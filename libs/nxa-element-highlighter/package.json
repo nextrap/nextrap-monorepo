@@ -5,10 +5,7 @@
   "scripts": {
     "test:browser": "vitest --workspace=vitest.workspace.ts"
   },
-  "dependencies": {
-    "lit": "^3.2.1",
-    "lit-css-loader": "^3.0.1"
-  },
+  "dependencies": {},
   "type": "module",
   "types": "./index.d.ts"
 }
