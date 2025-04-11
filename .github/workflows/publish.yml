@@ -35,7 +35,7 @@ jobs:
       - uses: nrwl/nx-set-shas@v4
       - run: npx nx report
       - run: npx nx affected -t test build
-      - run: npx nx release publish --public
+      - run: npx nx release publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_CONFIG_PROVENANCE: true
