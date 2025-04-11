@@ -18,6 +18,7 @@
       "@nextrap/element-highlighter": [
         "libs/nxa-element-highlighter/src/index.ts"
       ],
+      "@nextrap/infiniscroll": ["libs/nxa-infiniscroll/src/index.ts"],
       "@nextrap/scroll-to-top": ["libs/nxa-scroll-to-top/src/index.ts"]
     }
   },
