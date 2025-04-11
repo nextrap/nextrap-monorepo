@@ -1,3 +1,3 @@
 export function nxaElementHighlighter(): string {
-  return 'nxa-element-highlighter';
+  return 'nxa-element-highlighter@2';
 }
