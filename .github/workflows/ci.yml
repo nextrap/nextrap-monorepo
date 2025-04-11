@@ -30,6 +30,9 @@ jobs:
       # - run: npx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="e2e-ci"
       - run: npm ci
 
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
       - uses: nrwl/nx-set-shas@v4
 
       # Optional: Setup NX Cloud
