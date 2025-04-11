@@ -53,5 +53,11 @@ export default defineConfig(() => ({
       reportsDirectory: '../../coverage/libs/nxa-element-highlighter',
       provider: 'v8' as const,
     },
+    browser: {
+      provider: 'playwright',
+      enabled: true,
+      headless: true,
+      instances: [{ browser: 'chromium' }],
+    },
   },
 }));

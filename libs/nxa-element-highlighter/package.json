@@ -1,8 +1,11 @@
 {
   "name": "@nextrap/element-highlighter",
   "version": "0.0.1",
-  "type": "module",
   "main": "./index.js",
-  "types": "./index.d.ts",
-  "dependencies": {}
+  "scripts": {
+    "test:browser": "vitest --workspace=vitest.workspace.ts"
+  },
+  "dependencies": {},
+  "type": "module",
+  "types": "./index.d.ts"
 }
