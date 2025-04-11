@@ -1,0 +1,15 @@
+{
+  "name": "@nextrap/source",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {},
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "@nx/js": "20.7.2",
+    "nx": "20.7.2"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}
