@@ -1,20 +1,15 @@
 {
   "name": "@nextrap/element-highlighter",
   "version": "0.0.1",
-  "type": "module",
   "main": "./index.js",
-  "types": "./index.d.ts",
+  "scripts": {
+    "test:browser": "vitest --workspace=vitest.workspace.ts"
+  },
   "dependencies": {
     "@nextrap/doc-visualizer": "^0.0.4",
     "lit": "^3.2.1",
     "lit-css-loader": "^3.0.1"
   },
-  "devDependencies": {
-    "@vitest/browser": "^3.1.1",
-    "playwright": "^1.51.1",
-    "vitest-browser-lit": "^0.1.0"
-  },
-  "scripts": {
-    "test:browser": "vitest --workspace=vitest.workspace.ts"
-  }
+  "type": "module",
+  "types": "./index.d.ts"
 }
