@@ -6,11 +6,11 @@ Monorepo for Nextrap
 
 <!-- Please also maintain the CODEOWNERS file when adjusting the table below -->
 
-| Name                                                        | Contact     |
-| ----------------------------------------------------------- | ----------- |
-| [`nxa-element-highlighter`](./libs/nxa-element-highlighter) | @evolkmann  |
-| [`nxa-infiniscroll`](./libs/nxa-infiniscroll)               | @dermatthes |
-| [`nxa-scroll-to-top`](./libs/nxa-scroll-to-top)             | @dermatthes |
+| Name                                                        | Contact                                      |
+| ----------------------------------------------------------- | -------------------------------------------- |
+| [`nxa-element-highlighter`](./libs/nxa-element-highlighter) | [@evolkmann](https://github.com/evolkmann)   |
+| [`nxa-infiniscroll`](./libs/nxa-infiniscroll)               | [@dermatthes](https://github.com/dermatthes) |
+| [`nxa-scroll-to-top`](./libs/nxa-scroll-to-top)             | [@dermatthes](https://github.com/dermatthes) |
 
 ## Releases
 
