@@ -6,7 +6,6 @@
     "test:browser": "vitest --workspace=vitest.workspace.ts"
   },
   "dependencies": {
-    "@nextrap/doc-visualizer": "^0.0.4",
     "lit": "^3.2.1",
     "lit-css-loader": "^3.0.1"
   },
