@@ -40,7 +40,8 @@ jobs:
         uses: actions/github-script@7.0.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: return context.payload.ref.replace(/\/refs\/tags\//, '').replace(/@.*/, '');
+          result-encoding: string
+          script: return context.payload.ref.replace('refs/tags/', '').replace(/@.*/, '');
       - run: npx nx run -p ${{steps.package_name.outputs.result}} -t test build
       - run: npx nx release publish --access public -p ${{steps.package_name.outputs.result}}
         env:
