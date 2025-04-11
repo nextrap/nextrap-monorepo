@@ -7,6 +7,8 @@ declare global {
   }
 }
 
+const codeChangeToTriggerVersion = '0.0.2';
+
 @customElement('nxa-element-highlighter')
 export class NxaElementHighlighter extends LitElement {
   private error?: string;

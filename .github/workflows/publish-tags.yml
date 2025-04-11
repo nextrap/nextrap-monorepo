@@ -1,9 +1,9 @@
-name: Publish
+name: Publish Tags
 
 on:
   push:
     tags:
-      - 'nxa**'
+      - '*@*.*.*'
 
 jobs:
   main:
@@ -13,21 +13,18 @@ jobs:
       id-token: write # needed for provenance data generation
     timeout-minutes: 10
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Install Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
           registry-url: https://registry.npmjs.org/
           scope: '@nextrap'
 
       - run: npm ci
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium
       - run: npx nx report
       - name: Extract tagged package
         id: package_name
@@ -40,4 +37,3 @@ jobs:
       - run: npx nx release publish --access public -p ${{steps.package_name.outputs.result}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: true

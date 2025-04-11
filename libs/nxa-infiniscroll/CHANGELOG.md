@@ -1,3 +1,23 @@
+## 0.1.2-0 (2025-05-05)
+
+This was a version bump only for nxa-infiniscroll to align it with other projects, there were no code changes.
+
+## 0.1.1-0 (2025-05-05)
+
+This was a version bump only for nxa-infiniscroll to align it with other projects, there were no code changes.
+
+## 0.0.2 (2025-05-05)
+
+This was a version bump only for nxa-infiniscroll to align it with other projects, there were no code changes.
+
+## 0.1.14 (2025-05-05)
+
+This was a version bump only for nxa-infiniscroll to align it with other projects, there were no code changes.
+
+## 0.1.13 (2025-04-28)
+
+This was a version bump only for nxa-infiniscroll to align it with other projects, there were no code changes.
+
 ## 0.1.12 (2025-04-11)
 
 This was a version bump only for nxa-infiniscroll to align it with other projects, there were no code changes.
