@@ -37,12 +37,12 @@ jobs:
       - run: npx nx report
       - name: Extract tagged package
         id: package_name
-        uses: actions/github-script@0.2.0
+        uses: actions/github-script@7.0.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: return context.payload.ref.replace(/\/refs\/tags\//, '').replace(/@.*/, '');
-      - run: npx nx run -p "${steps.package_name.outputs.result}" -t test build
-      - run: npx nx release publish --access public -p "${steps.package_name.outputs.result}"
+      - run: npx nx run -p ${{steps.package_name.outputs.result}} -t test build
+      - run: npx nx release publish --access public -p ${{steps.package_name.outputs.result}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_CONFIG_PROVENANCE: true
