@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "types": ["@vitest/browser/providers/playwright"],
     "module": "commonjs",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
