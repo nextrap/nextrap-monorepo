@@ -30,6 +30,8 @@ jobs:
           registry-url: https://registry.npmjs.org/
 
       - run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
       - uses: nrwl/nx-set-shas@v4
       - run: npx nx report
       - run: npx nx affected -t test build
