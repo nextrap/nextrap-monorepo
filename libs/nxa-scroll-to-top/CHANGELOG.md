@@ -1,3 +1,7 @@
+## 0.1.11 (2025-04-11)
+
+This was a version bump only for nxa-scroll-to-top to align it with other projects, there were no code changes.
+
 ## 0.1.10 (2025-04-11)
 
 This was a version bump only for nxa-scroll-to-top to align it with other projects, there were no code changes.
