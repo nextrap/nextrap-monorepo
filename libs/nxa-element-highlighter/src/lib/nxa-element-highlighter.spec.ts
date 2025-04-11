@@ -1,4 +1,4 @@
-import { NxaElementHighlighter } from '@nextrap/element-highlighter';
+import { NxaElementHighlighter } from './nxa-element-highlighter';
 import { html } from 'lit';
 import { expect } from 'vitest';
 import { render } from 'vitest-browser-lit';
