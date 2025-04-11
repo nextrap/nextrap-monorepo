@@ -17,7 +17,8 @@
     "paths": {
       "@nextrap/element-highlighter": [
         "libs/nxa-element-highlighter/src/index.ts"
-      ]
+      ],
+      "@nextrap/scroll-to-top": ["libs/nxa-scroll-to-top/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
