@@ -2,6 +2,11 @@
   "extends": "nx/presets/npm.json",
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "release": {
+    "projects": ["apps/*", "libs/*"],
+    "projectsRelationship": "independent",
+    "changelog": {
+      "projectChangelogs": true
+    },
     "version": {
       "preVersionCommand": "npx nx run-many -t build"
     }
