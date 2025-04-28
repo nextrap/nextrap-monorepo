@@ -1,3 +1,13 @@
+## 0.1.14 (2025-04-28)
+
+### 🩹 Fixes
+
+- **element-highlighter:** code change for version ([0e8060d](https://github.com/nextrap/nextrap-monorepo/commit/0e8060d))
+
+### ❤️ Thank You
+
+- Enzo Volkmann @evolkmann
+
 ## 0.1.13 (2025-04-28)
 
 This was a version bump only for nxa-element-highlighter to align it with other projects, there were no code changes.
