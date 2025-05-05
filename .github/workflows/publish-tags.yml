@@ -3,7 +3,7 @@ name: Publish Tags
 on:
   push:
     tags:
-      - 'nxa**'
+      - '*'
 
 jobs:
   main:
@@ -24,8 +24,7 @@ jobs:
           scope: '@nextrap'
 
       - run: npm ci
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium
       - run: npx nx report
       - name: Extract tagged package
         id: package_name
