@@ -1,0 +1,10 @@
+{
+  "name": "nxa-doc-visualizer-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/nxa-doc-visualizer-e2e/src",
+  "projectType": "application",
+  "tags": [],
+  "implicitDependencies": ["nxa-doc-visualizer"],
+  "// targets": "to see all targets run: nx show project nxa-doc-visualizer-e2e --web",
+  "targets": {}
+}

@@ -1,0 +1,9 @@
+{
+  "name": "nxa-doc-visualizer",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/nxa-doc-visualizer/src",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project nxa-doc-visualizer --web",
+  "targets": {}
+}
