@@ -1,3 +1,7 @@
+## 0.1.16 (2025-05-05)
+
+This was a version bump only for nxa-element-highlighter to align it with other projects, there were no code changes.
+
 ## 0.1.15 (2025-04-28)
 
 This was a version bump only for nxa-element-highlighter to align it with other projects, there were no code changes.
