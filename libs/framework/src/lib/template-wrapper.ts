@@ -7,15 +7,6 @@ export type Extra = {
   hide(this: HTMLElement): void;
 };
 
-const extraImpl: Extra = {
-  show() {
-    this.style.display = "";
-  },
-  hide() {
-    this.style.display = "none";
-  }
-
-};
 
 export type AugmentedEl = HTMLElement & Extra;
 
@@ -23,6 +14,9 @@ export type AugmentedEl = HTMLElement & Extra;
 export type Wrapper<IDs extends readonly string[]> = Record<IDs[number], AugmentedEl> & {
   fragment: DocumentFragment;
 };
+
+
+
 
 /**
  * Create a lazy HTML wrapper. Parsing is **deferred** until the first access
@@ -34,48 +28,30 @@ export type Wrapper<IDs extends readonly string[]> = Record<IDs[number], Augment
  * w.foo.show();    // parses now
  * w.fragment;      // DocumentFragment with the cloned nodes
  */
-export function tpl<const IDs extends readonly string[]>(
+export function wrap<const IDs extends readonly string[]>(
   html: string,
-  ids: IDs
+  shadowRoot : ShadowRoot
 ): Wrapper<IDs> {
-  let parsed = false;
-  let frag: DocumentFragment;
-  let map: Record<IDs[number], AugmentedEl>;
 
-  const init = () => {
-    if (parsed) return;
-    parsed = true;
-    const t = document.createElement("template");
-    t.innerHTML = html.trim();
-    frag = t.content.cloneNode(true) as DocumentFragment;
-    map = Object.create(null);
-    ids.forEach(id => {
-      const el = frag.querySelector<HTMLElement>(`#${id}`);
-      if (!el) {
-        throw new Error(
-          `❌ ID '${id}' not found.\nKnown: [${ids.join(", ")}]\nHTML:\n${html}`
-        );
-      }
-      Object.assign(el, extraImpl);
-      (map as any)[id] = el as AugmentedEl;
-    });
-  };
+
+  const t = document.createElement("template");
+  t.innerHTML = html.trim();
+  shadowRoot.append(t.content.cloneNode(true));
 
   // Proxy providing lazy parsing + rich errors
   return new Proxy({} as Wrapper<IDs>, {
     get(_, prop: string | symbol) {
       if (prop === "fragment") {
-        init();
-        return frag;
+        return shadowRoot;
       }
       if (typeof prop === "string") {
-        if (!ids.includes(prop as any)) {
+        const e = shadowRoot.getElementById(prop);
+        if (! e) {
           throw new Error(
-            `❌ Unknown id '${prop}'.\nKnown: [${ids.join(", ")}]`
+            `❌ Unknown id '${prop}'.`
           );
         }
-        init();
-        return map[prop as keyof typeof map];
+        return e as AugmentedEl;
       }
       return undefined;
     }

@@ -1,0 +1,14 @@
+version: 1.0
+
+environments:
+    coder:
+        files:
+            - name: "project files"
+              include:
+                  - "./composer.json"
+                  - "./.editorconfig"
+                  - "./src/**/*.(php|ts|js)"
+                  - "./www/**/*"
+                  - "./vite.config.js"
+              instructions: |
+                  These are all project files. You can edit them as you like.

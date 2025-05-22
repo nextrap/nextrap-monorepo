@@ -1,0 +1,138 @@
+// All Row Styles go here
+
+nt-nav[mode="row"] {
+  box-shadow: var(--nt-nav-shadow);
+  background: var(--nt-nav-bg);
+}
+
+nt-nav[mode="row"] ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: var(--nt-nav-bg);
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+  border-radius: var(--nt-nav-radius);
+  position: relative;
+}
+
+nt-nav[mode="row"] > ul > li,
+nt-nav[mode="row"] ul > li {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+nt-nav[mode="row"] ul > li > a {
+  display: block;
+  padding: .65em 1.1em;
+  color: var(--nt-nav-color);
+  text-decoration: none;
+  border-radius: var(--nt-nav-radius);
+  transition: background var(--nt-nav-transition), color var(--nt-nav-transition);
+  font-weight: 500;
+}
+
+nt-nav[mode="row"] ul > li > a.active,
+nt-nav[mode="row"] ul > li > a:active {
+  background: var(--nt-nav-item-active-bg);
+  color: var(--nt-nav-item-active-color);
+}
+
+nt-nav[mode="row"] ul > li > a:hover,
+nt-nav[mode="row"] ul > li:hover > a {
+  background: var(--nt-nav-item-hover-bg);
+}
+
+nt-nav[mode="row"] ul > li > ul {
+  display: block;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  min-width: 11rem;
+  background: var(--nt-nav-bg);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: .3em;
+  border-radius: var(--nt-nav-radius);
+  box-shadow: var(--nt-nav-shadow);
+  border: 1px solid var(--nt-nav-border);
+  flex-direction: column;
+  z-index: 3;
+  transition: opacity var(--nt-nav-transition), transform var(--nt-nav-transition), visibility var(--nt-nav-transition);
+  transform: translateY(-0.7em);
+}
+
+nt-nav[mode="row"] ul > li:hover > ul,
+nt-nav[mode="row"] ul > li:focus-within > ul {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+
+/* NEW: Keep submenu open when hovering over the submenu itself */
+nt-nav[mode="row"] ul > li > ul:hover,
+nt-nav[mode="row"] ul > li > ul:focus-within {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+
+nt-nav[mode="row"] ul > li > ul > li {
+  display: flex;
+}
+
+nt-nav[mode="row"] ul > li > ul > li > a {
+  display: block;
+  color: var(--nt-nav-color);
+  padding: 0.63em 1.3em;
+  border-radius: var(--nt-nav-radius);
+  font-size: 0.99em;
+  font-weight: 400;
+  transition: background var(--nt-nav-transition), color var(--nt-nav-transition);
+}
+nt-nav[mode="row"] ul > li > ul > li > a:hover {
+  background: var(--nt-nav-item-hover-bg);
+  color: var(--nt-nav-primary);
+}
+
+/* Animations for icons and caret */
+nt-nav[mode="row"] ul > li > a:after {
+  content: '';
+  display: inline-block;
+  margin-left: 0.47em;
+  margin-bottom: 0.08em;
+  border: solid currentColor;
+  border-width: 0 2px 2px 0;
+  padding: 3px;
+  transform: rotate(45deg) scale(0.8);
+  opacity: 0;
+  transition: opacity var(--nt-nav-transition), transform var(--nt-nav-transition);
+}
+
+/* mark li's with submenu, show caret only if submenu exists */
+nt-nav[mode="row"] ul > li:has(ul) > a:after {
+  opacity: 0.55;
+}
+
+nt-nav[mode="row"] ul > li:hover > a:after,
+nt-nav[mode="row"] ul > li:focus-within > a:after {
+  transform: rotate(-135deg) scale(0.85);
+}
+
+/* Original unchanged content below */
+
+nt-nav[mode="row"] {
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+}

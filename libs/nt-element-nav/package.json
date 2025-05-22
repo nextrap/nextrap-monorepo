@@ -1,8 +1,11 @@
 {
   "name": "@nextrap/element-nav",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "main": "./index.js",
   "types": "./index.d.ts",
-  "dependencies": {}
+  "dependencies": {},
+  "exports": {
+    "./nav": "./src/lib/nt-element-nav.ts"
+  }
 }

@@ -6,6 +6,13 @@ import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
 export default defineConfig(() => ({
+  server: {
+    port: 4000,
+    host: "0.0.0.0",
+    hmr: true
+
+  },
+  publicDir: './public/www',
   root: __dirname,
   cacheDir: '../../node_modules/.vite/libs/nt-element-nav',
   plugins: [

@@ -1,15 +1,17 @@
 import { CSSResult, ReactiveElement, unsafeCSS } from 'lit';
-import { Wrapper } from './template-wrapper';
+import { wrap, Wrapper } from './template-wrapper';
 
 
-export abstract class NtSimpleElement extends ReactiveElement {
-  static tpl: Wrapper<any>;
+export abstract class NtSimpleElement<const IDs extends readonly string[]> extends ReactiveElement {
+
   abstract get css(): CSSResult[] | CSSResult;
 
-  constructor(html: Wrapper<any>) {
+  public readonly $: Wrapper<IDs>;
+
+  constructor(html: string) {
     super();
     const shadowRoot = this.createRenderRoot();
-    shadowRoot.append(html.fragment);
+    this.$ = wrap<IDs>(html, shadowRoot as ShadowRoot);
 
   }
 

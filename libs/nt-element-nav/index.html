@@ -5,8 +5,22 @@
   <title>NT Burger</title>
 </head>
 <body>
-    <nt-burger onclick="this.open = !this.open"></nt-burger>
-    <script type="module" src="./public/main.ts"></script>
+  <nt-nav breakpoint="768px" mode="sidebar">
+    <ul>
+      <li><a href="#" class="active">Home</a></li>
+      <li><a href="#">Products</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+      <li>
+        <a href="#">More ▾</a>
+        <ul>
+          <li><a href="#">Team</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nt-nav>
+  <script type="module" src="./public/main.ts"></script>
 
 </body>
 </html>

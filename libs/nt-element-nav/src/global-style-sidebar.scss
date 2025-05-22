@@ -1,0 +1,114 @@
+// All Sidebar Styles go here
+
+// -----------------------------------------------------------------------------
+// Global Sidebar Navigation Styles
+// -----------------------------------------------------------------------------
+
+
+
+/* -------------------------------------------------------------------------- */
+/* NEW: Analogue global styling when <nt-nav mode="sidebar"> is used          */
+/* -------------------------------------------------------------------------- */
+
+nt-nav[mode="sidebar"] {
+  background: var(--nt-nav-bg);
+  color: var(--nt-nav-color);
+}
+
+/* Main unordered list container */
+nt-nav[mode="sidebar"] ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--nt-nav-bg);
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+  border-radius: var(--nt-nav-radius);
+  position: relative;
+}
+
+/* List items – root and nested */
+nt-nav[mode="sidebar"] > ul > li,
+nt-nav[mode="sidebar"] ul > li {
+  position: relative;
+  display: block;
+}
+
+/* Anchor links */
+nt-nav[mode="sidebar"] ul > li > a {
+  display: block;
+  padding: .65em 1.1em;
+  color: var(--nt-nav-color);
+  text-decoration: none;
+  border-radius: var(--nt-nav-radius);
+  transition: background var(--nt-nav-transition), color var(--nt-nav-transition);
+  font-weight: 500;
+}
+
+nt-nav[mode="sidebar"] ul > li > a.active,
+nt-nav[mode="sidebar"] ul > li > a:active {
+  background: var(--nt-nav-item-active-bg);
+  color: var(--nt-nav-item-active-color);
+}
+
+nt-nav[mode="sidebar"] ul > li > a:hover,
+nt-nav[mode="sidebar"] ul > li:hover > a {
+  background: var(--nt-nav-item-hover-bg);
+}
+
+/* Nested unordered list (submenu) */
+nt-nav[mode="sidebar"] ul > li > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  padding-left: .7em; /* Indent submenu items */
+  display: none;
+  flex-direction: column;
+}
+
+/* Reveal submenu on hover or focus */
+nt-nav[mode="sidebar"] ul > li:hover > ul,
+nt-nav[mode="sidebar"] ul > li:focus-within > ul {
+  display: flex;
+}
+
+/* Submenu links */
+nt-nav[mode="sidebar"] ul > li > ul > li > a {
+  padding: 0.55em 1.1em;
+  font-size: .95em;
+  font-weight: 400;
+  border-radius: var(--nt-nav-radius);
+  color: var(--nt-nav-color);
+  transition: background var(--nt-nav-transition), color var(--nt-nav-transition);
+}
+
+nt-nav[mode="sidebar"] ul > li > ul > li > a:hover {
+  background: var(--nt-nav-item-hover-bg);
+  color: var(--nt-nav-primary);
+}
+
+/* Caret styling for items that possess a submenu */
+nt-nav[mode="sidebar"] ul > li > a:after {
+  content: '';
+  display: inline-block;
+  margin-left: 0.47em;
+  margin-bottom: 0.08em;
+  border: solid currentColor;
+  border-width: 0 2px 2px 0;
+  padding: 3px;
+  transform: rotate(45deg) scale(.8);
+  opacity: 0;
+  transition: opacity var(--nt-nav-transition), transform var(--nt-nav-transition);
+}
+
+/* Show caret only when submenu exists */
+nt-nav[mode="sidebar"] ul > li:has(ul) > a:after {
+  opacity: .55;
+}
+
+/* Rotate caret on hover/focus */
+nt-nav[mode="sidebar"] ul > li:hover > a:after,
+nt-nav[mode="sidebar"] ul > li:focus-within > a:after {
+  transform: rotate(135deg) scale(.85);
+}

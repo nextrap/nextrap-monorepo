@@ -1,0 +1,15 @@
+{
+    "name": "user/opt",
+    "type": "project",
+
+    "minimum-stability": "dev",
+    "require-dev": {
+        "lack/kindergarden": "dev-main"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": false
+        },
+        "preferred-install": "source"
+    }
+}

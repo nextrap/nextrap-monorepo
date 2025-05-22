@@ -1,0 +1,226 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "4059c5ebfe66ed729f60fe967821def2",
+    "packages": [],
+    "packages-dev": [
+        {
+            "name": "lack/keystore",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lack-project/lack-keystore.git",
+                "reference": "c4254cad50d275271d4128392e57b1921e25f5ce"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lack-project/lack-keystore/zipball/c4254cad50d275271d4128392e57b1921e25f5ce",
+                "reference": "c4254cad50d275271d4128392e57b1921e25f5ce",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "phore/tester": "*"
+            },
+            "type": "project",
+            "autoload": {
+                "psr-4": {
+                    "Lack\\Keystore\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matthias Leuffen",
+                    "email": "matthes@leuffen.de"
+                }
+            ],
+            "description": "Developer Key store",
+            "homepage": "https://infracamp.org",
+            "support": {
+                "issues": "https://github.com/lack-project/lack-keystore/issues",
+                "source": "https://github.com/lack-project/lack-keystore/tree/1.0.0"
+            },
+            "time": "2024-07-26T07:34:52+00:00"
+        },
+        {
+            "name": "lack/kindergarden",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lack-project/lack-kindergarden.git",
+                "reference": "371be0ff9caf56db55936c5bedc93e171b6a5d89"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lack-project/lack-kindergarden/zipball/371be0ff9caf56db55936c5bedc93e171b6a5d89",
+                "reference": "371be0ff9caf56db55936c5bedc93e171b6a5d89",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "lack/keystore": "^1.0.0",
+                "phore/core": "^1.2.1",
+                "phore/hydrator": "*",
+                "php": ">=8.3"
+            },
+            "require-dev": {
+                "phore/tester": "*"
+            },
+            "suggest": {
+                "lack/keystore": "For key-value storage"
+            },
+            "default-branch": true,
+            "bin": [
+                "bin/kg"
+            ],
+            "type": "project",
+            "autoload": {
+                "files": [
+                    "src/bootstrap.php"
+                ],
+                "psr-4": {
+                    "Lack\\Kindergarden\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matthias Leuffen",
+                    "email": "matthes@leuffen.de"
+                }
+            ],
+            "description": "Ki Kit",
+            "homepage": "https://infracamp.org",
+            "support": {
+                "issues": "https://github.com/lack-project/lack-kindergarden/issues",
+                "source": "https://github.com/lack-project/lack-kindergarden/tree/1.0.15"
+            },
+            "time": "2025-05-19T13:08:38+00:00"
+        },
+        {
+            "name": "phore/core",
+            "version": "1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phore/phore-core.git",
+                "reference": "e600e9b709be2347d88f41997c5c87e4e1b35a0b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phore/phore-core/zipball/e600e9b709be2347d88f41997c5c87e4e1b35a0b",
+                "reference": "e600e9b709be2347d88f41997c5c87e4e1b35a0b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "ext-json": "*",
+                "ext-sodium": "*",
+                "ext-yaml": "*",
+                "phpunit/phpunit": "*"
+            },
+            "suggest": {
+                "ext-json": "Json encoding parsing",
+                "ext-sodium": "Encryption functions",
+                "ext-yaml": "Yaml encoding parsing"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/functions.inc.php"
+                ],
+                "psr-4": {
+                    "Phore\\Core\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matthias Leuffen",
+                    "email": "m@tth.es"
+                }
+            ],
+            "description": "Phore core library",
+            "homepage": "https://infracamp.org/project/phore",
+            "support": {
+                "issues": "https://github.com/phore/phore-core/issues",
+                "source": "https://github.com/phore/phore-core/tree/1.2.1"
+            },
+            "time": "2025-02-16T23:07:18+00:00"
+        },
+        {
+            "name": "phore/hydrator",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phore/phore-hydrator.git",
+                "reference": "0221f402082a8a874fe5c62f7f2c2ffa8d1565ff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phore/phore-hydrator/zipball/0221f402082a8a874fe5c62f7f2c2ffa8d1565ff",
+                "reference": "0221f402082a8a874fe5c62f7f2c2ffa8d1565ff",
+                "shasum": ""
+            },
+            "require": {
+                "phore/core": "*",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "phore/tester": "*"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "Phore\\Hydrator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matthias Leuffen",
+                    "email": "m@tth.es"
+                }
+            ],
+            "description": "Unserialize arrays into object structure",
+            "support": {
+                "issues": "https://github.com/phore/phore-hydrator/issues",
+                "source": "https://github.com/phore/phore-hydrator/tree/v1.2.0"
+            },
+            "time": "2025-01-10T11:45:44+00:00"
+        }
+    ],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "lack/kindergarden": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.6.0"
+}
