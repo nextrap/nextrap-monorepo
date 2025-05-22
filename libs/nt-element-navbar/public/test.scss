@@ -1,0 +1,26 @@
+
+section {
+    border: 1px solid black;
+    padding: 10px;
+    margin: 10px;
+}
+
+
+tj-section.accordion-element {
+
+    h3 {
+        color: blue;
+        font-size: 20px;
+        margin: 0;
+    }
+
+    &::part(summary) {
+        background-color: lightblue;
+        padding: 10px;
+        border-radius: 5px;
+
+        &:hover {
+            background-color: lightgreen;
+        }
+    }
+}

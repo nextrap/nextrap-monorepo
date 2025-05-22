@@ -15,10 +15,13 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@nextrap/element-burger": ["libs/nt-element-burger/src/index.ts"],
       "@nextrap/element-highlighter": [
         "libs/nxa-element-highlighter/src/index.ts"
       ],
+      "@nextrap/element-nav": ["libs/nt-element-nav/src/index.ts"],
       "@nextrap/element-navbar": ["libs/nxa-element-navbar/src/index.ts"],
+      "@nextrap/framework": ["libs/framework/src/index.ts"],
       "@nextrap/infiniscroll": ["libs/nxa-infiniscroll/src/index.ts"],
       "@nextrap/scroll-to-top": ["libs/nxa-scroll-to-top/src/index.ts"]
     }

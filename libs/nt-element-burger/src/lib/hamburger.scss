@@ -1,0 +1,53 @@
+
+:host {
+    --size: 40px;
+    --color:  #666;
+    --color-hover: #000;
+    height: var(--size);
+    width: var(--size);
+
+}
+
+
+.hamburger {
+    display: block;
+    cursor: pointer;
+    appearance: none;
+    border: 0 none;
+    background: none;
+
+    transition: transform 0.4s;
+    &:hover {
+        --color: var(--color-hover);
+    }
+
+}
+
+
+
+:host([open]) {
+    .hamburger .bar:nth-of-type(1) {
+        --translate: calc(var(--size) / 4.0);
+        transform: translateY(var(--translate)) rotate(45deg);
+    }
+
+    .hamburger .bar:nth-of-type(2){
+        opacity: 0;
+    }
+
+    .hamburger .bar:nth-of-type(3){
+        --translate: calc(var(--size) / -4.0 );
+        transform: translateY(var(--translate)) rotate(-45deg);
+    }
+}
+
+
+.bar {
+    height: 3px;
+    width: var(--size);
+    display: block;
+    margin: calc(var(--size) / 5.2) auto;
+    position: relative;
+    background-color: var(--color);
+    transition: 0.4s;
+}

@@ -1,8 +1,10 @@
 {
-  "name": "@nextrap/element-navbar",
+  "name": "@nextrap/element-burger",
   "version": "0.0.1",
   "type": "module",
   "main": "./index.js",
   "types": "./index.d.ts",
-  "dependencies": {}
+  "dependencies": {
+    "@nextrap/framework": "^0.0.1"
+  }
 }

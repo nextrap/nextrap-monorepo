@@ -1,7 +1,7 @@
 {
-  "name": "nxa-element-navbar",
+  "name": "nt-element-nav",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/nxa-element-navbar/src",
+  "sourceRoot": "libs/nt-element-nav/src",
   "projectType": "library",
   "release": {
     "version": {

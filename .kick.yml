@@ -15,16 +15,6 @@ command:
   run:
 
 
-  vite:
-      - vite serve
-
-  dev:
-      - "D: vite serve"
-
-
-  update:
-    - "npm update"
-
 
   killall:
     - killall jekyll
