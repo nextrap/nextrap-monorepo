@@ -8,7 +8,7 @@ export type Extra = {
 };
 
 
-export type AugmentedEl = HTMLElement & Extra;
+export type AugmentedEl = HTMLElement | HTMLSlotElement | HTMLTemplateElement | HTMLStyleElement | HTMLScriptElement | HTMLLinkElement | Element & { [key: string]: any };
 
 // Helper for compile‑time type: all ids + "fragment" property
 export type Wrapper<IDs extends readonly string[]> = Record<IDs[number], AugmentedEl> & {

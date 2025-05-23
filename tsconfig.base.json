@@ -23,7 +23,8 @@
       "@nextrap/element-navbar": ["libs/nxa-element-navbar/src/index.ts"],
       "@nextrap/framework": ["libs/framework/src/index.ts"],
       "@nextrap/infiniscroll": ["libs/nxa-infiniscroll/src/index.ts"],
-      "@nextrap/scroll-to-top": ["libs/nxa-scroll-to-top/src/index.ts"]
+      "@nextrap/scroll-to-top": ["libs/nxa-scroll-to-top/src/index.ts"],
+      "@nextrap/style-colors": ["libs/style-colors/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

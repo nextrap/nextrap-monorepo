@@ -6,15 +6,8 @@ import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
 export default defineConfig(() => ({
-  server: {
-    port: 4000,
-    host: "0.0.0.0",
-    hmr: true
-
-  },
-  publicDir: './public/www',
   root: __dirname,
-  cacheDir: '../../node_modules/.vite/libs/nt-element-nav',
+  cacheDir: '../../node_modules/.vite/libs/style-colors',
   plugins: [
     nxViteTsPaths(),
     nxCopyAssetsPlugin(['*.md']),
@@ -30,7 +23,7 @@ export default defineConfig(() => ({
   // Configuration for building your library.
   // See: https://vitejs.dev/guide/build.html#library-mode
   build: {
-    outDir: '../../dist/libs/nt-element-nav',
+    outDir: '../../dist/libs/style-colors',
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {
@@ -39,7 +32,7 @@ export default defineConfig(() => ({
     lib: {
       // Could also be a dictionary or array of multiple entry points.
       entry: 'src/index.ts',
-      name: 'nt-element-nav',
+      name: 'style-colors',
       fileName: 'index',
       // Change this to the formats you want to support.
       // Don't forget to update your package.json as well.
@@ -50,13 +43,6 @@ export default defineConfig(() => ({
       external: [],
     },
   },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        includePaths: ['node_modules'], // or custom paths
-      },
-    },
-  },
   test: {
     watch: false,
     globals: true,
@@ -64,7 +50,7 @@ export default defineConfig(() => ({
     include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     reporters: ['default'],
     coverage: {
-      reportsDirectory: '../../coverage/libs/nt-element-nav',
+      reportsDirectory: '../../coverage/libs/style-colors',
       provider: 'v8' as const,
     },
   },

@@ -18,6 +18,15 @@ $surface: #fff;
 // Sidebar mode styles
 // -----------------------------------------------------------------------------
 :host([mode="sidebar"]) {
+  --text-color: var(--text-color);
+  --hover-color: var(--primary);
+  --hover-text-color: var(--text-on-primary-color);
+  --transition: 0.2s ease-in-out;
+  --submenu-bg: var(--light);
+  --submenu-text-color: var(--text-color);
+  --justify-content: center;
+  --justify-sidebar-burger: flex-end;
+
   display: block;
   position: relative;
 
@@ -26,8 +35,18 @@ $surface: #fff;
   #open-burger {display: block;}
   #close-burger {display: none;}
 
+#burger-header {
+  padding-bottom: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: var(--justify-sidebar-burger);
+}
 
-
+#burger {
+  display: flex;
+    flex-direction: row;
+    justify-content: var(--justify-content);
+}
 
   // Sidebar panel
   .nt-nav-links {

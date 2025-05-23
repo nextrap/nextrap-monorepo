@@ -1,7 +1,8 @@
-import { NtSimpleElement } from '@nextrap/framework';
+import { isBiggerThanBreakpoint, NtElementDefinition, NtSimpleElement } from '@nextrap/framework';
 import { unsafeCSS } from '@nextrap/framework';
 import { customElement, property } from '@nextrap/framework';
 import style from './nav.scss?inline';
+import { NtElementBurger } from '@nextrap/element-burger';
 
 // Minimal CSS for the nav element
 
@@ -13,7 +14,7 @@ const html = `
   </slot>
   <div id="backdrop"></div>
   <div class="nt-nav-links" id="main">
-    <slot class="burger" name="burger"><nt-burger id="close-burger" open></nt-burger></slot>
+    <slot class="burger" name="burger" id="burger-header"><nt-burger id="close-burger" open></nt-burger></slot>
     <slot></slot>
   </div>
 </nav>
@@ -29,10 +30,16 @@ const html = `
  */
 @customElement('nt-nav')
 export class NtElementNav extends NtSimpleElement< ['main', 'open-burger', 'close-burger', 'backdrop'] > {
+
+  static override  DEFINITION : NtElementDefinition = {
+    classes: ["align-left", "align-right", "align-center"],
+    attributes: {}
+  }
+
   @property({ type: String, reflect: true }) mode : "row" | "sidebar" = "sidebar";
   // Only for mode "sidebar"
   @property({ type: Boolean, reflect: true }) open = false;
-  @property({ type: String, reflect: true }) breakpoint = '700px';
+  @property({ type: String, reflect: true }) breakpoint : string | number = '';
 
   constructor() {
     super(html);
@@ -45,10 +52,33 @@ export class NtElementNav extends NtSimpleElement< ['main', 'open-burger', 'clos
     this.$['backdrop'].onclick = () => {
       this.open = false;
     }
+
+
+  }
+
+  override update(changedProperties: Map<string | number | symbol, unknown>): void {
+    super.update(changedProperties);
+    this.$['open-burger'].open = this.open;
   }
 
   get css() {
     return unsafeCSS(style);
+  }
+
+  override connectedCallback() {
+    super.connectedCallback();
+    if (this.breakpoint !== '') {
+      if ( isBiggerThanBreakpoint(this.breakpoint) ) {
+        this.mode = "row";
+      }
+      window.addEventListener("breakpoint-changed", (event: Event) => {
+        if (isBiggerThanBreakpoint(this.breakpoint)) {
+          this.mode = "row";
+        } else {
+          this.mode = "sidebar";
+        }
+      });
+    }
   }
 
 }
