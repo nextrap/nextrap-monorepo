@@ -1,0 +1,66 @@
+:host {
+  --container-width: var(--nt-container-width, 100%);
+  --gap: var(--nt-base-gap);
+
+  --x-direction: row;
+  --y-direction: column;
+}
+
+:host(.desktop-reverse) {
+  --x-direction: row-reverse;
+}
+
+:host(.mobile-reverse) {
+  --y-direction: column-reverse;
+}
+
+:host(.alternate:nth-child(odd)) {
+  .row {
+    div[part='main'] {
+      order: 2;
+    }
+    div[part='aside'] {
+      order: 1;
+    }
+  }
+}
+
+#row {
+  width: var(--container-width);
+  display: flex;
+  gap: var(--gap);
+
+  &.row {
+    flex-direction: var(--x-direction);
+
+    div[part='main'] {
+      width: calc(100% * var(--cols, 1) / 12);
+    }
+
+    div[part='aside'] {
+      width: calc(100% * (12 - var(--cols, 1)) / 12);
+    }
+  }
+
+  &.col {
+    flex-direction: var(--y-direction);
+
+    slot {
+      width: 100%;
+    }
+  }
+}
+
+div[part] {
+  display: flex;
+  flex-grow: 1;
+
+  &:has(slot.is-empty) {
+    display: none;
+  }
+}
+
+section {
+  width: var(--container-width);
+  margin: 0 auto;
+}

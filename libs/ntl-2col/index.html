@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>ntl-2col</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="m-2">
+    <h1 class="text-slate-900 text-xl font-bold">ntl-2col</h1>
+
+    <ntl-2col cols="4" class="alternate">
+      <div slot="top">
+        <h3 class="text-lg font-semibold">Top Content</h3>
+        <p>This is always on top</p>
+      </div>
+      <div>
+        <h3 class="text-lg font-semibold">Left Column</h3>
+        <p>This is the left column content.</p>
+      </div>
+      <div slot="aside">
+        <h3 class="text-lg font-semibold">Right Column</h3>
+        <p>This is the right column content.</p>
+      </div>
+    </ntl-2col>
+
+    <ntl-2col cols="4" class="alternate">
+      <div>
+        <h3 class="text-lg font-semibold">Left Column</h3>
+        <p>This is the left column content.</p>
+      </div>
+      <div slot="aside">
+        <h3 class="text-lg font-semibold">Right Column</h3>
+        <p>This is the right column content.</p>
+      </div>
+      <div slot="bottom">
+        <h3 class="text-lg font-semibold">Bottom Content</h3>
+        <p>This is always below</p>
+      </div>
+    </ntl-2col>
+
+    <script src="./src/index.ts" type="module"></script>
+  </body>
+</html>
