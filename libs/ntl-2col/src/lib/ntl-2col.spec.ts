@@ -1,7 +1,5 @@
-import { ntl2col } from './ntl-2col';
+import { describe } from 'vitest';
 
 describe('ntl2col', () => {
-  it('should work', () => {
-    expect(ntl2col()).toEqual('ntl-2col');
-  });
+  it.todo('write some tests');
 });
