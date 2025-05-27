@@ -2,6 +2,7 @@
 #
 # Syntax: https://docs.github.com/de/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners#example-of-a-codeowners-file
 
+libs/nte-dialog @evolkmann
 libs/nxa-element-highlighter @evolkmann
 libs/nxa-infiniscroll @dermatthes
 libs/nxa-scroll-to-top @dermatthes

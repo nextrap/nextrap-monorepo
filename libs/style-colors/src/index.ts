@@ -1,1 +1,2 @@
-import "./colors.scss";
+import './colors.scss';
+import './reset.scss';

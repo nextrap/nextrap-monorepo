@@ -1,0 +1,37 @@
+@use '@nextrap/style-colors/src/reset';
+
+:host {
+  --min-width: 300px;
+  --min-height: 200px;
+  --max-width: calc(100% - 2em - 6px);
+  --max-height: calc(100% - 2em - 6px);
+
+  --padding: 1rem;
+
+  --border: 1px solid var(--nt-primary);
+}
+
+:host(.fullsize) {
+  --min-width: 100%;
+  --min-height: 100%;
+  --max-width: 100%;
+  --max-height: 100%;
+}
+
+dialog {
+  min-width: var(--min-width);
+  min-height: var(--min-height);
+  max-width: var(--max-width);
+  max-height: var(--max-height);
+
+  padding: var(--padding);
+
+  border: var(--border);
+
+  margin: auto;
+}
+
+#dialog-header {
+  display: flex;
+  justify-content: space-between;
+}
