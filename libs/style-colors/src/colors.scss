@@ -97,7 +97,7 @@ $background-color: $white !default;
     --nt-text-on-black-color: #{$text-on-black-color};
     --nt-background-color: #{$background-color};
 
-    --nt-container-size: 1200px;
+    --nt-container-width: 100%;
     // Set the container size based on the media width like in Bootstrap
 
     @media (min-width: 576px) {
