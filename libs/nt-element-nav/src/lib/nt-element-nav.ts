@@ -13,7 +13,7 @@ const html = `
     <nt-burger id="open-burger"></nt-burger>
   </slot>
   <div id="backdrop"></div>
-  <div class="nt-nav-links" id="main">
+  <div class="nt-nav-links" id="main" part="main">
     <slot class="burger" name="burger" id="burger-header"><nt-burger id="close-burger" open></nt-burger></slot>
     <slot></slot>
   </div>

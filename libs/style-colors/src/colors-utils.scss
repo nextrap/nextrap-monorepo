@@ -18,17 +18,17 @@
     --text-color: var(--text-on-#{$color}) ;
   }
   .bg-#{$color} {
-    background-color: var(--#{$color}) ;
-    --background-color: var(--#{$color}) ;
-    --text-color: var(--text-on-#{$color}) ;
+    background-color: var(--mt-#{$color}) ;
+    --background-color: var(--mt-#{$color}) ;
+    --text-color: var(--mt-text-on-#{$color}) ;
   }
   .text-#{$color} {
-    --text-color: var(--#{$color}) ;
-    color: var(--#{$color}) ;
+    --text-color: var(--mt-#{$color}) ;
+    color: var(--mt-#{$color}) ;
   }
   .border-#{$color} {
-    --border-color: var(--#{$color}) ;
-    border-color: var(--#{$color}) ;
+    --border-color: var(--mt-#{$color}) ;
+    border-color: var(--mt-#{$color}) ;
   }
 }
 
@@ -45,7 +45,7 @@
 
 ) {
   .bg-#{$color} {
-    background-color: var(--#{$color});
+    background-color: var(--mt-#{$color});
   }
 }
 
