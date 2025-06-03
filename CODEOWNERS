@@ -6,5 +6,5 @@ libs/ntl-2col @evolkmann
 libs/nte-dialog @evolkmann
 libs/nxa-element-highlighter @evolkmann
 libs/ntl-infiniscroll @dermatthes
-libs/nxa-scroll-to-top @dermatthes
+libs/nte-scroll-to-top @dermatthes
 libs/nt-framework @dermatthes

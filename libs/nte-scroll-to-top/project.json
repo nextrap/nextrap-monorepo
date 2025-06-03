@@ -1,7 +1,7 @@
 {
-  "name": "nxa-scroll-to-top",
+  "name": "nte-scroll-to-top",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/nxa-scroll-to-top/src",
+  "sourceRoot": "libs/nte-scroll-to-top/src",
   "projectType": "library",
   "release": {
     "version": {

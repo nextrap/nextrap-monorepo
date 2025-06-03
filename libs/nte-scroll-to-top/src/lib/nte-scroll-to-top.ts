@@ -2,16 +2,14 @@
 // TODO: Fix the linting errors and enable eslint!
 
 import { html, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators.js';
 
-import { style } from './style';
-import { ka_create_element } from '@kasimirjs/core/src/create-element';
-import { ka_dom_ready } from '@kasimirjs/core/src/await/dom-ready';
 import { Debouncer, ka_sleep } from '@kasimirjs/core';
+import { style } from './style';
 
 let debounceer = new Debouncer(100);
-@customElement('nxa-scroll-to-top')
-export class NxaScrollToTop extends LitElement {
+@customElement('nte-scroll-to-top')
+export class NteScrollToTop extends LitElement {
   static styles = style;
 
   connectedCallback() {
