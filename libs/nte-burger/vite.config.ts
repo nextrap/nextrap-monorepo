@@ -52,6 +52,7 @@ export default defineConfig((command) => ({
     },
   },
   test: {
+    passWithNoTests: true,
     watch: false,
     globals: true,
     environment: 'node',
