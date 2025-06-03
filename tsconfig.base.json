@@ -16,8 +16,8 @@
     "baseUrl": ".",
     "paths": {
       "@nextrap/nte-burger": ["libs/nte-burger/src/index.ts"],
-      "@nextrap/element-highlighter": [
-        "libs/nxa-element-highlighter/src/index.ts"
+      "@nextrap/nte-element-highlighter": [
+        "libs/nte-element-highlighter/src/index.ts"
       ],
       "@nextrap/nte-nav": ["libs/nte-nav/src/index.ts"],
       "@nextrap/element-navbar": ["libs/nxa-element-navbar/src/index.ts"],

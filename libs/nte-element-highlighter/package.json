@@ -1,5 +1,5 @@
 {
-  "name": "@nextrap/element-highlighter",
+  "name": "@nextrap/nte-element-highlighter",
   "version": "0.1.3-0",
   "main": "./index.js",
   "scripts": {

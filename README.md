@@ -6,14 +6,14 @@ Monorepo for Nextrap maintained with [Nx](https://nx.dev/).
 
 <!-- Please also maintain the CODEOWNERS file when adjusting the table below -->
 
-| Name                                                        | Contact                                      |
-| ----------------------------------------------------------- | -------------------------------------------- |
-| [`nt-framework`](./libs/nt-framework)                       | [@dermatthes](https://github.com/dermatthes) |
-| [`nxa-element-highlighter`](./libs/nxa-element-highlighter) | [@evolkmann](https://github.com/evolkmann)   |
-| [`ntl-infiniscroll`](libs/ntl-infiniscroll)                 | [@dermatthes](https://github.com/dermatthes) |
-| [`nte-scroll-to-top`](libs/nte-scroll-to-top)               | [@dermatthes](https://github.com/dermatthes) |
-| [`nte-dialog`](./libs/nte-dialog)                           | [@evolkmann](https://github.com/evolkmann)   |
-| [`ntl-2col`](./libs/ntl-2col)                               | [@evolkmann](https://github.com/evolkmann)   |
+| Name                                                      | Contact                                      |
+| --------------------------------------------------------- | -------------------------------------------- |
+| [`nt-framework`](./libs/nt-framework)                     | [@dermatthes](https://github.com/dermatthes) |
+| [`nte-element-highlighter`](libs/nte-element-highlighter) | [@evolkmann](https://github.com/evolkmann)   |
+| [`ntl-infiniscroll`](libs/ntl-infiniscroll)               | [@dermatthes](https://github.com/dermatthes) |
+| [`nte-scroll-to-top`](libs/nte-scroll-to-top)             | [@dermatthes](https://github.com/dermatthes) |
+| [`nte-dialog`](./libs/nte-dialog)                         | [@evolkmann](https://github.com/evolkmann)   |
+| [`ntl-2col`](./libs/ntl-2col)                             | [@evolkmann](https://github.com/evolkmann)   |
 
 ## Working with the repository
 
@@ -25,7 +25,7 @@ Monorepo for Nextrap maintained with [Nx](https://nx.dev/).
 - `npx nx lint <package>`: Run linter for a package
 - `npx nx show project <package>`: Show all targets of a package
 
-Try out `npx nx dev nxa-element-highlighter` and make some changes [to the code](./libs/nxa-element-highlighter/src).
+Try out `npx nx dev nxa-element-highlighter` and make some changes [to the code](libs/nte-element-highlighter/src).
 
 ### Dependencies
 

@@ -3,14 +3,12 @@ import { customElement, property, state } from 'lit/decorators.js';
 
 declare global {
   interface HTMLElementTagNameMap {
-    'nxa-element-highlighter': NxaElementHighlighter;
+    'nte-element-highlighter': NteElementHighlighter;
   }
 }
 
-const codeChangeToTriggerVersion = '0.0.2';
-
-@customElement('nxa-element-highlighter')
-export class NxaElementHighlighter extends LitElement {
+@customElement('nte-element-highlighter')
+export class NteElementHighlighter extends LitElement {
   private error?: string;
   private targetElement?: HTMLElement;
 

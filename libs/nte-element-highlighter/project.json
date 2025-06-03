@@ -1,7 +1,7 @@
 {
-  "name": "nxa-element-highlighter",
+  "name": "nte-element-highlighter",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/nxa-element-highlighter/src",
+  "sourceRoot": "libs/nte-element-highlighter/src",
   "projectType": "library",
   "release": {
     "version": {

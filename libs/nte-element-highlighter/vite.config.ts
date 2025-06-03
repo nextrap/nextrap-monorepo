@@ -1,19 +1,18 @@
 /// <reference types='vitest' />
+import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
+import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
+import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
-import * as path from 'path';
-import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
-import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 
 export default defineConfig(() => ({
   server: {
     port: 4000,
-    host: "0.0.0.0",
-    hmr: true
-
+    host: '0.0.0.0',
+    hmr: true,
   },
   root: __dirname,
-  cacheDir: '../../node_modules/.vite/libs/nxa-element-highlighter',
+  cacheDir: '../../node_modules/.vite/libs/nte-element-highlighter',
   plugins: [
     nxViteTsPaths(),
     nxCopyAssetsPlugin(['*.md']),
@@ -29,7 +28,7 @@ export default defineConfig(() => ({
   // Configuration for building your library.
   // See: https://vitejs.dev/guide/build.html#library-mode
   build: {
-    outDir: '../../dist/libs/nxa-element-highlighter',
+    outDir: '../../dist/libs/nte-element-highlighter',
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {
@@ -38,7 +37,7 @@ export default defineConfig(() => ({
     lib: {
       // Could also be a dictionary or array of multiple entry points.
       entry: 'src/index.ts',
-      name: 'nxa-element-highlighter',
+      name: 'nte-element-highlighter',
       fileName: 'index',
       // Change this to the formats you want to support.
       // Don't forget to update your package.json as well.
@@ -56,7 +55,7 @@ export default defineConfig(() => ({
     include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     reporters: ['default'],
     coverage: {
-      reportsDirectory: '../../coverage/libs/nxa-element-highlighter',
+      reportsDirectory: '../../coverage/libs/nte-element-highlighter',
       provider: 'v8' as const,
     },
     browser: {

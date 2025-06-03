@@ -1,12 +1,12 @@
-import { NxaElementHighlighter } from './nxa-element-highlighter';
 import { html } from 'lit';
 import { expect } from 'vitest';
 import { render } from 'vitest-browser-lit';
+import { NteElementHighlighter } from './nte-element-highlighter';
 
-describe('nxaElementHighlighter', () => {
+describe('nte-element-highlighter', () => {
   it('should create an element', () => {
-    const el = new NxaElementHighlighter();
-    expect(el).toBeInstanceOf(NxaElementHighlighter);
+    const el = new NteElementHighlighter();
+    expect(el).toBeInstanceOf(NteElementHighlighter);
   });
 
   it('renders', async () => {
