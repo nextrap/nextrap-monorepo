@@ -1,4 +1,4 @@
-import { Debouncer } from '@nextrap/nt-framework';
+import { Debouncer } from './Debouncer';
 
 export type Breakpoint = {
   name: string;
