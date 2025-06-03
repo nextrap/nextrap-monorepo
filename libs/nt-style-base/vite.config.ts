@@ -7,7 +7,7 @@ import dts from 'vite-plugin-dts';
 
 export default defineConfig(() => ({
   root: __dirname,
-  cacheDir: '../../node_modules/.vite/libs/style-colors',
+  cacheDir: '../../node_modules/.vite/libs/nt-style-base',
   plugins: [
     nxViteTsPaths(),
     nxCopyAssetsPlugin(['*.md']),
@@ -23,7 +23,7 @@ export default defineConfig(() => ({
   // Configuration for building your library.
   // See: https://vitejs.dev/guide/build.html#library-mode
   build: {
-    outDir: '../../dist/libs/style-colors',
+    outDir: '../../dist/libs/nt-style-base',
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {
@@ -32,7 +32,7 @@ export default defineConfig(() => ({
     lib: {
       // Could also be a dictionary or array of multiple entry points.
       entry: 'src/index.ts',
-      name: 'style-colors',
+      name: 'nt-style-base',
       fileName: 'index',
       // Change this to the formats you want to support.
       // Don't forget to update your package.json as well.
@@ -44,13 +44,14 @@ export default defineConfig(() => ({
     },
   },
   test: {
+    passWithNoTests: true,
     watch: false,
     globals: true,
     environment: 'node',
     include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     reporters: ['default'],
     coverage: {
-      reportsDirectory: '../../coverage/libs/style-colors',
+      reportsDirectory: '../../coverage/libs/nt-style-base',
       provider: 'v8' as const,
     },
   },

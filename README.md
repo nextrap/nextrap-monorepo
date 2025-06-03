@@ -15,6 +15,7 @@ All packages use a common naming convention:
 | Name                                                      | Contact                                      |
 | --------------------------------------------------------- | -------------------------------------------- |
 | [`nt-framework`](./libs/nt-framework)                     | [@dermatthes](https://github.com/dermatthes) |
+| [`nt-style-base`](./libs/nt-style-base)                   | [@dermatthes](https://github.com/dermatthes) |
 | [`nte-element-highlighter`](libs/nte-element-highlighter) | [@evolkmann](https://github.com/evolkmann)   |
 | [`nte-scroll-to-top`](libs/nte-scroll-to-top)             | [@dermatthes](https://github.com/dermatthes) |
 | [`nte-dialog`](./libs/nte-dialog)                         | [@evolkmann](https://github.com/evolkmann)   |

@@ -4,8 +4,8 @@
   "main": "./index.js",
   "dependencies": {
     "@nextrap/nt-framework": "^0.0.1",
-    "@nextrap/nte-burger": "^0.0.1",
-    "@nextrap/style-colors": "^0.0.1"
+    "@nextrap/nt-style-base": "^0.0.1",
+    "@nextrap/nte-burger": "^0.0.1"
   },
   "type": "module",
   "exports": {

@@ -1,7 +1,7 @@
 {
-  "name": "style-colors",
+  "name": "nt-style-base",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/style-colors/src",
+  "sourceRoot": "libs/nt-style-base/src",
   "projectType": "library",
   "release": {
     "version": {
