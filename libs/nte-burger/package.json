@@ -1,10 +1,10 @@
 {
-  "name": "@nextrap/element-burger",
+  "name": "@nextrap/nte-burger",
   "version": "0.0.1",
-  "type": "module",
   "main": "./index.js",
-  "types": "./index.d.ts",
   "dependencies": {
     "@nextrap/framework": "^0.0.1"
-  }
+  },
+  "type": "module",
+  "types": "./index.d.ts"
 }

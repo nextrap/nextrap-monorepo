@@ -5,20 +5,16 @@ import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
-
-
-
 export default defineConfig((command) => ({
   server: {
     port: 4000,
-    host: "0.0.0.0",
-    hmr: true
-
+    host: '0.0.0.0',
+    hmr: true,
   },
   publicDir: './public/www',
 
   root: __dirname,
-  cacheDir: '../../node_modules/.vite/libs/nt-element-burger',
+  cacheDir: '../../node_modules/.vite/libs/nte-burger',
   plugins: [
     nxViteTsPaths(),
     nxCopyAssetsPlugin(['*.md']),
@@ -34,7 +30,7 @@ export default defineConfig((command) => ({
   // Configuration for building your library.
   // See: https://vitejs.dev/guide/build.html#library-mode
   build: {
-    outDir: '../../dist/libs/nt-element-burger',
+    outDir: '../../dist/libs/nte-burger',
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {
@@ -43,7 +39,7 @@ export default defineConfig((command) => ({
     lib: {
       // Could also be a dictionary or array of multiple entry points.
       entry: 'src/index.ts',
-      name: 'nt-element-burger',
+      name: 'nte-burger',
       fileName: 'index',
       // Change this to the formats you want to support.
       // Don't forget to update your package.json as well.
@@ -62,7 +58,7 @@ export default defineConfig((command) => ({
     include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     reporters: ['default'],
     coverage: {
-      reportsDirectory: '../../coverage/libs/nt-element-burger',
+      reportsDirectory: '../../coverage/libs/nte-burger',
       provider: 'v8' as const,
     },
   },

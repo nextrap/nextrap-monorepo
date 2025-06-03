@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@nextrap/element-burger": ["libs/nt-element-burger/src/index.ts"],
+      "@nextrap/nte-burger": ["libs/nte-burger/src/index.ts"],
       "@nextrap/element-highlighter": [
         "libs/nxa-element-highlighter/src/index.ts"
       ],

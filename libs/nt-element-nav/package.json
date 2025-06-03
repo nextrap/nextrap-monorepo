@@ -1,15 +1,15 @@
 {
   "name": "@nextrap/element-nav",
   "version": "0.0.2",
-  "type": "module",
   "main": "./index.js",
-  "types": "./index.d.ts",
   "dependencies": {
     "@nextrap/framework": "^0.0.1",
-    "@nextrap/element-burger": "^0.0.1",
+    "@nextrap/nte-burger": "^0.0.1",
     "@nextrap/style-colors": "^0.0.1"
   },
+  "type": "module",
   "exports": {
     "./nav": "./src/lib/nt-element-nav.ts"
-  }
+  },
+  "types": "./index.d.ts"
 }

@@ -1,7 +1,7 @@
 {
-  "name": "nt-element-burger",
+  "name": "nte-burger",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/nt-element-burger/src",
+  "sourceRoot": "libs/nte-burger/src",
   "projectType": "library",
   "release": {
     "version": {
