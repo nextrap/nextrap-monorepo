@@ -5,14 +5,15 @@
   "scripts": {
     "prepare": "husky"
   },
+  "dependencies": {},
   "devDependencies": {
     "@eslint/js": "^9.8.0",
     "@kasimirjs/core": "^1.0.9",
-    "@nx/eslint": "20.7.2",
-    "@nx/eslint-plugin": "20.7.2",
-    "@nx/js": "20.7.2",
-    "@nx/vite": "20.7.2",
-    "@nx/web": "20.7.2",
+    "@nx/eslint": "21.1.2",
+    "@nx/eslint-plugin": "21.1.2",
+    "@nx/js": "21.1.2",
+    "@nx/vite": "21.1.2",
+    "@nx/web": "21.1.2",
     "@swc-node/register": "~1.9.1",
     "@swc/core": "~1.5.7",
     "@swc/helpers": "~0.5.11",
@@ -30,7 +31,7 @@
     "lint-staged": "^15.5.0",
     "lit": "^3.2.1",
     "lit-css-loader": "^3.0.1",
-    "nx": "20.7.2",
+    "nx": "21.1.2",
     "playwright": "^1.51.1",
     "prettier": "^2.6.2",
     "prettier-plugin-organize-imports": "^4.1.0",
@@ -51,6 +52,5 @@
   ],
   "nx": {
     "includedScripts": []
-  },
-  "dependencies": {}
+  }
 }

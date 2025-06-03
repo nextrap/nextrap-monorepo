@@ -5,10 +5,9 @@
   "projectType": "library",
   "release": {
     "version": {
-      "generatorOptions": {
-        "packageRoot": "{projectRoot}",
-        "currentVersionResolver": "disk"
-      }
+      "currentVersionResolver": "disk",
+      "preserveLocalDependencyProtocols": false,
+      "manifestRootsToUpdate": ["{projectRoot}"]
     }
   },
   "tags": [],
