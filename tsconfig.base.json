@@ -22,7 +22,7 @@
       "@nextrap/nte-nav": ["libs/nte-nav/src/index.ts"],
       "@nextrap/element-navbar": ["libs/nxa-element-navbar/src/index.ts"],
       "@nextrap/framework": ["libs/framework/src/index.ts"],
-      "@nextrap/infiniscroll": ["libs/nxa-infiniscroll/src/index.ts"],
+      "@nextrap/ntl-infiniscroll": ["libs/ntl-infiniscroll/src/index.ts"],
       "@nextrap/nte-dialog": ["libs/nte-dialog/src/index.ts"],
       "@nextrap/ntl-2col": ["libs/ntl-2col/src/index.ts"],
       "@nextrap/scroll-to-top": ["libs/nxa-scroll-to-top/src/index.ts"],

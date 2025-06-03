@@ -13,7 +13,7 @@ const style = `
 
 `;
 
-class NxInfiniscroll extends HTMLElement {
+class NtlInfiniscroll extends HTMLElement {
   private container: HTMLElement;
   private observer: IntersectionObserver;
   private autoScroll: boolean;
@@ -242,4 +242,4 @@ class NxInfiniscroll extends HTMLElement {
   }
 }
 
-customElements.define('nxa-infiniscroll', NxInfiniscroll);
+customElements.define('ntl-infiniscroll', NtlInfiniscroll);

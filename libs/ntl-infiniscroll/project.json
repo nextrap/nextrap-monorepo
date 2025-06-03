@@ -1,7 +1,7 @@
 {
-  "name": "nxa-infiniscroll",
+  "name": "ntl-infiniscroll",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/nxa-infiniscroll/src",
+  "sourceRoot": "libs/ntl-infiniscroll/src",
   "projectType": "library",
   "release": {
     "version": {

@@ -6,9 +6,8 @@ import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
 export default defineConfig(() => ({
-
   root: __dirname,
-  cacheDir: '../../node_modules/.vite/libs/nxa-infiniscroll',
+  cacheDir: '../../node_modules/.vite/libs/ntl-infiniscroll',
   plugins: [
     nxViteTsPaths(),
     nxCopyAssetsPlugin(['*.md']),
@@ -24,7 +23,7 @@ export default defineConfig(() => ({
   // Configuration for building your library.
   // See: https://vitejs.dev/guide/build.html#library-mode
   build: {
-    outDir: '../../dist/libs/nxa-infiniscroll',
+    outDir: '../../dist/libs/ntl-infiniscroll',
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {
@@ -33,7 +32,7 @@ export default defineConfig(() => ({
     lib: {
       // Could also be a dictionary or array of multiple entry points.
       entry: 'src/index.ts',
-      name: 'nxa-infiniscroll',
+      name: 'ntl-infiniscroll',
       fileName: 'index',
       // Change this to the formats you want to support.
       // Don't forget to update your package.json as well.
@@ -51,7 +50,7 @@ export default defineConfig(() => ({
     include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     reporters: ['default'],
     coverage: {
-      reportsDirectory: '../../coverage/libs/nxa-infiniscroll',
+      reportsDirectory: '../../coverage/libs/ntl-infiniscroll',
       provider: 'v8' as const,
     },
   },

@@ -1,5 +1,5 @@
 {
-  "name": "@nextrap/infiniscroll",
+  "name": "@nextrap/ntl-infiniscroll",
   "version": "0.1.2-0",
   "main": "./index.js",
   "dependencies": {},

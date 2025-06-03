@@ -9,7 +9,7 @@ Monorepo for Nextrap maintained with [Nx](https://nx.dev/).
 | Name                                                        | Contact                                      |
 | ----------------------------------------------------------- | -------------------------------------------- |
 | [`nxa-element-highlighter`](./libs/nxa-element-highlighter) | [@evolkmann](https://github.com/evolkmann)   |
-| [`nxa-infiniscroll`](./libs/nxa-infiniscroll)               | [@dermatthes](https://github.com/dermatthes) |
+| [`ntl-infiniscroll`](libs/ntl-infiniscroll)                 | [@dermatthes](https://github.com/dermatthes) |
 | [`nxa-scroll-to-top`](./libs/nxa-scroll-to-top)             | [@dermatthes](https://github.com/dermatthes) |
 | [`nte-dialog`](./libs/nte-dialog)                           | [@evolkmann](https://github.com/evolkmann)   |
 | [`ntl-2col`](./libs/ntl-2col)                               | [@evolkmann](https://github.com/evolkmann)   |
