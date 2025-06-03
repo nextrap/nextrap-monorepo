@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "main": "./index.js",
   "dependencies": {
-    "@nextrap/framework": "^0.0.1",
+    "@nextrap/nt-framework": "^0.0.1",
     "@nextrap/nte-burger": "^0.0.1",
     "@nextrap/style-colors": "^0.0.1"
   },

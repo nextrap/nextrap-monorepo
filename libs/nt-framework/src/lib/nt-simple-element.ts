@@ -1,13 +1,10 @@
 import { CSSResult, ReactiveElement, unsafeCSS } from 'lit';
 import { wrap, Wrapper } from './template-wrapper';
 
-
 export type AttributeDefintion = {
-  type: "string" | "number" | "boolean" | "enum";
+  type: 'string' | 'number' | 'boolean' | 'enum';
   enum?: string[];
-
-
-}
+};
 
 export type NtElementDefinition = {
   /**
@@ -19,16 +16,15 @@ export type NtElementDefinition = {
    * List of attributes to be added to the element
    */
   attributes: Record<string, AttributeDefintion>;
-}
+};
 
-
-
-export abstract class NtSimpleElement<const IDs extends readonly string[]> extends ReactiveElement {
-
+export abstract class NtSimpleElement<
+  const IDs extends readonly string[]
+> extends ReactiveElement {
   static DEFINITION: NtElementDefinition = {
     classes: [],
     attributes: {},
-  }
+  };
 
   abstract get css(): CSSResult[] | CSSResult;
 
@@ -38,9 +34,7 @@ export abstract class NtSimpleElement<const IDs extends readonly string[]> exten
     super();
     const shadowRoot = this.createRenderRoot();
     this.$ = wrap<IDs>(html, shadowRoot as ShadowRoot);
-
   }
-
 
   override connectedCallback() {
     super.connectedCallback();

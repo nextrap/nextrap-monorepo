@@ -3,7 +3,7 @@ import {
   NtSimpleElement,
   property,
   unsafeCSS,
-} from '@nextrap/framework';
+} from '@nextrap/nt-framework';
 import style from './hamburger.scss?inline';
 
 const html = `

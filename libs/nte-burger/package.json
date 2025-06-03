@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "main": "./index.js",
   "dependencies": {
-    "@nextrap/framework": "^0.0.1"
+    "@nextrap/nt-framework": "^0.0.1"
   },
   "type": "module",
   "types": "./index.d.ts"

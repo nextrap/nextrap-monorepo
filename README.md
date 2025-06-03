@@ -8,6 +8,7 @@ Monorepo for Nextrap maintained with [Nx](https://nx.dev/).
 
 | Name                                                        | Contact                                      |
 | ----------------------------------------------------------- | -------------------------------------------- |
+| [`nt-framework`](./libs/nt-framework)                       | [@dermatthes](https://github.com/dermatthes) |
 | [`nxa-element-highlighter`](./libs/nxa-element-highlighter) | [@evolkmann](https://github.com/evolkmann)   |
 | [`ntl-infiniscroll`](libs/ntl-infiniscroll)                 | [@dermatthes](https://github.com/dermatthes) |
 | [`nxa-scroll-to-top`](./libs/nxa-scroll-to-top)             | [@dermatthes](https://github.com/dermatthes) |

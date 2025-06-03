@@ -1,4 +1,4 @@
-import { isBiggerThanBreakpoint } from '@nextrap/framework';
+import { isBiggerThanBreakpoint } from '@nextrap/nt-framework';
 import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import style from './ntl-2col.scss?inline';

@@ -1,17 +1,18 @@
-
+import {
+  CSSResult,
+  customElement,
+  html,
+  NtSimpleElement,
+  unsafeCSS,
+} from '@nextrap/nt-framework';
 import styleNavbar from './style-navbar.scss?inline';
-import {NtSimpleElement} from '@nextrap/framework';
-import {customElement, html, CSSResult, unsafeCSS} from '@nextrap/framework';
 
 const tpl = html`
-<div id="wrapper">
-  <div id="navbar">
-    
+  <div id="wrapper">
+    <div id="navbar"></div>
+    <div id="spacer"></div>
   </div>
-  <div id="spacer"></div>
-</div>
 `;
-
 
 @customElement('nt-element-navbar')
 class NtElementNavbar extends NtSimpleElement {
@@ -19,7 +20,7 @@ class NtElementNavbar extends NtSimpleElement {
     throw new Error('Method not implemented.');
   }
   override get css(): CSSResult | CSSResult[] {
-    return unsafeCSS(styleNavbar)
+    return unsafeCSS(styleNavbar);
   }
 
   constructor() {
@@ -39,4 +40,3 @@ class NtElementNavbar extends NtSimpleElement {
     ];
   }
 }
-

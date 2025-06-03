@@ -5,7 +5,7 @@ import {
   NtSimpleElement,
   property,
   unsafeCSS,
-} from '@nextrap/framework';
+} from '@nextrap/nt-framework';
 import style from './nav.scss?inline';
 
 // Minimal CSS for the nav element
