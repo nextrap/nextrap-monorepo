@@ -1,7 +1,7 @@
 {
-  "name": "nt-element-nav",
+  "name": "nte-nav",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/nt-element-nav/src",
+  "sourceRoot": "libs/nte-nav/src",
   "projectType": "library",
   "release": {
     "version": {

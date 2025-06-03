@@ -1,5 +1,5 @@
 {
-  "name": "@nextrap/element-nav",
+  "name": "@nextrap/nte-nav",
   "version": "0.0.2",
   "main": "./index.js",
   "dependencies": {
@@ -9,7 +9,7 @@
   },
   "type": "module",
   "exports": {
-    "./nav": "./src/lib/nt-element-nav.ts"
+    "./nav": "./src/lib/nte-nav.ts"
   },
   "types": "./index.d.ts"
 }

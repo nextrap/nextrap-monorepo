@@ -25,15 +25,15 @@ const html = `
 `;
 
 /**
- * <nt-nav>
+ * <nte-nav>
  *   <span slot="brand">Brand</span>
  *   <a slot="links" href="/">Home</a>
  *   ...
  *   [optionally:] <nte-burger slot="burger"></nte-burger>
- * </nt-nav>
+ * </nte-nav>
  */
-@customElement('nt-nav')
-export class NtElementNav extends NtSimpleElement<
+@customElement('nte-nav')
+export class NteNav extends NtSimpleElement<
   ['main', 'open-burger', 'close-burger', 'backdrop']
 > {
   static override DEFINITION: NtElementDefinition = {

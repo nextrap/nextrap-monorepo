@@ -1,10 +1,8 @@
 // All Row Styles go here
 
+@use '@nextrap/style-colors' as *;
 
-@use "@nextrap/style-colors" as *;
-
-
-nt-nav {
+nte-nav {
   --text-color: var(--text-color);
   --hover-color: var(--primary);
   --hover-text-color: var(--text-on-primary-color);
@@ -13,24 +11,20 @@ nt-nav {
   --submenu-text-color: var(--text-color);
   --justify-content: center;
 
-
   &.start {
     --justify-content: flex-start;
   }
-    &.end {
-        --justify-content: flex-end;
-    }
-    &.center {
-        --justify-content: center;
-    }
+  &.end {
+    --justify-content: flex-end;
+  }
+  &.center {
+    --justify-content: center;
+  }
   &.stretch {
     --justify-content: space-between;
   }
 
-
-  &[mode="row"] {
-
-
+  &[mode='row'] {
     ul {
       list-style: none;
       padding: 0;
@@ -50,7 +44,7 @@ nt-nav {
 
         > a {
           display: block;
-          padding: .65em 1.1em;
+          padding: 0.65em 1.1em;
           color: var(--text-color);
           text-decoration: none;
           transition: background var(--transition), color var(--transition);
@@ -105,10 +99,11 @@ nt-nav {
           position: absolute;
           top: 100%;
           left: 0;
-          margin-top: .3em;
+          margin-top: 0.3em;
           flex-direction: column;
           z-index: 3;
-          transition: opacity var(--transition), transform var(--transition), visibility var(--transition);
+          transition: opacity var(--transition), transform var(--transition),
+            visibility var(--transition);
           transform: translateY(-0.7em);
 
           &:hover,
