@@ -1,4 +1,4 @@
-import '@nextrap/element-burger';
+import '@nextrap/nte-burger';
 import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import style from './nte-dialog.scss?inline';
@@ -27,7 +27,7 @@ export class NteDialog extends LitElement {
         <div id="dialog-header">
           <slot name="title"></slot>
           <slot name="closeButton" @click="${this.close}">
-            <nt-burger open></nt-burger>
+            <nte-burger open></nte-burger>
           </slot>
         </div>
         <slot></slot>

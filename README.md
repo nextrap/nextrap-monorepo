@@ -4,15 +4,23 @@ Monorepo for Nextrap maintained with [Nx](https://nx.dev/).
 
 ## Packages
 
+All packages use a common naming convention:
+
+- `nt-*`: General purpose packages
+- `nte-*`: Web-Components/Elements (e.g. `nte-burger`)
+- `ntl-*`: Layout packages (e.g. `ntl-2col`)
+
 <!-- Please also maintain the CODEOWNERS file when adjusting the table below -->
 
-| Name                                                        | Contact                                      |
-| ----------------------------------------------------------- | -------------------------------------------- |
-| [`nxa-element-highlighter`](./libs/nxa-element-highlighter) | [@evolkmann](https://github.com/evolkmann)   |
-| [`nxa-infiniscroll`](./libs/nxa-infiniscroll)               | [@dermatthes](https://github.com/dermatthes) |
-| [`nxa-scroll-to-top`](./libs/nxa-scroll-to-top)             | [@dermatthes](https://github.com/dermatthes) |
-| [`nte-dialog`](./libs/nte-dialog)                           | [@evolkmann](https://github.com/evolkmann)   |
-| [`ntl-2col`](./libs/ntl-2col)                               | [@evolkmann](https://github.com/evolkmann)   |
+| Name                                                      | Contact                                      |
+| --------------------------------------------------------- | -------------------------------------------- |
+| [`nt-framework`](./libs/nt-framework)                     | [@dermatthes](https://github.com/dermatthes) |
+| [`nt-style-base`](./libs/nt-style-base)                   | [@dermatthes](https://github.com/dermatthes) |
+| [`nte-element-highlighter`](libs/nte-element-highlighter) | [@evolkmann](https://github.com/evolkmann)   |
+| [`nte-scroll-to-top`](libs/nte-scroll-to-top)             | [@dermatthes](https://github.com/dermatthes) |
+| [`nte-dialog`](./libs/nte-dialog)                         | [@evolkmann](https://github.com/evolkmann)   |
+| [`ntl-infiniscroll`](libs/ntl-infiniscroll)               | [@dermatthes](https://github.com/dermatthes) |
+| [`ntl-2col`](./libs/ntl-2col)                             | [@evolkmann](https://github.com/evolkmann)   |
 
 ## Working with the repository
 
@@ -24,7 +32,7 @@ Monorepo for Nextrap maintained with [Nx](https://nx.dev/).
 - `npx nx lint <package>`: Run linter for a package
 - `npx nx show project <package>`: Show all targets of a package
 
-Try out `npx nx dev nxa-element-highlighter` and make some changes [to the code](./libs/nxa-element-highlighter/src).
+Try out `npx nx dev ntl-2col` and make some changes [to the code](libs/nte-element-highlighter/src).
 
 ### Dependencies
 
@@ -39,7 +47,7 @@ Nx will handle the linking of these packages automatically during build, serve, 
 You can just import them directly like this:
 
 ```javascript
-import { MyComponent } from '@nextrap/my-library';
+import { NteSomeComponent } from '@nextrap/nte-some-component';
 ```
 
 This import is made possible by defining a path alias in the `tsconfig.base.json` file.
@@ -64,7 +72,7 @@ To see all targets/capabilities of a package, run
 1. Switch to a feature branch to benefit from CI checks and to avoid breaking the main branch.
 2. Use [Nx Generators](https://nx.dev/features/generate-code) to generate new libs or apps:
 
-   `nx g @nx/js:lib libs/nxa-element-highlighter --publishable --importPath @nextrap/element-highlighter --bundler vite --linter eslint --unitTestRunner vitest`
+   `nx g @nx/js:lib libs/nte-some-component --publishable --importPath @nextrap/nte-some-component --bundler vite --linter eslint --unitTestRunner vitest`
 
 3. Manually verify (and adjust if necessary) that the newly created `project.json`'s release settings are
    [like this](https://github.com/nextrap/nextrap-monorepo/blob/5ee04c3b75ac7bb069ba2ad9e4b6a9f2c2b0022a/libs/nxa-element-highlighter/project.json#L6-L13).

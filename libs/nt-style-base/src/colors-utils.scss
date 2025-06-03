@@ -1,0 +1,55 @@
+@use 'colors';
+
+// Create classes for bg colors and text colors
+@each $color,
+  $value
+    in (
+      primary: $primary,
+      accent: $accent,
+      success: $success,
+      info: $info,
+      warning: $warning,
+      danger: $danger,
+      light: $light,
+      dark: $dark,
+      white: $white,
+      black: $black
+    )
+{
+  .#{$color} {
+    --background-color: #{$value};
+    --text-color: var(--text-on-#{$color});
+  }
+  .bg-#{$color} {
+    background-color: var(--mt-#{$color});
+    --background-color: var(--mt-#{$color});
+    --text-color: var(--mt-text-on-#{$color});
+  }
+  .text-#{$color} {
+    --text-color: var(--mt-#{$color});
+    color: var(--mt-#{$color});
+  }
+  .border-#{$color} {
+    --border-color: var(--mt-#{$color});
+    border-color: var(--mt-#{$color});
+  }
+}
+
+// Create bg-* classes for soft colors
+@each $color,
+  $value
+    in (
+      soft-primary: $soft-primary,
+      soft-accent: $soft-accent,
+      soft-success: $soft-success,
+      soft-info: $soft-info,
+      soft-warning: $soft-warning,
+      soft-danger: $soft-danger,
+      soft-light: $soft-light,
+      soft-dark: $soft-dark
+    )
+{
+  .bg-#{$color} {
+    background-color: var(--mt-#{$color});
+  }
+}
