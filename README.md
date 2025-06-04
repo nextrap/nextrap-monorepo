@@ -10,17 +10,19 @@ All packages use a common naming convention:
 - `nte-*`: Web-Components/Elements (e.g. `nte-burger`)
 - `ntl-*`: Layout packages (e.g. `ntl-2col`)
 
+These packages are grouped into their respective directories ([`nextrap-base`](./nextrap-base), [`nextrap-elements`](./nextrap-elements), and [`nextrap-layout`](./nextrap-layout)).
+
 <!-- Please also maintain the CODEOWNERS file when adjusting the table below -->
 
-| Name                                                      | Contact                                      |
-| --------------------------------------------------------- | -------------------------------------------- |
-| [`nt-framework`](./libs/nt-framework)                     | [@dermatthes](https://github.com/dermatthes) |
-| [`nt-style-base`](./libs/nt-style-base)                   | [@dermatthes](https://github.com/dermatthes) |
-| [`nte-element-highlighter`](libs/nte-element-highlighter) | [@evolkmann](https://github.com/evolkmann)   |
-| [`nte-scroll-to-top`](libs/nte-scroll-to-top)             | [@dermatthes](https://github.com/dermatthes) |
-| [`nte-dialog`](./libs/nte-dialog)                         | [@evolkmann](https://github.com/evolkmann)   |
-| [`ntl-infiniscroll`](libs/ntl-infiniscroll)               | [@dermatthes](https://github.com/dermatthes) |
-| [`ntl-2col`](./libs/ntl-2col)                             | [@evolkmann](https://github.com/evolkmann)   |
+| Name                                                                  | Contact                                      |
+| --------------------------------------------------------------------- | -------------------------------------------- |
+| [`nt-framework`](nextrap-base/nt-framework)                           | [@dermatthes](https://github.com/dermatthes) |
+| [`nt-style-base`](nextrap-base/nt-style-base)                         | [@dermatthes](https://github.com/dermatthes) |
+| [`nte-element-highlighter`](nextrap-elements/nte-element-highlighter) | [@evolkmann](https://github.com/evolkmann)   |
+| [`nte-scroll-to-top`](nextrap-elements/nte-scroll-to-top)             | [@dermatthes](https://github.com/dermatthes) |
+| [`nte-dialog`](nextrap-elements/nte-dialog)                           | [@evolkmann](https://github.com/evolkmann)   |
+| [`ntl-infiniscroll`](nextrap-layout/ntl-infiniscroll)                 | [@dermatthes](https://github.com/dermatthes) |
+| [`ntl-2col`](nextrap-layout/ntl-2col)                                 | [@evolkmann](https://github.com/evolkmann)   |
 
 ## Working with the repository
 
@@ -32,7 +34,7 @@ All packages use a common naming convention:
 - `npx nx lint <package>`: Run linter for a package
 - `npx nx show project <package>`: Show all targets of a package
 
-Try out `npx nx dev ntl-2col` and make some changes [to the code](libs/nte-element-highlighter/src).
+Try out `npx nx dev ntl-2col` and make some changes [to the code](nextrap-elements/nte-element-highlighter/src).
 
 ### Dependencies
 
@@ -40,8 +42,8 @@ All external dependencies (from npm) only exist in one version and are defined i
 [`package.json`](./package.json) of the workspace. To add or update dependencies, use regular
 npm procedures, e.g. `npm install <package>` or updating the `package.json` file directly.
 
-Packages within the repo may be dependent on each other as well. For example, a web-app from the
-[`apps`](./apps) folder may depend on a library from the [`libs`](./libs) folder.
+Packages within the repo may be dependent on each other as well. For example, a web-component from the
+[`nextrap-elements`](./nextrap-elements) directory may depend on a library from the [`nextrap-base`](./nextrap-base) folder.
 
 Nx will handle the linking of these packages automatically during build, serve, etc.
 You can just import them directly like this:
@@ -72,7 +74,7 @@ To see all targets/capabilities of a package, run
 1. Switch to a feature branch to benefit from CI checks and to avoid breaking the main branch.
 2. Use [Nx Generators](https://nx.dev/features/generate-code) to generate new libs or apps:
 
-   `nx g @nx/js:lib libs/nte-some-component --publishable --importPath @nextrap/nte-some-component --bundler vite --linter eslint --unitTestRunner vitest`
+   `nx g @nx/js:lib nextrap-elements/nte-some-component --publishable --importPath @nextrap/nte-some-component --bundler vite --linter eslint --unitTestRunner vitest`
 
 3. Manually verify (and adjust if necessary) that the newly created `project.json`'s release settings are
    [like this](https://github.com/nextrap/nextrap-monorepo/blob/5ee04c3b75ac7bb069ba2ad9e4b6a9f2c2b0022a/libs/nxa-element-highlighter/project.json#L6-L13).

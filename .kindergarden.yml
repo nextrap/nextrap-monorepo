@@ -1,13 +1,16 @@
 version: 1.0
 
 environments:
-    coder:
-        files:
-            - name: "project files"
-              include:
+  coder:
+    files:
+      - name: 'project files'
+        include:
+          - './nextrap-base/*/*.(json|yml|ts|scss)'
+          - './nextrap-base/*/**.(js|html|css|ts|scss)'
+          - './nextrap-elements/*/*.(json|yml|ts|scss)'
+          - './nextrap-elements/*/**.(js|html|css|ts|scss)'
+          - './nextrap-layout/*/*.(json|yml|ts|scss)'
+          - './nextrap-layout/*/**.(js|html|css|ts|scss)'
 
-                  - "./libs/*/*.(json|yml|ts|scss)"
-                  - "./libs/*/**.(js|html|css|ts|scss)"
-
-              instructions: |
-                  These are all project files. You can edit them as you like.
+        instructions: |
+          These are all project files. You can edit them as you like.

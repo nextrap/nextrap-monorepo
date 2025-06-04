@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>nte-dialog</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="m-2">
+    <h1 class="text-slate-900 text-xl font-bold">nte-dialog</h1>
+
+    <button
+      class="border p-1"
+      onclick="document.getElementById('example-dialog').show()"
+    >
+      show
+    </button>
+    <button
+      class="border p-1"
+      onclick="document.getElementById('example-dialog').showModal()"
+    >
+      show modal
+    </button>
+    <button class="border p-1" id="user-dialog-btn">
+      show user edit dialog
+    </button>
+
+    <nte-dialog id="example-dialog">
+      <h3 slot="title">This is a dialog</h3>
+      <div>
+        <p>This content is in the default slot of the dialog</p>
+      </div>
+      <div slot="footer">
+        <button
+          class="font-semibold"
+          onclick="document.getElementById('example-dialog').close()"
+        >
+          Close Dialog
+        </button>
+      </div>
+    </nte-dialog>
+
+    <script src="src/index.ts" type="module"></script>
+
+    <script type="module">
+      import { UserEditDialog } from './src/examples/user-edit-dialog.ts';
+
+      const btn = document.getElementById('user-dialog-btn');
+      btn.addEventListener('click', async () => {
+        const res = await UserEditDialog.open({
+          data: {
+            user: 'enzo',
+          },
+        });
+
+        console.log(res);
+      });
+    </script>
+  </body>
+</html>

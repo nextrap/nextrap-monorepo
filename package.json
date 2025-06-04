@@ -47,8 +47,9 @@
   },
   "private": true,
   "workspaces": [
-    "apps/*",
-    "libs/*"
+    "nextrap-base/*",
+    "nextrap-elements/*",
+    "nextrap-layout/*"
   ],
   "nx": {
     "includedScripts": []
