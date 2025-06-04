@@ -69,6 +69,75 @@ To see all targets/capabilities of a package, run
 
 `npx nx show project <package>`.
 
+## Component Authoring
+
+### Framework / Toolkit
+
+We use [Lit](https://lit.dev/) as the framework for our web components. The following guidelines are based on using Lit.
+For anything not specified here (e.g. reactive properties), refer to the [Lit documentation](https://lit.dev/docs/).
+
+### Styling
+
+When developing web components, we differentiate _Light DOM_ (the host document) and _Shadow DOM_
+(the private document of the component).
+
+The _Light-DOM-styles_ (e.g. global CSS variables) are available inside the component's Shadow DOM. On the contrary,
+the _Shadow-DOM-styles_ are _not_ available in the host document and therefore private to the component.
+
+#### Code Structure
+
+To write private CSS for a component, create a `scss`-file and import it like so. The `?inline` is required
+to make this work. It has the same effect as using a [`css` tag](https://lit.dev/docs/components/styles/#add-styles)
+directly in your component file, but allows us to write styles in a separate file.
+
+```ts
+import { LitElement, unsafeCSS } from 'lit';
+import { customElement } from 'lit/decorators.js';
+import style from './nte-my-component.scss?inline';
+
+@customElement('nte-my-component')
+export class NteDialog extends LitElement {
+  static override styles = [unsafeCSS(style)];
+}
+```
+
+The styles in the component's static `styles` property will be the Shadow DOM styles of the component.
+
+In your component's `index.ts` (where you export the component), make sure to import the
+[@nextrap/style-base](./nextrap-base/nt-style-base) styles. These will be added to the component's Light DOM
+(see [@nextrap/nte-dialog](./nextrap-elements/nte-dialog/src/index.ts)).
+
+#### Host-Styles / CSS Variables
+
+The `:host` selector can be used as a "bridge" between the Light DOM and the Shadow DOM.
+We use it do define the component's public API in terms of CSS variables.
+This allows the host document (user of the component) to style the component without having to know about
+its internal structure. (see also: [Lit Docs](https://lit.dev/docs/components/styles/#customprops))
+
+```scss
+:host {
+  --nte-my-component-background-color: var(--nt-primary);
+  --nte-my-component-text-color: var(--nt-text-on-primary);
+}
+
+.some-internal-element {
+  background-color: var(--nte-my-component-background-color);
+  color: var(--nte-my-component-text-color);
+}
+```
+
+By default, we use existing CSS variables from the [@nextrap/style-base](./nextrap-base/nt-style-base) package
+(this is why we import them like described above). They act as a fallback if the user does not define their own variables.
+
+To overwrite the component's styles, the user can now simply define the CSS variables in their global stylesheet:
+
+```css
+:root {
+  --nte-my-component-background-color: red;
+  --nte-my-component-text-color: white;
+}
+```
+
 ## Creating new packages
 
 1. Switch to a feature branch to benefit from CI checks and to avoid breaking the main branch.
