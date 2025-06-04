@@ -1,0 +1,22 @@
+{
+  "name": "nt-framework",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "nextrap-base/nt-framework/src",
+  "projectType": "library",
+  "release": {
+    "version": {
+      "currentVersionResolver": "git-tag",
+      "fallbackCurrentVersionResolver": "disk",
+      "preserveLocalDependencyProtocols": false,
+      "manifestRootsToUpdate": ["dist/{projectRoot}"]
+    }
+  },
+  "tags": [],
+  "targets": {
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/{projectRoot}"
+      }
+    }
+  }
+}

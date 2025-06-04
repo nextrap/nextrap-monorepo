@@ -2,7 +2,7 @@
   "extends": "nx/presets/npm.json",
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "release": {
-    "projects": ["apps/*", "libs/*"],
+    "projects": ["nextrap-base/*", "nextrap-elements/*", "nextrap-layout/*"],
     "projectsRelationship": "independent",
     "changelog": {
       "projectChangelogs": true

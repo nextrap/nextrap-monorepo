@@ -2,10 +2,12 @@
 #
 # Syntax: https://docs.github.com/de/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners#example-of-a-codeowners-file
 
-libs/ntl-2col @evolkmann
-libs/nte-dialog @evolkmann
-libs/nte-element-highlighter @evolkmann
-libs/ntl-infiniscroll @dermatthes
-libs/nte-scroll-to-top @dermatthes
-libs/nt-framework @dermatthes
-libs/nt-style-base @dermatthes
+nextrap-base/nt-framework @dermatthes
+nextrap-base/nt-style-base @dermatthes
+
+nextrap-elements/nte-dialog @evolkmann
+nextrap-elements/nte-element-highlighter @evolkmann
+nextrap-elements/nte-scroll-to-top @dermatthes
+
+nextrap-layout/ntl-2col @evolkmann
+nextrap-layout/ntl-infiniscroll @dermatthes

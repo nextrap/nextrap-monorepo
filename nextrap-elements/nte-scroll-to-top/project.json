@@ -1,0 +1,21 @@
+{
+  "name": "nte-scroll-to-top",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "nextrap-elements/nte-scroll-to-top/src",
+  "projectType": "library",
+  "release": {
+    "version": {
+      "currentVersionResolver": "disk",
+      "preserveLocalDependencyProtocols": false,
+      "manifestRootsToUpdate": ["{projectRoot}"]
+    }
+  },
+  "tags": [],
+  "targets": {
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/{projectRoot}"
+      }
+    }
+  }
+}
