@@ -1,3 +1,4 @@
+import '@nextrap/nt-style-base';
 import '@nextrap/nte-burger';
 import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
