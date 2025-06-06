@@ -9,26 +9,19 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>nte-dialog</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      body {
+        margin: 1rem;
+      }
+    </style>
   </head>
-  <body class="m-2">
-    <h1 class="text-slate-900 text-xl font-bold">nte-dialog</h1>
+  <body>
+    <h1>nte-dialog</h1>
 
-    <button
-      class="border p-1"
-      onclick="document.getElementById('example-dialog').show()"
-    >
-      show
-    </button>
-    <button
-      class="border p-1"
-      onclick="document.getElementById('example-dialog').showModal()"
-    >
-      show modal
-    </button>
-    <button class="border p-1" id="user-dialog-btn">
-      show user edit dialog
-    </button>
+    <button id="show-dialog-btn">show</button>
+    <button id="show-modal-btn">show modal</button>
+    <button id="show-fullsize-btn">show fullsize</button>
+    <button id="user-dialog-btn">show user edit dialog</button>
 
     <nte-dialog id="example-dialog">
       <h3 slot="title">This is a dialog</h3>
@@ -36,10 +29,7 @@
         <p>This content is in the default slot of the dialog</p>
       </div>
       <div slot="footer">
-        <button
-          class="font-semibold"
-          onclick="document.getElementById('example-dialog').close()"
-        >
+        <button onclick="document.getElementById('example-dialog').close()">
           Close Dialog
         </button>
       </div>
@@ -50,8 +40,28 @@
     <script type="module">
       import { UserEditDialog } from './src/examples/user-edit-dialog.ts';
 
-      const btn = document.getElementById('user-dialog-btn');
-      btn.addEventListener('click', async () => {
+      const exampleDialog = document.getElementById('example-dialog');
+
+      const showDialogBtn = document.getElementById('show-dialog-btn');
+      showDialogBtn.addEventListener('click', () => {
+        exampleDialog.classList.remove('fullsize');
+        exampleDialog.show();
+      });
+
+      const showModalBtn = document.getElementById('show-modal-btn');
+      showModalBtn.addEventListener('click', () => {
+        exampleDialog.classList.remove('fullsize');
+        exampleDialog.showModal();
+      });
+
+      const showFullsizeBtn = document.getElementById('show-fullsize-btn');
+      showFullsizeBtn.addEventListener('click', () => {
+        exampleDialog.classList.add('fullsize');
+        exampleDialog.showModal();
+      });
+
+      const userDialogBtn = document.getElementById('user-dialog-btn');
+      userDialogBtn.addEventListener('click', async () => {
         const res = await UserEditDialog.open({
           data: {
             user: 'enzo',

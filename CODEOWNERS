@@ -4,6 +4,7 @@
 
 nextrap-base/nt-framework @dermatthes
 nextrap-base/nt-style-base @dermatthes
+nextrap-base/nt-style-reset @dermatthes
 
 nextrap-elements/nte-dialog @evolkmann
 nextrap-elements/nte-element-highlighter @evolkmann

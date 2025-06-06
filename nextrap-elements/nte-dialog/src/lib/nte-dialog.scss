@@ -1,4 +1,4 @@
-@use '../../../../node_modules/@nextrap/nt-style-base/src/reset';
+@use '@nextrap/nt-style-reset';
 
 :host {
   --min-width: 300px;
@@ -6,7 +6,7 @@
   --max-width: calc(100% - 2em - 6px);
   --max-height: calc(100% - 2em - 6px);
 
-  --padding: 1rem;
+  --padding: var(--nt-base-space, 1rem);
 
   --border: 1px solid var(--nt-primary);
 }

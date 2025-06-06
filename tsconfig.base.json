@@ -28,7 +28,8 @@
         "nextrap-elements/nte-scroll-to-top/src/index.ts"
       ],
       "@nextrap/nt-framework": ["nextrap-base/nt-framework/src/index.ts"],
-      "@nextrap/nt-style-base": ["nextrap-base/nt-style-base/src/index.ts"],
+      "@nextrap/nt-style-reset": ["nextrap-base/nt-style-reset/index.ts"],
+      "@nextrap/nt-style-base": ["nextrap-base/nt-style-base/index.ts"],
       "@nextrap/ntl-infiniscroll": [
         "nextrap-layout/ntl-infiniscroll/src/index.ts"
       ],

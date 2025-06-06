@@ -1,3 +1,2 @@
-import '@nextrap/nt-style-base';
-
 export * from './lib/nte-dialog';
+export * from './lib/nte-modal';
