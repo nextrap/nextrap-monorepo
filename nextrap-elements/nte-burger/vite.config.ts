@@ -4,15 +4,13 @@ import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
+import viteServerConfig from '../../utils/vite/config/vite-server-config';
+import viteTestConfig from '../../utils/vite/config/vite-test-config';
 
 export default defineConfig((command) => ({
-  server: {
-    port: 4000,
-    host: '0.0.0.0',
-    hmr: true,
-  },
+  ...viteServerConfig,
+  test: viteTestConfig('nextrap-elements/nte-burger'),
   publicDir: './public/www',
-
   root: __dirname,
   cacheDir: '../../node_modules/.vite/nextrap-elements/nte-burger',
   plugins: [
@@ -49,18 +47,6 @@ export default defineConfig((command) => ({
       // External packages that should not be bundled into your library.
       input: './public/main.ts',
       external: [],
-    },
-  },
-  test: {
-    passWithNoTests: true,
-    watch: false,
-    globals: true,
-    environment: 'node',
-    include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    reporters: ['default'],
-    coverage: {
-      reportsDirectory: '../../coverage/nextrap-elements/nte-burger',
-      provider: 'v8' as const,
     },
   },
 }));
