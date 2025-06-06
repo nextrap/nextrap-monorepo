@@ -4,13 +4,10 @@ import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
+import viteServerConfig from '../../utils/vite/config/vite-server-config';
 
 export default defineConfig(() => ({
-  server: {
-    port: 4000,
-    host: '0.0.0.0',
-    hmr: true,
-  },
+  ...viteServerConfig,
   root: __dirname,
   cacheDir: '../../node_modules/.vite/nextrap-elements/nte-element-highlighter',
   plugins: [
