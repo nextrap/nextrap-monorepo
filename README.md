@@ -207,14 +207,16 @@ You can also use the following syntax to define a public API in terms of CSS cla
 
 3. Manually verify (and adjust if necessary) that the newly created `project.json`'s release settings are
    [like this](https://github.com/nextrap/nextrap-monorepo/blob/5ee04c3b75ac7bb069ba2ad9e4b6a9f2c2b0022a/libs/nxa-element-highlighter/project.json#L6-L13).
-4. Import the `viteServerConfig` in `vite.config.ts`
+4. Import `viteServerConfig` and `viteTestConfig` in `vite.config.ts`
 
    ```ts
    import viteServerConfig from '../../utils/vite/config/vite-server-config';
+   import viteTestConfig from '../../utils/vite/config/vite-test-config';
 
    export default defineConfig(() => ({
      ...viteServerConfig,
-     // ...
+     test: viteTestConfig('nextrap-element/nte-some-component'),
+     // more config ...
    }));
    ```
 

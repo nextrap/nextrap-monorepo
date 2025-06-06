@@ -4,8 +4,10 @@ import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
+import viteTestConfig from '../../utils/vite/config/vite-test-config';
 
 export default defineConfig(() => ({
+  test: viteTestConfig('nextrap-base/nt-framework'),
   root: __dirname,
   cacheDir: '../../node_modules/.vite/nextrap-base/nt-framework',
   plugins: [
@@ -41,18 +43,6 @@ export default defineConfig(() => ({
     rollupOptions: {
       // External packages that should not be bundled into your library.
       external: [],
-    },
-  },
-  test: {
-    watch: false,
-    passWithNoTests: true,
-    globals: true,
-    environment: 'node',
-    include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    reporters: ['default'],
-    coverage: {
-      reportsDirectory: '../../coverage/nextrap-base/nt-framework',
-      provider: 'v8' as const,
     },
   },
 }));
