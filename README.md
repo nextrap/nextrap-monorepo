@@ -17,8 +17,8 @@ These packages are grouped into their respective directories ([`nextrap-base`](.
 | Name                                                                  | Contact                                      |
 | --------------------------------------------------------------------- | -------------------------------------------- |
 | [`nt-framework`](nextrap-base/nt-framework)                           | [@dermatthes](https://github.com/dermatthes) |
-| [`nt-style-base`](nextrap-base/nt-style-base)                         | [@dermatthes](https://github.com/dermatthes) |
-| [`nt-style-reset`](nextrap-base/nt-style-reset)                       | [@dermatthes](https://github.com/dermatthes) |
+| [`style-base`](nextrap-base/style-base)                               | [@dermatthes](https://github.com/dermatthes) |
+| [`style-reset`](nextrap-base/style-reset)                             | [@dermatthes](https://github.com/dermatthes) |
 | [`nte-element-highlighter`](nextrap-elements/nte-element-highlighter) | [@evolkmann](https://github.com/evolkmann)   |
 | [`nte-scroll-to-top`](nextrap-elements/nte-scroll-to-top)             | [@dermatthes](https://github.com/dermatthes) |
 | [`nte-dialog`](nextrap-elements/nte-dialog)                           | [@evolkmann](https://github.com/evolkmann)   |
@@ -113,11 +113,11 @@ export class NteDialog extends LitElement {
 }
 ```
 
-Inside your component's scss file, you can `@use '@nextrap/nt-style-reset';` to apply a consistent
+Inside your component's scss file, you can `@use '@nextrap/style-reset';` to apply a consistent
 baseline for your styling:
 
 ```scss
-@use '@nextrap/nt-style-reset';
+@use '@nextrap/style-reset';
 
 :host {
   --spacing: var(--nt-base-gap, 4px);
@@ -129,7 +129,7 @@ baseline for your styling:
 ```
 
 In your component's class file (where you define the component), make sure to also import the
-[@nextrap/style-base](./nextrap-base/nt-style-base) styles. These will be added to the component's Light DOM
+[@nextrap/style-base](nextrap-base/style-base) styles. These will be added to the component's Light DOM
 and provide default variables for theming etc.
 (see [@nextrap/nte-dialog](./nextrap-elements/nte-dialog/src/lib/nte-dialog.ts))
 
@@ -164,7 +164,7 @@ its internal structure. (see also: [Lit Docs](https://lit.dev/docs/components/st
 }
 ```
 
-By default, we use existing CSS variables from the [@nextrap/style-base](./nextrap-base/nt-style-base) package
+By default, we use existing CSS variables from the [@nextrap/style-base](nextrap-base/style-base) package
 (this is why we import them like described above). They act as a fallback if the user does not define their own variables.
 
 To overwrite the component's styles, the user can now simply define the CSS variables in their global stylesheet:

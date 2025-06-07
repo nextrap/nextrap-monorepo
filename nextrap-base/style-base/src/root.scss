@@ -1,0 +1,103 @@
+@use './../variables' as *;
+
+@function luminance($color) {
+  $r: red($color) / 255;
+  $g: green($color) / 255;
+  $b: blue($color) / 255;
+
+  $r: if($r < 0.03928, $r / 12.92, pow(($r + 0.055) / 1.055, 2.4));
+  $g: if($g < 0.03928, $g / 12.92, pow(($g + 0.055) / 1.055, 2.4));
+  $b: if($b < 0.03928, $b / 12.92, pow(($b + 0.055) / 1.055, 2.4));
+
+  @return 0.2126 * $r + 0.7152 * $g + 0.0722 * $b;
+}
+
+@function contrast($color1, $color2) {
+  $l1: luminance($color1) + 0.05;
+  $l2: luminance($color2) + 0.05;
+  @return if($l1 > $l2, $l1 / $l2, $l2 / $l1);
+}
+
+$text: $black !default;
+$text-on-primary: $white !default;
+// Calculate if contrast is needed
+$text-on-primary: if(contrast($primary, $text) > 4.5, $text, $white) !default;
+$text-on-secondary: if(
+  contrast($secondary, $text) > 4.5,
+  $text,
+  $white
+) !default;
+
+$text-on-accent: if(contrast($accent, $text) > 4.5, $text, $white) !default;
+$text-on-success: if(contrast($success, $text) > 4.5, $text, $white) !default;
+$text-on-info: if(contrast($info, $text) > 4.5, $text, $white) !default;
+$text-on-warning: if(contrast($warning, $text) > 4.5, $text, $white) !default;
+$text-on-danger: if(contrast($danger, $text) > 4.5, $text, $white) !default;
+$text-on-light: if(contrast($light, $text) > 4.5, $text, $black) !default;
+$text-on-dark: if(contrast($dark, $text) > 4.5, $text, $white) !default;
+$text-on-white: if(contrast($white, $text) > 4.5, $text, $black) !default;
+$text-on-black: if(contrast($black, $text) > 4.5, $text, $white) !default;
+$background: $white !default;
+
+// Register the css variables
+
+:root {
+  --nt-primary: #{$primary};
+  --nt-secondary: #{$secondary};
+  --nt-accent: #{$accent};
+  --nt-success: #{$success};
+  --nt-info: #{$info};
+  --nt-warning: #{$warning};
+  --nt-danger: #{$danger};
+  --nt-light: #{$light};
+  --nt-dark: #{$dark};
+  --nt-white: #{$white};
+  --nt-black: #{$black};
+
+  --nt-primary-rgb: #{red($primary)}, #{green($primary)}, #{blue($primary)};
+  --nt-secondary-rgb:
+    #{red($secondary)}, #{green($secondary)}, #{blue($secondary)};
+  --nt-accent-rgb: #{red($accent)}, #{green($accent)}, #{blue($accent)};
+  --nt-success-rgb: #{red($success)}, #{green($success)}, #{blue($success)};
+  --nt-info-rgb: #{red($info)}, #{green($info)}, #{blue($info)};
+  --nt-warning-rgb: #{red($warning)}, #{green($warning)}, #{blue($warning)};
+  --nt-danger-rgb: #{red($danger)}, #{green($danger)}, #{blue($danger)};
+  --nt-light-rgb: #{red($light)}, #{green($light)}, #{blue($light)};
+  --nt-dark-rgb: #{red($dark)}, #{green($dark)}, #{blue($dark)};
+  --nt-white-rgb: #{red($white)}, #{green($white)}, #{blue($white)};
+  --nt-black-rgb: #{red($black)}, #{green($black)}, #{blue($black)};
+
+  // Soft colors
+  --nt-soft-primary: #{$soft-primary};
+  --nt-soft-accent: #{$soft-accent};
+  --nt-soft-success: #{$soft-success};
+  --nt-soft-info: #{$soft-info};
+  --nt-soft-warning: #{$soft-warning};
+  --nt-soft-danger: #{$soft-danger};
+  --nt-soft-light: #{$soft-light};
+  --nt-soft-dark: #{$soft-dark};
+
+  // Text colors
+  --nt-text: #{$text};
+  --nt-text-rgb: #{red($text)}, #{green($text)}, #{blue($text)};
+
+  --nt-text-on-primary: #{$text-on-primary};
+  --nt-text-on-accent: #{$text-on-accent};
+  --nt-text-on-success: #{$text-on-success};
+  --nt-text-on-info: #{$text-on-info};
+  --nt-text-on-warning: #{$text-on-warning};
+  --nt-text-on-danger: #{$text-on-danger};
+  --nt-text-on-light: #{$text-on-light};
+  --nt-text-on-dark: #{$text-on-dark};
+  --nt-text-on-white: #{$text-on-white};
+  --nt-text-on-black: #{$text-on-black};
+  --nt-background: #{$background};
+
+  --nt-link: #{$link-color};
+  --nt-link-on-dark: #{$link-on-dark};
+  --nt-text-decoration-link: #{$text-decoration_link};
+
+  --nt-font-family-base: #{$font-family-base};
+  --nt-font-family-header: #{$font-family-header};
+  --nt-header: #{header};
+}

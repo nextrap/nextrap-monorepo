@@ -1,8 +1,9 @@
 {
-  "name": "@nextrap/nt-style-reset",
+  "name": "@nextrap/style-button",
   "version": "0.0.1",
   "main": "./index.js",
   "dependencies": {},
+  "devDependencies": {},
   "type": "module",
-  "types": "./src/index.d.ts"
+  "types": "./index.d.ts"
 }

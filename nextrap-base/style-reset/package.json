@@ -1,8 +1,8 @@
 {
-  "name": "@nextrap/nt-style-base",
+  "name": "@nextrap/style-reset",
   "version": "0.0.1",
   "main": "./index.js",
   "dependencies": {},
   "type": "module",
-  "types": "./index.d.ts"
+  "types": "./src/index.d.ts"
 }

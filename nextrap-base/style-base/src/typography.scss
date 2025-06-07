@@ -1,0 +1,17 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--nt-font-family-header);
+  font-size: var(--nt-font-size-header);
+}
+
+html,
+body {
+  font-family: var(--nt-font-family-base);
+  font-size: var(--nt-font-size-base);
+  line-height: var(--nt-line-height-base);
+  color: var(--nt-text);
+}

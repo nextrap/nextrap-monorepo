@@ -1,14 +1,13 @@
 {
-  "name": "nt-style-reset",
+  "name": "style-button",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "nextrap-base/nt-style-reset/src",
+  "sourceRoot": "nextrap-base/style-button/src",
   "projectType": "library",
   "release": {
     "version": {
+      "manifestRootsToUpdate": ["dist/{projectRoot}"],
       "currentVersionResolver": "git-tag",
-      "fallbackCurrentVersionResolver": "disk",
-      "preserveLocalDependencyProtocols": false,
-      "manifestRootsToUpdate": ["dist/{projectRoot}"]
+      "fallbackCurrentVersionResolver": "disk"
     }
   },
   "tags": [],

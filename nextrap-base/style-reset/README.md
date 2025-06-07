@@ -1,4 +1,4 @@
-# @nextrap/nt-style-reset
+# @nextrap/style-reset
 
 A simple stylesheet that resets the styles of all elements to a consistent baseline.
 

@@ -1,0 +1,32 @@
+@use './btn' as *;
+
+.btn-group {
+  --border-radius: var(--nt-border-radius, 0.25rem);
+
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0;
+
+  .btn {
+    flex: 1 1 auto;
+    // Allow buttons to grow and shrink, but not exceed their content sizem
+    margin: 0; // Reset margin to avoid spacing issues
+    min-width: 100px; // Ensure buttons have a minimum width
+    border-radius: 0;
+  }
+
+  // Remove left border from all but the last button
+  .btn:not(:last-child) {
+    border-right: 0; // Remove right border from all but the last button
+  }
+
+  .btn:first-child {
+    border-radius: var(--nt-border-radius, 0.25rem) 0 0
+      var(--nt-border-radius, 0.25rem); // Round left corners
+  }
+
+  .btn:last-child {
+    border-radius: 0 var(--nt-border-radius, 0.25rem)
+      var(--nt-border-radius, 0.25rem) 0; // Round right corners
+  }
+}

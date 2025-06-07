@@ -1,7 +1,7 @@
 {
-  "name": "nt-style-base",
+  "name": "style-reset",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "nextrap-base/nt-style-base/src",
+  "sourceRoot": "nextrap-base/style-reset/src",
   "projectType": "library",
   "release": {
     "version": {

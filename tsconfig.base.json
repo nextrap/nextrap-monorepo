@@ -18,22 +18,23 @@
       "@nextrap/element-navbar": [
         "nextrap-elements/nxa-element-navbar/src/index.ts"
       ],
+      "@nextrap/nt-framework": ["nextrap-base/nt-framework/src/index.ts"],
+      "@nextrap/style-base": ["nextrap-base/style-base/index.ts"],
+      "@nextrap/style-reset": ["nextrap-base/style-reset/index.ts"],
       "@nextrap/nte-burger": ["nextrap-elements/nte-burger/src/index.ts"],
+      "@nextrap/nte-dialog": ["nextrap-elements/nte-dialog/src/index.ts"],
       "@nextrap/nte-element-highlighter": [
         "nextrap-elements/nte-element-highlighter/src/index.ts"
       ],
       "@nextrap/nte-nav": ["nextrap-elements/nte-nav/src/index.ts"],
-      "@nextrap/nte-dialog": ["nextrap-elements/nte-dialog/src/index.ts"],
       "@nextrap/nte-scroll-to-top": [
         "nextrap-elements/nte-scroll-to-top/src/index.ts"
       ],
-      "@nextrap/nt-framework": ["nextrap-base/nt-framework/src/index.ts"],
-      "@nextrap/nt-style-reset": ["nextrap-base/nt-style-reset/index.ts"],
-      "@nextrap/nt-style-base": ["nextrap-base/nt-style-base/index.ts"],
+      "@nextrap/ntl-2col": ["nextrap-layout/ntl-2col/src/index.ts"],
       "@nextrap/ntl-infiniscroll": [
         "nextrap-layout/ntl-infiniscroll/src/index.ts"
       ],
-      "@nextrap/ntl-2col": ["nextrap-layout/ntl-2col/src/index.ts"]
+      "@nextrap/style-button": ["nextrap-base/style-button/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
