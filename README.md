@@ -19,11 +19,14 @@ These packages are grouped into their respective directories ([`nextrap-base`](.
 | [`nt-framework`](nextrap-base/nt-framework)                           | [@dermatthes](https://github.com/dermatthes) |
 | [`style-base`](nextrap-base/style-base)                               | [@dermatthes](https://github.com/dermatthes) |
 | [`style-reset`](nextrap-base/style-reset)                             | [@dermatthes](https://github.com/dermatthes) |
+| [`style-button`](nextrap-base/style-button)                           | [@dermatthes](https://github.com/dermatthes) |
 | [`nte-element-highlighter`](nextrap-elements/nte-element-highlighter) | [@evolkmann](https://github.com/evolkmann)   |
 | [`nte-scroll-to-top`](nextrap-elements/nte-scroll-to-top)             | [@dermatthes](https://github.com/dermatthes) |
 | [`nte-dialog`](nextrap-elements/nte-dialog)                           | [@evolkmann](https://github.com/evolkmann)   |
 | [`ntl-infiniscroll`](nextrap-layout/ntl-infiniscroll)                 | [@dermatthes](https://github.com/dermatthes) |
 | [`ntl-2col`](nextrap-layout/ntl-2col)                                 | [@evolkmann](https://github.com/evolkmann)   |
+
+_) Do not include any style-_ packages (except 'style-reset') in the Shadow DOM of components!
 
 ## Working with the repository
 
@@ -36,6 +39,9 @@ These packages are grouped into their respective directories ([`nextrap-base`](.
 - `npx nx show project <package>`: Show all targets of a package
 
 Try out `npx nx dev ntl-2col` and make some changes [to the code](nextrap-elements/nte-element-highlighter/src).
+
+**Note**: When renaming packages or moving them to a different directory, make sure to update all import paths
+and run `npm update` on the monorepos root to update the package links.
 
 ### Dependencies
 
