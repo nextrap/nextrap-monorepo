@@ -22,11 +22,7 @@ $text: $black !default;
 $text-on-primary: $white !default;
 // Calculate if contrast is needed
 $text-on-primary: if(contrast($primary, $text) > 4.5, $text, $white) !default;
-$text-on-secondary: if(
-  contrast($secondary, $text) > 4.5,
-  $text,
-  $white
-) !default;
+$text-on-secondary: if(contrast($secondary, $text) > 4.5, $text, $white) !default;
 
 $text-on-accent: if(contrast($accent, $text) > 4.5, $text, $white) !default;
 $text-on-success: if(contrast($success, $text) > 4.5, $text, $white) !default;
@@ -55,8 +51,7 @@ $background: $white !default;
   --nt-black: #{$black};
 
   --nt-primary-rgb: #{red($primary)}, #{green($primary)}, #{blue($primary)};
-  --nt-secondary-rgb:
-    #{red($secondary)}, #{green($secondary)}, #{blue($secondary)};
+  --nt-secondary-rgb: #{red($secondary)}, #{green($secondary)}, #{blue($secondary)};
   --nt-accent-rgb: #{red($accent)}, #{green($accent)}, #{blue($accent)};
   --nt-success-rgb: #{red($success)}, #{green($success)}, #{blue($success)};
   --nt-info-rgb: #{red($info)}, #{green($info)}, #{blue($info)};
@@ -99,5 +94,9 @@ $background: $white !default;
 
   --nt-font-family-base: #{$font-family-base};
   --nt-font-family-header: #{$font-family-header};
+  --nt-font-size-base: #{$font-size-base};
+  --nt-font-size-header: #{$font-size-header};
+  --nt-font-size-multiplier: #{$font-size_multiplier};
+  --nt-font-size-multiplier-header: #{$font-size_multiplier_header};
   --nt-header: #{header};
 }

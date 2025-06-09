@@ -1,17 +1,7 @@
 @use '@nextrap/style-base' as *;
 
 // make Array of all BS colors
-$colors: (
-  'primary',
-  'accent',
-  'secondary',
-  'success',
-  'danger',
-  'warning',
-  'info',
-  'light',
-  'dark'
-);
+$colors: ('primary', 'accent', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark');
 
 .btn {
   // Configuration variables
@@ -52,7 +42,7 @@ $colors: (
   &.disabled,
   &[disabled] {
     background-color: rgba(var(--btn-bg-rgb), 0.5);
-    color: var(--btn-txt-rgb);
+    color: rgba(var(--btn-txt-rgb), 0.9);
     cursor: not-allowed;
     pointer-events: none;
   }
