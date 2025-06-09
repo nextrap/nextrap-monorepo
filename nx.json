@@ -1,36 +1,36 @@
 {
-  "extends": "nx/presets/npm.json",
-  "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "release": {
-    "projects": ["nextrap-base/*", "nextrap-elements/*", "nextrap-layout/*"],
-    "projectsRelationship": "independent",
-    "changelog": {
-      "projectChangelogs": true
+    "extends": "nx/presets/npm.json",
+    "$schema": "./node_modules/nx/schemas/nx-schema.json",
+    "release": {
+        "projects": ["nextrap-base/*", "nextrap-elements/*", "nextrap-layout/*"],
+        "projectsRelationship": "independent",
+        "changelog": {
+            "projectChangelogs": true
+        },
+        "version": {
+            "preVersionCommand": "npx nx run-many -t build"
+        }
     },
-    "version": {
-      "preVersionCommand": "npx nx run-many -t build"
-    }
-  },
-  "plugins": [
-    {
-      "plugin": "@nx/vite/plugin",
-      "options": {
-        "buildTargetName": "build",
-        "testTargetName": "test",
-        "serveTargetName": "serve",
-        "devTargetName": "dev",
-        "previewTargetName": "preview",
-        "serveStaticTargetName": "serve-static",
-        "typecheckTargetName": "typecheck",
-        "buildDepsTargetName": "build-deps",
-        "watchDepsTargetName": "watch-deps"
-      }
-    },
-    {
-      "plugin": "@nx/eslint/plugin",
-      "options": {
-        "targetName": "lint"
-      }
-    }
-  ]
+    "plugins": [
+        {
+            "plugin": "@nx/vite/plugin",
+            "options": {
+                "buildTargetName": "build",
+                "testTargetName": "test",
+                "serveTargetName": "serve",
+                "devTargetName": "dev",
+                "previewTargetName": "preview",
+                "serveStaticTargetName": "serve-static",
+                "typecheckTargetName": "typecheck",
+                "buildDepsTargetName": "build-deps",
+                "watchDepsTargetName": "watch-deps"
+            }
+        },
+        {
+            "plugin": "@nx/eslint/plugin",
+            "options": {
+                "targetName": "lint"
+            }
+        }
+    ]
 }
