@@ -1,6 +1,6 @@
 import { LitElement, unsafeCSS } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import style from './element-scrollspy.scss?inline';
+import style from './scrollspy-shadow.scss?inline';
 
 export type NavigationItem = {
   id: string; // The ID of the element to scroll to

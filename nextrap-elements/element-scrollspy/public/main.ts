@@ -1,1 +1,2 @@
-import '../navbar-global.scss';
+import '@nextrap/style-base';
+import '../src/index';

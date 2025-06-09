@@ -4,9 +4,10 @@ import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
+import viteServerConfig from '../../utils/vite/config/vite-server-config';
 
 export default defineConfig(() => ({
-  root: __dirname,
+  ...viteServerConfig,
   cacheDir: '../../node_modules/.vite/nextrap-elements/element-scrollspy',
   plugins: [
     nxViteTsPaths(),
