@@ -1,13 +1,15 @@
 @use './../variables' as *;
+@use 'sass:math';
+@use 'sass:color';
 
 @function luminance($color) {
-  $r: red($color) / 255;
-  $g: green($color) / 255;
-  $b: blue($color) / 255;
+  $g: color.channel($color, 'green', $space: rgb);
+  $r: color.channel($color, 'red', $space: rgb);
+  $b: color.channel($color, 'blue', $space: rgb);
 
-  $r: if($r < 0.03928, $r / 12.92, pow(($r + 0.055) / 1.055, 2.4));
-  $g: if($g < 0.03928, $g / 12.92, pow(($g + 0.055) / 1.055, 2.4));
-  $b: if($b < 0.03928, $b / 12.92, pow(($b + 0.055) / 1.055, 2.4));
+  $r: if($r < 0.03928, math.div($r, 12.92), pow(math.div($r + 0.055, 1.055), 2.4));
+  $g: if($g < 0.03928, math.div($g, 12.92), pow(math.div($g + 0.055, 1.055), 2.4));
+  $b: if($b < 0.03928, math.div($b, 12.92), pow(math.div($b + 0.055, 1.055), 2.4));
 
   @return 0.2126 * $r + 0.7152 * $g + 0.0722 * $b;
 }
@@ -15,7 +17,14 @@
 @function contrast($color1, $color2) {
   $l1: luminance($color1) + 0.05;
   $l2: luminance($color2) + 0.05;
-  @return if($l1 > $l2, $l1 / $l2, $l2 / $l1);
+  @return if($l1 > $l2, math.div($l1, $l2), math.div($l2, $l1));
+}
+
+@function hex2rgb($color) {
+  $g: color.channel($color, 'green', $space: rgb);
+  $r: color.channel($color, 'red', $space: rgb);
+  $b: color.channel($color, 'blue', $space: rgb);
+  @return '#{$r}, #{$g}, #{$b}';
 }
 
 $text: $black !default;
@@ -50,17 +59,17 @@ $background: $white !default;
   --nt-white: #{$white};
   --nt-black: #{$black};
 
-  --nt-primary-rgb: #{red($primary)}, #{green($primary)}, #{blue($primary)};
-  --nt-secondary-rgb: #{red($secondary)}, #{green($secondary)}, #{blue($secondary)};
-  --nt-accent-rgb: #{red($accent)}, #{green($accent)}, #{blue($accent)};
-  --nt-success-rgb: #{red($success)}, #{green($success)}, #{blue($success)};
-  --nt-info-rgb: #{red($info)}, #{green($info)}, #{blue($info)};
-  --nt-warning-rgb: #{red($warning)}, #{green($warning)}, #{blue($warning)};
-  --nt-danger-rgb: #{red($danger)}, #{green($danger)}, #{blue($danger)};
-  --nt-light-rgb: #{red($light)}, #{green($light)}, #{blue($light)};
-  --nt-dark-rgb: #{red($dark)}, #{green($dark)}, #{blue($dark)};
-  --nt-white-rgb: #{red($white)}, #{green($white)}, #{blue($white)};
-  --nt-black-rgb: #{red($black)}, #{green($black)}, #{blue($black)};
+  --nt-primary-rgb: hex2rgb($primary);
+  --nt-secondary-rgb: hex2rgb($secondary);
+  --nt-accent-rgb: hex2rgb($accent);
+  --nt-success-rgb: hex2rgb($success);
+  --nt-info-rgb: hex2rgb($info);
+  --nt-warning-rgb: hex2rgb($warning);
+  --nt-danger-rgb: hex2rgb($danger);
+  --nt-light-rgb: hex2rgb($light);
+  --nt-dark-rgb: hex2rgb($dark);
+  --nt-white-rgb: hex2rgb($white);
+  --nt-black-rgb: hex2rgb($black);
 
   // Soft colors
   --nt-soft-primary: #{$soft-primary};
@@ -74,7 +83,7 @@ $background: $white !default;
 
   // Text colors
   --nt-text: #{$text};
-  --nt-text-rgb: #{red($text)}, #{green($text)}, #{blue($text)};
+  --nt-text-rgb: hex2rgb($text);
 
   --nt-text-on-primary: #{$text-on-primary};
   --nt-text-on-accent: #{$text-on-accent};

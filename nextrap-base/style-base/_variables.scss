@@ -13,15 +13,17 @@ $black: #000 !default;
 $lighten-factor: 40% !default;
 
 // By default calculate light colors
-$soft-primary: lighten($primary, $lighten-factor) !default;
-$soft-secondary: lighten($secondary, $lighten-factor) !default;
-$soft-accent: lighten($accent, $lighten-factor) !default;
-$soft-success: lighten($success, $lighten-factor) !default;
-$soft-info: lighten($info, $lighten-factor) !default;
-$soft-warning: lighten($warning, $lighten-factor) !default;
-$soft-danger: lighten($danger, $lighten-factor) !default;
-$soft-light: lighten($light, $lighten-factor) !default;
-$soft-dark: lighten($dark, $lighten-factor) !default;
+@use 'sass:color';
+
+$soft-primary: color.adjust($primary, $lightness: $lighten-factor) !default;
+$soft-secondary: color.adjust($secondary, $lightness: $lighten-factor) !default;
+$soft-accent: color.adjust($accent, $lightness: $lighten-factor) !default;
+$soft-success: color.adjust($success, $lightness: $lighten-factor) !default;
+$soft-info: color.adjust($info, $lightness: $lighten-factor) !default;
+$soft-warning: color.adjust($warning, $lightness: $lighten-factor) !default;
+$soft-danger: color.adjust($danger, $lightness: $lighten-factor) !default;
+$soft-light: color.adjust($light, $lightness: $lighten-factor) !default;
+$soft-dark: color.adjust($dark, $lightness: $lighten-factor) !default;
 
 // ======== FONTS ======== //
 
