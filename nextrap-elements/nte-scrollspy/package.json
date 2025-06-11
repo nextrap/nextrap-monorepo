@@ -1,5 +1,5 @@
 {
-    "name": "@nextrap/element-scrollspy",
+    "name": "@nextrap/nte-scrollspy",
     "version": "0.0.1",
     "main": "./index.js",
     "dependencies": {},

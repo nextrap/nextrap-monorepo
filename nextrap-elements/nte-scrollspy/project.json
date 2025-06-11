@@ -1,7 +1,7 @@
 {
-    "name": "element-scrollspy",
+    "name": "nte-scrollspy",
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
-    "sourceRoot": "nextrap-elements/element-scrollspy/src",
+    "sourceRoot": "nextrap-elements/nte-scrollspy/src",
     "projectType": "library",
     "release": {
         "version": {
