@@ -1,0 +1,82 @@
+// These styles are injected to the light DOM
+
+nte-scrollspy {
+  // Light DOM base styles
+  display: block;
+
+  // Customization variables (to be overridden by consumers)
+  --scrollspy-background: transparent;
+  --scrollspy-item-padding: 0.75rem 1rem;
+  --scrollspy-item-margin: 0;
+  --scrollspy-item-background: transparent;
+  --scrollspy-item-background-hover: var(--nt-primary, #007bff);
+  --scrollspy-item-color: inherit;
+  --scrollspy-item-color-hover: white;
+  --scrollspy-item-color-active: var(--nt-primary, #007bff);
+
+  /* Decorator variables */
+  --scrollspy-decorator-size: 24px;
+  --scrollspy-decorator-font-size: 0.9rem;
+  --scrollspy-decorator-border: 1px solid var(--nt-border-color, #ccc);
+  --scrollspy-decorator-bg: var(--nt-background-color, #fff);
+  --scrollspy-decorator-bg-active: var(--nt-primary, #4a90e2);
+  --scrollspy-decorator-color: var(--nt-text, #333);
+  --scrollspy-decorator-color-active: var(--nt-text-on-primary, #fff);
+
+  --scrollspy-transition: all 0.2s ease;
+
+  // Direct styling of shadow parts for external customization
+  &::part(scrollspy) {
+    background-color: var(--scrollspy-background);
+  }
+
+  &::part(scrollspy-item) {
+    padding: var(--scrollspy-item-padding);
+    margin: var(--scrollspy-item-margin);
+    background-color: var(--scrollspy-item-background);
+    color: var(--scrollspy-item-color);
+    transition: var(--scrollspy-transition);
+
+    &:hover {
+      background-color: var(--scrollspy-item-background-hover);
+      color: var(--scrollspy-item-color-hover);
+    }
+
+    &.scrollspy__item--active {
+      font-weight: bold;
+      color: var(--scrollspy-item-color-active);
+    }
+  }
+
+  &::part(scrollspy-decorator) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--scrollspy-decorator-size);
+    height: var(--scrollspy-decorator-size);
+    border-radius: 50%; /* Fully rounded */
+    border: var(--scrollspy-decorator-border);
+    background-color: var(--scrollspy-decorator-bg);
+    color: var(--scrollspy-decorator-color);
+    font-size: var(--scrollspy-decorator-font-size);
+    margin-right: 0.75rem;
+    transition: var(--scrollspy-transition);
+    line-height: 1;
+  }
+
+  // Orientation-specific styles from external
+  &.scrollspy--horizontal {
+    &::part(scrollspy-list) {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  }
+
+  &.scrollspy--vertical {
+    &::part(scrollspy-list) {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
