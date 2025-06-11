@@ -1,0 +1,124 @@
+// This is styling for the scrollspy shadow dom
+@use '@nextrap/style-reset';
+
+:host {
+  --min-width: 200px;
+  --min-height: 300px;
+  --max-width: calc(100% - var(--nt-base-space) * 2);
+  --max-height: calc(100% - var(--nt-base-space) * 2);
+  --padding: var(--nt-base-space);
+
+  --border: 1px solid var(--nt-primary);
+
+  --scrollspy-item-text-color: var(--nt-text);
+  --scrollspy-item-text-color-hover: var(--nt-text-on-primary);
+  --scrollspy-item-text-color-active: var(--nt-text-on-primary);
+
+  /* Decorator styling variables */
+  --scrollspy-decorator-size: 24px;
+  --scrollspy-decorator-font-size: 0.9rem;
+  --scrollspy-decorator-border: 1px solid var(--nt-border-color, #ccc);
+  --scrollspy-decorator-bg: var(--nt-background-color, #fff);
+  --scrollspy-decorator-bg-active: var(--nt-primary, #4a90e2);
+  --scrollspy-decorator-color: var(--nt-text, #333);
+  --scrollspy-decorator-color-active: var(--nt-text-on-primary, #fff);
+  --scrollspy-decorator-bg-viewed: var(--nt-background-color-viewed, #ddd);
+  --scrollspy-decorator-color-viewed: var(--nt-text-viewed, #666);
+
+  display: block;
+}
+
+.scrollspy {
+  &--vertical {
+    .scrollspy__list {
+      flex-direction: column;
+    }
+  }
+
+  &--horizontal {
+    .scrollspy__list {
+      flex-direction: row;
+    }
+  }
+}
+
+.scrollspy__list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.scrollspy__item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  color: var(--scrollspy-item-text-color);
+
+  &:hover {
+    background-color: var(--nt-primary);
+    color: var(--scrollspy-item-text-color-hover);
+  }
+
+  &--active {
+    opacity: 1;
+    font-weight: bold;
+    color: var(--scrollspy-item-text-color-active);
+  }
+
+  &--viewed {
+    opacity: 0.5;
+    .scrollspy__item-decorator {
+      background-color: var(--scrollspy-decorator-bg-viewed);
+      color: var(--scrollspy-decorator-color-viewed);
+    }
+  }
+}
+
+.scrollspy__item-decorator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 0.75rem;
+  width: var(--scrollspy-decorator-size);
+  height: var(--scrollspy-decorator-size);
+  font-size: var(--scrollspy-decorator-font-size);
+  border: var(--scrollspy-decorator-border);
+  border-radius: 50%; /* Fully rounded */
+  background-color: var(--scrollspy-decorator-bg);
+  color: var(--scrollspy-decorator-color);
+  transition: all 0.3s ease;
+
+  /* Ensure proper centering of content */
+  line-height: 1;
+  text-align: center;
+  position: relative;
+
+  /* Show number by default using the data-index attribute */
+  &::before {
+    content: attr(data-index);
+  }
+
+  .scrollspy__item--active & {
+    background-color: var(--scrollspy-decorator-bg-active);
+    color: var(--scrollspy-decorator-color-active);
+    border-color: var(--scrollspy-decorator-bg-active);
+
+    /* Show bullet instead of number for active items */
+    &::before {
+      content: '\2022'; /* Unicode bullet */
+    }
+  }
+
+  .scrollspy__item--viewed & {
+    background-color: var(--scrollspy-decorator-bg-viewed);
+    color: var(--scrollspy-decorator-color-viewed);
+    border-color: var(--scrollspy-decorator-bg-viewed);
+
+    /* Show checkmark instead of number for viewed items */
+    &::before {
+      content: '\2714'; /* Unicode checkmark */
+      opacity: 0.8; /* Slightly dimmed */
+    }
+  }
+}
