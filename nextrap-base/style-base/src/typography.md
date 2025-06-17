@@ -4,6 +4,8 @@
 
 The typography system implements a fluid, responsive type scale using modern CSS features. It's designed to maintain proper proportions and readability across all screen sizes while providing a consistent visual hierarchy.
 
+The system is based on [this approach](https://typescale.net/responsive-typography.html) and uses a naming scheme similar to [Bootstrap classes](https://bootstrap-cheatsheet.themeselection.com/). 
+
 ## Technical Implementation
 
 ### Fluid Typography Calculation
