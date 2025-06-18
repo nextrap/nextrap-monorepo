@@ -10,10 +10,10 @@
 
 // Calculate fluid typography values
 @function fluid-type($min-size, $max-size, $min-width: 320px, $max-width: 1200px) {
-  $slope: calc(($max-size - $min-size) / ($max-width - $min-width));
-  $slope-vw: calc($slope * 100);
-  $intercept-rem: calc($min-size - $slope * $min-width);
-  @return clamp($min-size, $intercept-rem + $slope-vw, $max-size);
+  $slope: ($max-size - $min-size) / ($max-width - $min-width);
+  $slope-vw: $slope * 100;
+  $intercept: $min-size - $slope * $min-width;
+  @return unquote("clamp(#{$min-size}, #{$intercept}rem + #{$slope-vw}vw, #{$max-size})");
 }
 
 // Generate CSS custom properties for the type scale
