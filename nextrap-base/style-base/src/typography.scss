@@ -8,14 +8,6 @@
   @return calc($base-size * pow($ratio, $level));
 }
 
-// Calculate fluid typography values
-@function fluid-type($min-size, $max-size, $min-width: 320px, $max-width: 1200px) {
-  $slope: ($max-size - $min-size) / ($max-width - $min-width);
-  $slope-vw: $slope * 100;
-  $intercept: $min-size - $slope * $min-width;
-  @return unquote("clamp(#{$min-size}, #{$intercept}rem + #{$slope-vw}vw, #{$max-size})");
-}
-
 // Generate CSS custom properties for the type scale
 :root {
   // Base size
@@ -27,16 +19,16 @@
   --type-scale-ratio-desktop: #{$type-scale-ratio-desktop};
   
   // Fluid type scale
-  --fs-6: #{fluid-type(0.75rem, 0.875rem)};    // Extra small
-  --fs-5: #{fluid-type(0.875rem, 1rem)};       // Small
-  --fs-4: #{fluid-type(1rem, 1.125rem)};       // Base
-  --fs-3: #{fluid-type(1.125rem, 1.25rem)};    // Large
-  --fs-2: #{fluid-type(1.25rem, 1.5rem)};      // Extra large
-  --fs-1: #{fluid-type(1.5rem, 1.875rem)};     // 2x large
-  --display-4: #{fluid-type(1.875rem, 2.25rem)}; // Display 4
-  --display-3: #{fluid-type(2.25rem, 3rem)};     // Display 3
-  --display-2: #{fluid-type(3rem, 3.75rem)};     // Display 2
-  --display-1: #{fluid-type(3.75rem, 4.5rem)};   // Display 1
+  --fs-6: #{$fs-6};    // Extra small
+  --fs-5: #{$fs-5};       // Small
+  --fs-4: #{$fs-4};       // Base
+  --fs-3: #{$fs-3};    // Large
+  --fs-2: #{$fs-2};      // Extra large
+  --fs-1: #{$fs-1};     // 2x large
+  --display-4: #{$display-4}; // Display 4
+  --display-3: #{$display-3};     // Display 3
+  --display-2: #{$display-2};     // Display 2
+  --display-1: #{$display-1};   // Display 1
   
   // Line heights
   --lh-base: #{$line-height-base};

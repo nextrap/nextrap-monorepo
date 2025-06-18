@@ -2,26 +2,11 @@
 
 ## Core Concepts
 
-The typography system implements a fluid, responsive type scale using modern CSS features. It's designed to maintain proper proportions and readability across all screen sizes while providing a consistent visual hierarchy.
+The typography system implements a responsive type scale using modern CSS features. It's designed to maintain proper proportions and readability across all screen sizes while providing a consistent visual hierarchy.
 
 The system is based on [this approach](https://typescale.net/responsive-typography.html) and uses a naming scheme similar to [Bootstrap classes](https://bootstrap-cheatsheet.themeselection.com/). 
 
 ## Technical Implementation
-
-### Fluid Typography Calculation
-
-The system uses a combination of `clamp()` and viewport units to create fluid typography. The calculation is based on a linear interpolation between minimum and maximum sizes:
-
-```scss
-@function fluid-type($min-size, $max-size, $min-width: 320px, $max-width: 1200px) {
-  $slope: calc(($max-size - $min-size) / ($max-width - $min-width));
-  $slope-vw: calc($slope * 100);
-  $intercept-rem: calc($min-size - $slope * $min-width);
-  @return clamp($min-size, $intercept-rem + $slope-vw, $max-size);
-}
-```
-
-This creates a smooth transition between sizes while maintaining minimum and maximum bounds for readability.
 
 ### Type Scale
 
@@ -40,20 +25,20 @@ The scale uses different ratios for different viewport sizes:
 
 ### CSS Custom Properties
 
-The system uses CSS custom properties to make the type scale dynamic and responsive:
+The system uses CSS custom properties to make the type scale dynamic and responsive. For now, fixed rem values are used for the type scale, and fluid scaling is not active:
 
 ```scss
 :root {
-  --fs-6: #{fluid-type(0.75rem, 0.875rem)};    // Extra small
-  --fs-5: #{fluid-type(0.875rem, 1rem)};       // Small
-  --fs-4: #{fluid-type(1rem, 1.125rem)};       // Base
-  --fs-3: #{fluid-type(1.125rem, 1.25rem)};    // Large
-  --fs-2: #{fluid-type(1.25rem, 1.5rem)};      // Extra large
-  --fs-1: #{fluid-type(1.5rem, 1.875rem)};     // 2x large
-  --display-4: #{fluid-type(1.875rem, 2.25rem)}; // Display 4
-  --display-3: #{fluid-type(2.25rem, 3rem)};     // Display 3
-  --display-2: #{fluid-type(3rem, 3.75rem)};     // Display 2
-  --display-1: #{fluid-type(3.75rem, 4.5rem)};   // Display 1
+  --fs-6: 0.75rem;    // Extra small
+  --fs-5: 0.875rem;   // Small
+  --fs-4: 1rem;       // Base
+  --fs-3: 1.125rem;   // Large
+  --fs-2: 1.25rem;    // Extra large
+  --fs-1: 1.5rem;     // 2x large
+  --display-4: 1.875rem; // Display 4
+  --display-3: 2.25rem;  // Display 3
+  --display-2: 3rem;     // Display 2
+  --display-1: 3.75rem;  // Display 1
 }
 ```
 
@@ -99,7 +84,5 @@ The system adjusts the type scale ratio based on viewport size:
 
 The system uses modern CSS features that are supported in all modern browsers:
 - CSS Custom Properties (variables)
-- `clamp()` function
-- `calc()` function
 
 For older browsers, consider providing fallback values or using a polyfill.
