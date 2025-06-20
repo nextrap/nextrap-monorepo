@@ -4,6 +4,7 @@ environments:
   coder:
     files:
       - name: 'project files'
+        enabled: false
         include:
           - './nextrap-base/*/*.(json|yml|ts|scss)'
           - './nextrap-base/*/**.(js|html|css|ts|scss)'
