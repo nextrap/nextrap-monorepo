@@ -2,17 +2,17 @@
 
 ## The Split-Problem
 
-When dealing with web-components you will often find yourself in doing something like this:
+When working with web components you will often end up splitting your code into _markup_ and _logic_ like so:
 
 ```html
-<!-- inside the dom Tree -->
+<!-- In the DOM tree -->
 <my-component id="my-component"></my-component>
 
-<!-- somewhere else in the document - or - worse inside transpiled js-code: -->
+<!-- Somewhere else in the document – or even worse – inside transpiled JS: -->
 <script>
-    window.addEventListener('domready', () => {
+    window.addEventListener('DOMContentLoaded', () => {
         const myComponent = document.getElementById('my-component');
-        myComponeent.setData({
+        myComponent.setData({
             title: 'Hello World',
             description: 'This is a description',
         });
@@ -20,18 +20,16 @@ When dealing with web-components you will often find yourself in doing something
 </script>
 ```
 
-So the component is responsible for rendering the data, but the data is set from outside of the component.
+In this scenario the component is responsible for rendering the data, while the data itself is fed from the outside.  
+This pattern is common when the component renders its content inside a _shadow DOM_, but it comes with a few drawbacks:
 
-This happens, when the component handles rendering of the data inside the shadow DOM. This is a common pattern,
-but it has some drawbacks. Especially when you want to be a bit more flexible with your components and maybe
-allow html in the title or description.
+- The `title` and `description` are defined far away from where they are rendered, making the code harder to reason about.
+- Allowing rich HTML (e.g. `<em>` or `<strong>`) inside `title` or `description` is cumbersome.
+- You end up writing boiler-plate glue code that clutters your application.
 
-And it adds a lot of boilerplate code to your application, where it is not really clear, where the data
-displayed as title or description is coming from.
+### A Half-Baked Solution: All HTML
 
-### A half-baked solution: All HTML
-
-Most frameworks therefore let the rendering of all data be done inside the template.
+Many frameworks therefore push all rendering into the template:
 
 ```html
 <my-component id="my-component">
@@ -40,14 +38,42 @@ Most frameworks therefore let the rendering of all data be done inside the templ
 </my-component>
 ```
 
-This is a bit better when it comes to flexibility. But it is a massive overhead, when you just want to display
-some data from within your application. You have to transform your data into html and then render it inside the
-component.
+While this gives you more flexibility (everything is plain HTML), it is still heavy-handed when all you want is to display some data.  
+You now have to turn your data into HTML _before_ passing it to the component.
 
-## Nextraps Mixed Approach
+## Nextrap’s Mixed Approach
 
-Nextrap Components are designed to work in both worlds. They can be used as normal web-components inside
-a rendered template:
+Nextrap Components are designed to embrace **both** worlds.
+
+1. Use them declaratively inside a template:
+
+    ```html
+    <my-component id="my-component">
+        <h1 slot="title">Hello World</h1>
+        <p slot="description">This is a description</p>
+    </my-component>
+    ```
+
+2. Or create them programmatically:
+
+    ```javascript
+    const component = new MyComponent({
+        data: {
+            title: 'Hello World',
+            description: 'This is a description',
+        },
+    });
+    document.body.appendChild(component);
+    ```
+
+### How It Works
+
+Like in normale web compnents, the component makes use of `slots` to render its content. This way you can
+always add custom HTML to the component, even when using it declaratively.
+
+If the `data` key is present in the first argument of the constructor, the component injects that data as **slotted elements** in the _light DOM_ instead of rendering it in the shadow DOM.
+
+Both usage patterns therefore generate identical light-DOM markup:
 
 ```html
 <my-component id="my-component">
@@ -56,47 +82,24 @@ a rendered template:
 </my-component>
 ```
 
-But they can also be used programmatically from within your application:
+From a developer’s perspective you can start simple (declarative) and later switch to a programmatic approach without touching your CSS or HTML.
 
-```javascript
-const component = new MyComponent({
-    data: {
-        title: 'Hello World',
-        description: 'This is a description',
-    },
-});
-document.body.appendChild(component);
-```
-
-### How it's done
-
-If the data key of the paraemter 1 of the constructor is set, the component will append the data not to
-the shadow DOM but to the main document.
-
-So both approaches generate the same html in light-dom:
-
-The data is inserted into the component as **slots**.
-
-```html
-<my-component id="my-component">
-    <h1 slot="title">Hello World</h1>
-    <p slot="description">This is a description</p>
-</my-component>
-```
+> **Note for developers:** Design your components in a way that the _markup_ usage is tested first. You can add
+> programmatic usage tests later, but they should not be the primary focus.
 
 ## Styling of Components
 
 ### Shadow DOM vs. Light DOM
 
-Each element can have both, styles in shadow DOM and light DOM. although it is not recommended to prefer shadow DOM styles,
-to provide encapsulated styles for the component, which are not affected by the main document styles.
+Each Nextrap element can expose styles in both the shadow DOM **and** the light DOM.  
+In practice you will usually prefer shadow-DOM styles because they are encapsulated and cannot be accidentally overridden by the page.
 
-#### Limitations of Shadow DOM Styling
+#### Limitations of Shadow-DOM Styling
 
-When it comes to styling slotted content, the shadow DOM styles can only be applied to the very first element
-inside the slot. This means that you cannot style nested elements inside the slot from within the shadow DOM.
+When styling _slotted_ content the shadow DOM has one big limitation:  
+You can only target the **first element** inside the slot. Nested selectors will not work.
 
-**This is possible: (Styling Top-Level Elements)**
+**Possible (styling top-level elements)**
 
 ```scss
 ::slotted(ul) {
@@ -104,7 +107,7 @@ inside the slot. This means that you cannot style nested elements inside the slo
 }
 ```
 
-**NOT POSSIBLE: (Styling Nested Elements)**
+**Not possible (styling nested elements)**
 
 ```scss
 ::slotted(ul > li) {
@@ -112,9 +115,9 @@ inside the slot. This means that you cannot style nested elements inside the slo
 }
 ```
 
-#### Solution: Light DOM Styles
+#### Solution: Light-DOM Styles
 
-To style slotted content, you can use light DOM styles.
+For complex selectors you can fall back to light-DOM styles:
 
 ```scss
 my-component,
@@ -127,7 +130,23 @@ my-component,
 
 ### CSS Variables
 
-All styling-relevant properties of the components are defined as CSS variables. All CSS Variables for a component
-should be defined in the :host selector of the component's shadow DOM. This allows to override the styles,
-when the component is used in the main document and makes it easier to for the developer to see which styles
-are available for the component.
+All styling-relevant properties of a component should be exposed as **CSS variables**.  
+Define them in the `:host` selector inside the shadow DOM:
+
+```scss
+:host {
+    --my-component-primary-color: hotpink;
+}
+```
+
+This makes the available styling hooks explicit to developers and allows easy overrides from the main document:
+
+```scss
+my-component {
+    --my-component-primary-color: rebeccapurple;
+}
+```
+
+---
+
+Happy hacking!

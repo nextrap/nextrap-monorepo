@@ -34,9 +34,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
+            "license": ["MIT"],
             "authors": [
                 {
                     "name": "Matthias Leuffen",
@@ -57,12 +55,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/lack-project/lack-kindergarden.git",
-                "reference": "371be0ff9caf56db55936c5bedc93e171b6a5d89"
+                "reference": "5513ad3765d891c3cada426eaea47e4a81d801f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lack-project/lack-kindergarden/zipball/371be0ff9caf56db55936c5bedc93e171b6a5d89",
-                "reference": "371be0ff9caf56db55936c5bedc93e171b6a5d89",
+                "url": "https://api.github.com/repos/lack-project/lack-kindergarden/zipball/5513ad3765d891c3cada426eaea47e4a81d801f2",
+                "reference": "5513ad3765d891c3cada426eaea47e4a81d801f2",
                 "shasum": ""
             },
             "require": {
@@ -79,22 +77,16 @@
                 "lack/keystore": "For key-value storage"
             },
             "default-branch": true,
-            "bin": [
-                "bin/kg"
-            ],
+            "bin": ["bin/kg"],
             "type": "project",
             "autoload": {
-                "files": [
-                    "src/bootstrap.php"
-                ],
+                "files": ["src/bootstrap.php"],
                 "psr-4": {
                     "Lack\\Kindergarden\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
+            "license": ["MIT"],
             "authors": [
                 {
                     "name": "Matthias Leuffen",
@@ -105,9 +97,9 @@
             "homepage": "https://infracamp.org",
             "support": {
                 "issues": "https://github.com/lack-project/lack-kindergarden/issues",
-                "source": "https://github.com/lack-project/lack-kindergarden/tree/1.0.15"
+                "source": "https://github.com/lack-project/lack-kindergarden/tree/main"
             },
-            "time": "2025-05-19T13:08:38+00:00"
+            "time": "2025-06-05T12:47:03+00:00"
         },
         {
             "name": "phore/core",
@@ -139,17 +131,13 @@
             },
             "type": "library",
             "autoload": {
-                "files": [
-                    "src/functions.inc.php"
-                ],
+                "files": ["src/functions.inc.php"],
                 "psr-4": {
                     "Phore\\Core\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
+            "license": ["MIT"],
             "authors": [
                 {
                     "name": "Matthias Leuffen",
@@ -188,17 +176,13 @@
             "default-branch": true,
             "type": "library",
             "autoload": {
-                "files": [
-                    "src/functions.php"
-                ],
+                "files": ["src/functions.php"],
                 "psr-4": {
                     "Phore\\Hydrator\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
+            "license": ["MIT"],
             "authors": [
                 {
                     "name": "Matthias Leuffen",
