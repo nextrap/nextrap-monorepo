@@ -1,0 +1,124 @@
+// Styling for the progress bar component
+@use '@nextrap/style-reset';
+
+:host {
+  display: block;
+  width: 100%;
+
+  /* Colors */
+  --nte-progress-bg-color: var(--nt-light);
+  --nte-progress-bar-color: var(--nt-primary);
+  --nte-progress-text-color: var(--nt-white);
+  --nte-progress-stripe-color: rgba(255, 255, 255, 0.15);
+
+  /* Step-specific colors */
+  --nte-progress-step-bg: var(--nt-light);
+  --nte-progress-step-border-color: var(--nt-gray);
+  --nte-progress-step-completed-bg: var(--nt-primary);
+  --nte-progress-step-completed-border-color: var(--nt-primary);
+
+  /* Sizes, Spacing */
+  --nte-progress-height: 0.75rem;
+  --nte-progress-border-radius: 0.25rem;
+  --nte-progress-step-size: 0.75rem;
+  --nte-progress-stripe-size: 1rem;
+}
+
+.nte-progress {
+  display: flex;
+  height: var(--nte-progress-height);
+  overflow: hidden;
+  background-color: var(--nte-progress-bg-color);
+  border-radius: var(--nte-progress-border-radius);
+  position: relative;
+}
+
+.nte-progress-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  color: var(--nte-progress-text-color);
+  text-align: center;
+  white-space: nowrap;
+  background-color: var(--nte-progress-bar-color);
+  transition: width 0.6s ease;
+
+  &--striped {
+    background-image: linear-gradient(
+      45deg,
+      var(--nte-progress-stripe-color) 25%,
+      transparent 25%,
+      transparent 50%,
+      var(--nte-progress-stripe-color) 50%,
+      var(--nte-progress-stripe-color) 75%,
+      transparent 75%,
+      transparent
+    );
+    background-size: var(--nte-progress-stripe-size) var(--nte-progress-stripe-size);
+  }
+
+  &--animated {
+    animation: nte-progress-bar-stripes 1s linear infinite;
+  }
+}
+
+/* Progress step indicators */
+.nte-progress-steps {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Allow clicking through to the progress bar */
+}
+
+.nte-progress-step {
+  position: absolute;
+  width: var(--nte-progress-step-size);
+  height: var(--nte-progress-step-size);
+  background-color: var(--nte-progress-step-bg);
+  border: 2px solid var(--nte-progress-step-border-color);
+  border-radius: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+
+  /* Completed step styling */
+  &--completed {
+    background-color: var(--nte-progress-step-completed-bg);
+    border-color: var(--nte-progress-step-completed-border-color);
+  }
+}
+
+/* Animation for striped progress bar */
+@keyframes nte-progress-bar-stripes {
+  0% {
+    background-position-x: var(--nte-progress-stripe-size);
+  }
+  100% {
+    background-position-x: 0;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  :host {
+    --nte-progress-height: 0.5rem;
+    --nte-progress-step-size: 0.6rem;
+  }
+}
+
+/* High contrast mode support for accessibility */
+@media (forced-colors: active) {
+  .nte-progress-bar {
+    border: 1px solid CanvasText;
+  }
+
+  .nte-progress-step {
+    outline: 1px solid CanvasText;
+  }
+}
