@@ -1,0 +1,21 @@
+{
+    "name": "nte-stepper",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "nextrap-elements/nte-stepper/src",
+    "projectType": "library",
+    "release": {
+        "version": {
+            "currentVersionResolver": "disk",
+            "preserveLocalDependencyProtocols": false,
+            "manifestRootsToUpdate": ["{projectRoot}"]
+        }
+    },
+    "tags": [],
+    "targets": {
+        "nx-release-publish": {
+            "options": {
+                "packageRoot": "dist/{projectRoot}"
+            }
+        }
+    }
+}

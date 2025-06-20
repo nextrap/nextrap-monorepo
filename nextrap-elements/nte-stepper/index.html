@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>NTE Stepper Examples</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      .panel {
+        background-color: #fefefe;
+        padding: 1rem;
+        margin: 2rem;
+        width: auto;
+        display: inline-block;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        border-radius: 0.5rem;
+        box-shadow:
+          0 1px 4px rgba(0, 0, 0, 0.07),
+          0px 8px 32px rgba(0, 0, 0, 0.07);
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/icons-react/dist/index.umd.min.js"></script>
+    <script>
+      const stepperData = [
+        {
+          id: 'step-1',
+          label: 'Step 1',
+          icon: 'ti ti-user',
+        },
+        {
+          id: 'step-2',
+          label: 'Step 2',
+          icon: 'ti ti-home',
+        },
+        {
+          id: 'step-3',
+          label: 'Step 3',
+          icon: 'ti ti-credit-card',
+        },
+        {
+          id: 'step-4',
+          label: 'Step 4',
+          icon: 'ti ti-credit-card',
+        },
+        {
+          id: 'step-4',
+          label: 'Step 4',
+          icon: 'ti ti-credit-card',
+        },
+      ];
+
+      // Set data to the component after it's defined
+      window.addEventListener('DOMContentLoaded', () => {
+        const stepper = document.querySelector('nte-stepper');
+        if (stepper) {
+          stepper.data = stepperData;
+          stepper.mode = 'horizontal';
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <main class="main-wrapper">
+      <div class="panel">
+        <nte-stepper></nte-stepper>
+      </div>
+    </main>
+    <script src="src/index.ts" type="module"></script>
+  </body>
+</html>

@@ -32,6 +32,9 @@ These packages are grouped into their respective directories ([`nextrap-base`](.
 | [`nte-dialog`](nextrap-elements/nte-dialog)                           | [@evolkmann](https://github.com/evolkmann)   |
 | [`ntl-infiniscroll`](nextrap-layout/ntl-infiniscroll)                 | [@dermatthes](https://github.com/dermatthes) |
 | [`ntl-2col`](nextrap-layout/ntl-2col)                                 | [@evolkmann](https://github.com/evolkmann)   |
+| [`nte-stepper`](nextrap-elements/nte-stepper)                         | [@marliedev](https://github.com/marliedev)   |
+| [`ntl-scrollspy`](nextrap-elements/ntl-scrollspy)                     | [@marliedev](https://github.com/marliedev)   |
+| [`nte-progress`](nextrap-elements/nte-progress)                       | [@marliedev](https://github.com/marliedev)   |
 
 _) Do not include any style-_ packages (except 'style-reset') in the Shadow DOM of components!
 
