@@ -1,42 +1,108 @@
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--nt-font-family-header);
-  font-size: var(--nt-font-size-header);
+@import '../_variables';
+
+// Typography System
+// Implements a fluid, responsive typography system using CSS custom properties and clamp()
+
+// Calculate type scale values
+@function type-scale($level, $base-size: $font-size-base, $ratio: $type-scale-ratio) {
+  @return calc($base-size * pow($ratio, $level));
 }
 
-html,
+// Generate CSS custom properties for the type scale
+:root {
+  // Base size
+  --font-size-base: #{$font-size-base};
+  
+  // Type scale ratios
+  --type-scale-ratio: #{$type-scale-ratio};
+  --type-scale-ratio-mobile: #{$type-scale-ratio-mobile};
+  --type-scale-ratio-desktop: #{$type-scale-ratio-desktop};
+  
+  // Fluid type scale
+  --fs-6: #{$fs-6};    // Extra small
+  --fs-5: #{$fs-5};       // Small
+  --fs-4: #{$fs-4};       // Base
+  --fs-3: #{$fs-3};    // Large
+  --fs-2: #{$fs-2};      // Extra large
+  --fs-1: #{$fs-1};     // 2x large
+  --display-4: #{$display-4}; // Display 4
+  --display-3: #{$display-3};     // Display 3
+  --display-2: #{$display-2};     // Display 2
+  --display-1: #{$display-1};   // Display 1
+  
+  // Line heights
+  --lh-base: #{$line-height-base};
+  --lh-heading: #{$line-height-heading};
+  --lh-sm: 1.25;
+  --lh-lg: 1.75;
+}
+
+// Base typography styles
 body {
-  font-family: var(--nt-font-family-base);
-  font-size: var(--nt-font-size-base);
-  line-height: var(--nt-line-height-base);
-  color: var(--nt-text);
+  font-family: $font-family-base;
+  font-size: var(--fs-4);
+  line-height: var(--lh-base);
+  color: $text;
 }
 
-h1 {
-  font-size: calc(var(--nt-font-size-header) * calc(6 * var(--nt-font-size-multiplier-header)));
-  line-height: var(--nt-line-height-header);
+// Heading styles
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-family-heading;
+  line-height: var(--lh-heading);
+  color: $header;
+  margin-bottom: 1rem;
 }
-h2 {
-  font-size: calc(var(--nt-font-size-header) * calc(5 * var(--nt-font-size-multiplier-header)));
-  line-height: var(--nt-line-height-header);
+
+h1 { font-size: var(--display-1); }
+h2 { font-size: var(--display-2); }
+h3 { font-size: var(--display-3); }
+h4 { font-size: var(--display-4); }
+h5 { font-size: var(--fs-1); }
+h6 { font-size: var(--fs-2); }
+
+// Text utility classes
+.fs-6 { font-size: var(--fs-6); }
+.fs-5 { font-size: var(--fs-5); }
+.fs-4 { font-size: var(--fs-4); }
+.fs-3 { font-size: var(--fs-3); }
+.fs-2 { font-size: var(--fs-2); }
+.fs-1 { font-size: var(--fs-1); }
+.display-4 { font-size: var(--display-4); }
+.display-3 { font-size: var(--display-3); }
+.display-2 { font-size: var(--display-2); }
+.display-1 { font-size: var(--display-1); }
+
+// Line height utilities
+.lh-sm { line-height: var(--lh-sm); }
+.lh-base { line-height: var(--lh-base); }
+.lh-lg { line-height: var(--lh-lg); }
+.lh-heading { line-height: var(--lh-heading); }
+
+// Link styles
+a {
+  color: $link-color;
+  text-decoration: $text-decoration-link;
+  
+  &:hover {
+    text-decoration: none;
+  }
 }
-h3 {
-  font-size: calc(var(--nt-font-size-header) * calc(4 * var(--nt-font-size-multiplier-header)));
-  line-height: var(--nt-line-height-header);
+
+// Dark mode link color
+.bg-dark a,
+.text-dark a {
+  color: $link-on-dark;
 }
-h4 {
-  font-size: calc(var(--nt-font-size-header) * calc(3 * var(--nt-font-size-multiplier-header)));
-  line-height: var(--nt-line-height-header);
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  :root {
+    --type-scale-ratio: var(--type-scale-ratio-mobile);
+  }
 }
-h5 {
-  font-size: calc(var(--nt-font-size-header) * calc(2 * var(--nt-font-size-multiplier-header)));
-  line-height: var(--nt-line-height-header);
-}
-h6 {
-  font-size: calc(var(--nt-font-size-header) * var(--nt-font-size-multiplier-header));
-  line-height: var(--nt-line-height-header);
+
+@media (min-width: 1200px) {
+  :root {
+    --type-scale-ratio: var(--type-scale-ratio-desktop);
+  }
 }

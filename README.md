@@ -32,6 +32,10 @@ These packages are grouped into their respective directories ([`nextrap-base`](.
 
 _) Do not include any style-_ packages (except 'style-reset') in the Shadow DOM of components!
 
+## How to use
+
+If you want to know how to utilize/consume the nextrap monorepo, go [here](/docs/how-to-use.md).
+
 ## Working with the repository
 
 ### Common Commands
