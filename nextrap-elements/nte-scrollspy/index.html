@@ -3,125 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <title>NtE Scrollspy Examples</title>
-
     <style>
-      :root {
-        --primary-color: #4a90e2;
-      }
-
       body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        line-height: 1.6;
+        font-family: sans-serif;
       }
-      section {
-        display: flex;
-        flex-direction: row;
-        width: 100%;
-        gap: 1rem;
-        &.flex-col {
-          flex-direction: column;
-        }
-      }
-      .container {
-        display: flex;
-      }
-
-      .scrolling-content {
-        flex: 1;
-        max-height: 1000px;
-        width: 100%;
-        max-width: 500px;
-        overflow-y: auto;
-        padding: 1rem 1rem 8rem 1rem;
-        div {
-          padding-bottom: 2rem;
-        }
-      }
-
-      /* Light DOM styling example */
-      #light-dom-spy::part(scrollspy-list) {
-        list-style-type: none;
-        padding: 0;
-        border-left: 3px solid #ccc;
-      }
-
-      #light-dom-spy::part(scrollspy-item) {
-        padding: 8px 15px;
-        margin: 4px 0;
-        transition: all 0.3s ease;
-      }
-
-      /* Styling active items with additional specificity */
-      #light-dom-spy .scrollspy__item--active::part(scrollspy-item) {
-        border-left: 3px solid var(--primary-color);
-        background-color: rgba(74, 144, 226, 0.1);
-        font-weight: bold;
-      }
-
-      #light-dom-spy::part(scrollspy-link) {
-        text-decoration: none;
-        color: #333;
-        display: block;
-      }
-
-      /* Custom variables example */
-      #custom-spy {
-        --scrollspy-background: #f0f4f8;
-        --scrollspy-item-background: transparent;
-        --scrollspy-item-background-hover: rgba(74, 144, 226, 0.2);
-        --scrollspy-item-color: #333;
-        --scrollspy-item-color-hover: #4a90e2;
-        --scrollspy-item-color-active: #4a90e2;
-        --scrollspy-item-padding: 12px;
-        --scrollspy-item-margin: 4px 0;
-        --scrollspy-transition: all 0.3s ease;
-        --scrollspy-decorator-size: 1.2rem;
-      }
-
-      /* Additional part-based customization */
-      #custom-spy::part(scrollspy) {
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        padding: 10px;
-      }
-
-      .main-wrapper {
-        width: 100%;
-        max-width: 1280px;
-        margin: 0 auto;
-        padding-inline: 1rem;
-      }
-
       .main-container {
         display: flex;
-        flex-direction: row;
-        gap: 1rem;
+        max-width: 1200px;
+        margin: 0 auto;
       }
-      .example-container__item {
-        border-bottom: 1px dashed lightgrey;
-        padding-bottom: 4rem;
-        h3 {
-          margin-top: 0;
-          margin-bottom: 1rem;
-        }
-        p {
-          line-height: 300%;
-        }
+      aside {
+        width: 250px;
+        padding-right: 20px;
       }
-      pre {
-        white-space: pre-wrap;
-        background: hsl(0, 0%, 18%);
+      section {
+        flex: 1;
       }
-      code {
-        border-radius: 3px;
-        font-family: courier, monospace;
-        padding: 0 3px;
-        color: white;
-        comment {
-          opacity: 0.5;
-        }
+      .scrolling-content > div {
+        min-height: 400px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid #eee;
       }
     </style>
   </head>
@@ -130,219 +32,130 @@
       <h1>NTE Scrollspy Component - Examples</h1>
       <div class="main-container">
         <aside>
+          <nte-scrollspy data-target="#basic-example" style="width: 200px; position: sticky; top: 1rem">
+            <ul>
+              <li>
+                <a href="#section-1-1">Abschnitt 1</a>
+              </li>
+              <li>
+                <a href="#section-1-2">Abschnitt 2</a>
+              </li>
+              <li>
+                <a href="#section-1-3">Abschnitt 3</a>
+              </li>
+              <li>
+                <a href="#section-1-4">Abschnitt 4</a>
+              </li>
+            </ul>
+          </nte-scrollspy>
+        </aside>
+        <section>
+          <div class="scrolling-content" id="basic-example">
+            <div id="section-1-1">
+              <h3>First Section</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+                labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et
+                ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+                clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
+              </p>
+            </div>
+            <div id="section-1-2">
+              <h3>Second Section</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+                labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et
+                ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+                clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
+              </p>
+            </div>
+            <div id="section-1-3">
+              <h3>Third Section</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+                labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et
+                ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+                clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
+              </p>
+            </div>
+            <div id="section-1-4">
+              <h3>Fourth Section</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+                labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et
+                ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+                clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+      <!-- test 2 -->
+      <div class="main-container">
+        <aside>
           <nte-scrollspy
-            id="global-spy"
-            style="
-              position: sticky;
-              top: 2rem;
-              min-width: 300px;
-              background: rgb(248, 248, 248);
-              border-right: 1px solid lightgray;
-            "
+            data-target="#custom-example"
+            style="width: 200px; position: sticky; top: 1rem"
           ></nte-scrollspy>
         </aside>
-        <div class="example-container" id="examples">
-          <!-- Basic Information & Options -->
-          <div class="example-container__item" id="basic-info-section">
-            <h2 data-title="Basic Information & Options">Basic Information & Options</h2>
-            <p>The scrollspy component can be configured with:</p>
-            <pre>
-              <code>
-    <comment>Custom CSS classes to apply to the element</comment>
-    classes?: string[];
-  
-    <comment>Custom attributes to apply to the element</comment>
-    attributes?: {
-      dataTarget?: string;
-    };
-  
-    <comment>Orientation of the scrollspy element, defaults to 'vertical'</comment>
-    orientation?: ScrollspyOrientation;
-  
-    <comment>Navigation items to display in the scrollspy</comment>
-    data?: INavigationItem[id, label, href, active];
-  
-    <comment>Track progress through sections</comment>
-    trackProgress?: boolean;
-
-    <comment>Whether to create links for the navigation items</comment>
-    linkItems?: boolean;
-  
-    
-              </code>
-            </pre>
+        <section>
+          <div class="scrolling-content" id="custom-example">
+            <div id="section-2-1" data-title="First Section">
+              <h3>First Section</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+                labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et
+                ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+                clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
+              </p>
+            </div>
+            <div id="section-2-2" data-title="Second Section">
+              <h3>Second Section</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+                labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et
+                ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+                clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
+              </p>
+            </div>
+            <div id="section-2-3" data-title="Second Section">
+              <h3>Third Section</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+                labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et
+                ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+                clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
+              </p>
+            </div>
+            <div id="section-2-4" data-title="Second Section">
+              <h3>Fourth Section</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+                labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et
+                ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+                clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
+              </p>
+            </div>
           </div>
-          <!-- Basic example -->
-          <div class="example-container__item" id="basic-example-section">
-            <h2 data-title="Basic example">Basic example</h2>
-            <p>Settings:</p>
-            <ul>
-              <li>orientation: vertical</li>
-              <li>trackProgress: false</li>
-              <li>Provide custom data</li>
-            </ul>
-            <pre>
-              <code>
-  data: [ 
-      { id: 'section-1-1', label: 'First Section'}, 
-      { id: 'section-2-2', label: 'Second Section' }, 
-      { id: 'section-1-3', label: 'Third Section' }, 
-      { id: 'section-1-4', label: 'Fourth Section' },
-    ]
-              </code>
-            </pre>
-            <section>
-              <aside class="sidebar">
-                <nte-scrollspy id="basic-spy" data-target="#basic-example"></nte-scrollspy>
-              </aside>
-              <div class="scrolling-content" id="basic-example">
-                <div id="section-1-1">
-                  <h3>First Section</h3>
-                  <p>
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-                    labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-                    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-                    labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-                    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
-                  </p>
-                </div>
-                <div id="section-1-2">
-                  <h3>Second Section</h3>
-                  <p>
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-                    labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-                    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-                    labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-                    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
-                  </p>
-                </div>
-                <div id="section-1-3">
-                  <h3>Third Section</h3>
-                  <p>
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-                    labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-                    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-                    labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-                    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
-                  </p>
-                </div>
-                <div id="section-1-4">
-                  <h3>Fourth Section</h3>
-                  <p>
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-                    labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-                    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-                    labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-                    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
-                  </p>
-                </div>
-              </div>
-            </section>
-          </div>
-          <!-- Custom Example-->
-          <div class="example-container__item" id="custom-example-section">
-            <h2 data-title="Custom example">Custom example</h2>
-            <p>Settings:</p>
-            <ul>
-              <li>orientation: horizontal</li>
-              <li>trackProgress: true</li>
-              <li>including links</li>
-            </ul>
-            <section class="flex-col">
-              <aside class="sidebar" style="position: sticky; top: 0">
-                <nte-scrollspy id="custom-spy" data-target="#custom-example"></nte-scrollspy>
-              </aside>
-              <div class="scrolling-content" id="custom-example">
-                <div>
-                  <h3 data-title="First Section">First Section</h3>
-                  <p>
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-                    labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-                    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-                    labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-                    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
-                  </p>
-                </div>
-                <div>
-                  <h3 data-title="Second Section">Second Section</h3>
-                  <p>
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-                    labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-                    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-                    labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-                    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
-                  </p>
-                </div>
-                <div>
-                  <h3 data-title="Third Section">Third Section</h3>
-                  <p>
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-                    labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-                    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-                    labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-                    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
-                  </p>
-                </div>
-                <div>
-                  <h3 data-title="Fourth Section">Fourth Section</h3>
-                  <p>
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-                    labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-                    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-                    labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-                    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
-                  </p>
-                </div>
-              </div>
-            </section>
-          </div>
-        </div>
+        </section>
       </div>
     </main>
-
-    <script>
-      // Wait for custom elements to be defined
-      window.addEventListener('load', () => {
-        // Example 1: Basic configuration
-        const globalSpy = document.getElementById('global-spy');
-        // Example 1: Basic configuration
-        const basicSpy = document.getElementById('basic-spy');
-
-        // Example 2: Custom configuration with classes and attributes
-        const customSpy = document.getElementById('custom-spy');
-
-        globalSpy.config = {
-          trackProgress: false,
-          data: [
-            { id: 'basic-info-section', label: 'Basic Information & Options' },
-            { id: 'basic-example-section', label: 'Basic Example' },
-            { id: 'custom-example-section', label: 'Custom Example' },
-          ],
-        };
-
-        basicSpy.config = {
-          trackProgress: false,
-          data: [
-            { id: 'section-1-1', label: 'First Section' },
-            { id: 'section-1-2', label: 'Second Section' },
-            { id: 'section-1-3', label: 'Third Section' },
-            { id: 'section-1-4', label: 'Fourth Section' },
-          ],
-        };
-        customSpy.config = {
-          classes: ['custom-scrollspy', 'with-highlights'],
-          orientation: 'horizontal',
-        };
-      });
-    </script>
     <script src="src/index.ts" type="module"></script>
   </body>
 </html>

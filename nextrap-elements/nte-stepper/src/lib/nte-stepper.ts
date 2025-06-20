@@ -1,6 +1,8 @@
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import style from './nte-stepper-shadow.scss?inline';
+// Import the progress component
+import '@nextrap/nte-progress';
 
 // Import Tabler Icons CSS with all icons
 const tablerIconsUrl = 'https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css';
@@ -75,6 +77,16 @@ export class nteStepperElement extends LitElement {
   // Add the data property to receive items directly
   @property({ type: Array })
   data: IStepperItem[] = [];
+
+  // Direct access to mode property
+  @property({ type: String })
+  get mode(): 'horizontal' | 'vertical' | 'circular' {
+    return this.config.mode || 'horizontal';
+  }
+  set mode(value: 'horizontal' | 'vertical' | 'circular') {
+    this.config = { ...this.config, mode: value };
+    this.requestUpdate('mode');
+  }
 
   // Navigation items to display
   @state()
@@ -227,9 +239,23 @@ export class nteStepperElement extends LitElement {
 
   // Render the UI as a function of component state
   override render() {
+    // Find the active step index for the progress value
+    const activeIndex = this.stepperItems.findIndex((item) => item.active === true);
+    const progressValue = activeIndex >= 0 ? activeIndex : 0;
+    console.log(progressValue, progressValue);
     return html` <div class="nte-stepper-wrapper nte-stepper-mode-${this.config.mode}">
       ${this.stepperItems.map((item, index) => this.renderStepperItem(item, index))}
-      <div class="nte-stepper-progress"></div>
+      ${this.config.mode === 'horizontal'
+        ? html`<div class="nte-stepper-progress">
+            <nte-progress
+              part="stepper-progress"
+              min="0"
+              max="${this.stepperItems.length}"
+              value="${progressValue}"
+              steps="${this.stepperItems.length}"
+            ></nte-progress>
+          </div>`
+        : ''}
     </div>`;
   }
 }

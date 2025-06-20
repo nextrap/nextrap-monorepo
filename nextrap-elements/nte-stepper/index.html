@@ -50,18 +50,23 @@
           icon: 'ti ti-credit-card',
         },
         {
-          id: 'step-4',
-          label: 'Step 4',
+          id: 'step-5',
+          label: 'Step 5',
           icon: 'ti ti-credit-card',
         },
       ];
 
       // Set data to the component after it's defined
       window.addEventListener('DOMContentLoaded', () => {
-        const stepper = document.querySelector('nte-stepper');
-        if (stepper) {
-          stepper.data = stepperData;
-          stepper.mode = 'horizontal';
+        const stepperHorizontal = document.querySelector('#stepper-horizontal');
+        const stepperVertical = document.querySelector('#stepper-vertical');
+        if (stepperHorizontal) {
+          stepperHorizontal.data = stepperData;
+          stepperHorizontal.mode = 'horizontal';
+        }
+        if (stepperVertical) {
+          stepperVertical.data = stepperData;
+          stepperVertical.mode = 'vertical';
         }
       });
     </script>
@@ -69,7 +74,10 @@
   <body>
     <main class="main-wrapper">
       <div class="panel">
-        <nte-stepper></nte-stepper>
+        <nte-stepper id="stepper-horizontal"></nte-stepper>
+      </div>
+      <div class="panel">
+        <nte-stepper id="stepper-vertical" mode="vertical"></nte-stepper>
       </div>
     </main>
     <script src="src/index.ts" type="module"></script>
