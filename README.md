@@ -25,6 +25,9 @@ These packages are grouped into their respective directories ([`nextrap-base`](.
 | [`nte-dialog`](nextrap-elements/nte-dialog)                           | [@evolkmann](https://github.com/evolkmann)   |
 | [`ntl-infiniscroll`](nextrap-layout/ntl-infiniscroll)                 | [@dermatthes](https://github.com/dermatthes) |
 | [`ntl-2col`](nextrap-layout/ntl-2col)                                 | [@evolkmann](https://github.com/evolkmann)   |
+| [`nte-stepper`](nextrap-elements/nte-stepper)                         | [@marliedev](https://github.com/marliedev)   |
+| [`ntl-scrollspy`](nextrap-elements/ntl-scrollspy)                     | [@marliedev](https://github.com/marliedev)   |
+| [`nte-progress`](nextrap-elements/nte-progress)                       | [@marliedev](https://github.com/marliedev)   |
 
 _) Do not include any style-_ packages (except 'style-reset') in the Shadow DOM of components!
 
@@ -115,7 +118,7 @@ import style from './nte-my-component.scss?inline';
 
 @customElement('nte-my-component')
 export class NteDialog extends LitElement {
-  static override styles = [unsafeCSS(style)];
+    static override styles = [unsafeCSS(style)];
 }
 ```
 
@@ -126,11 +129,11 @@ baseline for your styling:
 @use '@nextrap/style-reset';
 
 :host {
-  --spacing: var(--nt-base-gap, 4px);
+    --spacing: var(--nt-base-gap, 4px);
 }
 
 .some-internal-element {
-  padding: var(--spacing);
+    padding: var(--spacing);
 }
 ```
 
@@ -147,7 +150,7 @@ import style from './nte-my-component.scss?inline';
 
 @customElement('nte-my-component')
 export class NteDialog extends LitElement {
-  static override styles = [unsafeCSS(style)];
+    static override styles = [unsafeCSS(style)];
 }
 ```
 
@@ -160,13 +163,13 @@ its internal structure. (see also: [Lit Docs](https://lit.dev/docs/components/st
 
 ```scss
 :host {
-  --bg-color: var(--nt-primary);
-  --fg-color: var(--nt-text-on-primary);
+    --bg-color: var(--nt-primary);
+    --fg-color: var(--nt-text-on-primary);
 }
 
 .some-internal-element {
-  background-color: var(--bg-color);
-  color: var(--fg-color);
+    background-color: var(--bg-color);
+    color: var(--fg-color);
 }
 ```
 
@@ -177,30 +180,28 @@ To overwrite the component's styles, the user can now simply define the CSS vari
 
 ```css
 :root {
-  --nt-primary: red;
-  --nt-text-on-primary: white;
+    --nt-primary: red;
+    --nt-text-on-primary: white;
 }
 ```
 
 or, alternatively, provide the component's CSS variables as inline styles on the component's host element:
 
 ```html
-<nte-my-component
-  style="--bg-color: red; --fg-color: white;"
-></nte-my-component>
+<nte-my-component style="--bg-color: red; --fg-color: white;"></nte-my-component>
 ```
 
 You can also use the following syntax to define a public API in terms of CSS classes that applied to the component by the host document. For an example, see the [@nextrap/nte-dialog](./nextrap-elements/nte-dialog/src/lib/nte-dialog.scss) _fullsize_ class.
 
 ```scss
 :host {
-  --width: 100px;
-  --height: 100px;
+    --width: 100px;
+    --height: 100px;
 }
 
 :host(.large) {
-  --width: 200px;
-  --height: 200px;
+    --width: 200px;
+    --height: 200px;
 }
 ```
 
@@ -209,22 +210,22 @@ You can also use the following syntax to define a public API in terms of CSS cla
 1. Switch to a feature branch to benefit from CI checks and to avoid breaking the main branch.
 2. Use [Nx Generators](https://nx.dev/features/generate-code) to generate new libs or apps:
 
-   `nx g @nx/js:lib nextrap-elements/nte-some-component --publishable --importPath @nextrap/nte-some-component --bundler vite --linter eslint --unitTestRunner vitest`
+    `nx g @nx/js:lib nextrap-elements/nte-some-component --publishable --importPath @nextrap/nte-some-component --bundler vite --linter eslint --unitTestRunner vitest`
 
 3. Manually verify (and adjust if necessary) that the newly created `project.json`'s release settings are
    [like this](https://github.com/nextrap/nextrap-monorepo/blob/45ac7582c1b4ab804d24ee08563d6e89caf241cd/nextrap-elements/nte-dialog/project.json#L6-L12).
 4. Import `viteServerConfig` and `viteTestConfig` in `vite.config.ts`
 
-   ```ts
-   import viteServerConfig from '../../utils/vite/config/vite-server-config';
-   import viteTestConfig from '../../utils/vite/config/vite-test-config';
+    ```ts
+    import viteServerConfig from '../../utils/vite/config/vite-server-config';
+    import viteTestConfig from '../../utils/vite/config/vite-test-config';
 
-   export default defineConfig(() => ({
-     ...viteServerConfig,
-     test: viteTestConfig('nextrap-element/nte-some-component'),
-     // more config ...
-   }));
-   ```
+    export default defineConfig(() => ({
+        ...viteServerConfig,
+        test: viteTestConfig('nextrap-element/nte-some-component'),
+        // more config ...
+    }));
+    ```
 
 5. Add the new package to the _Packages_ list in this README and to the [CODEOWNERS](./CODEOWNERS) file.
 
