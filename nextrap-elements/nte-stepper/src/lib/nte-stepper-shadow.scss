@@ -15,6 +15,8 @@
   --nte-stepper-seperator-color: var(--nt-soft-dark);
   --nte-stepper-background-color-hover: rgba(var(--nt-black-rgb), 0.03);
   --nte-stepper-background-color-active: rgba(var(--nt-primary-rgb), 0.03);
+  --nte-stepper-progress-bg-color: var(--nt-soft-primary);
+  --nte-stepper-progress-bar-color: var(--nt-primary);
   /* Sizes, Spacing */
   --nte-stepper-padding-x: 1rem;
   --nte-stepper-padding-y: 0.75rem;
@@ -52,14 +54,26 @@
     }
 
     .nte-stepper-progress {
-      display: block;
+      display: inline-block;
       position: absolute;
-      height: 0.5rem;
-      width: calc(100% - 2rem);
+      width: 100%;
       top: calc(var(--nte-stepper-padding-y) + var(--nte-stepper-circle-size) + 1rem);
-      left: 1rem;
-      border-radius: 0.25rem;
-      background-color: var(--nte-stepper-circle-border-color);
+      nte-progress::part(progress) {
+        // Style the main progress container
+        background-color: var(--nte-stepper-progress-bg-color);
+      }
+
+      nte-progress::part(progress-bar) {
+        // Style the progress bar itself
+        background-color: var(--nte-stepper-progress-bar-color);
+      }
+
+      nte-progress::part(progress-steps) {
+      }
+
+      nte-progress::part(progress-step) {
+        // Style individual steps
+      }
     }
   }
   &.nte-stepper-mode-vertical {

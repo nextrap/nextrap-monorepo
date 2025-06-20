@@ -86,6 +86,13 @@ export class NtScrollSpyElement extends LitElement {
   @state()
   private visitedSections: string[] = [];
 
+  // Reference to the slot element
+  private slotElement: HTMLSlotElement | null = null;
+
+  // Track if slot content exists
+  @state()
+  private hasSlottedContent = false;
+
   /**
    * Creates a new NtScrollSpyElement
    * @param config Optional configuration for the element
@@ -101,10 +108,59 @@ export class NtScrollSpyElement extends LitElement {
    * Called when the element is first updated
    */
   protected override firstUpdated(): void {
+    // Get the slot element and set up slot change listener
+    this.slotElement = this.shadowRoot?.querySelector('slot') || null;
+
+    if (this.slotElement) {
+      // Use bind(this) to ensure correct context
+      this.slotElement.addEventListener('slotchange', this.handleSlotChange.bind(this));
+      // Initial check
+      this.handleSlotChange();
+    } else {
+      console.warn('nte-scrollspy: No slot element found in shadow root');
+    }
+
     this.updateNavigationItems();
     this.applyClasses();
     this.applyAttributes();
     this.setupScrollObserver();
+  }
+
+  /**
+   * Handles slot content changes
+   */
+  private handleSlotChange(): void {
+    if (!this.slotElement) {
+      console.warn('nte-scrollspy: No slot element available');
+      return;
+    }
+
+    // Check if we have any assigned elements in the slot
+    const assignedNodes = this.slotElement.assignedNodes({ flatten: true });
+
+    // Filter out text nodes and empty nodes
+    const hasContent = assignedNodes.some((node) => {
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        console.log('nte-scrollspy: Found element in slot:', (node as Element).tagName);
+        return true;
+      }
+      if (node.nodeType === Node.TEXT_NODE && node.textContent && node.textContent.trim()) {
+        console.log('nte-scrollspy: Found non-empty text node in slot');
+        return true;
+      }
+      return false;
+    });
+
+    // Update state if changed
+    if (this.hasSlottedContent !== hasContent) {
+      this.hasSlottedContent = hasContent;
+      this.requestUpdate();
+
+      // Reset and setup observer with new content
+      if (hasContent) {
+        this.setupScrollObserver();
+      }
+    }
   }
 
   /**
@@ -130,6 +186,12 @@ export class NtScrollSpyElement extends LitElement {
    */
   public override disconnectedCallback(): void {
     super.disconnectedCallback();
+
+    // Remove slot change listener if exists
+    if (this.slotElement) {
+      this.slotElement.removeEventListener('slotchange', this.handleSlotChange.bind(this));
+    }
+
     this.disconnectObserver();
   }
 
@@ -138,16 +200,11 @@ export class NtScrollSpyElement extends LitElement {
    * This looks for data-title attributes in the target element if no config.data is provided
    */
   private updateNavigationItems(): void {
-    console.log('updateNavigationItems');
-    console.log('---------------------');
     // If we have explicit data in config, use that
     if (this.config.data && this.config.data.length > 0) {
-      console.log('Using explicit data from config:', this.config.data);
       this.navigationItems = this.config.data;
       return;
     }
-
-    console.log('No explicit data in config, searching for elements with data-title');
 
     // Otherwise, try to generate navigation items from DOM elements with data-title attributes
     const targetElement = this.getTargetElement();
@@ -158,10 +215,6 @@ export class NtScrollSpyElement extends LitElement {
       this.navigationItems = [];
       return;
     }
-
-    console.log('Target element:', targetElement);
-    console.log('Target element ID:', targetElement.id);
-    console.log('Target element children count:', targetElement.children.length);
 
     // Wait a moment for the DOM to be fully available
     // This helps with dynamically created elements
@@ -177,7 +230,6 @@ export class NtScrollSpyElement extends LitElement {
   private findElementsWithDataTitle(targetElement: HTMLElement): void {
     // Find elements with data-title attribute in the target element
     const elements = targetElement.querySelectorAll('[data-title]');
-    console.log('Elements with data-title found:', elements.length);
 
     if (elements.length === 0) {
       console.warn(
@@ -189,7 +241,6 @@ export class NtScrollSpyElement extends LitElement {
       // Try manual DOM traversal as fallback
       const foundElements = this.findElementsManually(targetElement);
       if (foundElements.length > 0) {
-        console.log('Found elements with manual traversal:', foundElements.length);
         this.processFoundElements(foundElements);
         return;
       }
@@ -248,8 +299,6 @@ export class NtScrollSpyElement extends LitElement {
         element.id = id;
       }
 
-      console.log(`Created navigation item: id=${id}, label=${dataTitle}`);
-
       return {
         id,
         label: dataTitle,
@@ -264,7 +313,6 @@ export class NtScrollSpyElement extends LitElement {
 
     // If we're tracking progress, set up the scroll observer
     if (this.isTrackingProgress() && this.navigationItems.length > 0) {
-      console.log('Setting up scroll observer for items:', this.navigationItems);
       this.setupScrollObserver();
     }
   }
@@ -282,8 +330,8 @@ export class NtScrollSpyElement extends LitElement {
 
     // Apply orientation class
     const orientation = this.getOrientation();
-    this.classList.remove('scrollspy--horizontal', 'scrollspy--vertical');
-    this.classList.add(`scrollspy--${orientation}`);
+    this.classList.remove('scrollspy-menu-horizontal', 'scrollspy-menu-vertical');
+    this.classList.add(`scrollspy-menu-${orientation}`);
   }
   /**
    * Applies attributes from the config to the host element.
@@ -328,7 +376,6 @@ export class NtScrollSpyElement extends LitElement {
     // Use the property value which is synced with the attribute via @property decorator
     // First check for HTML attribute, then config, then fallback to document.body
     const targetSelector = this.dataTarget || this.config.attributes?.dataTarget || 'document.body';
-    console.log('Using target selector:', targetSelector);
     let targetElement: HTMLElement | null = null;
 
     try {
@@ -368,17 +415,17 @@ export class NtScrollSpyElement extends LitElement {
    */
   private renderNavigationItem(item: INavigationItem, index: number) {
     // Determine item classes based on active and visited state
-    let itemClass = 'scrollspy__item';
+    let itemClass = 'scrollspy-item';
 
     // Always apply active class if item is active, regardless of trackProgress
     if (item.active) {
-      itemClass += ' scrollspy__item--active';
+      itemClass += ' scrollspy-item-active';
     }
 
     // Apply viewed class only if tracking progress is enabled and item is visited
     const isVisited = this.isTrackingProgress() && this.visitedSections.includes(item.id);
     if (isVisited && !item.active) {
-      itemClass += ' scrollspy__item--viewed';
+      itemClass += ' scrollspy-item-viewed';
     }
 
     // Event-Handler für das sanfte Scrollen
@@ -399,13 +446,13 @@ export class NtScrollSpyElement extends LitElement {
       ? html`<a
           href="#${item.id}"
           @click=${handleClick}
-          part="scrollspy-link item-link ${item.active ? 'active-link' : ''} ${isVisited ? 'viewed-link' : ''}"
-          class="scrollspy__item-link"
+          part="scrollspy-item-link item-link ${item.active ? 'active-link' : ''} ${isVisited ? 'viewed-link' : ''}"
+          class="scrollspy-item-link"
           >${item.label}</a
         >`
       : html`<span
-          part="scrollspy-label item-label ${item.active ? 'active-label' : ''} ${isVisited ? 'viewed-label' : ''}"
-          class="scrollspy__item-label"
+          part="scrollspy-item-label ${item.active ? 'active-label' : ''} ${isVisited ? 'viewed-label' : ''}"
+          class="scrollspy-item-label"
           >${item.label}</span
         >`;
 
@@ -421,7 +468,7 @@ export class NtScrollSpyElement extends LitElement {
           part="scrollspy-decorator decorator ${item.active ? 'active-decorator' : ''} ${isVisited
             ? 'viewed-decorator'
             : ''}"
-          class="scrollspy__item-decorator"
+          class="scrollspy-item-decorator"
           data-index="${index + 1}"
         ></span>
         ${contentElement}
@@ -432,12 +479,19 @@ export class NtScrollSpyElement extends LitElement {
   // Renders the navigation list
   protected override render() {
     const orientation = this.getOrientation();
+    console.log('nte-scrollspy: Rendering with hasSlottedContent:', this.hasSlottedContent);
 
     return html`
-      <div id="scrollspy-wrapper" part="scrollspy container" class="scrollspy scrollspy--${orientation}">
-        <ul part="scrollspy-list list" class="scrollspy__list">
-          ${this.navigationItems.map((item, index) => this.renderNavigationItem(item, index))}
-        </ul>
+      <div id="scrollspy" part="scrollspy container" class="scrollspy scrollspy-${orientation}">
+        <!-- Always include the slot in the template -->
+        <slot></slot>
+        ${!this.hasSlottedContent
+          ? html`
+              <ul part="scrollspy-menu menu" class="scrollspy-menu">
+                ${this.navigationItems.map((item, index) => this.renderNavigationItem(item, index))}
+              </ul>
+            `
+          : ''}
       </div>
     `;
   }

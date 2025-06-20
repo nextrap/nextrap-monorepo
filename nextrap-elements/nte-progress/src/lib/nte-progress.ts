@@ -214,13 +214,31 @@ export class nteProgressElement extends LitElement {
     return classes.join(' ');
   }
 
+  /**
+   * Generates CSS classes for the progress container, including any external classes
+   * This allows custom classes to be added from outside
+   */
+  private getContainerClasses(): string {
+    // Start with the base class
+    const classes = ['nte-progress'];
+
+    // Add any classes from the host element
+    const classAttr = this.getAttribute('class');
+    if (classAttr) {
+      const hostClasses = classAttr.split(' ').filter((c) => c.length > 0);
+      classes.push(...hostClasses);
+    }
+
+    return classes.join(' ');
+  }
+
   override render() {
     const percentage = this.calculatePercentage();
     const stepPercentage = this.steps > 0 ? 100 / this.steps : 0;
 
     return html`
       <div
-        class="nte-progress"
+        class="${this.getContainerClasses()}"
         part="progress"
         role="progressbar"
         aria-valuenow="${this._value}"
