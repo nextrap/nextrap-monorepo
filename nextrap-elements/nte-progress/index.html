@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NTE Progress Examples</title>
+    <script src="src/index.ts" type="module"></script>
+    <style>
+      :root {
+        --nt-white: #ffffff;
+        --nt-light: #f8f9fa;
+        --nt-primary: #0d6efd;
+        --nt-primary-rgb: 13, 110, 253;
+        --nt-secondary: #6c757d;
+        --nt-success: #198754;
+        --nt-warning: #ffc107;
+        --nt-danger: #dc3545;
+        --nt-info: #0dcaf0;
+        --nt-dark: #212529;
+        --nt-gray: #6c757d;
+        --nt-text-on-light: #212529;
+      }
+
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        margin: 0;
+        padding: 2rem;
+        background-color: #f8f9fa;
+        color: #212529;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        color: var(--nt-primary);
+        margin-top: 0;
+        border-bottom: 2px solid var(--nt-light);
+        padding-bottom: 0.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .example {
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        background-color: #fefefe;
+      }
+
+      .example h2 {
+        margin-top: 0;
+        font-size: 1.25rem;
+        color: var(--nt-dark);
+      }
+
+      .controls {
+        margin-top: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .controls button {
+        padding: 0.5rem 1rem;
+        background-color: var(--nt-primary);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .controls button:hover {
+        background-color: #0b5ed7;
+      }
+
+      .event-log {
+        margin-top: 1rem;
+        padding: 1rem;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        max-height: 150px;
+        overflow-y: auto;
+        font-family: monospace;
+        font-size: 0.875rem;
+      }
+
+      .code-snippet {
+        background-color: #f7f7f7;
+        padding: 1rem;
+        border-left: 4px solid var(--nt-primary);
+        margin-top: 1rem;
+        font-family: monospace;
+        white-space: pre-wrap;
+        font-size: 0.875rem;
+        overflow-x: auto;
+      }
+
+      nte-progress {
+        margin: 1rem 0;
+      }
+
+      .config-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .config-option {
+        display: flex;
+        align-items: center;
+      }
+
+      .theme-selector {
+        margin-top: 1rem;
+        margin-bottom: 2rem;
+        text-align: right;
+      }
+
+      .theme-selector button {
+        padding: 0.375rem 0.75rem;
+        background-color: var(--nt-light);
+        border: 1px solid var(--nt-gray);
+        border-radius: 4px;
+        cursor: pointer;
+        color: var(--nt-dark);
+      }
+
+      .theme-selector button.active {
+        background-color: var(--nt-primary);
+        color: white;
+        border-color: var(--nt-primary);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="theme-selector">
+        <button class="active" onclick="setTheme('primary')" id="theme-primary">Primary</button>
+        <button onclick="setTheme('success')" id="theme-success">Success</button>
+        <button onclick="setTheme('danger')" id="theme-danger">Danger</button>
+        <button onclick="setTheme('warning')" id="theme-warning">Warning</button>
+      </div>
+
+      <h1>NTE Progress Examples</h1>
+
+      <div class="example">
+        <h2>Basic Progress Bar</h2>
+        <nte-progress id="basic-progress" value="50" min="0" max="100"></nte-progress>
+        <div class="controls">
+          <button onclick="document.getElementById('basic-progress').value = 0">0%</button>
+          <button onclick="document.getElementById('basic-progress').value = 25">25%</button>
+          <button onclick="document.getElementById('basic-progress').value = 50">50%</button>
+          <button onclick="document.getElementById('basic-progress').value = 75">75%</button>
+          <button onclick="document.getElementById('basic-progress').value = 100">100%</button>
+        </div>
+        <div class="code-snippet">&lt;nte-progress value="50" min="0" max="100"&gt;&lt;/nte-progress&gt;</div>
+      </div>
+
+      <div class="example">
+        <h2>Custom Min/Max Range</h2>
+        <nte-progress id="custom-range" value="5" min="0" max="10"></nte-progress>
+        <div class="controls">
+          <button onclick="document.getElementById('custom-range').value = 0">0</button>
+          <button onclick="document.getElementById('custom-range').value = 2.5">2.5</button>
+          <button onclick="document.getElementById('custom-range').value = 5">5</button>
+          <button onclick="document.getElementById('custom-range').value = 7.5">7.5</button>
+          <button onclick="document.getElementById('custom-range').value = 10">10</button>
+        </div>
+        <div class="code-snippet">&lt;nte-progress value="5" min="0" max="10"&gt;&lt;/nte-progress&gt;</div>
+      </div>
+
+      <div class="example">
+        <h2>Stepped Progress Bar</h2>
+        <nte-progress id="stepped-progress" value="40" steps="5"></nte-progress>
+        <div class="controls">
+          <button onclick="document.getElementById('stepped-progress').value = 0">Step 1</button>
+          <button onclick="document.getElementById('stepped-progress').value = 25">Step 2</button>
+          <button onclick="document.getElementById('stepped-progress').value = 50">Step 3</button>
+          <button onclick="document.getElementById('stepped-progress').value = 75">Step 4</button>
+          <button onclick="document.getElementById('stepped-progress').value = 100">Step 5</button>
+        </div>
+        <div class="code-snippet">&lt;nte-progress value="40" steps="5"&gt;&lt;/nte-progress&gt;</div>
+      </div>
+
+      <div class="example">
+        <h2>Striped Progress Bar</h2>
+        <nte-progress id="striped-progress" value="75" striped></nte-progress>
+        <div class="controls">
+          <button onclick="incrementProgress('striped-progress', 10)">+10%</button>
+          <button onclick="incrementProgress('striped-progress', -10)">-10%</button>
+        </div>
+        <div class="code-snippet">&lt;nte-progress value="75" striped&gt;&lt;/nte-progress&gt;</div>
+      </div>
+
+      <div class="example">
+        <h2>Animated Striped Progress Bar</h2>
+        <nte-progress id="animated-progress" value="75" striped animated></nte-progress>
+        <div class="controls">
+          <button onclick="incrementProgress('animated-progress', 10)">+10%</button>
+          <button onclick="incrementProgress('animated-progress', -10)">-10%</button>
+        </div>
+        <div class="code-snippet">&lt;nte-progress value="75" striped animated&gt;&lt;/nte-progress&gt;</div>
+      </div>
+
+      <div class="example">
+        <h2>Live Configuration</h2>
+        <nte-progress id="config-progress" value="60"></nte-progress>
+        <div class="config-options">
+          <div class="config-option">
+            <label> <input type="checkbox" id="config-striped" onchange="updateConfig()" /> Striped </label>
+          </div>
+          <div class="config-option">
+            <label> <input type="checkbox" id="config-animated" onchange="updateConfig()" /> Animated </label>
+          </div>
+          <div class="config-option">
+            <label>
+              Steps:
+              <input
+                type="number"
+                id="config-steps"
+                min="0"
+                max="10"
+                value="0"
+                style="width: 50px"
+                onchange="updateConfig()"
+              />
+            </label>
+          </div>
+          <div class="config-option">
+            <label>
+              Value:
+              <input
+                type="range"
+                id="config-value"
+                min="0"
+                max="100"
+                value="60"
+                onchange="updateConfig()"
+                oninput="updateConfig()"
+              />
+              <span id="value-display">60</span>%
+            </label>
+          </div>
+        </div>
+        <div class="code-snippet" id="live-code">&lt;nte-progress value="60"&gt;&lt;/nte-progress&gt;</div>
+      </div>
+
+      <div class="example">
+        <h2>Event Demonstration</h2>
+        <nte-progress id="event-progress" value="0"></nte-progress>
+        <div class="controls">
+          <button onclick="simulateProgress()">Start Progress</button>
+          <button onclick="document.getElementById('event-progress').value = 0">Reset</button>
+          <button onclick="clearLog()">Clear Log</button>
+        </div>
+        <div class="event-log" id="event-log"></div>
+      </div>
+    </div>
+
+    <script>
+      // Function to increment progress value
+      function incrementProgress(id, amount) {
+        const progress = document.getElementById(id);
+        progress.value = Math.min(100, Math.max(0, parseFloat(progress.value) + amount));
+      }
+
+      // Function to simulate gradual progress
+      function simulateProgress() {
+        const progress = document.getElementById('event-progress');
+        progress.value = 0;
+        let value = 0;
+
+        const interval = setInterval(() => {
+          value += 5;
+          progress.value = value;
+          if (value >= 100) {
+            clearInterval(interval);
+          }
+        }, 300);
+      }
+
+      // Function to clear the event log
+      function clearLog() {
+        document.getElementById('event-log').innerHTML = '';
+      }
+
+      // Function to update the live configuration example
+      function updateConfig() {
+        const progress = document.getElementById('config-progress');
+        const striped = document.getElementById('config-striped').checked;
+        const animated = document.getElementById('config-animated').checked;
+        const steps = parseInt(document.getElementById('config-steps').value);
+        const value = parseFloat(document.getElementById('config-value').value);
+
+        progress.striped = striped;
+        progress.animated = animated;
+        progress.steps = steps;
+        progress.value = value;
+
+        document.getElementById('value-display').textContent = value;
+
+        // Update the code snippet
+        let code = `<nte-progress value="${value}"`;
+        if (steps > 0) code += ` steps="${steps}"`;
+        if (striped) code += ` striped`;
+        if (animated) code += ` animated`;
+        code += `></nte-progress>`;
+
+        document.getElementById('live-code').textContent = code;
+      }
+
+      // Function to change the theme colors
+      function setTheme(theme) {
+        // Reset all theme buttons
+        document.querySelectorAll('.theme-selector button').forEach((btn) => {
+          btn.classList.remove('active');
+        });
+
+        // Activate the selected theme button
+        document.getElementById(`theme-${theme}`).classList.add('active');
+
+        // Update CSS variables based on the theme
+        const root = document.documentElement;
+
+        switch (theme) {
+          case 'success':
+            root.style.setProperty('--nt-primary', '#198754');
+            root.style.setProperty('--nt-primary-rgb', '25, 135, 84');
+            break;
+          case 'danger':
+            root.style.setProperty('--nt-primary', '#dc3545');
+            root.style.setProperty('--nt-primary-rgb', '220, 53, 69');
+            break;
+          case 'warning':
+            root.style.setProperty('--nt-primary', '#ffc107');
+            root.style.setProperty('--nt-primary-rgb', '255, 193, 7');
+            break;
+          default: // primary
+            root.style.setProperty('--nt-primary', '#0d6efd');
+            root.style.setProperty('--nt-primary-rgb', '13, 110, 253');
+        }
+      }
+
+      // Set up event listeners
+      document.addEventListener('DOMContentLoaded', () => {
+        const eventProgress = document.getElementById('event-progress');
+        const eventLog = document.getElementById('event-log');
+        const steppedProgress = document.getElementById('stepped-progress');
+
+        function logEvent(message) {
+          const timestamp = new Date().toLocaleTimeString();
+          const entry = document.createElement('div');
+          entry.innerHTML = `<span style="color:#888">[${timestamp}]</span> ${message}`;
+          eventLog.appendChild(entry);
+          eventLog.scrollTop = eventLog.scrollHeight;
+        }
+
+        // Clear old event listeners (in case page is reloaded)
+        const newEventProgress = eventProgress.cloneNode(true);
+        eventProgress.parentNode.replaceChild(newEventProgress, eventProgress);
+
+        const newSteppedProgress = steppedProgress.cloneNode(true);
+        steppedProgress.parentNode.replaceChild(newSteppedProgress, steppedProgress);
+
+        // Add new event listeners
+        document.getElementById('event-progress').addEventListener('progress-changed', (e) => {
+          logEvent(`Progress changed: <strong>${e.detail.value.toFixed(1)}%</strong>`);
+        });
+
+        document.getElementById('event-progress').addEventListener('completed', () => {
+          logEvent(`<strong>Progress completed! 🎉</strong>`);
+        });
+
+        document.getElementById('stepped-progress').addEventListener('step-changed', (e) => {
+          logEvent(`Step changed: <strong>${e.detail.stepIndex + 1} of 5</strong>`);
+        });
+      });
+    </script>
+  </body>
+</html>
