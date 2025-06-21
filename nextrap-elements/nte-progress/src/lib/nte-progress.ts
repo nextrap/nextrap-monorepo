@@ -233,20 +233,16 @@ export class nteProgressElement extends LitElement {
   }
 
   override render() {
-    const percentage = this.calculatePercentage();
     const stepPercentage = this.steps > 0 ? 100 / this.steps : 0;
 
     return html`
-      <div
-        class="${this.getContainerClasses()}"
+      <progress
+        class="${this.getContainerClasses()} ${this.getProgressBarClasses()}"
         part="progress"
-        role="progressbar"
-        aria-valuenow="${this._value}"
-        aria-valuemin="${this._min}"
-        aria-valuemax="${this._max}"
+        value="${this._value}"
+        min="${this._min}"
+        max="${this._max}"
       >
-        <div class="${this.getProgressBarClasses()}" part="progress-bar" style="width: ${percentage}%"></div>
-
         ${this.steps > 0
           ? html`
               <div class="nte-progress-steps" part="progress-steps">
@@ -266,7 +262,7 @@ export class nteProgressElement extends LitElement {
               </div>
             `
           : ''}
-      </div>
+      </progress>
     `;
   }
 }
