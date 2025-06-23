@@ -1,183 +1,99 @@
-// This is styling for the scrollspy shadow dom
+// This is styling for the stepper container shadow DOM
 @use '@nextrap/style-reset';
 
 :host {
   /* Colors */
-  --nte-stepper-circle-border-color: var(--nt-dark);
-  --nte-stepper-circle-icon-color: var(--nt-primary);
-  --nte-stepper-circle-active-color: var(--nt-primary);
-  --nte-stepper-circle-active-icon-color: var(--nt-white);
-  --nte-stepper-circle-active-border-color: var(--nt-primary);
-  --nte-stepper-title-color: var(--nt-text-on-light);
-  --nte-stepper-title-active-color: var(--nt-primary);
-  --nte-stepper-action-icon-color: var(--nt-soft-dark);
-  --nte-stepper-info-icon-color: var(--nt-soft-dark);
-  --nte-stepper-seperator-color: var(--nt-soft-dark);
-  --nte-stepper-background-color-hover: rgba(var(--nt-black-rgb), 0.03);
-  --nte-stepper-background-color-active: rgba(var(--nt-primary-rgb), 0.03);
-  --nte-stepper-progress-bg-color: var(--nt-soft-primary);
-  --nte-stepper-progress-bar-color: var(--nt-primary);
+  --nte-stepper-seperator-color: var(--nt-soft-dark, #6c757d);
+  --nte-stepper-progress-bg-color: rgba(var(--nt-primary-rgb), 0.05);
+  --nte-stepper-progress-bar-color: var(--nt-primary, #0d6efd);
+
   /* Sizes, Spacing */
-  --nte-stepper-padding-x: 1rem;
-  --nte-stepper-padding-y: 0.75rem;
-  --nte-stepper-border-radius: 0.5rem;
-  --nte-stepper-min-width: 200px;
   --nte-stepper-spacing: 1rem;
   --nte-stepper-circle-size: 36px;
-  --nte-stepper-circle-border-width: 2px;
-  --nte-stepper-step-title-font-size: 1.25rem;
-  --nte-stepper-info-icon-size: 1.25rem;
-  --nte-stepper-action-icon-size: 1.25rem;
-  --nte-stepper-circle-to-icon-size-ratio: 1.75;
   --nte-stepper-seperator-width: 2px;
   --nte-stepper-seperator-height: 2rem;
-  /* Calculated */
-  --nte-stepper-circle-icon-size: calc(var(--nte-stepper-circle-size) / var(--nte-stepper-circle-to-icon-size-ratio));
+  --nte-stepper-padding-y: 0.75rem;
+
+  /* CSS vars are cascade-inherited to nte-step components */
+  --nte-stepper-padding-x: 1rem;
+  --nte-stepper-border-radius: 0.5rem;
+  --nte-stepper-min-width: 200px;
+
+  /* CSS for slotted nte-step element */
+  --slotted-nte-step-background-color-hover: rgba(var(--nt-black-rgb), 0.03);
 }
 
 .nte-stepper-wrapper {
   display: flex;
   position: relative;
+
+  ::slotted(nte-step) {
+    --nte-step-background-color-hover: var(--slotted-nte-step-background-color-hover);
+    /* No hover styling here - moved to nte-step component */
+  }
+
   &.nte-stepper-mode-horizontal {
     flex-direction: row;
-    .nte-stepper-item {
+
+    ::slotted(nte-step) {
       flex-direction: column;
       justify-items: flex-start;
       align-items: flex-start;
-      gap: 3rem;
-      .nte-stepper-action {
-        display: none;
-      }
-    }
-    .nte-stepper-separator {
-      display: none;
+      gap: 2rem;
     }
 
     .nte-stepper-progress {
       display: inline-block;
       position: absolute;
       width: 100%;
-      top: calc(var(--nte-stepper-padding-y) + var(--nte-stepper-circle-size) + 1rem);
+      top: calc(var(--nte-stepper-padding-y) + var(--nte-stepper-circle-size) + 0.5rem);
+
       nte-progress::part(progress) {
-        // Style the main progress container
-        background-color: var(--nte-stepper-progress-bg-color);
+        --nte-progress-bg-color: var(--nte-stepper-progress-bg-color);
       }
 
       nte-progress::part(progress-bar) {
-        // Style the progress bar itself
         background-color: var(--nte-stepper-progress-bar-color);
       }
-
-      nte-progress::part(progress-steps) {
-      }
-
-      nte-progress::part(progress-step) {
-        // Style individual steps
-      }
     }
   }
+
   &.nte-stepper-mode-vertical {
     flex-direction: column;
-    .nte-stepper-item {
+    position: relative;
+
+    ::slotted(nte-step) {
       flex-flow: row nowrap;
-      .nte-stepper-separator {
-        display: none;
-      }
+      margin: 1rem 0;
+      /* Remove hover styling here - moved to nte-step component */
+    }
+
+    .nte-stepper-separator {
+      position: absolute;
+      left: calc(
+        var(--nte-stepper-padding-x) + var(--nte-stepper-circle-size) / 2 - var(--nte-stepper-seperator-width) / 2
+      );
+      top: var(--nte-stepper-separator-top, 25%);
+      height: var(--nte-stepper-seperator-height);
+      border-left: var(--nte-stepper-seperator-width) dashed var(--nte-stepper-seperator-color);
+      width: var(--nte-stepper-seperator-width);
+      margin: 0;
+      z-index: 0;
+      transform: translateY(-50%);
     }
   }
+
   &.nte-stepper-mode-circular {
     flex-direction: row;
   }
 }
 
-.nte-stepper-item {
-  padding: var(--nte-stepper-padding-y) var(--nte-stepper-padding-x);
-  display: flex;
+/* Styles moved to nte-step component */
 
-  align-items: center;
-  gap: var(--nte-stepper-spacing);
-  border-radius: var(--nte-stepper-border-radius);
-  min-width: var(--nte-stepper-min-width);
-
-  .nte-stepper-circle {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: var(--nte-stepper-circle-size);
-    height: var(--nte-stepper-circle-size);
-    background: transparent;
-    border-radius: 50%;
-    border: var(--nte-stepper-circle-border-width) solid var(--nte-stepper-circle-border-color);
-    i {
-      width: var(--nte-stepper-circle-icon-size);
-      height: var(--nte-stepper-circle-icon-size);
-      color: var(--nte-stepper-circle-icon-color);
-      font-size: var(--nte-stepper-circle-icon-size);
-    }
-    .nte-stepper-circle-progress {
-      position: absolute;
-      margin: 0;
-      padding: 0;
-      top: calc(var(--nte-stepper-circle-border-width) * -1);
-      left: calc(var(--nte-stepper-circle-border-width) * -1);
-      width: calc(100% + var(--nte-stepper-circle-border-width) * 2);
-      height: calc(100% + var(--nte-stepper-circle-border-width) * 2);
-      border-radius: 50%;
-      background-color: transparent;
-      border: var(--nte-stepper-circle-border-width) solid var(--nte-circle-border-color);
-    }
-  }
-  .nte-stepper-info {
-    display: flex;
-    align-items: center;
-    h2 {
-      margin: 0;
-      color: var(--nte-stepper-title-color);
-      font-size: var(--nte-stepper-step-title-font-size);
-    }
-    i {
-      font-size: var(--nte-stepper-info-icon-size);
-      color: var(--nte-stepper-info-icon-color);
-      height: auto;
-      margin-left: 0.25rem;
-    }
-  }
-  .nte-stepper-action {
-    margin-left: auto;
-    i {
-      font-size: var(--nte-stepper-action-icon-size);
-      color: var(--nte-stepper-action-icon-color);
-      height: auto;
-    }
-  }
-
-  &:hover {
-    background-color: var(--nte-stepper-background-color-hover);
-    cursor: pointer;
-  }
-  &[data-active='true'] {
-    background-color: var(--nte-stepper-background-color-active);
-    cursor: pointer;
-    .nte-stepper-circle {
-      background: var(--nte-stepper-circle-active-color);
-      border-color: var(--nte-stepper-circle-active-border-color);
-      i {
-        color: var(--nte-stepper-circle-active-icon-color);
-      }
-    }
-    .nte-stepper-info {
-      h2 {
-        color: var(--nte-stepper-title-active-color);
-      }
-    }
-  }
-}
-
-.nte-stepper-separator {
-  height: var(--nte-stepper-seperator-height);
-  border-left: var(--nte-stepper-seperator-width) dashed var(--nte-stepper-seperator-color);
-  margin-left: calc(
-    var(--nte-stepper-padding-x) + var(--nte-stepper-circle-size) / 2 - var(--nte-stepper-seperator-width) / 2
-  );
+/* Horizontal separators between steps (added dynamically in render method) */
+.nte-stepper-separator--horizontal {
+  margin: 0 0.5rem;
+  height: 1px;
+  flex: 1;
+  border-top: var(--nte-stepper-seperator-width) dashed var(--nte-stepper-seperator-color);
 }

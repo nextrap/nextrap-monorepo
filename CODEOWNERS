@@ -11,6 +11,7 @@ nextrap-elements/nte-dialog @evolkmann
 nextrap-elements/nte-element-highlighter @evolkmann
 nextrap-elements/nte-scroll-to-top @dermatthes
 nextrap-elements/nte-stepper @marliedev
+nextrap-elements/nte-step @marliedev
 nextrap-elements/nte-scrollspy @marliedev
 nextrap-elements/nte-progress @marliedev
 

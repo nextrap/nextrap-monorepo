@@ -3,51 +3,8 @@ import { customElement, property, state } from 'lit/decorators.js';
 import style from './nte-stepper-shadow.scss?inline';
 // Import the progress component
 import '@nextrap/nte-progress';
-
-// Import Tabler Icons CSS with all icons
-const tablerIconsUrl = 'https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css';
-
-// Fetch and inject the Tabler icons CSS
-async function loadTablerIconsCss() {
-  try {
-    const response = await fetch(tablerIconsUrl);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch Tabler icons CSS: ${response.statusText}`);
-    }
-    return await response.text();
-  } catch (error) {
-    console.error('Error loading Tabler icons CSS:', error);
-    return '';
-  }
-}
-
-// Will hold the loaded CSS
-let tablerIconsStyles = '';
-
-// Load the CSS
-(async () => {
-  tablerIconsStyles = await loadTablerIconsCss();
-})();
-
-export interface IStepperItem {
-  // The ID step
-  id: string;
-
-  // The label to display in the stepper menu
-  label: string;
-
-  // Whether the item is currently active
-  active?: boolean;
-
-  // Whether the item is currently completed
-  completed?: boolean;
-
-  // Whether the item is currently disabled
-  disabled?: boolean;
-
-  // The icon to display in the stepper menu
-  icon?: string;
-}
+// Import the step component
+import '@nextrap/nte-step';
 
 export interface IStepperConfig {
   // Custom CSS classes to apply to the element
@@ -55,28 +12,20 @@ export interface IStepperConfig {
 
   // The mode of the stepper
   mode?: 'horizontal' | 'vertical' | 'circular';
-
-  // The data for the stepper
-  data?: IStepperItem[];
 }
 
 @customElement('nte-stepper')
 export class nteStepperElement extends LitElement {
   static override styles = [unsafeCSS(style)];
 
-  // Default configuration for the scrollspy component
+  // Default configuration for the stepper component
   private static readonly DEFAULT_CONFIG: Partial<IStepperConfig> = {
     mode: 'horizontal',
-    data: [],
   };
 
   // Declare reactive properties
   @property({ type: Object })
   config: IStepperConfig = { ...nteStepperElement.DEFAULT_CONFIG };
-
-  // Add the data property to receive items directly
-  @property({ type: Array })
-  data: IStepperItem[] = [];
 
   // Direct access to mode property
   @property({ type: String })
@@ -88,16 +37,20 @@ export class nteStepperElement extends LitElement {
     this.requestUpdate('mode');
   }
 
-  // Navigation items to display
+  // Track active step index
   @state()
-  private stepperItems: IStepperItem[] = [];
+  private activeIndex = 0;
 
-  // Reference to the slot element
+  // Reference to the default slot element
   private slotElement: HTMLSlotElement | null = null;
 
   // Track if slot content exists
   @state()
   private hasSlottedContent = false;
+
+  // Store references to slotted nte-step elements
+  @state()
+  private stepElements: HTMLElement[] = [];
 
   /**
    * Creates a new NtStepperElement
@@ -109,153 +62,260 @@ export class nteStepperElement extends LitElement {
     if (config) {
       this.config = { ...nteStepperElement.DEFAULT_CONFIG, ...config };
     }
-    console.log(this.config);
-    this.injectIconStyles();
   }
 
   /**
-   * Injects the Tabler icon styles into the shadow root
+   * When the component is first connected to the DOM
    */
-  private async injectIconStyles() {
-    // If we already have the styles, use them
-    if (tablerIconsStyles) {
-      this.updateStyles(tablerIconsStyles);
-      return;
-    }
+  override connectedCallback() {
+    super.connectedCallback();
 
-    // Otherwise load them
-    tablerIconsStyles = await loadTablerIconsCss();
-    this.updateStyles(tablerIconsStyles);
+    // Listen for step click events
+    this.addEventListener('nte-step-click', this.handleStepClick as EventListener);
   }
 
   /**
-   * Updates the component's styles with the given CSS
+   * When the component is removed from the DOM
    */
-  private updateStyles(css: string) {
-    // Create a new style element
-    const styleEl = document.createElement('style');
-    styleEl.textContent = css;
+  override disconnectedCallback() {
+    super.disconnectedCallback();
 
-    // Add it to the shadow root
-    if (this.shadowRoot) {
-      this.shadowRoot.appendChild(styleEl);
+    // Remove event listeners
+    this.removeEventListener('nte-step-click', this.handleStepClick as EventListener);
+
+    if (this.slotElement) {
+      this.slotElement.removeEventListener('slotchange', this.handleSlotChange);
     }
-  }
-
-  protected override firstUpdated(): void {
-    this.updateStepperItems();
   }
 
   /**
-   * Responds to property changes in the component
-   * @param changedProperties Map of changed properties with their previous values
+   * After first render, set up slot change listener
    */
-  protected override updated(changedProperties: Map<string, any>): void {
-    if (changedProperties.has('data') || changedProperties.has('config')) {
-      this.updateStepperItems();
+  override firstUpdated() {
+    // Get slot element
+    this.slotElement = this.shadowRoot?.querySelector('slot') || null;
+
+    if (this.slotElement) {
+      // Listen for slotchange event
+      this.slotElement.addEventListener('slotchange', this.handleSlotChange.bind(this));
+      // Initialize slotted elements
+      this.handleSlotChange();
+    }
+
+    // Add separators after initial render is complete
+    this.updateComplete.then(() => {
+      this.addSeparatorsBetweenSteps();
+    });
+  }
+
+  /**
+   * When the component's properties are updated
+   */
+  override updated(changedProperties: Map<string, unknown>) {
+    super.updated(changedProperties);
+
+    // Update active class when activeIndex changes
+    if (changedProperties.has('activeIndex')) {
+      this.updateStepsState();
+    }
+
+    // Check if mode has changed
+    if (changedProperties.has('mode')) {
+      // Re-create separators when mode changes
+      this.addSeparatorsBetweenSteps();
     }
   }
 
-  private updateStepperItems(): void {
-    // First check if direct data property is available
-    if (this.data && this.data.length > 0) {
-      console.log('Using data property:', this.data);
-      this.stepperItems = [...this.data];
-      return;
-    }
+  /**
+   * Handle slot change event
+   */
+  private handleSlotChange() {
+    if (!this.slotElement) return;
 
-    // Fall back to config.data if available
-    if (this.config.data && this.config.data.length > 0) {
-      console.log('Using config.data:', this.config.data);
-      this.stepperItems = [...this.config.data];
-      return;
-    }
+    // Get all slotted elements
+    const assignedElements = this.slotElement.assignedElements();
 
-    // Default to empty array if no data available
-    console.log('No data available, using empty array');
-    this.stepperItems = [];
+    // Filter for only nte-step elements
+    this.stepElements = assignedElements.filter((el) => el.tagName.toLowerCase() === 'nte-step') as HTMLElement[];
+
+    // Set has slotted content flag
+    this.hasSlottedContent = this.stepElements.length > 0;
+
+    // Update step indices and initialize states
+    this.stepElements.forEach((step, index) => {
+      // Set the index property on each step for identification
+      step.setAttribute('index', index.toString());
+    });
+
+    // Initialize active state based on current activeIndex
+    this.updateStepsState();
+
+    // Add separators between steps if in vertical mode
+    this.addSeparatorsBetweenSteps();
+
+    // Force re-render
+    this.requestUpdate();
   }
 
-  private handleClick(event: Event): void {
-    event.preventDefault();
+  /**
+   * Update the state of all step elements based on activeIndex
+   */
+  private updateStepsState() {
+    this.stepElements.forEach((step, index) => {
+      // Set active state
+      if (index === this.activeIndex) {
+        step.setAttribute('active', '');
+      } else {
+        step.removeAttribute('active');
+      }
 
-    // Find the stepper item that was clicked
-    const target = event.currentTarget as HTMLElement;
-    const index = target.dataset.index ? parseInt(target.dataset.index) : -1;
+      // Set completed state for steps before active index
+      if (index < this.activeIndex) {
+        step.setAttribute('completed', '');
+      } else if (index > this.activeIndex) {
+        step.removeAttribute('completed');
+      }
+    });
+  }
 
-    if (index >= 0 && index < this.stepperItems.length) {
-      // Update active state - set all items to inactive except the clicked one
-      this.stepperItems = this.stepperItems.map((item, i) => {
-        return {
-          ...item,
-          active: i === index,
-        };
-      });
+  /**
+   * Handles when a slotted nte-step is clicked
+   * @param event Custom event from nte-step with step index
+   */
+  private handleStepClick(event: CustomEvent) {
+    const step = event.target as HTMLElement;
+    const index = parseInt(step.getAttribute('index') || '0', 10);
+
+    // Only allow clicking if the step is not disabled
+    if (step && !step.hasAttribute('disabled')) {
+      this.setActiveStep(index);
 
       // Dispatch a custom event for external listeners
       this.dispatchEvent(
-        new CustomEvent('stepper-item-click', {
+        new CustomEvent('nte-stepper-change', {
           detail: {
-            item: this.stepperItems[index],
             index,
+            step,
           },
           bubbles: true,
           composed: true,
         }),
       );
-
-      // Trigger a re-render
-      this.requestUpdate();
     }
   }
 
-  private renderStepperItem(item: IStepperItem, index: number) {
-    console.log(item);
-    const stepperItemElement = html`
-      <div
-        class="nte-stepper-item"
-        part="stepper-item"
-        data-index="${index}"
-        data-active="${item.active}"
-        @click="${this.handleClick}"
-      >
-        <div class="nte-stepper-circle" part="stepper-circle">
-          <div class="nte-stepper-circle-progress"></div>
-          <i class="${item.icon}"></i>
-        </div>
-        <div class="nte-stepper-info" part="stepper-info">
-          <h2>${item.label}</h2>
-          <i class="ti ti-info-circle"></i>
-        </div>
-        <div class="nte-stepper-action" part="stepper-action">
-          <i class="ti ti-arrow-narrow-right"></i>
-        </div>
-      </div>
-      ${index === this.stepperItems.length - 1 ? '' : html`<div class="nte-stepper-separator"></div>`}
-    `;
-
-    return stepperItemElement;
+  /**
+   * Sets the active step by index
+   * @param index Index of the step to set active
+   */
+  private setActiveStep(index: number) {
+    if (index >= 0 && index < this.stepElements.length) {
+      this.activeIndex = index;
+    }
   }
 
-  // Render the UI as a function of component state
+  /**
+   * Public method to set active step programmatically
+   * @param index Index of the step to activate
+   */
+  public setActiveIndex(index: number): void {
+    this.setActiveStep(index);
+  }
+
+  /**
+   * Gets the number of steps in the stepper
+   */
+  public getStepCount(): number {
+    return this.stepElements.length;
+  }
+
+  /**
+   * Helper method to create separator elements between steps
+   */
+  private createSeparator(): HTMLElement {
+    const separator = document.createElement('div');
+    separator.className = 'nte-stepper-separator';
+    separator.setAttribute('part', 'separator');
+    return separator;
+  }
+
+  /**
+   * Add separator elements between step items when in vertical mode
+   */
+  private addSeparatorsBetweenSteps(): void {
+    // Only add separators in vertical mode
+    if (this.mode !== 'vertical') {
+      // Remove existing separators when not in vertical mode
+      this.removeAllSeparators();
+      return;
+    }
+
+    // Remove any existing separators before adding new ones
+    this.removeAllSeparators();
+
+    // Make sure we have a shadow root and a wrapper element
+    if (!this.shadowRoot) return;
+
+    // Get the wrapper element from the shadow DOM
+    const wrapper = this.shadowRoot.querySelector('.nte-stepper-wrapper');
+    if (!wrapper) return;
+
+    // Use the actual stepElements array
+    if (this.stepElements.length < 2) return;
+
+    // For each pair of slots, add a separator
+    for (let i = 0; i < this.stepElements.length - 1; i++) {
+      // Create a new separator
+      const separator = this.createSeparator();
+
+      // Add it to the wrapper
+      wrapper.appendChild(separator);
+
+      // Position it appropriately using CSS
+      separator.style.setProperty('--nte-stepper-separator-top', `calc(${i + 1} * 100% / ${this.stepElements.length})`);
+    }
+  }
+
+  /**
+   * Remove all separator elements
+   */
+  private removeAllSeparators(): void {
+    // We need the shadow root to access the wrapper
+    if (!this.shadowRoot) return;
+
+    // Get the wrapper element
+    const wrapper = this.shadowRoot.querySelector('.nte-stepper-wrapper');
+    if (!wrapper) return;
+
+    // Find and remove all separator elements within the wrapper
+    const separators = wrapper.querySelectorAll('.nte-stepper-separator');
+    separators.forEach((separator) => separator.remove());
+  }
+
+  /**
+   * Render the UI as a function of component state
+   */
   override render() {
-    // Find the active step index for the progress value
-    const activeIndex = this.stepperItems.findIndex((item) => item.active === true);
-    const progressValue = activeIndex >= 0 ? activeIndex : 0;
-    console.log(progressValue, progressValue);
-    return html` <div class="nte-stepper-wrapper nte-stepper-mode-${this.config.mode}">
-      ${this.stepperItems.map((item, index) => this.renderStepperItem(item, index))}
-      ${this.config.mode === 'horizontal'
-        ? html`<div class="nte-stepper-progress">
-            <nte-progress
-              part="stepper-progress"
-              min="0"
-              max="${this.stepperItems.length}"
-              value="${progressValue}"
-              steps="${this.stepperItems.length}"
-            ></nte-progress>
-          </div>`
-        : ''}
-    </div>`;
+    const stepsCount = this.stepElements.length;
+
+    return html`
+      <div class="nte-stepper-wrapper nte-stepper-mode-${this.mode}" part="wrapper">
+        <slot @slotchange=${this.handleSlotChange}></slot>
+
+        ${this.mode === 'horizontal'
+          ? html`
+              <div class="nte-stepper-progress" part="progress-container">
+                <nte-progress
+                  part="progress"
+                  min="0"
+                  max="${stepsCount}"
+                  value="${this.activeIndex}"
+                  steps="${stepsCount}"
+                ></nte-progress>
+              </div>
+            `
+          : ''}
+      </div>
+    `;
   }
 }
