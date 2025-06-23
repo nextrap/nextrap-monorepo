@@ -1,7 +1,7 @@
 {
-    "name": "nte-stepper",
+    "name": "nte-step",
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
-    "sourceRoot": "nextrap-elements/nte-stepper/src",
+    "sourceRoot": "nextrap-elements/nte-step/src",
     "projectType": "library",
     "release": {
         "version": {

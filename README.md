@@ -33,6 +33,7 @@ These packages are grouped into their respective directories ([`nextrap-base`](.
 | [`ntl-infiniscroll`](nextrap-layout/ntl-infiniscroll)                 | [@dermatthes](https://github.com/dermatthes) |
 | [`ntl-2col`](nextrap-layout/ntl-2col)                                 | [@evolkmann](https://github.com/evolkmann)   |
 | [`nte-stepper`](nextrap-elements/nte-stepper)                         | [@marliedev](https://github.com/marliedev)   |
+| [`nte-step`](nextrap-elements/nte-step)                               | [@marliedev](https://github.com/marliedev)   |
 | [`ntl-scrollspy`](nextrap-elements/ntl-scrollspy)                     | [@marliedev](https://github.com/marliedev)   |
 | [`nte-progress`](nextrap-elements/nte-progress)                       | [@marliedev](https://github.com/marliedev)   |
 
