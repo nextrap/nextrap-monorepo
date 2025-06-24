@@ -25,37 +25,23 @@ $soft-danger: color.adjust($danger, $lightness: $lighten-factor) !default;
 $soft-light: color.adjust($light, $lightness: $lighten-factor) !default;
 $soft-dark: color.adjust($dark, $lightness: $lighten-factor) !default;
 
-// ======== TYPOGRAPHY ======== //
-
-// Base typography
-$font-family-base: sans-serif !default;
-$font-family-heading: $font-family-base !default;
-
-// Base size and scale ratios
-$font-size-base: 1rem !default;
-$type-scale-ratio: 1.2 !default;
-$type-scale-ratio-mobile: 1.1 !default;
-$type-scale-ratio-desktop: 1.25 !default;
-
-// Line heights
-$line-height-base: 1.5 !default;
-$line-height-heading: 1.2 !default;
-
-// Text colors
-$text: $black !default;
-$header: $black !default;
-
-// Link styles
-$text-decoration-link: underline !default;
-$link-color: $primary !default;
-$link-on-dark: $white !default;
-
 // ======== FONTS ======== //
 
 $base-space: 1rem !default; // Base spacing unit
 
+$font-family-base: sans-serif !default;
+$font-size-base: 1rem !default; // Base font size
 $font-size-multiplier: 1.2 !default; // Font size multiplier for headers
-$font-size-multiplier-header: 0.7 !default; // Font size multiplier for headers
+$line-height-base: 1.5 !default; // Base line height
 
 $font-family-header: $font-family-base !default;
 $font-size-header: 1rem !default; // Header font size
+$font-size-multiplier-header: 0.7 !default; // Font size multiplier for headers
+$line-height-header: 1.2 !default; // Header line height
+
+$text: $black !default; // Base text color
+$header: $black !default; // Header text color
+
+$text-decoration-link: underline !default;
+$link-color: $primary !default;
+$link-on-dark: $white !default;

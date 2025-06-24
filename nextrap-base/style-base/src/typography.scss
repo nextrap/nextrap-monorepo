@@ -1,108 +1,46 @@
-@import '../_variables';
-
-// Typography System
-// Implements a fluid, responsive typography system using CSS custom properties and clamp()
-
-// Calculate type scale values
-@function type-scale($level, $base-size: $font-size-base, $ratio: $type-scale-ratio) {
-  @return calc($base-size * pow($ratio, $level));
+@use '../variables' as *;
+@use 'sass:math';
+h1 {
+  font-size: $font-size-base * pow($font-size-multiplier, 5);
+  line-height: $line-height-base;
+}
+h2 {
+  font-size: $font-size-base * pow($font-size-multiplier, 4);
+  line-height: $line-height-base;
+}
+h3 {
+  font-size: $font-size-base * pow($font-size-multiplier, 3);
+  line-height: $line-height-base;
+}
+h4 {
+  font-size: $font-size-base * pow($font-size-multiplier, 2);
+  line-height: $line-height-base;
+}
+h5 {
+  font-size: $font-size-base * $font-size-multiplier;
+  line-height: $line-height-base;
+}
+h6 {
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+}
+p {
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+}
+small {
+  font-size: math.div($font-size-base, $font-size-multiplier);
+  line-height: $line-height-base;
 }
 
-// Generate CSS custom properties for the type scale
-:root {
-  // Base size
-  --font-size-base: #{$font-size-base};
-  
-  // Type scale ratios
-  --type-scale-ratio: #{$type-scale-ratio};
-  --type-scale-ratio-mobile: #{$type-scale-ratio-mobile};
-  --type-scale-ratio-desktop: #{$type-scale-ratio-desktop};
-  
-  // Fluid type scale
-  --fs-6: #{$fs-6};    // Extra small
-  --fs-5: #{$fs-5};       // Small
-  --fs-4: #{$fs-4};       // Base
-  --fs-3: #{$fs-3};    // Large
-  --fs-2: #{$fs-2};      // Extra large
-  --fs-1: #{$fs-1};     // 2x large
-  --display-4: #{$display-4}; // Display 4
-  --display-3: #{$display-3};     // Display 3
-  --display-2: #{$display-2};     // Display 2
-  --display-1: #{$display-1};   // Display 1
-  
-  // Line heights
-  --lh-base: #{$line-height-base};
-  --lh-heading: #{$line-height-heading};
-  --lh-sm: 1.25;
-  --lh-lg: 1.75;
-}
-
-// Base typography styles
-body {
+main {
   font-family: $font-family-base;
-  font-size: var(--fs-4);
-  line-height: var(--lh-base);
-  color: $text;
 }
-
-// Heading styles
-h1, h2, h3, h4, h5, h6 {
-  font-family: $font-family-heading;
-  line-height: var(--lh-heading);
-  color: $header;
-  margin-bottom: 1rem;
-}
-
-h1 { font-size: var(--display-1); }
-h2 { font-size: var(--display-2); }
-h3 { font-size: var(--display-3); }
-h4 { font-size: var(--display-4); }
-h5 { font-size: var(--fs-1); }
-h6 { font-size: var(--fs-2); }
-
-// Text utility classes
-.fs-6 { font-size: var(--fs-6); }
-.fs-5 { font-size: var(--fs-5); }
-.fs-4 { font-size: var(--fs-4); }
-.fs-3 { font-size: var(--fs-3); }
-.fs-2 { font-size: var(--fs-2); }
-.fs-1 { font-size: var(--fs-1); }
-.display-4 { font-size: var(--display-4); }
-.display-3 { font-size: var(--display-3); }
-.display-2 { font-size: var(--display-2); }
-.display-1 { font-size: var(--display-1); }
-
-// Line height utilities
-.lh-sm { line-height: var(--lh-sm); }
-.lh-base { line-height: var(--lh-base); }
-.lh-lg { line-height: var(--lh-lg); }
-.lh-heading { line-height: var(--lh-heading); }
-
-// Link styles
-a {
-  color: $link-color;
-  text-decoration: $text-decoration-link;
-  
-  &:hover {
-    text-decoration: none;
+// pow() is not a built-in SASS function, so we need to define it if not already present.
+@function pow($base, $exp) {
+  $result: 1;
+  @for $i from 1 through $exp {
+    $result: $result * $base;
   }
-}
-
-// Dark mode link color
-.bg-dark a,
-.text-dark a {
-  color: $link-on-dark;
-}
-
-// Responsive adjustments
-@media (max-width: 768px) {
-  :root {
-    --type-scale-ratio: var(--type-scale-ratio-mobile);
-  }
-}
-
-@media (min-width: 1200px) {
-  :root {
-    --type-scale-ratio: var(--type-scale-ratio-desktop);
-  }
+  @return $result;
 }

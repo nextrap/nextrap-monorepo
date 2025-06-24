@@ -1,3 +1,4 @@
+@forward './variables';
 @use './variables' as *;
 @use './src/root' as *;
 @use './src/container' as *;
