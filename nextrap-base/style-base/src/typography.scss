@@ -1,3 +1,5 @@
+@use '../variables' as *;
+@use 'sass:math';
 h1 {
   font-size: $font-size-base * pow($font-size-multiplier, 5);
   line-height: $line-height-base;
@@ -27,8 +29,12 @@ p {
   line-height: $line-height-base;
 }
 small {
-  font-size: $font-size-base / $font-size-multiplier;
+  font-size: math.div($font-size-base, $font-size-multiplier);
   line-height: $line-height-base;
+}
+
+main {
+  font-family: $font-family-base;
 }
 // pow() is not a built-in SASS function, so we need to define it if not already present.
 @function pow($base, $exp) {
