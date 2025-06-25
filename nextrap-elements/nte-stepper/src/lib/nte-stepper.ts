@@ -176,6 +176,34 @@ export class nteStepperElement extends LitElement {
         step.removeAttribute('completed');
       }
     });
+
+    // Update separator classes when step states change
+    this.updateSeparatorClasses();
+  }
+
+  /**
+   * Update the classes of separator elements based on step states
+   */
+  private updateSeparatorClasses(): void {
+    // Only update separators in vertical mode
+    if (this.mode !== 'vertical' || !this.shadowRoot) return;
+
+    // Get the wrapper element
+    const wrapper = this.shadowRoot.querySelector('.nte-stepper-wrapper');
+    if (!wrapper) return;
+
+    // Get all separator elements
+    const separators = wrapper.querySelectorAll('.nte-stepper-separator');
+    if (separators.length === 0) return;
+
+    // Update each separator's class based on the next step's state
+    separators.forEach((separator, i) => {
+      if (this.stepElements[i + 1]?.hasAttribute('active') || this.stepElements[i + 1]?.hasAttribute('completed')) {
+        separator.classList.add('completed');
+      } else {
+        separator.classList.remove('completed');
+      }
+    });
   }
 
   /**
@@ -267,6 +295,11 @@ export class nteStepperElement extends LitElement {
     for (let i = 0; i < this.stepElements.length - 1; i++) {
       // Create a new separator
       const separator = this.createSeparator();
+
+      // Add "completed" class if the next step (i+1) is active or completed
+      if (this.stepElements[i + 1]?.hasAttribute('active') || this.stepElements[i + 1]?.hasAttribute('completed')) {
+        separator.classList.add('completed');
+      }
 
       // Add it to the wrapper
       wrapper.appendChild(separator);
