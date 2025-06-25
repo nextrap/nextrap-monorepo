@@ -3,10 +3,10 @@
 
 :host {
   /* Colors */
-  --nte-stepper-seperator-color: var(--nt-soft-dark, #6c757d);
   --nte-stepper-progress-bg-color: rgba(var(--nt-primary-rgb), 0.05);
   --nte-stepper-progress-bar-color: var(--nt-primary, #0d6efd);
-
+  --nte-stepper-seperator-color: var(--nt-soft-dark, #6c757d);
+  --nte-stepper-seperator-color-completed: var(--nt-primary, #0d6efd);
   /* Sizes, Spacing */
   --nte-stepper-spacing: 1rem;
   --nte-stepper-circle-size: 36px;
@@ -80,6 +80,10 @@
       margin: 0;
       z-index: 0;
       transform: translateY(-50%);
+
+      &.completed {
+        border-left-color: var(--nte-stepper-seperator-color-completed);
+      }
     }
   }
 
