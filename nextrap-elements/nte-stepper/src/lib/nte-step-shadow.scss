@@ -67,6 +67,20 @@
     }
   }
 }
+@keyframes checkmark-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) rotate(-30deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2) rotate(5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
 
 :host([completed]) {
   /* Apply a check mark or other completion indicator */
@@ -76,6 +90,17 @@
 
     ::slotted([slot='icon']) {
       color: var(--nte-step-circle-completed-icon-color, white);
+    }
+
+    .check-icon {
+      width: var(--nte-step-circle-icon-size);
+      height: var(--nte-step-circle-icon-size);
+      fill: var(--nte-step-circle-completed-icon-color, white);
+      transform-origin: center;
+
+      &.animate {
+        animation: checkmark-pop 1s cubic-bezier(0.5, 0, 0.25, 1.25) forwards;
+      }
     }
   }
 }
