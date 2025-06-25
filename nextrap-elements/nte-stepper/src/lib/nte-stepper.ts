@@ -4,7 +4,7 @@ import style from './nte-stepper-shadow.scss?inline';
 // Import the progress component
 import '@nextrap/nte-progress';
 // Import the step component
-import '@nextrap/nte-step';
+import './nte-step';
 
 export interface IStepperConfig {
   // Custom CSS classes to apply to the element
