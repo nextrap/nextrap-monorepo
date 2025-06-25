@@ -53,6 +53,36 @@ export class nteStepElement extends LitElement {
   index = -1;
 
   /**
+   * Track when animation should play
+   */
+  private shouldAnimateCheckmark = false;
+
+  /**
+   * Handle property changes
+   */
+  override updated(changedProperties: Map<string, unknown>): void {
+    // If the completed status has changed to true, trigger animation
+    if (changedProperties.has('completed') && this.completed) {
+      // Force reset the animation by removing the class briefly
+      this.shouldAnimateCheckmark = false;
+
+      // Use requestAnimationFrame to ensure the DOM has updated before re-adding the class
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          this.shouldAnimateCheckmark = true;
+          this.requestUpdate();
+
+          // Reset the animation state after animation completes
+          setTimeout(() => {
+            this.shouldAnimateCheckmark = false;
+            this.requestUpdate();
+          }, 1000);
+        });
+      });
+    }
+  }
+
+  /**
    * Handle click events on the step
    */
   override connectedCallback(): void {
@@ -88,7 +118,19 @@ export class nteStepElement extends LitElement {
     return html`
       <div class="nte-step-circle" part="step-circle" @click="${this.handleClick}">
         <div class="nte-step-circle-progress" part="step-circle-progress"></div>
-        <slot name="icon"></slot>
+        ${this.completed
+          ? html`<svg
+              class="check-icon ${this.shouldAnimateCheckmark ? 'animate' : ''}"
+              viewBox="0 0 78.369 78.369"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M78.049,19.015L29.458,67.606c-0.428,0.428-1.121,0.428-1.548,0L0.32,40.015c-0.427-0.426-0.427-1.119,0-1.547l6.704-6.704
+                c0.428-0.427,1.121-0.427,1.548,0l20.113,20.112l41.113-41.113c0.429-0.427,1.12-0.427,1.548,0l6.703,6.704
+                C78.477,17.894,78.477,18.586,78.049,19.015z"
+              />
+            </svg>`
+          : html`<slot name="icon"></slot>`}
       </div>
       <div class="nte-step-info" part="step-info" @click="${this.handleClick}">
         <slot name="title"></slot>
