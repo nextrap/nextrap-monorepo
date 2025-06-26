@@ -1,3 +1,4 @@
+@use '../_variables.scss' as *;
 h1 {
   font-size: $font-size-base * pow($font-size-multiplier, 5);
   line-height: $line-height-base;
