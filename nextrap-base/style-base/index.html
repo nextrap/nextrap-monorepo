@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nextrap Base Style System</title>
+    <link rel="stylesheet" href="index.scss" />
+    <style>
+      .demo-section {
+        margin: 2rem 0;
+        padding: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 0.25rem;
+      }
+      .demo-section h2 {
+        margin-top: 0;
+        color: var(--nt-primary);
+      }
+      .color-swatch {
+        display: inline-block;
+        width: 100px;
+        height: 60px;
+        margin: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 0.25rem;
+        text-align: center;
+        line-height: 60px;
+        font-weight: bold;
+        font-size: 0.8rem;
+      }
+      .container-demo {
+        background: var(--nt-light);
+        padding: 1rem;
+        margin: 1rem 0;
+        border: 2px dashed var(--nt-primary);
+      }
+      .spacing-demo {
+        background: var(--nt-soft-primary);
+        margin: 0.5rem 0;
+        padding: 0.5rem;
+        border-radius: 0.25rem;
+      }
+      .typography-demo {
+        margin: 1rem 0;
+        padding: 1rem;
+        background: var(--nt-white);
+        border-left: 4px solid var(--nt-primary);
+      }
+      .variable-demo {
+        background: var(--nt-soft-light);
+        padding: 1rem;
+        margin: 0.5rem 0;
+        border-radius: 0.25rem;
+        font-family: monospace;
+        font-size: 0.9rem;
+      }
+      .combined-demo {
+        background: linear-gradient(135deg, var(--nt-soft-primary), var(--nt-soft-accent));
+        padding: 2rem;
+        margin: 2rem 0;
+        border-radius: 0.5rem;
+        color: var(--nt-text-on-primary);
+      }
+      .responsive-demo {
+        background: var(--nt-soft-success);
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 0.25rem;
+      }
+      @media (min-width: 576px) {
+        .responsive-demo::after {
+          content: ' (≥576px)';
+          font-weight: bold;
+        }
+      }
+      @media (min-width: 768px) {
+        .responsive-demo::after {
+          content: ' (≥768px)';
+          font-weight: bold;
+        }
+      }
+      @media (min-width: 992px) {
+        .responsive-demo::after {
+          content: ' (≥992px)';
+          font-weight: bold;
+        }
+      }
+      @media (min-width: 1200px) {
+        .responsive-demo::after {
+          content: ' (≥1200px)';
+          font-weight: bold;
+        }
+      }
+      @media (min-width: 1400px) {
+        .responsive-demo::after {
+          content: ' (≥1400px)';
+          font-weight: bold;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-demo">
+      <h1>Nextrap Base Style System</h1>
+      <p>
+        A comprehensive demonstration of the base styling system including typography, colors, spacing, and responsive
+        behavior.
+      </p>
+    </div>
+
+    <!-- Typography Section -->
+    <div class="demo-section">
+      <h2>Typography (typography.scss)</h2>
+      <p>Demonstrating the typography hierarchy with font size multipliers:</p>
+
+      <div class="typography-demo">
+        <h1>Heading 1 - Font Size: 1rem × 1.2⁵ = 2.488rem</h1>
+        <h2>Heading 2 - Font Size: 1rem × 1.2⁴ = 2.074rem</h2>
+        <h3>Heading 3 - Font Size: 1rem × 1.2³ = 1.728rem</h3>
+        <h4>Heading 4 - Font Size: 1rem × 1.2² = 1.44rem</h4>
+        <h5>Heading 5 - Font Size: 1rem × 1.2 = 1.2rem</h5>
+        <h6>Heading 6 - Font Size: 1rem (base)</h6>
+        <p>Paragraph text - Font Size: 1rem (base) with line-height: 1.5</p>
+        <small>Small text - Font Size: 1rem ÷ 1.2 = 0.833rem</small>
+      </div>
+    </div>
+
+    <!-- Colors Section -->
+    <div class="demo-section">
+      <h2>Color System (colors-utils.scss & _variables.scss)</h2>
+
+      <h3>Primary Colors</h3>
+      <div>
+        <div class="color-swatch" style="background-color: var(--nt-primary); color: var(--nt-text-on-primary)">
+          Primary
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-accent); color: var(--nt-text-on-accent)">
+          Accent
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-secondary); color: var(--nt-text-on-secondary)">
+          Secondary
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-success); color: var(--nt-text-on-success)">
+          Success
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-info); color: var(--nt-text-on-info)">Info</div>
+        <div class="color-swatch" style="background-color: var(--nt-warning); color: var(--nt-text-on-warning)">
+          Warning
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-danger); color: var(--nt-text-on-danger)">
+          Danger
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-light); color: var(--nt-text-on-light)">Light</div>
+        <div class="color-swatch" style="background-color: var(--nt-dark); color: var(--nt-text-on-dark)">Dark</div>
+        <div
+          class="color-swatch"
+          style="background-color: var(--nt-white); color: var(--nt-text-on-white); border: 1px solid #ccc"
+        >
+          White
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-black); color: var(--nt-text-on-black)">Black</div>
+      </div>
+
+      <h3>Soft Colors (40% lighter)</h3>
+      <div>
+        <div class="color-swatch" style="background-color: var(--nt-soft-primary); color: var(--nt-text-on-primary)">
+          Soft Primary
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-soft-accent); color: var(--nt-text-on-accent)">
+          Soft Accent
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-soft-success); color: var(--nt-text-on-success)">
+          Soft Success
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-soft-info); color: var(--nt-text-on-info)">
+          Soft Info
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-soft-warning); color: var(--nt-text-on-warning)">
+          Soft Warning
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-soft-danger); color: var(--nt-text-on-danger)">
+          Soft Danger
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-soft-light); color: var(--nt-text-on-light)">
+          Soft Light
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-soft-dark); color: var(--nt-text-on-dark)">
+          Soft Dark
+        </div>
+      </div>
+
+      <h3>Color Utility Classes</h3>
+      <div>
+        <p class="text-primary">Text Primary Color</p>
+        <p class="text-accent">Text Accent Color</p>
+        <p class="text-success">Text Success Color</p>
+        <p class="text-danger">Text Danger Color</p>
+        <p class="text-warning">Text Warning Color</p>
+        <p class="text-info">Text Info Color</p>
+      </div>
+
+      <div>
+        <div class="bg-primary" style="padding: 1rem; margin: 0.5rem 0; border-radius: 0.25rem">
+          <p style="color: var(--nt-text-on-primary); margin: 0">Background Primary</p>
+        </div>
+        <div class="bg-accent" style="padding: 1rem; margin: 0.5rem 0; border-radius: 0.25rem">
+          <p style="color: var(--nt-text-on-accent); margin: 0">Background Accent</p>
+        </div>
+        <div class="bg-soft-primary" style="padding: 1rem; margin: 0.5rem 0; border-radius: 0.25rem">
+          <p style="margin: 0">Background Soft Primary</p>
+        </div>
+        <div class="bg-soft-accent" style="padding: 1rem; margin: 0.5rem 0; border-radius: 0.25rem">
+          <p style="margin: 0">Background Soft Accent</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spacing Section -->
+    <div class="demo-section">
+      <h2>Spacing System (spacing.scss)</h2>
+      <p>CSS Custom Properties for consistent spacing:</p>
+
+      <div class="variable-demo">
+        --nt-base-gap: 1rem<br />
+        --nt-base-space: 1rem<br />
+        --nt-border-radius: 0.25rem<br />
+        --nt-border-width: 1px
+      </div>
+
+      <div class="spacing-demo" style="margin: var(--nt-base-space)">Element with base space margin</div>
+      <div class="spacing-demo" style="padding: var(--nt-base-gap)">Element with base gap padding</div>
+      <div
+        class="spacing-demo"
+        style="border-radius: var(--nt-border-radius); border: var(--nt-border-width) solid var(--nt-primary)"
+      >
+        Element with border radius and border width
+      </div>
+    </div>
+
+    <!-- Container Section -->
+    <div class="demo-section">
+      <h2>Container System (container.scss)</h2>
+      <p>Responsive container widths based on viewport size:</p>
+
+      <div class="responsive-demo">
+        <strong>Current Container Width:</strong>
+        <span id="container-width">Calculating...</span>
+        <br />
+        <small>Resize your browser window to see the container width change</small>
+      </div>
+
+      <div class="variable-demo">
+        <strong>Breakpoint Container Widths:</strong><br />
+        &lt; 576px: 100%<br />
+        ≥ 576px: 540px<br />
+        ≥ 768px: 720px<br />
+        ≥ 992px: 960px<br />
+        ≥ 1200px: 1140px<br />
+        ≥ 1400px: 1320px
+      </div>
+    </div>
+
+    <!-- CSS Custom Properties Section -->
+    <div class="demo-section">
+      <h2>CSS Custom Properties (root.scss)</h2>
+      <p>All CSS variables are available for dynamic theming:</p>
+
+      <div class="variable-demo">
+        <strong>Color Variables:</strong><br />
+        --nt-primary: #007bff<br />
+        --nt-accent: #6610f2<br />
+        --nt-secondary: #6c757d<br />
+        --nt-success: #28a745<br />
+        --nt-info: #17a2b8<br />
+        --nt-warning: #ffc107<br />
+        --nt-danger: #dc3545<br />
+        --nt-light: #f8f9fa<br />
+        --nt-dark: #343a40<br />
+        --nt-white: #fff<br />
+        --nt-black: #000
+      </div>
+
+      <div class="variable-demo">
+        <strong>RGB Color Variables:</strong><br />
+        --nt-primary-rgb: 0, 123, 255<br />
+        --nt-accent-rgb: 102, 16, 242<br />
+        --nt-secondary-rgb: 108, 117, 125<br />
+        --nt-success-rgb: 40, 167, 69<br />
+        --nt-info-rgb: 23, 162, 184<br />
+        --nt-warning-rgb: 255, 193, 7<br />
+        --nt-danger-rgb: 220, 53, 69<br />
+        --nt-light-rgb: 248, 249, 250<br />
+        --nt-dark-rgb: 52, 58, 64<br />
+        --nt-white-rgb: 255, 255, 255<br />
+        --nt-black-rgb: 0, 0, 0
+      </div>
+
+      <div class="variable-demo">
+        <strong>Typography Variables:</strong><br />
+        --nt-font-family-base: sans-serif<br />
+        --nt-font-family-header: sans-serif<br />
+        --nt-font-size-base: 1rem<br />
+        --nt-font-size-header: 1rem<br />
+        --nt-font-size-multiplier: 1.2<br />
+        --nt-font-size-multiplier-header: 0.7<br />
+        --nt-text: #000<br />
+        --nt-header: #000
+      </div>
+
+      <div class="variable-demo">
+        <strong>Link Variables:</strong><br />
+        --nt-link: #007bff<br />
+        --nt-link-on-dark: #fff<br />
+        --nt-text-decoration-link: underline
+      </div>
+    </div>
+
+    <!-- Combined Elements Section -->
+    <div class="demo-section">
+      <h2>Combined Elements</h2>
+      <p>Showcasing how all systems work together:</p>
+
+      <div class="combined-demo">
+        <h3>Combined Styling Example</h3>
+        <p>This element uses:</p>
+        <ul>
+          <li>Typography from typography.scss</li>
+          <li>Colors from colors-utils.scss</li>
+          <li>Spacing from spacing.scss</li>
+          <li>CSS custom properties from root.scss</li>
+        </ul>
+        <p>It demonstrates how the base system provides a cohesive design foundation.</p>
+      </div>
+
+      <div
+        style="
+          background: var(--nt-soft-success);
+          padding: var(--nt-base-space);
+          border-radius: var(--nt-border-radius);
+          margin: var(--nt-base-gap) 0;
+        "
+      >
+        <h4 style="color: var(--nt-success)">Success Message Example</h4>
+        <p style="margin: 0">This uses soft colors, typography hierarchy, and consistent spacing.</p>
+      </div>
+
+      <div
+        style="
+          background: var(--nt-soft-warning);
+          padding: var(--nt-base-space);
+          border-radius: var(--nt-border-radius);
+          margin: var(--nt-base-gap) 0;
+        "
+      >
+        <h4 style="color: var(--nt-warning)">Warning Message Example</h4>
+        <p style="margin: 0">Another example showing the system's flexibility and consistency.</p>
+      </div>
+    </div>
+
+    <script>
+      // Update container width display
+      function updateContainerWidth() {
+        const width = window.innerWidth;
+        let containerWidth = '100%';
+
+        if (width >= 1400) containerWidth = '1320px';
+        else if (width >= 1200) containerWidth = '1140px';
+        else if (width >= 992) containerWidth = '960px';
+        else if (width >= 768) containerWidth = '720px';
+        else if (width >= 576) containerWidth = '540px';
+
+        document.getElementById('container-width').textContent = containerWidth;
+      }
+
+      window.addEventListener('resize', updateContainerWidth);
+      updateContainerWidth();
+    </script>
+  </body>
+</html>
