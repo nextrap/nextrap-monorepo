@@ -1,55 +1,58 @@
-@use 'colors';
+@use '../variables' as *;
 
 // Create classes for bg colors and text colors
 @each $color,
   $value
     in (
-      primary: $primary,
-      accent: $accent,
-      success: $success,
-      info: $info,
-      warning: $warning,
-      danger: $danger,
-      light: $light,
-      dark: $dark,
-      white: $white,
-      black: $black
+      'primary': $primary,
+      'accent': $accent,
+      'secondary': $secondary,
+      'success': $success,
+      'info': $info,
+      'warning': $warning,
+      'danger': $danger,
+      'light': $light,
+      'dark': $dark,
+      'white': $white,
+      'black': $black
     )
 {
-  .#{$color} {
-    --background-color: #{$value};
-    --text-color: var(--text-on-#{$color});
-  }
   .bg-#{$color} {
-    background-color: var(--mt-#{$color});
-    --background-color: var(--mt-#{$color});
-    --text-color: var(--mt-text-on-#{$color});
+    background-color: var(--nt-#{$color}) !important;
+    --background-color: var(--nt-#{$color}) !important;
+    --text-color: var(--nt-text-on-#{$color}) !important;
   }
   .text-#{$color} {
-    --text-color: var(--mt-#{$color});
-    color: var(--mt-#{$color});
+    --text-color: var(--nt-#{$color}) !important;
+    color: var(--nt-#{$color}) !important;
   }
+
   .border-#{$color} {
-    --border-color: var(--mt-#{$color});
-    border-color: var(--mt-#{$color});
+    --border-color: var(--nt-#{$color}) !important;
+    border-color: var(--nt-#{$color}) !important;
   }
 }
 
-// Create bg-* classes for soft colors
 @each $color,
   $value
     in (
-      soft-primary: $soft-primary,
-      soft-accent: $soft-accent,
-      soft-success: $soft-success,
-      soft-info: $soft-info,
-      soft-warning: $soft-warning,
-      soft-danger: $soft-danger,
-      soft-light: $soft-light,
-      soft-dark: $soft-dark
+      'soft-primary': $soft-primary,
+      'soft-accent': $soft-accent,
+      'soft-secondary': $soft-secondary,
+      'soft-success': $soft-success,
+      'soft-info': $soft-info,
+      'soft-warning': $soft-warning,
+      'soft-danger': $soft-danger,
+      'soft-light': $soft-light,
+      'soft-dark': $soft-dark
     )
 {
   .bg-#{$color} {
-    background-color: var(--mt-#{$color});
+    background-color: var(--background-color) !important;
+    --background-color: var(--nt-#{$color}) !important;
   }
+}
+
+.text-auto {
+  color: var(--text-color) !important;
 }
