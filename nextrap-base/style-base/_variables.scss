@@ -27,7 +27,7 @@ $soft-dark: color.adjust($dark, $lightness: $lighten-factor) !default;
 
 // ======== FONTS ======== //
 
-$gap: 1.5rem !default; // Base gap for layout (use this for padding, margins, etc.)
+$gap: 1.25rem !default; // Base gap for layout (use this for padding, margins, etc.)
 $space: 1rem !default; // Base spacing unit
 $content-space: 10rem !default; // Base constant spacing unit
 
