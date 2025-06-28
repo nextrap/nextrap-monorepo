@@ -1,8 +1,8 @@
 # Kickstart container config file - see https://gitub.com/infracamp/kickstart
 # Run ./kickstart.sh to start a development-container for this project
 version: 1
-from: 'ghcr.io/nfra-project/kickstart-flavor-php:unstable'
-ports: '80:80;4000:4000;4100:4100;127.0.0.1:2222:22'
+from: "ghcr.io/nfra-project/kickstart-flavor-php:unstable"
+ports: "80:80;4000:4000;4100:4100;127.0.0.1:2222:22"
 secrets: open_ai
 
 command:

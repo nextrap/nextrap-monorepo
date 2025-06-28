@@ -18,7 +18,7 @@
       }
       .color-swatch {
         display: inline-block;
-        width: 100px;
+        width: 150px;
         height: 60px;
         margin: 0.5rem;
         border: 1px solid #ccc;
@@ -129,46 +129,113 @@
     <div class="demo-section">
       <h2>Color System (colors-utils.scss & _variables.scss)</h2>
 
-      <h3>Primary Colors</h3>
+      <code>
+        <span style="color: var(--nt-primary)">--nt-primary</span>
+        <span style="color: var(--nt-accent)">--nt-accent</span>
+        <span style="color: var(--nt-secondary)">--nt-secondary</span>
+        <span style="color: var(--nt-success)">--nt-success</span>
+        <span style="color: var(--nt-info)">--nt-info</span>
+        <span style="color: var(--nt-warning)">--nt-warning</span>
+        <span style="color: var(--nt-danger)">--nt-danger</span>
+        <span style="color: var(--nt-light)">--nt-light</span>
+        <span style="color: var(--nt-dark)">--nt-dark</span>
+        <span style="color: var(--nt-white)">--nt-white</span>
+        <span style="color: var(--nt-black)">--nt-black</span>
+        <span style="color: var(--nt-soft-primary)">--nt-soft-primary</span>
+        <span style="color: var(--nt-soft-accent)">--nt-soft-accent</span>
+        <span style="color: var(--nt-soft-success)">--nt-soft-success</span>
+        <span style="color: var(--nt-soft-info)">--nt-soft-info</span>
+        <span style="color: var(--nt-soft-warning)">--nt-soft-warning</span>
+        <span style="color: var(--nt-soft-danger)">--nt-soft-danger</span>
+        <span style="color: var(--nt-soft-light)">--nt-soft-light</span>
+        <span style="color: var(--nt-soft-dark)">--nt-soft-dark</span>
+      </code>
+
+      <h3>Primary Colors (with --nt-text-on-#color)</h3>
       <div>
-        <div class="color-swatch bg-primary text-auto">Primary</div>
-        <div class="color-swatch bg-accent text-auto">Accent</div>
-        <!-- Repeat for other colors -->
-        <div class="color-swatch bg-secondary text-auto">Secondary</div>
-        <div class="color-swatch bg-success text-auto">Success</div>
-        <div class="color-swatch bg-danger text-auto">Danger</div>
-        <div class="color-swatch bg-warning text-auto">Warning</div>
-        <div class="color-swatch bg-info text-auto">Info</div>
-        <div class="color-swatch bg-light text-auto">Light</div>
-        <div class="color-swatch bg-dark text-auto">Dark</div>
-        <div class="color-swatch bg-white text-auto">White</div>
-        <div class="color-swatch bg-black text-auto">Black</div>
+        <div class="color-swatch" style="background-color: var(--nt-primary); color: var(--nt-text-on-primary)">
+          --nt-primary
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-accent); color: var(--nt-text-on-accent)">
+          --nt-accent
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-secondary); color: var(--nt-text-on-secondary)">
+          --nt-secondary
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-success); color: var(--nt-text-on-success)">
+          --nt-success
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-info); color: var(--nt-text-on-info)">
+          --nt-info
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-warning); color: var(--nt-text-on-warning)">
+          --nt-warning
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-danger); color: var(--nt-text-on-danger)">
+          --nt-danger
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-light); color: var(--nt-text-on-light)">
+          --nt-light
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-dark); color: var(--nt-text-on-dark)">
+          --nt-dark
+        </div>
+        <div
+          class="color-swatch"
+          style="background-color: var(--nt-white); color: var(--nt-text-on-white); border: 1px solid #ccc"
+        >
+          --nt-white
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-black); color: var(--nt-text-on-black)">
+          --nt-black
+        </div>
       </div>
 
       <h3>Soft Colors (40% lighter)</h3>
       <div>
-        <div class="color-swatch bg-soft-primary">Soft Primary</div>
-        <div class="color-swatch bg-soft-accent">Soft Accent</div>
-        <div class="color-swatch bg-soft-secondary">Soft Secondary</div>
-        <div class="color-swatch bg-soft-success">Soft Success</div>
-        <div class="color-swatch bg-soft-danger">Soft Danger</div>
-        <div class="color-swatch bg-soft-warning">Soft Warning</div>
-        <div class="color-swatch bg-soft-info">Soft Info</div>
+        <div class="color-swatch" style="background-color: var(--nt-soft-primary); color: var(--nt-text-on-primary)">
+          --nt-soft-primary
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-soft-accent); color: var(--nt-text-on-accent)">
+          --nt-soft-accent
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-soft-success); color: var(--nt-text-on-success)">
+          --nt-soft-success
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-soft-info); color: var(--nt-text-on-info)">
+          --nt-soft-info
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-soft-warning); color: var(--nt-text-on-warning)">
+          --nt-soft-warning
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-soft-danger); color: var(--nt-text-on-danger)">
+          --nt-soft-danger
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-soft-light); color: var(--nt-text-on-light)">
+          --nt-soft-light
+        </div>
+        <div class="color-swatch" style="background-color: var(--nt-soft-dark); color: var(--nt-text-on-dark)">
+          --nt-soft-dark
+        </div>
       </div>
 
       <h3>Color Utility Classes</h3>
       <div>
-        <p class="text-primary">Text Primary Color</p>
-        <p class="text-accent">Text Accent Color</p>
-        <p class="text-success">Text Success Color</p>
-        <p class="text-danger">Text Danger Color</p>
-        <p class="text-warning">Text Warning Color</p>
-        <p class="text-info">Text Info Color</p>
+        <p class="text-primary">Text Primary Color <code>.text-primary</code></p>
+        <p class="text-accent">Text Accent Color <code>.text-accent</code></p>
+        <p class="text-secondary">Text Secondary Color <code>.text-secondary</code></p>
+        <p class="text-success">Text Success Color <code>.text-success</code></p>
+
+        <p class="text-danger">Text Danger Color <code>.text-danger</code></p>
+
+        <p class="text-warning">Text Warning Color <code>.text-warning</code></p>
+
+        <p class="text-info">Text Info Color <code>.text-info</code></p>
       </div>
 
       <div>
         <div class="bg-primary" style="padding: 1rem; margin: 0.5rem 0; border-radius: 0.25rem">
-          <p>Background Primary</p>
+          <p style="color: var(--nt-text-on-primary); margin: 0">Background Primary .bg-primary</p>
         </div>
         <div class="bg-accent" style="padding: 1rem; margin: 0.5rem 0; border-radius: 0.25rem">
           <p style="color: var(--nt-text-on-accent); margin: 0">Background Accent</p>
@@ -179,6 +246,9 @@
         <div class="bg-soft-accent" style="padding: 1rem; margin: 0.5rem 0; border-radius: 0.25rem">
           <p style="margin: 0">Background Soft Accent</p>
         </div>
+      </div>
+      <div>
+        <div class="bg-primary text-auto"></div>
       </div>
     </div>
 
