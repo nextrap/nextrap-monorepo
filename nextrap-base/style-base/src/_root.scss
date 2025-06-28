@@ -108,9 +108,9 @@ $background: $white !default;
   --nt-font-family-header: #{$font-family-header};
   --nt-font-size-base: #{$font-size-base};
   --nt-font-size-header: #{$font-size-header};
-  --nt-font-size-multiplier: #{$font-size_multiplier};
-  --nt-font-size-multiplier-header: #{$font-size_multiplier_header};
   --nt-header: #{header};
+
+  --nt-font-size-small: #{$font-size-small};
 
   // Spacing
   --nt-gap: #{$gap};
@@ -129,10 +129,17 @@ $background: $white !default;
   @each $i, $val in $spaceMap {
     --nt-content-space-#{$i}: calc(var(--nt-content-space) * #{$val});
   }
-}
 
-// Responsive sizing (RCS)
-// This is the root size all rem units are based on. (also space, content-space, etc.)
-html {
-  font-size: clamp(0.875rem, 1vw + 0.5rem, 1.125rem);
+  // =============== FONT SIZES =============== //
+  // Font size
+  @each $i, $val in $fontSizeMap {
+    --nt-font-size-#{$i}: calc(var(--nt-font-size-base) * #{$val});
+  }
+
+  // header font size
+  @each $i, $val in $headerFontSizeMap {
+    --nt-font-size-h#{$i}: calc(var(--nt-font-size-header) * #{$val});
+  }
+
+  // Display font size
 }

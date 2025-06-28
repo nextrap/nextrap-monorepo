@@ -33,12 +33,10 @@ $content-space: 10rem !default; // Base constant spacing unit
 
 $font-family-base: sans-serif !default;
 $font-size-base: 1rem !default; // Base font size
-$font-size-multiplier: 1.2 !default; // Font size multiplier for headers
 $line-height-base: 1.5 !default; // Base line height
 
 $font-family-header: $font-family-base !default;
 $font-size-header: 1rem !default; // Header font size
-$font-size-multiplier-header: 0.7 !default; // Font size multiplier for headers
 $line-height-header: 1.2 !default; // Header line height
 
 $text: $black !default; // Base text color
@@ -57,3 +55,22 @@ $spaceMap: (
   '4': 1.5,
   '5': 3,
 ) !default; // Spacing map for utility classes
+
+$font-size-small: 0.875rem !default; // Font size in <small> tags or .small class
+
+$fontSizeMap: (
+  '1': 0.75,
+  '2': 0.875,
+  '3': 1,
+  '4': 1.25,
+  '5': 1.5,
+) !default; // Font size map for utility classes
+
+$headerFontSizeMap: (
+  '1': 2.5,
+  '2': 2,
+  '3': 1.75,
+  '4': 1.5,
+  '5': 1.25,
+  '6': 1,
+) !default; // Font size map for headers
