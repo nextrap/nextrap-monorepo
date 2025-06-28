@@ -22,7 +22,7 @@
         height: 60px;
         margin: 0.5rem;
         border: 1px solid #ccc;
-        border-radius: 0.25rem;
+        border-radius: var(--nt-border-radius);
         text-align: center;
         line-height: 60px;
         font-weight: bold;
@@ -37,8 +37,8 @@
       .spacing-demo {
         background: var(--nt-soft-primary);
         margin: 0.5rem 0;
-        padding: 0.5rem;
-        border-radius: 0.25rem;
+        padding: var(--nt-gap);
+        border-radius: var(--nt-border-radius);
       }
       .typography-demo {
         margin: 1rem 0;
@@ -56,14 +56,14 @@
       }
       .combined-demo {
         background: linear-gradient(135deg, var(--nt-soft-primary), var(--nt-soft-accent));
-        padding: 2rem;
+        padding: var(--nt-gap);
         margin: 2rem 0;
         border-radius: 0.5rem;
-        color: var(--nt-text-on-primary);
+        color: var(--nt-text-on-soft-colors);
       }
       .responsive-demo {
         background: var(--nt-soft-success);
-        padding: 1rem;
+        padding: var(--nt-gap);
         margin: 1rem 0;
         border-radius: 0.25rem;
       }
@@ -151,7 +151,9 @@
         <span style="color: var(--nt-soft-dark)">--nt-soft-dark</span>
       </code>
 
-      <h3>Primary Colors (with --nt-text-on-#color)</h3>
+      <h3>
+        Primary Colors <small>(with <code>--nt-text-on-#color</code>)</small>
+      </h3>
       <div>
         <div class="color-swatch" style="background-color: var(--nt-primary); color: var(--nt-text-on-primary)">
           --nt-primary
@@ -193,28 +195,37 @@
 
       <h3>Soft Colors (40% lighter)</h3>
       <div>
-        <div class="color-swatch" style="background-color: var(--nt-soft-primary); color: var(--nt-text-on-primary)">
+        <div
+          class="color-swatch"
+          style="background-color: var(--nt-soft-primary); color: var(--nt-text-on-soft-colors)"
+        >
           --nt-soft-primary
         </div>
-        <div class="color-swatch" style="background-color: var(--nt-soft-accent); color: var(--nt-text-on-accent)">
+        <div class="color-swatch" style="background-color: var(--nt-soft-accent); color: var(--nt-text-on-soft-colors)">
           --nt-soft-accent
         </div>
-        <div class="color-swatch" style="background-color: var(--nt-soft-success); color: var(--nt-text-on-success)">
+        <div
+          class="color-swatch"
+          style="background-color: var(--nt-soft-success); color: var(--nt-text-on-soft-colors)"
+        >
           --nt-soft-success
         </div>
-        <div class="color-swatch" style="background-color: var(--nt-soft-info); color: var(--nt-text-on-info)">
+        <div class="color-swatch" style="background-color: var(--nt-soft-info); color: var(--nt-text-on-soft-colors)">
           --nt-soft-info
         </div>
-        <div class="color-swatch" style="background-color: var(--nt-soft-warning); color: var(--nt-text-on-warning)">
+        <div
+          class="color-swatch"
+          style="background-color: var(--nt-soft-warning); color: var(--nt-text-on-soft-colors)"
+        >
           --nt-soft-warning
         </div>
-        <div class="color-swatch" style="background-color: var(--nt-soft-danger); color: var(--nt-text-on-danger)">
+        <div class="color-swatch" style="background-color: var(--nt-soft-danger); color: var(--nt-text-on-soft-colors)">
           --nt-soft-danger
         </div>
-        <div class="color-swatch" style="background-color: var(--nt-soft-light); color: var(--nt-text-on-light)">
+        <div class="color-swatch" style="background-color: var(--nt-soft-light); color: var(--nt-text-on-soft-colors)">
           --nt-soft-light
         </div>
-        <div class="color-swatch" style="background-color: var(--nt-soft-dark); color: var(--nt-text-on-dark)">
+        <div class="color-swatch" style="background-color: var(--nt-soft-dark); color: var(--nt-text-on-soft-colors)">
           --nt-soft-dark
         </div>
       </div>
@@ -264,8 +275,14 @@
         --nt-border-width: 1px
       </div>
 
-      <div class="spacing-demo" style="margin: var(--nt-base-space)">Element with base space margin</div>
-      <div class="spacing-demo" style="padding: var(--nt-base-gap)">Element with base gap padding</div>
+      <div class="spacing-demo" style="margin: var(--nt-space-1)">Element with <code>--nt-space-1</code></div>
+      <div class="spacing-demo" style="margin: var(--nt-space-2)">Element with <code>--nt-space-2</code></div>
+      <div class="spacing-demo" style="margin: var(--nt-space-3)">
+        Element with <code>--nt-space-3 (equals --nt-space)</code>
+      </div>
+      <div class="spacing-demo" style="margin: var(--nt-space-4)">Element with <code>--nt-space-4</code></div>
+      <div class="spacing-demo" style="margin: var(--nt-space-5)">Element with <code>--nt-space-5</code></div>
+      <div class="spacing-demo" style="padding: var(--nt-gap)">Element with base gap padding</div>
       <div
         class="spacing-demo"
         style="border-radius: var(--nt-border-radius); border: var(--nt-border-width) solid var(--nt-primary)"
@@ -273,7 +290,18 @@
         Element with border radius and border width
       </div>
     </div>
+    <div class="demo-section">
+      <h3>Spacing Utility Classes</h3>
+      <div class="variable-demo">
+        Margin: .m-[0-5] .mt-[0-5] .mb-[0-5] .ms-[0-5] .me-[0-5] .my-[0-5] .mx-[0-5]<br />
+        Padding: .p-[0-5] .pt-[0-5] .pb-[0-5] .ps-[0-5] .pe-[0-5] .py-[0-5] .px-[0-5]
+      </div>
 
+      <div class="">
+        <div class="mt-1">.mt-1</div>
+        <div class="mt-2">.mt-2</div>
+      </div>
+    </div>
     <!-- Container Section -->
     <div class="demo-section">
       <h2>Container System (container.scss)</h2>
@@ -352,6 +380,14 @@
       </div>
     </div>
 
+    <section class="demo-section">
+      <h2>Spacing</h2>
+      <p>Demonstrating responsive behavior with media queries:</p>
+
+      <div class="responsive-demo">
+        <div class="mt-1">--mt-1</div>
+      </div>
+    </section>
     <!-- Combined Elements Section -->
     <div class="demo-section">
       <h2>Combined Elements</h2>
@@ -372,9 +408,9 @@
       <div
         style="
           background: var(--nt-soft-success);
-          padding: var(--nt-base-space);
+          padding: var(--nt-space);
           border-radius: var(--nt-border-radius);
-          margin: var(--nt-base-gap) 0;
+          margin: var(--nt-gap) 0;
         "
       >
         <h4 style="color: var(--nt-success)">Success Message Example</h4>
@@ -384,9 +420,9 @@
       <div
         style="
           background: var(--nt-soft-warning);
-          padding: var(--nt-base-space);
+          padding: var(--nt-space);
           border-radius: var(--nt-border-radius);
-          margin: var(--nt-base-gap) 0;
+          margin: var(--nt-gap) 0;
         "
       >
         <h4 style="color: var(--nt-warning)">Warning Message Example</h4>

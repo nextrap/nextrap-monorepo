@@ -81,6 +81,7 @@ $background: $white !default;
   --nt-soft-danger: #{$soft-danger};
   --nt-soft-light: #{$soft-light};
   --nt-soft-dark: #{$soft-dark};
+  --nt-text-on-soft-colors: #{$text-on-soft-colors}; // Default: always text color (black)
 
   // Text colors
   --nt-text: #{$text};
@@ -110,4 +111,22 @@ $background: $white !default;
   --nt-font-size-multiplier: #{$font-size_multiplier};
   --nt-font-size-multiplier-header: #{$font-size_multiplier_header};
   --nt-header: #{header};
+
+  // Spacing
+  --nt-gap: #{$gap};
+
+  --nt-border-radius: 0.25rem;
+  --nt-border-width: 1px;
+
+  --nt-space: #{$space};
+  // Create --nt-space-1-5 variables (Multiplier from bootstrap)
+  @each $i, $val in $spaceMap {
+    --nt-space-#{$i}: calc(var(--nt-space) * #{$val});
+  }
+
+  --nt-content-space: #{$content-space};
+  // Create --nt-content-space-1-5 variables
+  @each $i, $val in $spaceMap {
+    --nt-content-space-#{$i}: calc(var(--nt-content-space) * #{$val});
+  }
 }

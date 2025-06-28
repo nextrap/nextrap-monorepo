@@ -50,6 +50,7 @@
   .bg-#{$color} {
     background-color: var(--background-color) !important;
     --background-color: var(--nt-#{$color}) !important;
+    --text-color: var(--nt-text-on-#{$color}) !important;
   }
 }
 

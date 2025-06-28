@@ -27,7 +27,9 @@ $soft-dark: color.adjust($dark, $lightness: $lighten-factor) !default;
 
 // ======== FONTS ======== //
 
-$base-space: 1rem !default; // Base spacing unit
+$gap: 1.5rem !default; // Base gap for layout (use this for padding, margins, etc.)
+$space: 1rem !default; // Base spacing unit
+$content-space: 10rem !default; // Base constant spacing unit
 
 $font-family-base: sans-serif !default;
 $font-size-base: 1rem !default; // Base font size
@@ -40,8 +42,18 @@ $font-size-multiplier-header: 0.7 !default; // Font size multiplier for headers
 $line-height-header: 1.2 !default; // Header line height
 
 $text: $black !default; // Base text color
+$text-on-soft-colors: $text !default; // Default text color on soft colors
 $header: $black !default; // Header text color
 
 $text-decoration-link: underline !default;
 $link-color: $primary !default;
 $link-on-dark: $white !default;
+
+// Used for generating --space-1, --space-2, etc. CSS variables and --content-space-1, --content-space-2, etc.
+$spaceMap: (
+  '1': 0.25,
+  '2': 0.5,
+  '3': 1,
+  '4': 1.5,
+  '5': 3,
+) !default; // Spacing map for utility classes
