@@ -1,0 +1,118 @@
+// Base Variables
+$base-gap: var(--nt-base-gap);
+$base-space: var(--nt-base-space);
+$base-content-space: var(--nt-base-content-space);
+
+// Spacing Scale (0 to 5)
+@for $i from 1 through 5 {
+  .m-#{$i} {
+    margin: var(--nt-space-#{$i}) !important;
+  }
+  .mt-#{$i} {
+    margin-top: var(--nt-space-#{$i}) !important;
+  }
+  .me-#{$i} {
+    margin-right: var(--nt-space-#{$i}) !important;
+  }
+  .mb-#{$i} {
+    margin-bottom: var(--nt-space-#{$i}) !important;
+  }
+  .ms-#{$i} {
+    margin-left: var(--nt-space-#{$i}) !important;
+  }
+  .mx-#{$i} {
+    margin-inline: var(--nt-space-#{$i}) !important;
+  }
+  .my-#{$i} {
+    margin-block: var(--nt-space-#{$i}) !important;
+  }
+  .p-#{$i} {
+    padding: var(--nt-space-#{$i}) !important;
+  }
+  .pt-#{$i} {
+    padding-top: var(--nt-space-#{$i}) !important;
+  }
+  .pe-#{$i} {
+    padding-right: var(--nt-space-#{$i}) !important;
+  }
+  .pb-#{$i} {
+    padding-bottom: var(--nt-space-#{$i}) !important;
+  }
+  .ps-#{$i} {
+    padding-left: var(--nt-space-#{$i}) !important;
+  }
+  .px-#{$i} {
+    padding-inline: var(--nt-space-#{$i}) !important;
+  }
+  .py-#{$i} {
+    padding-block: var(--nt-space-#{$i}) !important;
+  }
+}
+
+// make m-0 p-0 my-0 mx-0 mt-0 mb-0 ms-0 me-0 pt-0 pb-0 ps-0 pe-0
+.m-0 {
+  margin: 0 !important;
+}
+.mt-0 {
+  margin-top: 0 !important;
+}
+.me-0 {
+  margin-right: 0 !important;
+}
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+.ms-0 {
+  margin-left: 0 !important;
+}
+.mx-0 {
+  margin-inline: 0 !important;
+}
+.my-0 {
+  margin-block: 0 !important;
+}
+.p-0 {
+  padding: 0 !important;
+}
+.pt-0 {
+  padding-top: 0 !important;
+}
+.pe-0 {
+  padding-right: 0 !important;
+}
+.pb-0 {
+  padding-bottom: 0 !important;
+}
+.ps-0 {
+  padding-left: 0 !important;
+}
+.px-0 {
+  padding-inline: 0 !important;
+}
+.py-0 {
+  padding-block: 0 !important;
+}
+// Spacing Utilities
+
+.content-space-top-0 {
+  margin-top: 0 !important;
+}
+.content-space-bottom-0 {
+  margin-bottom: 0 !important;
+}
+.content-space-0 {
+  margin-block: 0 !important;
+}
+
+// Content Space Helpers
+@for $i from 0 through 5 {
+  .content-space-top-#{$i} {
+    margin-top: calc(var(--content-space-#{$i}) * #{$i}) !important;
+  }
+  .content-space-bottom-#{$i} {
+    margin-bottom: calc(var(--content-space-#{$i}) * #{$i}) !important;
+  }
+  .content-space-#{$i} {
+    margin-block: calc(var(--content-space-#{$i}) * #{$i}) !important;
+  }
+}

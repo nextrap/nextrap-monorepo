@@ -3,15 +3,15 @@
 @use 'sass:color';
 
 @function luminance($color) {
-  $g: color.channel($color, 'green', $space: rgb);
-  $r: color.channel($color, 'red', $space: rgb);
-  $b: color.channel($color, 'blue', $space: rgb);
+  $r: red($color) / 255;
+  $g: green($color) / 255;
+  $b: blue($color) / 255;
 
-  $r: if($r < 0.03928, math.div($r, 12.92), pow(math.div($r + 0.055, 1.055), 2.4));
-  $g: if($g < 0.03928, math.div($g, 12.92), pow(math.div($g + 0.055, 1.055), 2.4));
-  $b: if($b < 0.03928, math.div($b, 12.92), pow(math.div($b + 0.055, 1.055), 2.4));
+  $r: if($r < 0.03928, $r / 12.92, pow((($r + 0.055) / 1.055), 2.4));
+  $g: if($g < 0.03928, $g / 12.92, pow((($g + 0.055) / 1.055), 2.4));
+  $b: if($b < 0.03928, $b / 12.92, pow((($b + 0.055) / 1.055), 2.4));
 
-  @return 0.2126 * $r + 0.7152 * $g + 0.0722 * $b;
+  @return $r * 0.2126 + $g * 0.7152 + $b * 0.0722;
 }
 
 @function contrast($color1, $color2) {
@@ -73,6 +73,7 @@ $background: $white !default;
 
   // Soft colors
   --nt-soft-primary: #{$soft-primary};
+  --nt-soft-secondary: #{$soft-secondary};
   --nt-soft-accent: #{$soft-accent};
   --nt-soft-success: #{$soft-success};
   --nt-soft-info: #{$soft-info};
@@ -80,12 +81,14 @@ $background: $white !default;
   --nt-soft-danger: #{$soft-danger};
   --nt-soft-light: #{$soft-light};
   --nt-soft-dark: #{$soft-dark};
+  --nt-text-on-soft-colors: #{$text-on-soft-colors}; // Default: always text color (black)
 
   // Text colors
   --nt-text: #{$text};
   --nt-text-rgb: hex2rgb($text);
 
   --nt-text-on-primary: #{$text-on-primary};
+  --nt-text-on-secondary: #{$text-on-secondary};
   --nt-text-on-accent: #{$text-on-accent};
   --nt-text-on-success: #{$text-on-success};
   --nt-text-on-info: #{$text-on-info};
@@ -105,7 +108,38 @@ $background: $white !default;
   --nt-font-family-header: #{$font-family-header};
   --nt-font-size-base: #{$font-size-base};
   --nt-font-size-header: #{$font-size-header};
-  --nt-font-size-multiplier: #{$font-size_multiplier};
-  --nt-font-size-multiplier-header: #{$font-size_multiplier_header};
   --nt-header: #{header};
+
+  --nt-font-size-small: #{$font-size-small};
+
+  // Spacing
+  --nt-gap: #{$gap};
+
+  --nt-border-radius: 0.25rem;
+  --nt-border-width: 1px;
+
+  --nt-space: #{$space};
+  // Create --nt-space-1-5 variables (Multiplier from bootstrap)
+  @each $i, $val in $spaceMap {
+    --nt-space-#{$i}: calc(var(--nt-space) * #{$val});
+  }
+
+  --nt-content-space: #{$content-space};
+  // Create --nt-content-space-1-5 variables
+  @each $i, $val in $spaceMap {
+    --nt-content-space-#{$i}: calc(var(--nt-content-space) * #{$val});
+  }
+
+  // =============== FONT SIZES =============== //
+  // Font size
+  @each $i, $val in $fontSizeMap {
+    --nt-font-size-#{$i}: calc(var(--nt-font-size-base) * #{$val});
+  }
+
+  // header font size
+  @each $i, $val in $headerFontSizeMap {
+    --nt-font-size-h#{$i}: calc(var(--nt-font-size-header) * #{$val});
+  }
+
+  // Display font size
 }
