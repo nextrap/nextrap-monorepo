@@ -1,8 +1,6 @@
 @forward './variables';
-@use './variables' as *;
 @use './src/root' as *;
 @use './src/html' as *;
-@use './src/typography' as *;
 @use './src/typography' as *;
 @use 'src/utils/spacing-utils' as *;
 @use 'src/utils/colors-utils' as *;
