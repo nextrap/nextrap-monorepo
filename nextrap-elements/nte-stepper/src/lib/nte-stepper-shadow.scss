@@ -11,7 +11,7 @@
   --nte-stepper-spacing: 1rem;
   --nte-stepper-circle-size: 36px;
   --nte-stepper-seperator-width: 2px;
-  --nte-stepper-seperator-height: 2rem;
+  --nte-stepper-seperator-height: 3rem;
   --nte-stepper-padding-y: 0.75rem;
 
   /* CSS vars are cascade-inherited to nte-step components */
@@ -82,7 +82,7 @@
       transform: translateY(-50%);
 
       &.completed {
-        border-left-color: var(--nte-stepper-seperator-color-completed);
+        border-left: var(--nte-stepper-seperator-width) solid var(--nte-stepper-seperator-color-completed);
       }
     }
   }
