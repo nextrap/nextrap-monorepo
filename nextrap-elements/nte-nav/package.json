@@ -1,15 +1,16 @@
 {
-  "name": "@nextrap/nte-nav",
-  "version": "0.0.2",
-  "main": "./index.js",
-  "dependencies": {
-    "@nextrap/nt-framework": "^0.0.1",
-    "@nextrap/nte-burger": "^0.0.1",
-    "@nextrap/style-base": "^0.0.1"
-  },
-  "type": "module",
-  "exports": {
-    "./nav": "./src/lib/nte-nav.ts"
-  },
-  "types": "./index.d.ts"
+    "name": "@nextrap/nte-nav",
+    "version": "0.0.2",
+    "main": "./index.js",
+    "dependencies": {
+        "@nextrap/nt-framework": "^0.0.1",
+        "@nextrap/nte-burger": "^0.0.1",
+        "@nextrap/nte-offcanvas": "^0.0.1",
+        "@nextrap/style-base": "^0.0.1"
+    },
+    "type": "module",
+    "exports": {
+        "./nav": "./src/lib/nte-nav.ts"
+    },
+    "types": "./index.d.ts"
 }

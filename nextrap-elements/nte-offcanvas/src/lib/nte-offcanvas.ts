@@ -6,7 +6,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import style from './nte-offcanvas.scss?inline';
 
 @customElement(NteOffcanvas.is)
-class NteOffcanvas extends LitElement {
+export class NteOffcanvas extends LitElement {
   static override styles = [unsafeCSS(style)];
 
   static get is() {
@@ -17,7 +17,7 @@ class NteOffcanvas extends LitElement {
   public backdrop = true;
 
   @property({ type: Boolean, reflect: true })
-  public open = true;
+  public opened = false;
 
   override connectedCallback() {
     super.connectedCallback();
@@ -27,10 +27,20 @@ class NteOffcanvas extends LitElement {
   @state()
   protected closedClass = true;
 
+  public open() {
+    this.opened = true;
+  }
+  public close() {
+    this.opened = false;
+  }
+  public toggle() {
+    this.opened = !this.opened;
+  }
+
   override async updated(changedProperties: Map<string | number | symbol, unknown>): Promise<void> {
     // Animation logic - display first - then apply
-    if (changedProperties.has('open')) {
-      if (this.open) {
+    if (changedProperties.has('opened')) {
+      if (this.opened) {
         this.style.display = 'block';
         await ka_sleep(1);
         SlotTool.observeEmptySlots(this); // Check for empty slots
@@ -50,7 +60,7 @@ class NteOffcanvas extends LitElement {
       <div
         id="backdrop"
         part="backdrop"
-        @click=${() => (this.open = false)}
+        @click=${() => (this.opened = false)}
         class=${classMap({ closed: this.closedClass })}
       ></div>
       <div

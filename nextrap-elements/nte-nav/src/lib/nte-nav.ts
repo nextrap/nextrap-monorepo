@@ -1,30 +1,10 @@
-import {
-  customElement,
-  isBiggerThanBreakpoint,
-  NtElementDefinition,
-  NtSimpleElement,
-  property,
-  unsafeCSS,
-} from '@nextrap/nt-framework';
+import { customElement, isBiggerThanBreakpoint, NtElementDefinition, property, unsafeCSS } from '@nextrap/nt-framework';
+import '@nextrap/nte-offcanvas';
+import { NteOffcanvas } from '@nextrap/nte-offcanvas';
+import { html, LitElement } from 'lit';
+import { state } from 'lit/decorators.js';
+import { createRef, ref, Ref } from 'lit/directives/ref.js';
 import style from './nav.scss?inline';
-
-// Minimal CSS for the nav element
-
-const html = `
-<nav>  
-  <div id="container">
-    <slot name="burger" id="burger" class="burger">
-      <!-- fallback icon -->
-      <nte-burger id="open-burger"></nte-burger>
-    </slot>
-    <div id="backdrop"></div>
-    <div class="nt-nav-links" id="main" part="main">
-      <slot class="burger" name="burger" id="burger-header"><nte-burger id="close-burger" open></nte-burger></slot>
-      <slot></slot>
-    </div>
-  </div>
-</nav>
-`;
 
 /**
  * <nte-nav>
@@ -35,51 +15,74 @@ const html = `
  * </nte-nav>
  */
 @customElement('nte-nav')
-export class NteNav extends NtSimpleElement<['main', 'open-burger', 'close-burger', 'backdrop']> {
-  static override DEFINITION: NtElementDefinition = {
+export class NteNav extends LitElement {
+  static DEFINITION: NtElementDefinition = {
     classes: ['align-left', 'align-right', 'align-center'],
     attributes: {},
   };
 
-  @property({ type: String, reflect: true }) mode: 'row' | 'sidebar' = 'sidebar';
+  static override styles = [unsafeCSS(style)];
+
+  @property({ type: String, reflect: true }) mode: 'row' | 'column' | 'auto' = 'auto';
   // Only for mode "sidebar"
-  @property({ type: Boolean, reflect: true }) open = false;
-  @property({ type: String, reflect: true }) breakpoint: string | number = '';
 
-  constructor() {
-    super(html);
-    this.$['open-burger'].onclick = () => {
-      this.open = true;
-    };
-    this.$['close-burger'].onclick = () => {
-      this.open = false;
-    };
-    this.$['backdrop'].onclick = () => {
-      this.open = false;
-    };
+  @property({ type: String, reflect: true }) breakpoint: string | number = '99999px';
+
+  private offcanvasRef: Ref<NteOffcanvas> = createRef<NteOffcanvas>();
+
+  @state() private _sidebar = false;
+
+  override render() {
+    const sidebar = html`
+      <nte-offcanvas ${ref(this.offcanvasRef)} id="sidebar" part="sidebar">
+        <nte-burger id="close-burger" open slot="header" @click=${() => this.offcanvasRef.value?.close()}></nte-burger>
+        <slot></slot>
+      </nte-offcanvas>
+    `;
+
+    const normal = html`
+      <div class="nt-nav-links" id="main" part="main">
+        <slot></slot>
+      </div>
+    `;
+
+    return html` <nav>
+      <slot
+        ?hidden=${!this._sidebar}
+        name="burger"
+        open
+        id="burger"
+        class="burger"
+        @click=${() => this.offcanvasRef.value?.open()}
+      >
+        <!-- fallback icon -->
+        <nte-burger id="open-burger"></nte-burger>
+      </slot>
+      ${this._sidebar ? sidebar : normal}
+    </nav>`;
   }
 
-  override update(changedProperties: Map<string | number | symbol, unknown>): void {
-    super.update(changedProperties);
-    // @ts-ignore
-    this.$['open-burger'].open = this.open;
-  }
-
-  get css() {
-    return unsafeCSS(style);
+  switchMode(mode: 'row' | 'column') {
+    this.classList.remove('nav-row', 'nav-column');
+    this.classList.add(`nav-${mode}`);
   }
 
   override connectedCallback() {
     super.connectedCallback();
+    this.switchMode('column');
+    this._sidebar = true;
     if (this.breakpoint !== '') {
       if (isBiggerThanBreakpoint(this.breakpoint)) {
-        this.mode = 'row';
+        this.switchMode('row');
+        this._sidebar = false;
       }
       window.addEventListener('breakpoint-changed', (event: Event) => {
         if (isBiggerThanBreakpoint(this.breakpoint)) {
-          this.mode = 'row';
+          this.switchMode('row');
+          this._sidebar = false;
         } else {
-          this.mode = 'sidebar';
+          this.switchMode('column');
+          this._sidebar = true;
         }
       });
     }
