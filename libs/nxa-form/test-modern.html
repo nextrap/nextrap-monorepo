@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modern Form Test</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      /* Debug styles to see what's happening */
+      nxa-form-input[modern] {
+        border: 2px solid red !important;
+      }
+
+      /* Additional styles to ensure modern form styling works */
+      form[modern] input.form-control,
+      form[modern] select.form-control,
+      form[modern] textarea.form-control {
+        border: none !important;
+        border-bottom: 1px solid #dee2e6 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        background-color: transparent !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+
+      form[modern] input.form-control:focus,
+      form[modern] select.form-control:focus,
+      form[modern] textarea.form-control:focus {
+        border: none !important;
+        border-bottom: 2px solid #0d6efd !important;
+        box-shadow: none !important;
+        outline: none !important;
+      }
+    </style>
+  </head>
+  <body class="container mt-5">
+    <h2>Testing Modern Form Styles</h2>
+
+    <form modern>
+      <nxa-form-input modern label="Test Input">
+        <input
+          slot="input"
+          type="text"
+          class="form-control"
+          placeholder="Should have no border except bottom"
+        />
+      </nxa-form-input>
+
+      <nxa-form-input modern label="Test Select" type="select">
+        <select slot="input" class="form-control">
+          <option>Option 1</option>
+          <option>Option 2</option>
+        </select>
+      </nxa-form-input>
+    </form>
+
+    <script src="./src/index.ts" type="module"></script>
+  </body>
+</html>
