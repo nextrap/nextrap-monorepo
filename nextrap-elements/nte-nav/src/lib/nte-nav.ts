@@ -12,14 +12,16 @@ import style from './nav.scss?inline';
 
 const html = `
 <nav>  
-  <slot name="burger" id="burger" class="burger">
-    <!-- fallback icon -->
-    <nte-burger id="open-burger"></nte-burger>
-  </slot>
-  <div id="backdrop"></div>
-  <div class="nt-nav-links" id="main" part="main">
-    <slot class="burger" name="burger" id="burger-header"><nte-burger id="close-burger" open></nte-burger></slot>
-    <slot></slot>
+  <div id="container">
+    <slot name="burger" id="burger" class="burger">
+      <!-- fallback icon -->
+      <nte-burger id="open-burger"></nte-burger>
+    </slot>
+    <div id="backdrop"></div>
+    <div class="nt-nav-links" id="main" part="main">
+      <slot class="burger" name="burger" id="burger-header"><nte-burger id="close-burger" open></nte-burger></slot>
+      <slot></slot>
+    </div>
   </div>
 </nav>
 `;
@@ -33,16 +35,13 @@ const html = `
  * </nte-nav>
  */
 @customElement('nte-nav')
-export class NteNav extends NtSimpleElement<
-  ['main', 'open-burger', 'close-burger', 'backdrop']
-> {
+export class NteNav extends NtSimpleElement<['main', 'open-burger', 'close-burger', 'backdrop']> {
   static override DEFINITION: NtElementDefinition = {
     classes: ['align-left', 'align-right', 'align-center'],
     attributes: {},
   };
 
-  @property({ type: String, reflect: true }) mode: 'row' | 'sidebar' =
-    'sidebar';
+  @property({ type: String, reflect: true }) mode: 'row' | 'sidebar' = 'sidebar';
   // Only for mode "sidebar"
   @property({ type: Boolean, reflect: true }) open = false;
   @property({ type: String, reflect: true }) breakpoint: string | number = '';
@@ -60,10 +59,9 @@ export class NteNav extends NtSimpleElement<
     };
   }
 
-  override update(
-    changedProperties: Map<string | number | symbol, unknown>,
-  ): void {
+  override update(changedProperties: Map<string | number | symbol, unknown>): void {
     super.update(changedProperties);
+    // @ts-ignore
     this.$['open-burger'].open = this.open;
   }
 

@@ -39,9 +39,7 @@ function calculateCurrentBreakpoint() {
  *
  * @param breakpoint
  */
-export function isBiggerThanBreakpoint(
-  breakpoint: Breakpoint | string | number,
-): boolean {
+export function isBiggerThanBreakpoint(breakpoint: Breakpoint | string | number): boolean {
   if (typeof breakpoint === 'string' && breakpoint.endsWith('px')) {
     breakpoint = parseInt(breakpoint.replace('px', ''));
   }
@@ -49,9 +47,7 @@ export function isBiggerThanBreakpoint(
     breakpoint = breakpoints[breakpoint];
     if (!breakpoint) {
       throw new Error(
-        `Breakpoint ${breakpoint} not found. Defined breakpoints are: ${Object.keys(
-          breakpoints,
-        ).join(', ')}`,
+        `Breakpoint ${breakpoint} not found. Defined breakpoints are: ${Object.keys(breakpoints).join(', ')}`,
       );
     }
   } else if (typeof breakpoint === 'number') {
@@ -65,7 +61,7 @@ export function isBiggerThanBreakpoint(
  */
 if (!window.__nextrap_current_breakpoint) {
   window.__nextrap_current_breakpoint = calculateCurrentBreakpoint();
-  const deboucer = new Debouncer(500);
+  const deboucer = new Debouncer(200, 500);
   window.addEventListener('resize', async () => {
     await deboucer.wait();
     if (currentBreakpoint !== calculateCurrentBreakpoint()) {

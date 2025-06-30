@@ -9,13 +9,6 @@
 /* -------------------------------------------------------------------------- */
 
 nte-nav[mode='sidebar'] {
-  --text-color: var(--text-color);
-  --hover-color: var(--primary);
-  --hover-text-color: var(--text-on-primary-color);
-  --transition: 0.2s ease-in-out;
-  --submenu-bg: var(--light);
-  --submenu-text-color: var(--text-color);
-
   /* Main unordered list container */
   ul {
     list-style: none;

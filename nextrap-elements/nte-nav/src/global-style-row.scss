@@ -1,14 +1,6 @@
 // All Row Styles go here
 
 nte-nav {
-  --text-color: var(--text-color);
-  --hover-color: var(--primary);
-  --hover-text-color: var(--text-on-primary-color);
-  --transition: 0.2s ease-in-out;
-  --submenu-bg: var(--light);
-  --submenu-text-color: var(--text-color);
-  --justify-content: center;
-
   &.start {
     --justify-content: flex-start;
   }

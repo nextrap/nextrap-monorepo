@@ -1,5 +1,15 @@
-$primary: #007bff;
-$surface: #fff;
+:host {
+  --container-width: var(--nt-container-width);
+  --text-color: var(--nt-text-color);
+  --hover-color: var(--nt-primary);
+  --hover-text-color: var(--nt-text-on-primary);
+  --transition: 0.2s ease-in-out;
+  --submenu-bg: var(--nt-light);
+  --submenu-text-color: var(--nt-text);
+  --justify-content: center;
+  --sidemenu-bg: var(--nt-soft-primary);
+  --justify-sidebar-burger: flex-end;
+}
 
 :host([mode='row']) {
   .burger {
@@ -11,19 +21,16 @@ $surface: #fff;
   display: none;
 }
 
+#container {
+  width: var(--container-width);
+  max-width: var(--container-width);
+  margin: 0 auto;
+}
+
 // -----------------------------------------------------------------------------
 // Sidebar mode styles
 // -----------------------------------------------------------------------------
 :host([mode='sidebar']) {
-  --text-color: var(--text-color);
-  --hover-color: var(--primary);
-  --hover-text-color: var(--text-on-primary-color);
-  --transition: 0.2s ease-in-out;
-  --submenu-bg: var(--light);
-  --submenu-text-color: var(--text-color);
-  --justify-content: center;
-  --justify-sidebar-burger: flex-end;
-
   display: block;
   position: relative;
 
@@ -59,7 +66,7 @@ $surface: #fff;
     width: 16rem; // 256px
     transform: translateX(100%);
     transition: transform 0.3s ease-in-out;
-    background: $surface;
+    background: var(--sidemenu-bg);
     box-shadow: -2px 0 8px rgba(#000, 0.1);
     overflow-y: auto;
     display: flex;
