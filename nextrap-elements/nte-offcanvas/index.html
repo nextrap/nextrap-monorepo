@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>nte-nav</title>
+  </head>
+  <body>
+    <nte-offcanvas>
+      <h2 slot="header" class="m-0">Offcanvas Header</h2>
+      <button slot="header" class="btn btn-primary" onclick="document.querySelector('nte-offcanvas').close()">
+        Close
+      </button>
+
+      <ul>
+        <li><a href="#" class="active">Home</a></li>
+        <li><a href="#">Products</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+        <li>
+          <a href="#">More</a>
+          <ul>
+            <li><a href="#">Team</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </li>
+      </ul>
+      <div slot="footer">
+        <p>Footer content here</p>
+        <button class="btn btn-secondary" onclick="document.querySelector('nte-offcanvas').close()">
+          Close Offcanvas
+        </button>
+      </div>
+    </nte-offcanvas>
+
+    <hr />
+
+    <p>Dies ist content</p>
+    <button class="btn btn-primary" onclick="document.querySelector('nte-offcanvas').open = true">
+      Open Offcanvas
+    </button>
+
+    <script type="module" src="public/main.ts"></script>
+  </body>
+</html>

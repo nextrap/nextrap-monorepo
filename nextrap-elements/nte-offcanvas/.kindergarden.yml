@@ -1,0 +1,15 @@
+version: 1.0
+
+environments:
+  coder:
+    files:
+      - name: 'project files'
+        include:
+          - './package.json'
+          - './.editorconfig'
+          - './src/**/*.(ts|js|css|scss)'
+          - './index.html'
+          - './www/**/*'
+          - './vite.config.js'
+        instructions: |
+          These are all project files. You can edit them as you like.
