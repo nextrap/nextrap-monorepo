@@ -3,6 +3,7 @@
     "version": "0.0.1",
     "main": "./index.js",
     "dependencies": {
+        "@nextrap/nt-framework": "0.0.1",
         "@nextrap/nte-framework": "0.0.1",
         "@nextrap/style-reset": "0.0.1"
     },

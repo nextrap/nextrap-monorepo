@@ -1,4 +1,5 @@
 import { ka_sleep } from '@kasimirjs/core';
+import { SlotTool } from '@nextrap/nt-framework';
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
@@ -32,6 +33,8 @@ class NteOffcanvas extends LitElement {
       if (this.open) {
         this.style.display = 'block';
         await ka_sleep(1);
+        SlotTool.observeEmptySlots(this); // Check for empty slots
+
         this.closedClass = false;
       } else {
         this.closedClass = true;
@@ -58,9 +61,17 @@ class NteOffcanvas extends LitElement {
         class=${classMap({ closed: this.closedClass })}
         ?backdrop="${this.backdrop}"
       >
-        <slot id="header" name="header"></slot>
-        <slot id="main"></slot>
-        <slot id="footer" name="footer"></slot>
+        <div id="header">
+          <slot name="header"></slot>
+        </div>
+
+        <div id="main" part="main">
+          <slot></slot>
+        </div>
+
+        <div id="footer" part="footer">
+          <slot name="footer"></slot>
+        </div>
       </div>
     `;
   }

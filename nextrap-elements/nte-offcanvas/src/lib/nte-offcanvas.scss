@@ -38,11 +38,11 @@
   }
 }
 
-slot#header {
-  &:has-slotted {
-    display: flex; // Does not work in Safari yet (30.06.2025)
+#header {
+  &:has(> slot[empty]) {
+    display: none;
   }
-  display: none;
+  display: flex;
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
@@ -53,7 +53,7 @@ slot#header {
   padding: var(--padding);
 }
 
-slot#main {
+#main {
   display: flex;
   width: 100%;
 
@@ -64,11 +64,11 @@ slot#main {
   height: 100%;
 }
 
-slot#footer {
-  &:has-slotted {
-    display: flex; // Does not work in Safari yet
+#footer {
+  &:has(> slot[empty]) {
+    display: none;
   }
-  display: none;
+  display: flex;
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
