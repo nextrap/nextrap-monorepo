@@ -11,7 +11,7 @@
   --nte-stepper-spacing: 1rem;
   --nte-stepper-circle-size: 36px;
   --nte-stepper-seperator-width: 2px;
-  --nte-stepper-seperator-height: 3rem;
+  --nte-stepper-seperator-height: 2rem;
   --nte-stepper-padding-y: 0.75rem;
 
   /* CSS vars are cascade-inherited to nte-step components */
@@ -21,51 +21,253 @@
 
   /* CSS for slotted nte-step element */
   --slotted-nte-step-background-color-hover: rgba(var(--nt-black-rgb), 0.03);
+
+  /* CSS for circular mode */
+  --nte-stepper-circular-progress-size: 100px;
+  --nte-stepper-circular-progress-text-size: 1.5rem;
+  --nte-stepper-circular-progress-step-text-size: 0.75rem;
+  --nte-stepper-circular-progress-stroke-width: 0.5rem;
+  --nte-stepper-circular-progress-bg-color: var(--nt-light, #e6e6e6);
+  --nte-stepper-circular-progress-fg-color: var(--nt-primary, #0d6efd);
+  --nte-stepper-circular-text-color: var(--nt-text-on-light);
+
+  /* CSS for circular menu overlay */
+  --nte-stepper-menu-bg-color: var(--nt-white, #ffffff);
+  --nte-stepper-menu-border-color: var(--nt-border-color, #dee2e6);
+  --nte-stepper-menu-text-color: var(--nt-dark, #212529);
+  --nte-stepper-menu-disabled-color: var(--nt-secondary, #6c757d);
+  --nte-stepper-menu-item-hover-bg: var(--nt-light, #f8f9fa);
+  --nte-stepper-menu-active-color: var(--nt-primary, #0d6efd);
+  --nte-stepper-menu-completed-color: var(--nt-success, #198754);
+  --nte-stepper-menu-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 }
 
 .nte-stepper-wrapper {
-  display: flex;
   position: relative;
+  display: flex;
 
   ::slotted(nte-step) {
     --nte-step-background-color-hover: var(--slotted-nte-step-background-color-hover);
-    /* No hover styling here - moved to nte-step component */
   }
 
-  &.nte-stepper-mode-horizontal {
-    flex-direction: row;
-
-    ::slotted(nte-step) {
-      flex-direction: column;
-      justify-items: flex-start;
-      align-items: flex-start;
-      gap: 2rem;
-    }
-
-    .nte-stepper-progress {
-      display: inline-block;
-      position: absolute;
-      width: 100%;
-      top: calc(var(--nte-stepper-padding-y) + var(--nte-stepper-circle-size) + 0.5rem);
-
-      nte-progress::part(progress) {
-        --nte-progress-bg-color: var(--nte-stepper-progress-bg-color);
-      }
-
-      nte-progress::part(progress-bar) {
-        background-color: var(--nte-stepper-progress-bar-color);
-      }
-    }
-  }
-
-  &.nte-stepper-mode-vertical {
-    flex-direction: column;
+  .nte-stepper-circular {
+    --size: var(--nte-stepper-circular-progress-size);
+    --half-size: calc(var(--size) / 2);
+    --stroke-width: var(--nte-stepper-circular-progress-stroke-width);
+    --radius: calc((var(--size) - var(--stroke-width)) / 2);
+    --circumference: calc(var(--radius) * pi * 2);
+    --dash: calc((var(--progress) * var(--circumference)) / 100);
+    display: none;
     position: relative;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    &:hover {
+      .nte-stepper-circular-text {
+        opacity: 0.8;
+      }
+    }
+
+    &.menu-open {
+      .nte-stepper-circular-text {
+        opacity: 0.6;
+      }
+    }
+
+    circle {
+      cx: var(--half-size);
+      cy: var(--half-size);
+      r: var(--radius);
+      stroke-width: var(--stroke-width);
+      fill: transparent;
+      stroke-linecap: round;
+
+      &.nte-stepper-circular-progress-bg {
+        stroke: var(--nte-stepper-circular-progress-bg-color);
+      }
+
+      &.nte-stepper-circular-progress-fg {
+        transform: rotate(-90deg);
+        transform-origin: var(--half-size) var(--half-size);
+        stroke-dasharray: var(--dash) calc(var(--circumference) - var(--dash));
+        transition: stroke-dasharray 0.8s linear 0s;
+        stroke: var(--nte-stepper-circular-progress-fg-color);
+      }
+    }
+
+    .nte-stepper-circular-text {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: var(--nte-stepper-circular-progress-text-size);
+      color: var(--nte-stepper-circular-text-color);
+      span:first-of-type {
+        font-size: var(--nte-stepper-circular-progress-step-text-size);
+        letter-spacing: 0.125rem;
+        opacity: 0.5;
+        place-self: center;
+        text-align: center;
+      }
+    }
+
+    .nte-stepper-menu {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      width: 100%;
+      max-width: 480px;
+      max-height: 100%;
+      background-color: var(--nte-stepper-menu-bg-color);
+      border-radius: var(--nte-stepper-border-radius);
+      box-shadow: var(--nte-stepper-menu-shadow);
+      border: 1px solid var(--nte-stepper-menu-border-color);
+      z-index: 1000;
+      overflow: hidden;
+      cursor: default;
+      animation: nte-menu-fade-in 0.2s ease-out;
+
+      @keyframes nte-menu-fade-in {
+        from {
+          opacity: 0;
+          transform: translateX(-50%) translateY(5px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(-50%) translateY(10px);
+        }
+      }
+
+      .nte-stepper-menu-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid var(--nte-stepper-menu-border-color);
+
+        h3 {
+          margin: 0;
+          font-size: 1.25rem;
+          font-weight: 500;
+          color: var(--nte-stepper-menu-text-color);
+        }
+
+        .nte-stepper-menu-close {
+          border: none;
+          background: none;
+          font-size: 1.5rem;
+          line-height: 1;
+          padding: 0;
+          width: 24px;
+          height: 24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          color: var(--nte-stepper-menu-disabled-color);
+          border-radius: 50%;
+
+          &:hover {
+            background-color: var(--nte-stepper-menu-item-hover-bg);
+            color: var(--nte-stepper-menu-text-color);
+          }
+        }
+      }
+
+      .nte-stepper-menu-items {
+        max-height: 300px;
+        overflow-y: auto;
+
+        .nte-stepper-menu-item {
+          display: flex;
+          align-items: center;
+          padding: 0.75rem 1rem;
+          border-bottom: 1px solid var(--nte-stepper-menu-border-color);
+          color: var(--nte-stepper-menu-text-color);
+          transition: background-color 0.2s ease;
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          &.selectable {
+            cursor: pointer;
+
+            &:hover {
+              background-color: var(--nte-stepper-menu-item-hover-bg);
+            }
+          }
+
+          &.active {
+            background-color: rgba(var(--nt-primary-rgb), 0.1);
+            font-weight: 500;
+
+            .nte-stepper-menu-item-icon {
+              color: var(--nte-stepper-menu-active-color);
+              border-color: var(--nte-stepper-menu-active-color);
+            }
+          }
+
+          &.completed {
+            .nte-stepper-menu-item-icon {
+              color: var(--nte-stepper-menu-completed-color);
+              border-color: var(--nte-stepper-menu-completed-color);
+            }
+          }
+
+          &:not(.selectable) {
+            opacity: 0.6;
+            cursor: not-allowed;
+          }
+
+          .nte-stepper-menu-item-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            background-color: var(--nte-stepper-menu-item-hover-bg);
+            border: 1px solid var(--nte-stepper-menu-border-color);
+            flex-shrink: 0;
+
+            .nte-stepper-menu-item-number {
+              font-weight: 500;
+            }
+          }
+
+          .nte-stepper-menu-item-title {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+      }
+    }
+  }
+
+  // Vertical Mode
+  &.nte-stepper-mode-vertical {
+    .nte-stepper-circular {
+      display: none;
+    }
+    .nte-stepper-steps {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
 
     ::slotted(nte-step) {
       flex-flow: row nowrap;
       margin: 1rem 0;
-      /* Remove hover styling here - moved to nte-step component */
     }
 
     .nte-stepper-separator {
@@ -86,18 +288,70 @@
       }
     }
   }
-
-  &.nte-stepper-mode-circular {
+  // Circular Mode
+  &.nte-stepper-mode-horizontal {
     flex-direction: row;
+
+    .nte-stepper-circular {
+      display: none;
+      @media (max-width: 468px) {
+        display: flex;
+      }
+    }
+    .nte-stepper-steps {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+      @media (max-width: 468px) {
+        display: none;
+      }
+    }
+    ::slotted(nte-step) {
+      flex-direction: column;
+      justify-items: flex-start;
+      align-items: flex-start;
+      gap: 2rem;
+    }
+
+    .nte-stepper-progress {
+      display: inline-block;
+      position: absolute;
+      width: 100%;
+      top: calc(var(--nte-stepper-padding-y) + var(--nte-stepper-circle-size) + 0.5rem);
+      @media (max-width: 468px) {
+        display: none;
+      }
+      nte-progress::part(progress) {
+        --nte-progress-bg-color: var(--nte-stepper-progress-bg-color);
+      }
+
+      nte-progress::part(progress-bar) {
+        background-color: var(--nte-stepper-progress-bar-color);
+      }
+    }
   }
-}
+  // Circular Mode
+  &.nte-stepper-mode-circular {
+    .nte-stepper-circular {
+      display: flex;
+      position: relative;
+    }
+    .nte-stepper-steps {
+      display: none;
+      width: 100%;
+      margin-top: 1.5rem;
+    }
 
-/* Styles moved to nte-step component */
+    ::slotted(nte-step) {
+      display: none;
+    }
 
-/* Horizontal separators between steps (added dynamically in render method) */
-.nte-stepper-separator--horizontal {
-  margin: 0 0.5rem;
-  height: 1px;
-  flex: 1;
-  border-top: var(--nte-stepper-seperator-width) dashed var(--nte-stepper-seperator-color);
+    ::slotted(nte-step[active]) {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      background-color: transparent !important;
+    }
+  }
 }
