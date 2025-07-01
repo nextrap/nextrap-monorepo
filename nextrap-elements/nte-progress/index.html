@@ -199,20 +199,159 @@
         <h2>Striped Progress Bar</h2>
         <nte-progress id="striped-progress" value="75" striped></nte-progress>
         <div class="controls">
-          <button onclick="incrementProgress('striped-progress', 10)">+10%</button>
-          <button onclick="incrementProgress('striped-progress', -10)">-10%</button>
+          <button onclick="document.getElementById('striped-progress').value = 0">0%</button>
+          <button onclick="document.getElementById('striped-progress').value = 25">25%</button>
+          <button onclick="document.getElementById('striped-progress').value = 50">50%</button>
+          <button onclick="document.getElementById('striped-progress').value = 75">75%</button>
+          <button onclick="document.getElementById('striped-progress').value = 100">100%</button>
         </div>
         <div class="code-snippet">&lt;nte-progress value="75" striped&gt;&lt;/nte-progress&gt;</div>
       </div>
 
       <div class="example">
-        <h2>Animated Striped Progress Bar</h2>
-        <nte-progress id="animated-progress" value="75" striped animated></nte-progress>
-        <div class="controls">
-          <button onclick="incrementProgress('animated-progress', 10)">+10%</button>
-          <button onclick="incrementProgress('animated-progress', -10)">-10%</button>
+        <h2>Circular Progress</h2>
+        <div style="display: flex; justify-content: center; margin: 2rem 0">
+          <nte-progress id="circular-progress" type="circle" value="60" min="0" max="100">
+            <span style="font-size: 0.8rem; opacity: 0.7">PROGRESS</span>
+            <span id="circular-progress-value">60%</span>
+          </nte-progress>
         </div>
-        <div class="code-snippet">&lt;nte-progress value="75" striped animated&gt;&lt;/nte-progress&gt;</div>
+        <div class="controls">
+          <button onclick="updateCircularProgress(0)">0%</button>
+          <button onclick="updateCircularProgress(25)">25%</button>
+          <button onclick="updateCircularProgress(50)">50%</button>
+          <button onclick="updateCircularProgress(75)">75%</button>
+          <button onclick="updateCircularProgress(100)">100%</button>
+        </div>
+        <div class="code-snippet">
+          &lt;nte-progress type="circle" value="60" min="0" max="100"&gt; &lt;span style="font-size: 0.8rem; opacity:
+          0.7;"&gt;PROGRESS&lt;/span&gt; &lt;span&gt;60%&lt;/span&gt; &lt;/nte-progress&gt;
+        </div>
+      </div>
+
+      <div class="example">
+        <h2>Stepped Circular Progress</h2>
+        <div style="display: flex; justify-content: center; margin: 2rem 0">
+          <nte-progress id="stepped-circular" type="circle" value="1" min="0" max="4" steps="5">
+            <span style="font-size: 0.8rem; opacity: 0.7">STEP</span>
+            <span id="stepped-circular-text">2 / 5</span>
+          </nte-progress>
+        </div>
+        <div class="controls">
+          <button onclick="updateSteppedCircular(0)">Step 1</button>
+          <button onclick="updateSteppedCircular(1)">Step 2</button>
+          <button onclick="updateSteppedCircular(2)">Step 3</button>
+          <button onclick="updateSteppedCircular(3)">Step 4</button>
+          <button onclick="updateSteppedCircular(4)">Step 5</button>
+        </div>
+        <div class="code-snippet">
+          &lt;nte-progress type="circle" value="1" min="0" max="4" steps="5"&gt; &lt;span style="font-size: 0.8rem;
+          opacity: 0.7;"&gt;STEP&lt;/span&gt; &lt;span&gt;2 / 5&lt;/span&gt; &lt;/nte-progress&gt;
+        </div>
+      </div>
+
+      <div class="example">
+        <h2>Progress Bar with Percentage Display</h2>
+        <div style="position: relative; margin: 2rem 0">
+          <style>
+            .percentage-container {
+              position: relative;
+              height: var(--nte-progress-height, 0.75rem);
+            }
+
+            .percentage-text {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: #fff;
+              font-weight: bold;
+              text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+              z-index: 10;
+              pointer-events: none;
+            }
+          </style>
+          <div class="percentage-container">
+            <nte-progress id="bar-with-percentage" value="65">
+              <span id="bar-percentage-text">65%</span>
+            </nte-progress>
+          </div>
+        </div>
+        <div class="controls">
+          <button onclick="updateBarPercentage(0)">0%</button>
+          <button onclick="updateBarPercentage(25)">25%</button>
+          <button onclick="updateBarPercentage(50)">50%</button>
+          <button onclick="updateBarPercentage(75)">75%</button>
+          <button onclick="updateBarPercentage(100)">100%</button>
+        </div>
+        <div class="code-snippet">
+          &lt;style&gt; .percentage-container { position: relative; height: var(--nte-progress-height, 0.75rem); }
+          .percentage-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items:
+          center; justify-content: center; color: #fff; font-weight: bold; text-shadow: 0 0 3px rgba(0,0,0,0.8);
+          z-index: 10; pointer-events: none; } &lt;/style&gt; &lt;div class="percentage-container"&gt; &lt;nte-progress
+          value="65"&gt;&lt;/nte-progress&gt; &lt;div class="percentage-text"&gt; &lt;span&gt;65%&lt;/span&gt;
+          &lt;/div&gt; &lt;/div&gt;
+        </div>
+      </div>
+
+      <div class="example">
+        <h2>Custom Styled Circle Progress</h2>
+        <div style="display: flex; justify-content: center; margin: 2rem 0">
+          <nte-progress
+            id="custom-circle"
+            type="circle"
+            value="42"
+            min="0"
+            max="100"
+            style="
+              --nte-progress-circle-size: 120px;
+              --nte-progress-circle-stroke-width: 8px;
+              --nte-progress-color: var(--nt-success);
+            "
+          >
+            <div style="display: flex; flex-direction: column; align-items: center">
+              <span id="custom-circle-value" style="font-size: 1.5rem; font-weight: bold">42%</span>
+              <span style="font-size: 0.75rem; opacity: 0.8">COMPLETED</span>
+            </div>
+          </nte-progress>
+        </div>
+        <div class="controls">
+          <button onclick="updateCustomCircle(0)">0%</button>
+          <button onclick="updateCustomCircle(25)">25%</button>
+          <button onclick="updateCustomCircle(42)">42%</button>
+          <button onclick="updateCustomCircle(75)">75%</button>
+          <button onclick="updateCustomCircle(100)">100%</button>
+        </div>
+        <div class="code-snippet">
+          &lt;nte-progress type="circle" value="42" min="0" max="100" style="--nte-progress-circle-size: 120px;
+          --nte-progress-circle-stroke-width: 8px; --nte-progress-color: var(--nt-success);" &gt; &lt;div
+          style="display: flex; flex-direction: column; align-items: center;"&gt; &lt;span style="font-size: 1.5rem;
+          font-weight: bold;"&gt;42%&lt;/span&gt; &lt;span style="font-size: 0.75rem; opacity:
+          0.8;"&gt;COMPLETED&lt;/span&gt; &lt;/div&gt; &lt;/nte-progress&gt;
+        </div>
+      </div>
+
+      <div class="example">
+        <h2>Animated Progress Display</h2>
+        <div style="position: relative; margin: 2rem 0">
+          <nte-progress id="animated-percentage" value="80" striped animated>
+            <span id="animated-percentage-text">Loading... 80%</span>
+          </nte-progress>
+        </div>
+        <div class="controls">
+          <button onclick="updateAnimatedPercentage(20)">20%</button>
+          <button onclick="updateAnimatedPercentage(40)">40%</button>
+          <button onclick="updateAnimatedPercentage(60)">60%</button>
+          <button onclick="updateAnimatedPercentage(80)">80%</button>
+          <button onclick="updateAnimatedPercentage(100)">100%</button>
+        </div>
+        <div class="code-snippet">
+          &lt;nte-progress value="80" striped animated&gt; &lt;span&gt;Loading... 80%&lt;/span&gt; &lt;/nte-progress&gt;
+        </div>
       </div>
 
       <div class="example">
@@ -352,6 +491,42 @@
             root.style.setProperty('--nt-primary', '#0d6efd');
             root.style.setProperty('--nt-primary-rgb', '13, 110, 253');
         }
+      }
+
+      // Functions for circular progress examples
+      function updateCircularProgress(value) {
+        const progress = document.getElementById('circular-progress');
+        const valueDisplay = document.getElementById('circular-progress-value');
+        progress.value = value;
+        valueDisplay.textContent = value + '%';
+      }
+
+      function updateSteppedCircular(value) {
+        const progress = document.getElementById('stepped-circular');
+        const textDisplay = document.getElementById('stepped-circular-text');
+        progress.value = value;
+        textDisplay.textContent = value + 1 + ' / 5';
+      }
+
+      function updateBarPercentage(value) {
+        const progress = document.getElementById('bar-with-percentage');
+        const textDisplay = document.getElementById('bar-percentage-text');
+        progress.value = value;
+        textDisplay.textContent = value + '%';
+      }
+
+      function updateCustomCircle(value) {
+        const progress = document.getElementById('custom-circle');
+        const valueDisplay = document.getElementById('custom-circle-value');
+        progress.value = value;
+        valueDisplay.textContent = value + '%';
+      }
+
+      function updateAnimatedPercentage(value) {
+        const progress = document.getElementById('animated-percentage');
+        const textDisplay = document.getElementById('animated-percentage-text');
+        progress.value = value;
+        textDisplay.textContent = 'Loading... ' + value + '%';
       }
 
       // Set up event listeners

@@ -13,6 +13,7 @@ import style from './nte-progress-shadow.scss?inline';
  * @prop {number} steps - Optional number of discrete steps
  * @prop {boolean} striped - Whether the progress bar has striped pattern
  * @prop {boolean} animated - Whether the striped pattern is animated
+ * @prop {string} type - Type of progress indicator ('bar' or 'circle')
  *
  * @fires progress-changed - Fired when the progress value changes
  * @fires step-changed - Fired when a step changes (only when steps > 0)
@@ -25,6 +26,12 @@ export class nteProgressElement extends LitElement {
   private static readonly DEFAULT_MIN = 0;
   private static readonly DEFAULT_MAX = 100;
   private static readonly DEFAULT_VALUE = 0;
+
+  /**
+   * The type of progress indicator to display
+   */
+  @property({ type: String, reflect: true })
+  type: 'bar' | 'circle' = 'bar';
 
   /**
    * The current progress value
@@ -222,6 +229,10 @@ export class nteProgressElement extends LitElement {
     // Start with the base class
     const classes = ['nte-progress'];
 
+    if (this.type === 'circle') {
+      classes.push('nte-progress-circle');
+    }
+
     // Add any classes from the host element
     const classAttr = this.getAttribute('class');
     if (classAttr) {
@@ -234,7 +245,38 @@ export class nteProgressElement extends LitElement {
 
   override render() {
     const stepPercentage = this.steps > 0 ? 100 / this.steps : 0;
+    const percentage = this.calculatePercentage();
 
+    if (this.type === 'circle') {
+      // For circular progress
+      const radius = 45; // Default radius without stroke width
+      const circumference = 2 * Math.PI * radius;
+      const dashArray = (percentage * circumference) / 100;
+      const dashOffset = circumference - dashArray;
+
+      return html`
+        <div class="${this.getContainerClasses()}" part="container">
+          <svg class="nte-progress-circle-svg" width="100%" height="100%" viewBox="0 0 100 100" part="svg">
+            <circle class="nte-progress-circle-bg" cx="50" cy="50" r="${radius}" part="circle-background"></circle>
+            <circle
+              class="nte-progress-circle-fg"
+              cx="50"
+              cy="50"
+              r="${radius}"
+              stroke-dasharray="${circumference}"
+              stroke-dashoffset="${dashOffset}"
+              part="circle-foreground"
+              style="--progress: ${percentage}"
+            ></circle>
+          </svg>
+          <div class="nte-progress-circle-content" part="content">
+            <slot></slot>
+          </div>
+        </div>
+      `;
+    }
+
+    // For standard progress bar
     return html`
       <progress
         class="${this.getContainerClasses()} ${this.getProgressBarClasses()}"
@@ -262,6 +304,7 @@ export class nteProgressElement extends LitElement {
               </div>
             `
           : ''}
+        <slot></slot>
       </progress>
     `;
   }
