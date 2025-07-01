@@ -41,6 +41,10 @@ export class nteStepperElement extends LitElement {
   @state()
   private activeIndex = 0;
 
+  // Track if overlay menu is open
+  @state()
+  private isMenuOpen = false;
+
   // Reference to the default slot element
   private slotElement: HTMLSlotElement | null = null;
 
@@ -105,6 +109,7 @@ export class nteStepperElement extends LitElement {
     // Add separators after initial render is complete
     this.updateComplete.then(() => {
       this.addSeparatorsBetweenSteps();
+      this.updateCircularProgress();
     });
   }
 
@@ -117,12 +122,14 @@ export class nteStepperElement extends LitElement {
     // Update active class when activeIndex changes
     if (changedProperties.has('activeIndex')) {
       this.updateStepsState();
+      this.updateCircularProgress();
     }
 
     // Check if mode has changed
     if (changedProperties.has('mode')) {
       // Re-create separators when mode changes
       this.addSeparatorsBetweenSteps();
+      this.updateCircularProgress();
     }
   }
 
@@ -152,7 +159,7 @@ export class nteStepperElement extends LitElement {
 
     // Add separators between steps if in vertical mode
     this.addSeparatorsBetweenSteps();
-
+    this.updateCircularProgress();
     // Force re-render
     this.requestUpdate();
   }
@@ -181,6 +188,15 @@ export class nteStepperElement extends LitElement {
     this.updateSeparatorClasses();
   }
 
+  private updateCircularProgress(): void {
+    if (this.mode !== 'circular' || !this.shadowRoot) return;
+    const circularWrapper = this.shadowRoot.querySelector<HTMLElement>('.nte-stepper-circular');
+    if (!circularWrapper) return;
+    const stepCount = this.stepElements.length;
+    const progressPercentage = stepCount > 1 ? (this.activeIndex / (stepCount - 1)) * 100 : 0;
+    circularWrapper.style.setProperty('--progress', progressPercentage.toString());
+  }
+
   /**
    * Update the classes of separator elements based on step states
    */
@@ -189,7 +205,7 @@ export class nteStepperElement extends LitElement {
     if (this.mode !== 'vertical' || !this.shadowRoot) return;
 
     // Get the wrapper element
-    const wrapper = this.shadowRoot.querySelector('.nte-stepper-wrapper');
+    const wrapper = this.shadowRoot.querySelector('.nte-stepper-steps');
     if (!wrapper) return;
 
     // Get all separator elements
@@ -285,7 +301,7 @@ export class nteStepperElement extends LitElement {
     if (!this.shadowRoot) return;
 
     // Get the wrapper element from the shadow DOM
-    const wrapper = this.shadowRoot.querySelector('.nte-stepper-wrapper');
+    const wrapper = this.shadowRoot.querySelector('.nte-stepper-steps');
     if (!wrapper) return;
 
     // Use the actual stepElements array
@@ -317,12 +333,53 @@ export class nteStepperElement extends LitElement {
     if (!this.shadowRoot) return;
 
     // Get the wrapper element
-    const wrapper = this.shadowRoot.querySelector('.nte-stepper-wrapper');
+    const wrapper = this.shadowRoot.querySelector('.nte-stepper-steps');
     if (!wrapper) return;
 
     // Find and remove all separator elements within the wrapper
     const separators = wrapper.querySelectorAll('.nte-stepper-separator');
     separators.forEach((separator) => separator.remove());
+  }
+
+  /**
+   * Toggle the overlay menu open/closed
+   */
+  private toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  /**
+   * Close the overlay menu
+   */
+  private closeMenu() {
+    this.isMenuOpen = false;
+  }
+
+  /**
+   * Navigate to a step from the menu
+   * @param index Index of the step to navigate to
+   */
+  private navigateToStep(index: number) {
+    // Only allow navigation to completed steps or the active step
+    if (index <= this.activeIndex) {
+      this.setActiveStep(index);
+      this.closeMenu();
+    }
+  }
+
+  private increaseActiveIndex() {
+    if (this.activeIndex >= this.stepElements.length - 1) return;
+    this.activeIndex++;
+
+    this.updateStepsState();
+    this.updateCircularProgress();
+  }
+
+  private decreaseActiveIndex() {
+    if (this.activeIndex <= 0) return;
+    this.activeIndex--;
+    this.updateStepsState();
+    this.updateCircularProgress();
   }
 
   /**
@@ -333,8 +390,73 @@ export class nteStepperElement extends LitElement {
 
     return html`
       <div class="nte-stepper-wrapper nte-stepper-mode-${this.mode}" part="wrapper">
-        <slot @slotchange=${this.handleSlotChange}></slot>
+        <div class="nte-stepper-circular ${this.isMenuOpen ? 'menu-open' : ''}" @click="${this.toggleMenu}">
+          <svg
+            width="var(--nte-stepper-circular-progress-size)"
+            height="var(--nte-stepper-circular-progress-size)"
+            style="width: var(--nte-stepper-circular-progress-size); height: var(--nte-stepper-circular-progress-size);"
+            viewBox="0 0 100 100"
+            class="nte-stepper-circular-progress"
+          >
+            <circle class="nte-stepper-circular-progress-bg"></circle>
+            <circle class="nte-stepper-circular-progress-fg"></circle>
+          </svg>
+          <div class="nte-stepper-circular-text" part="circular-text">
+            <span>STEP</span>
+            <span>${this.activeIndex + 1} / ${stepsCount}</span>
+          </div>
 
+          ${this.isMenuOpen
+            ? html` <div class="nte-stepper-menu" @click="${(e: Event) => e.stopPropagation()}">
+                <div class="nte-stepper-menu-header">
+                  <h3>Steps</h3>
+                  <button class="nte-stepper-menu-close" @click="${this.closeMenu}">×</button>
+                </div>
+                <div class="nte-stepper-menu-items">
+                  ${this.stepElements.map((step, index) => {
+                    const isActive = index === this.activeIndex;
+                    const isCompleted = index < this.activeIndex;
+                    const isSelectable = index <= this.activeIndex;
+                    const iconElement = step.querySelector('nte-icon') || null;
+                    const title = step.getAttribute('title') || `Step ${index + 1}`;
+
+                    return html`
+                      <div
+                        class="nte-stepper-menu-item ${isActive ? 'active' : ''} ${isCompleted
+                          ? 'completed'
+                          : ''} ${isSelectable ? 'selectable' : ''}"
+                        @click="${isSelectable ? () => this.navigateToStep(index) : null}"
+                      >
+                        <div class="nte-stepper-menu-item-icon">
+                          ${iconElement
+                            ? iconElement.cloneNode(true)
+                            : html`<div class="nte-stepper-menu-item-number">${index + 1}</div>`}
+                        </div>
+                        <div class="nte-stepper-menu-item-title">${title}</div>
+                      </div>
+                    `;
+                  })}
+                </div>
+              </div>`
+            : ''}
+        </div>
+        <div class="nte-stepper-steps">
+          <slot @slotchange=${this.handleSlotChange}></slot>
+        </div>
+        ${this.mode == 'circular'
+          ? html`<div
+                style="cursor:pointer; width:48px;height:48px;background-color:var(--nt-primary);;margin-inline:1rem; border-radius:8px; place-items:center;display:grid; color:white; font-size:1.5rem;"
+                @click="${this.increaseActiveIndex}"
+              >
+                +
+              </div>
+              <div
+                style="cursor:pointer; width:48px;height:48px;background-color:var(--nt-primary); border-radius:8px; place-items:center;display:grid; color:white; font-size:1.5rem;margin-inline:1rem;"
+                @click="${this.decreaseActiveIndex}"
+              >
+                -
+              </div>`
+          : ''}
         ${this.mode === 'horizontal'
           ? html`
               <div class="nte-stepper-progress" part="progress-container">
