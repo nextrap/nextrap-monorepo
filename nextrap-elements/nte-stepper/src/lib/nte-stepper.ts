@@ -120,7 +120,7 @@ export class nteStepperElement extends LitElement {
 
     // Update active class when activeIndex changes
     if (changedProperties.has('activeIndex')) {
-      this.updateStepsState();
+      setTimeout(() => this.updateStepsState(), 400);
     }
 
     // Check if mode has changed
@@ -205,6 +205,8 @@ export class nteStepperElement extends LitElement {
         separator.classList.add('completed');
       } else {
         separator.classList.remove('completed');
+        // Also remove backwards class when separator is no longer completed
+        separator.classList.remove('backwards');
       }
     });
   }
@@ -241,7 +243,53 @@ export class nteStepperElement extends LitElement {
    */
   private setActiveStep(index: number) {
     if (index >= 0 && index < this.stepElements.length) {
+      // Store the previous index to determine direction of navigation
+      const previousIndex = this.activeIndex;
+      const isGoingBackward = index < previousIndex;
+
+      // Set the new active index
       this.activeIndex = index;
+      // Update the steps states first (this also updates separator classes)
+      this.updateStepsState();
+
+      // If navigating backwards, apply backwards classes AFTER the step states are updated
+      if (isGoingBackward && this.mode === 'vertical') {
+        this.markBackwardSeparators(index, previousIndex);
+      }
+    }
+  }
+
+  /**
+   * Mark separators with backwards class for reverse animation
+   * @param newIndex The new (lower) index user is navigating to
+   * @param previousIndex The previous (higher) index user is navigating from
+   */
+  private markBackwardSeparators(newIndex: number, previousIndex: number): void {
+    // Only process in vertical mode with shadow root
+    if (this.mode !== 'vertical' || !this.shadowRoot) return;
+
+    // Get the wrapper element
+    const wrapper = this.shadowRoot.querySelector('.nte-stepper-steps');
+    if (!wrapper) return;
+
+    // Get all separator elements
+    const separators = wrapper.querySelectorAll('.nte-stepper-separator');
+    if (separators.length === 0) return;
+
+    // Reset all backwards classes first
+    /*  separators.forEach(separator => {
+      separator.classList.remove('backwards');
+    }); */
+
+    // Add backwards class to separators between newIndex and previousIndex
+    // These are the separators that need to animate in reverse
+    for (let i = newIndex; i < previousIndex; i++) {
+      if (separators[i]) {
+        // Make sure the separator has the completed class (required for animation)
+        separators[i].classList.add('completed');
+        // Add the backwards class for animation
+        separators[i].classList.add('backwards');
+      }
     }
   }
 
@@ -267,6 +315,12 @@ export class nteStepperElement extends LitElement {
     const separator = document.createElement('div');
     separator.className = 'nte-stepper-separator';
     separator.setAttribute('part', 'separator');
+    const separatorDashedLine = document.createElement('div');
+    separatorDashedLine.className = 'nte-stepper-separator-dashed-line';
+    separator.appendChild(separatorDashedLine);
+    const separatorSolidLine = document.createElement('div');
+    separatorSolidLine.className = 'nte-stepper-separator-solid-line';
+    separator.appendChild(separatorSolidLine);
     return separator;
   }
 
