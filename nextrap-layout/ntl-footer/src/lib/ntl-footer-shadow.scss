@@ -45,11 +45,15 @@ footer {
   pointer-events: none;
 }
 
-/* 
 /* Parallax-Effekt für Background-Elemente */
 
 :host::part(background) ::slotted(*) {
+  pointer-events: none;
+}
+
+/* Nur bei aktivem Parallax */
+
+:host([parallax]) ::part(background) ::slotted(*) {
   will-change: transform;
   backface-visibility: hidden;
-  pointer-events: none;
 }

@@ -14,7 +14,7 @@ export class NtlFooter extends LitElement {
   cols = 12;
 
   @property({ type: Boolean, reflect: true })
-  parallax = true;
+  parallax = false;
 
   @property({ type: Number, reflect: true })
   parallaxIntensity = 0.5;
