@@ -58,7 +58,7 @@ export class NtlFooter extends LitElement {
     window.addEventListener('scroll', this.scrollListener, { passive: true });
   }
 
-  private updateParallax() {
+  private updateParallax(forceUpdate = false) {
     if (!this.parallax || this.backgroundElements.length === 0) {
       return;
     }
@@ -73,8 +73,8 @@ export class NtlFooter extends LitElement {
     const viewportTop = scrollTop;
     const viewportBottom = scrollTop + windowHeight;
 
-    // Only apply parallax when footer is visible
-    if (footerBottom > viewportTop && footerTop < viewportBottom) {
+    // Apply parallax when footer is visible OR when forced (initial load)
+    if (forceUpdate || (footerBottom > viewportTop && footerTop < viewportBottom)) {
       const parallaxOffset = (scrollTop - footerTop) * this.parallaxIntensity;
 
       this.backgroundElements.forEach((item) => {
@@ -121,6 +121,11 @@ export class NtlFooter extends LitElement {
     // Collect background elements for parallax
     if (this.parallax) {
       this.collectBackgroundElements();
+
+      // Initialize parallax positioning on page load
+      requestAnimationFrame(() => {
+        this.updateParallax(true);
+      });
     }
   }
 
