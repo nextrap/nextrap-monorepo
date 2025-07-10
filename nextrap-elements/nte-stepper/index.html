@@ -2,387 +2,935 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>NTE Stepper Examples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NTE Stepper - Complete Component Documentation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <style>
+      /* Base styles */
+
+      :root {
+        --nt-primary: #3b82f6;
+        --nt-secondary: #6b7280;
+        --nt-success: #10b981;
+        --nt-danger: #ef4444;
+        --nt-warning: #f59e0b;
+        --nt-info: #06b6d4;
+        --nt-light: #f8fafc;
+        --nt-dark: #1e293b;
+      }
+
       * {
         box-sizing: border-box;
       }
+
       body {
         margin: 0;
         padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        line-height: 1.6;
+        color: #334155;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        min-height: 100vh;
       }
-      .main-wrapper {
-        display: block;
-        max-width: 1440px;
-        margin: 4rem auto;
+
+      .header {
+        background: linear-gradient(135deg, var(--nt-primary) 0%, #1e40af 100%);
+        color: white;
+        padding: 3rem 0;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .header h1 {
+        font-size: 3rem;
+        margin: 0 0 1rem 0;
+        font-weight: 700;
+      }
+
+      .header p {
+        font-size: 1.25rem;
+        margin: 0;
+        opacity: 0.9;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .section {
+        background: white;
+        border-radius: 16px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e2e8f0;
+      }
+
+      .section-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #e2e8f0;
+      }
+
+      .section-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--nt-dark);
+        margin: 0 0 0.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .section-description {
+        font-size: 1.1rem;
+        color: var(--nt-secondary);
+        margin: 0;
+      }
+
+      .example-grid {
+        display: grid;
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+
+      .example-item {
+        background: hsl(210, 40%, 99%);
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid #f2f8f0;
+      }
+
+      .example-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--nt-dark);
+        margin: 0 0 1rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .example-description {
+        color: var(--nt-secondary);
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+      }
+
+      .code-block {
+        background: #1e293b;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 1rem;
+        font-family: 'Monaco', 'Consolas', monospace;
+        font-size: 0.85rem;
+        line-height: 1.4;
+        overflow-x: auto;
+        margin: 1rem 0;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .badge-primary {
+        background: var(--nt-primary);
+        color: white;
+      }
+
+      .badge-success {
+        background: var(--nt-success);
+        color: white;
+      }
+
+      .badge-warning {
+        background: var(--nt-warning);
+        color: white;
+      }
+
+      .badge-info {
+        background: var(--nt-info);
+        color: white;
+      }
+
+      .controls {
+        display: flex;
+        gap: 1rem;
+        margin: 1rem 0;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        padding: 0.5rem 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        background: white;
+        color: var(--nt-dark);
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+      }
+
+      .btn:hover {
+        background: var(--nt-light);
+        border-color: var(--nt-primary);
+      }
+
+      .btn.active {
+        background: var(--nt-primary);
+        color: white;
+        border-color: var(--nt-primary);
+      }
+
+      .properties-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+      }
+
+      .properties-table th,
+      .properties-table td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .properties-table th {
+        background: #f8fafc;
+        font-weight: 600;
+        color: var(--nt-dark);
+      }
+
+      .target-section {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        border: 2px solid #0ea5e9;
+        border-radius: 12px;
+        padding: 2rem;
+        margin: 2rem 0;
+      }
+
+      .target-section h3 {
+        color: #0c4a6e;
+        margin-top: 0;
+      }
+
+      i.fas {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      /* Responsive design */
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 1rem;
+        }
+        .section {
+          padding: 1.5rem;
+        }
+        .header h1 {
+          font-size: 2rem;
+        }
       }
     </style>
+  </head>
+
+  <body>
+    <header class="header">
+      <h1><i class="fas fa-layer-group"></i> NTE Stepper</h1>
+      <p>
+        A comprehensive, customizable stepper component with multiple modes, navigation options, and styling
+        capabilities
+      </p>
+    </header>
+
+    <div class="container">
+      <!-- Overview Section -->
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title"><i class="fas fa-info-circle"></i> Component Overview</h2>
+          <p class="section-description">
+            The NTE Stepper component provides a flexible way to guide users through multi-step processes with various
+            display modes and navigation options.
+          </p>
+        </div>
+
+        <table class="properties-table">
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>mode</code></td>
+              <td><code>'horizontal' | 'vertical' | 'circular'</code></td>
+              <td><code>'horizontal'</code></td>
+              <td>Display mode of the stepper</td>
+            </tr>
+            <tr>
+              <td><code>linear</code></td>
+              <td><code>boolean</code></td>
+              <td><code>false</code></td>
+              <td>Restricts navigation to sequential steps only</td>
+            </tr>
+            <tr>
+              <td><code>href</code></td>
+              <td><code>string</code></td>
+              <td><code>undefined</code></td>
+              <td>URL or anchor link for navigation (on individual steps)</td>
+            </tr>
+            <tr>
+              <td><code>status</code></td>
+              <td><code>'inactive' | 'active' | 'disabled'</code></td>
+              <td><code>'inactive'</code></td>
+              <td>Current status of the step</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Modes Section -->
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title"><i class="fas fa-th-list"></i> Display Modes</h2>
+          <p class="section-description">
+            The stepper supports three different display modes, each optimized for different use cases and layouts.
+          </p>
+        </div>
+
+        <div class="example-grid">
+          <!-- Horizontal Mode -->
+          <div class="example-item">
+            <h3 class="example-title"><span class="badge badge-primary">Horizontal</span> Default Layout</h3>
+            <p class="example-description">
+              Best for wide layouts and desktop interfaces. Steps are arranged horizontally with connecting lines.
+            </p>
+
+            <nte-stepper mode="horizontal" class="lines-solid">
+              <nte-step>
+                <i slot="icon" class="fas fa-user"></i>
+                <h4 slot="title">Account Setup</h4>
+                <p slot="info">Create your account</p>
+              </nte-step>
+              <nte-step>
+                <i slot="icon" class="fas fa-id-card"></i>
+                <h4 slot="title">Profile Info</h4>
+                <p slot="info">Add personal details</p>
+              </nte-step>
+              <nte-step>
+                <i slot="icon" class="fas fa-credit-card"></i>
+                <h4 slot="title">Payment</h4>
+                <p slot="info">Setup billing</p>
+              </nte-step>
+              <nte-step>
+                <i slot="icon" class="fas fa-check"></i>
+                <h4 slot="title">Complete</h4>
+                <p slot="info">Finish setup</p>
+              </nte-step>
+            </nte-stepper>
+          </div>
+
+          <!-- Vertical Mode -->
+          <div class="example-item">
+            <h3 class="example-title"><span class="badge badge-success">Vertical</span> Sidebar Layout</h3>
+            <p class="example-description">
+              Perfect for sidebar navigation and mobile interfaces. Steps stack vertically with detailed descriptions.
+            </p>
+
+            <nte-stepper mode="vertical">
+              <nte-step>
+                <i slot="icon" class="fas fa-download"></i>
+                <h4 slot="title">Download</h4>
+                <p slot="info">Download the application files</p>
+              </nte-step>
+              <nte-step class="has-error">
+                <i slot="icon" class="fas fa-cog"></i>
+                <h4 slot="title">Installation</h4>
+                <p slot="info">Install and configure the application</p>
+              </nte-step>
+              <nte-step>
+                <i slot="icon" class="fas fa-play"></i>
+                <h4 slot="title">Launch</h4>
+                <p slot="info">Start using the application</p>
+              </nte-step>
+            </nte-stepper>
+          </div>
+
+          <!-- Circular Mode -->
+          <div class="example-item">
+            <h3 class="example-title"><span class="badge badge-info">Circular</span> Progress Indicator</h3>
+            <p class="example-description">
+              Compact circular progress indicator with step navigation. Ideal for dashboards and confined spaces.
+            </p>
+
+            <nte-stepper mode="circular" id="circular-demo">
+              <nte-step>
+                <i slot="icon" class="fas fa-file-upload"></i>
+                <h4 slot="title">Upload</h4>
+                <p slot="info">Upload your files</p>
+              </nte-step>
+              <nte-step>
+                <i slot="icon" class="fas fa-search"></i>
+                <h4 slot="title">Process</h4>
+                <p slot="info">Analyze content</p>
+              </nte-step>
+              <nte-step>
+                <i slot="icon" class="fas fa-chart-bar"></i>
+                <h4 slot="title">Results</h4>
+                <p slot="info">View report</p>
+              </nte-step>
+              <nte-step>
+                <i slot="icon" class="fas fa-share"></i>
+                <h4 slot="title">Share</h4>
+                <p slot="info">Export results</p>
+              </nte-step>
+            </nte-stepper>
+          </div>
+        </div>
+      </section>
+      <!-- Styles Section -->
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title"><i class="fas fa-th-list"></i> Display Styles</h2>
+          <p class="section-description">
+            The stepper supports different visual styles that can be combined with any mode.
+          </p>
+        </div>
+
+        <div class="example-grid">
+          <!-- Horizontal Default Mode -->
+          <div class="example-item">
+            <h3 class="example-title"><span class="badge badge-primary">Horizontal</span> Default Style</h3>
+            <p class="example-description">
+              Classic stepper with circles and connecting lines. Best for traditional step-by-step processes.
+            </p>
+
+            <nte-stepper mode="horizontal" class="lines-solid">
+              <nte-step>
+                <i slot="icon" class="fas fa-user"></i>
+                <h4 slot="title">Account Setup</h4>
+                <p slot="info">Create your account</p>
+              </nte-step>
+              <nte-step>
+                <i slot="icon" class="fas fa-id-card"></i>
+                <h4 slot="title">Profile Info</h4>
+                <p slot="info">Add personal details</p>
+              </nte-step>
+              <nte-step>
+                <i slot="icon" class="fas fa-credit-card"></i>
+                <h4 slot="title">Payment</h4>
+                <p slot="info">Setup billing</p>
+              </nte-step>
+              <nte-step>
+                <i slot="icon" class="fas fa-check"></i>
+                <h4 slot="title">Complete</h4>
+                <p slot="info">Finish setup</p>
+              </nte-step>
+            </nte-stepper>
+          </div>
+          <!-- Horizontal Route Mode -->
+          <div class="example-item">
+            <h3 class="example-title"><span class="badge badge-primary">Horizontal</span> Arrow Style</h3>
+            <p class="example-description">
+              Modern arrow-shaped steps for a dynamic flow. Perfect for wizards and guided navigation.
+            </p>
+
+            <div class="controls">
+              <button class="btn" onclick="toggleRouteStyle('route-stepper')">Toggle Arrow Style</button>
+              <button class="btn" onclick="setRouteStep(0)">Step 1</button>
+              <button class="btn" onclick="setRouteStep(1)">Step 2</button>
+              <button class="btn" onclick="setRouteStep(2)">Step 3</button>
+              <button class="btn" onclick="setRouteStep(3)">Step 4</button>
+            </div>
+
+            <nte-stepper mode="horizontal" class="style-route" id="route-stepper">
+              <nte-step>
+                <h4 slot="title">Account Setup</h4>
+                <p slot="info">Create your account</p>
+              </nte-step>
+              <nte-step>
+                <h4 slot="title">Profile Info</h4>
+                <p slot="info">Add personal details</p>
+              </nte-step>
+              <nte-step>
+                <h4 slot="title">Payment</h4>
+                <p slot="info">Setup billing</p>
+              </nte-step>
+              <nte-step>
+                <h4 slot="title">Complete</h4>
+                <p slot="info">Finish setup</p>
+              </nte-step>
+            </nte-stepper>
+          </div>
+          <!-- Vertical Default Style -->
+          <div class="example-item">
+            <h3 class="example-title"><span class="badge badge-success">Vertical</span> Default Style</h3>
+            <p class="example-description">
+              Traditional vertical stepper with circles and connecting lines. Great for detailed multi-step forms.
+            </p>
+
+            <nte-stepper mode="vertical">
+              <nte-step>
+                <i slot="icon" class="fas fa-download"></i>
+                <h4 slot="title">Download</h4>
+                <p slot="info">Download the application files</p>
+              </nte-step>
+              <nte-step>
+                <i slot="icon" class="fas fa-cog"></i>
+                <h4 slot="title">Installation</h4>
+                <p slot="info">Install and configure the application</p>
+              </nte-step>
+              <nte-step>
+                <i slot="icon" class="fas fa-play"></i>
+                <h4 slot="title">Launch</h4>
+                <p slot="info">Start using the application</p>
+              </nte-step>
+            </nte-stepper>
+          </div>
+          <!-- Vertical Route Style -->
+          <div class="example-item">
+            <h3 class="example-title"><span class="badge badge-success">Vertical</span> Diamond Style</h3>
+            <p class="example-description">
+              Diamond-shaped steps for a unique vertical flow. Perfect for progress indicators and milestone tracking.
+            </p>
+
+            <div class="controls">
+              <button class="btn" onclick="toggleRouteStyle('route-stepper-vertical')">Toggle Diamond Style</button>
+              <button class="btn" onclick="setVerticalRouteStep(0)">Step 1</button>
+              <button class="btn" onclick="setVerticalRouteStep(1)">Step 2</button>
+              <button class="btn" onclick="setVerticalRouteStep(2)">Step 3</button>
+            </div>
+
+            <nte-stepper mode="vertical" class="style-route" id="route-stepper-vertical">
+              <nte-step>
+                <h4 slot="title">Download</h4>
+                <p slot="info">Download the application files</p>
+              </nte-step>
+              <nte-step>
+                <h4 slot="title">Installation</h4>
+                <p slot="info">Install and configure the application</p>
+              </nte-step>
+              <nte-step>
+                <h4 slot="title">Launch</h4>
+                <p slot="info">Start using the application</p>
+              </nte-step>
+            </nte-stepper>
+          </div>
+        </div>
+      </section>
+      <!-- Linear vs Non-Linear Navigation -->
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title"><i class="fas fa-route"></i> Navigation Modes</h2>
+          <p class="section-description">
+            Control how users can navigate through steps with linear and non-linear modes.
+          </p>
+        </div>
+
+        <div class="example-grid">
+          <!-- Linear Navigation -->
+          <div class="example-item">
+            <h3 class="example-title"><span class="badge badge-warning">Linear</span> Sequential Navigation</h3>
+            <p class="example-description">
+              Users must complete steps in order. Future steps are disabled until previous steps are completed.
+            </p>
+
+            <div class="controls">
+              <button class="btn" onclick="setLinearStep(0)">Step 1</button>
+              <button class="btn" onclick="setLinearStep(1)">Step 2</button>
+              <button class="btn" onclick="setLinearStep(2)">Step 3</button>
+              <button class="btn" onclick="setLinearStep(3)">Step 4</button>
+            </div>
+
+            <nte-stepper mode="horizontal" linear="true" id="linear-stepper" class="gaps-lg">
+              <nte-step>
+                <i slot="icon" class="fas fa-play"></i>
+                <h4 slot="title">Start</h4>
+                <p slot="info">Begin the process</p>
+              </nte-step>
+              <nte-step>
+                <i slot="icon" class="fas fa-edit"></i>
+                <h4 slot="title">Configure</h4>
+                <p slot="info">Set your preferences</p>
+              </nte-step>
+              <nte-step>
+                <i slot="icon" class="fas fa-eye"></i>
+                <h4 slot="title">Review</h4>
+                <p slot="info">Check your settings</p>
+              </nte-step>
+              <nte-step>
+                <i slot="icon" class="fas fa-save"></i>
+                <h4 slot="title">Save</h4>
+                <p slot="info">Confirm changes</p>
+              </nte-step>
+            </nte-stepper>
+          </div>
+
+          <!-- Non-Linear Navigation -->
+          <div class="example-item">
+            <h3 class="example-title"><span class="badge badge-success">Non-Linear</span> Free Navigation</h3>
+            <p class="example-description">
+              Users can jump to any step at any time. All steps are accessible regardless of completion status.
+            </p>
+
+            <div class="controls">
+              <button class="btn" onclick="setNonLinearStep(0)">Dashboard</button>
+              <button class="btn" onclick="setNonLinearStep(1)">Settings</button>
+              <button class="btn" onclick="setNonLinearStep(2)">Reports</button>
+              <button class="btn" onclick="setNonLinearStep(3)">Help</button>
+            </div>
+
+            <nte-stepper mode="horizontal" id="nonlinear-stepper" class="gaps-md">
+              <nte-step>
+                <i slot="icon" class="fas fa-tachometer-alt"></i>
+                <h4 slot="title">Dashboard</h4>
+                <p slot="info">Overview and metrics</p>
+              </nte-step>
+              <nte-step>
+                <i slot="icon" class="fas fa-cog"></i>
+                <h4 slot="title">Settings</h4>
+                <p slot="info">Configure options</p>
+              </nte-step>
+              <nte-step>
+                <i slot="icon" class="fas fa-chart-line"></i>
+                <h4 slot="title">Reports</h4>
+                <p slot="info">View analytics</p>
+              </nte-step>
+              <nte-step>
+                <i slot="icon" class="fas fa-question-circle"></i>
+                <h4 slot="title">Help</h4>
+                <p slot="info">Support and docs</p>
+              </nte-step>
+            </nte-stepper>
+          </div>
+        </div>
+      </section>
+
+      <!-- Step States and Styling -->
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title"><i class="fas fa-palette"></i> Step States & Styling</h2>
+          <p class="section-description">
+            Demonstrate different step states, error handling, and visual styling options.
+          </p>
+        </div>
+
+        <div class="example-grid">
+          <!-- Step States -->
+          <div class="example-item">
+            <h3 class="example-title"><i class="fas fa-traffic-light"></i> Step States</h3>
+            <p class="example-description">
+              Shows all possible step states: inactive, active, disabled, completed, and error states.
+            </p>
+
+            <nte-stepper mode="horizontal" class="lines-dashed">
+              <nte-step status="inactive">
+                <i slot="icon" class="fas fa-circle"></i>
+                <h4 slot="title">Inactive</h4>
+                <p slot="info">Default state</p>
+              </nte-step>
+              <nte-step status="active" class="completed">
+                <i slot="icon" class="fas fa-play"></i>
+                <h4 slot="title">Active & Completed</h4>
+                <p slot="info">Currently active</p>
+              </nte-step>
+              <nte-step status="inactive" class="has-error">
+                <i slot="icon" class="fas fa-exclamation-triangle"></i>
+                <h4 slot="title">Error State</h4>
+                <p slot="info">Requires attention</p>
+              </nte-step>
+              <nte-step status="disabled">
+                <i slot="icon" class="fas fa-lock"></i>
+                <h4 slot="title">Disabled</h4>
+                <p slot="info">Not accessible</p>
+              </nte-step>
+            </nte-stepper>
+          </div>
+
+          <!-- Gap Variations -->
+          <div class="example-item">
+            <h3 class="example-title"><i class="fas fa-arrows-alt-h"></i> Gap Variations</h3>
+            <p class="example-description">Different spacing options: gaps-0, gaps-sm, gaps-md, gaps-lg, gaps-xl.</p>
+
+            <div style="margin-bottom: 1.5rem">
+              <strong>No Gaps (gaps-0):</strong>
+              <nte-stepper mode="horizontal" class="gaps-0 lines-solid">
+                <nte-step>
+                  <h5 slot="title">Step 1</h5>
+                </nte-step>
+                <nte-step>
+                  <h5 slot="title">Step 2</h5>
+                </nte-step>
+                <nte-step>
+                  <h5 slot="title">Step 3</h5>
+                </nte-step>
+              </nte-stepper>
+            </div>
+
+            <div style="margin-bottom: 1.5rem">
+              <strong>Large Gaps (gaps-xl):</strong>
+              <nte-stepper mode="horizontal" class="gaps-xl lines-solid">
+                <nte-step>
+                  <h5 slot="title">Step 1</h5>
+                </nte-step>
+                <nte-step>
+                  <h5 slot="title">Step 2</h5>
+                </nte-step>
+                <nte-step>
+                  <h5 slot="title">Step 3</h5>
+                </nte-step>
+              </nte-stepper>
+            </div>
+          </div>
+
+          <!-- Line Styles -->
+          <div class="example-item">
+            <h3 class="example-title"><i class="fas fa-minus"></i> Line Styles</h3>
+            <p class="example-description">Different connector line styles: lines-solid, lines-dashed, lines-dotted.</p>
+
+            <div style="margin-bottom: 1.5rem">
+              <strong>Solid Lines:</strong>
+              <nte-stepper mode="horizontal" class="lines-solid">
+                <nte-step>
+                  <h5 slot="title">Solid</h5>
+                </nte-step>
+                <nte-step>
+                  <h5 slot="title">Lines</h5>
+                </nte-step>
+                <nte-step>
+                  <h5 slot="title">Style</h5>
+                </nte-step>
+              </nte-stepper>
+            </div>
+
+            <div style="margin-bottom: 1.5rem">
+              <strong>Dashed Lines:</strong>
+              <nte-stepper mode="horizontal" class="lines-dashed">
+                <nte-step>
+                  <h5 slot="title">Dashed</h5>
+                </nte-step>
+                <nte-step>
+                  <h5 slot="title">Lines</h5>
+                </nte-step>
+                <nte-step>
+                  <h5 slot="title">Style</h5>
+                </nte-step>
+              </nte-stepper>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- HREF Navigation -->
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title"><i class="fas fa-external-link-alt"></i> HREF Navigation</h2>
+          <p class="section-description">
+            Steps can include href attributes for navigation to anchor links or external URLs with proper validation and
+            accessibility.
+          </p>
+        </div>
+
+        <div class="example-item">
+          <h3 class="example-title"><i class="fas fa-link"></i> Navigation Examples</h3>
+          <p class="example-description">
+            Click steps to navigate to different sections or external links. Anchor links scroll smoothly, external URLs
+            open in new tabs.
+          </p>
+
+          <nte-stepper mode="horizontal" class="lines-solid gaps-lg">
+            <nte-step href="#overview-section">
+              <i slot="icon" class="fas fa-info"></i>
+              <h4 slot="title">Overview</h4>
+              <p slot="info">Navigate to overview section</p>
+            </nte-step>
+            <nte-step href="#examples-section">
+              <i slot="icon" class="fas fa-code"></i>
+              <h4 slot="title">Examples</h4>
+              <p slot="info">Jump to examples</p>
+            </nte-step>
+            <nte-step href="https://github.com">
+              <i slot="icon" class="fab fa-github"></i>
+              <h4 slot="title">GitHub</h4>
+              <p slot="info">Visit repository (new tab)</p>
+            </nte-step>
+            <nte-step href="#documentation-section">
+              <i slot="icon" class="fas fa-book"></i>
+              <h4 slot="title">Documentation</h4>
+              <p slot="info">View documentation</p>
+            </nte-step>
+          </nte-stepper>
+
+          <div class="code-block">
+            &lt;nte-step href="#section-id"&gt; &lt;h4 slot="title"&gt;Anchor Link&lt;/h4&gt; &lt;p
+            slot="info"&gt;Scrolls to section&lt;/p&gt; &lt;/nte-step&gt; &lt;nte-step href="https://example.com"&gt;
+            &lt;h4 slot="title"&gt;External URL&lt;/h4&gt; &lt;p slot="info"&gt;Opens in new tab&lt;/p&gt;
+            &lt;/nte-step&gt;
+          </div>
+        </div>
+      </section>
+
+      <!-- Complex Example -->
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title"><i class="fas fa-rocket"></i> Advanced Example</h2>
+          <p class="section-description">
+            A comprehensive example showcasing a complete user onboarding flow with various step states and
+            interactions.
+          </p>
+        </div>
+
+        <div class="example-item">
+          <h3 class="example-title"><i class="fas fa-user-plus"></i> User Onboarding Flow</h3>
+          <p class="example-description">
+            Complete user registration and setup process with error handling and progressive completion.
+          </p>
+
+          <div class="controls">
+            <button class="btn" onclick="setOnboardingStep(0)">Start Over</button>
+            <button class="btn" onclick="setOnboardingStep(1)">Skip to Profile</button>
+            <button class="btn" onclick="setOnboardingStep(2)">Skip to Verification</button>
+            <button class="btn" onclick="setOnboardingStep(3)">Skip to Preferences</button>
+            <button class="btn" onclick="setOnboardingStep(4)">Complete</button>
+          </div>
+
+          <nte-stepper mode="horizontal" linear="true" id="onboarding-stepper" class="gaps-lg lines-solid">
+            <nte-step>
+              <i slot="icon" class="fas fa-user-plus"></i>
+              <h4 slot="title">Account Creation</h4>
+              <p slot="info">Create your account with email and password</p>
+            </nte-step>
+            <nte-step>
+              <i slot="icon" class="fas fa-id-card"></i>
+              <h4 slot="title">Profile Setup</h4>
+              <p slot="info">Add your personal information and avatar</p>
+            </nte-step>
+            <nte-step>
+              <i slot="icon" class="fas fa-envelope-open"></i>
+              <h4 slot="title">Email Verification</h4>
+              <p slot="info">Verify your email address to continue</p>
+            </nte-step>
+            <nte-step>
+              <i slot="icon" class="fas fa-sliders-h"></i>
+              <h4 slot="title">Preferences</h4>
+              <p slot="info">Customize your experience and notifications</p>
+            </nte-step>
+            <nte-step>
+              <i slot="icon" class="fas fa-check-circle"></i>
+              <h4 slot="title">Welcome!</h4>
+              <p slot="info">Your account is ready to use</p>
+            </nte-step>
+          </nte-stepper>
+        </div>
+      </section>
+
+      <!-- Target Sections for Navigation -->
+      <div id="overview-section" class="target-section">
+        <h3>📋 Overview Section</h3>
+        <p>
+          This is the overview section that you can navigate to using the anchor link <code>#overview-section</code>.
+        </p>
+        <p>The HREF functionality provides:</p>
+        <ul>
+          <li><strong>Anchor Navigation:</strong> Smooth scrolling to target elements</li>
+          <li><strong>External Links:</strong> Secure new tab opening with proper attributes</li>
+          <li><strong>Validation:</strong> URL and anchor format validation</li>
+          <li><strong>Accessibility:</strong> Proper ARIA attributes and keyboard support</li>
+        </ul>
+      </div>
+
+      <div id="examples-section" class="target-section">
+        <h3>💡 Examples Section</h3>
+        <p>This demonstrates anchor link navigation within the same page.</p>
+        <div class="code-block">
+          // JavaScript API Examples const stepper = document.querySelector('nte-stepper'); // Set active step
+          programmatically stepper.setActiveIndex(2); // Get step count const stepCount = stepper.getStepCount(); //
+          Listen for step changes stepper.addEventListener('nte-stepper-change', (event) => { console.log('Step
+          changed:', event.detail.index); });
+        </div>
+      </div>
+
+      <div id="documentation-section" class="target-section">
+        <h3>📚 Documentation Section</h3>
+        <p>Complete component documentation and API reference.</p>
+        <h4>CSS Custom Properties</h4>
+        <ul>
+          <li><code>--nte-step-circle-size</code> - Size of step circles</li>
+          <li><code>--nte-step-circle-active-bg-color</code> - Active step background</li>
+          <li><code>--nte-step-circle-completed-bg-color</code> - Completed step background</li>
+          <li><code>--nte-step-separator-color</code> - Connector line color</li>
+        </ul>
+      </div>
+    </div>
+
+    <script src="src/index.ts" type="module"></script>
 
     <script>
-      const stepperData = [
-        {
-          id: 'step-1',
-          label: 'Step 1',
-          icon: 'ti ti-user',
-        },
-        {
-          id: 'step-2',
-          label: 'Step 2',
-          icon: 'ti ti-home',
-        },
-        {
-          id: 'step-3',
-          label: 'Step 3',
-          icon: 'ti ti-credit-card',
-        },
-        {
-          id: 'step-4',
-          label: 'Step 4',
-          icon: 'ti ti-credit-card',
-        },
-        {
-          id: 'step-5',
-          label: 'Step 5',
-          icon: 'ti ti-credit-card',
-        },
-      ];
+      // Interactive demo controls
+      function setLinearStep(index) {
+        const stepper = document.getElementById('linear-stepper');
+        if (stepper) {
+          stepper.setActiveIndex(index);
+        }
+      }
 
-      // Set data to the component after it's defined
-      /*window.addEventListener('DOMContentLoaded', () => {
-        const stepperHorizontal = document.querySelector('#stepper-horizontal');
-        const stepperVertical = document.querySelector('#stepper-vertical');
-        if (stepperHorizontal) {
-          stepperHorizontal.data = stepperData;
-          stepperHorizontal.mode = 'horizontal';
+      function setNonLinearStep(index) {
+        const stepper = document.getElementById('nonlinear-stepper');
+        if (stepper) {
+          stepper.setActiveIndex(index);
         }
-        if (stepperVertical) {
-          stepperVertical.data = stepperData;
-          stepperVertical.mode = 'vertical';
+      }
+
+      function setOnboardingStep(index) {
+        const stepper = document.getElementById('onboarding-stepper');
+        if (stepper) {
+          stepper.setActiveIndex(index);
         }
-      });*/
+      }
+
+      function toggleRouteStyle(stepperId) {
+        const stepper = document.getElementById(stepperId);
+        if (stepper) {
+          stepper.classList.toggle('style-route');
+        }
+      }
+
+      function setRouteStep(index) {
+        const stepper = document.getElementById('route-stepper');
+        if (stepper) {
+          stepper.setActiveIndex(index);
+        }
+      }
+
+      function setVerticalRouteStep(index) {
+        const stepper = document.getElementById('route-stepper-vertical');
+        if (stepper) {
+          stepper.setActiveIndex(index);
+        }
+      }
+      // Initialize demo with some completed steps
+      document.addEventListener('DOMContentLoaded', () => {
+        // Set some initial states for demos
+        setTimeout(() => {
+          setLinearStep(1);
+          setNonLinearStep(0);
+          setOnboardingStep(2);
+        }, 100);
+      });
     </script>
-  </head>
-  <body>
-    <main class="main-wrapper">
-      <!-- horizontal stepper example -->
-      <h2>Horizontal Stepper</h2>
-      <nte-stepper id="stepper-horizontal" mode="horizontal">
-        <nte-step completed>
-          <svg
-            slot="icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-alarm"
-            viewBox="0 0 16 16"
-          >
-            <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z" />
-            <path
-              d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"
-            />
-          </svg>
-          <h3 slot="title">Step 1</h3>
-        </nte-step>
-        <nte-step active href="#step2">
-          <svg
-            slot="icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-alarm"
-            viewBox="0 0 16 16"
-          >
-            <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z" />
-            <path
-              d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"
-            />
-          </svg>
-          <h3 slot="title">Step 2</h3>
-        </nte-step>
-        <nte-step active href="#step3">
-          <svg
-            slot="icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-alarm"
-            viewBox="0 0 16 16"
-          >
-            <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z" />
-            <path
-              d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"
-            />
-          </svg>
-          <h3 slot="title">Step 3</h3>
-        </nte-step>
-        <nte-step active href="#step4">
-          <svg
-            slot="icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-alarm"
-            viewBox="0 0 16 16"
-          >
-            <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z" />
-            <path
-              d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"
-            />
-          </svg>
-          <h3 slot="title">Step 4</h3>
-        </nte-step>
-        <nte-step active href="#step5">
-          <svg
-            slot="icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-alarm"
-            viewBox="0 0 16 16"
-          >
-            <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z" />
-            <path
-              d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"
-            />
-          </svg>
-          <h3 slot="title">Step 5</h3>
-        </nte-step>
-        <nte-step active href="#step6">
-          <svg
-            slot="icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-alarm"
-            viewBox="0 0 16 16"
-          >
-            <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z" />
-            <path
-              d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"
-            />
-          </svg>
-          <h3 slot="title">Step 6</h3>
-        </nte-step>
-      </nte-stepper>
-      <!-- vertical stepper example -->
-      <h2>Vertical Stepper</h2>
-      <nte-stepper id="stepper-vertical" mode="vertical">
-        <nte-step completed>
-          <svg
-            slot="icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-alarm"
-            viewBox="0 0 16 16"
-          >
-            <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z" />
-            <path
-              d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"
-            />
-          </svg>
-          <h3 slot="title">Step 1</h3>
-        </nte-step>
-        <nte-step active href="#step2">
-          <svg
-            slot="icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-alarm"
-            viewBox="0 0 16 16"
-          >
-            <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z" />
-            <path
-              d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"
-            />
-          </svg>
-          <h3 slot="title">Step 2</h3>
-        </nte-step>
-        <nte-step active href="#step3">
-          <svg
-            slot="icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-alarm"
-            viewBox="0 0 16 16"
-          >
-            <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z" />
-            <path
-              d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"
-            />
-          </svg>
-          <h3 slot="title">Step 3</h3>
-        </nte-step>
-        <nte-step active href="#step4">
-          <svg
-            slot="icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-alarm"
-            viewBox="0 0 16 16"
-          >
-            <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z" />
-            <path
-              d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"
-            />
-          </svg>
-          <h3 slot="title">Step 4</h3>
-        </nte-step>
-        <nte-step active href="#step5">
-          <svg
-            slot="icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-alarm"
-            viewBox="0 0 16 16"
-          >
-            <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z" />
-            <path
-              d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"
-            />
-          </svg>
-          <h3 slot="title">Step 5</h3>
-        </nte-step>
-        <nte-step active href="#step6">
-          <svg
-            slot="icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-alarm"
-            viewBox="0 0 16 16"
-          >
-            <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z" />
-            <path
-              d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"
-            />
-          </svg>
-          <h3 slot="title">Step 6</h3>
-        </nte-step>
-      </nte-stepper>
-      <!-- circular stepper example -->
-      <h2>Circular Stepper</h2>
-      <nte-stepper id="stepper-circular" mode="circular">
-        <nte-step completed>
-          <svg
-            slot="icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-alarm"
-            viewBox="0 0 16 16"
-          >
-            <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z" />
-            <path
-              d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"
-            />
-          </svg>
-          <h3 slot="title">Step 1</h3>
-        </nte-step>
-        <nte-step active href="#step2">
-          <svg
-            slot="icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-alarm"
-            viewBox="0 0 16 16"
-          >
-            <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z" />
-            <path
-              d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"
-            />
-          </svg>
-          <h3 slot="title">Step 2</h3>
-        </nte-step>
-        <nte-step active href="#step3">
-          <svg
-            slot="icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-alarm"
-            viewBox="0 0 16 16"
-          >
-            <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z" />
-            <path
-              d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"
-            />
-          </svg>
-          <h3 slot="title">Step 3</h3>
-        </nte-step>
-        <nte-step active href="#step4">
-          <svg
-            slot="icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-alarm"
-            viewBox="0 0 16 16"
-          >
-            <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z" />
-            <path
-              d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"
-            />
-          </svg>
-          <h3 slot="title">Step 4</h3>
-        </nte-step>
-        <nte-step active href="#step5">
-          <svg
-            slot="icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-alarm"
-            viewBox="0 0 16 16"
-          >
-            <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z" />
-            <path
-              d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"
-            />
-          </svg>
-          <h3 slot="title">Step 5</h3>
-        </nte-step>
-        <nte-step active href="#step6">
-          <svg
-            slot="icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-alarm"
-            viewBox="0 0 16 16"
-          >
-            <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z" />
-            <path
-              d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"
-            />
-          </svg>
-          <h3 slot="title">Step 6</h3>
-        </nte-step>
-      </nte-stepper>
-    </main>
-    <script src="src/index.ts" type="module"></script>
   </body>
 </html>
