@@ -1,7 +1,7 @@
 import '@nextrap/nte-burger';
+import '@nextrap/style-base';
 import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
-import 'nextrap-base/style-base';
 import style from './nte-dialog.scss?inline';
 
 @customElement('nte-dialog')
