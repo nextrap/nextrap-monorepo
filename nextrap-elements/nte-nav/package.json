@@ -1,6 +1,6 @@
 {
     "name": "@nextrap/nte-nav",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "main": "./index.js",
     "dependencies": {
         "@nextrap/nt-framework": "^0.0.1",
@@ -12,8 +12,5 @@
         "@nextrap/style-reset": "^0.0.1"
     },
     "type": "module",
-    "exports": {
-        "./nav": "./src/lib/nte-nav.ts"
-    },
     "types": "./index.d.ts"
 }
