@@ -14,7 +14,7 @@ export class SlotTool {
     const style = getComputedStyle(el);
     if (style.display === 'none' || style.visibility === 'hidden') return false;
 
-    if (el instanceof HTMLElement && (el.offsetWidth > 0 || el.offsetHeight > 0)) {
+    if (el instanceof HTMLElement && (el.offsetWidth > 0 || el.offsetHeight > 0 || el.tagName === 'IMG')) {
       return true;
     }
 
@@ -29,6 +29,18 @@ export class SlotTool {
     return false;
   }
 
+  /**
+   * Usage:
+   *
+   * in firstupdated or connectedCallback of your element:
+   * ```ts
+   *  override firstUpdated(_changedProperties: PropertyValues) {
+   *     SlotTool.observeEmptySlots(this)
+   *   }
+   * ```
+   *
+   * @param slot
+   */
   public static isEmptySlot(slot: HTMLSlotElement): boolean {
     const assignedElements = slot.assignedElements({ flatten: true });
     if (assignedElements.length === 0) {

@@ -5,6 +5,35 @@
     <title>nte-nav</title>
   </head>
   <body>
+    <nte-navbar class="autohide autoborder autoshadow" scroll-threshold="500">
+      <img
+        src="https://cdn.leuffen.de//leu-systemwebsite/v2/64/227-74_500/leuffen-gruen.svg"
+        slot="brand"
+        alt="Leuffen Logo"
+        style="height: 64px"
+      />
+      <nte-navbar-line>
+        <nte-nav breakpoint="1008px" mode="sidebar">
+          <p slot="menu-text">Menü</p>
+          <ul>
+            <li><a href="#" class="active">Home</a></li>
+            <li><a href="#">Products</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+            <li>
+              <a href="#">More</a>
+              <ul>
+                <li><a href="#">Team</a></li>
+                <li><a href="#">Careers</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nte-nav>
+      </nte-navbar-line>
+    </nte-navbar>
+
+    <hr style="margin-top: 500px" />
+
     <nte-nav breakpoint="768px" mode="sidebar">
       <ul>
         <li><a href="#" class="active">Home</a></li>
@@ -41,3 +70,5 @@
     <script type="module" src="public/main.ts"></script>
   </body>
 </html>
+
+<hr style="margin-top: 10000px" />
