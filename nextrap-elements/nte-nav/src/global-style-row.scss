@@ -1,143 +1,144 @@
 // All Row Styles go here
 
-nte-nav {
+nte-nav.nav-row {
   &.start {
     --justify-content: flex-start;
   }
+
   &.end {
     --justify-content: flex-end;
   }
+
   &.center {
     --justify-content: center;
   }
+
   &.stretch {
     --justify-content: space-between;
   }
 
-  &[mode='row'] {
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+
+    justify-content: var(--justify-content);
+
+    > li,
+    li {
       position: relative;
+      display: flex;
+      align-items: center;
 
-      justify-content: var(--justify-content);
+      > a {
+        display: block;
+        padding: 0.65em 1.1em;
+        color: var(--text-color);
+        text-decoration: none;
+        transition:
+          background var(--transition),
+          color var(--transition);
+        font-weight: 500;
 
-      > li,
-      li {
-        position: relative;
-        display: flex;
-        align-items: center;
-
-        > a {
-          display: block;
-          padding: 0.65em 1.1em;
-          color: var(--text-color);
-          text-decoration: none;
-          transition:
-            background var(--transition),
-            color var(--transition);
-          font-weight: 500;
-
-          &.active,
-          &:active {
-            background: var(--hover-color);
-            color: var(--hover-text-color);
-          }
-
-          &:hover,
-          li:hover > & {
-            background: var(--hover-color);
-            color: var(--hover-text-color);
-          }
-
-          /* Animations for icons and caret */
-          &:after {
-            content: '';
-            display: none;
-
-            margin-left: 0.47em;
-            margin-bottom: 0.08em;
-            border: solid currentColor;
-            border-width: 0 2px 2px 0;
-            padding: 3px;
-            transform: rotate(45deg) scale(0.8);
-            opacity: 0;
-            transition:
-              opacity var(--transition),
-              transform var(--transition);
-          }
+        &.active,
+        &:active {
+          background: var(--hover-color);
+          color: var(--hover-text-color);
         }
 
-        /* mark li's with submenu, show caret only if submenu exists */
-        &:has(ul) > a:after {
-          opacity: 0.55;
-          display: inline-block;
+        &:hover,
+        li:hover > & {
+          background: var(--hover-color);
+          color: var(--hover-text-color);
         }
 
-        &:hover > a:after,
-        &:focus-within > a:after {
-          transform: rotate(-135deg) scale(0.85);
-        }
+        /* Animations for icons and caret */
+        &:after {
+          content: '';
+          display: none;
 
-        > ul {
-          display: block;
-          visibility: hidden;
+          margin-left: 0.47em;
+          margin-bottom: 0.08em;
+          border: solid currentColor;
+          border-width: 0 2px 2px 0;
+          padding: 3px;
+          transform: rotate(45deg) scale(0.8);
           opacity: 0;
-          pointer-events: none;
-          min-width: 11rem;
-          background: var(--submenu-bg);
-          position: absolute;
-          top: 100%;
-          left: 0;
-          margin-top: 0.3em;
-          flex-direction: column;
-          z-index: 3;
           transition:
             opacity var(--transition),
-            transform var(--transition),
-            visibility var(--transition);
-          transform: translateY(-0.7em);
-
-          &:hover,
-          &:focus-within {
-            visibility: visible;
-            opacity: 1;
-            pointer-events: all;
-            transform: translateY(0);
-          }
-
-          > li {
-            display: flex;
-
-            > a {
-              display: block;
-              width: 100%;
-              color: var(--text-color);
-              padding: 0.63em 1.3em;
-              font-size: 0.99em;
-              font-weight: 400;
-              transition:
-                background var(--transition),
-                color var(--transition);
-
-              &:hover {
-                background: var(--hover-color);
-                color: var(--hover-text-color);
-              }
-            }
-          }
+            transform var(--transition);
         }
+      }
 
-        &:focus-within > ul {
+      /* mark li's with submenu, show caret only if submenu exists */
+      &:has(ul) > a:after {
+        opacity: 0.55;
+        display: inline-block;
+      }
+
+      &:hover > a:after,
+      &:focus-within > a:after {
+        transform: rotate(-135deg) scale(0.85);
+      }
+
+      > ul {
+        display: block;
+        visibility: hidden;
+        opacity: 0;
+        pointer-events: none;
+        min-width: 11rem;
+        background: var(--submenu-bg);
+        position: absolute;
+        top: 100%;
+        left: 0;
+        margin-top: 0.3em;
+        flex-direction: column;
+        z-index: 3;
+        transition:
+          opacity var(--transition),
+          transform var(--transition),
+          visibility var(--transition);
+        transform: translateY(-0.7em);
+
+        &:hover,
+        &:focus-within {
           visibility: visible;
           opacity: 1;
           pointer-events: all;
           transform: translateY(0);
         }
+
+        > li {
+          display: flex;
+
+          > a {
+            display: block;
+            width: 100%;
+            color: var(--text-color);
+            padding: 0.63em 1.3em;
+            font-size: 0.99em;
+            font-weight: 400;
+            transition:
+              background var(--transition),
+              color var(--transition);
+
+            &:hover {
+              background: var(--hover-color);
+              color: var(--hover-text-color);
+            }
+          }
+        }
+      }
+
+      &:focus-within > ul {
+        visibility: visible;
+        opacity: 1;
+        pointer-events: all;
+        transform: translateY(0);
       }
     }
   }

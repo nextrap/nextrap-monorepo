@@ -1,0 +1,67 @@
+nte-navbar {
+  &.state-scrolled {
+    --bg: rgba(var(--nt-white-rgb), 1);
+  }
+}
+
+nte-navbar.autoborder {
+  &.state-scrolled {
+    &::part(navbar) {
+      border-bottom: 1px solid rgba(var(--nt-text-rgb), 0.1);
+    }
+  }
+}
+
+nte-navbar.autoshadow {
+  &::part(navbar) {
+    transition: box-shadow 0.3s ease-in-out;
+  }
+  &.state-scrolled {
+    &::part(navbar) {
+      box-shadow: 0 2px 10px rgba(var(--nt-text-rgb), 0.1);
+    }
+  }
+}
+
+// Autohide
+
+nte-navbar.autohide {
+  &::part(navbar) {
+    transition: transform 0.3s ease-in-out;
+  }
+  &.state-pre-scrolled.state-scrolling-down {
+    &::part(navbar) {
+      transform: translateY(-100%);
+    }
+  }
+  &.state-pre-scrolled.state-scrolling-up {
+    &::part(navbar) {
+      transform: translateY(0);
+      position: fixed;
+      top: 0;
+      left: 0;
+      opacity: 1;
+      width: 100%;
+    }
+  }
+  &.state-scrolled {
+    &::part(navbar) {
+      position: fixed;
+      top: 0;
+      left: 0;
+      opacity: 1;
+      width: 100%;
+      transform: translateY(-100%);
+    }
+    &.state-scrolling-up {
+      &::part(navbar) {
+        transform: translateY(0);
+        position: fixed;
+        top: 0;
+        left: 0;
+        opacity: 1;
+        width: 100%;
+      }
+    }
+  }
+}

@@ -59,17 +59,17 @@ $background: $white !default;
   --nt-white: #{$white};
   --nt-black: #{$black};
 
-  --nt-primary-rgb: hex2rgb($primary);
-  --nt-secondary-rgb: hex2rgb($secondary);
-  --nt-accent-rgb: hex2rgb($accent);
-  --nt-success-rgb: hex2rgb($success);
-  --nt-info-rgb: hex2rgb($info);
-  --nt-warning-rgb: hex2rgb($warning);
-  --nt-danger-rgb: hex2rgb($danger);
-  --nt-light-rgb: hex2rgb($light);
-  --nt-dark-rgb: hex2rgb($dark);
-  --nt-white-rgb: hex2rgb($white);
-  --nt-black-rgb: hex2rgb($black);
+  --nt-primary-rgb: #{hex2rgb($primary)};
+  --nt-secondary-rgb: #{hex2rgb($secondary)};
+  --nt-accent-rgb: #{hex2rgb($accent)};
+  --nt-success-rgb: #{hex2rgb($success)};
+  --nt-info-rgb: #{hex2rgb($info)};
+  --nt-warning-rgb: #{hex2rgb($warning)};
+  --nt-danger-rgb: #{hex2rgb($danger)};
+  --nt-light-rgb: #{hex2rgb($light)};
+  --nt-dark-rgb: #{hex2rgb($dark)};
+  --nt-white-rgb: #{hex2rgb($white)};
+  --nt-black-rgb: #{hex2rgb($black)};
 
   // Soft colors
   --nt-soft-primary: #{$soft-primary};
@@ -85,7 +85,7 @@ $background: $white !default;
 
   // Text colors
   --nt-text: #{$text};
-  --nt-text-rgb: hex2rgb($text);
+  --nt-text-rgb: #{hex2rgb($text)};
 
   --nt-text-on-primary: #{$text-on-primary};
   --nt-text-on-secondary: #{$text-on-secondary};
