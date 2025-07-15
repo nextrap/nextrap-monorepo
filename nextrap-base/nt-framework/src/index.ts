@@ -1,5 +1,6 @@
 export * from './util/breakpoints';
 export * from './util/Debouncer';
+export * from './util/SlotTool';
 
 export * from 'lit';
 export * from 'lit/decorators.js';

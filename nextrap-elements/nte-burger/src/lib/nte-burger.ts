@@ -1,9 +1,4 @@
-import {
-  customElement,
-  NtSimpleElement,
-  property,
-  unsafeCSS,
-} from '@nextrap/nt-framework';
+import { customElement, NtSimpleElement, property, unsafeCSS } from '@nextrap/nt-framework';
 import style from './hamburger.scss?inline';
 
 const html = `
@@ -19,6 +14,8 @@ const html = `
 @customElement('nte-burger')
 export class NteBurger extends NtSimpleElement<['wrapper', 'button']> {
   @property({ type: Boolean, attribute: 'open', reflect: true }) open = false;
+
+  @property({ type: String, reflect: true }) text = 'Menu';
 
   constructor() {
     super(html);
