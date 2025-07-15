@@ -37,6 +37,18 @@ export class NteOffcanvas extends LitElement {
     this.opened = !this.opened;
   }
 
+  constructor() {
+    super();
+    this.addEventListener('click', (event) => {
+      if (event === undefined || !event.target || !(event.target instanceof HTMLElement)) {
+        return;
+      }
+      if ((event.target as HTMLElement).closest("[data-nt-dismiss='offcanvas']") !== null) {
+        this.close();
+      }
+    });
+  }
+
   override async updated(changedProperties: Map<string | number | symbol, unknown>): Promise<void> {
     // Animation logic - display first - then apply
     if (changedProperties.has('opened')) {

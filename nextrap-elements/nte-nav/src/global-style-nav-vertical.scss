@@ -8,8 +8,9 @@
 /* NEW: Analogue global styling when <nt-nav mode="sidebar"> is used          */
 /* -------------------------------------------------------------------------- */
 
-.nav-offcanvas {
+.nav-vertical {
   /* Main unordered list container */
+  width: 100%;
   ul {
     list-style: none;
     margin: 0;

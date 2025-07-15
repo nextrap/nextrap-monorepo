@@ -11,8 +11,20 @@
 }
 
 #wrapper {
-  position: relative;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
   width: 100%;
+}
+
+#spacer {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--brand-height);
+  background-color: var(--spacer-bg);
 }
 
 #navbar {

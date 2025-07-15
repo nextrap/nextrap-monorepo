@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>nte-nav</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
     <nte-navbar class="autohide autoborder autoshadow" scroll-threshold="500">
@@ -13,7 +14,7 @@
         style="height: 64px"
       />
       <nte-navbar-line>
-        <nte-nav breakpoint="1008px" mode="sidebar">
+        <nte-nav class="nav-horizontal" mode="master" breakpoint="1008px" transfer-to="#navSidebar">
           <p slot="menu-text">Menü</p>
           <ul>
             <li><a href="#" class="active">Home</a></li>
@@ -31,6 +32,11 @@
         </nte-nav>
       </nte-navbar-line>
     </nte-navbar>
+
+    <nte-offcanvas id="navSidebar">
+      <nte-burger slot="header" data-nt-dismiss="offcanvas" open></nte-burger>
+      <nte-nav class="nav-vertical"></nte-nav>
+    </nte-offcanvas>
 
     <hr style="margin-top: 500px" />
 

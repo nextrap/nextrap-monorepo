@@ -1,6 +1,6 @@
 // All Row Styles go here
 
-nte-nav.nav-row {
+.nav-horizontal {
   &.start {
     --justify-content: flex-start;
   }
@@ -95,6 +95,12 @@ nte-nav.nav-row {
         position: absolute;
         top: 100%;
         left: 0;
+
+        &:last-child {
+          right: 0; // Align last submenu to the right (prevents overflow)
+          left: auto;
+        }
+
         margin-top: 0.3em;
         flex-direction: column;
         z-index: 3;

@@ -1,3 +1,4 @@
+import { ka_dom_ready } from '@kasimirjs/core';
 import { customElement, isBiggerThanBreakpoint, NtElementDefinition, property, unsafeCSS } from '@nextrap/nt-framework';
 import '@nextrap/nte-offcanvas';
 import { NteOffcanvas } from '@nextrap/nte-offcanvas';
@@ -22,101 +23,114 @@ export class NteNav extends LitElement {
 
   static override styles = [unsafeCSS(style)];
 
-  @property({ type: String, reflect: true }) mode: 'row' | 'column' | 'auto' = 'auto';
+  @property({ type: String, reflect: true }) mode: 'master' | 'slave' = 'slave';
   // Only for mode "sidebar"
-
-  @property({ type: String, reflect: true }) text = 'Menu';
 
   @property({ type: String, reflect: true }) breakpoint: string | number = '99999px';
 
-  private offcanvas: NteOffcanvas;
+  @property({ type: String, reflect: true, attribute: 'transfer-to' }) transferTo = '';
 
-  @state() private _sidebar = false;
+  @state() private _isTransferred = false;
+
+  private getOffcanvas(): NteOffcanvas | null {
+    if (!this.transferTo) {
+      return null;
+    }
+    return document.querySelector(this.transferTo) as NteOffcanvas | null;
+  }
+
+  private getOffcanvasNav(): NteNav | null {
+    const offcanvas = this.getOffcanvas();
+    return offcanvas ? (offcanvas.querySelector('nte-nav') as NteNav | null) : null;
+  }
 
   constructor() {
     super();
-    this.offcanvas = new NteOffcanvas();
-    this.offcanvas.classList.add('nav-offcanvas');
-    this.offcanvas.innerHTML = `<div slot="header"><nte-burger state="open"></nte-burger></div>`;
-    // @ts-expect-error: onclick is definitly defined
-    this.offcanvas.querySelector('nte-burger').onclick = () => {
-      this.offcanvas.close();
-    };
-
-    document.body.appendChild(this.offcanvas);
   }
 
   override render() {
-    const normal = html`
-      <div class="nt-nav-links" id="main" part="main">
-        <slot id="main-slot"></slot>
-      </div>
-    `;
-
     return html` <nav>
       <slot
-        ?hidden=${!this._sidebar}
+        ?hidden=${!this._isTransferred}
         name="burger"
         open
         aria-haspopup="true"
         id="burger"
         class="burger"
-        @click=${() => this.offcanvas.open()}
+        @click=${() => this.getOffcanvas()?.open()}
       >
         <!-- fallback icon -->
-        <div style="display:flex; align-items: center; justify-content: center;">
-          <div id="text"><slot name="menu-text"></slot></div>
-          <nte-burger id="open-burger"></nte-burger>
-        </div>
+        ${this._isTransferred
+          ? html`<div style="display:flex; align-items: center; justify-content: center;">
+              <div id="text"><slot name="menu-text"></slot></div>
+              <nte-burger id="open-burger"></nte-burger>
+            </div>`
+          : ''}
       </slot>
-      ${normal}
+      <div class="nt-nav-links" id="main" part="main">
+        <slot id="main-slot"></slot>
+      </div>
     </nav>`;
+  }
+
+  public transferToElement(targetElement: NteNav) {
+    const mainSlot = this.shadowRoot?.querySelector('#main-slot') as HTMLSlotElement;
+    const elements = Array.from(mainSlot.assignedElements({ flatten: true }));
+    elements.forEach((el) => {
+      if (el instanceof HTMLElement) {
+        targetElement.appendChild(el);
+      }
+    });
   }
 
   protected override updated(_changedProperties: PropertyValues) {
     super.updated(_changedProperties);
 
-    if (this._sidebar) {
-      const slot = this.shadowRoot?.querySelector('#main-slot') as HTMLSlotElement;
-      this.offcanvas.append(...slot.assignedElements());
+    if (this._isTransferred) {
+      this.transferToElement(
+        this.getOffcanvasNav() ??
+          (() => {
+            throw new Error('No offcanvas nav found');
+          })(),
+      );
+    } else {
+      this.getOffcanvasNav()?.transferToElement(this);
+      this.getOffcanvas()?.close();
     }
   }
 
   protected override firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
     // Copy all styles from the parent element to the offcanvas
-    const styles = getComputedStyle(this);
-    for (const styleName of styles) {
-      console.debug(`Copying style ${styleName} with value ${styles.getPropertyValue(styleName)}`);
-      if (styleName.startsWith('--')) {
-        this.offcanvas.style.setProperty(styleName, styles.getPropertyValue(styleName));
-      }
+
+    const cl = this.classList;
+    if (!cl.contains('nav-vertical') && !cl.contains('nav-horizontal')) {
+      cl.add(this.closest('nte-offcanvas') === null ? 'nav-horizontal' : 'nav-vertical');
     }
   }
 
-  switchMode(mode: 'row' | 'column') {
-    this.classList.remove('nav-row', 'nav-column');
-    this.classList.add(`nav-${mode}`);
-  }
+  override async connectedCallback() {
+    await ka_dom_ready();
 
-  override connectedCallback() {
     super.connectedCallback();
-    this.switchMode('column');
-    this._sidebar = true;
-    if (this.breakpoint !== '') {
-      if (isBiggerThanBreakpoint(this.breakpoint)) {
-        this.switchMode('row');
-        this._sidebar = false;
-      }
-      window.addEventListener('breakpoint-changed', (event: Event) => {
-        if (isBiggerThanBreakpoint(this.breakpoint)) {
-          this.switchMode('row');
-          this._sidebar = false;
-        } else {
-          this.switchMode('column');
-          this._sidebar = true;
+
+    if (this.mode === 'slave') {
+      return;
+    }
+    if (this.transferTo !== '') {
+      this._isTransferred = false;
+      if (this.breakpoint !== '') {
+        if (!isBiggerThanBreakpoint(this.breakpoint)) {
+          this._isTransferred = true;
         }
-      });
+        window.addEventListener('breakpoint-changed', (event: Event) => {
+          if (isBiggerThanBreakpoint(this.breakpoint)) {
+            this._isTransferred = false;
+          } else {
+            this._isTransferred = true;
+          }
+        });
+      }
     }
   }
 }
