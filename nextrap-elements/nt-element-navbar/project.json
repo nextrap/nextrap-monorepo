@@ -1,22 +1,21 @@
 {
-  "name": "nt-element-navbar",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "nextrap-elements/nt-element-navbar/src",
-  "projectType": "library",
-  "release": {
-    "version": {
-      "currentVersionResolver": "git-tag",
-      "fallbackCurrentVersionResolver": "disk",
-      "preserveLocalDependencyProtocols": false,
-      "manifestRootsToUpdate": ["dist/{projectRoot}"]
+    "name": "nt-element-navbar",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "nextrap-elements/nt-element-navbar/src",
+    "projectType": "library",
+    "release": {
+        "version": {
+            "currentVersionResolver": "disk",
+            "preserveLocalDependencyProtocols": false,
+            "manifestRootsToUpdate": ["{projectRoot}"]
+        }
+    },
+    "tags": [],
+    "targets": {
+        "nx-release-publish": {
+            "options": {
+                "packageRoot": "dist/{projectRoot}"
+            }
+        }
     }
-  },
-  "tags": [],
-  "targets": {
-    "nx-release-publish": {
-      "options": {
-        "packageRoot": "dist/{projectRoot}"
-      }
-    }
-  }
 }
