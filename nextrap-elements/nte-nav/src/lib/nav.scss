@@ -9,4 +9,16 @@
   --justify-content: center;
   --sidemenu-bg: var(--nt-soft-primary);
   --justify-sidebar-burger: flex-end;
+  --height: auto;
+
+  height: var(--height);
+  display: block;
+}
+
+nav {
+  height: 100%;
+}
+
+#main {
+  height: 100%;
 }

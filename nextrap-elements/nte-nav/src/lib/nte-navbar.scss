@@ -5,7 +5,6 @@
   --spacer-bg: transparent;
   --container-width: var(--nt-container-width, 100%);
   --brand-height: 80px;
-  --padding: 0.5rem;
 
   margin: 0;
 }
@@ -34,35 +33,9 @@
   height: auto;
   background-color: var(--bg);
   z-index: 1000;
-  padding: var(--padding);
 }
 
-#container {
-  width: var(--container-width);
-  // center the container
-  margin: 0 auto;
-  display: flex;
-
-  #brand {
-    &:has(slot[empty]) {
-      display: none;
-    }
-    width: auto;
-    align-items: start;
-    display: flex;
-    height: 100%;
-    justify-items: center;
-    slot::slotted(img) {
-      height: var(--brand-height);
-      width: auto;
-    }
-  }
-
-  #navbars {
-    display: flex;
-    flex-grow: 1;
-    justify-content: end;
-    align-items: center;
-    gap: 1rem; // Adjust spacing between navbars
-  }
+#main {
+  width: 100%;
+  display: block;
 }

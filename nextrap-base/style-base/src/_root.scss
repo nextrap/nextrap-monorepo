@@ -133,12 +133,12 @@ $background: $white !default;
   // =============== FONT SIZES =============== //
   // Font size
   @each $i, $val in $fontSizeMap {
-    --nt-font-size-#{$i}: calc(var(--nt-font-size-base) * #{$val});
+    --nt-fs-#{$i}: calc(var(--nt-font-size-base) * #{$val});
   }
 
   // header font size
   @each $i, $val in $headerFontSizeMap {
-    --nt-font-size-h#{$i}: calc(var(--nt-font-size-header) * #{$val});
+    --nt-fs-h#{$i}: calc(var(--nt-font-size-header) * #{$val});
   }
 
   // Display font size

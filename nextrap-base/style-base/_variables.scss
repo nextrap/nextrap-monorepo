@@ -59,11 +59,12 @@ $spaceMap: (
 $font-size-small: 0.875rem !default; // Font size in <small> tags or .small class
 
 $fontSizeMap: (
-  '1': 0.75,
-  '2': 0.875,
+  '1': 1.5,
+  '2': 1.25,
   '3': 1,
-  '4': 1.25,
-  '5': 1.5,
+  '4': 0.9,
+  '5': 0.85,
+  '6': 0.75,
 ) !default; // Font size map for utility classes
 
 $headerFontSizeMap: (

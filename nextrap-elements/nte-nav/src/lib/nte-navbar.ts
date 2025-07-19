@@ -23,6 +23,7 @@ export class NteNavbar extends LitElement {
 
   // Track last scroll position to detect scroll direction
   private _lastScrollY = window.scrollY;
+  private _scrollUpPixels = 0;
 
   private _debouncer: Debouncer;
 
@@ -45,30 +46,30 @@ export class NteNavbar extends LitElement {
     const currentScrollY = window.scrollY;
 
     // Handle "state-scrolled-top"
-    if (currentScrollY < 2) {
-      this.classList.add('state-scrolled-top');
-      this.classList.remove('state-pre-scrolled');
-      return;
+    if (currentScrollY > 1) {
+      this.classList.add('is-scrolled');
     } else {
-      this.classList.remove('state-scrolled-top');
-      this.classList.remove('state-scrolling-up');
+      this.classList.remove('is-scrolled');
     }
 
+    // Switch to is-scrolling-up if
+    // - Scroled up more than 10 pixels
+    // - below the scroll threshold
     if (currentScrollY < this._lastScrollY) {
-      this.classList.add('state-scrolling-up');
-      this.classList.remove('state-scrolling-down');
+      this._scrollUpPixels += this._lastScrollY - currentScrollY;
+      if (this._scrollUpPixels > 10 && currentScrollY < this.scrollThreshold) {
+        this.classList.add('is-scrolling-up');
+      }
     } else {
-      this.classList.remove('state-scrolling-up');
-      this.classList.add('state-scrolling-down');
+      this._scrollUpPixels = 0; // Reset if scrolling down
+      this.classList.remove('is-scrolling-up');
     }
 
     // Handle "state-scrolled" based on threshold
     if (currentScrollY > this.scrollThreshold) {
-      this.classList.add('state-scrolled');
-      this.classList.remove('state-pre-scrolled');
+      this.classList.add('is-below-threshold');
     } else {
-      this.classList.add('state-pre-scrolled');
-      this.classList.remove('state-scrolled');
+      this.classList.remove('is-below-threshold');
     }
 
     // Handle "state-scrolling-up"
@@ -104,13 +105,11 @@ export class NteNavbar extends LitElement {
       <div id="wrapper" part="wrapper">
         <div id="spacer" part="spacer" ${ref(this.spacerRef)}></div>
         <div id="navbar" part="navbar" ${ref(this.navbarRef)}>
-          <div id="container" part="container">
-            <div id="brand" part="brand">
-              <slot name="brand"></slot>
-            </div>
-            <div id="navbars">
-              <slot></slot>
-            </div>
+          <div id="brand" part="brand">
+            <slot name="brand"></slot>
+          </div>
+          <div id="main">
+            <slot></slot>
           </div>
         </div>
       </div>

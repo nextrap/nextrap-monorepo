@@ -1,32 +1,42 @@
-import { html, LitElement } from 'lit';
+import { SlotTool } from '@nextrap/nt-framework';
+import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
 import { customElement } from 'lit/decorators.js';
+import style from './nte-navbar-line.scss?inline';
 
 @customElement('nte-navbar-line')
 class NteNavbarLine extends LitElement {
   static get is() {
     return 'nte-navbar-line';
   }
-
-  override createRenderRoot() {
-    return this.attachShadow({ mode: 'open' });
-  }
+  static override styles = [unsafeCSS(style)];
 
   override connectedCallback() {
     super.connectedCallback();
-    // Additional setup can be done here if needed
+
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (window.scrollY > 0) {
+          this.classList.add('is-scrolled');
+        } else {
+          this.classList.remove('is-scrolled');
+        }
+      },
+      { passive: true },
+    );
   }
 
+  override firstUpdated(_changedProperties: PropertyValues) {
+    SlotTool.observeEmptySlots(this);
+  }
   override render() {
     return html`
-      <div id="main">
-        <div id="topbar" part="topbar">
-          <div id="container-top" part="container-top">
-            <slot name="top"></slot>
+      <div id="main" part="main">
+        <div id="container" part="container">
+          <div id="brand" part="brand">
+            <slot name="brand"></slot>
           </div>
-        </div>
-
-        <div id="navbar" part="navbar">
-          <div id="container" part="container">
+          <div id="nav" part="nav">
             <slot></slot>
           </div>
         </div>
