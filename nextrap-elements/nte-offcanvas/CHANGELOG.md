@@ -1,3 +1,9 @@
+## 0.0.8 (2025-07-21)
+
+### 🧱 Updated Dependencies
+
+- Updated style-base to 1.0.1
+
 ## 0.0.7 (2025-07-21)
 
 ### 🧱 Updated Dependencies
