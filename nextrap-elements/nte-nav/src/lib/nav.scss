@@ -1,6 +1,8 @@
 :host {
   --container-width: var(--nt-container-width);
-  --text-color: var(--nt-text-color);
+  --text-color: var(--nt-text);
+  --burger-color-rgb: var(--nt-text-rgb);
+
   --hover-color: var(--nt-primary);
   --hover-text-color: var(--nt-text-on-primary);
   --transition: 0.2s ease-in-out;
@@ -25,4 +27,23 @@ nav {
 
 #burger-wrapper {
   padding: 15px;
+}
+
+#burger-default {
+  cursor: pointer;
+  slot::slotted(p) {
+    color: rgba(var(--burger-color-rgb), 0.7);
+    transition: color var(--transition);
+  }
+  nte-burger {
+    --color: rgba(var(--burger-color-rgb), 0.5);
+  }
+}
+#burger-default:hover {
+  slot::slotted(p) {
+    color: rgba(var(--burger-color-rgb), 1);
+  }
+  nte-burger {
+    --color: rgba(var(--burger-color-rgb), 1);
+  }
 }

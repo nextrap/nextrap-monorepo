@@ -61,7 +61,7 @@ export class NteNav extends LitElement {
         >
           <!-- fallback icon -->
           ${this._isTransferred
-            ? html`<div style="display:flex; align-items: center; justify-content: center;">
+            ? html`<div id="burger-default" style="display:flex; align-items: center; justify-content: center;">
                 <div id="text"><slot name="menu-text"></slot></div>
                 <nte-burger id="open-burger"></nte-burger>
               </div>`
