@@ -45,7 +45,6 @@ export default defineConfig((command) => ({
     },
     rollupOptions: {
       // External packages that should not be bundled into your library.
-      input: './public/main.ts',
       external: [],
     },
   },
