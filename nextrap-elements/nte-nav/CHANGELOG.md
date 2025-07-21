@@ -1,3 +1,10 @@
+## 0.2.20 (2025-07-21)
+
+### 🧱 Updated Dependencies
+
+- Updated style-base to 1.0.3
+- Updated nte-offcanvas to 0.0.12
+
 ## 0.2.19 (2025-07-21)
 
 ### 🧱 Updated Dependencies
