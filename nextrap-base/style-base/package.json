@@ -3,7 +3,7 @@
     "version": "1.1.1",
     "files": [
         "*.*",
-        "/src"
+        "src"
     ],
     "main": "./index.js",
     "dependencies": {},
