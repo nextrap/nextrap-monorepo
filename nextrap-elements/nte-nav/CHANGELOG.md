@@ -1,3 +1,9 @@
+## 0.2.31 (2025-07-21)
+
+### 🧱 Updated Dependencies
+
+- Updated nte-burger to 0.1.0
+
 ## 0.2.30 (2025-07-21)
 
 This was a version bump only for nte-nav to align it with other projects, there were no code changes.
