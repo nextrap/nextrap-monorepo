@@ -1,5 +1,4 @@
-import { ka_dom_ready } from '@kasimirjs/core';
-import { Debouncer, SlotTool } from '@nextrap/nt-framework';
+import { Debouncer, SlotTool, waitForDomContentLoaded, waitForLoad } from '@nextrap/nt-framework';
 import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { createRef, ref, Ref } from 'lit/directives/ref.js';
@@ -79,16 +78,18 @@ export class NteNavbar extends LitElement {
 
   override async connectedCallback() {
     this.updateScrollState();
-    await ka_dom_ready();
+    await waitForDomContentLoaded();
     super.connectedCallback();
     // Additional setup can be done here if needed
   }
 
   // Adjust the spacer height on every render
-  override updated(_changedProperties: PropertyValues) {
+  override async updated(_changedProperties: PropertyValues) {
+    await waitForLoad();
     super.updated(_changedProperties);
     const navbar = this.navbarRef.value;
     const spacer = this.spacerRef.value;
+    console.log('Updating spacer height', navbar?.offsetHeight, spacer);
     if (navbar && spacer) {
       spacer.style.height = `${navbar.offsetHeight}px`;
     }

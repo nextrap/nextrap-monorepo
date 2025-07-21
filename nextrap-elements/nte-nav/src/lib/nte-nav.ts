@@ -75,6 +75,9 @@ export class NteNav extends LitElement {
 
   public transferToElement(targetElement: NteNav) {
     const mainSlot = this.shadowRoot?.querySelector('#main-slot') as HTMLSlotElement;
+    if (mainSlot === null) {
+      return;
+    }
     const elements = Array.from(mainSlot.assignedElements({ flatten: true }));
     elements.forEach((el) => {
       if (el instanceof HTMLElement) {

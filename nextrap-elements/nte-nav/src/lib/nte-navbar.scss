@@ -6,11 +6,17 @@
   --container-width: var(--nt-container-width, 100%);
   --brand-height: 80px;
 
+  isolation: isolate;
   margin: 0;
 }
 
+:host(a) {
+  height: 85px;
+  width: auto;
+}
+
 #wrapper {
-  position: absolute;
+  position: relative;
   left: 0;
   top: 0;
   right: 0;

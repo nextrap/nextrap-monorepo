@@ -5,6 +5,7 @@
   --background: transparent;
   --text-color: var(--nt-text);
   --height: auto;
+  --brand-height: 80px;
   display: block;
   height: 100%;
 }
@@ -38,15 +39,12 @@
     &:has(slot[empty]) {
       display: none;
     }
+
     width: auto;
     align-items: start;
     display: flex;
     height: 100%;
     justify-items: center;
-    slot::slotted(img) {
-      height: var(--brand-height);
-      width: auto;
-    }
   }
 
   #nav {
