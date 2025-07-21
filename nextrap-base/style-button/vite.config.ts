@@ -9,10 +9,10 @@ import viteTestConfig from '../../utils/vite/config/vite-test-config';
 
 export default defineConfig((command) => ({
   ...viteServerConfig,
-  test: viteTestConfig('nextrap-elements/nte-burger'),
+  test: viteTestConfig('nextrap-base/style-button'),
   publicDir: './public/www',
   root: __dirname,
-  cacheDir: '../../node_modules/.vite/nextrap-elements/nte-burger',
+  cacheDir: '../../node_modules/.vite/nextrap-base/style-button',
   plugins: [
     nxViteTsPaths(),
     nxCopyAssetsPlugin(['*.md']),
@@ -28,7 +28,7 @@ export default defineConfig((command) => ({
   // Configuration for building your library.
   // See: https://vitejs.dev/guide/build.html#library-mode
   build: {
-    outDir: '../../dist/nextrap-elements/nte-burger',
+    outDir: '../../dist/nextrap-base/style-button',
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {
@@ -37,7 +37,7 @@ export default defineConfig((command) => ({
     lib: {
       // Could also be a dictionary or array of multiple entry points.
       entry: 'src/index.ts',
-      name: 'nte-burger',
+      name: 'style-burger',
       fileName: 'index',
       // Change this to the formats you want to support.
       // Don't forget to update your package.json as well.
