@@ -3,11 +3,11 @@
     "version": "0.0.21",
     "main": "./index.js",
     "dependencies": {
-        "@nextrap/nt-framework": "0.0.1"
+        "@nextrap/nt-framework": "^0.0.1"
     },
     "devDependencies": {
-        "@nextrap/style-base": "1.1.5",
-        "@nextrap/style-reset": "0.1.1"
+        "@nextrap/style-base": "^1.1.5",
+        "@nextrap/style-reset": "^0.1.1"
     },
     "type": "module",
     "types": "./index.d.ts"
