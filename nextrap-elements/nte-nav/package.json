@@ -1,6 +1,6 @@
 {
     "name": "@nextrap/nte-nav",
-    "version": "0.2.17",
+    "version": "0.2.18",
     "main": "./index.js",
     "dependencies": {
         "@nextrap/nt-framework": "^0.0.1",
