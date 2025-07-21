@@ -15,7 +15,7 @@ export default defineConfig((command) => ({
   cacheDir: '../../node_modules/.vite/nextrap-base/style-base',
   plugins: [
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md']),
+    nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss']),
     dts({
       entryRoot: 'src',
       tsconfigPath: path.join(__dirname, 'tsconfig.lib.json'),
