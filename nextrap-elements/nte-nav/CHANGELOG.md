@@ -1,3 +1,9 @@
+## 0.2.24 (2025-07-21)
+
+### 🧱 Updated Dependencies
+
+- Updated nte-offcanvas to 0.0.15
+
 ## 0.2.23 (2025-07-21)
 
 This was a version bump only for nte-nav to align it with other projects, there were no code changes.
