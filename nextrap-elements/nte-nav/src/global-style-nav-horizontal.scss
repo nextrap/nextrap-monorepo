@@ -67,6 +67,7 @@
     --item-margin: 0;
     --text-color: var(--nt-text);
     --hover-color: transparent;
+    --submenu-hover-color: var(--nt-primary);
     --hover-text-color: var(--nt-text);
     --submenu-bg: var(--nt-light);
     --submenu-text-color: var(--nt-text);
@@ -141,7 +142,7 @@
         display: inline-block;
       }
 
-      &:hover > a:after,
+      &:active > a:after,
       &:focus-within > a:after {
         transform: rotate(-135deg) scale(0.85);
       }
@@ -152,7 +153,7 @@
         opacity: 0;
         pointer-events: none;
         min-width: 11rem;
-        background: var(--submenu-bg);
+        background: var(--submenu-bg) !important;
         position: absolute;
         top: 100%;
         left: 0;
@@ -182,6 +183,7 @@
         > li {
           display: flex;
           height: auto;
+          background: var(--submenu-bg);
           > a {
             display: block;
             width: 100%;
@@ -195,7 +197,7 @@
               color var(--transition);
 
             &:hover {
-              background: var(--hover-color);
+              background: var(--submenu-hover-color);
               color: var(--hover-text-color);
             }
           }

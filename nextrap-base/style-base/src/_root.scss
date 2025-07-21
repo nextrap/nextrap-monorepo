@@ -20,13 +20,6 @@
   @return if($l1 > $l2, math.div($l1, $l2), math.div($l2, $l1));
 }
 
-@function hex2rgb($color) {
-  $g: color.channel($color, 'green', $space: rgb);
-  $r: color.channel($color, 'red', $space: rgb);
-  $b: color.channel($color, 'blue', $space: rgb);
-  @return '#{$r}, #{$g}, #{$b}';
-}
-
 $text: $black !default;
 $text-on-primary: $white !default;
 // Calculate if contrast is needed
@@ -59,6 +52,7 @@ $background: $white !default;
   --nt-white: #{$white};
   --nt-black: #{$black};
 
+  /** REMOVED - USE CSS Colors 5 Syntax instead rgb(from var(--nt-primary) r g b)
   --nt-primary-rgb: #{hex2rgb($primary)};
   --nt-secondary-rgb: #{hex2rgb($secondary)};
   --nt-accent-rgb: #{hex2rgb($accent)};
@@ -70,6 +64,7 @@ $background: $white !default;
   --nt-dark-rgb: #{hex2rgb($dark)};
   --nt-white-rgb: #{hex2rgb($white)};
   --nt-black-rgb: #{hex2rgb($black)};
+  */
 
   // Soft colors
   --nt-soft-primary: #{$soft-primary};
@@ -85,7 +80,7 @@ $background: $white !default;
 
   // Text colors
   --nt-text: #{$text};
-  --nt-text-rgb: #{hex2rgb($text)};
+  //--nt-text-rgb: #{hex2rgb($text)};
 
   --nt-text-on-primary: #{$text-on-primary};
   --nt-text-on-secondary: #{$text-on-secondary};

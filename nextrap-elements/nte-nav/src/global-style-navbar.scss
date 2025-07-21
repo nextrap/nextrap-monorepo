@@ -1,13 +1,13 @@
 nte-navbar {
   &.is-scrolled {
-    --bg: rgba(var(--nt-white-rgb), 1);
+    --bg: rgb(from var(--nt-white) r g b / 1);
   }
 }
 
 nte-navbar.autoborder {
   &.is-scrolled {
     &::part(navbar) {
-      border-bottom: 1px solid rgba(var(--nt-text-rgb), 0.1);
+      border-bottom: 1px solid rgb(from var(--nt-text) r g b / 0.1);
     }
   }
 }
@@ -18,7 +18,7 @@ nte-navbar.autoshadow {
   }
   &.is-scrolled {
     &::part(navbar) {
-      box-shadow: 0 2px 10px rgba(var(--nt-text-rgb), 0.1);
+      box-shadow: 0 2px 10px rgb(from var(--nt-text) r g b / 0.1);
     }
   }
 }

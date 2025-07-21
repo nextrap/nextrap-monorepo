@@ -1,7 +1,7 @@
 :host {
   --size: 40px;
   --color: #666;
-  --color-hover: #000;
+  --color-hover: var(--color);
   height: var(--size);
   width: var(--size);
 }
