@@ -1,6 +1,6 @@
 // Create fs-1-6 classes
 
-@use '../../variables' as *;
+@use '../../../style-base/variables' as *;
 
 @for $i from 1 through 6 {
   .fs-#{$i} {

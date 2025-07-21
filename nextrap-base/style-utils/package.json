@@ -1,0 +1,10 @@
+{
+    "name": "@nextrap/style-utils",
+    "version": "0.0.1",
+    "main": "./index.js",
+    "dependencies": {
+        "@nextrap/style-base": "^0.0.2"
+    },
+    "type": "module",
+    "types": "./index.d.ts"
+}
