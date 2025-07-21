@@ -1,6 +1,9 @@
 {
     "name": "@nextrap/style-base",
     "version": "1.0.3",
+    "files": [
+        "*.scss"
+    ],
     "main": "./index.js",
     "dependencies": {},
     "type": "module",
