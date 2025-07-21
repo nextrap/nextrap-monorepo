@@ -1,10 +1,10 @@
 @use '@nextrap/style-reset' as *;
 
 :host {
-  --backdrop: rgba(var(--nt-dark-rgb), 0.5);
+  --backdrop: rgb(from var(--nt-dark) r g b / 0.5);
   --header-background: transparent;
   --background-color: var(--nt-soft-primary);
-  --shadow-color: rgba(var(--nt-dark-rgb), 0.5);
+  --shadow-color: rgb(from var(--nt-dark) r g b / 0.5);
   --main-padding: 0;
   --header-padding: var(--nt-space);
 
