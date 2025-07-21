@@ -1,3 +1,7 @@
+## 0.0.9 (2025-07-21)
+
+This was a version bump only for nte-offcanvas to align it with other projects, there were no code changes.
+
 ## 0.0.8 (2025-07-21)
 
 ### 🧱 Updated Dependencies
