@@ -6,6 +6,7 @@
   --container-width: var(--nt-container-width, 100%);
   --brand-height: 80px;
 
+  width: 100vw;
   isolation: isolate;
   margin: 0;
 }
@@ -35,13 +36,13 @@
 #navbar {
   position: absolute;
   top: 0;
-  width: 100%;
+  width: 100vw;
   height: auto;
   background-color: var(--bg);
   z-index: 1000;
 }
 
 #main {
-  width: 100%;
+  width: 100vw;
   display: block;
 }

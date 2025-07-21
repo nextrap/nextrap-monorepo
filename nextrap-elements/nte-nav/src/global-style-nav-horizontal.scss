@@ -14,7 +14,16 @@
   }
 
   &.pos-stretch {
-    --justify-content: space-between;
+    & > ul {
+      display: flex;
+      > li {
+        flex-grow: 1;
+        > a {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    }
   }
 
   --item-padding: 0.65em 1.1em;

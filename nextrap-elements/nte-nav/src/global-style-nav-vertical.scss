@@ -23,8 +23,7 @@
     position: relative;
 
     /* List items – root and nested */
-    > li,
-    li {
+    > li {
       position: relative;
       display: block;
 
@@ -41,13 +40,12 @@
 
         &.active,
         &:active {
-          background: var(--hover-color);
+          background-color: var(--hover-color);
           color: var(--hover-text-color);
         }
 
-        &:hover,
-        li:hover > & {
-          background: var(--hover-color);
+        &:hover {
+          background-color: var(--hover-color);
           color: var(--hover-text-color);
         }
 
@@ -74,7 +72,7 @@
       }
 
       /* Rotate caret on hover/focus */
-      &:hover > a:after,
+      &:active > a:after,
       &:focus-within > a:after {
         transform: rotate(135deg) scale(0.85);
       }

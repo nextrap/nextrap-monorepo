@@ -50,23 +50,25 @@ export class NteNav extends LitElement {
 
   override render() {
     return html` <nav>
-      <slot
-        ?hidden=${!this._isTransferred}
-        name="burger"
-        open
-        aria-haspopup="true"
-        id="burger"
-        class="burger"
-        @click=${() => this.getOffcanvas()?.open()}
-      >
-        <!-- fallback icon -->
-        ${this._isTransferred
-          ? html`<div style="display:flex; align-items: center; justify-content: center;">
-              <div id="text"><slot name="menu-text"></slot></div>
-              <nte-burger id="open-burger"></nte-burger>
-            </div>`
-          : ''}
-      </slot>
+      <div id="burger-wrapper" ?hidden=${!this._isTransferred}>
+        <slot
+          name="burger"
+          open
+          aria-haspopup="true"
+          id="burger"
+          class="burger"
+          @click=${() => this.getOffcanvas()?.open()}
+        >
+          <!-- fallback icon -->
+          ${this._isTransferred
+            ? html`<div style="display:flex; align-items: center; justify-content: center;">
+                <div id="text"><slot name="menu-text"></slot></div>
+                <nte-burger id="open-burger"></nte-burger>
+              </div>`
+            : ''}
+        </slot>
+      </div>
+
       <div class="nt-nav-links" id="main" part="main">
         <slot id="main-slot"></slot>
       </div>
