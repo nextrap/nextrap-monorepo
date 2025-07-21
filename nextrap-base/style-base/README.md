@@ -1,25 +1,25 @@
 # style-base
 
-CSS logic relevant to `nextrap` at large live in this folder.
-Understand the larger context by checking out the project's main `README`.
+Defines the core css variables and container width. This package will not add any styles or classes to
+the document.
 
+## Usage
+
+Include the `style-base` package in your main document's stylesheet. The package provides both, scss sources
+and a compiled css file.
+
+To work and modify themes of scss use the scss sources:
+
+```scss
+@use '@nextrap/style-base' with (
+    $primary: $primary,
+    $accent: $accent
+);
+```
+
+This will set up the core design tokens and responsive container widths for your application.
 
 ## Notes
 
 **Important**: This package must not be included in the shadow DOM of components. Add it to
 the main document's style only once.
-
-## Structure
-
-- `_variables.scss` - Core design tokens and defaults
-- `src/root.scss` - CSS custom properties and color calculations
-- `src/container.scss` - Responsive container widths
-- `src/spacing.scss` - Base spacing variables
-- `src/typography.scss` - Typography system
-- `src/colors-utils.scss` - Color utility classes
-
-See [HOW_TO_USE.md](./HOW_TO_USE.md) for customization options.
-
-## Development
-
-- Please try to keep the [how-to-use documentation](./HOW_TO_USE.md) up to date if you change the available variables.
