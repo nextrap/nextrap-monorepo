@@ -30,7 +30,7 @@ nav {
 
 #burger-default {
   cursor: pointer;
-  slot::slotted(p) {
+  slot::slotted(span) {
     color: rgb(from var(--text-color) r g b / 0.5);
     transition: color var(--transition);
   }
@@ -39,7 +39,7 @@ nav {
   }
 }
 #burger-default:hover {
-  slot::slotted(p) {
+  slot::slotted(span) {
     color: rgb(from var(--text-color) r g b / 1);
   }
   nte-burger {
