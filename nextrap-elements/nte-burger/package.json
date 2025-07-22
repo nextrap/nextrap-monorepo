@@ -1,9 +1,9 @@
 {
     "name": "@nextrap/nte-burger",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "main": "./index.js",
     "dependencies": {
-        "@nextrap/nt-framework": "^0.0.2"
+        "@nextrap/nt-framework": "^0.0.3"
     },
     "type": "module",
     "types": "./index.d.ts"

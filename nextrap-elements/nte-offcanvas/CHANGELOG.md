@@ -1,3 +1,9 @@
+## 0.0.24 (2025-07-22)
+
+### 🧱 Updated Dependencies
+
+- Updated nt-framework to 0.0.3
+
 ## 0.0.23 (2025-07-22)
 
 ### 🧱 Updated Dependencies

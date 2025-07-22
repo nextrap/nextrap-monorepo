@@ -1,9 +1,9 @@
 {
     "name": "@nextrap/nte-offcanvas",
-    "version": "0.0.23",
+    "version": "0.0.24",
     "main": "./index.js",
     "dependencies": {
-        "@nextrap/nt-framework": "^0.0.2"
+        "@nextrap/nt-framework": "^0.0.3"
     },
     "devDependencies": {
         "@nextrap/style-base": "^1.1.5",
