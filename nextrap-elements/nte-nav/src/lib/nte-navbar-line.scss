@@ -8,7 +8,7 @@
   --brand-height: 80px;
   display: block;
   height: 100%;
-  width: 100%;
+  width: 100vw;
 }
 
 :host(.hide-on-scroll) {
@@ -40,7 +40,7 @@
     &:has(slot[empty]) {
       display: none;
     }
-
+    flex-shrink: 1;
     width: auto;
     align-items: start;
     display: flex;

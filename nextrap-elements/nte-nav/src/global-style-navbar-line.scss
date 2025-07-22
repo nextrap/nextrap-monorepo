@@ -1,6 +1,9 @@
 nte-navbar-line {
   [slot='brand'] img {
     height: var(--brand-height);
+    max-height: 100%;
+    max-width: 100%;
     width: auto;
+    object-fit: contain;
   }
 }
