@@ -40,6 +40,7 @@
     &:has(slot[empty]) {
       display: none;
     }
+    min-width: 0; // Prevents overflow
     flex-shrink: 1;
     width: auto;
     align-items: start;
