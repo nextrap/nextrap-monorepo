@@ -1,3 +1,9 @@
+## 0.2.47 (2025-07-22)
+
+### 🧱 Updated Dependencies
+
+- Updated nte-offcanvas to 1.0.0
+
 ## 0.2.46 (2025-07-22)
 
 ### 🧱 Updated Dependencies
