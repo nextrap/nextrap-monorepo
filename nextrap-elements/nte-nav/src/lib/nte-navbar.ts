@@ -1,4 +1,4 @@
-import { Debouncer, SlotTool, waitForDomContentLoaded, waitForLoad } from '@nextrap/nt-framework';
+import { Debouncer, sleep, SlotTool, waitForDomContentLoaded, waitForLoad } from '@nextrap/nt-framework';
 import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { createRef, ref, Ref } from 'lit/directives/ref.js';
@@ -89,7 +89,7 @@ export class NteNavbar extends LitElement {
     super.updated(_changedProperties);
     const navbar = this.navbarRef.value;
     const spacer = this.spacerRef.value;
-    console.log('Updating spacer height', navbar?.offsetHeight, spacer);
+    await sleep(100); // Wait for the DOM to settle after any changes
     if (navbar && spacer) {
       spacer.style.height = `${navbar.offsetHeight}px`;
     }
