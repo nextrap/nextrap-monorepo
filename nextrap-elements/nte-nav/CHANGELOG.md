@@ -1,3 +1,9 @@
+## 0.2.48 (2025-07-22)
+
+### 🧱 Updated Dependencies
+
+- Updated nte-burger to 1.0.0
+
 ## 0.2.47 (2025-07-22)
 
 ### 🧱 Updated Dependencies

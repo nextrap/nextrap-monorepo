@@ -1,3 +1,7 @@
+# 1.0.0 (2025-07-22)
+
+This was a version bump only for nte-burger to align it with other projects, there were no code changes.
+
 ## 0.1.3 (2025-07-22)
 
 ### 🧱 Updated Dependencies
