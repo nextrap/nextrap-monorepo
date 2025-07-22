@@ -1,11 +1,11 @@
 {
     "name": "@nextrap/nte-nav",
-    "version": "0.2.45",
+    "version": "0.2.46",
     "main": "./index.js",
     "dependencies": {
         "@nextrap/nt-framework": ">=0.0.3",
         "@nextrap/nte-burger": ">=0.1.1",
-        "@nextrap/nte-offcanvas": ">=0.0.24"
+        "@nextrap/nte-offcanvas": "0.0.25"
     },
     "devDependencies": {
         "@nextrap/style-base": "^1.1.5",
