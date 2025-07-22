@@ -12,9 +12,14 @@ export class SlotTool {
    */
   public static isVisible(el: Element): boolean {
     const style = getComputedStyle(el);
-    if (style.display === 'none' || style.visibility === 'hidden') return false;
+    if (style.display === 'none') {
+      return false;
+    }
 
-    if (el instanceof HTMLElement && (el.offsetWidth > 0 || el.offsetHeight > 0 || el.tagName === 'IMG')) {
+    if (
+      el instanceof HTMLElement &&
+      (el.offsetWidth > 0 || el.offsetHeight > 0 || el.tagName === 'IMG' || el.textContent !== '')
+    ) {
       return true;
     }
 
