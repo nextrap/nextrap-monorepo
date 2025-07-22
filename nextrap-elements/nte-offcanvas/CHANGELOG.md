@@ -1,3 +1,9 @@
+## 0.0.23 (2025-07-22)
+
+### 🧱 Updated Dependencies
+
+- Updated nt-framework to 0.0.2
+
 ## 0.0.22 (2025-07-22)
 
 This was a version bump only for nte-offcanvas to align it with other projects, there were no code changes.
