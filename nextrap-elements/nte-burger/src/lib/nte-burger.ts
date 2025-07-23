@@ -2,13 +2,13 @@ import { customElement, NtSimpleElement, property, unsafeCSS } from '@nextrap/nt
 import style from './hamburger.scss?inline';
 
 const html = `
-<div id="wrapper">
-  <button id="button" class="hamburger">
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-  </button>
-</div>
+
+<button id="button" class="hamburger">
+  <div class="bar"></div>
+  <div class="bar"></div>
+  <div class="bar"></div>
+</button>
+
 `;
 
 @customElement('nte-burger')

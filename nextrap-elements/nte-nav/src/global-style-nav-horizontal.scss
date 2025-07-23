@@ -71,6 +71,14 @@
     --hover-text-color: var(--nt-text);
     --submenu-bg: var(--nt-light);
     --submenu-text-color: var(--nt-text);
+
+    a {
+      color: rgb(from var(--text-color) r g b / var(--default-alpha));
+      transition: color var(--transition);
+    }
+    a:hover {
+      color: rgb(from var(--text-color) r g b / 1);
+    }
   }
 
   ul {

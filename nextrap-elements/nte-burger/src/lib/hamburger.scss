@@ -1,17 +1,27 @@
 :host {
   --size: 40px;
-  --color: var(--nt-text);
+  --color: var(--nt-text, black);
   --color-hover: var(--color);
+  --width: 4px;
   height: var(--size);
   width: var(--size);
+  display: block;
+}
+
+#button {
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
 }
 
 .hamburger {
   display: block;
-  cursor: pointer;
+
   appearance: none;
   border: 0 none;
   background: none;
+  position: relative;
 
   transition: transform 0.4s;
   &:hover {
@@ -21,8 +31,8 @@
 
 :host([open]) {
   .hamburger .bar:nth-of-type(1) {
-    --translate: calc(var(--size) / 4);
-    transform: translateY(var(--translate)) rotate(45deg);
+    transform-origin: center center;
+    transform: translateY(calc(0.5em - var(--width) / 2)) rotate(45deg);
   }
 
   .hamburger .bar:nth-of-type(2) {
@@ -30,17 +40,26 @@
   }
 
   .hamburger .bar:nth-of-type(3) {
-    --translate: calc(var(--size) / -4);
-    transform: translateY(var(--translate)) rotate(-45deg);
+    transform: translateY(calc(0.5em - var(--width) / 2)) rotate(-45deg);
   }
 }
 
 .bar {
-  height: 3px;
+  font-size: var(--size);
+  &:nth-of-type(1) {
+    transform: translateY(calc(0.25em - var(--width) / 2));
+  }
+  &:nth-of-type(2) {
+    transform: translateY(calc(0.5em - var(--width) / 2));
+  }
+  &:nth-of-type(3) {
+    transform: translateY(calc(0.75em - var(--width) / 2));
+  }
+  height: var(--width);
   width: var(--size);
   display: block;
-  margin: calc(var(--size) / 5.2) auto;
-  position: relative;
+  position: absolute;
+  top: 0;
   background-color: var(--color);
   transition: 0.4s;
 }

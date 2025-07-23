@@ -5,7 +5,14 @@
     <title>nte-burger</title>
   </head>
   <body>
-    <nte-burger onclick="this.open = !this.open"></nte-burger>
+    <nte-burger onclick="this.open = !this.open" style="border: 1px solid red; --size: 25px"></nte-burger>
+    <nte-burger onclick="this.open = !this.open" style="border: 1px solid red"></nte-burger>
+    <nte-burger open onclick="this.open = !this.open" style="border: 1px solid red; --size: 100px"></nte-burger>
+    <nte-burger
+      open
+      onclick="this.open = !this.open"
+      style="border: 1px solid red; --size: 300px; --width: 5px"
+    ></nte-burger>
     <script type="module" src="public/main.ts"></script>
   </body>
 </html>
