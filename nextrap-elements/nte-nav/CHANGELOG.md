@@ -1,3 +1,11 @@
+## 1.0.10 (2025-07-23)
+
+### 🧱 Updated Dependencies
+
+- Updated nt-framework to 1.1.0
+- Updated nte-offcanvas to 1.0.3
+- Updated nte-burger to 1.1.3
+
 ## 1.0.9 (2025-07-23)
 
 ### 🧱 Updated Dependencies
