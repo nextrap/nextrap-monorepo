@@ -44,6 +44,23 @@
   }
 }
 
+// Not open
+:host(:not([open])) {
+  #button:hover {
+    .bar {
+      &:nth-of-type(1) {
+        transform: translateY(calc(0.2em - var(--width) / 2));
+      }
+      &:nth-of-type(2) {
+        transform: translateY(calc(0.5em - var(--width) / 2));
+      }
+      &:nth-of-type(3) {
+        transform: translateY(calc(0.8em - var(--width) / 2));
+      }
+    }
+  }
+}
+
 .bar {
   font-size: var(--size);
   &:nth-of-type(1) {
