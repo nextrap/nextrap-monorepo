@@ -1,4 +1,4 @@
-import { Debouncer, sleep, SlotTool, waitForDomContentLoaded, waitForLoad } from '@nextrap/nt-framework';
+import { Debouncer, SlotTool, waitForDomContentLoaded } from '@nextrap/nt-framework';
 import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { createRef, ref, Ref } from 'lit/directives/ref.js';
@@ -85,14 +85,8 @@ export class NteNavbar extends LitElement {
 
   // Adjust the spacer height on every render
   override async updated(_changedProperties: PropertyValues) {
-    await waitForLoad();
+    await waitForDomContentLoaded();
     super.updated(_changedProperties);
-    const navbar = this.navbarRef.value;
-    const spacer = this.spacerRef.value;
-    await sleep(100); // Wait for the DOM to settle after any changes
-    if (navbar && spacer) {
-      spacer.style.height = `${navbar.offsetHeight}px`;
-    }
   }
 
   override firstUpdated(_changedProperties: PropertyValues) {

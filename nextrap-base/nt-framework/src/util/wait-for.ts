@@ -31,3 +31,13 @@ export function waitForLoad(): Promise<void> {
 export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export function waitForAnimationEnd(element: HTMLElement): Promise<AnimationEvent> {
+  return new Promise((resolve) => {
+    const handler = (event: AnimationEvent) => {
+      element.removeEventListener('animationend', handler);
+      resolve(event);
+    };
+    element.addEventListener('animationend', handler);
+  });
+}

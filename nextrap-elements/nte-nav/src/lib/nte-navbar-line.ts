@@ -10,24 +10,30 @@ class NteNavbarLine extends LitElement {
   }
   static override styles = [unsafeCSS(style)];
 
+  private _isScrolled = false;
+
+  protected updateScrollState() {
+    const currentScrollY = window.scrollY;
+
+    // Handle "is-scrolled" state
+    if (currentScrollY > 1 && !this._isScrolled) {
+      this.classList.add('is-scrolled');
+      this._isScrolled = true;
+    } else if (currentScrollY <= 1 && this._isScrolled) {
+      this.classList.remove('is-scrolled');
+      this._isScrolled = false;
+    }
+  }
+
   override connectedCallback() {
     super.connectedCallback();
 
-    window.addEventListener(
-      'scroll',
-      () => {
-        if (window.scrollY > 0) {
-          this.classList.add('is-scrolled');
-        } else {
-          this.classList.remove('is-scrolled');
-        }
-      },
-      { passive: true },
-    );
+    window.addEventListener('scroll', () => this.updateScrollState(), { passive: true });
   }
 
-  override firstUpdated(_changedProperties: PropertyValues) {
+  override async firstUpdated(_changedProperties: PropertyValues) {
     SlotTool.observeEmptySlots(this);
+    this.updateScrollState();
   }
   override render() {
     return html`

@@ -5,6 +5,7 @@
   --spacer-bg: transparent;
   --container-width: var(--nt-container-width, 100%);
   --brand-height: 80px;
+  --spacer-height: 80px;
 
   width: 100vw;
   margin: 0;
@@ -28,7 +29,8 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: var(--brand-height);
+  transition: height 0.3s ease-in-out;
+  height: var(--spacer-height);
   background-color: var(--spacer-bg);
 }
 
