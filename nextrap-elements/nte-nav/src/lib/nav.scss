@@ -29,6 +29,10 @@ nav {
   padding: 15px;
 }
 
+#text {
+  padding-right: 10px;
+}
+
 #burger-default {
   cursor: pointer;
   slot::slotted(span) {

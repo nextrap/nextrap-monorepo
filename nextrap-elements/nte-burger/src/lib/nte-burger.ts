@@ -1,10 +1,15 @@
-import { customElement, eventListener, property, unsafeCSS } from '@nextrap/nt-framework';
+import {
+  customElement,
+  EVENT_NAME_GROUP_OPEN_CLOSE,
+  eventListener,
+  property,
+  triggerGroupOpenCloseEvent,
+  unsafeCSS,
+} from '@nextrap/nt-framework';
 import { LitElement } from 'lit';
 import style from './hamburger.scss?inline';
 
 import { html } from 'lit/static-html.js';
-
-const BURGER_EVENT_NAME = 'nte-burger-state-changed';
 
 @customElement('nte-burger')
 export class NteBurger extends LitElement {
@@ -31,7 +36,7 @@ export class NteBurger extends LitElement {
     </button>`;
   }
 
-  @eventListener(BURGER_EVENT_NAME, document)
+  @eventListener(EVENT_NAME_GROUP_OPEN_CLOSE, document)
   protected listenEvents(event: CustomEvent) {
     if (event.detail.groupName !== this.dataGroupName) {
       return; // Ignore events from other groups
@@ -44,13 +49,7 @@ export class NteBurger extends LitElement {
 
     // If DataGroupName is set, we dispatch custom events to syncronize all states
     if (changedProperties.has('open') && this.dataGroupName !== '') {
-      document.dispatchEvent(
-        new CustomEvent(BURGER_EVENT_NAME, {
-          bubbles: false,
-          composed: true,
-          detail: { open: this.open, groupName: this.dataGroupName },
-        }),
-      );
+      triggerGroupOpenCloseEvent(this.open, this.dataGroupName);
     }
   }
 }

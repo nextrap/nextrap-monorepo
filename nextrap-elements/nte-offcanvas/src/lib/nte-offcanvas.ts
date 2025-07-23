@@ -1,5 +1,5 @@
 import { ka_sleep } from '@kasimirjs/core';
-import { SlotTool } from '@nextrap/nt-framework';
+import { SlotTool, triggerGroupOpenCloseEvent } from '@nextrap/nt-framework';
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
@@ -18,6 +18,8 @@ export class NteOffcanvas extends LitElement {
 
   @property({ type: Boolean, reflect: true })
   public opened = false;
+
+  @property({ type: String, attribute: 'data-group-name' }) private dataGroupName = '';
 
   override connectedCallback() {
     super.connectedCallback();
@@ -52,6 +54,11 @@ export class NteOffcanvas extends LitElement {
   override async updated(changedProperties: Map<string | number | symbol, unknown>): Promise<void> {
     // Animation logic - display first - then apply
     if (changedProperties.has('opened')) {
+      if (this.dataGroupName !== '') {
+        // If DataGroupName is set, we dispatch custom events to syncronize all states
+        triggerGroupOpenCloseEvent(this.opened, this.dataGroupName);
+      }
+
       if (this.opened) {
         this.style.display = 'block';
         await ka_sleep(1);

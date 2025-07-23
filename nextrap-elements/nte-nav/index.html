@@ -12,13 +12,11 @@
         <nte-nav class="style-undecorated size-sm fs-5">
           <ul>
             <li>
-              <a href="#" class="active"><i class="bi bi-pin"></i> Home</a>
+              <a href="#" class="active"><i class="bi bi-pin"></i> BBB</a>
             </li>
             <li>
-              <a href="#"><i class="bi bi-x-square-fill"></i> Products</a>
+              <a href="#"><i class="bi bi-x-square-fill"></i> AAA</a>
             </li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
             <li>
               <a href="#">More</a>
               <ul>
@@ -51,6 +49,7 @@
         <nte-nav
           class="nav-horizontal"
           mode="master"
+          data-group-name="nav1"
           breakpoint="10008px"
           transfer-to="#navSidebar"
           style="--text-color: blue"
@@ -83,8 +82,13 @@
       "
     ></div>
 
-    <nte-offcanvas id="navSidebar">
-      <nte-burger slot="header" data-nt-dismiss="offcanvas" open></nte-burger>
+    <nte-offcanvas id="navSidebar" data-group-name="nav1">
+      <nte-burger
+        slot="header"
+        data-nt-dismiss="offcanvas"
+        data-group-name="nav1"
+        onclick="this.open = false"
+      ></nte-burger>
       <nte-nav class="nav-vertical"></nte-nav>
       <nte-nav slot="footer" class="nav-horizontal pos-stretch" style="width: 100%">
         <ul>

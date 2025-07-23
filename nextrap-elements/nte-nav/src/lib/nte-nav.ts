@@ -30,6 +30,8 @@ export class NteNav extends LitElement {
 
   @property({ type: String, reflect: true, attribute: 'transfer-to' }) transferTo = '';
 
+  @property({ type: String, reflect: false, attribute: 'data-group-name' }) dataGroupName = '';
+
   @state() private _isTransferred = false;
 
   private getOffcanvas(): NteOffcanvas | null {
@@ -63,7 +65,11 @@ export class NteNav extends LitElement {
           ${this._isTransferred
             ? html`<div id="burger-default" style="display:flex; align-items: center; justify-content: center;">
                 <div id="text"><slot name="menu-text"></slot></div>
-                <nte-burger id="open-burger"></nte-burger>
+                <nte-burger
+                  data-group-name="${this.dataGroupName}"
+                  id="open-burger"
+                  onclick="this.open = true"
+                ></nte-burger>
               </div>`
             : ''}
         </slot>
