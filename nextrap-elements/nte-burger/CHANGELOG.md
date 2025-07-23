@@ -1,3 +1,9 @@
+## 1.1.1 (2025-07-23)
+
+### 🧱 Updated Dependencies
+
+- Updated nt-framework to 1.0.0
+
 ## 1.1.0 (2025-07-23)
 
 This was a version bump only for nte-burger to align it with other projects, there were no code changes.
