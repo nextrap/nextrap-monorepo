@@ -1,3 +1,7 @@
+## 1.0.12 (2025-07-23)
+
+This was a version bump only for nte-nav to align it with other projects, there were no code changes.
+
 ## 1.0.11 (2025-07-23)
 
 ### 🧱 Updated Dependencies
