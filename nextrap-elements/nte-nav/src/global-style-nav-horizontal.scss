@@ -72,11 +72,13 @@
     --submenu-bg: var(--nt-light);
     --submenu-text-color: var(--nt-text);
 
-    a {
+    a,
+    a > * {
       color: rgb(from var(--text-color) r g b / var(--default-alpha));
       transition: color var(--transition);
     }
-    a:hover {
+    a:hover,
+    a:hover > * {
       color: rgb(from var(--text-color) r g b / 1);
     }
   }
@@ -113,10 +115,6 @@
           background var(--transition),
           color var(--transition);
         font-weight: 500;
-
-        > * {
-          color: var(--text-color);
-        }
 
         &.active,
         &:active {
