@@ -114,6 +114,10 @@
           color var(--transition);
         font-weight: 500;
 
+        > * {
+          color: var(--text-color);
+        }
+
         &.active,
         &:active {
           background: var(--hover-color);
