@@ -5,20 +5,23 @@ nte-navbar {
 }
 
 nte-navbar.autoborder {
+  --border-color: var(--nt-light);
   &.is-scrolled {
     &::part(navbar) {
-      border-bottom: 1px solid rgb(from var(--nt-text) r g b / 0.1);
+      border-bottom: 1px solid rgb(from var(--border-color) r g b / 0.1);
     }
   }
 }
 
 nte-navbar.autoshadow {
+  --shadow-color: var(--nt-text);
+  --shadow: rgb(from var(--shadow-color) r g b / 0.1);
   &::part(navbar) {
     transition: box-shadow 0.3s ease-in-out;
   }
   &.is-scrolled {
     &::part(navbar) {
-      box-shadow: 0 2px 10px rgb(from var(--nt-text) r g b / 0.1);
+      box-shadow: var(--shadow);
     }
   }
 }
