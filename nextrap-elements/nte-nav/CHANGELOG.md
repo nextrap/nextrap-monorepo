@@ -1,3 +1,11 @@
+## 1.0.13 (2025-07-23)
+
+### 🧱 Updated Dependencies
+
+- Updated nt-framework to 1.1.1
+- Updated nte-offcanvas to 1.0.5
+- Updated nte-burger to 1.1.4
+
 ## 1.0.12 (2025-07-23)
 
 This was a version bump only for nte-nav to align it with other projects, there were no code changes.

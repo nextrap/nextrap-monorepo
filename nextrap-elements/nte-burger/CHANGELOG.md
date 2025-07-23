@@ -1,3 +1,9 @@
+## 1.1.4 (2025-07-23)
+
+### 🧱 Updated Dependencies
+
+- Updated nt-framework to 1.1.1
+
 ## 1.1.3 (2025-07-23)
 
 ### 🧱 Updated Dependencies
