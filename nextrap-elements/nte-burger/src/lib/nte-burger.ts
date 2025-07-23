@@ -1,27 +1,56 @@
-import { customElement, NtSimpleElement, property, unsafeCSS } from '@nextrap/nt-framework';
+import { customElement, eventListener, property, unsafeCSS } from '@nextrap/nt-framework';
+import { LitElement } from 'lit';
 import style from './hamburger.scss?inline';
 
-const html = `
+import { html } from 'lit/static-html.js';
 
-<button id="button" class="hamburger">
-  <div class="bar"></div>
-  <div class="bar"></div>
-  <div class="bar"></div>
-</button>
-
-`;
+const BURGER_EVENT_NAME = 'nte-burger-state-changed';
 
 @customElement('nte-burger')
-export class NteBurger extends NtSimpleElement<['wrapper', 'button']> {
+export class NteBurger extends LitElement {
+  static override styles = [unsafeCSS(style)];
+
   @property({ type: Boolean, attribute: 'open', reflect: true }) open = false;
 
   @property({ type: String, reflect: true }) text = 'Menu';
 
+  /**
+   * Listen to burger-open and burger-close events on main document
+   */
+  @property({ type: String, reflect: false, attribute: 'data-group-name' }) dataGroupName = '';
+
   constructor() {
-    super(html);
+    super();
   }
 
-  override get css() {
-    return unsafeCSS(style);
+  override render() {
+    return html` <button id="button" class="hamburger">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </button>`;
+  }
+
+  @eventListener(BURGER_EVENT_NAME, document)
+  protected listenEvents(event: CustomEvent) {
+    if (event.detail.groupName !== this.dataGroupName) {
+      return; // Ignore events from other groups
+    }
+    this.open = event.detail.open;
+  }
+
+  override update(changedProperties: Map<string | number | symbol, unknown>): void {
+    super.update(changedProperties);
+
+    // If DataGroupName is set, we dispatch custom events to syncronize all states
+    if (changedProperties.has('open') && this.dataGroupName !== '') {
+      document.dispatchEvent(
+        new CustomEvent(BURGER_EVENT_NAME, {
+          bubbles: false,
+          composed: true,
+          detail: { open: this.open, groupName: this.dataGroupName },
+        }),
+      );
+    }
   }
 }
