@@ -30,6 +30,7 @@
             "@nextrap/style-base": ["nextrap-base/style-base/index.ts"],
             "@nextrap/style-button": ["nextrap-base/style-button/src/index.ts"],
             "@nextrap/style-reset": ["nextrap-base/style-reset/index.ts"],
+            "@nextrap/style-typography": ["nextrap-base/style-typography/src/index.ts"],
             "@nextrap/style-utils": ["nextrap-base/style-utils/src/index.ts"]
         }
     },

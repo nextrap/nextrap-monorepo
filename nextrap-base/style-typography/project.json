@@ -1,7 +1,7 @@
 {
-    "name": "style-utils",
+    "name": "style-typography",
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
-    "sourceRoot": "nextrap-base/style-utils/src",
+    "sourceRoot": "nextrap-base/style-typography/src",
     "projectType": "library",
     "release": {
         "version": {
