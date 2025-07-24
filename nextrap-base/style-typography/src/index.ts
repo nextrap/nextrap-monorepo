@@ -1,1 +1,1 @@
-import './_typography.scss';
+import '../index.scss';
