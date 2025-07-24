@@ -1,1 +1,1 @@
-export * from './lib/style-utils';
+export * from '../index.scss';
