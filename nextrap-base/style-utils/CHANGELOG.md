@@ -1,3 +1,7 @@
+## 1.0.4 (2025-07-24)
+
+This was a version bump only for style-utils to align it with other projects, there were no code changes.
+
 ## 1.0.3 (2025-07-24)
 
 ### 🧱 Updated Dependencies
