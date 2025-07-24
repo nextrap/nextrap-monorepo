@@ -1,12 +1,12 @@
 {
     "name": "@nextrap/nte-offcanvas",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "main": "./index.js",
     "dependencies": {
         "@nextrap/nt-framework": "^1.1.1"
     },
     "devDependencies": {
-        "@nextrap/style-base": "^1.1.7",
+        "@nextrap/style-base": "^1.1.8",
         "@nextrap/style-reset": "^0.1.1"
     },
     "type": "module",
