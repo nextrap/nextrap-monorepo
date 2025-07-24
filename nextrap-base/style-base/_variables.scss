@@ -76,4 +76,5 @@ $headerFontSizeMap: (
   '6': 1,
 ) !default; // Font size map for headers
 
-$rcs: true !default; // Use RCS (Responsive CSS) for responsive design
+$enableRcs: false !default; // Use RCS (Responsive CSS) for responsive design
+$enableFontConfig: false !default; // Enable front-end configuration
