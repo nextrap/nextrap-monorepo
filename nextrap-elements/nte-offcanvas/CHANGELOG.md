@@ -1,3 +1,9 @@
+## 1.0.7 (2025-07-24)
+
+### 🧱 Updated Dependencies
+
+- Updated style-base to 1.1.6
+
 ## 1.0.6 (2025-07-23)
 
 This was a version bump only for nte-offcanvas to align it with other projects, there were no code changes.

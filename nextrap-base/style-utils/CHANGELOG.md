@@ -1,3 +1,9 @@
+## 1.0.2 (2025-07-24)
+
+### 🧱 Updated Dependencies
+
+- Updated style-base to 1.1.6
+
 ## 1.0.1 (2025-07-24)
 
 This was a version bump only for style-utils to align it with other projects, there were no code changes.
