@@ -248,7 +248,7 @@ This means that you can release a single or more packages without having to rele
 
 To create new versions, run the following commands:
 
-- `nx release --skip-publish [-p <package-name>]`
+- `nx release --skip-publish -p <package-1[,package-2,...]>` (if `-p` is omitted, you will be asked to select a version for _all_ packages)
 - `git push --follow-tags origin main`
 - The [publish-tags Action](./.github/workflows/publish-tags.yml) will build and release the desired packages to npm
 
