@@ -1,3 +1,3 @@
 export * from './lib/ntl-infiniscroll';
 
-export const tempChangeForForcingRelease = 1;
+export const tempChangeForForcingRelease = 2;
