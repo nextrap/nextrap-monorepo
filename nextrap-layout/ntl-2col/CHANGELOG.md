@@ -1,3 +1,13 @@
+## 0.1.3 (2025-07-25)
+
+### 🚀 Features
+
+- make temp change to force a release ([7cd8b27](https://github.com/nextrap/nextrap-monorepo/commit/7cd8b27))
+
+### ❤️ Thank You
+
+- Enzo Volkmann @evolkmann
+
 ## 0.1.2 (2025-07-25)
 
 ### 🚀 Features
