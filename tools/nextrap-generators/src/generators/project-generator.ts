@@ -27,7 +27,7 @@ export default async function (tree: Tree, input: Schema) {
   // Adjust server and test config to vite.config.ts
   adjustViteConfig(tree, options);
 
-  if (options.type === PackageType.ELEMENTS) {
+  if (options.type === PackageType.ELEMENTS || options.type === PackageType.LAYOUT) {
     createElementBaseFiles(tree, options, generatorSrcRoot);
   }
 
