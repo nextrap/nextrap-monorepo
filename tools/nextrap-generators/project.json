@@ -1,0 +1,41 @@
+{
+    "name": "nextrap-generators",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "tools/nextrap-generators/src",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/tools/nextrap-generators",
+                "main": "tools/nextrap-generators/src/index.ts",
+                "tsConfig": "tools/nextrap-generators/tsconfig.lib.json",
+                "assets": [
+                    "tools/nextrap-generators/*.md",
+                    {
+                        "input": "./tools/nextrap-generators/src",
+                        "glob": "**/!(*.ts)",
+                        "output": "./src"
+                    },
+                    {
+                        "input": "./tools/nextrap-generators/src",
+                        "glob": "**/*.d.ts",
+                        "output": "./src"
+                    },
+                    {
+                        "input": "./tools/nextrap-generators",
+                        "glob": "generators.json",
+                        "output": "."
+                    },
+                    {
+                        "input": "./tools/nextrap-generators",
+                        "glob": "executors.json",
+                        "output": "."
+                    }
+                ]
+            }
+        }
+    }
+}

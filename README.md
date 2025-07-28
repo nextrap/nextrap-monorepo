@@ -213,26 +213,8 @@ You can also use the following syntax to define a public API in terms of CSS cla
 ## Creating new packages
 
 1. Switch to a feature branch to benefit from CI checks and to avoid breaking the main branch.
-2. Use [Nx Generators](https://nx.dev/features/generate-code) to generate new libs or apps:
-
-    `nx g @nx/js:lib nextrap-elements/nte-some-component --publishable --importPath @nextrap/nte-some-component --bundler vite --linter eslint --unitTestRunner vitest`
-
-3. Manually verify (and adjust if necessary) that the newly created `project.json`'s release settings are
-   [like this](https://github.com/nextrap/nextrap-monorepo/blob/45ac7582c1b4ab804d24ee08563d6e89caf241cd/nextrap-elements/nte-dialog/project.json#L6-L12).
-4. Import `viteServerConfig` and `viteTestConfig` in `vite.config.ts`
-
-    ```ts
-    import viteServerConfig from '../../utils/vite/config/vite-server-config';
-    import viteTestConfig from '../../utils/vite/config/vite-test-config';
-
-    export default defineConfig(() => ({
-        ...viteServerConfig,
-        test: viteTestConfig('nextrap-element/nte-some-component'),
-        // more config ...
-    }));
-    ```
-
-5. Add the new package to the _Packages_ list in this README and to the [CODEOWNERS](./CODEOWNERS) file.
+2. Use our [Nx Generator](./tools/nextrap-generators) to generate new libs or apps:
+3. Add the new package to the _Packages_ list in this README and to the [CODEOWNERS](./CODEOWNERS) file.
 
 The package will now automatically be picked up by the CI and Release workflows.
 

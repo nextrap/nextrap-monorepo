@@ -1,0 +1,24 @@
+{
+    "$schema": "https://json-schema.org/schema",
+    "$id": "ProjectGenerator",
+    "title": "",
+    "type": "object",
+    "properties": {
+        "type": {
+            "type": "string",
+            "enum": ["base", "elements", "layout"],
+            "description": "",
+            "x-prompt": "What kind of library would you like to create?"
+        },
+        "name": {
+            "type": "string",
+            "description": "",
+            "$default": {
+                "$source": "argv",
+                "index": 0
+            },
+            "x-prompt": "What name would you like to use? (Do not include a prefix like nte-, ntl, ...)"
+        }
+    },
+    "required": ["type", "name"]
+}
