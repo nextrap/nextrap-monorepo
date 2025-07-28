@@ -1,11 +1,7 @@
 # nextrap-generators
 
-This library was generated with [Nx](https://nx.dev).
+Custom NX generators for new projects and libraries.
 
-## Building
+## Usage
 
-Run `nx build nextrap-generators` to build the library.
-
-## Running unit tests
-
-Run `nx test nextrap-generators` to execute the unit tests via [Vitest](https://vitest.dev/).
+`nx g @nextrap/nextrap-generators:project`

@@ -214,6 +214,9 @@ You can also use the following syntax to define a public API in terms of CSS cla
 
 1. Switch to a feature branch to benefit from CI checks and to avoid breaking the main branch.
 2. Use our [Nx Generator](./tools/nextrap-generators) to generate new libs or apps:
+
+`nx g @nextrap/nextrap-generators:project`
+
 3. Add the new package to the _Packages_ list in this README and to the [CODEOWNERS](./CODEOWNERS) file.
 
 The package will now automatically be picked up by the CI and Release workflows.
