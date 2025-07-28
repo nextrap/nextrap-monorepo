@@ -1,18 +1,18 @@
 {
     "$schema": "https://json-schema.org/schema",
     "$id": "ProjectGenerator",
-    "title": "",
+    "title": "Nextrap Project Generator",
     "type": "object",
     "properties": {
         "type": {
             "type": "string",
             "enum": ["base", "elements", "layout"],
-            "description": "",
+            "description": "To group the new package into one of our categories.",
             "x-prompt": "What kind of library would you like to create?"
         },
         "name": {
             "type": "string",
-            "description": "",
+            "description": "The name of the library. This should be a string without a prefix like 'nte-' or 'ntl-'.",
             "$default": {
                 "$source": "argv",
                 "index": 0

@@ -3,7 +3,7 @@
         "project": {
             "factory": "./src/generators/project-generator",
             "schema": "./src/generators/schema.json",
-            "description": "project-generator generator"
+            "description": "Generator for new nextrap packages"
         }
     }
 }
