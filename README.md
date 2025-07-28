@@ -217,7 +217,9 @@ You can also use the following syntax to define a public API in terms of CSS cla
 
 `nx g @nextrap/nextrap-generators:project`
 
-3. Add the new package to the _Packages_ list in this README and to the [CODEOWNERS](./CODEOWNERS) file.
+3. Run `npm i` and `nx run <new-package>:build` to verify that the new package has been created successfully.
+
+4. Add the new package to the _Packages_ list in this README and to the [CODEOWNERS](./CODEOWNERS) file.
 
 The package will now automatically be picked up by the CI and Release workflows.
 
