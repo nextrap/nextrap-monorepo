@@ -87,6 +87,10 @@ To create new versions, run the following commands:
 > If you use a GUI such as GitHub Desktop, make sure that tags are pushed as well,
 > as this is not the default behavior.
 
+### Branches
+
+**Feature branches** are used for development and should be created from the `main` branch. The Name should be "feat/<yourName>/<featureName>".
+
 ### Dependencies
 
 All external dependencies (from npm) only exist in one version and are defined in the

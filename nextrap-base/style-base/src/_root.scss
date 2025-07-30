@@ -136,5 +136,7 @@ $background: $white !default;
     --nt-fs-h#{$i}: calc(var(--nt-font-size-header) * #{$val});
   }
 
+  --nt-scroll-padding-top: calc(0.33 * 100vh); // Scroll element to upper 1/3 of the viewport height
+
   // Display font size
 }
