@@ -18,6 +18,11 @@ html {
     font-family: #{$font-family-base};
   }
 
+  @if $enableScrollOffset == true {
+    // Scroll offset for fixed elements
+    scroll-padding-top: var(--nt-scroll-padding-top);
+  }
+
   //--nt-container-width: 100%;
   // Set the container size based on the media width like in Bootstrap
   @media (min-width: 576px) {
