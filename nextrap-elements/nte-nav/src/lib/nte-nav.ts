@@ -1,5 +1,5 @@
 import { ka_dom_ready } from '@kasimirjs/core';
-import { customElement, isBiggerThanBreakpoint, NtElementDefinition, property, unsafeCSS } from '@nextrap/nt-framework';
+import { customElement, isBiggerThanBreakpoint, property, unsafeCSS } from '@nextrap/nt-framework';
 import '@nextrap/nte-offcanvas';
 import { NteOffcanvas } from '@nextrap/nte-offcanvas';
 import { html, LitElement, PropertyValues } from 'lit';
@@ -16,11 +16,6 @@ import style from './nav.scss?inline';
  */
 @customElement('nte-nav')
 export class NteNav extends LitElement {
-  static DEFINITION: NtElementDefinition = {
-    classes: ['align-left', 'align-right', 'align-center'],
-    attributes: {},
-  };
-
   static override styles = [unsafeCSS(style)];
 
   @property({ type: String, reflect: true }) mode: 'master' | 'slave' = 'slave';
