@@ -5,8 +5,6 @@ import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
-import viteTestConfig from '../../utils/vite/config/vite-test-config';
-
 export default defineConfig(() => ({
   server: {
     port: 4000,
@@ -14,8 +12,16 @@ export default defineConfig(() => ({
     hmr: true,
   },
   test: {
-    ...viteTestConfig('nextrap-elements/nte-element-highlighter'),
-
+    passWithNoTests: true,
+    watch: false,
+    globals: true,
+    environment: 'node',
+    include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    reporters: ['default'],
+    coverage: {
+      reportsDirectory: `../../coverage/nextrap-elements/nte-element-highlighter`,
+      provider: 'v8' as const,
+    },
     browser: {
       provider: 'playwright',
       enabled: true,

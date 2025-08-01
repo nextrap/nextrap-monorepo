@@ -7,19 +7,25 @@ export default function (tree: Tree, options: ResolvedOptions): void {
 
   const contents = tree.read(viteConfigPath).toString();
   // We use the first "real" line as a guide
-  const newContents = contents.replace(
-    'export default defineConfig(() => ({',
-    `
-import viteTestConfig from '../../utils/vite/config/vite-test-config';
-
+  const newContents = contents
+    .replace(
+      'export default defineConfig(() => ({',
+      `
 export default defineConfig(() => ({
   server: {
     port: 4000,
     host: '0.0.0.0',
     hmr: true,
   },
-  test: viteTestConfig('${options.projectDirName}'),
-    `,
-  );
+`,
+    )
+    .replace(
+      'test: {',
+      `
+  test: {
+    passWithNoTests: true,
+  `,
+    );
+
   tree.write(viteConfigPath, newContents);
 }

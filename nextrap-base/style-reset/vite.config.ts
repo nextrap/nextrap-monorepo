@@ -5,15 +5,24 @@ import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
-import viteTestConfig from '../../utils/vite/config/vite-test-config';
-
 export default defineConfig((command) => ({
   server: {
     port: 4000,
     host: '0.0.0.0',
     hmr: true,
   },
-  test: viteTestConfig('nextrap-base/style-reset'),
+  test: {
+    passWithNoTests: true,
+    watch: false,
+    globals: true,
+    environment: 'node',
+    include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    reporters: ['default'],
+    coverage: {
+      reportsDirectory: `../../coverage/nextrap-base/style-reset`,
+      provider: 'v8' as const,
+    },
+  },
   publicDir: './public/www',
   root: __dirname,
   cacheDir: '../../node_modules/.vite/nextrap-base/style-reset',
