@@ -15,12 +15,28 @@ export function resolveOptions(input: Schema) {
     }
   })();
   const groupDirectoryName = `${nextrap}-${input.type}`;
-  const projectDirName = `${groupDirectoryName}/${prefix}${preparedNames.fileName}`;
+  const prefixedName = `${prefix}${preparedNames.fileName}`;
+  const projectDirName = `${groupDirectoryName}/${prefixedName}`;
   return {
     ...input,
+    packageTypeEnumProp: input.type.toUpperCase(),
     scope: nextrapScope,
+    /**
+     * @example test-element
+     */
     name: preparedNames.fileName,
+    /**
+     * @example nte-
+     */
     prefix,
+    /**
+     * @example nte-test-element
+     */
+    prefixedName,
+    /**
+     * @example nextrap-elements
+     */
+    groupDirectoryName,
     /**
      * @example nextrap-elements/nte-test-element
      */
