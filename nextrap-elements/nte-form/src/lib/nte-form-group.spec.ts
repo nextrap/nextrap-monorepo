@@ -3,7 +3,7 @@ import { expect } from 'vitest';
 import { render } from 'vitest-browser-lit';
 import { NteFormGroup } from './nte-form-group';
 
-describe.skip('NteFormGroup', () => {
+describe('NteFormGroup', () => {
   it('should create an element', () => {
     const el = new NteFormGroup();
     expect(el).toBeInstanceOf(NteFormGroup);

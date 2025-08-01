@@ -9,7 +9,15 @@ import viteTestConfig from '../../utils/vite/config/vite-test-config';
 
 export default defineConfig(() => ({
   ...viteServerConfig,
-  test: viteTestConfig('nextrap-elements/nte-form'),
+  test: {
+    ...viteTestConfig('nextrap-elements/nte-form'),
+    browser: {
+      provider: 'playwright',
+      enabled: true,
+      headless: true,
+      instances: [{ browser: 'chromium' }],
+    },
+  },
   root: __dirname,
   cacheDir: '../../node_modules/.vite/nextrap-elements/nte-form',
   plugins: [
