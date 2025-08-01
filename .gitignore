@@ -5,6 +5,11 @@ dist
 tmp
 out-tsc
 
+# test assets
+nextrap-base/**/__screenshots__
+nextrap-elements/**/__screenshots__
+nextrap-layout/**/__screenshots__
+
 # dependencies
 node_modules
 /vendor
