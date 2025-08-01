@@ -10,11 +10,14 @@ export default function (tree: Tree, options: ResolvedOptions): void {
   const newContents = contents.replace(
     'export default defineConfig(() => ({',
     `
-import viteServerConfig from '../../utils/vite/config/vite-server-config';
 import viteTestConfig from '../../utils/vite/config/vite-test-config';
 
 export default defineConfig(() => ({
-  ...viteServerConfig,
+  server: {
+    port: 4000,
+    host: '0.0.0.0',
+    hmr: true,
+  },
   test: viteTestConfig('${options.projectDirName}'),
     `,
   );

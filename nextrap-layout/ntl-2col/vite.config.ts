@@ -4,11 +4,15 @@ import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
-import viteServerConfig from '../../utils/vite/config/vite-server-config';
+
 import viteTestConfig from '../../utils/vite/config/vite-test-config';
 
 export default defineConfig(() => ({
-  ...viteServerConfig,
+  server: {
+    port: 4000,
+    host: '0.0.0.0',
+    hmr: true,
+  },
   test: viteTestConfig('nextrap-layout/ntl-2col'),
   root: __dirname,
   cacheDir: '../../node_modules/.vite/nextrap-layout/ntl-2col',
