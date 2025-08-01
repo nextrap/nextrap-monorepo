@@ -1,3 +1,54 @@
+## 1.1.9 (2025-08-01)
+
+### 🧱 Updated Dependencies
+
+- Updated nte-offcanvas to 1.0.15
+
+## 1.1.8 (2025-08-01)
+
+This was a version bump only for nte-nav to align it with other projects, there were no code changes.
+
+## 1.1.7 (2025-08-01)
+
+### 🧱 Updated Dependencies
+
+- Updated nte-offcanvas to 1.0.14
+
+## 1.1.6 (2025-08-01)
+
+This was a version bump only for nte-nav to align it with other projects, there were no code changes.
+
+## 1.1.5 (2025-07-31)
+
+### 🧱 Updated Dependencies
+
+- Updated nte-offcanvas to 1.0.13
+
+## 1.1.4 (2025-07-31)
+
+This was a version bump only for nte-nav to align it with other projects, there were no code changes.
+
+## 1.1.3 (2025-07-31)
+
+### 🧱 Updated Dependencies
+
+- Updated style-base to 1.1.10
+- Updated nte-offcanvas to 1.0.12
+
+## 1.1.2 (2025-07-31)
+
+### 🧱 Updated Dependencies
+
+- Updated nte-offcanvas to 1.0.11
+
+## 1.1.1 (2025-07-31)
+
+This was a version bump only for nte-nav to align it with other projects, there were no code changes.
+
+## 1.1.0 (2025-07-31)
+
+This was a version bump only for nte-nav to align it with other projects, there were no code changes.
+
 ## 1.0.25 (2025-07-24)
 
 ### 🧱 Updated Dependencies

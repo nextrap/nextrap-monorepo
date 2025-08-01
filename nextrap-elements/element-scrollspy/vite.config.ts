@@ -45,6 +45,8 @@ export default defineConfig(() => ({
     },
   },
   test: {
+    // TODO: Write some tests
+    passWithNoTests: true,
     watch: false,
     globals: true,
     environment: 'node',

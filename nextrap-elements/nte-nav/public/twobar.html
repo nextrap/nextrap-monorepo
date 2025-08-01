@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>nte-nav</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
+  </head>
+  <body>
+    <nte-navbar class="fixed autoborder autoshadow" scroll-threshold="500" style="--spacer-height: 125px">
+      <nte-navbar-line>
+        <nte-navbar-line class="hide-on-scroll" style="--background: var(--nt-primary)">
+          <nte-nav class="style-undecorated size-sm fs-5">
+            <ul>
+              <li>
+                <a href="#" class="active"><i class="bi bi-pin"></i> BBB</a>
+              </li>
+              <li>
+                <a href="#"><i class="bi bi-x-square-fill"></i> AAA</a>
+              </li>
+              <li>
+                <a href="#">More</a>
+                <ul>
+                  <li><a href="#">Team</a></li>
+                  <li><a href="#">Careers</a></li>
+                </ul>
+              </li>
+            </ul>
+          </nte-nav>
+        </nte-navbar-line>
+
+        <!--a href="/" slot="brand">
+          <img src="https://cdn.leuffen.de//leu-systemwebsite/v2/64/227-74_500/leuffen-gruen.svg" alt="Leuffen Logo" />
+        </a-->
+
+        <a slot="brand" href="/">
+          <img
+            src="https://cdn.leuffen.de//leu-systemwebsite/v2/64/227-74_500/leuffen-gruen.svg"
+            alt="{{ site.data.general.logoalt }}"
+            height="64"
+            class="p-1 loader-image"
+            style="float: left"
+          />
+          <!-- div style="font-size: 1.1em; float: right" class="m-2 text-black">
+            <div style="font-size: 1.6em">{{ site.data.general.logoalt }}</div>
+            <div style="font-size: 1.1em">{{ site.data.general.fachrichtung}}</div>
+          </div-->
+        </a>
+
+        <nte-nav
+          class="nav-horizontal"
+          mode="master"
+          data-group-name="nav1"
+          breakpoint="10008px"
+          transfer-to="#navSidebar"
+          style="--text-color: blue"
+        >
+          <span slot="menu-text">Menü</span>
+          <ul>
+            <li><a href="#" class="active">Home</a></li>
+            <li><a href="#">Products</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+            <li>
+              <a href="javascript:void(0);">More</a>
+              <ul>
+                <li><a href="#">Team</a></li>
+                <li><a href="#">Careers</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nte-nav>
+      </nte-navbar-line>
+    </nte-navbar>
+
+    <div
+      style="
+        height: 1000px;
+        width: 100%;
+        background-image: url(https://cdn.leuffen.de//m-bock-k133//v2/2/32-15_f/Bock-Backg_1.webp);
+        background-size: cover;
+        background-position: center;
+      "
+    ></div>
+
+    <nte-offcanvas id="navSidebar" data-group-name="nav1">
+      <nte-burger
+        slot="header"
+        data-nt-dismiss="offcanvas"
+        data-group-name="nav1"
+        onclick="this.open = false"
+      ></nte-burger>
+      <nte-nav class="nav-vertical"></nte-nav>
+      <nte-nav slot="footer" class="nav-horizontal pos-stretch" style="width: 100%">
+        <ul>
+          <li><a href="#" class="active">Home</a></li>
+          <li><a href="#">Products</a></li>
+        </ul>
+      </nte-nav>
+    </nte-offcanvas>
+
+    <hr style="margin-top: 500px" />
+
+    <nte-nav breakpoint="768px" mode="sidebar">
+      <ul>
+        <li><a href="#" class="active">Home</a></li>
+        <li><a href="#">Products</a></li>
+        <li><a href="#">About</a></li>
+        <li>
+          <a href="#">More</a>
+          <ul>
+            <li><a href="#">Team</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nte-nav>
+
+    <hr />
+
+    <nte-nav breakpoint="xl" mode="sidebar" class="stretch">
+      <ul>
+        <li><a href="#" class="active">Home</a></li>
+        <li><a href="#">Products</a></li>
+        <li><a href="#">About</a></li>
+        <li>
+          <a href="#">More</a>
+          <ul>
+            <li><a href="#">Team</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nte-nav>
+    <script type="module" src="/public/main.ts"></script>
+  </body>
+</html>
+
+<hr style="margin-top: 10000px" />
