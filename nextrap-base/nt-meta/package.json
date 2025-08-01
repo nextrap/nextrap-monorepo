@@ -1,0 +1,11 @@
+{
+    "name": "@nextrap/nt-meta",
+    "version": "0.0.1",
+    "main": "./src/index.js",
+    "dependencies": {
+        "tslib": "^2.3.0"
+    },
+    "private": true,
+    "type": "commonjs",
+    "types": "./src/index.d.ts"
+}
