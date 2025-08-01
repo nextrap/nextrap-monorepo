@@ -2,7 +2,7 @@ import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
 // Styles for the light DOM
-import '@nextrap/style-base';
+import { resetStyle } from '@nextrap/style-reset';
 
 // Styles for your component's shadow DOM
 import style from './<%= prefix %><%= name %>.scss?inline';
@@ -12,7 +12,7 @@ export class <%= prefixedClassName %> extends LitElement {
   @state()
   private _count = 0;
 
-  static override styles = [unsafeCSS(style)];
+  static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
   render() {
     return html`
