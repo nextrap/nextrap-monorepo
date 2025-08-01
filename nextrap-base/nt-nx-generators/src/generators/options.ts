@@ -1,5 +1,5 @@
-import { nextrap, nextrapScope, PackageType } from '@nextrap/nt-meta';
 import { names } from '@nx/devkit';
+import { nextrap, nextrapScope, PackageType } from 'nextrap-base/nt-meta/src';
 import { Schema } from './schema';
 
 export function resolveOptions(input: Schema) {

@@ -1,6 +1,6 @@
-import { PackageType } from '@nextrap/nt-meta';
 import { formatFiles, Tree } from '@nx/devkit';
 import { libraryGenerator } from '@nx/js';
+import { PackageType } from 'nextrap-base/nt-meta/src';
 import { resolveOptions } from './options';
 import { Schema } from './schema';
 import adjustProjectJson from './steps/adjust-project-json';
@@ -32,4 +32,7 @@ export default async function (tree: Tree, input: Schema) {
   }
 
   await formatFiles(tree);
+
+  // const viteConfig = tree.read(`${options.projectDirName}/vite.config.ts`, 'utf-8')
+  // console.log(viteConfig)
 }

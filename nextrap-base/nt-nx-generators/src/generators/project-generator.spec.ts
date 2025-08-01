@@ -1,6 +1,6 @@
-import { nextrap, PackageType } from '@nextrap/nt-meta';
 import { Tree } from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
+import { nextrap, PackageType } from 'nextrap-base/nt-meta/src';
 
 import generatorFunc from './project-generator';
 import { Schema } from './schema';
