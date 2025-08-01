@@ -1,4 +1,4 @@
-import { PackageType } from '@nextrap/nextrap-constants';
+import { PackageType } from '@nextrap/nt-meta';
 import { formatFiles, Tree } from '@nx/devkit';
 import { libraryGenerator } from '@nx/js';
 import { resolveOptions } from './options';

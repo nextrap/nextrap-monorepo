@@ -1,4 +1,4 @@
-import { nextrap, PackageType } from '@nextrap/nextrap-constants';
+import { nextrap, PackageType } from '@nextrap/nt-meta';
 import { Tree } from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 

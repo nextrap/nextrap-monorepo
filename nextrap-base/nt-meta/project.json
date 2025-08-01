@@ -1,7 +1,7 @@
 {
     "name": "nextrap-constants",
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
-    "sourceRoot": "tools/nextrap-constants/src",
+    "sourceRoot": "nextrap-base/nt-meta/src",
     "projectType": "library",
     "tags": [],
     "targets": {
@@ -9,28 +9,28 @@
             "executor": "@nx/js:tsc",
             "outputs": ["{options.outputPath}"],
             "options": {
-                "outputPath": "dist/tools/nextrap-constants",
-                "main": "tools/nextrap-constants/src/index.ts",
-                "tsConfig": "tools/nextrap-constants/tsconfig.lib.json",
+                "outputPath": "dist/nextrap-base/nt-meta",
+                "main": "nextrap-base/nt-meta/src/index.ts",
+                "tsConfig": "nextrap-base/nt-meta/tsconfig.lib.json",
                 "assets": [
-                    "tools/nextrap-constants/*.md",
+                    "nextrap-base/nt-meta/*.md",
                     {
-                        "input": "./tools/nextrap-constants/src",
+                        "input": "./nextrap-base/nt-meta/src",
                         "glob": "**/!(*.ts)",
                         "output": "./src"
                     },
                     {
-                        "input": "./tools/nextrap-constants/src",
+                        "input": "./nextrap-base/nt-meta/src",
                         "glob": "**/*.d.ts",
                         "output": "./src"
                     },
                     {
-                        "input": "./tools/nextrap-constants",
+                        "input": "./nextrap-base/nt-meta",
                         "glob": "generators.json",
                         "output": "."
                     },
                     {
-                        "input": "./tools/nextrap-constants",
+                        "input": "./nextrap-base/nt-meta",
                         "glob": "executors.json",
                         "output": "."
                     }

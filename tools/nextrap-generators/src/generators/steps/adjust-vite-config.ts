@@ -11,7 +11,7 @@ export default function (tree: Tree, options: ResolvedOptions): void {
     .replace(
       /\n\n/,
       `
-import { nextrap, PackageType } from '@nextrap/nextrap-constants';
+import { nextrap, PackageType } from '@nextrap/nt-meta';
 
     `,
     )

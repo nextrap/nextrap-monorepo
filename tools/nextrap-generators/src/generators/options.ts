@@ -1,4 +1,4 @@
-import { nextrap, nextrapScope, PackageType } from '@nextrap/nextrap-constants';
+import { nextrap, nextrapScope, PackageType } from '@nextrap/nt-meta';
 import { names } from '@nx/devkit';
 import { Schema } from './schema';
 

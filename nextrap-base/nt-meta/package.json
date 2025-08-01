@@ -1,5 +1,5 @@
 {
-    "name": "@nextrap/nextrap-constants",
+    "name": "@nextrap/nt-meta",
     "version": "0.0.1",
     "main": "./src/index.js",
     "dependencies": {
