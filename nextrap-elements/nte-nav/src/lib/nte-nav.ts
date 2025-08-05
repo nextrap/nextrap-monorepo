@@ -1,9 +1,9 @@
 import { ka_dom_ready } from '@kasimirjs/core';
-import { customElement, isBiggerThanBreakpoint, property, unsafeCSS } from '@nextrap/nt-framework';
+import { isBiggerThanBreakpoint } from '@nextrap/nt-framework';
 import '@nextrap/nte-offcanvas';
 import { NteOffcanvas } from '@nextrap/nte-offcanvas';
-import { html, LitElement, PropertyValues } from 'lit';
-import { state } from 'lit/decorators.js';
+import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
 import style from './nav.scss?inline';
 
 /**
