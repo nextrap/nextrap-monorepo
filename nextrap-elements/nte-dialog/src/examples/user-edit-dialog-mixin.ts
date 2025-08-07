@@ -4,11 +4,9 @@ import { DialogMixin } from '../mixins/DialogMixin';
 
 @customElement('user-edit-dialog2')
 export class UserEditDialog2 extends DialogMixin(LitElement) {
-  constructor() {
-    super('Edit User');
-  }
+  override render() {
+    this.hide();
 
-  render() {
     return super.render(html`
       <input name="username" type="text" placeholder="wurst" />
       test

@@ -57,7 +57,13 @@ and run `npm update` on the monorepos root to update the package links.
 1. Switch to a feature branch to benefit from CI checks and to avoid breaking the main branch.
 2. Use our [Nx Generator](./nextrap-base/nt-nx-generators) to generate new libs or apps:
 
-`nx g @nextrap/nt-nx-generators:project`
+**Create new element Package**:
+
+`nx g @nextrap/nt-nx-generators:element`
+
+**Create new layout Package**:
+
+`nx g @nextrap/nt-nx-generators:layout`
 
 3. Run `npm i` and `nx run <new-package>:build` to verify that the new package has been created successfully.
 

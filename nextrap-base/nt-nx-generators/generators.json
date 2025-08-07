@@ -1,9 +1,14 @@
 {
     "generators": {
-        "project": {
-            "factory": "./src/generators/project-generator",
-            "schema": "./src/generators/schema.json",
-            "description": "Generator for new nextrap packages"
+        "element": {
+            "factory": "./src/generators/element-generator",
+            "schema": "./src/generators/element-schema.json",
+            "description": "Generator for new nextrap elements"
+        },
+        "layout": {
+            "factory": "./src/generators/layout-generator",
+            "schema": "./src/generators/layout-schema.json",
+            "description": "Generator for new nextrap elements"
         }
     }
 }

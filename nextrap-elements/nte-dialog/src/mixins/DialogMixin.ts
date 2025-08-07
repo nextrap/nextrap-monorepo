@@ -1,39 +1,23 @@
-import { html, LitElement } from 'lit';
-import { property } from 'lit/decorators.js';
+import { html } from 'lit';
 
-type Constructor<T = {}> = abstract new (...args: any[]) => T;
+type Constructor<T = object> = new (...args: any[]) => T;
 
-export function DialogMixin<TBase extends Constructor<LitElement>>(Base: TBase) {
-  abstract class DialogClass extends Base {
-    private _title: string | null;
-
-    constructor(title: string | null = null) {
+export function DialogMixin<TBase extends Constructor<object>>(Base: TBase) {
+  // @gts-ignore
+  class Mixin extends Base {
+    constructor(...args: any[]) {
       super();
-      this._title = title;
-      document.body.appendChild(this); // ensure dialog is in the body
+
+      document.body.appendChild(this as unknown as HTMLElement); // ensure dialog is in the body
     }
 
-    @property({ type: Boolean, reflect: true }) open = false;
-    private modalRef?: HTMLElement;
+    __modalRef?: HTMLElement | null;
 
-    show() {
-      this.open = true;
-      //this.modalRef['showModal'](); // call inner modal if available
-    }
-
-    hide() {
-      this.open = false;
-      this.modalRef?.['hide']?.();
-    }
+    hide() {}
 
     render(content?: unknown) {
-      return html`
-        <nte-dialog ${(el: HTMLElement) => (this.modalRef = el)} mode=${this.open ? 'open' : 'closed'}>
-          ${content || ''}
-        </nte-dialog>
-      `;
+      return html` <nte-dialog ${(el: HTMLElement) => (this.__modalRef = el)}> ${content || ''} </nte-dialog> `;
     }
   }
-
-  return DialogClass;
+  return Mixin;
 }

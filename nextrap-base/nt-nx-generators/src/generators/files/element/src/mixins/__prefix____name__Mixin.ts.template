@@ -1,16 +1,17 @@
 import { property } from 'lit/decorators.js';
 import { html, LitElement } from 'lit';
 
-type Constructor<T = {}> = abstract new (...args: any[]) => T;
+type Constructor<T = object> = abstract new (...args: any[]) => T;
 
-export function <%= prefixedClassName %>Mixin<TBase extends Constructor<LitElement>>(Base: TBase) {
+// @ts-ignore
+export function <%= prefixedClassName %>Mixin<TBase extends Constructor<object>>(Base: TBase) {
   abstract class MixinClass extends Base {
 
 
-    private _title: string | null;
+    __title: string | null;
 
-    constructor() {
-      super();
+    constructor(...args: any[]) {
+      super(...args);
 
 
       // document.body.appendChild(this); // Automatically appends the component to the body
@@ -22,10 +23,10 @@ export function <%= prefixedClassName %>Mixin<TBase extends Constructor<LitEleme
     /**
      * The Ref to the component instance
      */
-    private ref?: <%= prefixedClassName %>;
+    #ref?: <%= prefixedClassName %>;
 
 
-    hide() {
+    mixinMethod() {
       /**
        * Demonstration on mixin classes
        */
@@ -33,7 +34,7 @@ export function <%= prefixedClassName %>Mixin<TBase extends Constructor<LitEleme
 
     render(content?: unknown) {
       return html`
-        <<%= prefix %>-<%= name %> ${ (el:<%= prefixedClassName %>)=> this.ref = el }>
+        <<%= prefix %>-<%= name %> ${ (el:<%= prefixedClassName %>)=> this.#ref = el }>
           ${content || ''}
         </<%= prefix %>-<%= name %>>
       `;

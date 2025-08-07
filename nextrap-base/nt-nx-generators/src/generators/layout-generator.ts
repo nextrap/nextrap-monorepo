@@ -1,8 +1,8 @@
 import { formatFiles, Tree } from '@nx/devkit';
 import { libraryGenerator } from '@nx/js';
 import { PackageType } from 'nextrap-base/nt-meta/src';
+import { Schema } from './layout-schema';
 import { resolveOptions } from './options';
-import { Schema } from './schema';
 import adjustProjectJson from './steps/adjust-project-json';
 import adjustViteConfig from './steps/adjust-vite-config';
 import createElementBaseFiles from './steps/create-element-base-files';
@@ -28,7 +28,7 @@ export default async function (tree: Tree, input: Schema) {
   adjustViteConfig(tree, options);
 
   if (options.type === PackageType.ELEMENTS || options.type === PackageType.LAYOUT) {
-    createElementBaseFiles(tree, options, generatorSrcRoot);
+    createElementBaseFiles(tree, options, generatorSrcRoot, 'layout');
   }
 
   await formatFiles(tree);

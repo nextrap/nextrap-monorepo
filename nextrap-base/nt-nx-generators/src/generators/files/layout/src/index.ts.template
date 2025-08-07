@@ -1,0 +1,6 @@
+export * from './components/<%= prefix %><%= name %>/<%= prefix %><%= name %>';
+export * from './mixins/<%= prefixedClassName %>Mixin';
+
+
+/* this bundles light dom styles by default */
+export * from 'styles/index.scss';
