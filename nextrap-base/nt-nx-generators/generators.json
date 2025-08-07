@@ -1,0 +1,9 @@
+{
+    "generators": {
+        "project": {
+            "factory": "./src/generators/project-generator",
+            "schema": "./src/generators/schema.json",
+            "description": "Generator for new nextrap packages"
+        }
+    }
+}
