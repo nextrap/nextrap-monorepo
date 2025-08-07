@@ -1,12 +1,6 @@
-import {
-  customElement,
-  EVENT_NAME_GROUP_OPEN_CLOSE,
-  eventListener,
-  property,
-  triggerGroupOpenCloseEvent,
-  unsafeCSS,
-} from '@nextrap/nt-framework';
-import { LitElement } from 'lit';
+import { EVENT_NAME_GROUP_OPEN_CLOSE, eventListener, triggerGroupOpenCloseEvent } from '@nextrap/nt-framework';
+import { LitElement, unsafeCSS } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import style from './hamburger.scss?inline';
 
 import { html } from 'lit/static-html.js';
