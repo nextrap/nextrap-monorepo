@@ -1,6 +1,6 @@
 import { names } from '@nx/devkit';
 import { nextrap, nextrapScope, PackageType } from 'nextrap-base/nt-meta/src';
-import { Schema } from './schema';
+import { Schema } from './element-schema';
 
 export function resolveOptions(input: Schema) {
   const preparedNames = names(input.name.trim());
