@@ -20,7 +20,7 @@ import { nextrap, PackageType } from '@nextrap/nt-meta';
       'export default',
       `
 const projectName = '${options.prefixedName}';
-const dirName = \`\${nextrap}-\${PackageType.${options.packageTypeEnumProp}}/\${dirName}\`;
+const dirName = \`\${nextrap}-\${PackageType.${options.packageTypeEnumProp}}/\${projectName}\`;
 
 export default`,
     )

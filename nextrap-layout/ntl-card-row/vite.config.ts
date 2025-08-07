@@ -7,7 +7,7 @@ import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
 const projectName = 'ntl-card-row';
-const dirName = `${nextrap}-${PackageType.LAYOUT}/${dirName}`;
+const dirName = `${nextrap}-${PackageType.LAYOUT}/${projectName}`;
 
 export default defineConfig(() => ({
   server: {
