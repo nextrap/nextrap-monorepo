@@ -4,38 +4,5 @@
     "sourceRoot": "nextrap-base/nt-nx-generators/src",
     "projectType": "library",
     "tags": [],
-    "targets": {
-        "build": {
-            "executor": "@nx/js:tsc",
-            "outputs": ["{options.outputPath}"],
-            "options": {
-                "outputPath": "dist/nextrap-base/nt-nx-generators",
-                "main": "nextrap-base/nt-nx-generators/src/index.ts",
-                "tsConfig": "nextrap-base/nt-nx-generators/tsconfig.lib.json",
-                "assets": [
-                    "nextrap-base/nt-nx-generators/*.md",
-                    {
-                        "input": "./nextrap-base/nt-nx-generators/src",
-                        "glob": "**/!(*.ts)",
-                        "output": "./src"
-                    },
-                    {
-                        "input": "./nextrap-base/nt-nx-generators/src",
-                        "glob": "**/*.d.ts",
-                        "output": "./src"
-                    },
-                    {
-                        "input": "./nextrap-base/nt-nx-generators",
-                        "glob": "generators.json",
-                        "output": "."
-                    },
-                    {
-                        "input": "./nextrap-base/nt-nx-generators",
-                        "glob": "executors.json",
-                        "output": "."
-                    }
-                ]
-            }
-        }
-    }
+    "targets": {}
 }
