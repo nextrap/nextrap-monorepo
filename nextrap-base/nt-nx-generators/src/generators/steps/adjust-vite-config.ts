@@ -11,7 +11,8 @@ export default function (tree: Tree, options: ResolvedOptions): void {
     .replace(
       /\n\n/,
       `
-import { nextrap, PackageType } from '@nextrap/nt-meta';
+// Importing directly because vite does not support ts path alias
+import { nextrap, PackageType } from '../../nextrap-base/nt-meta/src/index';
 
     `,
     )
