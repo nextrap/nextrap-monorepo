@@ -17,8 +17,8 @@
         "paths": {
             "@nextrap/element-navbar": ["nextrap-elements/nxa-element-navbar/src/index.ts"],
             "@nextrap/element-scrollspy": ["nextrap-elements/element-scrollspy/src/index.ts"],
-            "@nextrap/nextrap-constants": ["tools/nextrap-constants/src/index.ts"],
             "@nextrap/nt-framework": ["nextrap-base/nt-framework/src/index.ts"],
+            "@nextrap/nt-meta": ["nextrap-base/nt-meta/src/index.ts"],
             "@nextrap/nt-nx-generators": ["nextrap-base/nt-nx-generators/src/index.ts"],
             "@nextrap/nt-scope": ["nextrap-base/nt-scope/src/index.ts"],
             "@nextrap/nte-burger": ["nextrap-elements/nte-burger/src/index.ts"],
