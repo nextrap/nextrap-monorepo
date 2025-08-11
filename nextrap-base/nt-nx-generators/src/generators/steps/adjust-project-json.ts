@@ -5,6 +5,7 @@ import { ResolvedOptions } from '../options';
 export default function (tree: Tree, options: ResolvedOptions): void {
   const projectJsonPath = path.join(options.projectDirName, 'project.json');
   updateJson(tree, projectJsonPath, (json) => {
+    json['name'] = options.prefixedName;
     json['release'] = {
       version: {
         currentVersionResolver: 'disk',
