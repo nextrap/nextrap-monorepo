@@ -1,3 +1,13 @@
+## 1.1.10 (2025-08-13)
+
+### 🩹 Fixes
+
+- do not re-export lit via nt-framework ([12ac05f](https://github.com/nextrap/nextrap-monorepo/commit/12ac05f))
+
+### ❤️ Thank You
+
+- Enzo Volkmann @evolkmann
+
 ## 1.1.9 (2025-08-01)
 
 ### 🧱 Updated Dependencies
