@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Demo Page</title>
+  </head>
+  <body>
+    <main class="container">
+      <h1>This is a heading</h1>
+      <h2>This is a subheading <a href="/link" class="btn">with a link</a></h2>
+
+      <tj-html-scope update-on="change keyup">
+        <template>
+          <div *for="i of Array.from({ length: repeatCount })">Hello {{name}}</div>
+        </template>
+
+        <input type="text" placeholder="Enter your name" value="World" name="name" />
+        <input type="number" value="3" name="repeatCount" />
+      </tj-html-scope>
+    </main>
+
+    <script src="/demo/main.js" type="module"></script>
+  </body>
+</html>
