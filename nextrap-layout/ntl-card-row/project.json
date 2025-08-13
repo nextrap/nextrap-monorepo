@@ -1,5 +1,5 @@
 {
-    "name": "card-row",
+    "name": "ntl-card-row",
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
     "sourceRoot": "nextrap-layout/ntl-card-row/src",
     "projectType": "library",

@@ -59,7 +59,7 @@ export default defineConfig((command) => ({
     },
     rollupOptions: {
       // External packages that should not be bundled into your library.
-      external: [],
+      external: (id) => !id.startsWith('.') && !path.isAbsolute(id),
     },
   },
 }));
