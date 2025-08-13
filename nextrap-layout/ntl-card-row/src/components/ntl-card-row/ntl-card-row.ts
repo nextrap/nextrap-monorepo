@@ -3,6 +3,7 @@ import { customElement, state } from 'lit/decorators.js';
 
 // Styles for the light DOM
 import { resetStyle } from '@nextrap/style-reset';
+import { attrAssign } from '@trunkjs/content-pane';
 
 // Styles for your component's shadow DOM
 import style from './ntl-card-row.scss?inline';
@@ -16,9 +17,7 @@ export class NtlCardRow extends LitElement {
 
   beforeLayoutCallback(origElement: HTMLElement, instance: this, children: Element[]): void | boolean {
     let hi = 3;
-    if (isSectionTreeElement(origElement)) {
-      hi = origElement.__IT.hi ?? 3; // Default to 3 if not defined
-    }
+
     attrAssign(origElement, `:scope > section`, { layout: 'sub-component' });
   }
 

@@ -2,11 +2,10 @@
     "name": "@nextrap/ntl-card-row",
     "version": "0.0.1",
     "main": "./index.js",
-    "dependencies": {},
-    "devDependencies": {
-        "@trunkjs/alpha": "^1.0.1"
+    "dependencies": {
+        "@trunkjs/content-pane": "^1.0.1"
     },
-    "private": true,
+    "devDependencies": {},
     "type": "module",
     "types": "./index.d.ts"
 }
