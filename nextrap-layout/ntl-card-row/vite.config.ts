@@ -4,6 +4,7 @@ import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
+import { nextrap, PackageType } from '../../nextrap-base/nt-meta/src/index';
 
 const projectName = 'ntl-card-row';
 const dirName = `nextrap-layout/${projectName}`;

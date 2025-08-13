@@ -4,3 +4,6 @@
 /.nx/cache
 /.nx/workspace-data
 /.kick.yml
+
+# Avoid invalid template expressions
+nextrap-base/nt-nx-generators/src/generators/files/**/*.scss
