@@ -1,0 +1,8 @@
+/* The ShadowDOM Styles */
+
+
+:host {
+    --container-width: var(--nt-container-width)
+    /* Refer to README.md for style guidelines */
+}
+

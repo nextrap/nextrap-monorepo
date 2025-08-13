@@ -1,0 +1,39 @@
+{
+    "name": "<%= name %>",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "{projectRoot}/src",
+    "projectType": "library",
+    "tags": [],
+    "release": {
+        "version": {
+            "currentVersionResolver": "disk",
+            "preserveLocalDependencyProtocols": false,
+            "manifestRootsToUpdate": ["{projectRoot}"]
+        }
+    },
+    "// targets": "to see all targets run: nx show project content-pane --web",
+    "targets": {
+        "build": {
+            "executor": "@nx/vite:build",
+            "outputs": ["{options.outputPath}"],
+            "defaultConfiguration": "production",
+            "options": {
+                "outputPath": "dist/{projectRoot}"
+            },
+            "configurations": {
+                "development": {
+                    "mode": "development"
+                },
+                "production": {
+                    "mode": "production"
+                }
+            }
+        },
+        "nx-release-publish": {
+            "executor": "@nx/js:release-publish",
+            "options": {
+                "packageRoot": "dist/{projectRoot}"
+            }
+        }
+    }
+}

@@ -59,11 +59,7 @@ and run `npm update` on the monorepos root to update the package links.
 
 **Create new element Package**:
 
-`nx g @nextrap/nt-nx-generators:element`
-
-**Create new layout Package**:
-
-`nx g @nextrap/nt-nx-generators:layout`
+`nx g @nextrap/nt-nx-generators:base --name nte-demo --path nextrap-element/nte-demo`
 
 3. Run `npm i` and `nx run <new-package>:build` to verify that the new package has been created successfully.
 

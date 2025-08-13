@@ -1,0 +1,46 @@
+import { property } from 'lit/decorators.js';
+import { html, LitElement } from 'lit';
+
+type Constructor<T = object> = abstract new (...args: any[]) => T;
+
+// @ts-ignore
+export function <%= mixinClassName %><TBase extends Constructor<object>>(Base: TBase) {
+  abstract class MixinClass extends Base {
+
+
+    __title: string | null;
+
+    constructor(...args: any[]) {
+      super(...args);
+
+
+      // document.body.appendChild(this); // Automatically appends the component to the body
+    }
+
+
+    @property({type:Boolean, reflect:true}) open = false;
+
+    /**
+     * The Ref to the component instance
+     */
+    #ref?: <%= className %>;
+
+
+    mixinMethod() {
+      /**
+       * Demonstration on mixin classes
+       */
+    }
+
+    render(content?: unknown) {
+      return html`
+        <<%= name %> ${ (el:<%= className %>)=> this.#ref = el }>
+          ${content || ''}
+        </<%= name %>>
+      `;
+    }
+  }
+
+
+  return MixinClass;
+}

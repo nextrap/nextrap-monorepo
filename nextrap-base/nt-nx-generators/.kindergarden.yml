@@ -1,0 +1,13 @@
+version: 1.0
+
+environments:
+  coder:
+    files:
+      - name: 'project files'
+        include:
+          - './src/*.(json|yml|ts|scss)'
+          - './src/*/**.(js|html|css|ts|scss)'
+          - './*.(js|html|css|ts|scss|json)'
+          - './README.md'
+        instructions: |
+          These are all project files. You can edit them as you like.

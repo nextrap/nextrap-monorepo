@@ -9,6 +9,11 @@
             "factory": "./src/generators/layout-generator",
             "schema": "./src/generators/layout-schema.json",
             "description": "Generator for new nextrap elements"
+        },
+        "base": {
+            "factory": "./src/generators/base-generator/base-generator",
+            "schema": "./src/generators/base-generator/base-schema.json",
+            "description": "Generators the base setup"
         }
     }
 }
