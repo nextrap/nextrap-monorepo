@@ -6,19 +6,24 @@ environments:
       - name: 'project files'
         enabled: true
         include:
-          - './**/*.(json|yml|ts|html|js|css|scss|md)'
-          - './*.(js|html|css|ts|scss|json|html)'
+          - './**.(json|yml|ts|html|js|css|scss|md)'
         exclude:
-          - './demo/*'
-
+          - './demo/**'
+          - '**.spec.*'
         instructions: |
           These are all project files. You can edit them as you like.
+
+      - name: 'unittests'
+        enabled: true
+        include:
+          - './src/**.spec.ts'
+        instructions: |
+          This are unittest files. Keep them up to date.
 
       - name: 'demonstration file'
         enabled: true
         include:
-          - './demo/**/*.*'
-          - './demo/*.*'
+          - './demo/**.*'
         instructions: |
           This are demonstration files. They are used to show how the project works. Keep them up to date.
 

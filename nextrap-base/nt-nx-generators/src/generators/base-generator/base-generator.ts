@@ -12,7 +12,7 @@ export default async function (tree: Tree, input: Schema) {
   // Invoke the default generator with our options
   await libraryGenerator(tree, {
     name: options.name,
-    importPath: `${options.path}`,
+    importPath: options.importPath,
     directory: options.path,
     linter: 'eslint',
     bundler: 'vite',
