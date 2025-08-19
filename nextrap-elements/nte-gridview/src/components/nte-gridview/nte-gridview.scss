@@ -1,0 +1,146 @@
+/* NTE GridView - Airtable-inspired design */
+
+:host {
+  display: block;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'SF Pro Display', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #1a1a1a;
+  background: #ffffff;
+  border: 2px solid #ff0000; /* DEBUG: Red border to verify SCSS is working */
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.gridview-container {
+  display: block;
+  background: #ffffff;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.gridview-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  background: #ffffff;
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+}
+
+/* Simple, clean cell styling */
+.gridview-table th,
+.gridview-table td {
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: middle;
+  border: 1px solid #e1e5e9;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  height: 32px;
+  box-sizing: border-box;
+  background: #ffffff;
+  display: table-cell;
+}
+
+/* Header styling */
+.gridview-table thead th {
+  background: #f4f4f4;
+  font-weight: 600;
+  color: #1a1a1a;
+  font-size: 13px;
+  text-transform: none;
+  letter-spacing: normal;
+  border-bottom: 1px solid #d1d5d9;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.gridview-table thead th:hover {
+  background-color: #e8e8e8;
+}
+
+/* Data row styling */
+.gridview-table tbody tr {
+  background: #ffffff;
+  transition: background-color 0.15s ease;
+}
+
+.gridview-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Alternating row colors */
+.gridview-table tbody tr:nth-child(even) {
+  background-color: #ffeb3b; /* DEBUG: Bright yellow for even rows */
+}
+
+.gridview-table tbody tr:nth-child(even):hover {
+  background-color: #f0f1f2;
+}
+
+/* Footer styling */
+.gridview-table tfoot tr {
+  background: #f4f4f4;
+  border-top: 1px solid #d1d5d9;
+}
+
+.gridview-table tfoot td {
+  font-weight: 500;
+  color: #6b7280;
+  border-bottom: none;
+}
+
+/* Resize handle styling */
+.resize-handle {
+  position: absolute;
+  top: 0;
+  right: -4px;
+  width: 8px;
+  height: 100%;
+  cursor: col-resize;
+  background: transparent;
+  z-index: 2;
+}
+
+.resize-handle:hover {
+  background-color: #0073ea;
+  opacity: 0.3;
+}
+
+.resize-handle.dragging {
+  background-color: #0073ea;
+  opacity: 0.6;
+}
+
+/* Ensure content doesn't interfere with resize handles */
+.gridview-table th > *,
+.gridview-table td > * {
+  pointer-events: none;
+}
+
+.gridview-table th .resize-handle,
+.gridview-table td .resize-handle {
+  pointer-events: auto;
+}
+
+/* Remove any content-specific styling - let users style their own content */
+.gridview-table button,
+.gridview-table .btn,
+.gridview-table .status-tag,
+.gridview-table .avatar,
+.gridview-table .priority-high,
+.gridview-table .priority-medium,
+.gridview-table .priority-low {
+  all: unset;
+  display: inline;
+}

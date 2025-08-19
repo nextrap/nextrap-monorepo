@@ -36,6 +36,7 @@
             "@nextrap/style-reset": ["nextrap-base/style-reset/index.ts"],
             "@nextrap/style-typography": ["nextrap-base/style-typography/src/index.ts"],
             "@nextrap/style-utils": ["nextrap-base/style-utils/src/index.ts"],
+            "nextrap-elements/nte-gridview": ["nextrap-elements/nte-gridview/src/index.ts"],
             "nextrap-layout/ntl-demo": ["nextrap-layout/ntl-demo/src/index.ts"]
         }
     },
