@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>nte-split-view Demo</title>
+    <script type="module" src="/demo/main"></script>
+    <style>
+      :root {
+        color-scheme: light dark;
+      }
+      body {
+        margin: 0;
+        padding: 16px;
+        font-family: system-ui, sans-serif;
+      }
+      .demo {
+        border: 1px solid #ddd;
+        height: 480px;
+        margin-bottom: 24px;
+      }
+      .tall {
+        height: 560px;
+      }
+      .panel {
+        padding: 8px;
+        box-sizing: border-box;
+      }
+      .nav {
+        background: #fff5f5;
+      }
+      .editor {
+        background: #f5faff;
+      }
+      .sidebar {
+        background: #f5fff0;
+      }
+      .terminal {
+        background: #f7f7f7;
+      }
+      .main {
+        background: #fafafa;
+      }
+      .side {
+        background: #f0f6ff;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>nte-split-view Demo</h1>
+
+    <h2>Verschachteltes Beispiel (IDE: Navigation, Editor, Sidebar, Terminal)</h2>
+    <nte-split-view class="vertical demo tall" resizable style="--primary-size: 200px">
+      <!-- Primary (top): 70% Höhe -->
+      <nte-split-view resizable style="--primary-size: 240px">
+        <!-- Primary (links): Navigation -->
+        <div class="panel nav">Navigation</div>
+
+        <!-- Secondary (rechts): Editor + Sidebar -->
+        <nte-split-view resizable reverse style="--primary-size: 320px">
+          <!-- Primary (links, da reverse): Editor -->
+          <div class="panel editor">Editor</div>
+          <!-- Secondary (rechts): Sidebar -->
+          <div class="panel sidebar">Sidebar</div>
+        </nte-split-view>
+      </nte-split-view>
+
+      <!-- Secondary (unten): Terminal -->
+      <div class="panel terminal">Terminal</div>
+    </nte-split-view>
+
+    <h2>Horizontal (Standard)</h2>
+    <nte-split-view
+      class="demo"
+      resizable
+      style="--primary-size: 30%; --primary-min-size: 20%; --primary-max-size: 60%"
+    >
+      <div class="panel main">Main content</div>
+      <div class="panel side">Side content</div>
+    </nte-split-view>
+
+    <h2>Vertikal</h2>
+    <nte-split-view class="demo vertical" resizable style="--primary-size: 40%">
+      <div class="panel main">Main content</div>
+      <div class="panel side">Side content</div>
+    </nte-split-view>
+  </body>
+</html>

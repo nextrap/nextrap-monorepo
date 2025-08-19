@@ -1,0 +1,46 @@
+version: 1.0
+
+environments:
+  coder:
+    files:
+      - name: 'project files'
+        enabled: true
+        include:
+          - './**.(json|yml|ts|html|js|css|scss|md)'
+        exclude:
+          - './.kg-tasks/**'
+          - './demo/**'
+          - '**.spec.*'
+        instructions: |
+          These are all project files. You can edit them as you like.
+
+      - name: 'unittests'
+        enabled: true
+        include:
+          - './src/**.spec.ts'
+        instructions: |
+          This are unittest files. Keep them up to date.
+
+      - name: 'demonstration file'
+        enabled: true
+        include:
+          - './demo/**.*'
+        instructions: |
+          This are demonstration files. They are used to show how the project works. Keep them up to date.
+
+      - name: 'documentation file'
+        enabled: true
+        include:
+          - './.README/*.md'
+          - './README.md'
+        instructions: |
+          Make sure new features are documented in the README.md file. Also correct any typos or errors in the documentation.
+          Write documentation for experienced developers using the package. So don't overexplain. Show examples instead of writing long texts.
+          Provide overview in the ./README.md file and link to the detailed documentation in the ./README/ folder.
+
+      - name: 'coding guidelines'
+        enabled: true
+        include:
+          - './../../.kindergarden.global.md'
+        instructions: |
+          Follow these coding guidelines. They are the same for all projects in this repository.

@@ -1,0 +1,63 @@
+
+Erstelle eine Split View Komponente, die zwei Bereiche nebeneinander anzeigt. Primary (das eerste Element) und Secondary (das zweite Element).
+
+Beide Element liegen im main slot.
+
+Side kann über die css Propertys
+
+--primary-min-size
+--primary-max-size
+--primary-size
+
+gesteuert werden, in welchen Größenverhältnissen die Side-Komponente angezeigt wird. und in wiefern sie sich anpassen lässt.
+
+Über das attribut `resizable` kann gesteuert werden, ob die Side-Komponente in der Größe verändert werden kann.
+
+über die klasse `.vertical` kann gesteuert werden, ob die Side-Komponente vertikal oder horizontal angezeigt wird.
+
+Die Elemente sollten in einem Flex Container liegen. Mit der klasse .reverse kann die Reihenfolge der Elemente umgekehrt werden.
+
+Über das attribut `label` kann dem Rezize-Handle ein accessibility Label gegeben werden. Dies ist standardmäßig "Resize the panels".
+
+Der Resize-Bereich soll standarmäßig 3 px breit sein, aber keinen eigenen Platz einnehmen. erst beim hover wird er sichtbar
+und der Mauszeiger ändert sich in "col-resize" bzw. "row-resize".
+
+das Element ist standartmöpig 100% breit und 100% hoch.
+
+Die Split Vies sollten sich direkt in einander schachteln lassen:
+
+
+Wenn keine Min und max size angegeben wird, soll die größe fest auf die primary_size gesetzt werden. Außer es ist resizable, dann kann die per default Größe zwsischen
+0 - 100% variiert werden.
+
+
+Es soll eine Warnung geben, wenn in einem Split View mehr als 2 Elemente liegen.
+
+
+Wichtig: Es darf keine slot="main" oder slot="side" Attribute geben, da die Elemente gemeinsam im hauptslot <slot> leigen sollen
+und nur anhand ihrer Reihenfolge unterschieden werden. Das erste Element ist immer Primary, das zweite Element ist immer Secondary.
+Entferne alle Code-Snippets, die auf slot="main" oder slot="side" verweisen.
+
+<nte-split-view style="--primary-size: 30%; --primary-min-size: 20%; --primary-max-size: 50%;" resizable vertical label="Resize the left panel">
+  <div>Content Main</div>
+  <nte-split-view resizable vertical label="Resize the left panel" style="--primary-size: 70px; >
+    <div>Content Side</div>
+    <nte-split-view>
+      <div>Nested Content Main</div>
+      <div>Nested Content Side</div>
+    </nte-split-view>
+  </nte-split-view>
+</nte-split-view>
+
+
+Beginne in der Demonsttration mit einem geschachtelten Beispeil, in dem die Aufteilung einer IDE in verschiedene Bereiche (Navigation; Editor, Sidebar, Terminal) etc gezeigt wird.
+
+Danach erst die Beipeile für vertikal und horziontal ( je ein beispiel)
+
+Der splitter ist im shadow dom - die zwei parts müssen im light dom liegen und werden aus dem Shadow Dom heraus per Css gestyled:
+
+ ::slotted(:first-child:not(:last-child))
+
+ und
+
+::slotted(:nth-child(2))

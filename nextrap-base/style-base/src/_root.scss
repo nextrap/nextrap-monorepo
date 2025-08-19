@@ -3,13 +3,13 @@
 @use 'sass:color';
 
 @function luminance($color) {
-  $r: red($color) / 255;
-  $g: green($color) / 255;
-  $b: blue($color) / 255;
+  $r: math.div(color.red($color), 255);
+  $g: math.div(color.green($color), 255);
+  $b: math.div(color.blue($color), 255);
 
-  $r: if($r < 0.03928, $r / 12.92, pow((($r + 0.055) / 1.055), 2.4));
-  $g: if($g < 0.03928, $g / 12.92, pow((($g + 0.055) / 1.055), 2.4));
-  $b: if($b < 0.03928, $b / 12.92, pow((($b + 0.055) / 1.055), 2.4));
+  $r: if($r < 0.03928, math.div($r, 12.92), pow(math.div(($r + 0.055), 1.055), 2.4));
+  $g: if($g < 0.03928, math.div($g, 12.92), pow(math.div(($g + 0.055), 1.055), 2.4));
+  $b: if($b < 0.03928, math.div($b, 12.92), pow(math.div(($b + 0.055), 1.055), 2.4));
 
   @return $r * 0.2126 + $g * 0.7152 + $b * 0.0722;
 }

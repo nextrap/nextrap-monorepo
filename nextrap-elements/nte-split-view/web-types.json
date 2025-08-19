@@ -1,0 +1,32 @@
+{
+    "name": "@nextrap/nte-split-view",
+    "version": "1.0.0",
+    "contributions": {
+        "": {
+            "tags": [
+                {
+                    "name": "-split-view",
+                    "description": "A lightweight split-view web component that displays two panels (primary = first child, secondary = second child) with an optional resizable divider. Orientation and order via host classes: .vertical, .reverse.",
+                    "attributes": [
+                        {
+                            "name": "resizable",
+                            "description": "Enable pointer and keyboard resizing.",
+                            "value": { "type": "boolean" }
+                        },
+                        {
+                            "name": "label",
+                            "description": "ARIA label for the resizer handle.",
+                            "value": { "type": "string" }
+                        }
+                    ],
+                    "slots": [
+                        {
+                            "name": "default",
+                            "description": "Provide exactly two elements. The first is primary, the second is secondary."
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
