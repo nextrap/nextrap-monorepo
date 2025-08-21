@@ -1,3 +1,4 @@
+import {LoggingMixin} from "@trunkjs/browser-utils";
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, state, property } from 'lit/decorators.js';
 
@@ -8,7 +9,7 @@ import { resetStyle } from '@nextrap/style-reset';
 import style from './<%= name %>.scss?inline';
 
 @customElement('<%= name %>')
-export class <%= elementClassName %> extends LitElement {
+export class <%= elementClassName %> extends LoggingMixin(LitElement) {
   @state()
   private _count = 0;
 
