@@ -1,3 +1,7 @@
+## 1.1.14 (2025-08-24)
+
+This was a version bump only for style-base to align it with other projects, there were no code changes.
+
 ## 1.1.13 (2025-08-24)
 
 This was a version bump only for style-base to align it with other projects, there were no code changes.
