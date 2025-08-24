@@ -13,15 +13,10 @@
         "colorVariants": ["-subtle", "-emphasis", ""]
       }
     </script>
-    <div class="container">
-      <prolit-scope update-on="" init="JSON.parse(document.getElementById('scope').textContent)" debug>
-        <template>
-          <div class="section" import-src="/public/01-colors.html"></div>
-
-          <div class="section" import-src="/public/02-typography.html"></div>
-          <div class="section" import-src="/public/03-space.html"></div>
-        </template>
-      </prolit-scope>
+    <div class="container section">
+      <prolit-scope src="/public/01-colors.html" style="display: contents"></prolit-scope>
+      <prolit-scope src="/public/02-typography.html"></prolit-scope>
+      <prolit-scope src="/public/03-space.html"></prolit-scope>
     </div>
 
     <script src="/public/main.ts" type="module"></script>

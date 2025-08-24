@@ -1,3 +1,7 @@
+body {
+  font-family: var(--nt-font-family-base);
+}
+
 .container {
   width: var(--nt-container-width);
   margin-left: auto;
@@ -10,6 +14,11 @@
   > h2 {
     color: var(--nt-primary);
     border-bottom: 2px solid var(--nt-primary);
+  }
+  > h3 {
+    color: var(--nt-secondary);
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
 }
 
