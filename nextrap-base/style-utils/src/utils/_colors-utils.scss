@@ -4,17 +4,17 @@
 @each $color,
   $value
     in (
-      'primary': $primary,
-      'accent': $accent,
-      'secondary': $secondary,
-      'success': $success,
-      'info': $info,
-      'warning': $warning,
-      'danger': $danger,
-      'light': $light,
-      'dark': $dark,
-      'white': $white,
-      'black': $black
+      'primary': 'primary',
+      'accent': accent,
+      'secondary': secondary,
+      'success': success,
+      'info': info,
+      'warning': warning,
+      'danger': danger,
+      'light': light,
+      'dark': dark,
+      'white': white,
+      'black': black
     )
 {
   .bg-#{$color} {
@@ -36,15 +36,15 @@
 @each $color,
   $value
     in (
-      'soft-primary': $soft-primary,
-      'soft-accent': $soft-accent,
-      'soft-secondary': $soft-secondary,
-      'soft-success': $soft-success,
-      'soft-info': $soft-info,
-      'soft-warning': $soft-warning,
-      'soft-danger': $soft-danger,
-      'soft-light': $soft-light,
-      'soft-dark': $soft-dark
+      'soft-primary': soft-primary,
+      'soft-accent': soft-accent,
+      'soft-secondary': soft-secondary,
+      'soft-success': soft-success,
+      'soft-info': soft-info,
+      'soft-warning': soft-warning,
+      'soft-danger': soft-danger,
+      'soft-light': soft-light,
+      'soft-dark': soft-dark
     )
 {
   .bg-#{$color} {

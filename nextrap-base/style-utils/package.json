@@ -3,7 +3,7 @@
     "version": "1.0.9",
     "main": "./index.js",
     "devDependencies": {
-        "@nextrap/style-base": "1.1.11"
+        "@nextrap/style-base": "^1.1.11"
     },
     "type": "module",
     "types": "./index.d.ts"
