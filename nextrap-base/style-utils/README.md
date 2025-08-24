@@ -2,12 +2,20 @@
 
 This library was generated with [Nx](https://nx.dev).
 
-## Building
+## Synopsis
 
-Run `nx build style-utils` to build the library.
+This library provides the utility classes known from Bootstrap but without the Media Queries.
 
-## Running unit tests
+The can be used in combination with [TrunkJS Responsive](https://github.com/trunkjs/trunkjs-monorepo/tree/main/packages/responsive).
 
-Run `nx test style-utils` to execute the unit tests via [Vitest](https://vitest.dev/).
+- [Utility Classes](https://getbootstrap.com/docs/5.3/utilities/)
 
-## Typography
+
+
+## Contents
+
+### Background
+
+- `.bg-primary`
+- `.bg-secondary`
+- `.bg-success`

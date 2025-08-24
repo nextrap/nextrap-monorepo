@@ -1,19 +1,54 @@
-$primary: #007bff !default;
-$accent: #6610f2 !default;
-$secondary: #6c757d !default;
-$success: #28a745 !default;
-$info: #17a2b8 !default;
-$warning: #ffc107 !default;
-$danger: #dc3545 !default;
-$light: #f8f9fa !default;
-$dark: #343a40 !default;
-$white: #fff !default;
-$black: #000 !default;
+// By default calculate light colors
+@use 'sass:color';
+
 
 $lighten-factor: 40% !default;
 
-// By default calculate light colors
-@use 'sass:color';
+$primary: #007bff !default;
+$primary-subtle: color.adjust($primary, $lightness: $lighten-factor) !default;
+$primary-emphasis: color.adjust($primary, $lightness: -$lighten-factor / 2) !default;
+
+$accent: #6610f2 !default;
+$accent-subtle: color.adjust($accent, $lightness: $lighten-factor) !default;
+$accent-emphasis: color.adjust($accent, $lightness: -$lighten-factor / 2) !default;
+
+$secondary: #6c757d !default;
+$secondary-subtle: color.adjust($secondary, $lightness: $lighten-factor) !default;
+$secondary-emphasis: color.adjust($secondary, $lightness: -$lighten-factor / 2) !default;
+
+$success: #28a745 !default;
+$success-subtle: color.adjust($success, $lightness: $lighten-factor) !default;
+$success-emphasis: color.adjust($success, $lightness: -$lighten-factor / 2) !default;
+
+$info: #17a2b8 !default;
+$info-subtle: color.adjust($info, $lightness: $lighten-factor) !default;
+$info-emphasis: color.adjust($info, $lightness: -$lighten-factor / 2) !default;
+
+$warning: #ffc107 !default;
+$warning-subtle: color.adjust($warning, $lightness: $lighten-factor) !default;
+$warning-emphasis: color.adjust($warning, $lightness: -$lighten-factor / 2) !default;
+
+$danger: #dc3545 !default;
+$danger-subtle: color.adjust($danger, $lightness: $lighten-factor) !default;
+$danger-emphasis: color.adjust($danger, $lightness: -$lighten-factor / 2) !default;
+
+$light: #f8f9fa !default;
+$light-subtle: color.adjust($light, $lightness: $lighten-factor) !default;
+$light-emphasis: color.adjust($light, $lightness: -$lighten-factor / 2) !default;
+
+$dark: #343a40 !default;
+$dark-subtle: color.adjust($dark, $lightness: $lighten-factor) !default;
+$dark-emphasis: color.adjust($dark, $lightness: -$lighten-factor / 2) !default;
+
+$white: #fff !default;
+$black: #000 !default;
+
+$body: $white !default;
+$body-secondary: $light !default;
+$body-tertiary: $light-subtle !default;
+
+
+
 
 $soft-primary: color.adjust($primary, $lightness: $lighten-factor) !default;
 $soft-secondary: color.adjust($secondary, $lightness: $lighten-factor) !default;

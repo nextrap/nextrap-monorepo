@@ -41,16 +41,48 @@ $background: $white !default;
 
 :root {
   --nt-primary: #{$primary};
+  --nt-primary-subtle: #{$primary-subtle};
+  --nt-primary-emphasis: #{$primary-emphasis};
+
   --nt-secondary: #{$secondary};
+  --nt-secondary-subtle: #{$secondary-subtle};
+  --nt-secondary-emphasis: #{$secondary-emphasis};
+
   --nt-accent: #{$accent};
+  --nt-accent-subtle: #{$accent-subtle};
+  --nt-accent-emphasis: #{$accent-emphasis};
+
   --nt-success: #{$success};
+  --nt-success-subtle: #{$success-subtle};
+  --nt-success-emphasis: #{$success-emphasis};
+
   --nt-info: #{$info};
+  --nt-info-subtle: #{$info-subtle};
+  --nt-info-emphasis: #{$info-emphasis};
+
   --nt-warning: #{$warning};
+  --nt-warning-subtle: #{$warning-subtle};
+  --nt-warning-emphasis: #{$warning-emphasis};
+
   --nt-danger: #{$danger};
+  --nt-danger-subtle: #{$danger-subtle};
+  --nt-danger-emphasis: #{$danger-emphasis};
+
   --nt-light: #{$light};
+  --nt-light-subtle: #{$light-subtle};
+  --nt-light-emphasis: #{$light-emphasis};
+
   --nt-dark: #{$dark};
+  --nt-dark-subtle: #{$dark-subtle};
+  --nt-dark-emphasis: #{$dark-emphasis};
+
   --nt-white: #{$white};
+
   --nt-black: #{$black};
+
+  --nt-body: #{$body};
+  --nt-body-secondary: #{$body-secondary};
+  --nt-body-tertiary: #{$body-tertiary};
 
   /** REMOVED - USE CSS Colors 5 Syntax instead rgb(from var(--nt-primary) r g b)
   --nt-primary-rgb: #{hex2rgb($primary)};
@@ -66,7 +98,7 @@ $background: $white !default;
   --nt-black-rgb: #{hex2rgb($black)};
   */
 
-  // Soft colors
+  // Soft colors (deprecated, use --nt-*-subtle instead)
   --nt-soft-primary: #{$soft-primary};
   --nt-soft-secondary: #{$soft-secondary};
   --nt-soft-accent: #{$soft-accent};
