@@ -33,7 +33,7 @@ $danger-emphasis: color.adjust($danger, $lightness: -$lighten-factor / 2) !defau
 
 $light: #f8f9fa !default;
 $light-subtle: color.adjust($light, $lightness: 1%) !default;
-$light-emphasis: color.adjust($light, $lightness: -$lighten-factor / 2) !default;
+$light-emphasis: color.adjust($light, $lightness: -$lighten-factor * 2) !default;
 
 $dark: #212529 !default;
 $dark-subtle: color.adjust($dark, $lightness: $lighten-factor) !default;
@@ -45,16 +45,6 @@ $black: #000 !default;
 $body: color.adjust($dark, $lightness: 90%) !default;
 $body-secondary: color.adjust($dark, $lightness: 60%) !default;
 $body-tertiary: color.adjust($dark, $lightness: 80%) !default;
-
-$soft-primary: color.adjust($primary, $lightness: $lighten-factor) !default;
-$soft-secondary: color.adjust($secondary, $lightness: $lighten-factor) !default;
-$soft-accent: color.adjust($accent, $lightness: $lighten-factor) !default;
-$soft-success: color.adjust($success, $lightness: $lighten-factor) !default;
-$soft-info: color.adjust($info, $lightness: $lighten-factor) !default;
-$soft-warning: color.adjust($warning, $lightness: $lighten-factor) !default;
-$soft-danger: color.adjust($danger, $lightness: $lighten-factor) !default;
-$soft-light: color.adjust($light, $lightness: $lighten-factor) !default;
-$soft-dark: color.adjust($dark, $lightness: $lighten-factor) !default;
 
 // ======== FONTS ======== //
 

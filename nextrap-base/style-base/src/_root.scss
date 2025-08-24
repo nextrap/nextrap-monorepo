@@ -77,38 +77,11 @@ $background: $white !default;
   --nt-dark-emphasis: #{$dark-emphasis};
 
   --nt-white: #{$white};
-
   --nt-black: #{$black};
 
   --nt-body: #{$body};
   --nt-body-secondary: #{$body-secondary};
   --nt-body-tertiary: #{$body-tertiary};
-
-  /** REMOVED - USE CSS Colors 5 Syntax instead rgb(from var(--nt-primary) r g b)
-  --nt-primary-rgb: #{hex2rgb($primary)};
-  --nt-secondary-rgb: #{hex2rgb($secondary)};
-  --nt-accent-rgb: #{hex2rgb($accent)};
-  --nt-success-rgb: #{hex2rgb($success)};
-  --nt-info-rgb: #{hex2rgb($info)};
-  --nt-warning-rgb: #{hex2rgb($warning)};
-  --nt-danger-rgb: #{hex2rgb($danger)};
-  --nt-light-rgb: #{hex2rgb($light)};
-  --nt-dark-rgb: #{hex2rgb($dark)};
-  --nt-white-rgb: #{hex2rgb($white)};
-  --nt-black-rgb: #{hex2rgb($black)};
-  */
-
-  // Soft colors (deprecated, use --nt-*-subtle instead)
-  --nt-soft-primary: #{$soft-primary};
-  --nt-soft-secondary: #{$soft-secondary};
-  --nt-soft-accent: #{$soft-accent};
-  --nt-soft-success: #{$soft-success};
-  --nt-soft-info: #{$soft-info};
-  --nt-soft-warning: #{$soft-warning};
-  --nt-soft-danger: #{$soft-danger};
-  --nt-soft-light: #{$soft-light};
-  --nt-soft-dark: #{$soft-dark};
-  --nt-text-on-soft-colors: #{$text-on-soft-colors}; // Default: always text color (black)
 
   // Text colors
   --nt-text: #{$text};
