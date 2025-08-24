@@ -7,6 +7,6 @@
         "lit": "^3.3.1"
     },
     "type": "module",
-    "types": "./index.d.ts"
-    "web-types": "./web-types.json",
+    "types": "./index.d.ts",
+    "web-types": "./web-types.json"
 }

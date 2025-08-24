@@ -1,5 +1,6 @@
 import { property } from 'lit/decorators.js';
 import { html, LitElement } from 'lit';
+import { <%= elementClassName %> } from '../components/<%= name %>/<%= name %>';
 
 type Constructor<T = object> = abstract new (...args: any[]) => T;
 
@@ -8,7 +9,7 @@ export function <%= mixinClassName %><TBase extends Constructor<object>>(Base: T
   abstract class MixinClass extends Base {
 
 
-    __title: string | null;
+    __title: string | null = null;
 
     constructor(...args: any[]) {
       super(...args);
@@ -23,7 +24,7 @@ export function <%= mixinClassName %><TBase extends Constructor<object>>(Base: T
     /**
      * The Ref to the component instance
      */
-    #ref?: <%= className %>;
+    #ref?: <%= elementClassName %>;
 
 
     mixinMethod() {
@@ -34,7 +35,7 @@ export function <%= mixinClassName %><TBase extends Constructor<object>>(Base: T
 
     render(content?: unknown) {
       return html`
-        <<%= name %> ${ (el:<%= className %>)=> this.#ref = el }>
+        <<%= name %> ${ (el:<%= elementClassName %>)=> this.#ref = el }>
           ${content || ''}
         </<%= name %>>
       `;
