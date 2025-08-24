@@ -1,0 +1,59 @@
+
+.row {
+  --gutter-x: var(--nt-gap, 1rem);
+  --gutter-y: 0;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  // Ensure child elements can shrink properly
+  & > * {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+    padding-right: calc(var(--gutter-x) * .5);
+    padding-left: calc(var(--gutter-x) * .5);
+    margin-top: var(--gutter-y);
+  }
+}
+
+@for $i from 1 through 6 {
+  .row-cols-#{$i} > * {
+    flex: 0 0 percentage(1 / $i);
+    width: percentage(1 / $i);
+  }
+}
+
+
+.col-auto {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+.col {
+  flex: 1 0 0;
+}
+
+@for $i from 1 through 12 {
+  .col-#{$i} {
+    flex: 0 0 auto;
+    width: percentage($i / 12);
+  }
+}
+
+
+@for $i from 0 through 6 {
+  .g-#{$i} {
+    --gutter-y: calc(#{$i} * var(--nt-base-gap, 1rem));
+    --gutter-x: calc(#{$i} * var(--nt-base-gap, 1rem));
+  }
+  .gx-#{$i} {
+    --nt-gap: 0;
+    --gutter-x: calc(#{$i} * var(--nt-base-gap, 1rem));
+  }
+  .gy-#{$i} {
+    --nt-gap: calc(#{$i} * var(--nt-base-gap, 1rem));
+    --gutter-y: 0;
+  }
+}
