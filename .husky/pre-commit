@@ -1,8 +1,9 @@
 
-# 1) Wenn Dependencies fehlen: Hook sauber überspringen
+# 1) If dependencies are not installed, skip pre-commit (otherwise lint-staged will fail and revert all changes!)
 [ -d node_modules ] || { echo "skip pre-commit (no node_modules)"; exit 0; }
 [ -x node_modules/.bin/lint-staged ] || { echo "skip pre-commit (no lint-staged)"; exit 0; }
 [ -x node_modules/.bin/prettier ] || { echo "skip pre-commit (no prettier)"; exit 0; }
 
-# 2) Sicher ausführen, ohne eigenes git add, ohne unnötiges Stashing
+# 2) Run lint-staged
+echo "run pre-commit (lint-staged)"
 npx --no-install lint-staged
