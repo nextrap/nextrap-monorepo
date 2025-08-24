@@ -1,0 +1,39 @@
+.container {
+  width: var(--nt-container-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section {
+  padding-top: 60px;
+  padding-bottom: 40px;
+  > h2 {
+    color: var(--nt-primary);
+    border-bottom: 2px solid var(--nt-primary);
+  }
+}
+
+.color-brick {
+  display: block;
+  flex: 1 0 33%;
+  height: auto;
+  margin: 5px;
+  border: 1px solid var(--nt-dark);
+
+  .header {
+    width: 100%;
+    height: auto;
+    margin: auto auto;
+    padding: 20px 60px;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .sub {
+    width: 100%;
+
+    margin: auto auto;
+    padding: 10px 60px;
+    text-align: center;
+  }
+}

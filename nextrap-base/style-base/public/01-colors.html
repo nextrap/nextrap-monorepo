@@ -1,0 +1,31 @@
+<h2>Colors</h2>
+
+<p>All colors are defined as css varaiables</p>
+
+<div style="display: flex; flex-wrap: wrap; flex-direction: row; margin-bottom: 1rem">
+  <div
+    *for="color of colors"
+    class="color-brick"
+    style="background-color: var(--nt-{{color}}); color: var(--nt-text-on-{{color}})"
+  >
+    <div class="header">
+      <code>background-color: --nt-{{color}}<br />color: --nt-text-on-{{color}}</code>
+    </div>
+    <div class="sub" style="background-color: var(--nt-{{color}}-subtle); color: var(--nt-dark)">
+      --nt-{{color}}-subtle
+    </div>
+    <div class="sub" style="background-color: var(--nt-white); color: var(--nt-{{color}}-emphasis)">
+      --nt-{{color}}-emphasis
+    </div>
+  </div>
+
+  <div class="color-brick" style="background-color: var(--nt-dark); color: var(--nt-text-on-dark)">
+    <div class="header">
+      <code>background-color: --nt-dark<br />color: --nt-text-on-dark</code>
+    </div>
+    <div class="sub" style="background-color: var(--nt-dark-subtle); color: var(--nt-light)">--nt-dark-subtle</div>
+    <div class="sub" style="background-color: var(--nt-body-secondary); color: var(--nt-dark)">--nt-body-secondary</div>
+    <div class="sub" style="background-color: var(--nt-body-tertiary); color: var(--nt-dark)">--nt-body-tertiary</div>
+    <div class="sub" style="background-color: var(--nt-body); color: var(--nt-dark)">--nt-body</div>
+  </div>
+</div>

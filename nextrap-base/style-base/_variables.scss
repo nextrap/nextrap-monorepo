@@ -1,7 +1,6 @@
 // By default calculate light colors
 @use 'sass:color';
 
-
 $lighten-factor: 40% !default;
 
 $primary: #007bff !default;
@@ -33,22 +32,19 @@ $danger-subtle: color.adjust($danger, $lightness: $lighten-factor) !default;
 $danger-emphasis: color.adjust($danger, $lightness: -$lighten-factor / 2) !default;
 
 $light: #f8f9fa !default;
-$light-subtle: color.adjust($light, $lightness: $lighten-factor) !default;
+$light-subtle: color.adjust($light, $lightness: 1%) !default;
 $light-emphasis: color.adjust($light, $lightness: -$lighten-factor / 2) !default;
 
-$dark: #343a40 !default;
+$dark: #212529 !default;
 $dark-subtle: color.adjust($dark, $lightness: $lighten-factor) !default;
 $dark-emphasis: color.adjust($dark, $lightness: -$lighten-factor / 2) !default;
 
 $white: #fff !default;
 $black: #000 !default;
 
-$body: $white !default;
-$body-secondary: $light !default;
-$body-tertiary: $light-subtle !default;
-
-
-
+$body: color.adjust($dark, $lightness: 90%) !default;
+$body-secondary: color.adjust($dark, $lightness: 60%) !default;
+$body-tertiary: color.adjust($dark, $lightness: 80%) !default;
 
 $soft-primary: color.adjust($primary, $lightness: $lighten-factor) !default;
 $soft-secondary: color.adjust($secondary, $lightness: $lighten-factor) !default;
