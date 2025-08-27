@@ -7,6 +7,7 @@ Monorepo for Nextrap maintained with [Nx](https://nx.dev/).
 - [Kickstart DevContainer Setup & Development](https://nfra.infracamp.org/)
 - [Development Concepts for Nextrap Elements](docs/nextrap-elements-concept.md)
 - [STyling Guide / Lit Styling](README_STYLING.md)
+- [Nextrap Website / Demos](https://www.nextrap.org)
 
 ## Packages
 
