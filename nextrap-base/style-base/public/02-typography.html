@@ -1,16 +1,17 @@
 <h2>Typography</h2>
 
 <h3>Headers</h3>
+<prolit-scope>
+  <h5 *for="i of [1,2,3,4,5,6]" style="font-size: var(--nt-fs-h{{i}})">Heading {{i}} <code>--nt-fs-h{{1}}</code></h5>
 
-<h5 *for="i of [1,2,3,4,5,6]" style="font-size: var(--nt-fs-h{{i}})">Heading {{i}} <code>--nt-fs-h{{1}}</code></h5>
+  <h3>Text-Size</h3>
 
-<h3>Text-Size</h3>
+  <p *for="i of [1,2,3,4,5,6]" style="font-size: var(--nt-fs-{{i}})">
+    This is text with font-size <code>--nt-fs-{{i}}</code>
+  </p>
 
-<p *for="i of [1,2,3,4,5,6]" style="font-size: var(--nt-fs-{{i}})">
-  This is text with font-size <code>--nt-fs-{{i}}</code>
-</p>
+  <h3>Font-Family</h3>
 
-<h3>Font-Family</h3>
-
-<h style="font-family: var(--nt-font-family-header); font-size: var(--nt-fs-h2)">--nt-font-family-header</h>
-<p style="font-family: var(--nt-font-family-base)">--nt-font-family-base</p>
+  <h style="font-family: var(--nt-font-family-header); font-size: var(--nt-fs-h2)">--nt-font-family-header</h>
+  <p style="font-family: var(--nt-font-family-base)">--nt-font-family-base</p>
+</prolit-scope>
