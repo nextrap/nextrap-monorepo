@@ -1,3 +1,13 @@
+## 1.1.8 (2025-08-28)
+
+### 🩹 Fixes
+
+- do not re-export lit via nt-framework ([12ac05f](https://github.com/nextrap/nextrap-monorepo/commit/12ac05f))
+
+### ❤️ Thank You
+
+- Enzo Volkmann @evolkmann
+
 ## 1.1.7 (2025-07-23)
 
 This was a version bump only for nte-burger to align it with other projects, there were no code changes.
