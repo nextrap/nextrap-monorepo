@@ -1,5 +1,4 @@
-import { ka_dom_ready } from '@kasimirjs/core';
-import { isBiggerThanBreakpoint } from '@nextrap/nt-framework';
+import { isBiggerThanBreakpoint, waitForDomContentLoaded } from '@nextrap/nt-framework';
 import '@nextrap/nte-offcanvas';
 import { NteOffcanvas } from '@nextrap/nte-offcanvas';
 import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
@@ -116,7 +115,7 @@ export class NteNav extends LitElement {
   }
 
   override async connectedCallback() {
-    await ka_dom_ready();
+    await waitForDomContentLoaded();
 
     super.connectedCallback();
 
