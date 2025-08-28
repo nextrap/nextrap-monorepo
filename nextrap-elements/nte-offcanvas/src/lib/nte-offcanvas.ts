@@ -1,5 +1,4 @@
-import { ka_sleep } from '@kasimirjs/core';
-import { SlotTool, triggerGroupOpenCloseEvent } from '@nextrap/nt-framework';
+import { sleep, SlotTool, triggerGroupOpenCloseEvent } from '@nextrap/nt-framework';
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
@@ -61,14 +60,14 @@ export class NteOffcanvas extends LitElement {
 
       if (this.opened) {
         this.style.display = 'block';
-        await ka_sleep(1);
+        await sleep(1);
         SlotTool.observeEmptySlots(this); // Check for empty slots
 
         this.closedClass = false;
       } else {
         this.closedClass = true;
         // Wait for the transition to finish before setting display to none
-        await ka_sleep(400);
+        await sleep(400);
         this.style.display = 'none';
       }
     }
