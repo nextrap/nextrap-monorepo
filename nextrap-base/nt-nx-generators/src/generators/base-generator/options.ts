@@ -11,7 +11,7 @@ export function resolveOptions(input: Schema) {
   const path = input.path.trim();
   const preparedNames = names(name);
 
-  const importPath = ensureScoped(path);
+  const importPath = ensureScoped(name);
 
   return {
     ...input,

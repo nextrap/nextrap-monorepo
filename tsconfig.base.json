@@ -16,8 +16,9 @@
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
         "paths": {
-            "@nextrap-elements/nte-card": ["nextrap-elements/nte-card/src/index.ts"],
-            "@nextrap-elements/nte-split-view": ["nextrap-elements/nte-split-view/src/index.ts"],
+            "@nextrap/nte-card": ["nextrap-elements/nte-card/src/index.ts"],
+            "@nextrap/nte-split-view": ["nextrap-elements/nte-split-view/src/index.ts"],
+            "@nextrap/ntl-card-row": ["nextrap-layout/ntl-card-row/src/index.ts"],
             "@nextrap/element-navbar": ["nextrap-elements/nxa-element-navbar/src/index.ts"],
             "@nextrap/element-scrollspy": ["nextrap-elements/element-scrollspy/src/index.ts"],
             "@nextrap/nt-framework": ["nextrap-base/nt-framework/src/index.ts"],

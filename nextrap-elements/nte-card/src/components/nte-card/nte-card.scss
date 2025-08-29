@@ -33,6 +33,9 @@
   border-radius: var(--card-border-radius);
   box-shadow: var(--card-box-shadow);
   overflow: hidden; /* ensure rounded corners clip child content */
+  &[tabindex='0'] {
+    cursor: pointer;
+  }
 }
 
 /* Make the card a flex column in fill-mode so body can stretch */
@@ -72,6 +75,7 @@
   slot {
     display: contents;
   }
+
   display: block;
   width: 100%;
   height: auto;

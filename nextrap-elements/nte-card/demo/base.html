@@ -10,11 +10,27 @@
 
     <h2>Basic Usage</h2>
 
-    <nte-card style="max-width: 400px; margin-bottom: 20px">
-      <h2 slot="header">Card Header</h2>
-      <p>Some Main content</p>
-      <p slot="footer">Card Footer</p>
-    </nte-card>
+    <div class="row">
+      <nte-card class="col-4">
+        <h2 slot="header">Card Header</h2>
+        <p>Some Main content</p>
+        <p slot="footer">Card Footer</p>
+      </nte-card>
+
+      <nte-card class="col-4">
+        <h2 slot="header">Clickable Card</h2>
+        <p>Some Main content</p>
+        <p slot="footer">Card Footer</p>
+        <a href="./base.html" slot="link" aria-label="Clickable Card">This is the aria label</a>
+      </nte-card>
+
+      <nte-card class="col-4">
+        <h2 slot="header">Clickable Card</h2>
+        <p>Some Main content</p>
+        <p slot="footer">Card Footer</p>
+        <a href="./base.html" slot="link" aria-label="Clickable Card">This is the aria label</a>
+      </nte-card>
+    </div>
 
     <h2>With image</h2>
 

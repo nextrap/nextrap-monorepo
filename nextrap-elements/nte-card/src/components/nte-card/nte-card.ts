@@ -22,10 +22,27 @@ export class NteCardElement extends LoggingMixin(LitElement) {
   @state() private accessor _hasHeader = false;
   @state() private accessor _hasImage = false;
   @state() private accessor _hasFooter = false;
+  @state() private accessor _role = '';
+  @state() private accessor _ariaLabel: string | null = null;
+
+  #aHrefElmeent: HTMLAnchorElement | null = null;
 
   override render() {
     return html`
-      <div class="card" part="card">
+      <div
+        class="card"
+        part="card"
+        role=${this._role}
+        @click=${() => this.#click()}
+        @keydown=${(e: KeyboardEvent) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.#click();
+          }
+        }}
+        aria-label=${this._ariaLabel}
+        tabindex=${this._role === 'button' ? '0' : '-1'}
+      >
         <div class="card-header" part="header" ?hidden=${!this._hasHeader}>
           <slot name="header" @slotchange=${this.#onHeaderSlot}></slot>
         </div>
@@ -41,9 +58,16 @@ export class NteCardElement extends LoggingMixin(LitElement) {
         <div class="card-footer" part="footer" ?hidden=${!this._hasFooter}>
           <slot name="footer" @slotchange=${this.#onFooterSlot}></slot>
         </div>
+        <div hidden>
+          <slot name="link" @slotchange=${this.#onLinkSlot}></slot>
+        </div>
       </div>
     `;
   }
+
+  #click = () => {
+    this.#aHrefElmeent?.click();
+  };
 
   #onHeaderSlot = (e: Event) => {
     const slot = e.target as HTMLSlotElement;
@@ -63,7 +87,25 @@ export class NteCardElement extends LoggingMixin(LitElement) {
     const assigned = slot.assignedElements({ flatten: true });
     this._hasImage = assigned.length > 0;
   };
-
+  #onLinkSlot = async (e: Event) => {
+    const slot = e.target as HTMLSlotElement;
+    const assigned = slot.assignedElements({ flatten: true });
+    if (assigned.length > 0) {
+      this._role = 'button';
+      const el = assigned[0];
+      if (el instanceof HTMLAnchorElement) {
+        this.#aHrefElmeent = el;
+        console.log('Found link element in slot:', el, el.getAttribute('aria-label'), el.textContent);
+        this._ariaLabel = el.getAttribute('aria-label') || el.textContent?.trim() || '';
+      } else {
+        this.warn(
+          "nte-card: The element assigned to the 'link' slot is not an anchor (<a>) element. Element found:",
+          el,
+        );
+        this.#aHrefElmeent = null;
+      }
+    }
+  };
   #isRenderableNode(n: Node): boolean {
     if (n.nodeType === Node.TEXT_NODE) {
       return (n.textContent || '').trim().length > 0;

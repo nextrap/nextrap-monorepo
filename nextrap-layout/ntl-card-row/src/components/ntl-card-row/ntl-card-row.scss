@@ -1,0 +1,27 @@
+/* The ShadowDOM Styles */
+
+:host {
+  --container-width: var(--nt-container-width) /* Refer to README.md for style guidelines */;
+  --default-cols: 4;
+  --gutter-x: var(--nt-gap);
+  --gutter-y: var(--nt-gap);
+}
+
+.wrapper {
+  max-width: var(--container-width);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gutter-y) var(--gutter-x);
+  slot {
+    display: contents;
+  }
+  ::slotted(*) {
+    --cols: var(--default-cols);
+    grid-column: span var(--cols, 3);
+  }
+}
