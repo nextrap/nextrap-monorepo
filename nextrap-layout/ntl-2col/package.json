@@ -4,5 +4,6 @@
     "main": "./index.js",
     "dependencies": {},
     "type": "module",
-    "types": "./index.d.ts"
+    "types": "./index.d.ts",
+    "web-types": "./web-types.json"
 }

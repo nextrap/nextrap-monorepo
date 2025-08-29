@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Base Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body class="container">
+    <h1>Demo of nte-card</h1>
+
+    <h2>Basic Usage</h2>
+
+    <nte-card style="max-width: 400px; margin-bottom: 20px">
+      <h2 slot="header">Card Header</h2>
+      <p>Some Main content</p>
+      <p slot="footer">Card Footer</p>
+    </nte-card>
+
+    <h2>With image</h2>
+
+    <div class="row">
+      <nte-card style="max-width: 400px; margin-bottom: 20px">
+        <h2 slot="header">Card Header</h2>
+        <img slot="image" src="https://placehold.co/600x400" alt="Placeholder Image" />
+        <p>Some Main content</p>
+        <p slot="footer">Card Footer</p>
+      </nte-card>
+
+      <nte-card style="max-width: 400px; margin-bottom: 20px; --image-aspect-ratio: 16/9">
+        <h2 slot="header">Card Header</h2>
+        <p slot="image"><img src="https://placehold.co/600x400" alt="Placeholder Image" /></p>
+        <p>Some Main content</p>
+        <p slot="footer">Card Footer</p>
+      </nte-card>
+      <nte-card style="max-width: 400px; margin-bottom: 20px; --image-aspect-ratio: 16/9">
+        <p slot="image"><img src="https://placehold.co/600x400" alt="Placeholder Image" /></p>
+        <h2>Card Header</h2>
+        <p>Some Main content</p>
+        <p>No Footer</p>
+      </nte-card>
+    </div>
+
+    <h2>With image inside a p element (e.g. Static Web Creator)</h2>
+
+    <div class="row">
+      <nte-card class="col-4">
+        <h2 slot="header">Card Header</h2>
+        <p slot="image"><img src="https://placehold.co/600x400" alt="Placeholder Image" /></p>
+        <p>Some Main content</p>
+        <p>Some other main Content</p>
+        <p slot="footer">Card Footer</p>
+      </nte-card>
+
+      <nte-card class="col-4">
+        <h2 slot="header">Card Header</h2>
+        <p slot="image"><img src="https://placehold.co/600x400" alt="Placeholder Image" /></p>
+        <p>Some Main content</p>
+        <p>Some other main Content</p>
+        <p slot="footer">Card Footer</p>
+      </nte-card>
+
+      <nte-card class="col-4" style="height: 100%">
+        <p slot="image"><img src="https://placehold.co/600x400" alt="Placeholder Image" /></p>
+        <p>Some Main content</p>
+        <p>Some other main Content</p>
+        <p slot="footer">Card Footer</p>
+      </nte-card>
+    </div>
+
+    <script src="/demo/main.js" type="module"></script>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Base Demo of <%= name %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+    <h1>Demo of <%= name %></h1>
+
+    <<%= name %>></<%= name %>>
+
+
+    <script src="/demo/main.js" type="module"></script>
+</body>
+</html>

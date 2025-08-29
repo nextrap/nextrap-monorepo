@@ -1,0 +1,69 @@
+{
+    "name": "ntl-2col",
+    "version": "1.0.0",
+    "contributions": {
+        "html": {
+            "elements": [
+                {
+                    "name": "ntl-2col",
+                    "description": "2Column Layout",
+                    "attributes": [
+                        {
+                            "name": "breakat",
+                            "type": "string",
+                            "description": "Breakpoint to switch to single column layout (default: md)"
+                        },
+                        {
+                            "name": "cols",
+                            "type": "number",
+                            "description": "Number of columns for the main slot (default 6)"
+                        }
+                    ]
+                }
+            ],
+            "slots": [
+                {
+                    "name": "",
+                    "description": "Primary content (first column)"
+                },
+                {
+                    "name": "aside",
+                    "description": "Secondary content (second column)"
+                }
+            ]
+        },
+        "css": {
+            "classes": [
+                {
+                    "name": "alternate",
+                    "description": "Alternate the order of the columns (aside first)"
+                },
+                {
+                    "name": "mobile-reverse",
+                    "description": "Reverse the order of the columns (aside first)"
+                },
+                {
+                    "name": "desktop-reverse",
+                    "description": "Remove the gap between the columns"
+                }
+            ],
+            "properties": [
+                {
+                    "name": "--container-width",
+                    "description": "Default with of the container (default: inherited from lightdom)",
+                    "value": { "type": "number" }
+                },
+                {
+                    "name": "--gap",
+                    "description": "Gap between the columns (default: from base styles)",
+                    "value": { "type": "string" }
+                },
+                {
+                    "name": "--ntl-aside-padding",
+                    "description": "Padding of the aside column (default: 0)",
+                    "value": { "type": "string" }
+                }
+            ]
+        }
+    }
+}

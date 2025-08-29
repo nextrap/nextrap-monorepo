@@ -1,10 +1,10 @@
 {
-    "name": "@nextrap/<%= name %>",
+    "name": "@nextrap/nte-card",
     "version": "1.0.0",
     "main": "./index.js",
     "dependencies": {
-        "@trunkjs/browser-utils": "^1.0.12",
         "@nextrap/style-reset": "^1.0.0",
+        "@trunkjs/browser-utils": "^1.0.12",
         "lit": "^3.3.1"
     },
     "devDependencies": {

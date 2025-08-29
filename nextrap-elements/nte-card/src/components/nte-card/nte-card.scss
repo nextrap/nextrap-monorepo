@@ -1,0 +1,98 @@
+/* The ShadowDOM Styles */
+
+:host {
+  display: block;
+
+  /* Customizable variables (Bootstrap-ish defaults) */
+  --card-bg: var(--nt-body, #fff);
+  --card-color: var(--nt-dark, #212529);
+  --card-border-color: var(--nt-dark, #dee2e6);
+  --card-border-radius: var(--nt-border-radius);
+  --card-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  --image-aspect-ratio: 1/1; /* default aspect ratio */
+
+  --card-spacer-x: 1rem;
+  --card-spacer-y: 1rem;
+
+  /* container width hint for consistency */
+  --container-width: var(--nt-container-width);
+}
+
+/* Full-height mode */
+:host([fill]) {
+  height: 100%;
+}
+
+.card {
+  position: relative;
+  display: block;
+  background-color: var(--card-bg);
+  color: var(--card-color);
+  border: 1px solid var(--card-border-color);
+  border-radius: var(--card-border-radius);
+  box-shadow: var(--card-box-shadow);
+  overflow: hidden; /* ensure rounded corners clip child content */
+}
+
+/* Make the card a flex column in fill-mode so body can stretch */
+:host([fill]) .card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Sections */
+.card-header,
+.card-footer {
+  padding: var(--card-spacer-y) var(--card-spacer-x);
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.card-header {
+  border-bottom: 1px solid var(--card-border-color);
+}
+
+.card-footer {
+  border-top: 1px solid var(--card-border-color);
+}
+
+.card-body {
+  padding: var(--card-spacer-y) var(--card-spacer-x);
+}
+
+/* Let body expand only in fill mode */
+:host([fill]) .card-body {
+  flex: 1 1 auto;
+  min-height: 0; /* avoid overflowing flex children */
+}
+
+/* Image section (top) */
+.card-img-top {
+  slot {
+    display: contents;
+  }
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--image-aspect-ratio); /* default aspect ratio */
+
+  /* Ensure top corners stay rounded */
+  border-top-left-radius: var(--card-border-radius);
+  border-top-right-radius: var(--card-border-radius);
+}
+
+/* Normalize slotted image items */
+.card-img-top slot::slotted(img) {
+  display: block;
+  width: 100%;
+}
+
+.card-img-top slot::slotted(p) {
+  margin: 0; /* when image is wrapped in a paragraph */
+}
+
+/* hide wrappers when not used */
+[hidden] {
+  display: none !important;
+}

@@ -1,0 +1,35 @@
+{
+    "name": "nte-card",
+    "version": "1.0.0",
+    "contributions": {
+        "html": {
+            "elements": [
+                {
+                    "name": "nte-card",
+                    "description": "Bootstrap-like card component with header, image, body and footer slots.",
+                    "slots": [
+                        { "name": "header", "description": "Card header content" },
+                        {
+                            "name": "image",
+                            "description": "Top image area (accepts <img> or markup; <p> wrappers supported)"
+                        },
+                        { "name": "default", "description": "Card body content" },
+                        { "name": "footer", "description": "Card footer content" }
+                    ],
+                    "events": [],
+                    "attributes": [
+                        {
+                            "name": "fill",
+                            "type": "boolean",
+                            "description": "Enable full-height mode. Card body expands to fill remaining space."
+                        }
+                    ]
+                }
+            ]
+        },
+        "css": {
+            "classes": [],
+            "scopes": []
+        }
+    }
+}

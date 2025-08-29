@@ -10,10 +10,16 @@ import style from './<%= name %>.scss?inline';
 
 @customElement('<%= name %>')
 export class <%= elementClassName %> extends LoggingMixin(LitElement) {
-  @state()
-  private _count = 0;
 
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
+
+
+  @state()
+  private accessor _count = 0;
+
+  @property({ type: String, reflect: true })
+  public accessor name = '<%= name %>';
+
 
   override render() {
     return html`
