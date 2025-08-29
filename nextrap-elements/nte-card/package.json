@@ -1,6 +1,6 @@
 {
     "name": "@nextrap/nte-card",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "main": "./index.js",
     "dependencies": {
         "@nextrap/style-reset": "^1.0.0",
