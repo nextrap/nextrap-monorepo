@@ -34,6 +34,67 @@
             "options": {
                 "packageRoot": "dist/{projectRoot}"
             }
+        },
+        "test": {
+            "executor": "@nx/vite:test",
+            "outputs": ["{options.reportsDirectory}"],
+            "options": {
+                "passWithNoTests": true,
+                "reportsDirectory": "../../coverage/{projectRoot}"
+            }
+        },
+        "cypress-run": {
+            "executor": "@nx/cypress:cypress",
+            "options": {
+                "cypressConfig": "{projectRoot}/cypress.config.cjs",
+                "testingType": "component",
+                "specPattern": "src/**/*.cy.ts"
+            }
+        },
+        "cypress-open": {
+            "executor": "@nx/cypress:cypress",
+            "options": {
+                "cypressConfig": "{projectRoot}/cypress.config.cjs",
+                "testingType": "component",
+                "watch": true,
+                "specPattern": "src/**/*.cy.ts"
+            }
+        },
+        "cypress-e2e-run": {
+            "executor": "@nx/cypress:cypress",
+            "options": {
+                "cypressConfig": "{projectRoot}/cypress.config.cjs",
+                "testingType": "e2e",
+                "specPattern": "cypress/e2e/**/*.cy.ts",
+                "devServerTarget": "nte-gridview:serve"
+            }
+        },
+        "cypress-e2e-open": {
+            "executor": "@nx/cypress:cypress",
+            "options": {
+                "cypressConfig": "{projectRoot}/cypress.config.cjs",
+                "testingType": "e2e",
+                "watch": true,
+                "specPattern": "cypress/e2e/**/*.cy.ts",
+                "devServerTarget": "nte-gridview:serve"
+            }
+        },
+        "serve": {
+            "executor": "@nx/vite:dev-server",
+            "defaultConfiguration": "development",
+            "options": {
+                "buildTarget": "nte-gridview:build"
+            },
+            "configurations": {
+                "development": {
+                    "buildTarget": "nte-gridview:build:development",
+                    "hmr": true
+                },
+                "production": {
+                    "buildTarget": "nte-gridview:build:production",
+                    "hmr": false
+                }
+            }
         }
     }
 }

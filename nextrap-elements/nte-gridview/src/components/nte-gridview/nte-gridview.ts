@@ -21,6 +21,11 @@ export interface GridViewOptions {
 export class NteGridview extends LitElement {
   static override styles = css``;
 
+  // Override to use Light DOM instead of Shadow DOM
+  override createRenderRoot() {
+    return this; // Use Light DOM
+  }
+
   // Auto-generated localStorage key based on component ID
   private get localStorageKey(): string {
     // Use custom key if set, otherwise auto-generate
@@ -59,16 +64,26 @@ export class NteGridview extends LitElement {
     return this.localStorageKey;
   }
 
-  @property({ type: Number })
+  @property({ type: Number, attribute: 'default-column-width' })
   defaultColumnWidth = 150;
 
-  @property({ type: Number })
+  @property({ type: Number, attribute: 'min-column-width' })
   minColumnWidth = 15;
 
-  @property({ type: Number })
+  @property({ type: Number, attribute: 'max-column-width' })
   maxColumnWidth = 400;
 
-  @property({ type: Boolean })
+  @property({
+    type: Boolean,
+    attribute: 'enable-column-resize',
+    converter: {
+      fromAttribute: (value: string | null) => {
+        if (value === null) return false;
+        if (value === '' || value === 'true') return true;
+        return false;
+      },
+    },
+  })
   enableColumnResize = true;
 
   @state()
@@ -90,9 +105,12 @@ export class NteGridview extends LitElement {
   private resizeTimeout: number | null = null;
   private observer: MutationObserver | null = null;
   private cachedElements = new Map<string, Element[]>();
+  private resizeAnimationFrame: number | null = null;
+  private pendingWidth: number | null = null;
 
   override connectedCallback() {
     super.connectedCallback();
+    this.setupDOMStructure();
     this.loadColumnConfig();
     this.setupMutationObserver();
   }
@@ -100,23 +118,86 @@ export class NteGridview extends LitElement {
   override disconnectedCallback() {
     super.disconnectedCallback();
     this.cleanup();
+    // Ensure resize event listeners are removed from document
+    document.removeEventListener('mousemove', this.handleResize);
+    document.removeEventListener('mouseup', this.stopResize);
   }
 
   override render() {
-    return html`
-      <div class="gridview-container">
-        <slot></slot>
-      </div>
-    `;
+    // In Light DOM mode, don't render children - they already exist
+    // Just return empty template since we'll manipulate DOM directly
+    return html``;
   }
 
-  override updated() {
+  override updated(changedProperties: Map<string, any>) {
+    super.updated(changedProperties);
+
+    // If enableColumnResize changed, update resize handles
+    if (changedProperties.has('enableColumnResize')) {
+      this.addResizeHandles();
+    }
+
     // Use requestIdleCallback for better performance
     if ('requestIdleCallback' in window) {
-      requestIdleCallback(() => this.initializeColumns());
+      requestIdleCallback(() => this.waitForChildrenAndInitialize());
     } else {
-      setTimeout(() => this.initializeColumns(), 0);
+      setTimeout(() => this.waitForChildrenAndInitialize(), 0);
     }
+  }
+
+  private setupDOMStructure() {
+    // Create the wrapper structure for sticky headers/footers
+    const existingTable = this.querySelector('table');
+
+    // Check if we already have the wrapper structure
+    const existingContainer = this.querySelector('.gridview-container');
+
+    if (existingTable && !existingContainer) {
+      // Add the required class to the table
+      existingTable.classList.add('gridview-table');
+
+      // Create wrapper structure
+      const container = document.createElement('div');
+      container.className = 'gridview-container';
+
+      const tableWrapper = document.createElement('div');
+      tableWrapper.className = 'gridview-table-wrapper';
+
+      // Ensure the CSS custom property is available for the wrapper
+      if (!this.style.getPropertyValue('--gridview-max-height')) {
+        this.style.setProperty('--gridview-max-height', 'calc(100vh - 200px)');
+      }
+
+      // Move the table into the wrapper structure
+      this.insertBefore(container, existingTable);
+      container.appendChild(tableWrapper);
+      tableWrapper.appendChild(existingTable);
+
+      // Debug: log the wrapper structure
+      console.log('DOM structure created:', {
+        container: container.className,
+        wrapper: tableWrapper.className,
+        table: existingTable.className,
+        maxHeight: this.style.getPropertyValue('--gridview-max-height'),
+      });
+    }
+  }
+
+  private waitForChildrenAndInitialize() {
+    // Wait for children to be available
+    if (this.children.length === 0) {
+      // If no children yet, wait a bit more
+      setTimeout(() => this.waitForChildrenAndInitialize(), 50);
+      return;
+    }
+
+    this.initializeColumns();
+  }
+
+  // Public method to force initialization (for testing)
+  public forceInitialization() {
+    this.setupDOMStructure();
+    this.initializeColumns();
   }
 
   private setupMutationObserver() {
@@ -133,8 +214,14 @@ export class NteGridview extends LitElement {
         );
 
         if (hasTableChanges) {
-          this.clearCache();
-          this.initializeColumns();
+          // Debounce the reinitialization to prevent excessive calls
+          if (this.resizeTimeout) {
+            clearTimeout(this.resizeTimeout);
+          }
+          this.resizeTimeout = window.setTimeout(() => {
+            this.clearCache();
+            this.initializeColumns();
+          }, 100);
         }
       });
 
@@ -217,23 +304,23 @@ export class NteGridview extends LitElement {
 
     // Collect all updates
     headerCells.forEach((cell, index) => {
-      if (this.columns[index]) {
-        updates.push({ element: cell as HTMLElement, width: this.columns[index].width });
+      if (this.columns[index] && cell instanceof HTMLElement) {
+        updates.push({ element: cell, width: this.columns[index].width });
       }
     });
 
     bodyRows.forEach((row) => {
       const cells = row.querySelectorAll('td');
       cells.forEach((cell, index) => {
-        if (this.columns[index]) {
-          updates.push({ element: cell as HTMLElement, width: this.columns[index].width });
+        if (this.columns[index] && cell instanceof HTMLElement) {
+          updates.push({ element: cell, width: this.columns[index].width });
         }
       });
     });
 
     footerCells.forEach((cell, index) => {
-      if (this.columns[index]) {
-        updates.push({ element: cell as HTMLElement, width: this.columns[index].width });
+      if (this.columns[index] && cell instanceof HTMLElement) {
+        updates.push({ element: cell, width: this.columns[index].width });
       }
     });
 
@@ -242,36 +329,83 @@ export class NteGridview extends LitElement {
       // Use requestAnimationFrame for smooth updates
       requestAnimationFrame(() => {
         updates.forEach(({ element, width }) => {
-          element.style.width = `${width}px`;
+          if (element && element.style) {
+            element.style.width = `${width}px`;
+          }
         });
       });
     }
   }
 
-  private addResizeHandles() {
-    if (!this.enableColumnResize) return;
+  private applyColumnWidthsOptimized(columnIndex: number, width: number) {
+    // Optimized method that only updates the specific column being resized
+    const headerCells = this.getCachedElements('thead th');
+    const bodyRows = this.getCachedElements('tbody tr');
+    const footerCells = this.getCachedElements('tfoot td');
 
+    // Update header cell
+    const headerCell = headerCells[columnIndex] as HTMLElement;
+    if (headerCell) {
+      headerCell.style.width = `${width}px`;
+    }
+
+    // Update body cells in the same column (more efficient than full row query)
+    bodyRows.forEach((row) => {
+      const cell = row.children[columnIndex] as HTMLElement;
+      if (cell && cell.tagName === 'TD') {
+        cell.style.width = `${width}px`;
+      }
+    });
+
+    // Update footer cell
+    const footerCell = footerCells[columnIndex] as HTMLElement;
+    if (footerCell) {
+      footerCell.style.width = `${width}px`;
+    }
+  }
+
+  private addResizeHandles() {
     const headerCells = this.getCachedElements('thead th');
 
     headerCells.forEach((cell, index) => {
-      if (this.columns[index]?.resizable !== false) {
-        // Check if resize handle already exists
-        if (cell.querySelector('.resize-handle')) return;
+      // Remove existing resize handles first
+      const existingHandle = cell.querySelector('.resize-handle');
+      if (existingHandle) {
+        existingHandle.remove();
+      }
 
+      // Make header cells focusable for accessibility
+      if (cell instanceof HTMLElement) {
+        cell.setAttribute('tabindex', '0');
+      }
+
+      // Only add handles if resizing is enabled
+      if (this.enableColumnResize && this.columns[index]?.resizable !== false) {
         const handle = document.createElement('div');
         handle.className = 'resize-handle';
 
         // Use event delegation for better performance
         handle.addEventListener('mousedown', (e) => this.startResize(e, index));
 
-        (cell as HTMLElement).style.position = 'relative';
-        cell.appendChild(handle);
+        // Ensure the cell has relative positioning for the resize handle
+        if (cell instanceof HTMLElement) {
+          cell.style.position = 'relative';
+          cell.appendChild(handle);
+        }
       }
     });
   }
 
   private startResize(event: MouseEvent, columnIndex: number) {
     event.preventDefault();
+    event.stopPropagation();
+
+    // Validate column index
+    if (columnIndex < 0 || columnIndex >= this.columns.length) {
+      console.warn('Invalid column index for resize:', columnIndex);
+      return;
+    }
+
     this.isResizing = true;
     this.resizingColumn = columnIndex.toString();
     this.startX = event.clientX;
@@ -289,20 +423,30 @@ export class NteGridview extends LitElement {
     if (!this.isResizing || this.resizingColumn === null) return;
 
     const columnIndex = parseInt(this.resizingColumn);
+
+    // Validate column index
+    if (columnIndex < 0 || columnIndex >= this.columns.length) {
+      this.stopResize();
+      return;
+    }
+
     const deltaX = event.clientX - this.startX;
     const newWidth = Math.max(this.minColumnWidth, Math.min(this.maxColumnWidth, this.startWidth + deltaX));
 
     if (this.columns[columnIndex]) {
       this.columns[columnIndex].width = newWidth;
+      this.pendingWidth = newWidth;
 
-      // Debounce width updates for better performance
-      if (this.resizeTimeout) {
-        clearTimeout(this.resizeTimeout);
+      // Use requestAnimationFrame for optimal performance
+      if (this.resizeAnimationFrame) {
+        cancelAnimationFrame(this.resizeAnimationFrame);
       }
 
-      this.resizeTimeout = window.setTimeout(() => {
-        this.applyColumnWidths();
-      }, 16); // ~60fps
+      this.resizeAnimationFrame = requestAnimationFrame(() => {
+        this.applyColumnWidthsOptimized(columnIndex, this.pendingWidth!);
+        this.resizeAnimationFrame = null;
+        this.pendingWidth = null;
+      });
     }
   };
 
@@ -352,6 +496,11 @@ export class NteGridview extends LitElement {
       this.resizeTimeout = null;
     }
 
+    if (this.resizeAnimationFrame) {
+      cancelAnimationFrame(this.resizeAnimationFrame);
+      this.resizeAnimationFrame = null;
+    }
+
     if (this.observer) {
       this.observer.disconnect();
       this.observer = null;
@@ -362,24 +511,89 @@ export class NteGridview extends LitElement {
 
   // Public API methods
   public getColumnWidth(columnKey: string): number {
+    if (!columnKey) {
+      console.warn('Invalid column key provided to getColumnWidth');
+      return this.defaultColumnWidth;
+    }
+
     const column = this.columns.find((col) => col.key === columnKey);
     return column?.width || this.defaultColumnWidth;
   }
 
+  public getColumns(): ColumnConfig[] {
+    return [...this.columns]; // Return a copy to prevent external mutation
+  }
+
   public setColumnWidth(columnKey: string, width: number): void {
+    if (!columnKey || typeof width !== 'number' || isNaN(width)) {
+      console.warn('Invalid parameters for setColumnWidth:', { columnKey, width });
+      return;
+    }
+
     const column = this.columns.find((col) => col.key === columnKey);
     if (column) {
       column.width = Math.max(this.minColumnWidth, Math.min(this.maxColumnWidth, width));
       this.applyColumnWidths();
       this.saveColumnConfig();
+    } else {
+      console.warn('Column not found:', columnKey);
     }
   }
 
   public resetColumnWidths(): void {
+    if (this.columns.length === 0) {
+      console.warn('No columns to reset');
+      return;
+    }
+
     this.columns.forEach((col) => {
       col.width = this.defaultColumnWidth;
     });
     this.applyColumnWidths();
     this.saveColumnConfig();
+  }
+
+  public setMaxHeight(maxHeight: string): void {
+    if (typeof maxHeight === 'string') {
+      this.style.setProperty('--gridview-max-height', maxHeight);
+    }
+  }
+
+  public getMaxHeight(): string {
+    return this.style.getPropertyValue('--gridview-max-height') || 'calc(100vh - 200px)';
+  }
+
+  public testScrolling(): void {
+    const wrapper = this.querySelector('.gridview-table-wrapper') as HTMLElement;
+    if (wrapper) {
+      console.log('Wrapper found:', {
+        scrollHeight: wrapper.scrollHeight,
+        clientHeight: wrapper.clientHeight,
+        offsetHeight: wrapper.offsetHeight,
+        maxHeight: window.getComputedStyle(wrapper).maxHeight,
+        overflowY: window.getComputedStyle(wrapper).overflowY,
+      });
+    } else {
+      console.log('No wrapper found');
+    }
+  }
+
+  public testPerformance(): void {
+    const tableSize = {
+      headerCells: this.getCachedElements('thead th').length,
+      bodyRows: this.getCachedElements('tbody tr').length,
+      footerCells: this.getCachedElements('tfoot td').length,
+    };
+
+    const totalCells = tableSize.bodyRows * tableSize.headerCells + tableSize.headerCells + tableSize.footerCells;
+
+    console.log('Performance info:', {
+      ...tableSize,
+      totalCells,
+      cacheSize: this.cachedElements.size,
+      isResizing: this.isResizing,
+      pendingAnimationFrame: this.resizeAnimationFrame !== null,
+      performanceOptimization: 'Column-specific updates during resize',
+    });
   }
 }

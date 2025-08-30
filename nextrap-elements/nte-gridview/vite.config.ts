@@ -16,6 +16,13 @@ export default defineConfig(() => ({
   },
   root: __dirname,
   cacheDir: `../../node_modules/.vite/${dirName}`,
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // Add any global SCSS variables or mixins here if needed
+      },
+    },
+  },
   plugins: [
     nxViteTsPaths(),
     nxCopyAssetsPlugin(['*.md']),
