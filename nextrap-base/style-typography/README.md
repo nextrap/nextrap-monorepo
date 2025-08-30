@@ -1,11 +1,5 @@
 # style-typography
 
-This library was generated with [Nx](https://nx.dev).
+Typography styles and .prose class for rich text content.
 
-## Building
-
-Run `nx build style-typography` to build the library.
-
-## Running unit tests
-
-Run `nx test style-typography` to execute the unit tests via [Vitest](https://vitest.dev/).
+See Demo markdown file for examples. [prose.md](./demo/prose.md)

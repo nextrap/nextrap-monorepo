@@ -63,3 +63,27 @@ p {
 small {
   font-size: var(--nt-fs-small);
 }
+
+a {
+  color: var(--nt-link);
+
+  position: relative;
+  text-decoration: underline;
+  text-decoration-color: var(-nt-link);
+  transition:
+    color 0.15s ease-in-out,
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+
+  &:hover {
+    color: color-mix(in srgb, var(--nt-link), black 30%);
+    text-decoration: underline;
+  }
+
+  &:focus {
+    outline: 1px dashed var(--nt-link);
+    outline-offset: 2px;
+    text-decoration: underline;
+  }
+}
