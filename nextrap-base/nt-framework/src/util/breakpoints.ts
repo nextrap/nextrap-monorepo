@@ -61,7 +61,7 @@ export function isBiggerThanBreakpoint(breakpoint: Breakpoint | string | number)
  */
 if (!window.__nextrap_current_breakpoint) {
   window.__nextrap_current_breakpoint = calculateCurrentBreakpoint();
-  const deboucer = new Debouncer(200, 500);
+  const deboucer = new Debouncer(500);
   window.addEventListener('resize', async () => {
     await deboucer.wait();
     if (currentBreakpoint !== calculateCurrentBreakpoint()) {

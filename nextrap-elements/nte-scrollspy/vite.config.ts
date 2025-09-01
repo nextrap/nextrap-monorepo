@@ -4,14 +4,10 @@ import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
+import viteServerConfig from '../../utils/vite/config/vite-server-config';
 
 export default defineConfig(() => ({
-  server: {
-    port: 4000,
-    host: '0.0.0.0',
-    hmr: true,
-  },
-  root: __dirname,
+  ...viteServerConfig,
   cacheDir: '../../node_modules/.vite/nextrap-elements/nte-scrollspy',
   plugins: [
     nxViteTsPaths(),
@@ -41,13 +37,11 @@ export default defineConfig(() => ({
       formats: ['es' as const],
     },
     rollupOptions: {
-      // External packages that should not be bundled into your library. IMPORTANT!
-      external: (id) => !id.startsWith('.') && !path.isAbsolute(id),
+      // External packages that should not be bundled into your library.
+      external: [],
     },
   },
   test: {
-    // TODO: Write some tests
-    passWithNoTests: true,
     watch: false,
     globals: true,
     environment: 'node',

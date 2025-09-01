@@ -57,12 +57,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/lack-project/lack-kindergarden.git",
-                "reference": "2fb175fdb10116aca9e2e42a6f5189da08acd3de"
+                "reference": "371be0ff9caf56db55936c5bedc93e171b6a5d89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lack-project/lack-kindergarden/zipball/2fb175fdb10116aca9e2e42a6f5189da08acd3de",
-                "reference": "2fb175fdb10116aca9e2e42a6f5189da08acd3de",
+                "url": "https://api.github.com/repos/lack-project/lack-kindergarden/zipball/371be0ff9caf56db55936c5bedc93e171b6a5d89",
+                "reference": "371be0ff9caf56db55936c5bedc93e171b6a5d89",
                 "shasum": ""
             },
             "require": {
@@ -105,9 +105,9 @@
             "homepage": "https://infracamp.org",
             "support": {
                 "issues": "https://github.com/lack-project/lack-kindergarden/issues",
-                "source": "https://github.com/lack-project/lack-kindergarden/tree/main"
+                "source": "https://github.com/lack-project/lack-kindergarden/tree/1.0.15"
             },
-            "time": "2025-08-14T12:00:52+00:00"
+            "time": "2025-05-19T13:08:38+00:00"
         },
         {
             "name": "phore/core",

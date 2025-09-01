@@ -1,9 +1,8 @@
 {
     "name": "@nextrap/ntl-2col",
-    "version": "0.1.5",
+    "version": "0.1.1",
     "main": "./index.js",
     "dependencies": {},
     "type": "module",
-    "types": "./index.d.ts",
-    "web-types": "./web-types.json"
+    "types": "./index.d.ts"
 }

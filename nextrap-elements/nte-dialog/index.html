@@ -23,7 +23,7 @@
     <button id="show-fullsize-btn">show fullsize</button>
     <button id="user-dialog-btn">show user edit dialog</button>
 
-    <nte-dialog id="example-dialog" mode="open">
+    <nte-dialog id="example-dialog">
       <h3 slot="title">This is a dialog</h3>
       <div>
         <p>This content is in the default slot of the dialog</p>
@@ -37,17 +37,13 @@
 
     <script type="module">
       import { UserEditDialog } from './src/examples/user-edit-dialog.ts';
-      import { UserEditDialog2 } from './src/examples/user-edit-dialog-mixin.js';
-
-      let dialog = new UserEditDialog2();
 
       const exampleDialog = document.getElementById('example-dialog');
 
       const showDialogBtn = document.getElementById('show-dialog-btn');
       showDialogBtn.addEventListener('click', () => {
         exampleDialog.classList.remove('fullsize');
-        dialog.show();
-        //exampleDialog.show();
+        exampleDialog.show();
       });
 
       const showModalBtn = document.getElementById('show-modal-btn');

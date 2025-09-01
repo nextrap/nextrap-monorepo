@@ -7,14 +7,14 @@ $colors: ('primary', 'accent', 'secondary', 'success', 'danger', 'warning', 'inf
   // Configuration variables
 
   // Variables modified by the color classes
-  --btn-txt: var(--nt-text-on-primary);
-  --btn-bg: var(--nt-primary);
+  --btn-txt-rgb: var(--nt-text-on-primary);
+  --btn-bg-rgb: var(--nt-primary-rgb);
   display: inline-block;
   padding: 0.5rem 1rem;
-  background-color: rgb(from var(--btn-bg) r g b / 0.8);
-  color: var(--btn-txt);
+  background-color: rgba(var(--btn-bg-rgb), 0.8);
+  color: var(--btn-txt-rgb);
   border-radius: var(--nt-border-radius);
-  border: 1px solid var(--btn-bg);
+  border: 1px solid var(--btn-bg-rgb);
   text-decoration: none;
 
   cursor: pointer;
@@ -23,26 +23,26 @@ $colors: ('primary', 'accent', 'secondary', 'success', 'danger', 'warning', 'inf
     color 0.3s ease;
 
   &:hover {
-    background-color: rgb(from var(--btn-bg) r g b / 1);
+    background-color: rgba(var(--btn-bg-rgb), 1);
     color: white;
   }
 
   &.btn-link {
     background-color: transparent;
-    color: rgb(from var(--nt-link) r g b / 0.8);
+    color: rgba(var(--nt-link-rgb), 0.8);
     border: none;
 
     text-decoration: var(--nt-text-decoration-link);
     &:hover {
       background-color: transparent;
-      color: rgb(from var(--nt-link) r g b / 1);
+      color: rgba(var(--nt-link-rgb), 1);
     }
   }
 
   &.disabled,
   &[disabled] {
-    background-color: rgba(from var(--btn-bg) r g b / 0.5);
-    color: rgb(from var(--nt-text) r g b / 0.5);
+    background-color: rgba(var(--btn-bg-rgb), 0.5);
+    color: rgba(var(--btn-txt-rgb), 0.9);
     cursor: not-allowed;
     pointer-events: none;
   }
@@ -65,8 +65,8 @@ $colors: ('primary', 'accent', 'secondary', 'success', 'danger', 'warning', 'inf
     justify-content: center;
     padding-right: 2rem; // Space for the dropdown icon
     background-image: none; // Remove any background image
-    background-color: rgb(from var(--btn-bg) r g b / 0.8);
-    color: var(--btn-txt);
+    background-color: rgba(var(--btn-bg-rgb), 0.8);
+    color: var(--btn-txt-rgb);
 
     &::after {
       content: '';
@@ -76,7 +76,7 @@ $colors: ('primary', 'accent', 'secondary', 'success', 'danger', 'warning', 'inf
       transform: translateY(-50%);
       border-left: 0.25rem solid transparent;
       border-right: 0.25rem solid transparent;
-      border-top: 0.25rem solid var(--btn-txt);
+      border-top: 0.25rem solid var(--btn-txt-rgb);
     }
   }
 
@@ -89,23 +89,23 @@ $colors: ('primary', 'accent', 'secondary', 'success', 'danger', 'warning', 'inf
   // Loop through colors and create classes
   @each $color in $colors {
     &.btn-#{$color} {
-      --btn-bg: rgb(from var(--nt-#{$color}) r g b / 0.8);
-      --btn-txt: rgb(from var(--nt-text-on-#{$color}) r g b / 0.8);
-      border-color: var(--nt-#{$color});
+      --btn-bg-rgb: var(--nt-#{$color}-rgb);
+      --btn-txt-rgb: var(--nt-text-on-#{$color});
+      border-color: rgba(var(--nt-#{$color}-rgb), 1);
 
       &:hover {
-        --btn-bg: var(--nt-#{$color});
+        --btn-bg-rgb: var(--nt-#{$color}-rgb);
       }
     }
     &.btn-outline-#{$color} {
       background-color: transparent;
-      --btn-txt: var(--nt-text);
-      border: 1px solid rgb(from var(--nt-#{$color}) r g b / 0.8);
+      --btn-txt-rgb: var(--nt-text);
+      border: 1px solid rgba(var(--nt-#{$color}-rgb), 0.9);
 
       &:hover {
-        background-color: var(--nt-#{$color});
-        --btn-bg: var(--nt-#{$color});
-        --btn-txt: var(--nt-text-on-#{$color});
+        background-color: rgba(var(--nt-#{$color}-rgb), 1);
+        --btn-bg-rgb: var(--nt-#{$color}-rgb);
+        --btn-txt-rgb: var(--nt-text-on-#{$color});
       }
     }
   }

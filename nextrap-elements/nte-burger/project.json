@@ -5,9 +5,10 @@
     "projectType": "library",
     "release": {
         "version": {
-            "currentVersionResolver": "disk",
+            "currentVersionResolver": "git-tag",
+            "fallbackCurrentVersionResolver": "disk",
             "preserveLocalDependencyProtocols": false,
-            "manifestRootsToUpdate": ["{projectRoot}"]
+            "manifestRootsToUpdate": ["dist/{projectRoot}"]
         }
     },
     "tags": [],

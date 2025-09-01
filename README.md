@@ -2,13 +2,6 @@
 
 Monorepo for Nextrap maintained with [Nx](https://nx.dev/).
 
-## Links
-
-- [Kickstart DevContainer Setup & Development](https://nfra.infracamp.org/)
-- [Development Concepts for Nextrap Elements](docs/nextrap-elements-concept.md)
-- [STyling Guide / Lit Styling](README_STYLING.md)
-- [Nextrap Website / Demos](https://www.nextrap.org)
-
 ## Packages
 
 All packages use a common naming convention:
@@ -38,10 +31,6 @@ These packages are grouped into their respective directories ([`nextrap-base`](.
 
 _) Do not include any style-_ packages (except 'style-reset') in the Shadow DOM of components!
 
-## How to use
-
-If you want to know how to utilize/consume the nextrap monorepo, go [here](/docs/how-to-use.md).
-
 ## Working with the repository
 
 ### Common Commands
@@ -56,47 +45,6 @@ Try out `npx nx dev ntl-2col` and make some changes [to the code](nextrap-elemen
 
 **Note**: When renaming packages or moving them to a different directory, make sure to update all import paths
 and run `npm update` on the monorepos root to update the package links.
-
-## Creating new packages
-
-1. Switch to a feature branch to benefit from CI checks and to avoid breaking the main branch.
-2. Use our [Nx Generator](./nextrap-base/nt-nx-generators) to generate new libs or apps:
-
-**Create new element Package**:
-
-`nx g @nextrap/nt-nx-generators:base --name nte-demo --path nextrap-elements/nte-demo`
-
-3. Run `npm i` and `nx run <new-package>:build` to verify that the new package has been created successfully.
-
-4. Add the new package to the _Packages_ list in this README and to the [CODEOWNERS](./CODEOWNERS) file.
-
-The package will now automatically be picked up by the CI and Release workflows.
-
-When you are ready, create a pull request to merge your changes into the `main` branch.
-
-## Releases
-
-> [!WARNING]
-> Releases should only be created from the `main` branch!
-
-The repo is configured so that each package is independently released with its own version.
-This means that you can release a single or more packages without having to release the entire repo.
-
-To create new versions, run the following commands:
-
-- `nx release --skip-publish -p <package-1[,package-2,...]>` (if `-p` is omitted, you will be asked to select a version for _all_ packages)
-- `git push --follow-tags origin main`
-- The [publish-tags Action](./.github/workflows/publish-tags.yml) will build and release the desired packages to npm
-
-> [!WARNING]
-> Make sure to push the tags, otherwise the publish-tags workflow won't run!
->
-> If you use a GUI such as GitHub Desktop, make sure that tags are pushed as well,
-> as this is not the default behavior.
-
-### Branches
-
-**Feature branches** are used for development and should be created from the `main` branch. The Name should be "feat/<yourName>/<featureName>".
 
 ### Dependencies
 
@@ -130,3 +78,177 @@ article to learn how this cascade of tasks works in detail.
 To see all targets/capabilities of a package, run
 
 `npx nx show project <package>`.
+
+## Component Authoring
+
+### Framework / Toolkit
+
+We use [Lit](https://lit.dev/) as the framework for our web components. The following guidelines are based on using Lit.
+For anything not specified here (e.g., reactive properties), refer to the [Lit documentation](https://lit.dev/docs/).
+
+### Styling
+
+When developing web components, we differentiate _Light DOM_ (the host document) and _Shadow DOM_
+(the private document of the component).
+
+The _Light-DOM-styles_ (e.g., global CSS variables) are available inside the component's Shadow DOM. On the contrary,
+the _Shadow-DOM-styles_ are _not_ available in the host document and therefore private to the component.
+
+We recommend that you read the [Lit documentation on styles](https://lit.dev/docs/components/styles/) to understand
+how styles work in Lit and the Shadow DOM.
+
+#### Code Structure
+
+To write private CSS for a component, create a `scss`-file and import it.
+The [`?inline`](https://vite.dev/guide/features#disabling-css-injection-into-the-page) parameter makes the import
+return the CSS string rather than injecting it as a style-element the DOM.
+It has the same effect as using a [`css` tag](https://lit.dev/docs/components/styles/#add-styles)
+directly in your component file, but allows us to write styles in a separate file.
+
+We have to use the `unsafeCSS` function to allow importing CSS (strings) that are not defined with the trusted `css` tag.
+This is not a problem here as we are in full control of the CSS file that is imported. At runtime, there is no performance
+difference or security risk with this approach.
+
+The styles in the component's static `styles` property will be the Shadow DOM styles of the component.
+
+```ts
+import { LitElement, unsafeCSS } from 'lit';
+import { customElement } from 'lit/decorators.js';
+import style from './nte-my-component.scss?inline';
+
+@customElement('nte-my-component')
+export class NteDialog extends LitElement {
+    static override styles = [unsafeCSS(style)];
+}
+```
+
+Inside your component's scss file, you can `@use '@nextrap/style-reset';` to apply a consistent
+baseline for your styling:
+
+```scss
+@use '@nextrap/style-reset';
+
+:host {
+    --spacing: var(--nt-base-gap, 4px);
+}
+
+.some-internal-element {
+    padding: var(--spacing);
+}
+```
+
+In your component's class file (where you define the component), make sure to also import the
+[@nextrap/style-base](nextrap-base/style-base) styles. These will be added to the component's Light DOM
+and provide default variables for theming etc.
+(see [@nextrap/nte-dialog](./nextrap-elements/nte-dialog/src/lib/nte-dialog.ts))
+
+```ts
+import { LitElement, unsafeCSS } from 'lit';
+import { customElement } from 'lit/decorators.js';
+import '@nextrap/nt-style-base'; // These will be added to the Light DOM
+import style from './nte-my-component.scss?inline';
+
+@customElement('nte-my-component')
+export class NteDialog extends LitElement {
+    static override styles = [unsafeCSS(style)];
+}
+```
+
+#### Host-Styles / CSS Variables
+
+The `:host` selector can be used as a "bridge" between the Light DOM and the Shadow DOM.
+We use it to define the component's public API in terms of CSS variables.
+This allows the host document (user of the component) to style the component without having to know about
+its internal structure. (see also: [Lit Docs](https://lit.dev/docs/components/styles/#customprops))
+
+```scss
+:host {
+    --bg-color: var(--nt-primary);
+    --fg-color: var(--nt-text-on-primary);
+}
+
+.some-internal-element {
+    background-color: var(--bg-color);
+    color: var(--fg-color);
+}
+```
+
+By default, we use existing CSS variables from the [@nextrap/style-base](nextrap-base/style-base) package
+(this is why we import them like described above). They act as a fallback if the user does not define their own variables.
+
+To overwrite the component's styles, the user can now simply define the CSS variables in their global stylesheet:
+
+```css
+:root {
+    --nt-primary: red;
+    --nt-text-on-primary: white;
+}
+```
+
+or, alternatively, provide the component's CSS variables as inline styles on the component's host element:
+
+```html
+<nte-my-component style="--bg-color: red; --fg-color: white;"></nte-my-component>
+```
+
+You can also use the following syntax to define a public API in terms of CSS classes that applied to the component by the host document. For an example, see the [@nextrap/nte-dialog](./nextrap-elements/nte-dialog/src/lib/nte-dialog.scss) _fullsize_ class.
+
+```scss
+:host {
+    --width: 100px;
+    --height: 100px;
+}
+
+:host(.large) {
+    --width: 200px;
+    --height: 200px;
+}
+```
+
+## Creating new packages
+
+1. Switch to a feature branch to benefit from CI checks and to avoid breaking the main branch.
+2. Use [Nx Generators](https://nx.dev/features/generate-code) to generate new libs or apps:
+
+    `nx g @nx/js:lib nextrap-elements/nte-some-component --publishable --importPath @nextrap/nte-some-component --bundler vite --linter eslint --unitTestRunner vitest`
+
+3. Manually verify (and adjust if necessary) that the newly created `project.json`'s release settings are
+   [like this](https://github.com/nextrap/nextrap-monorepo/blob/45ac7582c1b4ab804d24ee08563d6e89caf241cd/nextrap-elements/nte-dialog/project.json#L6-L12).
+4. Import `viteServerConfig` and `viteTestConfig` in `vite.config.ts`
+
+    ```ts
+    import viteServerConfig from '../../utils/vite/config/vite-server-config';
+    import viteTestConfig from '../../utils/vite/config/vite-test-config';
+
+    export default defineConfig(() => ({
+        ...viteServerConfig,
+        test: viteTestConfig('nextrap-element/nte-some-component'),
+        // more config ...
+    }));
+    ```
+
+5. Add the new package to the _Packages_ list in this README and to the [CODEOWNERS](./CODEOWNERS) file.
+
+The package will now automatically be picked up by the CI and Release workflows.
+
+When you are ready, create a pull request to merge your changes into the `main` branch.
+
+## Releases
+
+> [!WARNING]
+> Releases should only be created from the `main` branch!
+
+The repo is configured so that each package is independently released with its own version.
+This means that you can release a single or more packages without having to release the entire repo.
+
+To create new versions, run the following commands:
+
+- `nx release --skip-publish [-p <package-name>]`
+- `git push --follow-tags origin main`
+- The [publish-tags Action](./.github/workflows/publish-tags.yml) will build and release the desired packages to npm
+
+> [!WARNING]
+> Make sure to push the tags, otherwise the publish-tags workflow won't run!
+>
+> If you use a GUI such as GitHub Desktop, make sure that tags are pushed as well,
+> as this is not the default behavior.

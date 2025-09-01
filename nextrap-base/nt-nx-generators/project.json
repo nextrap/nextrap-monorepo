@@ -1,8 +1,0 @@
-{
-    "name": "nt-nx-generators",
-    "$schema": "../../node_modules/nx/schemas/project-schema.json",
-    "sourceRoot": "nextrap-base/nt-nx-generators/src",
-    "projectType": "library",
-    "tags": [],
-    "targets": {}
-}

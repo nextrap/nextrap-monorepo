@@ -1,17 +1,15 @@
 {
     "name": "@nextrap/nte-nav",
-    "version": "1.1.14",
+    "version": "0.0.2",
     "main": "./index.js",
     "dependencies": {
-        "@nextrap/nt-framework": "^1.1.1",
-        "@nextrap/nte-burger": "^1.1.7",
-        "@nextrap/nte-offcanvas": "^1.0.16"
-    },
-    "devDependencies": {
-        "@nextrap/style-base": "^1.1.11",
-        "@nextrap/style-reset": "^1.0.0"
+        "@nextrap/nt-framework": "^0.0.1",
+        "@nextrap/nte-burger": "^0.0.1",
+        "@nextrap/style-base": "^0.0.1"
     },
     "type": "module",
-    "style": "./index.css",
+    "exports": {
+        "./nav": "./src/lib/nte-nav.ts"
+    },
     "types": "./index.d.ts"
 }

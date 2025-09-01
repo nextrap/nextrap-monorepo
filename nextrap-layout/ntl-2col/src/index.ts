@@ -1,1 +1,3 @@
-export * from './components/ntl-2col/ntl-2col';
+import 'nextrap-base/style-base';
+
+export * from './lib/ntl-2col';

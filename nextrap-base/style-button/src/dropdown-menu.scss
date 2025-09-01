@@ -1,5 +1,5 @@
 .dropdown-menu {
-  --hover-bg: var(--nt-primary);
+  --hover-bg-rgb: var(--nt-primary-rgb);
   --hover-text: var(--nt-text-on-primary);
 
   opacity: 0;
@@ -14,7 +14,7 @@
   padding: 0.5rem 0;
   margin: 0;
   list-style: none;
-  background-color: rgb(from var(--nt-bg) r g b / 0.9);
+  background-color: rgba(var(--nt-bg-rgb), 0.9);
   border-radius: var(--nt-border-radius);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 
@@ -27,7 +27,7 @@
     > hr {
       margin: 0.5rem 0;
       border: none;
-      border-top: 1px solid var(--nt-text);
+      border-top: 1px solid rgba(var(--nt-text-rgb), 1);
     }
 
     > a {
@@ -41,7 +41,7 @@
     }
 
     &:hover {
-      background-color: var(--hover-bg);
+      background-color: rgba(var(--hover-bg-rgb), 1);
       color: var(--hover-text);
     }
 

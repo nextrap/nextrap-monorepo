@@ -35,8 +35,7 @@ select {
   outline: none;
 }
 
-a,
-i {
+a {
   color: inherit;
   text-decoration: none;
 }
@@ -49,8 +48,4 @@ ol {
 table {
   border-collapse: collapse;
   border-spacing: 0;
-}
-
-slot {
-  display: contents; /* Allows slotted elements to inherit styles from parent */
 }

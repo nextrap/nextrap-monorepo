@@ -4,28 +4,15 @@ import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
+import viteServerConfig from '../../utils/vite/config/vite-server-config';
+import viteTestConfig from '../../utils/vite/config/vite-test-config';
 
 export default defineConfig((command) => ({
-  server: {
-    port: 4000,
-    host: '0.0.0.0',
-    hmr: true,
-  },
-  test: {
-    passWithNoTests: true,
-    watch: false,
-    globals: true,
-    environment: 'node',
-    include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    reporters: ['default'],
-    coverage: {
-      reportsDirectory: `../../coverage/nextrap-base/style-button`,
-      provider: 'v8' as const,
-    },
-  },
+  ...viteServerConfig,
+  test: viteTestConfig('nextrap-elements/nte-burger'),
   publicDir: './public/www',
   root: __dirname,
-  cacheDir: '../../node_modules/.vite/nextrap-base/style-button',
+  cacheDir: '../../node_modules/.vite/nextrap-elements/nte-burger',
   plugins: [
     nxViteTsPaths(),
     nxCopyAssetsPlugin(['*.md']),
@@ -41,7 +28,7 @@ export default defineConfig((command) => ({
   // Configuration for building your library.
   // See: https://vitejs.dev/guide/build.html#library-mode
   build: {
-    outDir: '../../dist/nextrap-base/style-button',
+    outDir: '../../dist/nextrap-elements/nte-burger',
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {
@@ -50,7 +37,7 @@ export default defineConfig((command) => ({
     lib: {
       // Could also be a dictionary or array of multiple entry points.
       entry: 'src/index.ts',
-      name: 'style-burger',
+      name: 'nte-burger',
       fileName: 'index',
       // Change this to the formats you want to support.
       // Don't forget to update your package.json as well.
@@ -58,7 +45,8 @@ export default defineConfig((command) => ({
     },
     rollupOptions: {
       // External packages that should not be bundled into your library.
-      external: (id) => !id.startsWith('.') && !path.isAbsolute(id),
+      input: './public/main.ts',
+      external: [],
     },
   },
 }));

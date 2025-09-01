@@ -1,7 +1,0 @@
-/**
- * This file contains LightDOM Styles
- */
-
-<%= name %> {
-  /* Put styles here */
-}

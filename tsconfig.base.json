@@ -5,25 +5,18 @@
         "sourceMap": true,
         "declaration": false,
         "moduleResolution": "node",
-        "esModuleInterop": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "importHelpers": true,
-        "target": "es2022",
+        "target": "es2015",
         "module": "esnext",
         "lib": ["es2020", "dom"],
         "skipLibCheck": true,
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
         "paths": {
-            "@nextrap/nte-card": ["nextrap-elements/nte-card/src/index.ts"],
-            "@nextrap/nte-split-view": ["nextrap-elements/nte-split-view/src/index.ts"],
-            "@nextrap/ntl-card-row": ["nextrap-layout/ntl-card-row/src/index.ts"],
             "@nextrap/element-navbar": ["nextrap-elements/nxa-element-navbar/src/index.ts"],
             "@nextrap/nt-framework": ["nextrap-base/nt-framework/src/index.ts"],
-            "@nextrap/nt-meta": ["nextrap-base/nt-meta/src/index.ts"],
-            "@nextrap/nt-nx-generators": ["nextrap-base/nt-nx-generators/src/index.ts"],
-            "@nextrap/nt-scope": ["nextrap-base/nt-scope/src/index.ts"],
             "@nextrap/nte-burger": ["nextrap-elements/nte-burger/src/index.ts"],
             "@nextrap/nte-dialog": ["nextrap-elements/nte-dialog/src/index.ts"],
             "@nextrap/nte-element-highlighter": ["nextrap-elements/nte-element-highlighter/src/index.ts"],
@@ -38,9 +31,7 @@
             "@nextrap/ntl-infiniscroll": ["nextrap-layout/ntl-infiniscroll/src/index.ts"],
             "@nextrap/style-base": ["nextrap-base/style-base/index.ts"],
             "@nextrap/style-button": ["nextrap-base/style-button/src/index.ts"],
-            "@nextrap/style-reset": ["nextrap-base/style-reset/index.ts"],
-            "@nextrap/style-typography": ["nextrap-base/style-typography/src/index.ts"],
-            "@nextrap/style-utils": ["nextrap-base/style-utils/src/index.ts"]
+            "@nextrap/style-reset": ["nextrap-base/style-reset/index.ts"]
         }
     },
     "exclude": ["node_modules", "tmp"]

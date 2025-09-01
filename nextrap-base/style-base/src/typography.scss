@@ -1,0 +1,42 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--nt-font-family-header);
+  font-size: var(--nt-font-size-header);
+}
+
+html,
+body {
+  font-family: var(--nt-font-family-base);
+  font-size: var(--nt-font-size-base);
+  line-height: var(--nt-line-height-base);
+  color: var(--nt-text);
+}
+
+h1 {
+  font-size: calc(var(--nt-font-size-header) * calc(6 * var(--nt-font-size-multiplier-header)));
+  line-height: var(--nt-line-height-header);
+}
+h2 {
+  font-size: calc(var(--nt-font-size-header) * calc(5 * var(--nt-font-size-multiplier-header)));
+  line-height: var(--nt-line-height-header);
+}
+h3 {
+  font-size: calc(var(--nt-font-size-header) * calc(4 * var(--nt-font-size-multiplier-header)));
+  line-height: var(--nt-line-height-header);
+}
+h4 {
+  font-size: calc(var(--nt-font-size-header) * calc(3 * var(--nt-font-size-multiplier-header)));
+  line-height: var(--nt-line-height-header);
+}
+h5 {
+  font-size: calc(var(--nt-font-size-header) * calc(2 * var(--nt-font-size-multiplier-header)));
+  line-height: var(--nt-line-height-header);
+}
+h6 {
+  font-size: calc(var(--nt-font-size-header) * var(--nt-font-size-multiplier-header));
+  line-height: var(--nt-line-height-header);
+}

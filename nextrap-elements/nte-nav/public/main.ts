@@ -1,6 +1,5 @@
 import '../src';
 
 import '@nextrap/nte-burger';
-import '@nextrap/style-base';
-import '@nextrap/style-reset';
+import '../../../nextrap-base/style-base';
 import '../src/nav-global.scss';

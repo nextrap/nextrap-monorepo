@@ -4,25 +4,12 @@ import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
+import viteServerConfig from '../../utils/vite/config/vite-server-config';
+import viteTestConfig from '../../utils/vite/config/vite-test-config';
 
 export default defineConfig(() => ({
-  server: {
-    port: 4000,
-    host: '0.0.0.0',
-    hmr: true,
-  },
-  test: {
-    passWithNoTests: true,
-    watch: false,
-    globals: true,
-    environment: 'node',
-    include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    reporters: ['default'],
-    coverage: {
-      reportsDirectory: `../../coverage/nextrap-elements/nt-element-nav`,
-      provider: 'v8' as const,
-    },
-  },
+  ...viteServerConfig,
+  test: viteTestConfig('nextrap-elements/nt-element-nav'),
   publicDir: './public/www',
   root: __dirname,
   cacheDir: '../../node_modules/.vite/nextrap-elements/nte-nav',
@@ -58,7 +45,7 @@ export default defineConfig(() => ({
     },
     rollupOptions: {
       // External packages that should not be bundled into your library.
-      external: (id) => !id.startsWith('.') && !path.isAbsolute(id),
+      external: [],
     },
   },
   css: {

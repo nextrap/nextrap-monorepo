@@ -1,8 +1,0 @@
-{
-    "name": "@nextrap/style-typography",
-    "version": "1.0.4",
-    "main": "./index.js",
-    "dependencies": {},
-    "type": "module",
-    "types": "./index.d.ts"
-}

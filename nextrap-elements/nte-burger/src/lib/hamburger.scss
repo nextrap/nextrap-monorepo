@@ -1,27 +1,17 @@
 :host {
   --size: 40px;
-  --color: var(--nt-text, black);
-  --color-hover: var(--color);
-  --width: 4px;
+  --color: #666;
+  --color-hover: #000;
   height: var(--size);
   width: var(--size);
-  display: block;
-}
-
-#button {
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
 }
 
 .hamburger {
   display: block;
-
+  cursor: pointer;
   appearance: none;
   border: 0 none;
   background: none;
-  position: relative;
 
   transition: transform 0.4s;
   &:hover {
@@ -31,8 +21,8 @@
 
 :host([open]) {
   .hamburger .bar:nth-of-type(1) {
-    transform-origin: center center;
-    transform: translateY(calc(0.5em - var(--width) / 2)) rotate(45deg);
+    --translate: calc(var(--size) / 4);
+    transform: translateY(var(--translate)) rotate(45deg);
   }
 
   .hamburger .bar:nth-of-type(2) {
@@ -40,43 +30,17 @@
   }
 
   .hamburger .bar:nth-of-type(3) {
-    transform: translateY(calc(0.5em - var(--width) / 2)) rotate(-45deg);
-  }
-}
-
-// Not open
-:host(:not([open])) {
-  #button:hover {
-    .bar {
-      &:nth-of-type(1) {
-        transform: translateY(calc(0.2em - var(--width) / 2));
-      }
-      &:nth-of-type(2) {
-        transform: translateY(calc(0.5em - var(--width) / 2));
-      }
-      &:nth-of-type(3) {
-        transform: translateY(calc(0.8em - var(--width) / 2));
-      }
-    }
+    --translate: calc(var(--size) / -4);
+    transform: translateY(var(--translate)) rotate(-45deg);
   }
 }
 
 .bar {
-  font-size: var(--size);
-  &:nth-of-type(1) {
-    transform: translateY(calc(0.25em - var(--width) / 2));
-  }
-  &:nth-of-type(2) {
-    transform: translateY(calc(0.5em - var(--width) / 2));
-  }
-  &:nth-of-type(3) {
-    transform: translateY(calc(0.75em - var(--width) / 2));
-  }
-  height: var(--width);
+  height: 3px;
   width: var(--size);
   display: block;
-  position: absolute;
-  top: 0;
+  margin: calc(var(--size) / 5.2) auto;
+  position: relative;
   background-color: var(--color);
   transition: 0.4s;
 }

@@ -2,7 +2,7 @@
 
 This library was generated with [Nx](https://nx.dev).
 
-## Visual testing
+## Building
 
 Run `nx build ntl-2col` to build the library.
 

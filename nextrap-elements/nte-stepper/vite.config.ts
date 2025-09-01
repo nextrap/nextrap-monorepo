@@ -1,10 +1,11 @@
-/// <reference types='vitest' />
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import viteServerConfig from '../../utils/vite/config/vite-server-config';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import viteTestConfig from '../../utils/vite/config/vite-test-config';
 
 export default defineConfig(() => ({
@@ -12,6 +13,11 @@ export default defineConfig(() => ({
   test: viteTestConfig('nextrap-element/nte-some-component'),
   root: __dirname,
   cacheDir: '../../node_modules/.vite/nextrap-elements/nte-stepper',
+  resolve: {
+    alias: {
+      '@nextrap/style-reset': path.resolve(__dirname, '../../nextrap-base/style-reset/index.scss'),
+    },
+  },
   plugins: [
     nxViteTsPaths(),
     nxCopyAssetsPlugin(['*.md']),
@@ -42,17 +48,6 @@ export default defineConfig(() => ({
     rollupOptions: {
       // External packages that should not be bundled into your library.
       external: [],
-    },
-  },
-  test: {
-    watch: false,
-    globals: true,
-    environment: 'node',
-    include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    reporters: ['default'],
-    coverage: {
-      reportsDirectory: '../../coverage/nextrap-elements/nte-stepper',
-      provider: 'v8' as const,
     },
   },
 }));

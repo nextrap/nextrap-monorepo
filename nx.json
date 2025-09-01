@@ -1,21 +1,14 @@
 {
-    "pluginsConfig": {
-        "@nx/js": {
-            "analyzeSourceFiles": true
-        }
-    },
     "extends": "nx/presets/npm.json",
     "$schema": "./node_modules/nx/schemas/nx-schema.json",
     "release": {
         "projects": ["nextrap-base/*", "nextrap-elements/*", "nextrap-layout/*"],
         "projectsRelationship": "independent",
         "changelog": {
-            "automaticFromRef": true,
             "projectChangelogs": true
         },
         "version": {
-            "preVersionCommand": "npx nx run-many -t build",
-            "updateDependents": "never"
+            "preVersionCommand": "npx nx run-many -t build"
         }
     },
     "plugins": [
@@ -38,27 +31,6 @@
             "options": {
                 "targetName": "lint"
             }
-        },
-        {
-            "plugin": "@nx/js/typescript",
-            "options": {
-                "typecheck": {
-                    "targetName": "tsc:typecheck"
-                },
-                "build": {
-                    "targetName": "build",
-                    "configName": "tsconfig.lib.json",
-                    "buildDepsName": "build-deps",
-                    "watchDepsName": "watch-deps"
-                }
-            }
         }
-    ],
-    "targetDefaults": {
-        "@nx/js:tsc": {
-            "cache": true,
-            "dependsOn": ["^build"],
-            "inputs": ["default", "^default"]
-        }
-    }
+    ]
 }
