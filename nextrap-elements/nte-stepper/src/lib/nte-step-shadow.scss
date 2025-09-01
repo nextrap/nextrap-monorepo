@@ -1,0 +1,543 @@
+// Styling for the nte-step component
+@use '@nextrap/style-reset';
+:host {
+  display: flex;
+  flex: 1 1 0;
+  position: relative;
+  border-radius: var(--nte-step-border-radius);
+  min-width: var(--nte-step-min-width);
+  slot.is-empty {
+    display: none;
+  }
+  /* Colors */
+  /* Status Disabled */
+  --nte-step-circle-disabled-bg-color: none;
+  --nte-step-circle-disabled-icon-color: var(--nt-soft-dark);
+  --nte-step-circle-disabled-border-color: var(--nt-soft-dark);
+  /* Status Inactive */
+  --nte-step-circle-inactive-bg-color: none;
+  --nte-step-circle-inactive-icon-color: var(--nt-soft-dark);
+  --nte-step-circle-inactive-border-color: var(--nt-soft-dark);
+  /* Status Active */
+  --nte-step-circle-active-bg-color: var(--nt-primary);
+  --nte-step-circle-active-icon-color: var(--nt-white);
+  --nte-step-circle-active-border-color: var(--nt-primary);
+  /* Class Completed */
+  --nte-step-circle-completed-bg-color: transparent;
+  --nte-step-circle-completed-border-color: var(--nt-primary);
+  --nte-step-circle-completed-icon-color: var(--nt-primary);
+  /* class Error */
+  --nte-step-circle-error-bg-color: var(--nt-danger);
+  --nte-step-circle-error-border-color: var(--nt-danger);
+  --nte-step-circle-error-icon-color: var(--nt-light);
+  /* Title */
+  --nte-step-title-color: var(--nt-text-on-light);
+  --nte-step-title-active-color: var(--nt-primary);
+  --nte-step-title-disabled-color: var(--nt-soft-dark);
+  /* Info */
+  --nte-step-info-color: var(--nt-text-on-light);
+  --nte-step-info-error-color: var(--nt-danger);
+  --nte-step-info-icon-color: var(--nt-soft-dark);
+  /* Action */
+  --nte-step-action-icon-color: var(--nt-soft-dark);
+  /* Background */
+  --nte-step-background-color-hover: rgba(0, 0, 0, 0.025);
+  --nte-step-background-color-active: rgba(var(--nt-primary-rgb, 13, 110, 253), 0.03);
+  /* Sizes, Spacing */
+  --nte-step-padding-x: 1rem;
+  --nte-step-padding-y: 0.75rem;
+  --nte-step-border-radius: 0.5rem;
+  --nte-step-min-width: 50px;
+  --nte-step-spacing: 1rem;
+  --nte-step-circle-size: 36px;
+  --nte-step-circle-border-width: 2px;
+  --nte-step-title-font-size: 1.25rem;
+  --nte-step-info-icon-size: 1.25rem;
+  --nte-step-action-icon-size: 1.25rem;
+  --nte-step-circle-to-icon-size-ratio: 2;
+  /* Separator */
+  --nte-step-separator-size: 2px;
+  --nte-step-separator-line-style: dashed;
+  --nte-step-separator-color: var(--nt-soft-dark);
+  --nte-step-separator-color-completed: var(--nt-primary);
+  --nte-step-separator-gap: 4px;
+  /* Calculated */
+  --nte-step-circle-icon-size: calc(var(--nte-step-circle-size) / var(--nte-step-circle-to-icon-size-ratio));
+  /* Style Routed */
+  --nte-step-route-arrow-angle: 16px;
+}
+
+/* Host hover - this should work now */
+
+:host:hover {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+:host .nte-step-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+:host .nte-step-route-arrow {
+  display: none;
+}
+
+:host([mode='horizontal']) {
+  .nte-step-wrapper-content {
+    position: relative;
+    display: flex;
+    width: 100%;
+    flex-flow: column nowrap;
+    padding: var(--nte-step-padding-y) var(--nte-step-padding-x);
+    align-items: flex-start;
+    border-radius: var(--nte-step-border-radius);
+    transition: background-color 0.2s ease;
+    pointer-events: auto;
+    gap: var(--nte-step-spacing);
+  }
+}
+
+:host([mode='vertical']) {
+  .nte-step-wrapper-content {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: var(--nte-step-padding-y) var(--nte-step-padding-x);
+    transition: background-color 0.2s ease;
+    /* Ensure host can receive pointer events */
+    pointer-events: auto;
+    gap: var(--nte-step-spacing);
+    .nte-step-info {
+      padding-top: calc(var(--nte-step-circle-size) / 4);
+    }
+  }
+}
+
+.nte-step-separator.horizontal {
+  position: absolute;
+  left: calc(var(--nte-step-padding-x) + var(--nte-step-circle-size) + var(--nte-step-separator-gap));
+  top: calc(var(--nte-step-padding-y) + var(--nte-step-circle-size) / 2);
+  height: var(--nte-step-separator-size);
+  width: calc(100% - var(--nte-step-circle-size) - var(--nte-step-separator-gap) * 2);
+  margin: 0;
+  z-index: 0;
+  transform: translateY(-50%);
+  .nte-step-separator-dashed-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-top: var(--nte-step-separator-size) var(--nte-step-separator-line-style) var(--nte-step-separator-color);
+  }
+  .nte-step-separator-solid-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: scaleX(0);
+    z-index: 1;
+    border-top: var(--nte-step-separator-size) solid var(--nte-step-separator-color-completed);
+  }
+  &.backwards .nte-step-separator-solid-line {
+    animation: progress-fill-horizontal-backwards 0.4s ease-in-out forwards;
+  }
+  &.filled:not(.backwards) .nte-step-separator-solid-line {
+    animation: progress-fill-horizontal 0.4s ease-in-out forwards;
+  }
+}
+
+.nte-step-separator.vertical {
+  position: absolute;
+  left: calc(var(--nte-step-padding-x) + var(--nte-step-circle-size) / 2);
+  top: calc(
+    var(--nte-step-padding-y) + var(--nte-step-circle-size) +
+      var(--nte-step-separator-gap) - var(--nte-step-separator-size) / 2
+  );
+  width: var(--nte-step-separator-size);
+  height: calc(100% - var(--nte-step-circle-size) - var(--nte-step-separator-gap) * 2);
+  margin: 0;
+  z-index: 0;
+  .nte-step-separator-dashed-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-left: var(--nte-step-separator-size) var(--nte-step-separator-line-style) var(--nte-step-separator-color);
+  }
+  .nte-step-separator-solid-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: scaleY(0);
+    z-index: 1;
+    border-left: var(--nte-step-separator-size) solid var(--nte-step-separator-color-completed);
+  }
+  &.backwards .nte-step-separator-solid-line {
+    animation: progress-fill-vertical-backwards 0.4s ease-in-out forwards;
+  }
+  &.filled:not(.backwards) .nte-step-separator-solid-line {
+    animation: progress-fill-vertical 0.4s ease-in-out forwards;
+  }
+}
+
+/* Circle styles */
+
+.nte-step-circle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--nte-step-circle-size);
+  height: var(--nte-step-circle-size);
+  background: transparent;
+  border-radius: 50%;
+  border: var(--nte-step-circle-border-width) solid var(--nte-step-circle-inactive-border-color);
+  svg,
+  img {
+    width: var(--nte-step-circle-icon-size);
+    height: var(--nte-step-circle-icon-size);
+    fill: var(--nte-step-circle-inactive-icon-color);
+    color: var(--nte-step-circle-inactive-icon-color);
+    font-size: var(--nte-step-circle-icon-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  ::slotted([slot='icon']) {
+    width: var(--nte-step-circle-icon-size);
+    height: var(--nte-step-circle-icon-size);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .nte-step-circle-progress {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    top: calc(var(--nte-step-circle-border-width) * -1);
+    left: calc(var(--nte-step-circle-border-width) * -1);
+    width: calc(100% + var(--nte-step-circle-border-width) * 2);
+    height: calc(100% + var(--nte-step-circle-border-width) * 2);
+    border-radius: 50%;
+    background-color: transparent;
+    border: var(--nte-step-circle-border-width) solid var(--nte-step-circle-inactive-border-color);
+  }
+  .nte-step-default-icon {
+    width: calc(var(--nte-step-circle-size) / 3);
+    height: calc(var(--nte-step-circle-size) / 3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--nte-step-circle-inactive-border-color);
+  }
+  slot[name='icon']:not(.is-empty) + .nte-step-default-icon {
+    display: none;
+  }
+}
+
+/* Info section styles */
+
+.nte-step-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  ::slotted([slot='title']) {
+    margin: 0;
+    color: var(--nte-step-title-color);
+    font-size: var(--nte-step-title-font-size) !important;
+  }
+  ::slotted([slot='info']) {
+    visibility: hidden;
+    margin-bottom: 0;
+  }
+  i.nte-step-info-icon {
+    font-size: var(--nte-step-info-icon-size);
+    color: var(--nte-step-info-icon-color);
+    height: auto;
+    margin-left: 0.25rem;
+  }
+}
+
+/* Action section styles */
+
+.nte-step-action {
+  margin-left: auto;
+  i.nte-step-action-icon {
+    font-size: var(--nte-step-action-icon-size);
+    color: var(--nte-step-action-icon-color);
+    height: auto;
+  }
+}
+
+:host([status='inactive']) {
+  cursor: pointer;
+  /* Ensure inactive steps can receive hover events */
+  pointer-events: auto;
+  .nte-step-circle {
+    background-color: var(--nte-step-circle-inactive-bg-color);
+    border: var(--nte-step-circle-border-width) solid var(--nte-step-circle-inactive-border-color);
+    svg,
+    img,
+    ::slotted([slot='icon']) {
+      color: var(--nte-step-circle-inactive-icon-color);
+      fill: var(--nte-step-circle-inactive-icon-color);
+    }
+    .nte-step-circle-progress {
+      border-color: var(--nte-step-circle-inactive-border-color);
+    }
+  }
+}
+
+/* Specific hover for inactive steps */
+
+:host([status='inactive']:hover) {
+  background-color: var(--nte-step-background-color-hover) !important;
+}
+
+:host([status='inactive'].completed) {
+  .nte-step-circle {
+    background-color: var(--nte-step-circle-completed-bg-color);
+    border: var(--nte-step-circle-border-width) solid var(--nte-step-circle-completed-border-color);
+    ::slotted([slot='icon']) {
+      display: none;
+    }
+    svg,
+    img {
+      color: var(--nte-step-circle-completed-icon-color);
+      fill: var(--nte-step-circle-completed-icon-color);
+      animation: checkmark-pop 1s cubic-bezier(0.5, 0, 0.25, 1.25) forwards;
+    }
+    .nte-step-circle-progress {
+      border-color: var(--nte-step-circle-completed-border-color);
+    }
+  }
+}
+
+:host([status='disabled']) {
+  pointer-events: none;
+  cursor: not-allowed;
+  .nte-step-circle {
+    background-color: var(--nte-step-circle-disabled-bg-color);
+    border: var(--nte-step-circle-border-width) solid var(--nte-step-circle-disabled-border-color);
+    svg,
+    img,
+    ::slotted([slot='icon']) {
+      color: var(--nte-step-circle-disabled-icon-color);
+      fill: var(--nte-step-circle-disabled-icon-color);
+    }
+    .nte-step-circle-progress {
+      border-color: var(--nte-step-circle-disabled-border-color);
+    }
+    .nte-step-default-icon {
+      background-color: var(--nte-step-circle-disabled-icon-color);
+    }
+  }
+  .nte-step-info {
+    ::slotted([slot='title']) {
+      color: var(--nte-step-title-disabled-color);
+    }
+  }
+}
+
+:host([status='active']),
+:host(.completed) {
+  .nte-step-circle {
+    background-color: var(--nte-step-circle-active-bg-color);
+    border: var(--nte-step-circle-border-width) solid var(--nte-step-circle-active-border-color);
+    svg,
+    img,
+    ::slotted([slot='icon']) {
+      color: var(--nte-step-circle-active-icon-color);
+      fill: var(--nte-step-circle-active-icon-color);
+    }
+    .nte-step-circle-progress {
+      border-color: var(--nte-step-circle-active-border-color);
+    }
+  }
+}
+
+:host([status='active']) {
+  background-color: var(--nte-step-background-color-active);
+  .nte-step-info {
+    ::slotted([slot='title']) {
+      color: var(--nte-step-title-active-color);
+    }
+    ::slotted([slot='info']) {
+      visibility: visible;
+    }
+  }
+  .nte-step-circle {
+    .nte-step-default-icon {
+      background-color: var(--nte-step-circle-active-icon-color);
+    }
+  }
+}
+
+:host([status='inactive'].has-error),
+:host([status='active'].has-error) {
+  .nte-step-circle {
+    background-color: var(--nte-step-circle-error-bg-color);
+    border: var(--nte-step-circle-border-width) solid var(--nte-step-circle-error-border-color);
+    svg,
+    img,
+    ::slotted([slot='icon']) {
+      color: var(--nte-step-circle-error-icon-color);
+      fill: var(--nte-step-circle-error-icon-color);
+    }
+    .nte-step-circle-progress {
+      border-color: var(--nte-step-circle-error-border-color);
+    }
+  }
+  .nte-step-info {
+    ::slotted([slot='title']) {
+      color: var(--nte-step-info-error-color);
+    }
+  }
+}
+
+/* Responsive adjustments */
+
+@media (max-width: 768px) {
+  :host {
+    --nte-step-circle-size: 30px;
+    --nte-step-step-title-font-size: 1rem;
+  }
+}
+
+/* Style route mode - hide circle, separator, and action elements */
+
+:host([mode='horizontal'].style-route) {
+  .nte-step-separator,
+  .nte-step-action {
+    display: none !important;
+  }
+  position: relative;
+  padding-left: calc(var(--nte-step-padding-x) * 1.25);
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--nte-step-route-arrow-angle)) 0,
+    100% 50%,
+    calc(100% - var(--nte-step-route-arrow-angle)) 100%,
+    0 100%,
+    var(--nte-step-route-arrow-angle) 50%
+  );
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(var(--nt-dark-rgb), 0.025);
+  }
+  .nte-step-wrapper-content {
+    flex-flow: row-reverse nowrap;
+    align-items: center;
+  }
+}
+
+:host([mode='vertical'].style-route) {
+  .nte-step-separator,
+  .nte-step-action {
+    display: none !important;
+  }
+  position: relative;
+  padding-bottom: calc(var(--nte-step-padding-x) * 1.25);
+  padding-top: calc(var(--nte-step-padding-x) * 1.25);
+  clip-path: polygon(
+    0 0,
+    50% var(--nte-step-route-arrow-angle),
+    100% 0,
+    100% calc(100% - var(--nte-step-route-arrow-angle)),
+    50% 100%,
+    0% calc(100% - var(--nte-step-route-arrow-angle)),
+    0% 0
+  );
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(var(--nt-dark-rgb), 0.025);
+  }
+  .nte-step-wrapper-content {
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    .nte-step-info {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+  }
+}
+
+@keyframes progress-fill-vertical {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  100% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+}
+
+@keyframes progress-fill-vertical-backwards {
+  0% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+}
+
+@keyframes progress-fill-horizontal {
+  0% {
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  100% {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+@keyframes progress-fill-horizontal-backwards {
+  0% {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+  100% {
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+}
+
+@keyframes checkmark-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) rotate(-30deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2) rotate(5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}

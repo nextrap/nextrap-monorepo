@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>NtE Scrollspy Examples</title>
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+      .main-container {
+        display: flex;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      aside {
+        width: 250px;
+        padding-right: 20px;
+      }
+      section {
+        flex: 1;
+      }
+      .scrolling-content > div {
+        min-height: 400px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid #eee;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="main-wrapper">
+      <h1>NTE Scrollspy Component - Examples</h1>
+      <div class="main-container">
+        <aside>
+          <nte-scrollspy data-target="#basic-example" style="width: 200px; position: sticky; top: 1rem">
+            <ul>
+              <li>
+                <a href="#section-1-1">Abschnitt 1</a>
+              </li>
+              <li>
+                <a href="#section-1-2">Abschnitt 2</a>
+              </li>
+              <li>
+                <a href="#section-1-3">Abschnitt 3</a>
+              </li>
+              <li>
+                <a href="#section-1-4">Abschnitt 4</a>
+              </li>
+            </ul>
+          </nte-scrollspy>
+        </aside>
+        <section>
+          <div class="scrolling-content" id="basic-example">
+            <div id="section-1-1">
+              <h3>First Section</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+                labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et
+                ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+                clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
+              </p>
+            </div>
+            <div id="section-1-2">
+              <h3>Second Section</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+                labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et
+                ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+                clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
+              </p>
+            </div>
+            <div id="section-1-3">
+              <h3>Third Section</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+                labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et
+                ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+                clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
+              </p>
+            </div>
+            <div id="section-1-4">
+              <h3>Fourth Section</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+                labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et
+                ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+                clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+      <!-- test 2 -->
+      <div class="main-container">
+        <aside>
+          <nte-scrollspy
+            data-target="#custom-example"
+            style="width: 200px; position: sticky; top: 1rem"
+          ></nte-scrollspy>
+        </aside>
+        <section>
+          <div class="scrolling-content" id="custom-example">
+            <div id="section-2-1" data-title="First Section">
+              <h3>First Section</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+                labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et
+                ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+                clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
+              </p>
+            </div>
+            <div id="section-2-2" data-title="Second Section">
+              <h3>Second Section</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+                labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et
+                ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+                clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
+              </p>
+            </div>
+            <div id="section-2-3" data-title="Second Section">
+              <h3>Third Section</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+                labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et
+                ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+                clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
+              </p>
+            </div>
+            <div id="section-2-4" data-title="Second Section">
+              <h3>Fourth Section</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+                labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et
+                ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+                clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+    <script src="src/index.ts" type="module"></script>
+  </body>
+</html>

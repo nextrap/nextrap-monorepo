@@ -1,3 +1,0 @@
-# element-scrollspy
-
-- [Design Docs]()

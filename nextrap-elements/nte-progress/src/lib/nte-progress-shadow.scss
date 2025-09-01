@@ -1,0 +1,248 @@
+// Styling for the progress bar component
+@use '@nextrap/style-reset';
+
+:host {
+  /* Colors */
+  --nte-progress-bg-color: var(--nt-light);
+  --nte-progress-bar-color: var(--nt-primary);
+  --nte-progress-text-color: var(--nt-white);
+  --nte-progress-stripe-color: rgba(255, 255, 255, 0.15);
+
+  /* Step-specific colors */
+  --nte-progress-step-bg: var(--nt-light);
+  --nte-progress-step-border-color: var(--nt-gray);
+  --nte-progress-step-completed-bg: var(--nt-primary);
+  --nte-progress-step-completed-border-color: var(--nt-primary);
+
+  /* Sizes, Spacing */
+  --nte-progress-height: 0.75rem;
+  --nte-progress-border-radius: 0.25rem;
+  --nte-progress-step-size: 0.75rem;
+  --nte-progress-stripe-size: 1rem;
+
+  /* Circular progress styles */
+  --nte-progress-circle-size: 100px;
+  --nte-progress-circle-text-size: 1.5rem;
+  --nte-progress-circle-step-text-size: 0.75rem;
+  --nte-progress-circle-stroke-width: 0.5rem;
+  --nte-progress-circle-bg-color: var(--nt-light, #e6e6e6);
+  --nte-progress-circle-fg-color: var(--nt-primary, #0d6efd);
+  --nte-progress-circle-text-color: var(--nt-text-on-light);
+
+  display: inline-block;
+  width: 100%;
+}
+
+/* Progress element styling - cross-browser */
+progress.nte-progress {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: flex;
+  height: var(--nte-progress-height);
+  overflow: hidden;
+  background-color: var(--nte-progress-bg-color);
+  border-radius: var(--nte-progress-border-radius);
+  position: relative;
+  inline-size: auto;
+  width: 100%;
+  border: none;
+  color: var(--nte-progress-bar-color); /* Fallback for Firefox */
+}
+
+/* Webkit - Chrome, Safari, newer Edge */
+progress.nte-progress::-webkit-progress-bar {
+  background-color: var(--nte-progress-bg-color);
+  border-radius: var(--nte-progress-border-radius);
+  overflow: hidden;
+}
+
+progress.nte-progress::-webkit-progress-value {
+  background-color: var(--nte-progress-bar-color);
+  border-radius: var(--nte-progress-border-radius);
+  transition: width 0.6s ease;
+}
+
+/* Firefox */
+progress.nte-progress::-moz-progress-bar {
+  background-color: var(--nte-progress-bar-color);
+  border-radius: var(--nte-progress-border-radius);
+  transition: width 0.6s ease;
+}
+
+/* IE/Edge (older versions) */
+progress.nte-progress::-ms-fill {
+  background-color: var(--nte-progress-bar-color);
+  border-radius: var(--nte-progress-border-radius);
+  border: 0;
+  transition: width 0.6s ease;
+}
+
+/* For fallback and to maintain the striped/animated functionality */
+.nte-progress-bar {
+  display: none; /* Hide the original div since we're styling the progress element directly */
+}
+
+/* Striped styling for the progress element */
+progress.nte-progress.nte-progress-bar--striped::-webkit-progress-value {
+  background-image: linear-gradient(
+    45deg,
+    var(--nte-progress-stripe-color) 25%,
+    transparent 25%,
+    transparent 50%,
+    var(--nte-progress-stripe-color) 50%,
+    var(--nte-progress-stripe-color) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: var(--nte-progress-stripe-size) var(--nte-progress-stripe-size);
+}
+
+progress.nte-progress.nte-progress-bar--striped::-moz-progress-bar {
+  background-image: linear-gradient(
+    45deg,
+    var(--nte-progress-stripe-color) 25%,
+    transparent 25%,
+    transparent 50%,
+    var(--nte-progress-stripe-color) 50%,
+    var(--nte-progress-stripe-color) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: var(--nte-progress-stripe-size) var(--nte-progress-stripe-size);
+}
+
+/* Animation for striped progress bar */
+@keyframes nte-progress-bar-stripes {
+  0% {
+    background-position-x: var(--nte-progress-stripe-size);
+  }
+  100% {
+    background-position-x: 0;
+  }
+}
+
+progress.nte-progress.nte-progress-bar--animated::-webkit-progress-value {
+  animation: nte-progress-bar-stripes 1s linear infinite;
+}
+
+progress.nte-progress.nte-progress-bar--animated::-moz-progress-bar {
+  animation: nte-progress-bar-stripes 1s linear infinite;
+}
+
+/* Progress step indicators */
+.nte-progress-steps {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Allow clicking through to the progress bar */
+}
+
+.nte-progress-step {
+  position: absolute;
+  width: var(--nte-progress-step-size);
+  height: var(--nte-progress-step-size);
+  background-color: var(--nte-progress-step-bg);
+  border: 2px solid var(--nte-progress-step-border-color);
+  border-radius: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+
+  /* Completed step styling */
+  &--completed {
+    background-color: var(--nte-progress-step-completed-bg);
+    border-color: var(--nte-progress-step-completed-border-color);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  :host {
+    --nte-progress-height: 0.5rem;
+    --nte-progress-step-size: 0.6rem;
+  }
+}
+
+/* High contrast mode support for accessibility */
+@media (forced-colors: active) {
+  progress.nte-progress {
+    border: 1px solid CanvasText;
+  }
+
+  .nte-progress-step {
+    outline: 1px solid CanvasText;
+  }
+}
+
+/* Circular progress styles */
+.nte-progress-circle {
+  --size: var(--nte-progress-circle-size);
+  --half-size: calc(var(--size) / 2);
+  --stroke-width: var(--nte-progress-circle-stroke-width);
+  --radius: calc((var(--size) - var(--stroke-width)) / 2);
+  --circumference: calc(var(--radius) * 3.14159 * 2);
+  --dash: calc((var(--progress) * var(--circumference)) / 100);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size);
+  height: var(--size);
+  cursor: pointer;
+
+  .nte-progress-circle-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  circle {
+    stroke-width: var(--stroke-width);
+    fill: transparent;
+    stroke-linecap: round;
+
+    &.nte-progress-circle-bg {
+      stroke: var(--nte-progress-circle-bg-color);
+    }
+
+    &.nte-progress-circle-fg {
+      transform: rotate(-90deg);
+      transform-origin: center;
+      stroke: var(--nte-progress-circle-fg-color);
+      transition: stroke-dashoffset 0.8s linear 0s;
+    }
+  }
+
+  .nte-progress-circle-content {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    color: var(--nte-progress-circle-text-color);
+    text-align: center;
+    font-size: var(--nte-progress-circle-text-size);
+
+    ::slotted(*) {
+      line-height: 1.2;
+    }
+  }
+
+  /* Add hover effect */
+  &:hover {
+    .nte-progress-circle-content {
+      opacity: 0.8;
+    }
+  }
+}

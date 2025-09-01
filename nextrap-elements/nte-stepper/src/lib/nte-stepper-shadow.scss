@@ -1,0 +1,252 @@
+// This is styling for the stepper container shadow DOM
+@use '@nextrap/style-reset';
+:host {
+  position: relative;
+  display: flex;
+  justify-content: stretch;
+  height: auto;
+  width: 100%;
+  /* Colors */
+  --nte-stepper-progress-bg-color: rgba(var(--nt-primary-rgb), 0.05);
+  --nte-stepper-progress-bar-color: var(--nt-primary, #0d6efd);
+  --nte-stepper-seperator-color: var(--nt-soft-dark, #6c757d);
+  --nte-stepper-seperator-color-completed: var(--nt-primary, #0d6efd);
+  /* Sizes, Spacing */
+  --nte-stepper-spacing: 1rem;
+  --nte-stepper-circle-size: 36px;
+  --nte-stepper-seperator-width: 2px;
+  --nte-stepper-seperator-height: 4rem;
+  --nte-stepper-padding-y: 0.75rem;
+  /* CSS vars are cascade-inherited to nte-step components */
+  --nte-stepper-padding-x: 1rem;
+  --nte-stepper-border-radius: 0.5rem;
+  --nte-stepper-min-width: 200px;
+  /* CSS for slotted nte-step element */
+  --slotted-nte-step-background-color-hover: rgba(0, 0, 0, 0.15);
+  /* CSS for circular menu overlay */
+  --nte-stepper-menu-bg-color: var(--nt-white, #ffffff);
+  --nte-stepper-menu-border-color: var(--nt-border-color, #dee2e6);
+  --nte-stepper-menu-text-color: var(--nt-dark, #212529);
+  --nte-stepper-menu-disabled-color: var(--nt-secondary, #6c757d);
+  --nte-stepper-menu-item-hover-bg: var(--nt-light, #f8f9fa);
+  --nte-stepper-menu-active-color: var(--nt-primary, #0d6efd);
+  --nte-stepper-menu-completed-color: var(--nt-success, #198754);
+  --nte-stepper-menu-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+:host(.lines-solid) {
+  ::slotted(nte-step) {
+    --nte-step-separator-line-style: solid;
+  }
+}
+
+:host(.gaps-0) {
+  ::slotted(nte-step) {
+    --nte-step-separator-gap: 0px;
+  }
+}
+
+:host(.gaps-xs) {
+  ::slotted(nte-step) {
+    --nte-step-separator-gap: 2px;
+  }
+}
+
+:host(.gaps-sm) {
+  ::slotted(nte-step) {
+    --nte-step-separator-gap: 4px;
+  }
+}
+
+:host(.gaps-md) {
+  ::slotted(nte-step) {
+    --nte-step-separator-gap: 8px;
+  }
+}
+
+:host(.gaps-lg) {
+  ::slotted(nte-step) {
+    --nte-step-separator-gap: 12px;
+  }
+}
+
+:host(.gaps-xl) {
+  ::slotted(nte-step) {
+    --nte-step-separator-gap: 16px;
+  }
+}
+
+.nte-stepper-wrapper {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  .nte-stepper-circular-progress {
+    display: none;
+  }
+  .nte-stepper-menu {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    width: 100%;
+    max-width: 480px;
+    max-height: 100%;
+    background-color: var(--nte-stepper-menu-bg-color);
+    border-radius: var(--nte-stepper-border-radius);
+    box-shadow: var(--nte-stepper-menu-shadow);
+    border: 1px solid var(--nte-stepper-menu-border-color);
+    z-index: 1000;
+    overflow: hidden;
+    cursor: default;
+    animation: nte-menu-fade-in 0.2s ease-out;
+    @keyframes nte-menu-fade-in {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(10px);
+      }
+    }
+    .nte-stepper-menu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--nte-stepper-menu-border-color);
+      h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 500;
+        color: var(--nte-stepper-menu-text-color);
+      }
+      .nte-stepper-menu-close {
+        border: none;
+        background: none;
+        font-size: 1.5rem;
+        line-height: 1;
+        padding: 0;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--nte-stepper-menu-disabled-color);
+        border-radius: 50%;
+        &:hover {
+          background-color: var(--nte-stepper-menu-item-hover-bg);
+          color: var(--nte-stepper-menu-text-color);
+        }
+      }
+    }
+    .nte-stepper-menu-items {
+      max-height: 300px;
+      overflow-y: auto;
+      .nte-stepper-menu-item {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid var(--nte-stepper-menu-border-color);
+        color: var(--nte-stepper-menu-text-color);
+        transition: background-color 0.2s ease;
+        &:last-child {
+          border-bottom: none;
+        }
+        &.selectable {
+          cursor: pointer;
+          &:hover {
+            background-color: var(--nte-stepper-menu-item-hover-bg);
+          }
+        }
+        &.active {
+          background-color: rgba(var(--nt-primary-rgb), 0.1);
+          font-weight: 500;
+          .nte-stepper-menu-item-icon {
+            color: var(--nte-stepper-menu-active-color);
+            border-color: var(--nte-stepper-menu-active-color);
+          }
+        }
+        &.completed {
+          .nte-stepper-menu-item-icon {
+            color: var(--nte-stepper-menu-completed-color);
+            border-color: var(--nte-stepper-menu-completed-color);
+          }
+        }
+        &:not(.selectable) {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+        .nte-stepper-menu-item-icon {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-right: 1rem;
+          background-color: var(--nte-stepper-menu-item-hover-bg);
+          border: 1px solid var(--nte-stepper-menu-border-color);
+          flex-shrink: 0;
+          .nte-stepper-menu-item-number {
+            font-weight: 500;
+          }
+        }
+        .nte-stepper-menu-item-title {
+          flex: 1;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
+  // Vertical Mode
+  &.nte-stepper-mode-vertical {
+    .nte-stepper-circular-container,
+    .nte-stepper-circular-progress,
+    .nte-stepper-progress {
+      display: none;
+    }
+    .nte-stepper-steps {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    ::slotted(nte-step) {
+      flex-flow: row nowrap;
+    }
+  }
+  // Horizontal Mode
+  &.nte-stepper-mode-horizontal {
+    flex-direction: row;
+    .nte-stepper-steps {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+    }
+    ::slotted(nte-step) {
+      flex-direction: column;
+      justify-items: stretch;
+      align-items: flex-start;
+    }
+  }
+  // Circular Mode
+  &.nte-stepper-mode-circular {
+    .nte-stepper-circular-progress {
+      display: flex;
+      cursor: pointer;
+    }
+    .nte-stepper-steps {
+      display: none;
+      width: 100%;
+      margin-top: 1.5rem;
+    }
+    ::slotted(nte-step) {
+      display: none;
+    }
+  }
+}

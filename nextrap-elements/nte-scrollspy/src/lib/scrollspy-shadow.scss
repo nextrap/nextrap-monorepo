@@ -1,0 +1,138 @@
+// This is styling for the scrollspy shadow dom
+@use '@nextrap/style-reset';
+
+:host {
+  --min-width: 200px;
+  --min-height: 300px;
+  --max-width: calc(100% - var(--nt-base-space) * 2);
+  --max-height: calc(100% - var(--nt-base-space) * 2);
+  --padding: var(--nt-base-space);
+
+  --scrollspy-menu-bg-color: var($white);
+  --scrollspy-menu-border: 1px solid var($nt-light);
+  --scrollspy-menu-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1), 0px 4px 24px rgba(0, 0, 0, 0.05);
+
+  --scrollspy-menu-border-radius: 0.5rem;
+
+  --scrollspy-item-padding: 1rem;
+  --scrollspy-item-bg-color: var($white);
+  --scrollspy-item-bg-color-hover: var($soft-primary);
+  --scrollspy-item-bg-color-active: var($primary);
+  --scrollspy-item-text-color: var(--nt-text);
+  --scrollspy-item-text-color-hover: var(--nt-text-on-primary);
+  --scrollspy-item-text-color-active: var(--nt-text-on-primary);
+
+  /* Decorator styling variables */
+  --scrollspy-decorator-size: 32px;
+  --scrollspy-decorator-font-size: 0.9rem;
+  --scrollspy-decorator-border: 1px solid var(--nt-border-color, #ccc);
+  --scrollspy-decorator-bg: var(--nt-background-color, #fff);
+  --scrollspy-decorator-bg-active: var(--nt-primary, #4a90e2);
+  --scrollspy-decorator-color: var(--nt-text, #333);
+  --scrollspy-decorator-color-active: var(--nt-text-on-primary, #fff);
+  --scrollspy-decorator-bg-viewed: var(--nt-background-color-viewed, #ddd);
+  --scrollspy-decorator-color-viewed: var(--nt-text-viewed, #666);
+
+  display: block;
+}
+
+.scrollspy {
+  &-vertical {
+    .scrollspy-menu {
+      flex-direction: column;
+    }
+  }
+
+  &-horizontal {
+    .scrollspy-menu {
+      flex-direction: row;
+    }
+  }
+}
+
+.scrollspy-menu {
+  display: flex;
+  list-style: none;
+  background-color: var(--scrollspy-menu-bg-color);
+  border: var(--scrollspy-menu-border);
+  border-radius: var(--scrollspy-menu-border-radius);
+  box-shadow: var(--scrollspy-menu-shadow);
+  overflow: hidden;
+
+  margin: 0;
+  padding: 0;
+}
+
+.scrollspy-item {
+  display: flex;
+  align-items: center;
+  padding: var(--scrollspy-item-padding);
+  color: var(--scrollspy-item-text-color);
+
+  &:hover {
+    background-color: var(--scrollspy-item-bg-color-hover);
+    color: var(--scrollspy-item-text-color-hover);
+    cursor: pointer;
+  }
+
+  &-active {
+    background-color: var(--scrollspy-item-bg-color-active);
+    color: var(--scrollspy-item-text-color-active);
+  }
+
+  &-viewed {
+    opacity: 0.5;
+    .scrollspy-item-decorator {
+      background-color: var(--scrollspy-decorator-bg-viewed);
+      color: var(--scrollspy-decorator-color-viewed);
+    }
+  }
+}
+
+.scrollspy-item-decorator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 0.75rem;
+  width: var(--scrollspy-decorator-size);
+  height: var(--scrollspy-decorator-size);
+  font-size: var(--scrollspy-decorator-font-size);
+  border: var(--scrollspy-decorator-border);
+  border-radius: 50%; /* Fully rounded */
+  background-color: var(--scrollspy-decorator-bg);
+  color: var(--scrollspy-decorator-color);
+  transition: all 0.3s ease;
+
+  /* Ensure proper centering of content */
+  line-height: 1;
+  text-align: center;
+  position: relative;
+
+  /* Show number by default using the data-index attribute */
+  &::before {
+    content: attr(data-index);
+  }
+
+  .scrollspy-item-active & {
+    background-color: var(--scrollspy-decorator-bg-active);
+    color: var(--scrollspy-decorator-color-active);
+    border-color: var(--scrollspy-decorator-bg-active);
+
+    /* Show bullet instead of number for active items */
+    &::before {
+      content: '\2022'; /* Unicode bullet */
+    }
+  }
+
+  .scrollspy-item-viewed & {
+    background-color: var(--scrollspy-decorator-bg-viewed);
+    color: var(--scrollspy-decorator-color-viewed);
+    border-color: var(--scrollspy-decorator-bg-viewed);
+
+    /* Show checkmark instead of number for viewed items */
+    &::before {
+      content: '\2714'; /* Unicode checkmark */
+      opacity: 0.8; /* Slightly dimmed */
+    }
+  }
+}
