@@ -150,16 +150,13 @@ export class NteGridview extends LitElement {
     const existingTable = this.querySelector('table');
 
     // Check if we already have the wrapper structure
-    const existingContainer = this.querySelector('.gridview-container');
+    const existingWrapper = this.querySelector('.gridview-table-wrapper');
 
-    if (existingTable && !existingContainer) {
+    if (existingTable && !existingWrapper) {
       // Add the required class to the table
       existingTable.classList.add('gridview-table');
 
-      // Create wrapper structure
-      const container = document.createElement('div');
-      container.className = 'gridview-container';
-
+      // Create simplified wrapper structure (removed redundant container)
       const tableWrapper = document.createElement('div');
       tableWrapper.className = 'gridview-table-wrapper';
 
@@ -168,14 +165,12 @@ export class NteGridview extends LitElement {
         this.style.setProperty('--gridview-max-height', 'calc(100vh - 200px)');
       }
 
-      // Move the table into the wrapper structure
-      this.insertBefore(container, existingTable);
-      container.appendChild(tableWrapper);
+      // Move the table into the simplified wrapper structure
+      this.insertBefore(tableWrapper, existingTable);
       tableWrapper.appendChild(existingTable);
 
       // Debug: log the wrapper structure
       console.log('DOM structure created:', {
-        container: container.className,
         wrapper: tableWrapper.className,
         table: existingTable.className,
         maxHeight: this.style.getPropertyValue('--gridview-max-height'),

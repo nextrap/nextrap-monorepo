@@ -124,10 +124,10 @@ Cypress.Commands.add('scrollGridview', (deltaY: number) => {
   cy.get('nte-gridview').then(($element) => {
     const wrapper = $element.find('.gridview-table-wrapper');
     if (wrapper.length > 0) {
-      cy.wrap(wrapper).trigger('wheel', { deltaY });
+      cy.wrap(wrapper).trigger('wheel', { deltaY, force: true });
     } else {
       // Fallback to the table itself if wrapper doesn't exist
-      cy.get('nte-gridview table').trigger('wheel', { deltaY });
+      cy.get('nte-gridview table').trigger('wheel', { deltaY, force: true });
     }
   });
 });

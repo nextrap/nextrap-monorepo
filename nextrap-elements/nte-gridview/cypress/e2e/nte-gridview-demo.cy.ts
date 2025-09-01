@@ -1,4 +1,7 @@
 /// <reference types="cypress" />
+/// <reference path="../support/commands.ts" />
+
+import '../support/commands';
 
 describe('NTE GridView Demo Page', () => {
   beforeEach(() => {

@@ -1,7 +1,6 @@
 /* NTE GridView - Airtable-inspired design */
 
 nte-gridview {
-  display: block;
   font-family:
     -apple-system, BlinkMacSystemFont, 'Segoe UI', 'SF Pro Display', Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 13px;
@@ -10,37 +9,35 @@ nte-gridview {
   background: #ffffff;
   border: none;
   border-radius: 0;
-  overflow: scroll;
+  box-shadow: none;
+  overflow: hidden;
+  width: 100%;
   max-width: 100%;
-  max-height: 100%;
+  height: auto; /* Allow natural height */
+  max-height: 100%; /* Respect parent height constraints */
+  /* Proper box sizing for predictable dimensions */
+  box-sizing: border-box;
 
   /* CSS Custom Properties for theming */
-  --gridview-max-height: calc(100vh - 200px);
   --gridview-header-bg: #f4f4f4;
   --gridview-footer-bg: #f4f4f4;
   --gridview-border-color: #e1e5e9;
   --gridview-header-border: #d1d5d9;
 }
 
-.gridview-container {
-  max-width: 100%;
-  max-height: 100%;
-  display: block;
-  background: #ffffff;
-  border: none;
-  border-radius: 0;
-  box-shadow: none;
-  overflow: hidden;
-}
+/* Removed .gridview-container - merged into nte-gridview component */
 
 /* Create a scrollable wrapper for the table body */
 .gridview-table-wrapper {
-  max-height: var(--gridview-max-height, 400px); /* Fallback height */
-  height: var(--gridview-max-height, 400px); /* Set actual height */
+  max-height: 100%; /* Responsive max height */
+  /* Removed fixed height - let it size to content up to max-height */
   overflow-y: auto;
+  overflow-x: auto; /* Allow horizontal scrolling if needed */
   position: relative;
-  /* Ensure the wrapper has a defined height for scrolling to work */
-  min-height: 200px;
+  /* Let it size naturally, but ensure minimum for very small content */
+  min-height: 100px;
+  /* Ensure proper box sizing */
+  box-sizing: border-box;
 }
 
 /* Ensure the table maintains its structure */
@@ -96,12 +93,14 @@ nte-gridview {
   background-color: #f0f1f2;
 }
 
-/* Footer styling - sticky to bottom */
+/* Footer styling - sticky to bottom of scrollable area */
 .gridview-table tfoot {
   position: sticky;
   bottom: 0;
   z-index: 10;
   background: var(--gridview-footer-bg);
+  /* Ensure footer stays visible during scroll */
+  box-shadow: 0 -1px 0 0 var(--gridview-header-border);
 }
 
 .gridview-table tfoot tr {

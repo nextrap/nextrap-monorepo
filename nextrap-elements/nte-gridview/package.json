@@ -14,15 +14,15 @@
     },
     "dependencies": {
         "@nextrap/style-base": "*",
-        "cypress": "^13.16.1",
-        "cypress-lit": "^0.0.8",
         "lit": "^3.3.1",
         "vitest": "^3.2.0"
     },
     "devDependencies": {
         "@cypress/vite-dev-server": "^5.2.0",
         "@cypress/webpack-preprocessor": "^6.0.2",
-        "@nx/cypress": "21.1.2"
+        "@nx/cypress": "21.1.2",
+        "cypress": "^13.16.1",
+        "cypress-lit": "^0.0.8"
     },
     "type": "module",
     "types": "./index.d.ts"

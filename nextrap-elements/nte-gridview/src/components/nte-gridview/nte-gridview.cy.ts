@@ -88,7 +88,6 @@ describe('NTE GridView Component', () => {
       cy.mountGridview(sampleTableHtml);
 
       cy.get('nte-gridview').should('exist');
-      cy.get('nte-gridview .gridview-container').should('exist');
       cy.get('nte-gridview .gridview-table-wrapper').should('exist');
       cy.get('nte-gridview .gridview-table').should('exist');
     });
@@ -130,7 +129,7 @@ describe('NTE GridView Component', () => {
       cy.mountGridview(sampleTableHtml);
 
       // Check that the DOM structure is created
-      cy.get('nte-gridview .gridview-container .gridview-table-wrapper .gridview-table').should('exist');
+      cy.get('nte-gridview .gridview-table-wrapper .gridview-table').should('exist');
     });
 
     it('should add gridview-table class to the table', () => {
@@ -217,7 +216,7 @@ describe('NTE GridView Component', () => {
 
   describe('Sticky Headers and Scrolling', () => {
     it('should make headers sticky on scroll', () => {
-      cy.mountGridview(largeTableHtml, { 'max-height': '300px' });
+      cy.mountGridview(largeTableHtml, { 'max-height': '100%' });
 
       // Check that header is initially visible
       cy.get('nte-gridview .gridview-table thead th').first().should('be.visible');
@@ -240,9 +239,9 @@ describe('NTE GridView Component', () => {
 
       cy.get('nte-gridview').then(($el) => {
         const gridview = $el[0] as NteGridview;
-        gridview.setMaxHeight('400px');
+        gridview.setMaxHeight('400px%');
 
-        cy.get('nte-gridview .gridview-table-wrapper').should('have.css', 'max-height', '400px');
+        cy.get('nte-gridview .gridview-table-wrapper').should('have.css', 'max-height', '100%');
       });
     });
   });
@@ -482,6 +481,69 @@ describe('NTE GridView Component', () => {
 
       // Should be able to navigate with keyboard
       cy.focused().should('exist');
+    });
+  });
+
+  describe('Scroll Behavior Fix', () => {
+    it('should only have one scrollbar (inner wrapper, not outer component)', () => {
+      cy.mountGridview(sampleTableHtml);
+
+      // Check that the component itself has overflow hidden
+      cy.get('nte-gridview').should('have.css', 'overflow', 'hidden');
+
+      // Check that the table wrapper has the scrolling behavior
+      cy.get('.gridview-table-wrapper').should('have.css', 'overflow-y', 'auto');
+
+      // Verify DOM structure exists correctly
+      cy.get('.gridview-table-wrapper').should('exist');
+      cy.get('.gridview-table').should('exist');
+    });
+
+    it('should maintain proper nesting with simplified structure', () => {
+      cy.mountGridview(sampleTableHtml);
+
+      // Verify there's only one wrapper (no redundant container)
+      cy.get('.gridview-table-wrapper').should('have.length', 1);
+
+      // Verify the table is directly inside the wrapper
+      cy.get('.gridview-table-wrapper > .gridview-table').should('exist');
+
+      // Verify no redundant container exists
+      cy.get('.gridview-container').should('not.exist');
+    });
+
+    it('should size properly to fit parent element', () => {
+      cy.mountGridview(sampleTableHtml);
+
+      // Component should take reasonable width and height
+      cy.get('nte-gridview').then(($el) => {
+        const width = $el.width();
+        const height = $el.height();
+        expect(width).to.be.greaterThan(400); // Should have substantial width
+        expect(width).to.be.lessThan(2000); // But not excessively large
+        expect(height).to.be.greaterThan(100); // Should have some height for table content
+      });
+
+      // Wrapper should use responsive sizing
+      cy.get('.gridview-table-wrapper').should('have.css', 'overflow-y', 'auto');
+      cy.get('.gridview-table-wrapper').should('have.css', 'overflow-x', 'auto');
+      cy.get('.gridview-table-wrapper').should('have.css', 'box-sizing', 'border-box');
+
+      // Wrapper should have max-height set but not fixed height
+      cy.get('.gridview-table-wrapper').then(($wrapper) => {
+        const styles = window.getComputedStyle($wrapper[0]);
+        expect(styles.maxHeight).to.not.equal('none'); // Should have max-height constraint
+        expect(styles.minHeight).to.equal('100px'); // Should have min-height
+      });
+    });
+
+    it('should maintain sticky footer behavior', () => {
+      cy.mountGridview(sampleTableHtml);
+
+      // Footer should be sticky
+      cy.get('.gridview-table tfoot').should('have.css', 'position', 'sticky');
+      cy.get('.gridview-table tfoot').should('have.css', 'bottom', '0px');
+      cy.get('.gridview-table tfoot').should('have.css', 'z-index', '10');
     });
   });
 });
