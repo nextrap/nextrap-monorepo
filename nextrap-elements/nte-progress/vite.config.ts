@@ -4,14 +4,18 @@ import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
-import viteServerConfig from '../../utils/vite/config/vite-server-config';
-import viteTestConfig from '../../utils/vite/config/vite-test-config';
+
+const projectName = 'nte-progress';
+const dirName = `nextrap-elements/nte-progress`;
 
 export default defineConfig(() => ({
-  ...viteServerConfig,
-  test: viteTestConfig('nextrap-element/nte-some-component'),
+  server: {
+    port: 4000,
+    host: '0.0.0.0',
+    hmr: true,
+  },
   root: __dirname,
-  cacheDir: '../../node_modules/.vite/nextrap-elements/nte-progress',
+  cacheDir: `../../node_modules/.vite/${dirName}`,
   plugins: [
     nxViteTsPaths(),
     nxCopyAssetsPlugin(['*.md']),
@@ -24,7 +28,7 @@ export default defineConfig(() => ({
   // Configuration for building your library.
   // See: https://vitejs.dev/guide/build.html#library-mode
   build: {
-    outDir: '../../dist/nextrap-elements/nte-progress',
+    reportsDirectory: `../../coverage/${dirName}`,
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {
@@ -33,15 +37,15 @@ export default defineConfig(() => ({
     lib: {
       // Could also be a dictionary or array of multiple entry points.
       entry: 'src/index.ts',
-      name: 'nte-progress',
+      name: projectName,
       fileName: 'index',
       // Change this to the formats you want to support.
       // Don't forget to update your package.json as well.
       formats: ['es' as const],
     },
     rollupOptions: {
-      // External packages that should not be bundled into your library.
-      external: [],
+      // External packages that should not be bundled into your library. IMPORTANT!
+      external: (id) => !id.startsWith('.') && !path.isAbsolute(id),
     },
   },
   test: {
@@ -51,7 +55,7 @@ export default defineConfig(() => ({
     include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     reporters: ['default'],
     coverage: {
-      reportsDirectory: '../../coverage/nextrap-elements/nte-progress',
+      reportsDirectory: `../../coverage/${dirName}`,
       provider: 'v8' as const,
     },
   },
