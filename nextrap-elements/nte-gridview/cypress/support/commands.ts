@@ -91,23 +91,68 @@ Cypress.Commands.add('clearGridviewStorage', () => {
 });
 
 Cypress.Commands.add('resizeColumn', (columnIndex: number, deltaX: number) => {
+  // First ensure the component is fully initialized
+  cy.get('nte-gridview').then(($el) => {
+    const element = $el[0] as any;
+    if (element.forceInitialization) {
+      element.forceInitialization();
+    }
+  });
+
+  // Use a more robust approach that doesn't cause DOM detachment
   cy.get('nte-gridview .gridview-table thead th')
     .eq(columnIndex)
+    .should('exist')
     .within(() => {
-      cy.get('.resize-handle').then(($handle) => {
-        const handle = $handle[0];
-        const rect = handle.getBoundingClientRect();
-        const startX = rect.left + rect.width / 2;
-        const startY = rect.top + rect.height / 2;
+      cy.get('.resize-handle').should('exist');
+    });
 
-        cy.wrap(handle)
-          .trigger('mousedown', { clientX: startX, clientY: startY, which: 1, force: true })
-          .trigger('mousemove', { clientX: startX + deltaX, clientY: startY, force: true })
-          .trigger('mouseup', { force: true });
+  // Get the handle element separately to avoid chaining issues
+  cy.get('nte-gridview .gridview-table thead th')
+    .eq(columnIndex)
+    .find('.resize-handle')
+    .then(($handle) => {
+      const handle = $handle[0];
+      const rect = handle.getBoundingClientRect();
+      const startX = rect.left + rect.width / 2;
+      const startY = rect.top + rect.height / 2;
+
+      // Trigger events on document to avoid DOM detachment
+      cy.document().then((doc) => {
+        // Create and dispatch events manually
+        const mouseDownEvent = new MouseEvent('mousedown', {
+          clientX: startX,
+          clientY: startY,
+          button: 0,
+          bubbles: true,
+          cancelable: true,
+        });
+
+        const mouseMoveEvent = new MouseEvent('mousemove', {
+          clientX: startX + deltaX,
+          clientY: startY,
+          button: 0,
+          bubbles: true,
+          cancelable: true,
+        });
+
+        const mouseUpEvent = new MouseEvent('mouseup', {
+          clientX: startX + deltaX,
+          clientY: startY,
+          button: 0,
+          bubbles: true,
+          cancelable: true,
+        });
+
+        handle.dispatchEvent(mouseDownEvent);
+        cy.wait(10);
+        doc.dispatchEvent(mouseMoveEvent);
+        cy.wait(10);
+        doc.dispatchEvent(mouseUpEvent);
       });
     });
 
-  // Wait a bit for the resize to complete and be saved
+  // Wait for the resize to complete and be saved
   cy.wait(100);
 });
 
