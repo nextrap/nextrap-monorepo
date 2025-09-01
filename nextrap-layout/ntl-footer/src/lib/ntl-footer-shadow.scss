@@ -1,0 +1,59 @@
+// Styling for the nte-step component
+@use '@nextrap/style-reset';
+:host {
+  height: 40vh;
+  display: block;
+  overflow: visible;
+  overflow-x: clip;
+  --ntl-footer-background: #e4e6ef;
+  --ntl-footer-text: #203656;
+}
+
+footer {
+  position: relative;
+  overflow: visible;
+  background-color: var(--ntl-footer-background);
+  color: var(--ntl-footer-text);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+}
+
+:host::part(main) {
+  width: 100%;
+  height: 70%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* Parallax Background */
+
+:host::part(background) {
+  position: absolute;
+  top: -10vh;
+  left: 0;
+  width: 100%;
+  height: 50vh;
+  z-index: 1;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* Parallax-Effekt für Background-Elemente */
+
+:host::part(background) ::slotted(*) {
+  pointer-events: none;
+}
+
+/* Nur bei aktivem Parallax */
+
+:host([parallax]) ::part(background) ::slotted(*) {
+  will-change: transform;
+  backface-visibility: hidden;
+}
