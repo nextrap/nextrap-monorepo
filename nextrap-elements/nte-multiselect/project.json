@@ -1,39 +1,46 @@
 {
     "name": "nte-multiselect",
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
-    "sourceRoot": "{projectRoot}/src",
+    "sourceRoot": "nextrap-elements/nte-multiselect/src",
     "projectType": "library",
-    "tags": [],
-    "release": {
-        "version": {
-            "currentVersionResolver": "disk",
-            "preserveLocalDependencyProtocols": false,
-            "manifestRootsToUpdate": ["{projectRoot}"]
-        }
-    },
-    "// targets": "to see all targets run: nx show project content-pane --web",
+    "tags": ["type:element", "scope:nextrap"],
     "targets": {
         "build": {
             "executor": "@nx/vite:build",
             "outputs": ["{options.outputPath}"],
-            "defaultConfiguration": "production",
             "options": {
-                "outputPath": "dist/{projectRoot}"
+                "outputPath": "dist/nextrap-elements/nte-multiselect",
+                "configFile": "nextrap-elements/nte-multiselect/vite.config.ts"
+            }
+        },
+        "serve": {
+            "executor": "@nx/vite:dev-server",
+            "defaultConfiguration": "development",
+            "options": {
+                "buildTarget": "nte-multiselect:build",
+                "configFile": "nextrap-elements/nte-multiselect/vite.config.ts"
             },
             "configurations": {
                 "development": {
-                    "mode": "development"
+                    "buildTarget": "nte-multiselect:build:development"
                 },
                 "production": {
-                    "mode": "production"
+                    "buildTarget": "nte-multiselect:build:production"
                 }
             }
         },
-        "nx-release-publish": {
-            "executor": "@nx/js:release-publish",
+        "test": {
+            "executor": "@nx/vite:test",
+            "inputs": ["default", "^production"],
+            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
             "options": {
-                "packageRoot": "dist/{projectRoot}"
+                "reportsDirectory": "../../coverage/nextrap-elements/nte-multiselect",
+                "coverage": true,
+                "configFile": "nextrap-elements/nte-multiselect/vite.config.ts"
             }
+        },
+        "lint": {
+            "executor": "@nx/eslint:lint"
         }
     }
 }

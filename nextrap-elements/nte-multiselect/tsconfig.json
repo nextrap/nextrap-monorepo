@@ -1,27 +1,31 @@
 {
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
-        "module": "commonjs",
-        "esModuleInterop": true,
-        "forceConsistentCasingInFileNames": true,
+        "module": "ESNext",
+        "lib": ["ES2020", "DOM", "DOM.Iterable"],
+        "target": "ES2020",
+        "experimentalDecorators": true,
         "useDefineForClassFields": false,
-        "experimentalDecorators": false,
-        "emitDecoratorMetadata": false,
         "strict": true,
-        "importHelpers": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "declaration": true,
+        "declarationMap": true,
+        "sourceMap": true,
         "noImplicitOverride": true,
+        "noPropertyAccessFromIndexSignature": true,
         "noImplicitReturns": true,
-        "noFallthroughCasesInSwitch": true,
-        "noPropertyAccessFromIndexSignature": true
+        "noFallthroughCasesInSwitch": true
     },
     "files": [],
-    "include": [],
+    "include": ["src/**/*.ts"],
     "references": [
         {
             "path": "./tsconfig.lib.json"
-        },
-        {
-            "path": "./tsconfig.spec.json"
         }
     ]
 }
