@@ -3,6 +3,9 @@
     "version": "0.0.1",
     "main": "./index.js",
     "dependencies": {},
+    "devDependencies": {
+        "@trunkjs/responsive": "^1.0.6"
+    },
     "type": "module",
     "types": "./index.d.ts"
 }

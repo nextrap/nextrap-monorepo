@@ -61,11 +61,4 @@ export default defineConfig(() => ({
       external: (id) => !id.startsWith('.') && !path.isAbsolute(id),
     },
   },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        includePaths: ['node_modules'], // or custom paths
-      },
-    },
-  },
 }));
