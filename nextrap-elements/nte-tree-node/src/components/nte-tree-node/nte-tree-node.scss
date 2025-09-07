@@ -22,11 +22,17 @@
   display: flex;
   align-items: center;
   padding: 0.25rem 0.5rem;
-  cursor: pointer;
   border-radius: var(--tree-border-radius);
   color: var(--tree-text-color);
   transition: background-color var(--transition-duration) ease;
   user-select: none;
+  width: 100%;
+  text-align: left;
+
+  &:focus-visible {
+    outline: 2px solid var(--nt-primary);
+    outline-offset: -2px;
+  }
 }
 
 .tree-node-header:hover {

@@ -36,9 +36,16 @@ export class NteTreeNodeElement extends LoggingMixin(LitElement) {
   }
 
   override render() {
+    const ariaExpanded = this.hasChildren ? this.expanded.toString() : undefined;
+
     return html`
-      <div class="tree-node">
-        <div class="tree-node-header" @click="${this.toggleExpanded}">
+      <div class="tree-node" role="treeitem" aria-expanded="${ariaExpanded}">
+        <button
+          class="tree-node-header"
+          @click="${this.toggleExpanded}"
+          @keydown="${this.handleKeyDown}"
+          aria-expanded="${ariaExpanded}"
+        >
           <div class="tree-node-toggle">
             ${this.hasChildren
               ? html`
@@ -47,6 +54,7 @@ export class NteTreeNodeElement extends LoggingMixin(LitElement) {
                     width="12"
                     height="12"
                     viewBox="0 0 12 12"
+                    aria-hidden="true"
                   >
                     <path
                       d="M3 4.5L6 7.5L9 4.5"
@@ -58,21 +66,49 @@ export class NteTreeNodeElement extends LoggingMixin(LitElement) {
                     />
                   </svg>
                 `
-              : html`<span class="toggle-spacer"></span>`}
+              : html`<span class="toggle-spacer" aria-hidden="true"></span>`}
           </div>
 
-          <div class="tree-node-icon">
+          <div class="tree-node-icon" aria-hidden="true">
             <slot name="icon"></slot>
           </div>
 
           <div class="tree-node-name">
             <slot name="name"></slot>
           </div>
-        </div>
-        <div class="tree-node-children ${classMap({ collapsed: !this.expanded })}">
+        </button>
+        <div
+          class="tree-node-children ${classMap({ collapsed: !this.expanded })}"
+          role="group"
+          ?inert="${!this.expanded}"
+        >
           <slot></slot>
         </div>
       </div>
     `;
+  }
+
+  private handleKeyDown(event: KeyboardEvent) {
+    if (!this.hasChildren) return;
+
+    switch (event.key) {
+      case 'Enter':
+      case ' ':
+        event.preventDefault();
+        this.toggleExpanded();
+        break;
+      case 'ArrowRight':
+        if (!this.expanded) {
+          event.preventDefault();
+          this.expanded = true;
+        }
+        break;
+      case 'ArrowLeft':
+        if (this.expanded) {
+          event.preventDefault();
+          this.expanded = false;
+        }
+        break;
+    }
   }
 }
