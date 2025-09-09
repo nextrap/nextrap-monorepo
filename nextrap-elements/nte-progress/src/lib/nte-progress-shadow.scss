@@ -29,8 +29,15 @@
   --nte-progress-circle-fg-color: var(--nt-primary, #0d6efd);
   --nte-progress-circle-text-color: var(--nt-text-on-light);
 
-  display: inline-block;
+  display: block;
   width: 100%;
+
+  &[type='circle'] {
+    display: grid;
+    place-items: center;
+    width: auto; /* Let inline styles define size */
+    height: auto; /* Let inline styles define size */
+  }
 }
 
 /* Progress element styling - cross-browser */
@@ -182,31 +189,25 @@ progress.nte-progress.nte-progress-bar--animated::-moz-progress-bar {
 
 /* Circular progress styles */
 .nte-progress-circle {
-  --size: var(--nte-progress-circle-size);
-  --half-size: calc(var(--size) / 2);
-  --stroke-width: var(--nte-progress-circle-stroke-width);
-  --radius: calc((var(--size) - var(--stroke-width)) / 2);
-  --circumference: calc(var(--radius) * 3.14159 * 2);
-  --dash: calc((var(--progress) * var(--circumference)) / 100);
-
+  // This container now takes the full space given by the host.
+  display: grid;
+  place-items: center;
   position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--size);
-  height: var(--size);
-  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  min-height: var(--nte-progress-circle-size);
+  min-width: var(--nte-progress-circle-size);
 
   .nte-progress-circle-svg {
+    // The SVG scales to fit the smallest dimension of its container.
+    max-width: 100%;
+    max-height: 100%;
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    transform: rotate(-90deg); // Rotate the whole SVG for easier calculations
   }
 
   circle {
-    stroke-width: var(--stroke-width);
+    stroke-width: var(--nte-progress-circle-stroke-width);
     fill: transparent;
     stroke-linecap: round;
 
@@ -215,21 +216,19 @@ progress.nte-progress.nte-progress-bar--animated::-moz-progress-bar {
     }
 
     &.nte-progress-circle-fg {
-      transform: rotate(-90deg);
-      transform-origin: center;
       stroke: var(--nte-progress-circle-fg-color);
+      stroke-dasharray: var(--circumference);
+      stroke-dashoffset: calc(var(--circumference) - var(--dash));
       transition: stroke-dashoffset 0.8s linear 0s;
     }
   }
 
   .nte-progress-circle-content {
-    position: absolute;
+    position: relative; // Changed from absolute
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    height: 100%;
     color: var(--nte-progress-circle-text-color);
     text-align: center;
     font-size: var(--nte-progress-circle-text-size);

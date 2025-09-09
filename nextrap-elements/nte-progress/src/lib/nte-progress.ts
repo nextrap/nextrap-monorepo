@@ -248,26 +248,19 @@ export class nteProgressElement extends LitElement {
     const percentage = this.calculatePercentage();
 
     if (this.type === 'circle') {
-      // For circular progress
-      const radius = 45; // Default radius without stroke width
+      const radius = 45; // Radius based on a 100x100 viewBox
       const circumference = 2 * Math.PI * radius;
-      const dashArray = (percentage * circumference) / 100;
-      const dashOffset = circumference - dashArray;
+      const dash = (percentage / 100) * circumference;
 
       return html`
-        <div class="${this.getContainerClasses()}" part="container">
-          <svg class="nte-progress-circle-svg" width="100%" height="100%" viewBox="0 0 100 100" part="svg">
+        <div
+          class="${this.getContainerClasses()}"
+          part="container"
+          style="--circumference: ${circumference}; --dash: ${dash};"
+        >
+          <svg class="nte-progress-circle-svg" viewBox="0 0 100 100" part="svg">
             <circle class="nte-progress-circle-bg" cx="50" cy="50" r="${radius}" part="circle-background"></circle>
-            <circle
-              class="nte-progress-circle-fg"
-              cx="50"
-              cy="50"
-              r="${radius}"
-              stroke-dasharray="${circumference}"
-              stroke-dashoffset="${dashOffset}"
-              part="circle-foreground"
-              style="--progress: ${percentage}"
-            ></circle>
+            <circle class="nte-progress-circle-fg" cx="50" cy="50" r="${radius}" part="circle-foreground"></circle>
           </svg>
           <div class="nte-progress-circle-content" part="content">
             <slot></slot>
@@ -307,6 +300,39 @@ export class nteProgressElement extends LitElement {
         <slot></slot>
       </progress>
     `;
+  }
+
+  override updated(changedProperties: Map<string | number | symbol, unknown>) {
+    super.updated(changedProperties);
+
+    if (this.type === 'circle') {
+      this.updateStrokeWidth();
+    }
+  }
+
+  private updateStrokeWidth() {
+    const svg = this.shadowRoot?.querySelector('.nte-progress-circle-svg') as SVGElement;
+    if (!svg) return;
+
+    // Get the actual rendered size of the SVG
+    const rect = svg.getBoundingClientRect();
+    const actualSize = Math.min(rect.width, rect.height);
+
+    // Default size from CSS variable (100px)
+    const defaultSize = 100;
+
+    // Calculate scaling factor
+    const scaleFactor = actualSize / defaultSize;
+
+    // Adjust stroke width to maintain constant visual thickness
+    const baseStrokeWidth = 8; // Default stroke width in pixels
+    const adjustedStrokeWidth = baseStrokeWidth / scaleFactor;
+
+    // Apply the adjusted stroke width to both circles
+    const circles = svg.querySelectorAll('circle');
+    circles.forEach((circle) => {
+      circle.style.strokeWidth = `${adjustedStrokeWidth}px`;
+    });
   }
 }
 
