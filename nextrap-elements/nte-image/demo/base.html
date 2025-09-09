@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>nte-image Component Demos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        margin: 0;
+        padding: 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 16px;
+        padding: 3rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 3rem;
+        font-size: 2.5rem;
+        font-weight: 300;
+      }
+
+      .demo-section {
+        margin-bottom: 4rem;
+        padding-bottom: 3rem;
+        border-bottom: 1px solid #e1e8ed;
+      }
+
+      .demo-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+      }
+
+      h2 {
+        color: #34495e;
+        margin-bottom: 1rem;
+        font-size: 1.8rem;
+        font-weight: 400;
+      }
+
+      .demo-description {
+        color: #7f8c8d;
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+        line-height: 1.6;
+      }
+
+      .demo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .demo-item {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: visible; /* Allow content to be visible */
+      }
+
+      .demo-item:hover {
+        border-color: #667eea;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+      }
+
+      .demo-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .demo-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #2c3e50;
+      }
+
+      .demo-subtitle {
+        font-size: 0.9rem;
+        color: #7f8c8d;
+        margin-bottom: 1rem;
+      }
+
+      nte-image {
+        width: 100%;
+        height: 250px;
+        display: block;
+        margin-bottom: 1rem;
+      }
+
+      .slideshow-demo nte-image {
+        height: 300px;
+      }
+
+      .crop-demo nte-image {
+        height: 200px;
+      }
+
+      .code-snippet {
+        background: #2c3e50;
+        color: #ecf0f1;
+        padding: 1rem;
+        border-radius: 8px;
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        font-size: 0.85rem;
+        overflow-x: auto;
+        margin-top: 1rem;
+      }
+
+      .feature-list {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        margin-bottom: 1.5rem;
+        min-height: 2rem; /* Ensure consistent height */
+      }
+
+      .feature-list li {
+        background: #e3f2fd;
+        color: #1976d2;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        white-space: nowrap; /* Prevent text wrapping in tags */
+      }
+
+      .fullscreen-note,
+      .info-note,
+      .warning-note {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 2rem; /* Increased margin to prevent overlap */
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        color: #856404;
+        clear: both; /* Clear any floated elements */
+        position: relative;
+        z-index: 1;
+      }
+
+      .fullscreen-note {
+        background: #fff3cd;
+        border-color: #ffeaa7;
+        color: #856404;
+      }
+
+      .info-note {
+        background: #e3f2fd;
+        border-color: #bbdefb;
+        color: #1565c0;
+      }
+
+      .warning-note {
+        background: #ffebee;
+        border-color: #f8bbd9;
+        color: #c62828;
+      }
+
+      /* Navigation styling */
+      .demo-nav {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .demo-nav-container {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .nav-link {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        border: 2px solid #667eea;
+        transition: all 0.3s ease;
+        display: inline-block;
+        background: white;
+      }
+
+      .nav-link:hover {
+        background: #667eea;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      }
+
+      /* Responsive improvements */
+      @media (max-width: 768px) {
+        body {
+          padding: 1rem;
+        }
+
+        .container {
+          padding: 2rem 1.5rem;
+        }
+
+        h1 {
+          font-size: 2rem;
+          margin-bottom: 2rem;
+        }
+
+        .demo-grid {
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
+
+        .nav-link {
+          padding: 0.6rem 1.2rem;
+          font-size: 0.9rem;
+        }
+
+        nte-image {
+          height: 200px;
+        }
+
+        .slideshow-demo nte-image {
+          height: 220px;
+        }
+
+        .crop-demo nte-image {
+          height: 180px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding: 1.5rem 1rem;
+          margin: 0.5rem;
+          border-radius: 8px;
+        }
+
+        h1 {
+          font-size: 1.8rem;
+        }
+
+        h2 {
+          font-size: 1.5rem;
+        }
+
+        .demo-section {
+          margin-bottom: 3rem;
+          padding-bottom: 2rem;
+        }
+
+        nte-image {
+          height: 180px;
+        }
+
+        .slideshow-demo nte-image {
+          height: 200px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🖼️ nte-image Component Showcase</h1>
+
+      <!-- Navigation to other demos -->
+      <nav class="demo-nav">
+        <div class="demo-nav-container">
+          <a href="gallery.html" class="nav-link"> 🎨 Gallery Demo </a>
+          <a href="advanced.html" class="nav-link"> ⚡ Advanced Features </a>
+          <a href="mobile.html" class="nav-link"> 📱 Mobile Demo </a>
+        </div>
+      </nav>
+
+      <!-- Basic Image Demo -->
+      <section class="demo-section">
+        <h2>Basic Image Display</h2>
+        <p class="demo-description">
+          Simple image display with fullscreen capability. Click on any image to view it in fullscreen mode.
+        </p>
+        <div class="demo-grid">
+          <div class="demo-item">
+            <div class="demo-title">Standard Image</div>
+            <div class="demo-subtitle">Basic image with fullscreen feature</div>
+            <nte-image data-features="fullsize">
+              <img src="https://picsum.photos/400/250?random=1" alt="Sample landscape" />
+            </nte-image>
+            <ul class="feature-list">
+              <li>fullsize</li>
+            </ul>
+          </div>
+
+          <div class="demo-item">
+            <div class="demo-title">Rounded Borders</div>
+            <div class="demo-subtitle">Image with rounded corners</div>
+            <nte-image data-features="fullsize round-borders">
+              <img src="https://picsum.photos/400/250?random=2" alt="Sample architecture" />
+            </nte-image>
+            <ul class="feature-list">
+              <li>fullsize</li>
+              <li>round-borders</li>
+            </ul>
+          </div>
+        </div>
+        <div class="fullscreen-note">
+          💡 <strong>Tip:</strong> Click on any image to open it in fullscreen mode. Use ESC key or click outside to
+          close.
+        </div>
+      </section>
+
+      <!-- Slideshow Demo -->
+      <section class="demo-section slideshow-demo">
+        <h2>Slideshow Gallery</h2>
+        <p class="demo-description">
+          Interactive slideshow with navigation arrows, indicators, and automatic transitions.
+        </p>
+        <div class="demo-grid">
+          <div class="demo-item">
+            <div class="demo-title">Full Feature Slideshow</div>
+            <div class="demo-subtitle">Auto-play with navigation and indicators</div>
+            <nte-image data-features="slideshow arrows indicators fullsize round-borders" interval="3000">
+              <img
+                src="https://picsum.photos/600/300?random=10"
+                alt="Nature scene 1"
+                data-caption="Beautiful mountain landscape"
+              />
+              <img
+                src="https://picsum.photos/600/300?random=11"
+                alt="Nature scene 2"
+                data-caption="Serene lake reflection"
+              />
+              <img src="https://picsum.photos/600/300?random=12" alt="Nature scene 3" data-caption="Forest pathway" />
+              <img
+                src="https://picsum.photos/600/300?random=13"
+                alt="Nature scene 4"
+                data-caption="Ocean waves at sunset"
+              />
+            </nte-image>
+            <ul class="feature-list">
+              <li>slideshow</li>
+              <li>arrows</li>
+              <li>indicators</li>
+              <li>fullsize</li>
+              <li>round-borders</li>
+              <li>captions</li>
+            </ul>
+          </div>
+
+          <div class="demo-item">
+            <div class="demo-title">Minimal Slideshow</div>
+            <div class="demo-subtitle">Simple auto-play slideshow</div>
+            <nte-image data-features="slideshow fullsize" interval="4000">
+              <img src="https://picsum.photos/600/300?random=20" alt="City scene 1" />
+              <img src="https://picsum.photos/600/300?random=21" alt="City scene 2" />
+              <img src="https://picsum.photos/600/300?random=22" alt="City scene 3" />
+            </nte-image>
+            <ul class="feature-list">
+              <li>slideshow</li>
+              <li>fullsize</li>
+            </ul>
+          </div>
+        </div>
+        <div class="fullscreen-note">
+          💡 <strong>Slideshow Controls:</strong> Hover over slideshow to see navigation arrows. Use arrow keys in
+          fullscreen mode to navigate.
+        </div>
+      </section>
+
+      <!-- Image Cropping Demo -->
+      <section class="demo-section crop-demo">
+        <h2>Image Cropping & Focus</h2>
+        <p class="demo-description">
+          Demonstrate image cropping capabilities and focus point control using data-crop attributes.
+        </p>
+        <div class="demo-grid">
+          <div class="demo-item">
+            <div class="demo-title">Global Crop</div>
+            <div class="demo-subtitle">Crop applied to all images</div>
+            <nte-image data-features="fullsize round-borders" data-crop="top: 10%; bottom: 10%; left: 5%; right: 5%">
+              <img src="https://picsum.photos/500/400?random=30" alt="Cropped image" />
+            </nte-image>
+            <ul class="feature-list">
+              <li>global-crop</li>
+              <li>fullsize</li>
+              <li>round-borders</li>
+            </ul>
+            <div class="code-snippet">data-crop="top: 10%; bottom: 10%; left: 5%; right: 5%"</div>
+          </div>
+
+          <div class="demo-item">
+            <div class="demo-title">Individual Crop</div>
+            <div class="demo-subtitle">Different crop for each image</div>
+            <nte-image data-features="slideshow arrows fullsize" interval="5000">
+              <img
+                src="https://picsum.photos/500/400?random=31"
+                alt="Portrait crop"
+                data-crop="top: 20%; bottom: 20%"
+                style="object-position: center top"
+              />
+              <img
+                src="https://picsum.photos/500/400?random=32"
+                alt="Landscape crop"
+                data-crop="left: 15%; right: 15%"
+                style="object-position: center center"
+              />
+              <img
+                src="https://picsum.photos/500/400?random=33"
+                alt="Square crop"
+                data-crop="top: 25%; bottom: 25%; left: 25%; right: 25%"
+              />
+            </nte-image>
+            <ul class="feature-list">
+              <li>individual-crop</li>
+              <li>slideshow</li>
+              <li>arrows</li>
+              <li>fullsize</li>
+              <li>object-position</li>
+            </ul>
+          </div>
+
+          <div class="demo-item">
+            <div class="demo-title">Focus Point Control</div>
+            <div class="demo-subtitle">Using object-position for image focus</div>
+            <nte-image data-features="slideshow indicators fullsize round-borders" interval="4000">
+              <img
+                src="https://picsum.photos/600/400?random=40"
+                alt="Focus top"
+                style="object-position: center top"
+                data-caption="Focus: Top"
+              />
+              <img
+                src="https://picsum.photos/600/400?random=41"
+                alt="Focus center"
+                style="object-position: center center"
+                data-caption="Focus: Center"
+              />
+              <img
+                src="https://picsum.photos/600/400?random=42"
+                alt="Focus bottom"
+                style="object-position: center bottom"
+                data-caption="Focus: Bottom"
+              />
+            </nte-image>
+            <ul class="feature-list">
+              <li>object-position</li>
+              <li>slideshow</li>
+              <li>indicators</li>
+              <li>fullsize</li>
+              <li>captions</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Advanced Features Demo -->
+      <section class="demo-section">
+        <h2>Advanced Features</h2>
+        <p class="demo-description">
+          Showcase advanced features like custom intervals, pause behavior, and debug mode.
+        </p>
+        <div class="demo-grid">
+          <div class="demo-item">
+            <div class="demo-title">Fast Slideshow</div>
+            <div class="demo-subtitle">Quick transitions (2 seconds)</div>
+            <nte-image data-features="slideshow arrows indicators fullsize" interval="2000">
+              <img
+                src="https://picsum.photos/400/250?random=50"
+                alt="Fast slide 1"
+                data-caption="Fast transition - 2s"
+              />
+              <img src="https://picsum.photos/400/250?random=51" alt="Fast slide 2" data-caption="Quick change" />
+              <img src="https://picsum.photos/400/250?random=52" alt="Fast slide 3" data-caption="Rapid slideshow" />
+            </nte-image>
+            <ul class="feature-list">
+              <li>fast-interval</li>
+              <li>slideshow</li>
+              <li>arrows</li>
+              <li>indicators</li>
+            </ul>
+          </div>
+
+          <div class="demo-item">
+            <div class="demo-title">No Pause on Hover</div>
+            <div class="demo-subtitle">Continuous slideshow</div>
+            <nte-image data-features="slideshow arrows dont-pause-on-hover round-borders" interval="3500">
+              <img
+                src="https://picsum.photos/400/250?random=60"
+                alt="Continuous 1"
+                data-caption="Won't pause on hover"
+              />
+              <img src="https://picsum.photos/400/250?random=61" alt="Continuous 2" data-caption="Keeps playing" />
+              <img src="https://picsum.photos/400/250?random=62" alt="Continuous 3" data-caption="Always moving" />
+            </nte-image>
+            <ul class="feature-list">
+              <li>dont-pause-on-hover</li>
+              <li>slideshow</li>
+              <li>arrows</li>
+              <li>round-borders</li>
+            </ul>
+          </div>
+
+          <div class="demo-item">
+            <div class="demo-title">Debug Mode</div>
+            <div class="demo-subtitle">Check browser console for debug info</div>
+            <nte-image data-features="slideshow indicators fullsize" debug interval="6000">
+              <img
+                src="https://picsum.photos/400/250?random=70"
+                alt="Debug image 1"
+                data-caption="Debug mode enabled"
+              />
+              <img
+                src="https://picsum.photos/400/250?random=71"
+                alt="Debug image 2"
+                data-caption="Check console logs"
+              />
+            </nte-image>
+            <ul class="feature-list">
+              <li>debug</li>
+              <li>slideshow</li>
+              <li>indicators</li>
+              <li>fullsize</li>
+            </ul>
+            <div class="code-snippet">Open browser console (F12) to see debug information</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Usage Examples -->
+      <section class="demo-section">
+        <h2>Usage Examples</h2>
+        <p class="demo-description">Code examples showing how to implement each feature combination.</p>
+
+        <div class="demo-item">
+          <div class="demo-title">Basic Implementation</div>
+          <div class="code-snippet">
+            &lt;nte-image data-features="fullsize round-borders"&gt; &lt;img src="image.jpg" alt="Description" /&gt;
+            &lt;/nte-image&gt;
+          </div>
+        </div>
+
+        <div class="demo-item">
+          <div class="demo-title">Full-Featured Slideshow</div>
+          <div class="code-snippet">
+            &lt;nte-image data-features="slideshow arrows indicators fullsize round-borders" interval="4000"&gt; &lt;img
+            src="slide1.jpg" alt="Slide 1" data-caption="First slide" /&gt; &lt;img src="slide2.jpg" alt="Slide 2"
+            data-caption="Second slide" /&gt; &lt;img src="slide3.jpg" alt="Slide 3" data-caption="Third slide" /&gt;
+            &lt;/nte-image&gt;
+          </div>
+        </div>
+
+        <div class="demo-item">
+          <div class="demo-title">Image Cropping</div>
+          <div class="code-snippet">
+            &lt;nte-image data-features="fullsize" data-crop="top: 10%; bottom: 10%"&gt; &lt;img src="image.jpg"
+            alt="Cropped image" style="object-position: center top" /&gt; &lt;/nte-image&gt;
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="/demo/main.js" type="module"></script>
+  </body>
+</html>

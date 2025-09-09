@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>nte-image Advanced Features</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        margin: 0;
+        padding: 2rem;
+        background: linear-gradient(45deg, #1e3c72 0%, #2a5298 100%);
+        min-height: 100vh;
+        color: #333;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 16px;
+        padding: 3rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      h1 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 2rem;
+        font-size: 2.5rem;
+        font-weight: 300;
+      }
+
+      .back-link {
+        display: inline-block;
+        margin-bottom: 2rem;
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        border: 2px solid #667eea;
+        transition: all 0.3s ease;
+      }
+
+      .back-link:hover {
+        background: #667eea;
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      .demo-section {
+        margin-bottom: 4rem;
+        padding-bottom: 3rem;
+        border-bottom: 1px solid #e1e8ed;
+      }
+
+      .demo-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+      }
+
+      h2 {
+        color: #34495e;
+        margin-bottom: 1rem;
+        font-size: 1.8rem;
+        font-weight: 400;
+      }
+
+      .demo-description {
+        color: #7f8c8d;
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+        line-height: 1.6;
+      }
+
+      .demo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .demo-item {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+      }
+
+      .demo-item:hover {
+        border-color: #667eea;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+      }
+
+      .demo-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #2c3e50;
+      }
+
+      .demo-subtitle {
+        font-size: 0.9rem;
+        color: #7f8c8d;
+        margin-bottom: 1rem;
+      }
+
+      nte-image {
+        width: 100%;
+        height: 250px;
+        display: block;
+        margin-bottom: 1rem;
+      }
+
+      .performance-demo nte-image {
+        height: 200px;
+      }
+
+      .crop-precision-demo nte-image {
+        height: 300px;
+      }
+
+      .code-snippet {
+        background: #2c3e50;
+        color: #ecf0f1;
+        padding: 1rem;
+        border-radius: 8px;
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        font-size: 0.85rem;
+        overflow-x: auto;
+        margin-top: 1rem;
+        white-space: pre-wrap;
+      }
+
+      .feature-list {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        margin-bottom: 1.5rem;
+        min-height: 2rem;
+      }
+
+      .feature-list li {
+        background: #e8f5e8;
+        color: #2e7d32;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+
+      .performance-list li {
+        background: #fff3e0;
+        color: #ef6c00;
+      }
+
+      .warning-note {
+        background: #ffebee;
+        border: 1px solid #f8bbd9;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        color: #c62828;
+      }
+
+      /* Fix z-index issues */
+      .demo-item {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Ensure proper spacing */
+      .metrics-display {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .console-output {
+        max-height: 150px;
+        word-wrap: break-word;
+      }
+
+      /* Responsive improvements */
+      @media (max-width: 768px) {
+        body {
+          padding: 1rem;
+        }
+
+        .container {
+          padding: 2rem 1.5rem;
+        }
+
+        h1 {
+          font-size: 2rem;
+          margin-bottom: 1.5rem;
+        }
+
+        .back-link {
+          font-size: 0.9rem;
+          margin-bottom: 1.5rem;
+        }
+
+        .demo-grid {
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
+
+        nte-image {
+          height: 200px;
+        }
+
+        .performance-demo nte-image {
+          height: 180px;
+        }
+
+        .crop-precision-demo nte-image {
+          height: 220px;
+        }
+
+        .metrics-display {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding: 1.5rem 1rem;
+          margin: 0.5rem;
+          border-radius: 8px;
+        }
+
+        h1 {
+          font-size: 1.8rem;
+        }
+
+        h2 {
+          font-size: 1.5rem;
+        }
+
+        .demo-section {
+          margin-bottom: 3rem;
+          padding-bottom: 2rem;
+        }
+
+        nte-image {
+          height: 180px;
+        }
+
+        .performance-demo nte-image {
+          height: 160px;
+        }
+
+        .crop-precision-demo nte-image {
+          height: 200px;
+        }
+
+        .metrics-display {
+          grid-template-columns: 1fr;
+        }
+
+        .console-output {
+          max-height: 120px;
+          font-size: 0.75rem;
+        }
+      }
+
+      .info-note {
+        background: #e3f2fd;
+        border: 1px solid #bbdefb;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        color: #1565c0;
+      }
+
+      .console-output {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 1rem;
+        border-radius: 8px;
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        font-size: 0.8rem;
+        margin-top: 1rem;
+        max-height: 200px;
+        overflow-y: auto;
+        border: 1px solid #333;
+      }
+
+      .metrics-display {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .metric-item {
+        background: #f5f5f5;
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+      }
+
+      .metric-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #1976d2;
+      }
+
+      .metric-label {
+        font-size: 0.85rem;
+        color: #666;
+        margin-top: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a href="base.html" class="back-link">← Back to Main Demo</a>
+
+      <h1>⚡ Advanced Features & Performance</h1>
+
+      <!-- Performance Testing -->
+      <section class="demo-section performance-demo">
+        <h2>Performance & Optimization</h2>
+        <p class="demo-description">
+          Test performance characteristics, loading behavior, and optimization features of the nte-image component.
+        </p>
+        <div class="demo-grid">
+          <div class="demo-item">
+            <div class="demo-title">High-Speed Slideshow</div>
+            <div class="demo-subtitle">Stress test with 500ms intervals</div>
+            <nte-image data-features="slideshow arrows indicators fullsize" interval="500" debug>
+              <img
+                src="https://picsum.photos/400/200?random=300"
+                alt="Speed test 1"
+                data-caption="Ultra fast - 500ms"
+              />
+              <img src="https://picsum.photos/400/200?random=301" alt="Speed test 2" data-caption="Performance test" />
+              <img
+                src="https://picsum.photos/400/200?random=302"
+                alt="Speed test 3"
+                data-caption="Smooth transitions"
+              />
+              <img
+                src="https://picsum.photos/400/200?random=303"
+                alt="Speed test 4"
+                data-caption="Optimized rendering"
+              />
+            </nte-image>
+            <ul class="feature-list performance-list">
+              <li>500ms interval</li>
+              <li>debug mode</li>
+              <li>performance test</li>
+            </ul>
+          </div>
+
+          <div class="demo-item">
+            <div class="demo-title">Large Image Set</div>
+            <div class="demo-subtitle">Memory management with 10 images</div>
+            <nte-image data-features="slideshow indicators fullsize round-borders" interval="2000" debug>
+              <img src="https://picsum.photos/400/200?random=310" alt="Large set 1" data-caption="Image 1 of 10" />
+              <img src="https://picsum.photos/400/200?random=311" alt="Large set 2" data-caption="Image 2 of 10" />
+              <img src="https://picsum.photos/400/200?random=312" alt="Large set 3" data-caption="Image 3 of 10" />
+              <img src="https://picsum.photos/400/200?random=313" alt="Large set 4" data-caption="Image 4 of 10" />
+              <img src="https://picsum.photos/400/200?random=314" alt="Large set 5" data-caption="Image 5 of 10" />
+              <img src="https://picsum.photos/400/200?random=315" alt="Large set 6" data-caption="Image 6 of 10" />
+              <img src="https://picsum.photos/400/200?random=316" alt="Large set 7" data-caption="Image 7 of 10" />
+              <img src="https://picsum.photos/400/200?random=317" alt="Large set 8" data-caption="Image 8 of 10" />
+              <img src="https://picsum.photos/400/200?random=318" alt="Large set 9" data-caption="Image 9 of 10" />
+              <img src="https://picsum.photos/400/200?random=319" alt="Large set 10" data-caption="Image 10 of 10" />
+            </nte-image>
+            <ul class="feature-list performance-list">
+              <li>10 images</li>
+              <li>memory test</li>
+              <li>debug mode</li>
+            </ul>
+          </div>
+        </div>
+        <div class="info-note">
+          💡 <strong>Performance Tips:</strong> Open browser DevTools (F12) → Console to see detailed performance logs.
+          Monitor memory usage in the Performance tab.
+        </div>
+      </section>
+
+      <!-- Precise Cropping -->
+      <section class="demo-section crop-precision-demo">
+        <h2>Precision Cropping & Positioning</h2>
+        <p class="demo-description">
+          Advanced cropping techniques with pixel-perfect control and complex positioning scenarios.
+        </p>
+        <div class="demo-grid">
+          <div class="demo-item">
+            <div class="demo-title">Pixel-Perfect Cropping</div>
+            <div class="demo-subtitle">Mix of percentage and pixel values</div>
+            <nte-image
+              data-features="fullsize round-borders"
+              data-crop="top: 30px; bottom: 20%; left: 10%; right: 50px"
+            >
+              <img src="https://picsum.photos/600/400?random=400" alt="Precise crop" style="object-position: 30% 70%" />
+            </nte-image>
+            <ul class="feature-list">
+              <li>mixed units</li>
+              <li>pixel precision</li>
+              <li>custom position</li>
+            </ul>
+            <div class="code-snippet">
+              data-crop="top: 30px; bottom: 20%; left: 10%; right: 50px" style="object-position: 30% 70%"
+            </div>
+          </div>
+
+          <div class="demo-item">
+            <div class="demo-title">Dynamic Crop Slideshow</div>
+            <div class="demo-subtitle">Each image has different crop settings</div>
+            <nte-image data-features="slideshow arrows indicators fullsize" interval="4000" debug>
+              <img
+                src="https://picsum.photos/500/400?random=410"
+                alt="Crop 1"
+                data-crop="top: 0%; bottom: 30%; left: 0%; right: 0%"
+                style="object-position: center top"
+                data-caption="Top focus crop"
+              />
+              <img
+                src="https://picsum.photos/500/400?random=411"
+                alt="Crop 2"
+                data-crop="top: 25%; bottom: 25%; left: 0%; right: 0%"
+                style="object-position: center center"
+                data-caption="Center strip crop"
+              />
+              <img
+                src="https://picsum.photos/500/400?random=412"
+                alt="Crop 3"
+                data-crop="top: 0%; bottom: 0%; left: 20%; right: 20%"
+                style="object-position: center center"
+                data-caption="Side crop"
+              />
+              <img
+                src="https://picsum.photos/500/400?random=413"
+                alt="Crop 4"
+                data-crop="top: 15%; bottom: 15%; left: 15%; right: 15%"
+                style="object-position: 40% 60%"
+                data-caption="Uniform crop + offset"
+              />
+            </nte-image>
+            <ul class="feature-list">
+              <li>individual crops</li>
+              <li>dynamic positioning</li>
+              <li>slideshow</li>
+              <li>debug mode</li>
+            </ul>
+          </div>
+
+          <div class="demo-item">
+            <div class="demo-title">Extreme Cropping</div>
+            <div class="demo-subtitle">Heavy cropping with scaling compensation</div>
+            <nte-image data-features="fullsize" data-crop="top: 40%; bottom: 40%; left: 30%; right: 30%">
+              <img
+                src="https://picsum.photos/800/600?random=420"
+                alt="Extreme crop"
+                style="object-position: center center"
+              />
+            </nte-image>
+            <ul class="feature-list">
+              <li>extreme crop</li>
+              <li>auto scaling</li>
+              <li>center focus</li>
+            </ul>
+            <div class="code-snippet">
+              data-crop="top: 40%; bottom: 40%; left: 30%; right: 30%"
+              <!-- Results in a small centered window with automatic scaling -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Event Handling & Callbacks -->
+      <section class="demo-section">
+        <h2>Event Handling & JavaScript Integration</h2>
+        <p class="demo-description">
+          Demonstrate JavaScript event handling, callbacks, and programmatic control of the component.
+        </p>
+        <div class="demo-grid">
+          <div class="demo-item">
+            <div class="demo-title">Event Monitoring</div>
+            <div class="demo-subtitle">All events logged to console and displayed</div>
+            <nte-image
+              id="eventDemo"
+              data-features="slideshow arrows indicators fullsize round-borders"
+              interval="3000"
+              debug
+            >
+              <img
+                src="https://picsum.photos/400/250?random=500"
+                alt="Event test 1"
+                data-caption="Slide 1 - Check events"
+              />
+              <img
+                src="https://picsum.photos/400/250?random=501"
+                alt="Event test 2"
+                data-caption="Slide 2 - Event logging"
+              />
+              <img
+                src="https://picsum.photos/400/250?random=502"
+                alt="Event test 3"
+                data-caption="Slide 3 - Monitor console"
+              />
+            </nte-image>
+            <ul class="feature-list">
+              <li>event logging</li>
+              <li>slide change events</li>
+              <li>fullsize events</li>
+            </ul>
+            <div id="eventLog" class="console-output">
+              <div>Event log will appear here...</div>
+            </div>
+          </div>
+
+          <div class="demo-item">
+            <div class="demo-title">Performance Metrics</div>
+            <div class="demo-subtitle">Real-time performance monitoring</div>
+            <nte-image id="metricsDemo" data-features="slideshow indicators fullsize" interval="2000" debug>
+              <img
+                src="https://picsum.photos/400/250?random=510"
+                alt="Metrics 1"
+                data-caption="Performance monitoring"
+              />
+              <img src="https://picsum.photos/400/250?random=511" alt="Metrics 2" data-caption="Memory tracking" />
+              <img src="https://picsum.photos/400/250?random=512" alt="Metrics 3" data-caption="FPS measurement" />
+            </nte-image>
+            <div class="metrics-display">
+              <div class="metric-item">
+                <div class="metric-value" id="slideCount">0</div>
+                <div class="metric-label">Slide Changes</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-value" id="avgTime">0ms</div>
+                <div class="metric-label">Avg Transition</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-value" id="memoryUsage">0MB</div>
+                <div class="metric-label">Memory Usage</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="warning-note">
+          ⚠️ <strong>Note:</strong> Performance metrics are approximations and may vary based on browser, device, and
+          network conditions.
+        </div>
+      </section>
+
+      <!-- Edge Cases & Error Handling -->
+      <section class="demo-section">
+        <h2>Edge Cases & Error Handling</h2>
+        <p class="demo-description">Test component behavior with edge cases, invalid inputs, and error conditions.</p>
+        <div class="demo-grid">
+          <div class="demo-item">
+            <div class="demo-title">Invalid Crop Values</div>
+            <div class="demo-subtitle">Component handles malformed crop data gracefully</div>
+            <nte-image data-features="fullsize debug" data-crop="top: invalid; bottom: 200%; left: -50px; right: abc">
+              <img src="https://picsum.photos/400/250?random=600" alt="Invalid crop test" />
+            </nte-image>
+            <ul class="feature-list">
+              <li>error handling</li>
+              <li>graceful degradation</li>
+              <li>debug mode</li>
+            </ul>
+            <div class="code-snippet">
+              data-crop="top: invalid; bottom: 200%; left: -50px; right: abc"
+              <!-- Component should handle invalid values gracefully -->
+            </div>
+          </div>
+
+          <div class="demo-item">
+            <div class="demo-title">Missing Images</div>
+            <div class="demo-subtitle">Slideshow with some broken image URLs</div>
+            <nte-image data-features="slideshow arrows indicators debug" interval="3000">
+              <img src="https://picsum.photos/400/250?random=610" alt="Valid image 1" data-caption="This image loads" />
+              <img src="https://invalid-url.com/missing.jpg" alt="Broken image" data-caption="This image fails" />
+              <img src="https://picsum.photos/400/250?random=611" alt="Valid image 2" data-caption="This image loads" />
+            </nte-image>
+            <ul class="feature-list">
+              <li>error resilience</li>
+              <li>broken image handling</li>
+              <li>continued operation</li>
+            </ul>
+          </div>
+
+          <div class="demo-item">
+            <div class="demo-title">Extreme Intervals</div>
+            <div class="demo-subtitle">Very fast and very slow slideshow intervals</div>
+            <nte-image data-features="slideshow indicators fullsize debug" interval="100">
+              <img src="https://picsum.photos/400/250?random=620" alt="Ultra fast 1" data-caption="100ms interval!" />
+              <img
+                src="https://picsum.photos/400/250?random=621"
+                alt="Ultra fast 2"
+                data-caption="Very rapid changes"
+              />
+              <img src="https://picsum.photos/400/250?random=622" alt="Ultra fast 3" data-caption="Performance test" />
+            </nte-image>
+            <ul class="feature-list">
+              <li>extreme intervals</li>
+              <li>performance limits</li>
+              <li>stability test</li>
+            </ul>
+            <div class="warning-note">
+              ⚠️ <strong>Warning:</strong> 100ms intervals may cause performance issues and are not recommended for
+              production use.
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="/demo/main.js" type="module"></script>
+    <script>
+      // Event handling and metrics tracking
+      document.addEventListener('DOMContentLoaded', function () {
+        const eventDemo = document.getElementById('eventDemo');
+        const metricsDemo = document.getElementById('metricsDemo');
+        const eventLog = document.getElementById('eventLog');
+
+        let slideCount = 0;
+        let transitionTimes = [];
+        let lastTransitionTime = Date.now();
+
+        // Event logging
+        function logEvent(message) {
+          const timestamp = new Date().toLocaleTimeString();
+          const logEntry = document.createElement('div');
+          logEntry.textContent = `[${timestamp}] ${message}`;
+          eventLog.appendChild(logEntry);
+          eventLog.scrollTop = eventLog.scrollHeight;
+
+          // Keep only last 10 entries
+          while (eventLog.children.length > 10) {
+            eventLog.removeChild(eventLog.firstChild);
+          }
+        }
+
+        // Listen for custom events
+        eventDemo?.addEventListener('nte-image-slide-change', function (e) {
+          slideCount++;
+          const now = Date.now();
+          const transitionTime = now - lastTransitionTime;
+          transitionTimes.push(transitionTime);
+          lastTransitionTime = now;
+
+          logEvent(`Slide changed to index ${e.detail?.index || 'unknown'}`);
+          updateMetrics();
+        });
+
+        eventDemo?.addEventListener('nte-image-fullsize-open', function () {
+          logEvent('Fullsize view opened');
+        });
+
+        eventDemo?.addEventListener('nte-image-fullsize-close', function () {
+          logEvent('Fullsize view closed');
+        });
+
+        metricsDemo?.addEventListener('nte-image-slide-change', function () {
+          slideCount++;
+          updateMetrics();
+        });
+
+        function updateMetrics() {
+          document.getElementById('slideCount').textContent = slideCount;
+
+          if (transitionTimes.length > 0) {
+            const avgTime = transitionTimes.reduce((a, b) => a + b, 0) / transitionTimes.length;
+            document.getElementById('avgTime').textContent = Math.round(avgTime) + 'ms';
+          }
+
+          // Approximate memory usage (not accurate, just for demo)
+          if (performance.memory) {
+            const memoryMB = Math.round(performance.memory.usedJSHeapSize / 1024 / 1024);
+            document.getElementById('memoryUsage').textContent = memoryMB + 'MB';
+          }
+        }
+
+        // Initial log
+        logEvent('Event monitoring started');
+
+        // Update metrics every 5 seconds
+        setInterval(updateMetrics, 5000);
+      });
+    </script>
+  </body>
+</html>

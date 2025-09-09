@@ -1,0 +1,323 @@
+/* The ShadowDOM Styles */
+/* Refer to README.md for style guidelines */
+
+:host {
+  /* Public CSS variables (host API) */
+  --nxa-image-border-radius: var(--nt-radius-lg, 12px);
+  --nxa-image-shadow: var(--nt-shadow-md, 0 4px 20px rgba(0, 0, 0, 0.08));
+  --nxa-image-gap: var(--nt-base-gap, 8px);
+
+  --nxa-image-caption-fg: var(--nt-text, #333);
+  --nxa-image-caption-bg: var(--nt-surface, rgba(255, 255, 255, 0.95));
+  --nxa-image-caption-border: var(--nt-border-subtle, rgba(0, 0, 0, 0.05));
+
+  --nxa-image-arrow-bg: rgba(0, 0, 0, 0.2);
+  --nxa-image-arrow-bg-hover: rgba(0, 0, 0, 0.5);
+  --nxa-image-progress-bg: var(--nt-text-on-primary, #ffffff);
+
+  width: inherit;
+  height: inherit;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+:host(.round-borders) {
+  border-radius: var(--nxa-image-border-radius);
+  overflow: hidden;
+}
+
+::slotted(img) {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: inherit;
+  height: inherit;
+  user-select: none;
+  -webkit-user-drag: none;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+
+.navigation-arrows {
+  display: flex;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  justify-content: space-between;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.image-container:hover .navigation-arrows {
+  opacity: 1;
+}
+
+.arrow-button {
+  pointer-events: all;
+  background: var(--nxa-image-arrow-bg);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 60px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto 0;
+  font-size: 18px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(4px);
+  border-radius: 0 4px 4px 0;
+}
+
+.arrow-button.prev {
+  border-radius: 0 4px 4px 0;
+}
+
+.arrow-button.next {
+  border-radius: 4px 0 0 4px;
+}
+
+.arrow-button:hover {
+  background: var(--nxa-image-arrow-bg-hover);
+  width: 50px;
+}
+
+.image-container {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  width: 100%;
+  box-shadow: var(--nxa-image-shadow);
+}
+
+.caption-container {
+  position: relative;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  max-height: 80px;
+  box-shadow: var(--nxa-image-shadow);
+  margin-top: -1px;
+}
+
+:host(.round-borders) .caption-container {
+  border-radius: 0 0 var(--nxa-image-border-radius) var(--nxa-image-border-radius);
+  overflow: hidden;
+}
+
+.caption {
+  min-height: 0;
+  width: 100%;
+  color: var(--nxa-image-caption-fg);
+  font-size: 14px;
+  text-align: center;
+  padding: 12px 16px;
+  z-index: 2;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  background-color: var(--nxa-image-caption-bg);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-top: 1px solid var(--nxa-image-caption-border);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.caption:empty {
+  display: none;
+}
+
+.caption-container:has(.caption:empty) {
+  max-height: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :host {
+    --nxa-image-caption-fg: var(--nt-text, #f0f0f0);
+    --nxa-image-caption-bg: var(--nt-surface, rgba(30, 30, 30, 0.95));
+    --nxa-image-caption-border: var(--nt-border-subtle, rgba(255, 255, 255, 0.05));
+  }
+}
+
+.indicators {
+  position: absolute;
+  bottom: 15px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--nxa-image-gap);
+  z-index: 2;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.indicator-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.indicator {
+  width: 30px;
+  height: 5px;
+  border-radius: 2.5px;
+  background-color: var(--nxa-image-indicator-bg, rgba(0, 0, 0, 0.3));
+  margin: 0;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(2px);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.indicator.active {
+  background-color: var(--nxa-image-indicator-active-bg, rgba(0, 0, 0, 0.6));
+  width: 40px;
+}
+
+.progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: var(--nxa-image-progress-bg);
+  transition: width 0.05s linear;
+}
+
+.progress-bar.paused {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.7;
+  }
+}
+
+.pause-icon-small {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pause-icon-small:before,
+.pause-icon-small:after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 8px;
+  background-color: white;
+  border-radius: 1px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.pause-icon-small:before {
+  left: 35%;
+}
+
+.pause-icon-small:after {
+  right: 35%;
+}
+
+/* Remove the standalone pause indicator since we're integrating it with indicators */
+.pause-indicator {
+  display: none;
+}
+
+.image-container:hover .indicators {
+  opacity: 1;
+}
+
+:host(.round-borders) img {
+  border-radius: var(--nxa-image-border-radius);
+}
+
+/* When captions are present, adjust the image container to only have top rounded corners */
+:host(.round-borders) .caption-container:not(:empty) ~ .image-container,
+:host(.round-borders) .caption:not(:empty) ~ .image-container {
+  border-radius: var(--nxa-image-border-radius) var(--nxa-image-border-radius) 0 0;
+}
+
+/* Ensure the entire component has proper overflow handling */
+:host(.round-borders) {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Fullsize feature visual indicator */
+:host([data-features*='fullsize']) ::slotted(img) {
+  cursor: zoom-in;
+  transition: transform 0.2s ease;
+}
+
+:host([data-features*='fullsize']) ::slotted(img):hover {
+  transform: scale(1.02);
+}
+
+/* Slideshow functionality styles */
+:host(.slideshow) ::slotted(img) {
+  transition: opacity 0.5s ease;
+}
+
+:host(.slideshow) ::slotted(img:not(.active)) {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+:host(.slideshow) ::slotted(img.active) {
+  opacity: 1;
+  z-index: 1;
+  pointer-events: auto;
+  position: relative;
+}
+
+/* Blend transition animation for slideshow */
+:host(.slideshow[data-features*='blend']) ::slotted(img.active) {
+  animation: blendTransition 0.5s ease;
+}
+
+@keyframes blendTransition {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Ensure image container has proper positioning for slideshow */
+:host(.slideshow) .image-container {
+  position: relative;
+}
+
+/* Fix for slideshow images to maintain proper sizing */
+:host(.slideshow) ::slotted(img) {
+  object-fit: cover;
+}

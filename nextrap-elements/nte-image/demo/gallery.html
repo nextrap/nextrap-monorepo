@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>nte-image Gallery Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        margin: 0;
+        padding: 2rem;
+        background: #f8f9fa;
+        color: #333;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 2rem;
+        font-size: 2.5rem;
+        font-weight: 300;
+      }
+
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+      }
+
+      .gallery-item {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+
+      .gallery-item:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .gallery-item {
+        display: flex;
+        flex-direction: column;
+        overflow: visible;
+      }
+
+      .gallery-item nte-image {
+        width: 100%;
+        height: 300px;
+        display: block;
+      }
+
+      .gallery-info {
+        padding: 1.5rem;
+      }
+
+      .gallery-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #2c3e50;
+      }
+
+      .gallery-description {
+        color: #7f8c8d;
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
+
+      .hero-section {
+        margin-bottom: 4rem;
+      }
+
+      .hero-slideshow {
+        height: 500px;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .back-link {
+        display: inline-block;
+        margin-bottom: 2rem;
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        border: 2px solid #667eea;
+        transition: all 0.3s ease;
+      }
+
+      .back-link:hover {
+        background: #667eea;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      }
+
+      /* Responsive improvements */
+      @media (max-width: 768px) {
+        body {
+          padding: 1rem;
+        }
+
+        .container {
+          max-width: 100%;
+          padding: 0;
+        }
+
+        h1 {
+          font-size: 2rem;
+          margin-bottom: 1.5rem;
+          padding: 0 1rem;
+        }
+
+        .back-link {
+          margin: 0 1rem 1.5rem;
+          font-size: 0.9rem;
+        }
+
+        .gallery-grid {
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+          padding: 0 1rem;
+        }
+
+        .hero-section {
+          margin-bottom: 3rem;
+          padding: 0 1rem;
+        }
+
+        .hero-slideshow {
+          height: 300px;
+        }
+
+        .gallery-item nte-image {
+          height: 250px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .gallery-grid {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+
+        .hero-slideshow {
+          height: 250px;
+          border-radius: 12px;
+        }
+
+        .gallery-item nte-image {
+          height: 200px;
+        }
+
+        h1 {
+          font-size: 1.8rem;
+        }
+
+        .gallery-info {
+          padding: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a href="base.html" class="back-link">← Back to Main Demo</a>
+
+      <h1>🎨 Image Gallery Showcase</h1>
+
+      <!-- Hero Slideshow -->
+      <section class="hero-section">
+        <nte-image
+          class="hero-slideshow"
+          data-features="slideshow arrows indicators fullsize round-borders"
+          interval="4000"
+        >
+          <img
+            src="https://picsum.photos/1200/500?random=100"
+            alt="Hero image 1"
+            data-caption="Stunning landscape photography"
+          />
+          <img
+            src="https://picsum.photos/1200/500?random=101"
+            alt="Hero image 2"
+            data-caption="Urban architecture and design"
+          />
+          <img
+            src="https://picsum.photos/1200/500?random=102"
+            alt="Hero image 3"
+            data-caption="Nature's beautiful moments"
+          />
+          <img
+            src="https://picsum.photos/1200/500?random=103"
+            alt="Hero image 4"
+            data-caption="Abstract art and creativity"
+          />
+          <img src="https://picsum.photos/1200/500?random=104" alt="Hero image 5" data-caption="Travel and adventure" />
+        </nte-image>
+      </section>
+
+      <!-- Gallery Grid -->
+      <div class="gallery-grid">
+        <!-- Portfolio Item 1 -->
+        <div class="gallery-item">
+          <nte-image data-features="slideshow arrows indicators fullsize" interval="5000">
+            <img
+              src="https://picsum.photos/400/300?random=200"
+              alt="Portfolio 1-1"
+              data-caption="Creative composition"
+            />
+            <img
+              src="https://picsum.photos/400/300?random=201"
+              alt="Portfolio 1-2"
+              data-caption="Artistic perspective"
+            />
+            <img
+              src="https://picsum.photos/400/300?random=202"
+              alt="Portfolio 1-3"
+              data-caption="Visual storytelling"
+            />
+          </nte-image>
+          <div class="gallery-info">
+            <div class="gallery-title">Creative Photography</div>
+            <div class="gallery-description">
+              A collection of artistic photographs showcasing creative composition and unique perspectives.
+            </div>
+          </div>
+        </div>
+
+        <!-- Portfolio Item 2 -->
+        <div class="gallery-item">
+          <nte-image data-features="fullsize round-borders" data-crop="top: 15%; bottom: 15%">
+            <img
+              src="https://picsum.photos/400/400?random=210"
+              alt="Portrait photography"
+              style="object-position: center top"
+            />
+          </nte-image>
+          <div class="gallery-info">
+            <div class="gallery-title">Portrait Focus</div>
+            <div class="gallery-description">
+              Professional portrait photography with precise cropping and focus control.
+            </div>
+          </div>
+        </div>
+
+        <!-- Portfolio Item 3 -->
+        <div class="gallery-item">
+          <nte-image data-features="slideshow indicators fullsize round-borders" interval="3000">
+            <img src="https://picsum.photos/400/300?random=220" alt="Nature 1" data-caption="Mountain peaks" />
+            <img src="https://picsum.photos/400/300?random=221" alt="Nature 2" data-caption="Forest trails" />
+            <img src="https://picsum.photos/400/300?random=222" alt="Nature 3" data-caption="Ocean views" />
+            <img src="https://picsum.photos/400/300?random=223" alt="Nature 4" data-caption="Desert landscapes" />
+          </nte-image>
+          <div class="gallery-info">
+            <div class="gallery-title">Nature Collection</div>
+            <div class="gallery-description">
+              Breathtaking natural landscapes from around the world, captured in stunning detail.
+            </div>
+          </div>
+        </div>
+
+        <!-- Portfolio Item 4 -->
+        <div class="gallery-item">
+          <nte-image data-features="slideshow arrows fullsize dont-pause-on-hover" interval="2500">
+            <img src="https://picsum.photos/400/300?random=230" alt="Street 1" />
+            <img src="https://picsum.photos/400/300?random=231" alt="Street 2" />
+            <img src="https://picsum.photos/400/300?random=232" alt="Street 3" />
+          </nte-image>
+          <div class="gallery-info">
+            <div class="gallery-title">Street Photography</div>
+            <div class="gallery-description">
+              Candid moments from urban life, capturing the essence of city streets and people.
+            </div>
+          </div>
+        </div>
+
+        <!-- Portfolio Item 5 -->
+        <div class="gallery-item">
+          <nte-image data-features="fullsize round-borders" data-crop="left: 20%; right: 20%">
+            <img
+              src="https://picsum.photos/600/300?random=240"
+              alt="Architecture"
+              style="object-position: center center"
+            />
+          </nte-image>
+          <div class="gallery-info">
+            <div class="gallery-title">Architectural Design</div>
+            <div class="gallery-description">
+              Modern architecture and design elements that showcase form, function, and beauty.
+            </div>
+          </div>
+        </div>
+
+        <!-- Portfolio Item 6 -->
+        <div class="gallery-item">
+          <nte-image data-features="slideshow arrows indicators fullsize" interval="6000">
+            <img src="https://picsum.photos/400/300?random=250" alt="Abstract 1" data-caption="Color harmony" />
+            <img src="https://picsum.photos/400/300?random=251" alt="Abstract 2" data-caption="Geometric patterns" />
+            <img src="https://picsum.photos/400/300?random=252" alt="Abstract 3" data-caption="Texture studies" />
+          </nte-image>
+          <div class="gallery-info">
+            <div class="gallery-title">Abstract Art</div>
+            <div class="gallery-description">
+              Experimental photography exploring color, form, and abstract compositions.
+            </div>
+          </div>
+        </div>
+
+        <!-- Portfolio Item 7 -->
+        <div class="gallery-item">
+          <nte-image data-features="slideshow indicators fullsize round-borders" interval="4500">
+            <img
+              src="https://picsum.photos/400/300?random=260"
+              alt="Travel 1"
+              data-caption="European streets"
+              style="object-position: center top"
+            />
+            <img
+              src="https://picsum.photos/400/300?random=261"
+              alt="Travel 2"
+              data-caption="Asian temples"
+              style="object-position: center center"
+            />
+            <img
+              src="https://picsum.photos/400/300?random=262"
+              alt="Travel 3"
+              data-caption="American landscapes"
+              style="object-position: center bottom"
+            />
+            <img src="https://picsum.photos/400/300?random=263" alt="Travel 4" data-caption="African wildlife" />
+          </nte-image>
+          <div class="gallery-info">
+            <div class="gallery-title">Travel Photography</div>
+            <div class="gallery-description">
+              Adventures from around the globe, showcasing diverse cultures and breathtaking destinations.
+            </div>
+          </div>
+        </div>
+
+        <!-- Portfolio Item 8 -->
+        <div class="gallery-item">
+          <nte-image data-features="fullsize" data-crop="top: 25%; bottom: 25%; left: 10%; right: 10%">
+            <img src="https://picsum.photos/500/500?random=270" alt="Macro photography" />
+          </nte-image>
+          <div class="gallery-info">
+            <div class="gallery-title">Macro Details</div>
+            <div class="gallery-description">
+              Close-up photography revealing the intricate details of the natural world.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/demo/main.js" type="module"></script>
+  </body>
+</html>

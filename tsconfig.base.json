@@ -34,6 +34,7 @@
             "@nextrap/nte-scrollspy": ["nextrap-elements/nte-scrollspy/src/index.ts"],
             "@nextrap/nte-step": ["nextrap-elements/nte-step/src/index.ts"],
             "@nextrap/nte-stepper": ["nextrap-elements/nte-stepper/src/index.ts"],
+            "@nextrap/nte-image": ["nextrap-elements/nte-image/src/index.ts"],
             "@nextrap/ntl-2col": ["nextrap-layout/ntl-2col/src/index.ts"],
             "@nextrap/ntl-footer": ["nextrap-layout/ntl-footer/src/index.ts"],
             "@nextrap/ntl-infiniscroll": ["nextrap-layout/ntl-infiniscroll/src/index.ts"],

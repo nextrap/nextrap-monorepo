@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>nte-image Mobile Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        margin: 0;
+        padding: 1rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+      }
+
+      .container {
+        max-width: 100%;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      }
+
+      h1 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 1.5rem;
+        font-size: 1.8rem;
+        font-weight: 300;
+      }
+
+      .back-link {
+        display: inline-block;
+        margin-bottom: 1.5rem;
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        border: 2px solid #667eea;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+      }
+
+      .back-link:hover {
+        background: #667eea;
+        color: white;
+      }
+
+      .demo-section {
+        margin-bottom: 3rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid #e1e8ed;
+      }
+
+      .demo-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+      }
+
+      h2 {
+        color: #34495e;
+        margin-bottom: 1rem;
+        font-size: 1.4rem;
+        font-weight: 400;
+      }
+
+      .demo-description {
+        color: #7f8c8d;
+        margin-bottom: 1.5rem;
+        font-size: 1rem;
+        line-height: 1.5;
+      }
+
+      .demo-item {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+      }
+
+      .demo-item:hover {
+        border-color: #667eea;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
+      }
+
+      .demo-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #2c3e50;
+        font-size: 1.1rem;
+      }
+
+      .demo-subtitle {
+        font-size: 0.85rem;
+        color: #7f8c8d;
+        margin-bottom: 1rem;
+      }
+
+      nte-image {
+        width: 100%;
+        display: block;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .hero-image {
+        height: 250px;
+      }
+
+      .gallery-image {
+        height: 200px;
+      }
+
+      .story-image {
+        height: 180px;
+      }
+
+      .feature-list {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-top: 1rem;
+        margin-bottom: 1.5rem;
+        min-height: 1.8rem;
+      }
+
+      .feature-list li {
+        background: #e3f2fd;
+        color: #1976d2;
+        padding: 0.2rem 0.6rem;
+        border-radius: 15px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+
+      .mobile-tip,
+      .touch-instruction {
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        clear: both;
+        position: relative;
+        z-index: 1;
+      }
+
+      .mobile-tip {
+        background: #e8f5e8;
+        border: 1px solid #c8e6c9;
+        color: #2e7d32;
+      }
+
+      .touch-instruction {
+        background: #fff3e0;
+        border: 1px solid #ffcc02;
+        color: #ef6c00;
+      }
+
+      .swipe-demo {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .swipe-indicator {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 0.3rem 0.6rem;
+        border-radius: 15px;
+        font-size: 0.7rem;
+        z-index: 10;
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding: 1rem;
+          margin: 0.5rem;
+          border-radius: 8px;
+        }
+
+        h1 {
+          font-size: 1.5rem;
+        }
+
+        h2 {
+          font-size: 1.2rem;
+        }
+
+        .hero-image {
+          height: 200px;
+        }
+
+        .gallery-image {
+          height: 160px;
+        }
+
+        .story-image {
+          height: 140px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a href="base.html" class="back-link">← Back to Main Demo</a>
+
+      <h1>📱 Mobile Touch Experience</h1>
+
+      <!-- Hero Section -->
+      <section class="demo-section">
+        <h2>Hero Slideshow</h2>
+        <p class="demo-description">
+          Swipe-enabled hero slideshow optimized for mobile interaction with touch gestures.
+        </p>
+        <div class="demo-item">
+          <div class="demo-title">Touch-Enabled Hero</div>
+          <div class="demo-subtitle">Swipe left/right to navigate, tap for fullscreen</div>
+          <div class="swipe-demo">
+            <div class="swipe-indicator">👈 👉 Swipe</div>
+            <nte-image
+              class="hero-image"
+              data-features="slideshow arrows indicators fullsize round-borders"
+              interval="5000"
+            >
+              <img src="https://picsum.photos/800/400?random=700" alt="Hero 1" data-caption="Swipe to explore" />
+              <img
+                src="https://picsum.photos/800/400?random=701"
+                alt="Hero 2"
+                data-caption="Touch-optimized interface"
+              />
+              <img src="https://picsum.photos/800/400?random=702" alt="Hero 3" data-caption="Mobile-first design" />
+              <img src="https://picsum.photos/800/400?random=703" alt="Hero 4" data-caption="Responsive experience" />
+            </nte-image>
+          </div>
+          <ul class="feature-list">
+            <li>touch gestures</li>
+            <li>swipe navigation</li>
+            <li>mobile optimized</li>
+          </ul>
+        </div>
+        <div class="touch-instruction">
+          👆 <strong>Try these gestures:</strong> Swipe left/right to change slides, tap image for fullscreen, pinch to
+          zoom in fullscreen mode.
+        </div>
+      </section>
+
+      <!-- Mobile Gallery -->
+      <section class="demo-section">
+        <h2>Mobile Photo Gallery</h2>
+        <p class="demo-description">
+          Vertical stack of images perfect for mobile scrolling with touch-friendly controls.
+        </p>
+
+        <div class="demo-item">
+          <div class="demo-title">Portrait Photography</div>
+          <div class="demo-subtitle">Optimized for mobile viewing</div>
+          <nte-image class="gallery-image" data-features="slideshow indicators fullsize round-borders" interval="4000">
+            <img src="https://picsum.photos/400/600?random=710" alt="Portrait 1" data-caption="Mobile portrait mode" />
+            <img
+              src="https://picsum.photos/400/600?random=711"
+              alt="Portrait 2"
+              data-caption="Touch-friendly interface"
+            />
+            <img src="https://picsum.photos/400/600?random=712" alt="Portrait 3" data-caption="Optimized loading" />
+          </nte-image>
+          <ul class="feature-list">
+            <li>portrait mode</li>
+            <li>touch controls</li>
+            <li>mobile UI</li>
+          </ul>
+        </div>
+
+        <div class="demo-item">
+          <div class="demo-title">Food Photography</div>
+          <div class="demo-subtitle">Square format for social sharing</div>
+          <nte-image class="gallery-image" data-features="slideshow arrows fullsize" interval="3500">
+            <img src="https://picsum.photos/500/500?random=720" alt="Food 1" data-caption="Delicious cuisine" />
+            <img src="https://picsum.photos/500/500?random=721" alt="Food 2" data-caption="Culinary artistry" />
+            <img src="https://picsum.photos/500/500?random=722" alt="Food 3" data-caption="Perfect for sharing" />
+          </nte-image>
+          <ul class="feature-list">
+            <li>square format</li>
+            <li>social ready</li>
+            <li>food photography</li>
+          </ul>
+        </div>
+
+        <div class="demo-item">
+          <div class="demo-title">Travel Stories</div>
+          <div class="demo-subtitle">Landscape images with captions</div>
+          <nte-image class="gallery-image" data-features="slideshow indicators fullsize round-borders" interval="6000">
+            <img
+              src="https://picsum.photos/600/400?random=730"
+              alt="Travel 1"
+              data-caption="Adventure awaits around every corner"
+            />
+            <img src="https://picsum.photos/600/400?random=731" alt="Travel 2" data-caption="Discovering hidden gems" />
+            <img
+              src="https://picsum.photos/600/400?random=732"
+              alt="Travel 3"
+              data-caption="Memories that last forever"
+            />
+            <img src="https://picsum.photos/600/400?random=733" alt="Travel 4" data-caption="Journey of a lifetime" />
+          </nte-image>
+          <ul class="feature-list">
+            <li>storytelling</li>
+            <li>captions</li>
+            <li>travel photos</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Quick Stories -->
+      <section class="demo-section">
+        <h2>Story Format</h2>
+        <p class="demo-description">
+          Instagram-style story format with quick transitions, perfect for mobile consumption.
+        </p>
+
+        <div class="demo-item">
+          <div class="demo-title">Daily Stories</div>
+          <div class="demo-subtitle">Quick 2-second transitions</div>
+          <nte-image class="story-image" data-features="slideshow indicators fullsize" interval="2000">
+            <img src="https://picsum.photos/400/300?random=740" alt="Story 1" data-caption="Morning coffee ☕" />
+            <img src="https://picsum.photos/400/300?random=741" alt="Story 2" data-caption="Work in progress 💼" />
+            <img src="https://picsum.photos/400/300?random=742" alt="Story 3" data-caption="Lunch break 🥗" />
+            <img src="https://picsum.photos/400/300?random=743" alt="Story 4" data-caption="Evening walk 🌅" />
+            <img src="https://picsum.photos/400/300?random=744" alt="Story 5" data-caption="Goodnight 🌙" />
+          </nte-image>
+          <ul class="feature-list">
+            <li>story format</li>
+            <li>quick transitions</li>
+            <li>emoji captions</li>
+          </ul>
+        </div>
+
+        <div class="demo-item">
+          <div class="demo-title">Behind the Scenes</div>
+          <div class="demo-subtitle">Continuous play without pause</div>
+          <nte-image
+            class="story-image"
+            data-features="slideshow arrows dont-pause-on-hover round-borders"
+            interval="2500"
+          >
+            <img src="https://picsum.photos/400/300?random=750" alt="BTS 1" data-caption="Setting up the shot 📸" />
+            <img src="https://picsum.photos/400/300?random=751" alt="BTS 2" data-caption="Perfect lighting 💡" />
+            <img src="https://picsum.photos/400/300?random=752" alt="BTS 3" data-caption="Action! 🎬" />
+            <img src="https://picsum.photos/400/300?random=753" alt="BTS 4" data-caption="Checking the results ✅" />
+          </nte-image>
+          <ul class="feature-list">
+            <li>continuous play</li>
+            <li>no pause on hover</li>
+            <li>behind scenes</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Mobile Optimization Tips -->
+      <section class="demo-section">
+        <h2>Mobile Features</h2>
+        <p class="demo-description">Features specifically designed for mobile devices and touch interfaces.</p>
+
+        <div class="demo-item">
+          <div class="demo-title">Touch Gestures</div>
+          <div class="demo-subtitle">Comprehensive touch support</div>
+          <nte-image class="gallery-image" data-features="slideshow arrows indicators fullsize debug" interval="4000">
+            <img src="https://picsum.photos/500/400?random=760" alt="Touch 1" data-caption="Tap to pause slideshow" />
+            <img src="https://picsum.photos/500/400?random=761" alt="Touch 2" data-caption="Swipe to navigate" />
+            <img
+              src="https://picsum.photos/500/400?random=762"
+              alt="Touch 3"
+              data-caption="Pinch to zoom in fullscreen"
+            />
+          </nte-image>
+          <ul class="feature-list">
+            <li>tap controls</li>
+            <li>swipe gestures</li>
+            <li>pinch zoom</li>
+            <li>mobile detection</li>
+          </ul>
+        </div>
+
+        <div class="mobile-tip">
+          📱 <strong>Mobile Optimizations:</strong>
+          <ul style="margin: 0.5rem 0 0 1rem; padding: 0">
+            <li>Automatic mobile device detection</li>
+            <li>Touch-optimized button sizes (44px minimum)</li>
+            <li>Swipe gesture support for navigation</li>
+            <li>Fullscreen mode with mobile-friendly controls</li>
+            <li>Optimized image loading for mobile networks</li>
+            <li>Responsive design that adapts to screen size</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <script src="/demo/main.js" type="module"></script>
+    <script>
+      // Mobile-specific enhancements
+      document.addEventListener('DOMContentLoaded', function () {
+        // Add visual feedback for touch interactions
+        document.addEventListener('touchstart', function (e) {
+          if (e.target.closest('nte-image')) {
+            e.target.style.opacity = '0.8';
+          }
+        });
+
+        document.addEventListener('touchend', function (e) {
+          if (e.target.closest('nte-image')) {
+            setTimeout(() => {
+              e.target.style.opacity = '';
+            }, 150);
+          }
+        });
+
+        // Log mobile-specific events
+        console.log('Mobile demo loaded');
+        console.log('Touch support:', 'ontouchstart' in window);
+        console.log('Screen size:', window.innerWidth + 'x' + window.innerHeight);
+        console.log('Device pixel ratio:', window.devicePixelRatio);
+
+        // Detect mobile device
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        console.log('Mobile device detected:', isMobile);
+
+        if (isMobile) {
+          document.body.classList.add('mobile-device');
+        }
+      });
+    </script>
+  </body>
+</html>
