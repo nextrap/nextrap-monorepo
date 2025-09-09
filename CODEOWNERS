@@ -6,6 +6,8 @@ nextrap-base/nt-framework @dermatthes
 nextrap-base/style-base @dermatthes
 nextrap-base/style-reset @dermatthes
 nextrap-base/style-buttons @dermatthes
+nextrap-base/style-utils @dermatthes
+nextrap-base/style-typography @dermatthes
 
 nextrap-elements/nte-dialog @evolkmann
 nextrap-elements/nte-element-highlighter @evolkmann
@@ -14,6 +16,7 @@ nextrap-elements/nte-stepper @marliedev
 nextrap-elements/nte-scrollspy @marliedev
 nextrap-elements/nte-progress @marliedev
 nextrap-elements/nte-image @marcelfrank-dev
+nextrap-elements/nte-form @Wasilewskiii
 
 nextrap-layout/ntl-2col @evolkmann
 nextrap-layout/ntl-infiniscroll @dermatthes
