@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Base Demo of nte-tree-node</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        line-height: 1.6;
+      }
+
+      .demo-section {
+        margin: 2rem 0;
+        padding: 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Demo of nte-tree-node</h1>
+
+    <div class="demo-section">
+      <h2>File Browser Tree</h2>
+      <div class="tree-container" role="tree" aria-label="File Browser">
+        <nte-tree-node expanded level="0">
+          <span slot="name">src</span>
+          <i slot="icon" class="fa fa-folder"></i>
+
+          <nte-tree-node>
+            <span slot="name">components</span>
+            <i slot="icon" class="fa fa-folder"></i>
+            <nte-tree-node>
+              <span slot="name">component a</span>
+              <i class="fas fa-folder" slot="icon"></i>
+
+              <nte-tree-node>
+                <span slot="name">component-a.tsx</span>
+                <i class="fas fa-file-code js-icon" slot="icon"></i>
+              </nte-tree-node>
+
+              <nte-tree-node>
+                <span slot="name">component-a.scss</span>
+                <i class="fas fa-file-code css-icon" slot="icon"></i>
+              </nte-tree-node>
+            </nte-tree-node>
+
+            <nte-tree-node>
+              <span slot="name">Button.tsx</span>
+              <i class="fas fa-file-code js-icon" slot="icon"></i>
+            </nte-tree-node>
+
+            <nte-tree-node>
+              <span slot="name">Modal.tsx</span>
+              <i class="fas fa-file-code js-icon" slot="icon"></i>
+            </nte-tree-node>
+          </nte-tree-node>
+
+          <nte-tree-node expanded>
+            <span slot="name">styles</span>
+            <i slot="icon" class="fa fa-folder"></i>
+
+            <nte-tree-node>
+              <span slot="name">globals.css</span>
+              <i class="fab fa-css3-alt css-icon" slot="icon"></i>
+            </nte-tree-node>
+
+            <nte-tree-node>
+              <span slot="name">variables.css</span>
+              <i class="fab fa-css3-alt css-icon" slot="icon"></i>
+            </nte-tree-node>
+          </nte-tree-node>
+
+          <nte-tree-node>
+            <span slot="name">index.html</span>
+            <i class="fab fa-html5 html-icon" slot="icon"></i>
+          </nte-tree-node>
+
+          <nte-tree-node>
+            <span slot="name">main.js</span>
+            <i class="fab fa-js-square js-icon" slot="icon"></i>
+          </nte-tree-node>
+        </nte-tree-node>
+      </div>
+    </div>
+
+    <script src="/demo/main.ts" type="module"></script>
+  </body>
+</html>
