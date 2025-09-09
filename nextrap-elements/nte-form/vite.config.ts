@@ -11,24 +11,6 @@ export default defineConfig(() => ({
     host: '0.0.0.0',
     hmr: true,
   },
-  test: {
-    passWithNoTests: true,
-    watch: false,
-    globals: true,
-    environment: 'node',
-    include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    reporters: ['default'],
-    coverage: {
-      reportsDirectory: `../../coverage/nextrap-elements/nte-form`,
-      provider: 'v8' as const,
-    },
-    browser: {
-      provider: 'playwright',
-      enabled: true,
-      headless: true,
-      instances: [{ browser: 'chromium' }],
-    },
-  },
   root: __dirname,
   cacheDir: '../../node_modules/.vite/nextrap-elements/nte-form',
   plugins: [
@@ -64,6 +46,18 @@ export default defineConfig(() => ({
     rollupOptions: {
       // External packages that should not be bundled into your library.
       external: (id) => !id.startsWith('.') && !path.isAbsolute(id),
+    },
+  },
+  test: {
+    passWithNoTests: true,
+    watch: false,
+    globals: true,
+    environment: 'jsdom',
+    include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    reporters: ['default'],
+    coverage: {
+      reportsDirectory: `../../coverage/nextrap-elements/nte-form`,
+      provider: 'v8' as const,
     },
   },
 }));
