@@ -27,6 +27,11 @@
 
   position: fixed;
 
+  opacity: 0;
+  &.initialized {
+    opacity: 1;
+  }
+
   top: var(--self-top);
   left: var(--self-left);
 

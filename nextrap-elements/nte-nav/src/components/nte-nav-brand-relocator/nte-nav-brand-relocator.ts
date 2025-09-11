@@ -1,4 +1,4 @@
-import { waitForDomContentLoaded } from '@nextrap/nt-framework';
+import { waitForDomContentLoaded, waitForLoad } from '@nextrap/nt-framework';
 import { EventBindingsMixin, Listen, LoggingMixin } from '@trunkjs/browser-utils';
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
@@ -23,6 +23,9 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
 
   @state()
   private accessor done = false;
+
+  @state()
+  private accessor initialized = false;
 
   @Listen('scroll', { target: 'window', options: { passive: true } })
   private onScroll() {
@@ -77,7 +80,9 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
     };
 
     return html`<div
-      class="wrapper ${this.active ? '' : 'inactive'} ${this.done ? 'done' : ''}"
+      class="wrapper ${this.active ? '' : 'inactive'} ${this.done ? 'done' : ''} ${this.initialized
+        ? 'initialized'
+        : ''}"
       style=${styleMap(styles)}
       @transitionend=${() => this.onanimationEnd()}
     >
@@ -96,9 +101,17 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
   }
 
   override async firstUpdated() {
+    this.log('Waiting for Brand element loading...', this.brandElement);
+    await waitForLoad(this.brandElement);
+    this.log('Brand element loaded:', this.brandElement);
+    this.initialized = true;
+  }
+
+  override async connectedCallback() {
     await waitForDomContentLoaded();
 
     const brand = this.brandElement;
+    this.log('Brand element:', brand);
     if (!brand) {
       this.warn(`Brand element not found using selector: ${this.brandSelector}`);
       return;
@@ -106,6 +119,7 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
     const ghostElement = brand.cloneNode(true) as HTMLElement;
     this.appendChild(ghostElement);
 
+    super.connectedCallback();
     this.onScroll(); // Initial check
   }
 }
