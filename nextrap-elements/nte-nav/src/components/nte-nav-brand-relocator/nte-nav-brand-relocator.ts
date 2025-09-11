@@ -114,6 +114,10 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
       this.log('Waiting for Ghost element to have naturalWidth...', this.ghostElement);
       await sleep(100);
     }
+    while (this.brandElement && !this.brandElement.getBoundingClientRect().width) {
+      this.log('Waiting for Brand element to have width...', this.brandElement);
+      await sleep(100);
+    }
     const aspectRatio = this.ghostElement?.naturalWidth / this.ghostElement?.naturalHeight;
     this.log('Setting Aspect ratio:', aspectRatio);
     this.style.setProperty('--auto-aspect-ratio', aspectRatio.toString());
