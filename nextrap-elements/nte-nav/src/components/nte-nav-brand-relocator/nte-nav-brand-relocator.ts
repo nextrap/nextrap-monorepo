@@ -106,8 +106,9 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
   override async firstUpdated() {
     this.log('Waiting for Brand element loading...', this.brandElement);
     await waitForLoad(this.brandElement);
-    this.log('Brand element loaded:', this.brandElement);
+    this.log('Brand element is now loaded:', this.brandElement);
     this.initialized = true;
+    this.onScroll();
   }
 
   override async connectedCallback() {
