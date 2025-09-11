@@ -1,5 +1,5 @@
 import { waitForDomContentLoaded } from '@nextrap/nt-framework';
-import { EventBindingsMixin, Listen, LoggingMixin, sleep, waitForLoad } from '@trunkjs/browser-utils';
+import { create_element, EventBindingsMixin, Listen, LoggingMixin, sleep, waitForLoad } from '@trunkjs/browser-utils';
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
@@ -27,7 +27,7 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
   @state()
   private accessor initialized = false;
 
-  #ghostElement: HTMLElement | null = null;
+  #ghostElement: HTMLImageElement | null = null;
 
   @Listen('scroll', { target: 'window', options: { passive: true } })
   private onScroll() {
@@ -132,8 +132,8 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
         return;
       }
 
-      if (!this.#ghostElement) {
-        this.#ghostElement = brand.cloneNode(true) as HTMLElement;
+      if (!this.hasChildNodes()) {
+        this.#ghostElement = create_element('img', { src: brand.getAttribute('src') }) as HTMLImageElement;
         this.appendChild(this.#ghostElement);
         this.onScroll(); // Initial check
       }
