@@ -61,12 +61,13 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
   }
 
   override render() {
-    const brandRect = this.brandElement.getBoundingClientRect();
+    const brandRect = this.brandElement?.getBoundingClientRect();
+    if (!brandRect) {
+      return null;
+    }
 
     const selfRect = this.getBoundingClientRect();
-    if (!brandRect) {
-      return html`<div>No brand element found</div>`;
-    }
+
     const styles = {
       '--orig-top': brandRect.top + 'px',
       '--orig-left': brandRect.left + 'px',
@@ -100,13 +101,18 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
   }
 
   override async firstUpdated() {
-    this.log('Waiting for Brand element loading...', this.brandElement);
-    await waitForLoad(this.brandElement);
-
-    await sleep(1); // Wait a tick for layout to stabilize
-    const brandRect = this.brandElement.getBoundingClientRect();
-    const aspectRatio = brandRect.width / brandRect.height;
-    this.log('Brand element rect:', brandRect);
+    if (this.brandElement === null) {
+      this.warn(`Brand element not found using selector: ${this.brandSelector}`);
+      return;
+    }
+    this.log('Waiting for Ghost element loading...', this.#ghostElement);
+    await waitForLoad(this.#ghostElement);
+    await sleep(10); // Ensure styles are applied
+    while (!this.#ghostElement?.naturalWidth) {
+      this.log('Waiting for Ghost element to have naturalWidth...', this.#ghostElement);
+      await sleep(100);
+    }
+    const aspectRatio = this.#ghostElement?.naturalWidth / this.#ghostElement?.naturalHeight;
     this.log('Setting Aspect ratio:', aspectRatio);
     this.style.setProperty('--auto-aspect-ratio', aspectRatio.toString());
 
@@ -117,7 +123,6 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
 
   override async connectedCallback() {
     await waitForDomContentLoaded();
-    super.connectedCallback();
 
     if (this.#ghostElement === null) {
       const brand = this.brandElement;
@@ -133,5 +138,6 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
         this.onScroll(); // Initial check
       }
     }
+    super.connectedCallback();
   }
 }

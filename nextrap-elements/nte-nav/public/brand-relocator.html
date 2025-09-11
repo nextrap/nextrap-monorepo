@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>nte-nav</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="module" src="/public/main.ts"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
   </head>
   <body>
@@ -18,6 +19,7 @@
             src="https://cdn.leuffen.de//leu-systemwebsite/v2/64/227-74_500/leuffen-gruen.svg"
             alt="{{ site.data.general.logoalt }}"
             height="64"
+            loading="lazy"
             class="p-1 loader-image brand-image"
             style="float: left"
           />
@@ -62,10 +64,8 @@
         background-position: center;
       "
     >
-      <nte-nav-brand-relocator debug style="width: 500px; height: 200px"></nte-nav-brand-relocator>
+      <nte-nav-brand-relocator debug style="height: 200px"></nte-nav-brand-relocator>
     </div>
-
-    <script type="module" src="/public/main.ts"></script>
   </body>
 </html>
 
