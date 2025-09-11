@@ -27,6 +27,8 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
   @state()
   private accessor initialized = false;
 
+  #firstConnect = true;
+
   @Listen('scroll', { target: 'window', options: { passive: true } })
   private onScroll() {
     if (this.mode !== 'auto') {
@@ -62,6 +64,7 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
     const brandRect = this.brandElement.getBoundingClientRect();
 
     const aspectRatio = brandRect.width / brandRect.height;
+    this.log('Setting Aspect ratio:', aspectRatio);
     this.style.setProperty('--auto-aspect-ratio', aspectRatio.toString());
 
     const selfRect = this.getBoundingClientRect();
@@ -109,17 +112,21 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
 
   override async connectedCallback() {
     await waitForDomContentLoaded();
-
-    const brand = this.brandElement;
-    this.log('Brand element:', brand);
-    if (!brand) {
-      this.warn(`Brand element not found using selector: ${this.brandSelector}`);
-      return;
-    }
-    const ghostElement = brand.cloneNode(true) as HTMLElement;
-    this.appendChild(ghostElement);
-
     super.connectedCallback();
+
+    if (this.#firstConnect) {
+      this.#firstConnect = false;
+      const brand = this.brandElement;
+      this.log('first connectedCallback() on Brand element:', brand);
+      if (!brand) {
+        this.warn(`Brand element not found using selector: ${this.brandSelector}`);
+        return;
+      }
+
+      const ghostElement = brand.cloneNode(true) as HTMLElement;
+      this.appendChild(ghostElement);
+    }
+
     this.onScroll(); // Initial check
   }
 }
