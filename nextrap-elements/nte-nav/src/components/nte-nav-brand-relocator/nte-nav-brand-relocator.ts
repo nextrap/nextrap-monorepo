@@ -36,18 +36,30 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
     }
   }
 
-  #brandElement: HTMLElement | null = null;
-
   private onanimationEnd() {
     this.log('Animation ended - finalizing state');
     if (!this.active) {
-      this.#brandElement!.style.visibility = 'visible';
+      this.brandElement.style.visibility = 'visible';
       this.done = true;
     }
   }
 
+  #brandElement: HTMLElement | null = null;
+  private get brandElement() {
+    if (!this.#brandElement) {
+      this.#brandElement = document.querySelector(this.brandSelector) as HTMLElement;
+      if (!this.#brandElement) {
+        this.warn(`Brand element not found using selector: ${this.brandSelector}`);
+      }
+    }
+    return this.#brandElement;
+  }
+
   override render() {
-    const brandRect = this.#brandElement?.getBoundingClientRect();
+    const brandRect = this.brandElement.getBoundingClientRect();
+
+    const aspectRatio = brandRect.width / brandRect.height;
+    this.style.setProperty('--auto-aspect-ratio', aspectRatio.toString());
 
     const selfRect = this.getBoundingClientRect();
     if (!brandRect) {
@@ -86,7 +98,7 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
   override async firstUpdated() {
     await waitForDomContentLoaded();
 
-    const brand = (this.#brandElement = document.querySelector(this.brandSelector) as HTMLElement);
+    const brand = this.brandElement;
     if (!brand) {
       this.warn(`Brand element not found using selector: ${this.brandSelector}`);
       return;
