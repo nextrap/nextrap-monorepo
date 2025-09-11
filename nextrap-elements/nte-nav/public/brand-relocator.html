@@ -61,57 +61,10 @@
         background-size: cover;
         background-position: center;
       "
-    ></div>
+    >
+      <nte-nav-brand-relocator debug style="width: 500px; height: 200px"></nte-nav-brand-relocator>
+    </div>
 
-    <nte-offcanvas id="navSidebar" data-group-name="nav1">
-      <nte-burger
-        slot="header"
-        data-nt-dismiss="offcanvas"
-        data-group-name="nav1"
-        onclick="this.open = false"
-      ></nte-burger>
-      <nte-nav class="nav-vertical"></nte-nav>
-      <nte-nav slot="footer" class="nav-horizontal pos-stretch" style="width: 100%">
-        <ul>
-          <li><a href="#" class="active">Home</a></li>
-          <li><a href="#">Products</a></li>
-        </ul>
-      </nte-nav>
-    </nte-offcanvas>
-
-    <hr style="margin-top: 500px" />
-
-    <nte-nav breakpoint="768px" mode="sidebar">
-      <ul>
-        <li><a href="#" class="active">Home</a></li>
-        <li><a href="#">Products</a></li>
-        <li><a href="#">About</a></li>
-        <li>
-          <a href="#">More</a>
-          <ul>
-            <li><a href="#">Team</a></li>
-            <li><a href="#">Careers</a></li>
-          </ul>
-        </li>
-      </ul>
-    </nte-nav>
-
-    <hr />
-
-    <nte-nav breakpoint="xl" mode="sidebar" class="stretch">
-      <ul>
-        <li><a href="#" class="active">Home</a></li>
-        <li><a href="#">Products</a></li>
-        <li><a href="#">About</a></li>
-        <li>
-          <a href="#">More</a>
-          <ul>
-            <li><a href="#">Team</a></li>
-            <li><a href="#">Careers</a></li>
-          </ul>
-        </li>
-      </ul>
-    </nte-nav>
     <script type="module" src="/public/main.ts"></script>
   </body>
 </html>
