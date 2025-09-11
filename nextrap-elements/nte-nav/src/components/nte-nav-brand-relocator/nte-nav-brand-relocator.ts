@@ -1,5 +1,5 @@
 import { waitForDomContentLoaded } from '@nextrap/nt-framework';
-import { EventBindingsMixin, Listen, LoggingMixin, waitForLoad } from '@trunkjs/browser-utils';
+import { EventBindingsMixin, Listen, LoggingMixin, sleep, waitForLoad } from '@trunkjs/browser-utils';
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
@@ -63,10 +63,6 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
   override render() {
     const brandRect = this.brandElement.getBoundingClientRect();
 
-    const aspectRatio = brandRect.width / brandRect.height;
-    this.log('Setting Aspect ratio:', aspectRatio);
-    this.style.setProperty('--auto-aspect-ratio', aspectRatio.toString());
-
     const selfRect = this.getBoundingClientRect();
     if (!brandRect) {
       return html`<div>No brand element found</div>`;
@@ -106,6 +102,13 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
   override async firstUpdated() {
     this.log('Waiting for Brand element loading...', this.brandElement);
     await waitForLoad(this.brandElement);
+
+    await sleep(1); // Wait a tick for layout to stabilize
+    const brandRect = this.brandElement.getBoundingClientRect();
+    const aspectRatio = brandRect.width / brandRect.height;
+    this.log('Setting Aspect ratio:', aspectRatio);
+    this.style.setProperty('--auto-aspect-ratio', aspectRatio.toString());
+
     this.log('Brand element is now loaded:', this.brandElement);
     this.initialized = true;
     this.onScroll();
