@@ -250,17 +250,21 @@ export class nteProgressElement extends LitElement {
     if (this.type === 'circle') {
       const radius = 45; // Radius based on a 100x100 viewBox
       const circumference = 2 * Math.PI * radius;
-      const dash = (percentage / 100) * circumference;
+      const dashOffset = circumference - (percentage / 100) * circumference;
 
       return html`
-        <div
-          class="${this.getContainerClasses()}"
-          part="container"
-          style="--circumference: ${circumference}; --dash: ${dash};"
-        >
+        <div class="${this.getContainerClasses()}" part="container">
           <svg class="nte-progress-circle-svg" viewBox="0 0 100 100" part="svg">
             <circle class="nte-progress-circle-bg" cx="50" cy="50" r="${radius}" part="circle-background"></circle>
-            <circle class="nte-progress-circle-fg" cx="50" cy="50" r="${radius}" part="circle-foreground"></circle>
+            <circle
+              class="nte-progress-circle-fg"
+              cx="50"
+              cy="50"
+              r="${radius}"
+              stroke-dasharray="${circumference}"
+              stroke-dashoffset="${dashOffset}"
+              part="circle-foreground"
+            ></circle>
           </svg>
           <div class="nte-progress-circle-content" part="content">
             <slot></slot>
