@@ -1,5 +1,5 @@
-import { waitForDomContentLoaded, waitForLoad } from '@nextrap/nt-framework';
-import { EventBindingsMixin, Listen, LoggingMixin } from '@trunkjs/browser-utils';
+import { waitForDomContentLoaded } from '@nextrap/nt-framework';
+import { EventBindingsMixin, Listen, LoggingMixin, waitForLoad } from '@trunkjs/browser-utils';
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
@@ -27,7 +27,7 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
   @state()
   private accessor initialized = false;
 
-  #firstConnect = true;
+  #ghostElement: HTMLElement | null = null;
 
   @Listen('scroll', { target: 'window', options: { passive: true } })
   private onScroll() {
@@ -115,8 +115,7 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
     await waitForDomContentLoaded();
     super.connectedCallback();
 
-    if (this.#firstConnect) {
-      this.#firstConnect = false;
+    if (this.#ghostElement === null) {
       const brand = this.brandElement;
       this.log('first connectedCallback() on Brand element:', brand);
       if (!brand) {
@@ -124,9 +123,11 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
         return;
       }
 
-      const ghostElement = brand.cloneNode(true) as HTMLElement;
-      this.appendChild(ghostElement);
-      this.onScroll(); // Initial check
+      if (!this.#ghostElement) {
+        this.#ghostElement = brand.cloneNode(true) as HTMLElement;
+        this.appendChild(this.#ghostElement);
+        this.onScroll(); // Initial check
+      }
     }
   }
 }
