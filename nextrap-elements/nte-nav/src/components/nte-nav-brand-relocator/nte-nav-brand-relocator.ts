@@ -125,8 +125,7 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
 
       const ghostElement = brand.cloneNode(true) as HTMLElement;
       this.appendChild(ghostElement);
+      this.onScroll(); // Initial check
     }
-
-    this.onScroll(); // Initial check
   }
 }
