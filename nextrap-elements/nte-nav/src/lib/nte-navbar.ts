@@ -18,7 +18,7 @@ export class NteNavbar extends LitElement {
 
   // Scroll threshold after which "state-scrolled" becomes active
   @property({ type: Number, attribute: 'scroll-threshold', reflect: true })
-  scrollThreshold = 0;
+  accessor scrollThreshold = 0;
 
   // Track last scroll position to detect scroll direction
   private _lastScrollY = window.scrollY;
