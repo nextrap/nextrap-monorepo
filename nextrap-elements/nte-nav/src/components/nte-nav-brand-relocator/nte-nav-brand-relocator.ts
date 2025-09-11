@@ -106,6 +106,7 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
     await sleep(1); // Wait a tick for layout to stabilize
     const brandRect = this.brandElement.getBoundingClientRect();
     const aspectRatio = brandRect.width / brandRect.height;
+    this.log('Brand element rect:', brandRect);
     this.log('Setting Aspect ratio:', aspectRatio);
     this.style.setProperty('--auto-aspect-ratio', aspectRatio.toString());
 
