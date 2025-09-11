@@ -217,8 +217,6 @@ progress.nte-progress.nte-progress-bar--animated::-moz-progress-bar {
 
     &.nte-progress-circle-fg {
       stroke: var(--nte-progress-circle-fg-color);
-      stroke-dasharray: var(--circumference);
-      stroke-dashoffset: calc(var(--circumference) - var(--dash));
       transition: stroke-dashoffset 0.8s linear 0s;
     }
   }
