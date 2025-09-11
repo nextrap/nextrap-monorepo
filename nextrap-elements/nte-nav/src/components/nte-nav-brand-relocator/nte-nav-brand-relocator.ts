@@ -27,8 +27,6 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
   @state()
   private accessor initialized = false;
 
-  #ghostElement: HTMLImageElement | null = null;
-
   @Listen('scroll', { target: 'window', options: { passive: true } })
   private onScroll() {
     if (this.mode !== 'auto') {
@@ -100,19 +98,23 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
     super.update(changedProperties);
   }
 
+  private get ghostElement() {
+    return this.querySelector('img');
+  }
+
   override async firstUpdated() {
     if (this.brandElement === null) {
       this.warn(`Brand element not found using selector: ${this.brandSelector}`);
       return;
     }
-    this.log('Waiting for Ghost element loading...', this.#ghostElement);
-    await waitForLoad(this.#ghostElement);
+    this.log('Waiting for Ghost element loading...', this.ghostElement);
+    await waitForLoad(this.ghostElement);
     await sleep(10); // Ensure styles are applied
-    while (!this.#ghostElement?.naturalWidth) {
-      this.log('Waiting for Ghost element to have naturalWidth...', this.#ghostElement);
+    while (!this.ghostElement?.naturalWidth) {
+      this.log('Waiting for Ghost element to have naturalWidth...', this.ghostElement);
       await sleep(100);
     }
-    const aspectRatio = this.#ghostElement?.naturalWidth / this.#ghostElement?.naturalHeight;
+    const aspectRatio = this.ghostElement?.naturalWidth / this.ghostElement?.naturalHeight;
     this.log('Setting Aspect ratio:', aspectRatio);
     this.style.setProperty('--auto-aspect-ratio', aspectRatio.toString());
 
@@ -124,7 +126,7 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
   override async connectedCallback() {
     await waitForDomContentLoaded();
 
-    if (this.#ghostElement === null) {
+    if (this.ghostElement === null) {
       const brand = this.brandElement;
       this.log('first connectedCallback() on Brand element:', brand);
       if (!brand) {
@@ -133,8 +135,8 @@ export class NteNavBrandRelocator extends EventBindingsMixin(LoggingMixin(LitEle
       }
 
       if (!this.hasChildNodes()) {
-        this.#ghostElement = create_element('img', { src: brand.getAttribute('src') }) as HTMLImageElement;
-        this.appendChild(this.#ghostElement);
+        const ghost = create_element('img', { src: brand.getAttribute('src') }) as HTMLImageElement;
+        this.appendChild(ghost);
         this.onScroll(); // Initial check
       }
     }
