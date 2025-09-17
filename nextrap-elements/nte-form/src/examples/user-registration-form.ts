@@ -21,7 +21,7 @@ export class UserRegistrationForm extends LitElement {
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
 
-    console.log('Form submitted:', Object.fromEntries(formData));
+    console.log('Form submitted:', Object.fromEntries(formData as any));
   }
 
   private handleInputChange(e: Event) {

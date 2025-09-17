@@ -15,25 +15,5 @@
 
 .form-group ::slotted(*) {
   min-width: 0;
-}
-
-/* Small devices (phones) */
-@media (max-width: 767px) {
-  .form-group ::slotted(*) {
-    flex: 0 0 calc((100% - (var(--cols-sm) - 1) * var(--gap)) / var(--cols-sm));
-  }
-}
-
-/* Medium devices (tablets) */
-@media (min-width: 768px) and (max-width: 1023px) {
-  .form-group ::slotted(*) {
-    flex: 0 0 calc((100% - (var(--cols-md) - 1) * var(--gap)) / var(--cols-md));
-  }
-}
-
-/* Large devices (desktops) */
-@media (min-width: 1024px) {
-  .form-group ::slotted(*) {
-    flex: 0 0 calc((100% - (var(--cols-lg) - 1) * var(--gap)) / var(--cols-lg));
-  }
+  flex: 1;
 }

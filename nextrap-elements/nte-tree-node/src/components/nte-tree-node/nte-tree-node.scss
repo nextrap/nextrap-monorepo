@@ -1,0 +1,99 @@
+/* The ShadowDOM Styles */
+
+:host {
+  --tree-indent-size: 1.25rem;
+  --tree-toggle-size: 0.75rem;
+  --tree-icon-size: 1rem;
+  --tree-border-radius: 0.25rem;
+  --transition-duration: 0.2s;
+
+  /* Colors */
+  --tree-text-color: var(--nt-text-on-light);
+  --tree-hover-bg: var(--nt-body-tertiary);
+
+  display: block;
+}
+
+.tree-node {
+  display: block;
+}
+
+.tree-node-header {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--tree-border-radius);
+  color: var(--tree-text-color);
+  transition: background-color var(--transition-duration) ease;
+  user-select: none;
+  width: 100%;
+  text-align: left;
+
+  &:focus-visible {
+    outline: 2px solid var(--nt-primary);
+    outline-offset: -2px;
+  }
+}
+
+.tree-node-header:hover {
+  background-color: var(--tree-hover-bg);
+}
+
+.tree-node-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tree-toggle-size);
+  height: var(--tree-toggle-size);
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+.toggle-icon {
+  transition: transform var(--transition-duration) ease;
+  transform: rotate(-90deg);
+}
+
+.toggle-icon.expanded {
+  transform: rotate(0deg);
+}
+
+.toggle-spacer {
+  width: var(--tree-toggle-size);
+  height: var(--tree-toggle-size);
+}
+
+.tree-node-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tree-icon-size);
+  height: var(--tree-icon-size);
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+.tree-node-icon ::slotted(*) {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.tree-node-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tree-node-children {
+  overflow: hidden;
+  transition: all var(--transition-duration) ease;
+  padding-left: var(--tree-indent-size);
+}
+
+.tree-node-children.collapsed {
+  max-height: 0;
+  opacity: 0;
+}

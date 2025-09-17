@@ -34,6 +34,7 @@
             "@nextrap/nte-split-view": ["nextrap-elements/nte-split-view/src/index.ts"],
             "@nextrap/nte-step": ["nextrap-elements/nte-step/src/index.ts"],
             "@nextrap/nte-stepper": ["nextrap-elements/nte-stepper/src/index.ts"],
+            "@nextrap/nte-image": ["nextrap-elements/nte-image/src/index.ts"],
             "@nextrap/ntl-2col": ["nextrap-layout/ntl-2col/src/index.ts"],
             "@nextrap/ntl-card-row": ["nextrap-layout/ntl-card-row/src/index.ts"],
             "@nextrap/ntl-footer": ["nextrap-layout/ntl-footer/src/index.ts"],
@@ -44,6 +45,7 @@
             "@nextrap/style-typography": ["nextrap-base/style-typography/src/index.ts"],
             "@nextrap/style-utils": ["nextrap-base/style-utils/src/index.ts"],
             "@nte-multiselect": ["nextrap-elements/nte-multiselect/src/index.ts"]
+            "@nte-tree-node": ["nextrap-elements/nte-tree-node/src/index.ts"]
         }
     },
     "exclude": ["node_modules", "tmp"]

@@ -1,5 +1,11 @@
 // Function to return promise on a dedicated event
 
+/**
+ * @deprecated
+ * @param target
+ * @param eventName
+ * @param options
+ */
 export function waitFor<T>(target: EventTarget, eventName: string, options?: AddEventListenerOptions): Promise<T> {
   return new Promise((resolve, reject) => {
     const handler = (event: Event) => {
@@ -19,6 +25,9 @@ export function waitForDomContentLoaded(): Promise<void> {
   return Promise.resolve();
 }
 
+/**
+ * @deprecated
+ */
 export function waitForLoad(): Promise<void> {
   if (document.readyState === 'complete') {
     return Promise.resolve();

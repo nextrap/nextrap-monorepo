@@ -1,7 +1,7 @@
 // Styling for the nte-step component
-@use '@nextrap/style-reset';
+
 :host {
-  height: 40vh;
+  height: auto;
   display: block;
   overflow: visible;
   overflow-x: clip;
@@ -19,7 +19,6 @@ footer {
   justify-content: space-between;
   align-items: center;
   text-align: center;
-  height: 100%;
 }
 
 :host::part(main) {
@@ -39,9 +38,9 @@ footer {
   top: -10vh;
   left: 0;
   width: 100%;
-  height: 50vh;
+  height: calc(100% + 10vh);
   z-index: 1;
-  overflow: visible;
+  overflow: hidden;
   pointer-events: none;
 }
 

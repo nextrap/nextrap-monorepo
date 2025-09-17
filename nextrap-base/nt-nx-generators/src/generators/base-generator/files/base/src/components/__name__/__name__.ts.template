@@ -1,4 +1,4 @@
-import {LoggingMixin} from "@trunkjs/browser-utils";
+import {EventBindingsMixin, LoggingMixin, Listen} from "@trunkjs/browser-utils";
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, state, property } from 'lit/decorators.js';
 
@@ -9,7 +9,7 @@ import { resetStyle } from '@nextrap/style-reset';
 import style from './<%= name %>.scss?inline';
 
 @customElement('<%= name %>')
-export class <%= elementClassName %> extends LoggingMixin(LitElement) {
+export class <%= elementClassName %> extends EventBindingsMixin(LoggingMixin(LitElement)) {
 
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
@@ -20,6 +20,11 @@ export class <%= elementClassName %> extends LoggingMixin(LitElement) {
   @property({ type: String, reflect: true })
   public accessor name = '<%= name %>';
 
+  // Example of listening to window scroll events
+  @Listen('scroll', { target: 'window', options: { passive: true } })
+  private onScroll(e: Event) {
+    this._log('info', 'Window scrolled', e);
+  }
 
   override render() {
     return html`
