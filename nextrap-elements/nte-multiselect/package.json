@@ -1,0 +1,19 @@
+{
+    "name": "@nextrap/nte-multiselect",
+    "version": "0.0.1",
+    "main": "./src/index.ts",
+    "dependencies": {
+        "lit": "^3.0.0"
+    },
+    "peerDependencies": {
+        "@nextrap/style-reset": "*"
+    },
+    "type": "module",
+    "exports": {
+        ".": {
+            "import": "./src/index.ts",
+            "types": "./src/index.ts"
+        }
+    },
+    "types": "./src/index.ts"
+}

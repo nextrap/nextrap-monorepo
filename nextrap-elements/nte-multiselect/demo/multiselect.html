@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>nte-multiselect Demo - Nextrap Components</title>
+    <script type="module" src="../src/index.ts"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+
+      .header {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 20px 0;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      .header h1 {
+        margin: 0 0 10px 0;
+        color: #2d3748;
+        font-size: 2.5rem;
+        font-weight: 700;
+      }
+
+      .header p {
+        margin: 0 0 20px 0;
+        color: #4a5568;
+        font-size: 1.1rem;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .feature-badge {
+        background: linear-gradient(135deg, #4299e1, #3182ce);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(66, 153, 225, 0.3);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+
+      .nav-link {
+        padding: 8px 16px;
+        background: #f7fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        text-decoration: none;
+        color: #4a5568;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+
+      .nav-link:hover {
+        background: #edf2f7;
+        border-color: #cbd5e0;
+        transform: translateY(-1px);
+      }
+
+      .main-content {
+        padding: 40px 0;
+      }
+
+      .demo-section {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .demo-section h2 {
+        color: #2d3748;
+        margin: 0 0 20px 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .section-icon {
+        width: 24px;
+        height: 24px;
+        background: linear-gradient(135deg, #4299e1, #3182ce);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 14px;
+      }
+
+      .controls {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 25px;
+      }
+
+      .controls h3 {
+        margin: 0 0 15px 0;
+        color: #4a5568;
+        font-size: 1rem;
+        font-weight: 600;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+      }
+
+      button {
+        padding: 10px 16px;
+        border: 1px solid #cbd5e0;
+        border-radius: 6px;
+        background: white;
+        color: #4a5568;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+
+      button:hover {
+        background: #f7fafc;
+        border-color: #a0aec0;
+        transform: translateY(-1px);
+      }
+
+      button.primary {
+        background: linear-gradient(135deg, #4299e1, #3182ce);
+        color: white;
+        border-color: #3182ce;
+      }
+
+      button.primary:hover {
+        background: linear-gradient(135deg, #3182ce, #2c5282);
+      }
+
+      .output {
+        background: #edf2f7;
+        border: 1px solid #cbd5e0;
+        border-radius: 6px;
+        padding: 12px;
+        font-family: 'SF Mono', Monaco, monospace;
+        font-size: 13px;
+        color: #2d3748;
+        min-height: 20px;
+      }
+
+      /* Theme variations */
+      .dark-theme {
+        background: linear-gradient(135deg, #1a202c, #2d3748);
+        color: white;
+      }
+
+      .dark-theme h2 {
+        color: #f7fafc;
+      }
+
+      .dark-theme nte-multiselect-item {
+        --card-background: #2d3748;
+        --card-background-checked: #1a365d;
+        --card-border-color: #4a5568;
+        --card-border-color-checked: #3182ce;
+        --text-color: #f7fafc;
+        --description-color: #a0aec0;
+        --value-color: #63b3ed;
+      }
+
+      .compact-theme nte-multiselect {
+        --gap: 12px;
+      }
+
+      .compact-theme nte-multiselect-item {
+        --card-padding: 12px;
+        --control-size: 20px;
+      }
+
+      /* Responsive design */
+      @media (max-width: 768px) {
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .nav-links {
+          justify-content: center;
+        }
+
+        .demo-section {
+          padding: 20px;
+          margin-bottom: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="container">
+        <h1>🎯 nte-multiselect</h1>
+        <p>Moderne, barrierefreie Multiselect-Komponente für Web-Anwendungen</p>
+
+        <div class="features-grid">
+          <div class="feature-badge">✨ Custom Controls</div>
+          <div class="feature-badge">🎨 Themes & Styling</div>
+          <div class="feature-badge">📱 Responsive Design</div>
+          <div class="feature-badge">♿ Barrierefrei</div>
+          <div class="feature-badge">⚡ TypeScript</div>
+          <div class="feature-badge">🔧 Konfigurierbar</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="container">
+        <!-- Radio Button Example - Pricing Plans -->
+        <div class="demo-section">
+          <h2>Radio Auswahl - Preispläne (Grid Layout)</h2>
+          <div class="controls">
+            <button onclick="getPlanSelection()">Gewählten Plan anzeigen</button>
+            <button onclick="selectPlan('pro')">Pro Plan wählen</button>
+            <button onclick="clearPlans()">Auswahl löschen</button>
+            <div id="plan-output" class="output"></div>
+          </div>
+
+          <nte-multiselect id="plans" layout="grid">
+            <nte-multiselect-item type="radio" name="plan" value="basic" checked>
+              <span slot="leading">📦</span>
+              <span slot="title">Basis Plan</span>
+              <span slot="value">9€/Monat</span>
+              <span slot="description">
+                • 1 Benutzer<br />
+                • 10 GB Speicher<br />
+                • E-Mail Support
+              </span>
+            </nte-multiselect-item>
+
+            <nte-multiselect-item type="radio" name="plan" value="pro">
+              <span slot="leading">🚀</span>
+              <span slot="title">Pro Plan</span>
+              <span slot="value">29€/Monat</span>
+              <span slot="description">
+                • 5 Benutzer<br />
+                • 100 GB Speicher<br />
+                • Prioritäts-Support
+              </span>
+            </nte-multiselect-item>
+
+            <nte-multiselect-item type="radio" name="plan" value="enterprise">
+              <span slot="leading">🏢</span>
+              <span slot="title">Enterprise</span>
+              <span slot="value">99€/Monat</span>
+              <span slot="description">
+                • Unbegrenzte Benutzer<br />
+                • Unbegrenzter Speicher<br />
+                • 24/7 Telefon-Support
+              </span>
+            </nte-multiselect-item>
+          </nte-multiselect>
+        </div>
+
+        <!-- Checkbox Example - Features -->
+        <div class="demo-section">
+          <h2>Checkbox Auswahl - Zusätzliche Features (Rows Layout)</h2>
+          <div class="controls">
+            <button onclick="getFeaturesSelection()">Gewählte Features anzeigen</button>
+            <button onclick="selectAllFeatures()">Alle auswählen</button>
+            <button onclick="clearFeatures()">Alle abwählen</button>
+            <div id="features-output" class="output"></div>
+          </div>
+
+          <nte-multiselect id="features" layout="rows">
+            <nte-multiselect-item type="checkbox" name="features" value="ssl" checked>
+              <span slot="leading">🔒</span>
+              <span slot="title">SSL Zertifikat</span>
+              <span slot="value">+5€/Monat</span>
+              <span slot="description">Sichern Sie Ihre Website mit HTTPS-Verschlüsselung</span>
+            </nte-multiselect-item>
+
+            <nte-multiselect-item type="checkbox" name="features" value="backup">
+              <span slot="leading">💾</span>
+              <span slot="title">Tägliche Backups</span>
+              <span slot="value">+10€/Monat</span>
+              <span slot="description">Automatische tägliche Backups mit 30-Tage Aufbewahrung</span>
+            </nte-multiselect-item>
+
+            <nte-multiselect-item type="checkbox" name="features" value="cdn">
+              <span slot="leading">🌍</span>
+              <span slot="title">Globales CDN</span>
+              <span slot="value">+15€/Monat</span>
+              <span slot="description">Beschleunigen Sie Ihre Website mit globalem Content Delivery</span>
+            </nte-multiselect-item>
+
+            <nte-multiselect-item type="checkbox" name="features" value="monitoring" disabled>
+              <span slot="leading">📊</span>
+              <span slot="title">Erweiterte Überwachung</span>
+              <span slot="value">Demnächst</span>
+              <span slot="description">Echtzeit-Performance und Uptime-Monitoring</span>
+            </nte-multiselect-item>
+          </nte-multiselect>
+        </div>
+
+        <!-- Dark Theme Example -->
+        <div class="demo-section dark-theme">
+          <h2>Dunkles Theme - Zahlungsmethoden (Columns Layout)</h2>
+          <nte-multiselect layout="columns">
+            <nte-multiselect-item type="radio" name="payment" value="credit" control-position="top-right" checked>
+              <span slot="leading">💳</span>
+              <span slot="title">Kreditkarte</span>
+              <span slot="description">Visa, MasterCard, Amex</span>
+            </nte-multiselect-item>
+
+            <nte-multiselect-item type="radio" name="payment" value="paypal" control-position="top-right">
+              <span slot="leading">🅿️</span>
+              <span slot="title">PayPal</span>
+              <span slot="description">Sichere Zahlung</span>
+            </nte-multiselect-item>
+
+            <nte-multiselect-item type="radio" name="payment" value="crypto" control-position="top-right">
+              <span slot="leading">₿</span>
+              <span slot="title">Kryptowährung</span>
+              <span slot="description">Bitcoin, Ethereum</span>
+            </nte-multiselect-item>
+          </nte-multiselect>
+        </div>
+
+        <!-- Compact Theme Example -->
+        <div class="demo-section compact-theme">
+          <h2>Kompaktes Theme - Schnelle Optionen</h2>
+          <nte-multiselect layout="grid">
+            <nte-multiselect-item type="checkbox" name="options" value="option1">
+              <span slot="title">Option 1</span>
+            </nte-multiselect-item>
+
+            <nte-multiselect-item type="checkbox" name="options" value="option2">
+              <span slot="title">Option 2</span>
+            </nte-multiselect-item>
+
+            <nte-multiselect-item type="checkbox" name="options" value="option3">
+              <span slot="title">Option 3</span>
+            </nte-multiselect-item>
+
+            <nte-multiselect-item type="checkbox" name="options" value="option4">
+              <span slot="title">Option 4</span>
+            </nte-multiselect-item>
+          </nte-multiselect>
+        </div>
+
+        <!-- Hidden Controls Example -->
+        <div class="demo-section">
+          <h2>Versteckte Controls - Nur visuelle Auswahl</h2>
+          <div class="controls">
+            <button onclick="getHiddenSelection()">Gewählte Elemente anzeigen</button>
+            <button onclick="toggleHiddenControls()">Controls ein-/ausblenden</button>
+            <div id="hidden-output" class="output"></div>
+          </div>
+
+          <nte-multiselect id="hidden-controls" layout="grid">
+            <nte-multiselect-item type="checkbox" name="visual" value="design" show-controls="false" checked>
+              <span slot="leading">🎨</span>
+              <span slot="title">Design</span>
+              <span slot="description">Visuelles Design und UI/UX</span>
+            </nte-multiselect-item>
+
+            <nte-multiselect-item type="checkbox" name="visual" value="development" show-controls="false">
+              <span slot="leading">💻</span>
+              <span slot="title">Entwicklung</span>
+              <span slot="description">Frontend und Backend Programmierung</span>
+            </nte-multiselect-item>
+
+            <nte-multiselect-item type="checkbox" name="visual" value="marketing" show-controls="false">
+              <span slot="leading">📈</span>
+              <span slot="title">Marketing</span>
+              <span slot="description">Digitales Marketing und SEO</span>
+            </nte-multiselect-item>
+
+            <nte-multiselect-item type="checkbox" name="visual" value="consulting" show-controls="false">
+              <span slot="leading">💡</span>
+              <span slot="title">Beratung</span>
+              <span slot="description">Geschäftsstrategie und Beratung</span>
+            </nte-multiselect-item>
+          </nte-multiselect>
+        </div>
+
+        <!-- Control Position Example -->
+        <div class="demo-section">
+          <h2>Control-Positionen - Verschiedene Platzierungen</h2>
+          <div class="controls">
+            <button onclick="getPositionSelection()">Gewählte Optionen anzeigen</button>
+            <button onclick="changeControlPosition('top-left')">Oben Links</button>
+            <button onclick="changeControlPosition('top-right')">Oben Rechts</button>
+            <button onclick="changeControlPosition('bottom-left')">Unten Links</button>
+            <button onclick="changeControlPosition('bottom-right')">Unten Rechts</button>
+            <div id="position-output" class="output"></div>
+          </div>
+
+          <nte-multiselect id="control-positions" layout="grid">
+            <nte-multiselect-item type="radio" name="position-demo" value="option1" control-position="top-left" checked>
+              <span slot="leading">📍</span>
+              <span slot="title">Oben Links</span>
+              <span slot="description">Control in der oberen linken Ecke</span>
+            </nte-multiselect-item>
+
+            <nte-multiselect-item type="radio" name="position-demo" value="option2" control-position="top-right">
+              <span slot="leading">📍</span>
+              <span slot="title">Oben Rechts</span>
+              <span slot="description">Control in der oberen rechten Ecke</span>
+            </nte-multiselect-item>
+
+            <nte-multiselect-item type="radio" name="position-demo" value="option3" control-position="bottom-left">
+              <span slot="leading">📍</span>
+              <span slot="title">Unten Links</span>
+              <span slot="description">Control in der unteren linken Ecke</span>
+            </nte-multiselect-item>
+
+            <nte-multiselect-item type="radio" name="position-demo" value="option4" control-position="bottom-right">
+              <span slot="leading">📍</span>
+              <span slot="title">Unten Rechts</span>
+              <span slot="description">Control in der unteren rechten Ecke (Standard)</span>
+            </nte-multiselect-item>
+          </nte-multiselect>
+        </div>
+
+        <script>
+          // Demo helper functions
+          function getPlanSelection() {
+            const plans = document.getElementById('plans');
+            const selected = plans.getSelectedValues();
+            document.getElementById('plan-output').textContent = `Gewählter Plan: ${selected.join(', ') || 'Keiner'}`;
+          }
+
+          function selectPlan(value) {
+            const plans = document.getElementById('plans');
+            plans.setSelectedValues([value]);
+            getPlanSelection();
+          }
+
+          function clearPlans() {
+            const plans = document.getElementById('plans');
+            plans.clearSelection();
+            getPlanSelection();
+          }
+
+          function getFeaturesSelection() {
+            const features = document.getElementById('features');
+            const selected = features.getSelectedValues();
+            document.getElementById('features-output').textContent =
+              `Gewählte Features: ${selected.join(', ') || 'Keine'}`;
+          }
+
+          function selectAllFeatures() {
+            const features = document.getElementById('features');
+            features.selectAll();
+            getFeaturesSelection();
+          }
+
+          function clearFeatures() {
+            const features = document.getElementById('features');
+            features.clearSelection();
+            getFeaturesSelection();
+          }
+
+          function getHiddenSelection() {
+            const hiddenControls = document.getElementById('hidden-controls');
+            const selected = hiddenControls.getSelectedValues();
+            document.getElementById('hidden-output').textContent =
+              `Gewählte Elemente: ${selected.join(', ') || 'Keine'}`;
+          }
+
+          function toggleHiddenControls() {
+            const hiddenControls = document.getElementById('hidden-controls');
+            const items = hiddenControls.querySelectorAll('nte-multiselect-item');
+
+            items.forEach((item) => {
+              const currentValue = item.getAttribute('show-controls');
+              const newValue = currentValue === 'false' ? 'true' : 'false';
+              item.setAttribute('show-controls', newValue);
+            });
+
+            getHiddenSelection();
+          }
+
+          function getPositionSelection() {
+            const controlPositions = document.getElementById('control-positions');
+            const selected = controlPositions.getSelectedValues();
+            document.getElementById('position-output').textContent =
+              `Gewählte Optionen: ${selected.join(', ') || 'Keine'}`;
+          }
+
+          function changeControlPosition(position) {
+            const controlPositions = document.getElementById('control-positions');
+            const items = controlPositions.querySelectorAll('nte-multiselect-item');
+
+            items.forEach((item) => {
+              item.setAttribute('control-position', position);
+            });
+
+            getPositionSelection();
+          }
+
+          // Listen for change events
+          document.addEventListener('DOMContentLoaded', () => {
+            const plans = document.getElementById('plans');
+            const features = document.getElementById('features');
+            const hiddenControls = document.getElementById('hidden-controls');
+            const controlPositions = document.getElementById('control-positions');
+
+            plans.addEventListener('change', (e) => {
+              console.log('Plan Auswahl geändert:', e.detail);
+              getPlanSelection();
+            });
+
+            features.addEventListener('change', (e) => {
+              console.log('Features Auswahl geändert:', e.detail);
+              getFeaturesSelection();
+            });
+
+            hiddenControls.addEventListener('change', (e) => {
+              console.log('Versteckte Controls Auswahl geändert:', e.detail);
+              getHiddenSelection();
+            });
+
+            controlPositions.addEventListener('change', (e) => {
+              console.log('Control-Positionen Auswahl geändert:', e.detail);
+              getPositionSelection();
+            });
+
+            // Initial display
+            getPlanSelection();
+            getFeaturesSelection();
+            getHiddenSelection();
+            getPositionSelection();
+          });
+        </script>
+      </div>
+    </main>
+  </body>
+</html>
