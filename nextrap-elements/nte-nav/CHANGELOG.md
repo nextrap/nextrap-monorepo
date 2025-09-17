@@ -1,3 +1,63 @@
+## 1.1.29 (2025-09-12)
+
+This was a version bump only for nte-nav to align it with other projects, there were no code changes.
+
+## 1.1.28 (2025-09-11)
+
+This was a version bump only for nte-nav to align it with other projects, there were no code changes.
+
+## 1.1.27 (2025-09-11)
+
+This was a version bump only for nte-nav to align it with other projects, there were no code changes.
+
+## 1.1.26 (2025-09-11)
+
+This was a version bump only for nte-nav to align it with other projects, there were no code changes.
+
+## 1.1.25 (2025-09-11)
+
+This was a version bump only for nte-nav to align it with other projects, there were no code changes.
+
+## 1.1.24 (2025-09-11)
+
+This was a version bump only for nte-nav to align it with other projects, there were no code changes.
+
+## 1.1.23 (2025-09-11)
+
+This was a version bump only for nte-nav to align it with other projects, there were no code changes.
+
+## 1.1.22 (2025-09-11)
+
+This was a version bump only for nte-nav to align it with other projects, there were no code changes.
+
+## 1.1.21 (2025-09-11)
+
+This was a version bump only for nte-nav to align it with other projects, there were no code changes.
+
+## 1.1.20 (2025-09-11)
+
+This was a version bump only for nte-nav to align it with other projects, there were no code changes.
+
+## 1.1.19 (2025-09-11)
+
+This was a version bump only for nte-nav to align it with other projects, there were no code changes.
+
+## 1.1.18 (2025-09-11)
+
+This was a version bump only for nte-nav to align it with other projects, there were no code changes.
+
+## 1.1.17 (2025-09-11)
+
+This was a version bump only for nte-nav to align it with other projects, there were no code changes.
+
+## 1.1.16 (2025-09-11)
+
+This was a version bump only for nte-nav to align it with other projects, there were no code changes.
+
+## 1.1.15 (2025-09-11)
+
+This was a version bump only for nte-nav to align it with other projects, there were no code changes.
+
 ## 1.1.14 (2025-08-28)
 
 This was a version bump only for nte-nav to align it with other projects, there were no code changes.

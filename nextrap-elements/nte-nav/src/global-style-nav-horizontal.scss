@@ -69,6 +69,7 @@
     --hover-color: transparent;
     --submenu-hover-color: var(--nt-primary);
     --hover-text-color: var(--nt-text);
+    --submenu-hover-text-color: var(--nt-primary);
     --submenu-bg: var(--nt-light);
     --submenu-text-color: var(--nt-text);
 
@@ -208,7 +209,7 @@
 
             &:hover {
               background: var(--submenu-hover-color);
-              color: var(--hover-text-color);
+              color: var(--submenu-hover-text-color);
             }
           }
         }

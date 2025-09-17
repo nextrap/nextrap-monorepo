@@ -64,7 +64,8 @@ small {
   font-size: var(--nt-fs-small);
 }
 
-a {
+// Important: We use "body a" here to increase specificity and override reset styles
+body a {
   color: var(--nt-link);
 
   position: relative;

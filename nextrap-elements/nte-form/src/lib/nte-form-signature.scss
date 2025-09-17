@@ -1,0 +1,89 @@
+:host {
+  display: block;
+  font-family: var(--nte-font-family, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif);
+}
+
+.form-label {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--nte-label-color, #212529);
+
+  .required-indicator {
+    color: var(--nte-required-color, #dc3545);
+    margin-left: 0.25rem;
+  }
+}
+
+.signature-container {
+  position: relative;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--nte-border-color, #dee2e6);
+  border-radius: var(--nte-border-radius, 0.375rem);
+  background-color: var(--nte-bg-color, #ffffff);
+  cursor: crosshair;
+  touch-action: none; // Prevent default touch behaviors
+  user-select: none;
+
+  &.is-invalid {
+    border-color: var(--nte-invalid-color, #dc3545);
+    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+  }
+
+  &.is-valid {
+    border-color: var(--nte-valid-color, #198754);
+    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+  }
+}
+
+.clear-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--nte-btn-text-color, #6c757d);
+  background-color: var(--nte-btn-bg-color, #ffffff);
+  border: 1px solid var(--nte-btn-border-color, #dee2e6);
+  border-radius: var(--nte-btn-border-radius, 0.25rem);
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+
+  &:hover {
+    color: var(--nte-btn-hover-text-color, #495057);
+    background-color: var(--nte-btn-hover-bg-color, #f8f9fa);
+    border-color: var(--nte-btn-hover-border-color, #adb5bd);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.form-text {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--nte-muted-color, #6c757d);
+}
+
+.invalid-feedback {
+  display: var(--show-invalid-feedback, none);
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--nte-invalid-color, #dc3545);
+}
+
+.valid-feedback {
+  display: var(--show-valid-feedback, none);
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--nte-valid-color, #198754);
+}

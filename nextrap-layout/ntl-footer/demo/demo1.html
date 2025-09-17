@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    body {
+      margin: 0;
+    }
+
+    h3 {
+      font-size: 1rem;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .square {
+      --width: 50px;
+      --color: #f5ceb2;
+      position: absolute;
+      width: var(--width);
+      height: auto;
+      aspect-ratio: 1 / 1;
+      border-radius: 0.25rem;
+      background-color: var(--color);
+    }
+
+    main {
+      height: 7000vh;
+    }
+  </style>
+
+  <body>
+    <tj-responsive>
+      <main>Main Content</main>
+      <!-- Parallax ist standardmäßig deaktiviert -->
+      <!-- Für Parallax-Effekt: <ntl-footer parallax="true" parallax-intensity="0.3"> -->
+      <ntl-footer parallax="false" parallax-intensity="0.3" parallax-selector="*">
+        <!-- Slot Background mit verschiedenen Parallax-Methoden -->
+        <div slot="background">
+          <!-- Auto-generierte Geschwindigkeiten (Standard) -->
+          <div class="square" style="--width: 50px; top: 25%; left: 5%; --color: #f5ceb2"></div>
+          <div class="square" style="--width: 40px; top: 35%; left: 8%; --color: #dcdde8"></div>
+          <div class="square" style="--width: 70px; top: 70%; left: 4%; --color: #edf1f8"></div>
+
+          <!-- Benutzerdefinierte Geschwindigkeiten über data-parallax-speed -->
+          <div
+            class="square"
+            style="--width: 40px; top: 60%; right: 10%; --color: #dcdde8"
+            data-parallax-speed="0.7"
+          ></div>
+          <div
+            class="square"
+            style="--width: 60px; top: 66%; right: 6%; --color: #dcdde8"
+            data-parallax-speed="0.2"
+          ></div>
+
+          <!-- Benutzerdefinierte Geschwindigkeiten über CSS Custom Properties -->
+          <div class="square" style="--width: 70px; top: 65%; right: 5%; --color: #f5ceb2" --parallax-speed="0.9"></div>
+          <div class="square" style="--width: 120px; top: 90%; right: 8%; --color: #dcdde8"></div>
+          <div class="square" style="--width: 40px; top: 70%; right: 55%; --color: #edf1f8"></div>
+          <div class="square" style="--width: 30px; top: 80%; right: 52%; --color: #f5ceb2"></div>
+          <div class="square" style="--width: 110px; top: 120%; left: 5%; --color: #dcdde8"></div>
+        </div>
+        <!-- Slot Content -->
+        <div class="container row">
+          <div class="-xl:col-12 xl:col-4" style="text-align: left">
+            <h2>LOGO</h2>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.</p>
+          </div>
+          <div class="-xl:col-12 xl:col-2">
+            <h5>Links</h5>
+            <ul>
+              <li>Link 1</li>
+              <li>Link 2</li>
+              <li>Link 3</li>
+              <li>Link 4</li>
+            </ul>
+          </div>
+          <div class="-xl:col-12 xl:col-2">
+            <h5>Services</h5>
+            <ul>
+              <li>Service 1</li>
+              <li>Service 2</li>
+              <li>Service 3</li>
+              <li>Service 4</li>
+            </ul>
+          </div>
+          <div class="-xl:col-12 xl:col-2">
+            <h5>Social Media</h5>
+            <ul>
+              <li>Link 1</li>
+              <li>Link 2</li>
+              <li>Link 3</li>
+              <li>Link 4</li>
+            </ul>
+          </div>
+        </div>
+        <!-- Slot Bottom -->
+        <div slot="bottom">
+          <p>© 2025 Nextrap. All rights reserved.</p>
+        </div>
+      </ntl-footer>
+      <script src="/demo/demo.ts" type="module"></script>
+    </tj-responsive>
+  </body>
+</html>

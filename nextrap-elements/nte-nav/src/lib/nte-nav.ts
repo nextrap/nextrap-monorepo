@@ -17,16 +17,16 @@ import style from './nav.scss?inline';
 export class NteNav extends LitElement {
   static override styles = [unsafeCSS(style)];
 
-  @property({ type: String, reflect: true }) mode: 'master' | 'slave' = 'slave';
+  @property({ type: String, reflect: true }) accessor mode: 'master' | 'slave' = 'slave';
   // Only for mode "sidebar"
 
-  @property({ type: String, reflect: true }) breakpoint: string | number = '99999px';
+  @property({ type: String, reflect: true }) accessor breakpoint: string | number = '99999px';
 
-  @property({ type: String, reflect: true, attribute: 'transfer-to' }) transferTo = '';
+  @property({ type: String, reflect: true, attribute: 'transfer-to' }) accessor transferTo = '';
 
-  @property({ type: String, reflect: false, attribute: 'data-group-name' }) dataGroupName = '';
+  @property({ type: String, reflect: false, attribute: 'data-group-name' }) accessor dataGroupName = '';
 
-  @state() private _isTransferred = false;
+  @state() private accessor _isTransferred = false;
 
   private getOffcanvas(): NteOffcanvas | null {
     if (!this.transferTo) {
