@@ -7,7 +7,7 @@ Short description of the component.
 ## Component1
 
 ```html
-<<%= component1 %>></<%= component1 %>>
+<<%= name %>></<%= name %>>
 ```
 
 
