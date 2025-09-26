@@ -37,17 +37,30 @@
    Secondary: second element
 */
 
+/* Base styles for all slotted first children */
 ::slotted(:first-child:not(:last-child)) {
-  /* Primary pane controlled by --primary-size, bounded by min/max if provided */
-  /* Clamp ensures primary honors min/max while using --primary-size for basis */
-  flex: 0 0
-    clamp(
-      var(--primary-min-size, var(--primary-size, 50%)),
-      var(--primary-size, 50%),
-      var(--primary-max-size, var(--primary-size, 50%))
-    );
   min-inline-size: 0;
   min-block-size: 0;
+}
+
+/* Horizontal split-view: primary controls width */
+:host(:not(.vertical)) ::slotted(:first-child:not(:last-child)) {
+  /* Primary pane controlled by --primary-size from the host */
+  flex: 0 0 var(--primary-size, 50%);
+  min-width: var(--primary-min-size, 0);
+  max-width: var(--primary-max-size, 100%);
+  /* Height should be full height in horizontal layout */
+  height: 100%;
+}
+
+/* Vertical split-view: primary controls height */
+:host(.vertical) ::slotted(:first-child:not(:last-child)) {
+  /* Primary pane controlled by --primary-size from the host */
+  flex: 0 0 var(--primary-size, 50%);
+  min-height: var(--primary-min-size, 0);
+  max-height: var(--primary-max-size, 100%);
+  /* Width should be full width in vertical layout */
+  width: 100%;
 }
 
 ::slotted(:nth-child(2)) {
