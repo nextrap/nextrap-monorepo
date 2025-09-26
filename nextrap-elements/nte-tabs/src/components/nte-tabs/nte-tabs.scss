@@ -1,0 +1,185 @@
+/* The ShadowDOM Styles for nte-tabs */
+
+:host {
+  --nte-tabs-gap: 1rem;
+  --nte-tabs-indicator-color: var(--nte-primary-color, #1976d2);
+  --nte-tabs-border-color: #e0e0e0;
+  --nte-tabs-border-width: 2px;
+  --nte-tabs-background: transparent;
+  --nte-tabs-panel-padding: 1rem;
+
+  /* Color scheme for tabs */
+  --nte-tabs-color-inactive: #9ca3af; /* Light gray for inactive tabs */
+  --nte-tabs-color-hover: #6b7280; /* Medium gray for hover state */
+  --nte-tabs-color-selected: #374151; /* Dark gray for selected tab */
+
+  display: block;
+  width: 100%;
+}
+
+.tabs-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &.vertical {
+    flex-direction: row;
+
+    .tabs-list {
+      flex-direction: column;
+      background: linear-gradient(
+        to left,
+        var(--nte-tabs-border-color) 0,
+        var(--nte-tabs-border-color) var(--nte-tabs-border-width),
+        transparent var(--nte-tabs-border-width),
+        transparent 100%
+      );
+    }
+  }
+}
+
+.tabs-list {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  background: linear-gradient(
+    to top,
+    var(--nte-tabs-border-color) 0,
+    var(--nte-tabs-border-color) var(--nte-tabs-border-width),
+    transparent var(--nte-tabs-border-width),
+    transparent 100%
+  );
+  gap: var(--nte-tabs-gap);
+
+  ::slotted(nte-tab) {
+    flex: 0 0 auto;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+    /* All styling is now handled by the nte-tab component itself */
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+/* Selection indicator for line variant */
+.selection-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: var(--nte-tabs-border-width);
+  width: 100px; /* Default width, will be overridden by JS */
+  background-color: var(--nte-tabs-indicator-color);
+  transform-origin: left center;
+  transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, width;
+  z-index: 20; /* Higher z-index to appear above the gradient background */
+  pointer-events: none;
+}
+
+/* Vertical indicator */
+.tabs-container.vertical {
+  .selection-indicator {
+    bottom: auto;
+    left: auto;
+    right: 0;
+    top: 0;
+    width: var(--nte-tabs-border-width);
+    height: 50px; /* Default height, will be overridden by JS */
+    transform-origin: top center;
+    transition:
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, height;
+  }
+}
+
+/* Variant: Line - styles are now handled by the nte-tab component itself */
+
+/* Variant: Card */
+.tabs-container.card {
+  .tabs-list {
+    gap: var(--nte-tabs-gap);
+    /* Card styles are now handled by the nte-tab component itself */
+  }
+
+  &.vertical .tabs-list {
+    border-bottom: none;
+    border-right: 1px solid var(--nte-tabs-border-color);
+    flex-direction: column;
+    /* Vertical card styles are now handled by the nte-tab component itself */
+  }
+}
+
+/* Panel visibility styles */
+.panels-container ::slotted([slot='panel']) {
+  display: none; /* Hide all panels by default */
+  padding: var(--nte-tabs-panel-padding);
+}
+
+.panels-container ::slotted([slot='panel'].active) {
+  display: block !important; /* Show active panel with higher specificity */
+}
+
+.panels-container ::slotted([slot='panel'][hidden]) {
+  display: none !important; /* Ensure hidden panels stay hidden */
+}
+
+/* Size variants */
+.tabs-container {
+  &.sm {
+    .tabs-list ::slotted(nte-tab) {
+      padding: 0.375rem 0.75rem;
+      font-size: 0.875rem;
+    }
+  }
+
+  &.md {
+    .tabs-list ::slotted(nte-tab) {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+    }
+  }
+
+  &.lg {
+    .tabs-list ::slotted(nte-tab) {
+      padding: 0.625rem 1.25rem;
+      font-size: 1.125rem;
+    }
+  }
+
+  &.xl {
+    .tabs-list ::slotted(nte-tab) {
+      padding: 0.75rem 1.5rem;
+      font-size: 1.25rem;
+    }
+  }
+}
+
+/* Panels container */
+.panels-container {
+  padding: var(--nte-tabs-panel-padding);
+
+  ::slotted([slot='panel']) {
+    display: none !important;
+
+    &.active {
+      display: block !important;
+    }
+
+    &[hidden] {
+      display: none !important;
+    }
+  }
+}
+
+/* Focus styles */
+.tabs-list ::slotted(nte-tab:focus-visible) {
+  outline: 2px solid var(--nte-tabs-indicator-color);
+  outline-offset: 2px;
+}

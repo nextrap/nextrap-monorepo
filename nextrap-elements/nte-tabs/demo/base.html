@@ -1,0 +1,1019 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>nte-tabs Component Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        line-height: 1.6;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+
+      .container {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow:
+          0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        margin-bottom: 2rem;
+      }
+
+      h1 {
+        color: #1a202c;
+        margin-bottom: 0.5rem;
+        font-size: 2.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .subtitle {
+        color: #718096;
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+      }
+
+      h2 {
+        color: #2d3748;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+        border-bottom: 2px solid #e2e8f0;
+        padding-bottom: 0.5rem;
+      }
+
+      .demo-section {
+        margin-bottom: 3rem;
+      }
+
+      .demo-description {
+        color: #4a5568;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        background: #f7fafc;
+        border-left: 4px solid #667eea;
+        border-radius: 4px;
+      }
+
+      code {
+        background: #edf2f7;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-family: 'Consolas', 'Monaco', monospace;
+        font-size: 0.9em;
+        color: #e53e3e;
+      }
+
+      .icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.2em;
+        height: 1.2em;
+      }
+
+      .badge {
+        background: #667eea;
+        color: white;
+        padding: 0.2rem 0.5rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      .close-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.2rem;
+        border-radius: 4px;
+        color: #a0aec0;
+        transition: all 0.2s;
+      }
+
+      .close-btn:hover {
+        background: #edf2f7;
+        color: #2d3748;
+      }
+
+      .panel-content {
+        padding: 1rem;
+      }
+
+      .panel-content h3 {
+        color: #2d3748;
+        margin-top: 0;
+      }
+
+      .panel-content p {
+        color: #4a5568;
+        line-height: 1.6;
+      }
+
+      .feature-list {
+        list-style: none;
+        padding: 0;
+      }
+
+      .feature-list li {
+        padding: 0.5rem 0;
+        padding-left: 2rem;
+        position: relative;
+      }
+
+      .feature-list li::before {
+        content: '✨';
+        position: absolute;
+        left: 0;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+
+      .vertical-demo {
+        display: flex;
+        gap: 2rem;
+        height: 400px;
+      }
+
+      .vertical-demo nte-tabs {
+        flex: 1;
+      }
+
+      .controls {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .controls button {
+        padding: 0.5rem 1rem;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .controls button:hover {
+        background: #5a67d8;
+      }
+
+      .event-log {
+        background: #1a202c;
+        color: #68d391;
+        padding: 1rem;
+        border-radius: 6px;
+        font-family: 'Consolas', 'Monaco', monospace;
+        font-size: 0.9rem;
+        max-height: 150px;
+        overflow-y: auto;
+        margin-top: 1rem;
+      }
+
+      .event-log:empty::before {
+        content: 'Events will appear here...';
+        color: #718096;
+      }
+
+      .custom-styling-demo {
+        margin-top: 2rem;
+      }
+
+      .slider-container {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin: 0.5rem 0;
+      }
+
+      .slider-container label {
+        min-width: 120px;
+        font-weight: 500;
+      }
+
+      .slider-container input[type='range'] {
+        flex: 1;
+        max-width: 200px;
+      }
+
+      .slider-container input[type='color'] {
+        width: 50px;
+        height: 30px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .slider-container span {
+        min-width: 60px;
+        font-family: monospace;
+        color: #4a5568;
+      }
+
+      .animation-demo {
+        background: #f7fafc;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border-left: 4px solid #38b2ac;
+        margin: 1rem 0;
+      }
+
+      .animation-demo h4 {
+        margin-top: 0;
+        color: #2d3748;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🎯 nte-tabs Component</h1>
+      <p class="subtitle">A modern, accessible, and feature-rich tabs component built with Lit</p>
+
+      <!-- Shadow DOM Architecture Demo -->
+      <div class="demo-section">
+        <h2>Shadow DOM Architecture</h2>
+        <p class="demo-description">
+          The component uses Shadow DOM with a proper
+          <code>&lt;div id="list" role="tablist" part="tablist"&gt;</code> structure and animated selection indicator
+        </p>
+
+        <div class="animation-demo">
+          <h4>🏗️ Architecture Highlights</h4>
+          <ul class="feature-list">
+            <li><strong>Shadow DOM:</strong> Encapsulated styling and structure</li>
+            <li><strong>Tablist Container:</strong> Proper ARIA roles and semantics</li>
+            <li>
+              <strong>Selection Indicator:</strong> Smooth CSS animations with transform and width/height transitions
+            </li>
+            <li><strong>Event Delegation:</strong> Click handling through custom events</li>
+            <li><strong>ResizeObserver:</strong> Automatic indicator repositioning on layout changes</li>
+          </ul>
+        </div>
+
+        <nte-tabs selected="architecture" tabs-aria-label="Architecture demonstration">
+          <nte-tab value="architecture" label="Architecture">
+            <span slot="icon" class="icon">🏗️</span>
+            Architecture
+          </nte-tab>
+          <nte-tab value="indicator" label="Indicator">
+            <span slot="icon" class="icon">🎯</span>
+            Indicator
+          </nte-tab>
+          <nte-tab value="events" label="Events">
+            <span slot="icon" class="icon">⚡</span>
+            Events
+          </nte-tab>
+
+          <div slot="panel" data-tab-value="architecture">
+            <div class="panel-content">
+              <h3>🏗️ Shadow DOM Structure</h3>
+              <p>The component creates a proper Shadow DOM with:</p>
+              <ul>
+                <li><code>&lt;div id="list" role="tablist" part="tablist"&gt;</code> - Main container</li>
+                <li><code>&lt;slot&gt;</code> - For tab elements</li>
+                <li><code>&lt;div class="selection-indicator"&gt;</code> - Animated indicator</li>
+                <li><code>&lt;slot name="panel"&gt;</code> - For panel content</li>
+              </ul>
+            </div>
+          </div>
+
+          <div slot="panel" data-tab-value="indicator">
+            <div class="panel-content">
+              <h3>🎯 Selection Indicator</h3>
+              <p>The selection indicator features:</p>
+              <ul>
+                <li><strong>Smooth Animation:</strong> CSS transitions with cubic-bezier easing</li>
+                <li><strong>Dynamic Sizing:</strong> Width and height adjusted via JavaScript</li>
+                <li><strong>Position Calculation:</strong> Uses getBoundingClientRect() for precision</li>
+                <li><strong>RequestAnimationFrame:</strong> Ensures smooth DOM updates</li>
+              </ul>
+            </div>
+          </div>
+
+          <div slot="panel" data-tab-value="events">
+            <div class="panel-content">
+              <h3>⚡ Event System</h3>
+              <p>Comprehensive event handling:</p>
+              <ul>
+                <li><strong>Custom Events:</strong> 'tab-select' and 'change' events</li>
+                <li><strong>Event Bubbling:</strong> Proper event propagation from tabs to container</li>
+                <li><strong>Keyboard Support:</strong> Arrow keys, Home, End navigation</li>
+                <li><strong>Focus Management:</strong> Roving tabindex pattern</li>
+              </ul>
+            </div>
+          </div>
+        </nte-tabs>
+      </div>
+
+      <!-- Basic Example -->
+      <div class="demo-section">
+        <h2>Basic Usage</h2>
+        <p class="demo-description">
+          Simple tabs with default <code>line</code> variant, <code>md</code> size, and animated selection indicator
+        </p>
+
+        <div class="animation-demo">
+          <h4>🎨 Animated Selection Indicator</h4>
+          <p>
+            Notice how the blue indicator smoothly animates between tabs when you click them. This provides visual
+            feedback and enhances the user experience.
+          </p>
+        </div>
+
+        <nte-tabs selected="overview">
+          <nte-tab value="overview" label="Overview"> Overview </nte-tab>
+          <nte-tab value="features" label="Features"> Features </nte-tab>
+          <nte-tab value="documentation" label="Documentation"> Documentation </nte-tab>
+
+          <div slot="panel" data-tab-value="overview">
+            <div class="panel-content">
+              <h3>Welcome to nte-tabs!</h3>
+              <p>This is a powerful and flexible tabs component that provides:</p>
+              <ul class="feature-list">
+                <li>Full accessibility support with ARIA attributes</li>
+                <li>Keyboard navigation (Arrow keys, Home, End)</li>
+                <li>Animated selection indicator</li>
+                <li>Multiple visual variants</li>
+                <li>Responsive sizing options</li>
+                <li>Configurable styling properties</li>
+              </ul>
+            </div>
+          </div>
+
+          <div slot="panel" data-tab-value="features">
+            <div class="panel-content">
+              <h3>Key Features</h3>
+              <ul class="feature-list">
+                <li>Line and Card variants</li>
+                <li>Horizontal and Vertical layouts</li>
+                <li>4 size options (sm, md, lg, xl)</li>
+                <li>Icon and action slot support</li>
+                <li>Disabled state management</li>
+                <li>Event handling for tab changes</li>
+                <li>Smooth animations and transitions</li>
+                <li>Customizable border and indicator colors</li>
+              </ul>
+            </div>
+          </div>
+
+          <div slot="panel" data-tab-value="documentation">
+            <div class="panel-content">
+              <h3>Documentation</h3>
+              <p>Complete documentation is available in the component README.</p>
+              <p>The component follows the ARIA Tabs Design Pattern for maximum accessibility.</p>
+            </div>
+          </div>
+        </nte-tabs>
+      </div>
+
+      <!-- Tabs with Icons -->
+      <div class="demo-section">
+        <h2>Tabs with Icons</h2>
+        <p class="demo-description">Add visual context with icons using the <code>icon</code> slot</p>
+
+        <nte-tabs selected="home" variant="line" size="lg">
+          <nte-tab value="home" label="Home">
+            <span slot="icon" class="icon">🏠</span>
+            Home
+          </nte-tab>
+          <nte-tab value="profile" label="Profile">
+            <span slot="icon" class="icon">👤</span>
+            Profile
+          </nte-tab>
+          <nte-tab value="messages" label="Messages">
+            <span slot="icon" class="icon">💬</span>
+            Messages
+            <span slot="action" class="badge">3</span>
+          </nte-tab>
+          <nte-tab value="settings" label="Settings">
+            <span slot="icon" class="icon">⚙️</span>
+            Settings
+          </nte-tab>
+
+          <div slot="panel" data-tab-value="home">
+            <div class="panel-content">
+              <h3>🏠 Home Dashboard</h3>
+              <p>Welcome back! Here's your activity overview for today.</p>
+            </div>
+          </div>
+
+          <div slot="panel" data-tab-value="profile">
+            <div class="panel-content">
+              <h3>👤 User Profile</h3>
+              <p>Manage your profile information and preferences.</p>
+            </div>
+          </div>
+
+          <div slot="panel" data-tab-value="messages">
+            <div class="panel-content">
+              <h3>💬 Messages</h3>
+              <p>You have 3 unread messages waiting for you.</p>
+            </div>
+          </div>
+
+          <div slot="panel" data-tab-value="settings">
+            <div class="panel-content">
+              <h3>⚙️ Settings</h3>
+              <p>Configure your application preferences.</p>
+            </div>
+          </div>
+        </nte-tabs>
+      </div>
+
+      <!-- Card Variant -->
+      <div class="demo-section">
+        <h2>Card Variant</h2>
+        <p class="demo-description">Classic card-style tabs with <code>variant="card"</code></p>
+
+        <nte-tabs selected="general" variant="card">
+          <nte-tab value="general" label="General"> General </nte-tab>
+          <nte-tab value="privacy" label="Privacy"> Privacy </nte-tab>
+          <nte-tab value="security" label="Security"> Security </nte-tab>
+          <nte-tab value="notifications" label="Notifications" disabled> Notifications </nte-tab>
+
+          <div slot="panel" data-tab-value="general">
+            <div class="panel-content">
+              <h3>General Settings</h3>
+              <p>Configure general application settings and preferences.</p>
+            </div>
+          </div>
+
+          <div slot="panel" data-tab-value="privacy">
+            <div class="panel-content">
+              <h3>Privacy Settings</h3>
+              <p>Control your privacy and data sharing preferences.</p>
+            </div>
+          </div>
+
+          <div slot="panel" data-tab-value="security">
+            <div class="panel-content">
+              <h3>Security Settings</h3>
+              <p>Manage your security options and two-factor authentication.</p>
+            </div>
+          </div>
+
+          <div slot="panel" data-tab-value="notifications">
+            <div class="panel-content">
+              <h3>Notifications</h3>
+              <p>This feature is currently disabled.</p>
+            </div>
+          </div>
+        </nte-tabs>
+      </div>
+
+      <!-- Size Variants -->
+      <div class="demo-section">
+        <h2>Size Variants</h2>
+        <p class="demo-description">Different sizes for various UI contexts</p>
+
+        <div class="grid">
+          <div>
+            <h3>Small (<code>size="sm"</code>)</h3>
+            <nte-tabs selected="tab1" size="sm">
+              <nte-tab value="tab1" label="Tab 1">Tab 1</nte-tab>
+              <nte-tab value="tab2" label="Tab 2">Tab 2</nte-tab>
+              <nte-tab value="tab3" label="Tab 3">Tab 3</nte-tab>
+
+              <div slot="panel" data-tab-value="tab1">
+                <div class="panel-content">Small size tabs</div>
+              </div>
+              <div slot="panel" data-tab-value="tab2">
+                <div class="panel-content">Compact for tight spaces</div>
+              </div>
+              <div slot="panel" data-tab-value="tab3">
+                <div class="panel-content">Perfect for mobile</div>
+              </div>
+            </nte-tabs>
+          </div>
+
+          <div>
+            <h3>Extra Large (<code>size="xl"</code>)</h3>
+            <nte-tabs selected="tab1" size="xl" variant="card">
+              <nte-tab value="tab1" label="Tab 1">
+                <span slot="icon" class="icon">📊</span>
+                Tab 1
+              </nte-tab>
+              <nte-tab value="tab2" label="Tab 2">
+                <span slot="icon" class="icon">📈</span>
+                Tab 2
+              </nte-tab>
+              <nte-tab value="tab3" label="Tab 3">
+                <span slot="icon" class="icon">📉</span>
+                Tab 3
+              </nte-tab>
+
+              <div slot="panel" data-tab-value="tab1">
+                <div class="panel-content">Extra large size tabs</div>
+              </div>
+              <div slot="panel" data-tab-value="tab2">
+                <div class="panel-content">Great for headers</div>
+              </div>
+              <div slot="panel" data-tab-value="tab3">
+                <div class="panel-content">Maximum visibility</div>
+              </div>
+            </nte-tabs>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vertical Tabs -->
+      <div class="demo-section">
+        <h2>Vertical Layout</h2>
+        <p class="demo-description">Vertical tabs with <code>direction="vertical"</code> - perfect for sidebars</p>
+
+        <div class="vertical-demo">
+          <nte-tabs selected="account" direction="vertical" variant="line">
+            <nte-tab value="account" label="Account">
+              <span slot="icon" class="icon">👤</span>
+              Account
+            </nte-tab>
+            <nte-tab value="billing" label="Billing">
+              <span slot="icon" class="icon">💳</span>
+              Billing
+            </nte-tab>
+            <nte-tab value="team" label="Team">
+              <span slot="icon" class="icon">👥</span>
+              Team
+            </nte-tab>
+            <nte-tab value="integrations" label="Integrations">
+              <span slot="icon" class="icon">🔗</span>
+              Integrations
+            </nte-tab>
+            <nte-tab value="advanced" label="Advanced">
+              <span slot="icon" class="icon">🛠️</span>
+              Advanced
+            </nte-tab>
+
+            <div slot="panel" data-tab-value="account">
+              <div class="panel-content">
+                <h3>Account Settings</h3>
+                <p>Update your account details and personal information.</p>
+              </div>
+            </div>
+
+            <div slot="panel" data-tab-value="billing">
+              <div class="panel-content">
+                <h3>Billing & Subscription</h3>
+                <p>Manage your billing information and subscription plans.</p>
+              </div>
+            </div>
+
+            <div slot="panel" data-tab-value="team">
+              <div class="panel-content">
+                <h3>Team Management</h3>
+                <p>Add team members and manage permissions.</p>
+              </div>
+            </div>
+
+            <div slot="panel" data-tab-value="integrations">
+              <div class="panel-content">
+                <h3>Integrations</h3>
+                <p>Connect with third-party services and APIs.</p>
+              </div>
+            </div>
+
+            <div slot="panel" data-tab-value="advanced">
+              <div class="panel-content">
+                <h3>Advanced Settings</h3>
+                <p>Configure advanced features and developer options.</p>
+              </div>
+            </div>
+          </nte-tabs>
+        </div>
+      </div>
+
+      <!-- Live Interaction Demo -->
+      <div class="demo-section">
+        <h2>Live Interaction Test</h2>
+        <p class="demo-description">
+          Test the click handling, keyboard navigation, and selection indicator animation in real-time
+        </p>
+
+        <div class="animation-demo">
+          <h4>🖱️ Interaction Features</h4>
+          <p><strong>Try these interactions:</strong></p>
+          <ul class="feature-list">
+            <li><strong>Click:</strong> Click any tab to see the indicator animate</li>
+            <li><strong>Keyboard:</strong> Focus a tab and use Arrow keys, Home, End</li>
+            <li><strong>Disabled:</strong> Try clicking the disabled tab (no effect)</li>
+            <li><strong>Events:</strong> Watch the event log below for real-time feedback</li>
+          </ul>
+        </div>
+
+        <nte-tabs id="interaction-demo" selected="click" indicator-color="#e53e3e" border-color="#f56565">
+          <nte-tab value="click" label="Click Test">
+            <span slot="icon" class="icon">🖱️</span>
+            Click Test
+          </nte-tab>
+          <nte-tab value="keyboard" label="Keyboard Test">
+            <span slot="icon" class="icon">⌨️</span>
+            Keyboard
+          </nte-tab>
+          <nte-tab value="animation" label="Animation Test">
+            <span slot="icon" class="icon">✨</span>
+            Animation
+          </nte-tab>
+          <nte-tab value="disabled" label="Disabled Test" disabled>
+            <span slot="icon" class="icon">🚫</span>
+            Disabled
+          </nte-tab>
+
+          <div slot="panel" data-tab-value="click">
+            <div class="panel-content">
+              <h3>🖱️ Click Interaction</h3>
+              <p>Click on different tabs to see the selection indicator smoothly animate to the new position.</p>
+              <p><strong>Features:</strong> Event bubbling, custom events, disabled state handling</p>
+            </div>
+          </div>
+
+          <div slot="panel" data-tab-value="keyboard">
+            <div class="panel-content">
+              <h3>⌨️ Keyboard Navigation</h3>
+              <p>Focus this tab and use keyboard navigation:</p>
+              <ul>
+                <li><strong>→/↓:</strong> Next tab</li>
+                <li><strong>←/↑:</strong> Previous tab</li>
+                <li><strong>Home:</strong> First tab</li>
+                <li><strong>End:</strong> Last tab</li>
+              </ul>
+            </div>
+          </div>
+
+          <div slot="panel" data-tab-value="animation">
+            <div class="panel-content">
+              <h3>✨ Animation Details</h3>
+              <p>The selection indicator uses:</p>
+              <ul>
+                <li><strong>CSS Transitions:</strong> 0.3s cubic-bezier easing</li>
+                <li><strong>Transform:</strong> translateX for position</li>
+                <li><strong>Dynamic Width:</strong> Matches tab width exactly</li>
+                <li><strong>Z-Index:</strong> Appears above tab content</li>
+              </ul>
+            </div>
+          </div>
+
+          <div slot="panel" data-tab-value="disabled">
+            <div class="panel-content">
+              <h3>🚫 Disabled State</h3>
+              <p>This panel should not be visible as the tab is disabled.</p>
+            </div>
+          </div>
+        </nte-tabs>
+
+        <div class="event-log" id="interaction-log"></div>
+      </div>
+
+      <!-- Custom Styling Demo -->
+      <div class="demo-section">
+        <h2>Custom Styling Properties</h2>
+        <p class="demo-description">
+          Customize the appearance with configurable border width, border color, and indicator color properties
+        </p>
+
+        <div class="custom-styling-demo">
+          <div class="slider-container">
+            <label for="border-width">Border Width:</label>
+            <input type="range" id="border-width" min="1" max="8" value="2" oninput="updateBorderWidth(this.value)" />
+            <span id="border-width-value">2px</span>
+          </div>
+
+          <div class="slider-container">
+            <label for="border-color">Border Color:</label>
+            <input type="color" id="border-color" value="#e0e0e0" oninput="updateBorderColor(this.value)" />
+            <span id="border-color-value">#e0e0e0</span>
+          </div>
+
+          <div class="slider-container">
+            <label for="indicator-color">Indicator Color:</label>
+            <input type="color" id="indicator-color" value="#1976d2" oninput="updateIndicatorColor(this.value)" />
+            <span id="indicator-color-value">#1976d2</span>
+          </div>
+        </div>
+
+        <nte-tabs
+          id="custom-tabs"
+          selected="design"
+          border-width="2px"
+          border-color="#e0e0e0"
+          indicator-color="#1976d2"
+        >
+          <nte-tab value="design" label="Design">
+            <span slot="icon" class="icon">🎨</span>
+            Design
+          </nte-tab>
+          <nte-tab value="colors" label="Colors">
+            <span slot="icon" class="icon">🌈</span>
+            Colors
+          </nte-tab>
+          <nte-tab value="animation" label="Animation">
+            <span slot="icon" class="icon">✨</span>
+            Animation
+          </nte-tab>
+
+          <div slot="panel" data-tab-value="design">
+            <div class="panel-content">
+              <h3>🎨 Design Customization</h3>
+              <p>
+                Adjust the border width to change the thickness of the tab container border and selection indicator.
+              </p>
+            </div>
+          </div>
+
+          <div slot="panel" data-tab-value="colors">
+            <div class="panel-content">
+              <h3>🌈 Color Theming</h3>
+              <p>Customize border and indicator colors to match your design system or brand colors.</p>
+            </div>
+          </div>
+
+          <div slot="panel" data-tab-value="animation">
+            <div class="panel-content">
+              <h3>✨ Smooth Animations</h3>
+              <p>
+                The selection indicator smoothly animates between tabs with CSS transitions for a polished user
+                experience.
+              </p>
+            </div>
+          </div>
+        </nte-tabs>
+      </div>
+
+      <!-- Interactive Demo -->
+      <div class="demo-section">
+        <h2>Interactive Demo</h2>
+        <p class="demo-description">Try the interactive controls and see the event handling in action</p>
+
+        <div class="controls">
+          <button onclick="changeTab('first')">Select First Tab</button>
+          <button onclick="changeTab('second')">Select Second Tab</button>
+          <button onclick="changeTab('third')">Select Third Tab</button>
+          <button onclick="toggleDisabled()">Toggle Disabled</button>
+          <button onclick="changeVariant()">Switch Variant</button>
+          <button onclick="changeSize()">Change Size</button>
+          <button onclick="changeBorderStyle()">Change Border Style</button>
+        </div>
+
+        <nte-tabs id="interactive-tabs" selected="first">
+          <nte-tab value="first" label="First Tab">
+            <span slot="icon" class="icon">1️⃣</span>
+            First
+          </nte-tab>
+          <nte-tab value="second" label="Second Tab">
+            <span slot="icon" class="icon">2️⃣</span>
+            Second
+          </nte-tab>
+          <nte-tab value="third" label="Third Tab">
+            <span slot="icon" class="icon">3️⃣</span>
+            Third
+            <button slot="action" class="close-btn" onclick="event.stopPropagation(); alert('Close action!')">×</button>
+          </nte-tab>
+
+          <div slot="panel" data-tab-value="first">
+            <div class="panel-content">
+              <h3>First Panel</h3>
+              <p>This is the content of the first tab panel.</p>
+            </div>
+          </div>
+
+          <div slot="panel" data-tab-value="second">
+            <div class="panel-content">
+              <h3>Second Panel</h3>
+              <p>This is the content of the second tab panel.</p>
+            </div>
+          </div>
+
+          <div slot="panel" data-tab-value="third">
+            <div class="panel-content">
+              <h3>Third Panel</h3>
+              <p>This is the content of the third tab panel. Notice the close button in the tab!</p>
+            </div>
+          </div>
+        </nte-tabs>
+
+        <div class="event-log" id="event-log"></div>
+      </div>
+
+      <!-- Accessibility Demo -->
+      <div class="demo-section">
+        <h2>Accessibility Features</h2>
+        <p class="demo-description">
+          Full keyboard navigation support - try using Arrow keys, Home, and End keys when a tab is focused
+        </p>
+
+        <nte-tabs selected="a11y-1" aria-label="Accessibility demonstration tabs">
+          <nte-tab value="a11y-1" label="ARIA Support"> ARIA Support </nte-tab>
+          <nte-tab value="a11y-2" label="Keyboard Navigation"> Keyboard Nav </nte-tab>
+          <nte-tab value="a11y-3" label="Screen Readers"> Screen Readers </nte-tab>
+          <nte-tab value="a11y-4" label="Focus Management"> Focus Management </nte-tab>
+
+          <div slot="panel" data-tab-value="a11y-1">
+            <div class="panel-content">
+              <h3>ARIA Support</h3>
+              <p>Full ARIA implementation including:</p>
+              <ul>
+                <li><code>role="tablist"</code> on container</li>
+                <li><code>role="tab"</code> on each tab</li>
+                <li><code>role="tabpanel"</code> on panels</li>
+                <li><code>aria-selected</code> state management</li>
+                <li><code>aria-controls</code> and <code>aria-labelledby</code> relationships</li>
+              </ul>
+            </div>
+          </div>
+
+          <div slot="panel" data-tab-value="a11y-2">
+            <div class="panel-content">
+              <h3>Keyboard Navigation</h3>
+              <ul>
+                <li><strong>Tab:</strong> Move focus into and out of the tab list</li>
+                <li><strong>Arrow Right/Down:</strong> Move to next tab</li>
+                <li><strong>Arrow Left/Up:</strong> Move to previous tab</li>
+                <li><strong>Home:</strong> Move to first tab</li>
+                <li><strong>End:</strong> Move to last tab</li>
+                <li><strong>Space/Enter:</strong> Activate focused tab</li>
+              </ul>
+            </div>
+          </div>
+
+          <div slot="panel" data-tab-value="a11y-3">
+            <div class="panel-content">
+              <h3>Screen Reader Support</h3>
+              <p>Properly announces tab states and relationships to assistive technologies.</p>
+              <p>Each tab has a label attribute for screen reader context.</p>
+            </div>
+          </div>
+
+          <div slot="panel" data-tab-value="a11y-4">
+            <div class="panel-content">
+              <h3>Focus Management</h3>
+              <p>Smart focus management with roving tabindex pattern.</p>
+              <p>Only the active tab is in the tab order (tabindex="0").</p>
+            </div>
+          </div>
+        </nte-tabs>
+      </div>
+    </div>
+
+    <script src="/demo/main.js" type="module"></script>
+    <script>
+      // Interactive demo functions
+      const interactiveTabs = document.getElementById('interactive-tabs');
+      const customTabs = document.getElementById('custom-tabs');
+      const interactionDemo = document.getElementById('interaction-demo');
+      const eventLog = document.getElementById('event-log');
+      const interactionLog = document.getElementById('interaction-log');
+      let currentVariant = 'line';
+      let currentSize = 'md';
+      let currentBorderStyle = 0;
+      const sizes = ['sm', 'md', 'lg', 'xl'];
+      const borderStyles = [
+        { width: '2px', color: '#e0e0e0', indicator: '#1976d2' },
+        { width: '4px', color: '#f56565', indicator: '#e53e3e' },
+        { width: '1px', color: '#38b2ac', indicator: '#319795' },
+        { width: '3px', color: '#805ad5', indicator: '#6b46c1' },
+      ];
+
+      // Log tab change events for all tabs
+      document.addEventListener('change', (e) => {
+        if (e.target.tagName.toLowerCase() === 'nte-tabs') {
+          const entry = document.createElement('div');
+          entry.textContent = `[${new Date().toLocaleTimeString()}] Tab changed to: ${e.detail.value}`;
+
+          // Log to main event log
+          if (eventLog && e.target.id === 'interactive-tabs') {
+            eventLog.insertBefore(entry, eventLog.firstChild);
+            if (eventLog.children.length > 5) {
+              eventLog.removeChild(eventLog.lastChild);
+            }
+          }
+
+          // Log to interaction demo log
+          if (interactionLog && e.target.id === 'interaction-demo') {
+            const interactionEntry = entry.cloneNode(true);
+            interactionEntry.style.color = '#38b2ac';
+            interactionLog.insertBefore(interactionEntry, interactionLog.firstChild);
+            if (interactionLog.children.length > 8) {
+              interactionLog.removeChild(interactionLog.lastChild);
+            }
+          }
+        }
+      });
+
+      // Custom styling functions
+      function updateBorderWidth(value) {
+        customTabs.borderWidth = value + 'px';
+        document.getElementById('border-width-value').textContent = value + 'px';
+      }
+
+      function updateBorderColor(value) {
+        customTabs.borderColor = value;
+        document.getElementById('border-color-value').textContent = value;
+      }
+
+      function updateIndicatorColor(value) {
+        customTabs.indicatorColor = value;
+        document.getElementById('indicator-color-value').textContent = value;
+      }
+
+      // Interactive demo functions
+      function changeTab(value) {
+        interactiveTabs.selected = value;
+      }
+
+      function toggleDisabled() {
+        interactiveTabs.disabled = !interactiveTabs.disabled;
+        const entry = document.createElement('div');
+        entry.textContent = `[${new Date().toLocaleTimeString()}] Tabs ${interactiveTabs.disabled ? 'disabled' : 'enabled'}`;
+        eventLog.insertBefore(entry, eventLog.firstChild);
+      }
+
+      function changeVariant() {
+        currentVariant = currentVariant === 'line' ? 'card' : 'line';
+        interactiveTabs.variant = currentVariant;
+        const entry = document.createElement('div');
+        entry.textContent = `[${new Date().toLocaleTimeString()}] Variant changed to: ${currentVariant}`;
+        eventLog.insertBefore(entry, eventLog.firstChild);
+      }
+
+      function changeSize() {
+        const currentIndex = sizes.indexOf(currentSize);
+        currentSize = sizes[(currentIndex + 1) % sizes.length];
+        interactiveTabs.size = currentSize;
+        const entry = document.createElement('div');
+        entry.textContent = `[${new Date().toLocaleTimeString()}] Size changed to: ${currentSize}`;
+        eventLog.insertBefore(entry, eventLog.firstChild);
+      }
+
+      function changeBorderStyle() {
+        currentBorderStyle = (currentBorderStyle + 1) % borderStyles.length;
+        const style = borderStyles[currentBorderStyle];
+
+        interactiveTabs.borderWidth = style.width;
+        interactiveTabs.borderColor = style.color;
+        interactiveTabs.indicatorColor = style.indicator;
+
+        const entry = document.createElement('div');
+        entry.textContent = `[${new Date().toLocaleTimeString()}] Border style changed: ${style.width} ${style.color}`;
+        eventLog.insertBefore(entry, eventLog.firstChild);
+      }
+
+      // Keyboard navigation demo
+      document.addEventListener('keydown', (e) => {
+        if (e.target.getAttribute && e.target.getAttribute('role') === 'tab') {
+          const entry = document.createElement('div');
+          entry.textContent = `[${new Date().toLocaleTimeString()}] Key pressed: ${e.key}`;
+          entry.style.color = '#9f7aea';
+
+          // Log to main event log for interactive tabs
+          const parentTabs = e.target.closest('nte-tabs');
+          if (eventLog && parentTabs && parentTabs.id === 'interactive-tabs') {
+            eventLog.insertBefore(entry, eventLog.firstChild);
+            if (eventLog.children.length > 8) {
+              eventLog.removeChild(eventLog.lastChild);
+            }
+          }
+
+          // Log to interaction demo log
+          if (interactionLog && parentTabs && parentTabs.id === 'interaction-demo') {
+            const interactionEntry = entry.cloneNode(true);
+            interactionEntry.style.color = '#805ad5';
+            interactionLog.insertBefore(interactionEntry, interactionLog.firstChild);
+            if (interactionLog.children.length > 8) {
+              interactionLog.removeChild(interactionLog.lastChild);
+            }
+          }
+        }
+      });
+
+      // Click event logging for interaction demo
+      document.addEventListener('click', (e) => {
+        if (e.target.getAttribute && e.target.getAttribute('role') === 'tab') {
+          const parentTabs = e.target.closest('nte-tabs');
+          if (interactionLog && parentTabs && parentTabs.id === 'interaction-demo') {
+            const entry = document.createElement('div');
+            entry.textContent = `[${new Date().toLocaleTimeString()}] Tab clicked: ${e.target.getAttribute('value')}`;
+            entry.style.color = '#e53e3e';
+            interactionLog.insertBefore(entry, interactionLog.firstChild);
+            if (interactionLog.children.length > 8) {
+              interactionLog.removeChild(interactionLog.lastChild);
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
