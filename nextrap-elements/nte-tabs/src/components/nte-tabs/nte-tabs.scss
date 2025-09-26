@@ -6,7 +6,6 @@
   --nte-tabs-border-color: #e0e0e0;
   --nte-tabs-border-width: 2px;
   --nte-tabs-background: transparent;
-  --nte-tabs-panel-padding: 1rem;
 
   /* Color scheme for tabs */
   --nte-tabs-color-inactive: #9ca3af; /* Light gray for inactive tabs */
@@ -116,20 +115,6 @@
   }
 }
 
-/* Panel visibility styles */
-.panels-container ::slotted([slot='panel']) {
-  display: none; /* Hide all panels by default */
-  padding: var(--nte-tabs-panel-padding);
-}
-
-.panels-container ::slotted([slot='panel'].active) {
-  display: block !important; /* Show active panel with higher specificity */
-}
-
-.panels-container ::slotted([slot='panel'][hidden]) {
-  display: none !important; /* Ensure hidden panels stay hidden */
-}
-
 /* Size variants */
 .tabs-container {
   &.sm {
@@ -157,23 +142,6 @@
     .tabs-list ::slotted(nte-tab) {
       padding: 0.75rem 1.5rem;
       font-size: 1.25rem;
-    }
-  }
-}
-
-/* Panels container */
-.panels-container {
-  padding: var(--nte-tabs-panel-padding);
-
-  ::slotted([slot='panel']) {
-    display: none !important;
-
-    &.active {
-      display: block !important;
-    }
-
-    &[hidden] {
-      display: none !important;
     }
   }
 }

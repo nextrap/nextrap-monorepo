@@ -62,12 +62,6 @@ export class NteTabsElement extends LitElement {
       .filter((el) => el.tagName.toLowerCase() === 'nte-tab') as NteTabElement[];
   }
 
-  private get _panels(): HTMLElement[] {
-    const slot = this.shadowRoot?.querySelector('slot[name="panel"]') as HTMLSlotElement;
-    if (!slot) return [];
-    return slot.assignedElements({ flatten: true }) as HTMLElement[];
-  }
-
   // Note: Using manual queries instead of @query decorators to avoid TypeScript issues
   private get _indicator(): HTMLElement | null {
     return (this.shadowRoot?.querySelector('.selection-indicator') as HTMLElement) || null;
@@ -80,7 +74,6 @@ export class NteTabsElement extends LitElement {
   private _indicatorTransform: string = '';
 
   private _tabIdMap = new WeakMap<HTMLElement, string>();
-  private _panelIdMap = new WeakMap<HTMLElement, string>();
   private _idCounter = 0;
   private _resizeObserver?: ResizeObserver;
 
@@ -96,7 +89,7 @@ export class NteTabsElement extends LitElement {
     });
   }
 
-  disconnectedCallback() {
+  override disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('tab-select', this._handleTabSelect);
     this.removeEventListener('keydown', this._handleKeyDown);
@@ -113,8 +106,6 @@ export class NteTabsElement extends LitElement {
     // Use requestAnimationFrame to ensure DOM is fully rendered
     requestAnimationFrame(() => {
       this._updateTabs();
-      this._updateTabsAppearance(); // Ensure appearance is updated on first load
-      this._updatePanels();
 
       // Select first tab if none selected
       if (!this.selected && this._tabs.length > 0) {
@@ -146,12 +137,10 @@ export class NteTabsElement extends LitElement {
 
     if (changedProperties.has('selected') || changedProperties.has('disabled')) {
       this._updateTabs();
-      this._updatePanels();
       this._updateIndicator();
     }
 
     if (changedProperties.has('variant') || changedProperties.has('size') || changedProperties.has('direction')) {
-      this._updateTabsAppearance();
       this._updateIndicator();
     }
 
@@ -191,21 +180,15 @@ export class NteTabsElement extends LitElement {
             ? html`<div class="selection-indicator" style="transform: ${this._indicatorTransform}"></div>`
             : ''}
         </div>
-        <div class="panels-container">
-          <slot name="panel" @slotchange="${this._handlePanelsSlotChange}"></slot>
-        </div>
       </div>
     `;
   }
-
   private _handleSlotChange() {
     console.log('Slot changed, tabs count:', this._tabs.length);
 
     // Use requestAnimationFrame to ensure DOM is updated
     requestAnimationFrame(() => {
       this._updateTabs();
-      this._updateTabsAppearance();
-      this._updatePanels();
 
       // Observe new tabs for resize changes
       this._tabs.forEach((tab) => {
@@ -217,10 +200,6 @@ export class NteTabsElement extends LitElement {
       // Update indicator after DOM changes
       this._updateIndicator();
     });
-  }
-
-  private _handlePanelsSlotChange() {
-    this._updatePanels();
   }
 
   private _updateTabs() {
@@ -247,17 +226,6 @@ export class NteTabsElement extends LitElement {
         tab.setAttribute('aria-disabled', 'true');
       } else {
         tab.removeAttribute('aria-disabled');
-      }
-
-      // Set aria-controls to corresponding panel
-      const panel = this._findPanelByValue(value);
-      if (panel) {
-        if (!this._panelIdMap.has(panel)) {
-          this._panelIdMap.set(panel, `panel-${++this._idCounter}`);
-        }
-        const panelId = this._panelIdMap.get(panel)!;
-        panel.id = panel.id || panelId;
-        tab.setAttribute('aria-controls', panel.id);
       }
 
       // Update tab state
@@ -342,42 +310,6 @@ export class NteTabsElement extends LitElement {
         indicator.style.height = `${height}px`;
       }
     });
-  }
-
-  private _updateTabsAppearance() {
-    // This method is now integrated into _updateTabs for better reliability
-    this._updateTabs();
-  }
-
-  private _updatePanels() {
-    if (!this._panels.length) return;
-    this._panels.forEach((panel) => {
-      const panelValue = panel.getAttribute('data-tab-value');
-      const isSelected = panelValue === this.selected;
-
-      // Set ARIA attributes
-      panel.setAttribute('role', 'tabpanel');
-
-      // Find corresponding tab
-      const tab = this._tabs.find((t) => t.getAttribute('value') === panelValue);
-      if (tab && tab.id) {
-        panel.setAttribute('aria-labelledby', tab.id);
-      }
-
-      // Show/hide panel
-      if (isSelected) {
-        panel.removeAttribute('hidden');
-        panel.classList.add('active');
-      } else {
-        panel.setAttribute('hidden', '');
-        panel.classList.remove('active');
-      }
-    });
-  }
-
-  private _findPanelByValue(value?: string | null): HTMLElement | undefined {
-    if (!value || !this._panels.length) return undefined;
-    return this._panels.find((panel) => panel.getAttribute('data-tab-value') === value);
   }
 
   private _handleClick = (event: Event) => {
