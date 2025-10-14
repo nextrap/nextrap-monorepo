@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>nte-input demo</title>
+    <style>
+      :root {
+        color-scheme: light;
+        background: #f8f9fa;
+        color: #212529;
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          sans-serif;
+        line-height: 1.5;
+      }
+
+      body {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem 4rem;
+      }
+
+      h1 {
+        font-size: 2.25rem;
+        margin-bottom: 0.5rem;
+      }
+
+      h2 {
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+      }
+
+      h3 {
+        margin: 2rem 0 0.75rem;
+      }
+
+      section {
+        margin-bottom: 3rem;
+      }
+
+      form {
+        display: grid;
+        gap: 1.5rem;
+        padding: 1.5rem;
+        border: 1px solid #dee2e6;
+        border-radius: 1rem;
+        background-color: #fff;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+      }
+
+      nte-input {
+        display: block;
+      }
+
+      nte-input-group {
+        display: block;
+      }
+
+      .form-title {
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 0.75rem;
+        color: #6c757d;
+        margin-bottom: 0.5rem;
+      }
+
+      .subtitle {
+        color: #6c757d;
+        margin-bottom: 2rem;
+      }
+
+      button {
+        background-color: #0d6efd;
+        border: none;
+        color: #fff;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.75rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          background-color 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      button:hover {
+        background-color: #0b5ed7;
+        transform: translateY(-1px);
+      }
+
+      button:focus-visible {
+        outline: 2px solid #0d6efd;
+        outline-offset: 2px;
+      }
+
+      hr {
+        margin: 3rem 0;
+        border: none;
+        border-top: 1px solid #dee2e6;
+      }
+
+      .demo-note {
+        background: #f1f5f9;
+        border-left: 4px solid #0d6efd;
+        padding: 1rem 1.25rem;
+        border-radius: 0.5rem;
+        color: #1e293b;
+        margin-bottom: 2rem;
+      }
+
+      .demo-note strong {
+        display: block;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.5rem;
+      }
+
+      .form-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .btn-secondary {
+        background-color: #6c757d;
+      }
+
+      .btn-secondary:hover {
+        background-color: #5c636a;
+      }
+
+      .result-section {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        border: 1px solid #dee2e6;
+        border-radius: 1rem;
+        background-color: #fff;
+      }
+
+      .result-data {
+        display: flex;
+        gap: 2rem;
+        margin-top: 1rem;
+      }
+
+      .signature-preview {
+        margin-top: 1.5rem;
+        border-top: 1px solid #e5e7eb;
+        padding-top: 1.5rem;
+      }
+
+      .signature-preview img {
+        max-width: 100%;
+        border: 1px solid #e5e7eb;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>nte-input</h1>
+    <p class="subtitle">Demo playground for the input primitives.</p>
+
+    <hr />
+
+    <section>
+      <h2 class="form-title">Classic Form Style</h2>
+      <form action="/submit" method="get">
+        <nte-input label="Username">
+          <input
+            slot="input"
+            type="text"
+            class="form-control"
+            placeholder="Enter username"
+            id="username"
+            name="username"
+            required
+          />
+        </nte-input>
+
+        <nte-input-group cols="1-2-3">
+          <nte-input
+            label="Username"
+            inline
+            invalidFeedback="This username is already taken!"
+            validFeedback="This username is available!"
+          >
+            <input slot="input" type="text" class="form-control" required />
+          </nte-input>
+        </nte-input-group>
+
+        <nte-input-group cols="1-2-3">
+          <nte-input label="First Name">
+            <input
+              slot="input"
+              type="text"
+              class="form-control"
+              placeholder="Enter first name"
+              id="firstName"
+              name="firstName"
+            />
+          </nte-input>
+          <nte-input label="Last Name">
+            <input
+              slot="input"
+              type="text"
+              class="form-control"
+              placeholder="Enter last name"
+              id="lastName"
+              name="lastName"
+            />
+          </nte-input>
+        </nte-input-group>
+
+        <nte-input-group cols="1-2-3">
+          <nte-input floating label="Small Input" size="sm">
+            <input
+              slot="input"
+              type="text"
+              class="form-control form-control-sm"
+              placeholder=" "
+              id="smallInput"
+              name="smallInput"
+            />
+          </nte-input>
+          <nte-input floating label="Regular Input">
+            <input
+              slot="input"
+              type="text"
+              class="form-control"
+              placeholder=" "
+              id="regularInput"
+              name="regularInput"
+            />
+          </nte-input>
+          <nte-input floating label="Large Input" size="lg">
+            <input
+              slot="input"
+              type="text"
+              class="form-control form-control-lg"
+              placeholder=" "
+              id="largeInput"
+              name="largeInput"
+            />
+          </nte-input>
+        </nte-input-group>
+
+        <nte-input-group cols="1-2-3">
+          <nte-input
+            label="Country"
+            type="select"
+            helper-text="Required selection"
+            select-options='[
+                  {"key":"","value":"Select a country"},
+                  {"key":"us","value":"United States"},
+                  {"key":"uk","value":"United Kingdom"},
+                  {"key":"ca","value":"Canada"}
+              ]'
+          >
+            <select slot="input" class="form-control" name="countryRequired" required></select>
+          </nte-input>
+
+          <nte-input
+            label="Country (optional)"
+            type="select"
+            helper-text="Same options without required"
+            select-options='["Select a country", "United States", "United Kingdom", "Canada"]'
+          >
+            <select slot="input" class="form-control" name="countryOptional"></select>
+          </nte-input>
+        </nte-input-group>
+
+        <nte-input-group cols="1-2-3">
+          <nte-input type="checkbox" label="Classic Checkbox" name="classic-check" required>
+            <input slot="input" type="checkbox" class="form-check-input" id="classicCheck" name="classic-check" />
+          </nte-input>
+
+          <nte-input type="checkbox" label="Disabled Checkbox">
+            <input
+              slot="input"
+              type="checkbox"
+              class="form-check-input"
+              id="disabledCheck"
+              name="disabled-check"
+              disabled
+              checked
+            />
+          </nte-input>
+        </nte-input-group>
+
+        <nte-input-group cols="1-2-3">
+          <nte-input type="radio" label="Option 1" required>
+            <input slot="input" type="radio" class="form-check-input" id="option1" name="required-group" required />
+          </nte-input>
+          <nte-input type="radio" label="Option 2" required>
+            <input slot="input" type="radio" class="form-check-input" id="option2" name="required-group" required />
+          </nte-input>
+        </nte-input-group>
+
+        <button type="submit">Submit</button>
+      </form>
+    </section>
+
+    <hr />
+
+    <section>
+      <h2 class="form-title">Modern Form Style</h2>
+      <form action="/submit" method="get" modern>
+        <nte-input-group cols="1-2-3">
+          <nte-input
+            modern
+            label="Country"
+            type="select"
+            helper-text="Required"
+            select-options='[
+                  {"key":"","value":"Select a country"},
+                  {"key":"us","value":"United States"},
+                  {"key":"uk","value":"United Kingdom"},
+                  {"key":"ca","value":"Canada"}
+              ]'
+          >
+            <select slot="input" class="form-control" name="countryModernRequired" required></select>
+          </nte-input>
+
+          <nte-input
+            modern
+            label="Country (optional)"
+            type="select"
+            helper-text="No required attribute"
+            select-options='["Select a country", "United States", "United Kingdom", "Canada"]'
+          >
+            <select slot="input" class="form-control" name="countryModernOptional"></select>
+          </nte-input>
+        </nte-input-group>
+
+        <nte-input-group cols="1-2-3">
+          <nte-input modern floating label="Email">
+            <input slot="input" type="email" class="form-control" placeholder=" " id="email" name="email" />
+          </nte-input>
+          <nte-input modern floating label="Password">
+            <input slot="input" type="password" class="form-control" placeholder=" " id="password" name="password" />
+          </nte-input>
+        </nte-input-group>
+
+        <nte-input-group cols="1-2-3">
+          <nte-input modern label="Address">
+            <input
+              slot="input"
+              type="text"
+              class="form-control"
+              placeholder="Enter address"
+              id="address"
+              name="address"
+            />
+          </nte-input>
+        </nte-input-group>
+
+        <nte-input-group cols="1-2-3">
+          <nte-input modern type="checkbox" switchStyle="modern" label="Modern Switch" name="modern-switch">
+            <input
+              slot="input"
+              type="checkbox"
+              class="form-check-input"
+              id="modernSwitch"
+              name="modern-switch"
+              required
+            />
+          </nte-input>
+
+          <nte-input modern type="checkbox" switchStyle="modern" label="Disabled Switch">
+            <input
+              slot="input"
+              type="checkbox"
+              class="form-check-input"
+              id="disabledSwitch"
+              name="disabled-switch"
+              disabled
+              checked
+            />
+          </nte-input>
+        </nte-input-group>
+
+        <nte-input-group cols="1-2-3">
+          <nte-input modern type="radio" switchStyle="modern" label="Modern Radio 1">
+            <input slot="input" type="radio" class="form-check-input" id="modernRadio1" name="modern-radio" required />
+          </nte-input>
+
+          <nte-input modern type="radio" switchStyle="modern" label="Modern Radio 2">
+            <input slot="input" type="radio" class="form-check-input" id="modernRadio2" name="modern-radio" required />
+          </nte-input>
+        </nte-input-group>
+
+        <nte-input modern type="range" label="Volume">
+          <input
+            slot="input"
+            type="range"
+            class="form-control"
+            id="volume"
+            name="volume"
+            min="0"
+            max="100"
+            step="1"
+            value="50"
+          />
+        </nte-input>
+
+        <button type="submit">Submit</button>
+      </form>
+    </section>
+
+    <hr />
+
+    <section>
+      <h2 class="form-title">Search Input with Tags</h2>
+      <nte-input-tags
+        label="Search Tags"
+        name="tagSearch"
+        helperText="Type and press Enter, or select from suggestions."
+        id="tag-search-example"
+        search-suggestions-list='["JavaScript", "TypeScript", "Lit", "Web Components", "CSS", "HTML", "Node.js", "React", "Angular", "Vue"]'
+      ></nte-input-tags>
+    </section>
+
+    <hr />
+
+    <section>
+      <h2 class="form-title">User Registration Example</h2>
+      <user-registration-form></user-registration-form>
+    </section>
+
+    <hr />
+
+    <section>
+      <h2 class="form-title">Digital Signature Example</h2>
+      <signature-form-example></signature-form-example>
+    </section>
+
+    <script src="/demo/main.ts" type="module"></script>
+  </body>
+</html>

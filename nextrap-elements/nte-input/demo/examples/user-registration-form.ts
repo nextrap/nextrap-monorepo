@@ -1,7 +1,7 @@
 import { html, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import '../components/nte-form-group/nte-form-group';
-import '../components/nte-input/nte-input';
+import '../../src/components/nte-input-group/nte-input-group';
+import '../../src/components/nte-input/nte-input';
 
 @customElement('user-registration-form')
 export class UserRegistrationForm extends LitElement {
@@ -82,7 +82,7 @@ export class UserRegistrationForm extends LitElement {
 
       <form method="get" @submit="${this.handleSubmit}" @input="${this.handleInputChange}">
         <!-- Name fields -->
-        <nte-form-group cols="1-2-2">
+        <nte-input-group cols="1-2-2">
           <nte-input label="First Name" name="firstName" required>
             <input
               slot="input"
@@ -104,7 +104,7 @@ export class UserRegistrationForm extends LitElement {
               required
             />
           </nte-input>
-        </nte-form-group>
+        </nte-input-group>
 
         <!-- Email field -->
         <nte-input label="Email Address" name="email" required>
@@ -112,7 +112,7 @@ export class UserRegistrationForm extends LitElement {
         </nte-input>
 
         <!-- Password fields -->
-        <nte-form-group cols="1-2-2">
+        <nte-input-group cols="1-2-2">
           <nte-input label="Password" name="password" required>
             <input
               slot="input"
@@ -134,7 +134,7 @@ export class UserRegistrationForm extends LitElement {
               required
             />
           </nte-input>
-        </nte-form-group>
+        </nte-input-group>
 
         <!-- Country selection -->
         <nte-input label="Country" type="select" name="country" required>
@@ -150,7 +150,7 @@ export class UserRegistrationForm extends LitElement {
         </nte-input>
 
         <!-- Checkboxes -->
-        <nte-form-group cols="1-1-1">
+        <nte-input-group cols="1-1-1">
           <nte-input type="checkbox" label="I agree to the Terms and Conditions" name="agreeToTerms" required>
             <input slot="input" type="checkbox" class="form-check-input" name="agreeToTerms" required />
           </nte-input>
@@ -158,7 +158,7 @@ export class UserRegistrationForm extends LitElement {
           <nte-input type="checkbox" label="Subscribe to newsletter" name="newsletter">
             <input slot="input" type="checkbox" class="form-check-input" name="newsletter" />
           </nte-input>
-        </nte-form-group>
+        </nte-input-group>
 
         <!-- Submit buttons -->
         <div class="form-actions">

@@ -1,7 +1,7 @@
 {
-    "name": "nte-form",
+    "name": "nte-input",
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
-    "sourceRoot": "nextrap-elements/nte-form/src",
+    "sourceRoot": "nextrap-elements/nte-input/src",
     "projectType": "library",
     "release": {
         "version": {
