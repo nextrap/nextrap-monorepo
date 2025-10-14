@@ -1,14 +1,14 @@
 import { describe, expect } from 'vitest';
-import { NteFormInput } from './nte-form-input';
+import { NteInput } from './nte-input';
 
-describe('NteFormInput', () => {
+describe('NteInput', () => {
   it('should create an element', () => {
-    const el = new NteFormInput();
-    expect(el).toBeInstanceOf(NteFormInput);
+    const el = new NteInput();
+    expect(el).toBeInstanceOf(NteInput);
   });
 
   it('renders a basic input', async () => {
-    const element = document.createElement('nte-form-input') as NteFormInput;
+    const element = document.createElement('nte-input') as NteInput;
     document.body.appendChild(element);
     await element.updateComplete;
 
@@ -20,7 +20,7 @@ describe('NteFormInput', () => {
 
   it('renders with a label', async () => {
     const labelText = 'Test Label';
-    const element = document.createElement('nte-form-input') as NteFormInput;
+    const element = document.createElement('nte-input') as NteInput;
     element.label = labelText;
     document.body.appendChild(element);
     await element.updateComplete;
@@ -33,7 +33,7 @@ describe('NteFormInput', () => {
   });
 
   it('renders a checkbox input', async () => {
-    const element = document.createElement('nte-form-input') as NteFormInput;
+    const element = document.createElement('nte-input') as NteInput;
     element.type = 'checkbox';
     element.label = 'Checkbox Test';
     document.body.appendChild(element);
