@@ -1,7 +1,7 @@
 import { html, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import '../lib/nte-form-group';
-import '../lib/nte-form-input';
+import '../components/nte-form-group/nte-form-group';
+import '../components/nte-input/nte-input';
 
 @customElement('user-registration-form')
 export class UserRegistrationForm extends LitElement {
@@ -80,10 +80,10 @@ export class UserRegistrationForm extends LitElement {
 
       <h2>User Registration</h2>
 
-      <form @submit="${this.handleSubmit}" @input="${this.handleInputChange}">
+      <form method="get" @submit="${this.handleSubmit}" @input="${this.handleInputChange}">
         <!-- Name fields -->
         <nte-form-group cols="1-2-2">
-          <nte-form-input label="First Name" name="firstName" required>
+          <nte-input label="First Name" name="firstName" required>
             <input
               slot="input"
               type="text"
@@ -92,9 +92,9 @@ export class UserRegistrationForm extends LitElement {
               placeholder="Enter your first name"
               required
             />
-          </nte-form-input>
+          </nte-input>
 
-          <nte-form-input label="Last Name" name="lastName" required>
+          <nte-input label="Last Name" name="lastName" required>
             <input
               slot="input"
               type="text"
@@ -103,17 +103,17 @@ export class UserRegistrationForm extends LitElement {
               placeholder="Enter your last name"
               required
             />
-          </nte-form-input>
+          </nte-input>
         </nte-form-group>
 
         <!-- Email field -->
-        <nte-form-input label="Email Address" name="email" required>
+        <nte-input label="Email Address" name="email" required>
           <input slot="input" type="email" class="form-control" name="email" placeholder="Enter your email" required />
-        </nte-form-input>
+        </nte-input>
 
         <!-- Password fields -->
         <nte-form-group cols="1-2-2">
-          <nte-form-input label="Password" name="password" required>
+          <nte-input label="Password" name="password" required>
             <input
               slot="input"
               type="password"
@@ -122,9 +122,9 @@ export class UserRegistrationForm extends LitElement {
               placeholder="Create a password"
               required
             />
-          </nte-form-input>
+          </nte-input>
 
-          <nte-form-input label="Confirm Password" name="confirmPassword" required>
+          <nte-input label="Confirm Password" name="confirmPassword" required>
             <input
               slot="input"
               type="password"
@@ -133,11 +133,11 @@ export class UserRegistrationForm extends LitElement {
               placeholder="Confirm your password"
               required
             />
-          </nte-form-input>
+          </nte-input>
         </nte-form-group>
 
         <!-- Country selection -->
-        <nte-form-input label="Country" type="select" name="country" required>
+        <nte-input label="Country" type="select" name="country" required>
           <select slot="input" class="form-control" name="country" required>
             <option value="">Select your country</option>
             <option value="us">United States</option>
@@ -147,17 +147,17 @@ export class UserRegistrationForm extends LitElement {
             <option value="fr">France</option>
             <option value="au">Australia</option>
           </select>
-        </nte-form-input>
+        </nte-input>
 
         <!-- Checkboxes -->
         <nte-form-group cols="1-1-1">
-          <nte-form-input type="checkbox" label="I agree to the Terms and Conditions" name="agreeToTerms" required>
+          <nte-input type="checkbox" label="I agree to the Terms and Conditions" name="agreeToTerms" required>
             <input slot="input" type="checkbox" class="form-check-input" name="agreeToTerms" required />
-          </nte-form-input>
+          </nte-input>
 
-          <nte-form-input type="checkbox" label="Subscribe to newsletter" name="newsletter">
+          <nte-input type="checkbox" label="Subscribe to newsletter" name="newsletter">
             <input slot="input" type="checkbox" class="form-check-input" name="newsletter" />
-          </nte-form-input>
+          </nte-input>
         </nte-form-group>
 
         <!-- Submit buttons -->

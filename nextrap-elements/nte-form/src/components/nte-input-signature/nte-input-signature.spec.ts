@@ -1,18 +1,40 @@
-import { describe, expect } from 'vitest';
-import { NteFormSignature } from './nte-form-signature';
+import { afterAll, beforeAll, describe, expect, vi } from 'vitest';
+import { NteInputSignature } from './nte-input-signature';
 
-describe('NteFormSignature', () => {
+describe('NteInputSignature', () => {
+  let getContextSpy: ReturnType<typeof vi.spyOn>;
+
+  beforeAll(() => {
+    getContextSpy = vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockImplementation(
+      () =>
+        ({
+          beginPath: vi.fn(),
+          moveTo: vi.fn(),
+          lineTo: vi.fn(),
+          stroke: vi.fn(),
+          clearRect: vi.fn(),
+          getImageData: vi.fn(() => ({ data: [] }) as ImageData),
+          putImageData: vi.fn(),
+          closePath: vi.fn(),
+        }) as unknown as CanvasRenderingContext2D,
+    );
+  });
+
+  afterAll(() => {
+    getContextSpy.mockRestore();
+  });
+
   it('should create an element', () => {
-    const el = new NteFormSignature();
-    expect(el).toBeInstanceOf(NteFormSignature);
+    const el = new NteInputSignature();
+    expect(el).toBeInstanceOf(NteInputSignature);
   });
 
   it('renders with default properties', async () => {
-    const element = document.createElement('nte-form-signature') as NteFormSignature;
+    const element = document.createElement('nte-input-signature') as NteInputSignature;
     document.body.appendChild(element);
     await element.updateComplete;
 
-    expect(element).toBeInstanceOf(NteFormSignature);
+    expect(element).toBeInstanceOf(NteInputSignature);
     const canvas = element.shadowRoot?.querySelector('canvas');
     expect(canvas).not.toBeNull();
     expect(canvas?.height).toBe(150);
@@ -22,7 +44,7 @@ describe('NteFormSignature', () => {
 
   it('renders with a label', async () => {
     const labelText = 'Your Signature';
-    const element = document.createElement('nte-form-signature') as NteFormSignature;
+    const element = document.createElement('nte-input-signature') as NteInputSignature;
     element.label = labelText;
     document.body.appendChild(element);
     await element.updateComplete;
@@ -35,7 +57,7 @@ describe('NteFormSignature', () => {
   });
 
   it('shows required indicator when required', async () => {
-    const element = document.createElement('nte-form-signature') as NteFormSignature;
+    const element = document.createElement('nte-input-signature') as NteInputSignature;
     element.label = 'Signature';
     element.required = true;
     document.body.appendChild(element);
@@ -49,7 +71,7 @@ describe('NteFormSignature', () => {
   });
 
   it('renders with custom height', async () => {
-    const element = document.createElement('nte-form-signature') as NteFormSignature;
+    const element = document.createElement('nte-input-signature') as NteInputSignature;
     element.height = 300;
     document.body.appendChild(element);
     await element.updateComplete;
@@ -61,7 +83,7 @@ describe('NteFormSignature', () => {
   });
 
   it('has a clear button', async () => {
-    const element = document.createElement('nte-form-signature') as NteFormSignature;
+    const element = document.createElement('nte-input-signature') as NteInputSignature;
     document.body.appendChild(element);
     await element.updateComplete;
 
@@ -73,7 +95,7 @@ describe('NteFormSignature', () => {
   });
 
   it('validates required field when empty', async () => {
-    const element = document.createElement('nte-form-signature') as NteFormSignature;
+    const element = document.createElement('nte-input-signature') as NteInputSignature;
     element.required = true;
     element.invalidFeedback = 'Signature is required';
     document.body.appendChild(element);
@@ -92,7 +114,7 @@ describe('NteFormSignature', () => {
   });
 
   it('clears the canvas when clear method is called', async () => {
-    const element = document.createElement('nte-form-signature') as NteFormSignature;
+    const element = document.createElement('nte-input-signature') as NteInputSignature;
     document.body.appendChild(element);
     await element.updateComplete;
 
@@ -111,7 +133,7 @@ describe('NteFormSignature', () => {
 
   it('renders helper text when provided', async () => {
     const helperText = 'Sign with your mouse or finger';
-    const element = document.createElement('nte-form-signature') as NteFormSignature;
+    const element = document.createElement('nte-input-signature') as NteInputSignature;
     element.helperText = helperText;
     document.body.appendChild(element);
     await element.updateComplete;
@@ -125,7 +147,7 @@ describe('NteFormSignature', () => {
 
   it('shows valid feedback when configured', async () => {
     const validText = 'Signature captured';
-    const element = document.createElement('nte-form-signature') as NteFormSignature;
+    const element = document.createElement('nte-input-signature') as NteInputSignature;
     element.validFeedback = validText;
     document.body.appendChild(element);
     await element.updateComplete;
