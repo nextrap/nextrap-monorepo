@@ -1,0 +1,17 @@
+{
+    "name": "@nextrap/nte-rating",
+    "version": "1.0.0",
+    "main": "./index.js",
+    "dependencies": {
+        "@nextrap/style-reset": "^1.0.0",
+        "@trunkjs/browser-utils": "^1.0.12",
+        "lit": "^3.3.1"
+    },
+    "devDependencies": {
+        "@nextrap/style-base": "^1.0.0",
+        "@nextrap/style-utils": "^1.0.0"
+    },
+    "type": "module",
+    "types": "./index.d.ts",
+    "web-types": "./web-types.json"
+}

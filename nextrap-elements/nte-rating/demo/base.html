@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Base Demo of nte-rating</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        background: #f8fafc;
+        color: #1e293b;
+        line-height: 1.6;
+      }
+
+      .demo-section {
+        background: white;
+        padding: 2rem;
+        margin: 2rem 0;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .demo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin: 1.5rem 0;
+      }
+
+      .demo-item {
+        padding: 1.5rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: #f8fafc;
+      }
+
+      .demo-item h4 {
+        margin: 0 0 1rem 0;
+        color: #475569;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .event-log {
+        background: #1e293b;
+        color: #e2e8f0;
+        padding: 1rem;
+        border-radius: 6px;
+        font-family: 'Monaco', 'Menlo', monospace;
+        font-size: 0.875rem;
+        max-height: 200px;
+        overflow-y: auto;
+        margin-top: 1rem;
+      }
+
+      .controls {
+        display: flex;
+        gap: 1rem;
+        margin: 1rem 0;
+        flex-wrap: wrap;
+      }
+
+      .control-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .control-group label {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #475569;
+      }
+
+      button,
+      select,
+      input {
+        padding: 0.5rem 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        background: white;
+        font-size: 0.875rem;
+      }
+
+      button {
+        background: #3b82f6;
+        color: white;
+        border-color: #3b82f6;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      button:hover {
+        background: #2563eb;
+      }
+
+      .custom-styles {
+        margin-top: 2rem;
+      }
+
+      .custom-styles nte-rating {
+        --rating-color-filled: #10b981;
+        --rating-color-empty: #d1fae5;
+        --rating-star-size: 2.5rem;
+      }
+
+      .orange-theme nte-rating {
+        --rating-color-filled: #f97316;
+        --rating-color-empty: #fed7aa;
+        --rating-label-color: #ea580c;
+      }
+
+      .purple-theme nte-rating {
+        --rating-color-filled: #8b5cf6;
+        --rating-color-empty: #ddd6fe;
+        --rating-label-color: #7c3aed;
+      }
+
+      h1 {
+        text-align: center;
+        color: #1e293b;
+        margin-bottom: 3rem;
+      }
+
+      h2 {
+        color: #334155;
+        border-bottom: 2px solid #e2e8f0;
+        padding-bottom: 0.5rem;
+        margin-top: 3rem;
+      }
+
+      .rating-showcase {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+
+      .value-display {
+        background: #f1f5f9;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-weight: 600;
+        color: #475569;
+        min-width: 60px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🌟 nte-rating Component Demo</h1>
+
+    <!-- Basic Examples -->
+    <div class="demo-section">
+      <h2>Basic Examples</h2>
+      <div class="demo-grid">
+        <div class="demo-item">
+          <h4>Default Rating</h4>
+          <nte-rating value="3"></nte-rating>
+        </div>
+
+        <div class="demo-item">
+          <h4>With Label</h4>
+          <nte-rating value="4" label="Product Quality"></nte-rating>
+        </div>
+
+        <div class="demo-item">
+          <h4>Show Value</h4>
+          <nte-rating value="3.5" show-value allow-half></nte-rating>
+        </div>
+
+        <div class="demo-item">
+          <h4>Show Count</h4>
+          <nte-rating value="4.2" show-count count="127" allow-half></nte-rating>
+        </div>
+      </div>
+    </div>
+
+    <!-- Size Variants -->
+    <div class="demo-section">
+      <h2>Size Variants</h2>
+      <div class="demo-grid">
+        <div class="demo-item">
+          <h4>Small (sm)</h4>
+          <nte-rating value="4" size="sm" label="Small Rating"></nte-rating>
+        </div>
+
+        <div class="demo-item">
+          <h4>Medium (md) - Default</h4>
+          <nte-rating value="3" size="md" label="Medium Rating"></nte-rating>
+        </div>
+
+        <div class="demo-item">
+          <h4>Large (lg)</h4>
+          <nte-rating value="5" size="lg" label="Large Rating"></nte-rating>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive States -->
+    <div class="demo-section">
+      <h2>Interactive States</h2>
+      <div class="demo-grid">
+        <div class="demo-item">
+          <h4>Interactive (Default)</h4>
+          <nte-rating value="2" label="Click to rate" id="interactive-demo"></nte-rating>
+          <div class="value-display" id="interactive-value">Value: 2</div>
+        </div>
+
+        <div class="demo-item">
+          <h4>Read-only</h4>
+          <nte-rating value="4" readonly label="Read-only Rating"></nte-rating>
+        </div>
+
+        <div class="demo-item">
+          <h4>Disabled</h4>
+          <nte-rating value="3" disabled label="Disabled Rating"></nte-rating>
+        </div>
+
+        <div class="demo-item">
+          <h4>Non-interactive</h4>
+          <nte-rating value="4.5" interactive="false" allow-half label="Display Only"></nte-rating>
+        </div>
+      </div>
+    </div>
+
+    <!-- Half Stars -->
+    <div class="demo-section">
+      <h2>Half Star Support</h2>
+      <div class="demo-grid">
+        <div class="demo-item">
+          <h4>Half Stars Enabled</h4>
+          <nte-rating value="2.5" allow-half label="Half Star Rating" id="half-star-demo"></nte-rating>
+          <div class="value-display" id="half-star-value">Value: 2.5</div>
+        </div>
+
+        <div class="demo-item">
+          <h4>Various Half Values</h4>
+          <div class="rating-showcase">
+            <nte-rating value="1.5" allow-half show-value></nte-rating>
+          </div>
+          <div class="rating-showcase">
+            <nte-rating value="2.5" allow-half show-value></nte-rating>
+          </div>
+          <div class="rating-showcase">
+            <nte-rating value="4.5" allow-half show-value></nte-rating>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Validation States -->
+    <div class="demo-section">
+      <h2>Validation & Form States</h2>
+      <div class="demo-grid">
+        <div class="demo-item">
+          <h4>Required Field</h4>
+          <nte-rating value="0" required label="Required Rating"></nte-rating>
+        </div>
+
+        <div class="demo-item">
+          <h4>Error State</h4>
+          <nte-rating value="0" error error-message="Please provide a rating" label="Rating with Error"></nte-rating>
+        </div>
+
+        <div class="demo-item">
+          <h4>With Hint</h4>
+          <nte-rating value="3" hint="Rate your experience from 1 to 5 stars" label="Experience Rating"></nte-rating>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom Max Values -->
+    <div class="demo-section">
+      <h2>Custom Maximum Values</h2>
+      <div class="demo-grid">
+        <div class="demo-item">
+          <h4>3 Stars Maximum</h4>
+          <nte-rating value="2" max="3" show-value label="3-Star Scale"></nte-rating>
+        </div>
+
+        <div class="demo-item">
+          <h4>7 Stars Maximum</h4>
+          <nte-rating value="5" max="7" show-value label="7-Star Scale"></nte-rating>
+        </div>
+
+        <div class="demo-item">
+          <h4>10 Stars Maximum</h4>
+          <nte-rating value="8" max="10" show-value size="sm" label="10-Star Scale"></nte-rating>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom Styling -->
+    <div class="demo-section">
+      <h2>Custom Styling with CSS Variables</h2>
+      <div class="demo-grid">
+        <div class="demo-item custom-styles">
+          <h4>Green Theme (Large)</h4>
+          <nte-rating value="4" label="Green Stars"></nte-rating>
+        </div>
+
+        <div class="demo-item orange-theme">
+          <h4>Orange Theme</h4>
+          <nte-rating value="3" label="Orange Stars" show-value></nte-rating>
+        </div>
+
+        <div class="demo-item purple-theme">
+          <h4>Purple Theme</h4>
+          <nte-rating value="5" label="Purple Stars" show-count count="42"></nte-rating>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive Playground -->
+    <div class="demo-section">
+      <h2>Interactive Playground</h2>
+      <div class="controls">
+        <div class="control-group">
+          <label>Value:</label>
+          <input type="number" id="playground-value" value="3" min="0" max="5" step="0.5" />
+        </div>
+        <div class="control-group">
+          <label>Max Stars:</label>
+          <select id="playground-max">
+            <option value="3">3</option>
+            <option value="5" selected>5</option>
+            <option value="7">7</option>
+            <option value="10">10</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label>Size:</label>
+          <select id="playground-size">
+            <option value="sm">Small</option>
+            <option value="md" selected>Medium</option>
+            <option value="lg">Large</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label>Options:</label>
+          <div>
+            <label><input type="checkbox" id="playground-half" /> Allow Half</label><br />
+            <label><input type="checkbox" id="playground-show-value" /> Show Value</label><br />
+            <label><input type="checkbox" id="playground-show-count" /> Show Count</label><br />
+            <label><input type="checkbox" id="playground-readonly" /> Read-only</label><br />
+            <label><input type="checkbox" id="playground-disabled" /> Disabled</label><br />
+            <label><input type="checkbox" id="playground-error" /> Error State</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-item">
+        <h4>Live Preview</h4>
+        <nte-rating
+          id="playground-rating"
+          value="3"
+          label="Playground Rating"
+          hint="Customize the rating above"
+          count="156"
+          error-message="Something went wrong"
+        ></nte-rating>
+        <div class="value-display" id="playground-display">Value: 3</div>
+      </div>
+    </div>
+
+    <!-- Event Monitoring -->
+    <div class="demo-section">
+      <h2>Event Monitoring</h2>
+      <div class="demo-item">
+        <h4>Event Demo - Try interacting with this rating:</h4>
+        <nte-rating value="2" allow-half label="Event Demo Rating" id="event-demo"></nte-rating>
+        <button onclick="clearEventLog()">Clear Log</button>
+        <div class="event-log" id="event-log">Event log will appear here...</div>
+      </div>
+    </div>
+
+    <script src="/demo/main.js" type="module"></script>
+    <script>
+      // Interactive demo handlers
+      document.addEventListener('DOMContentLoaded', () => {
+        // Interactive demo
+        const interactiveDemo = document.getElementById('interactive-demo');
+        const interactiveValue = document.getElementById('interactive-value');
+
+        interactiveDemo.addEventListener('change', (e) => {
+          interactiveValue.textContent = `Value: ${e.detail.value}`;
+        });
+
+        // Half star demo
+        const halfStarDemo = document.getElementById('half-star-demo');
+        const halfStarValue = document.getElementById('half-star-value');
+
+        halfStarDemo.addEventListener('change', (e) => {
+          halfStarValue.textContent = `Value: ${e.detail.value}`;
+        });
+
+        // Playground controls
+        const playgroundRating = document.getElementById('playground-rating');
+        const playgroundDisplay = document.getElementById('playground-display');
+
+        function updatePlayground() {
+          const value = document.getElementById('playground-value').value;
+          const max = document.getElementById('playground-max').value;
+          const size = document.getElementById('playground-size').value;
+          const allowHalf = document.getElementById('playground-half').checked;
+          const showValue = document.getElementById('playground-show-value').checked;
+          const showCount = document.getElementById('playground-show-count').checked;
+          const readonly = document.getElementById('playground-readonly').checked;
+          const disabled = document.getElementById('playground-disabled').checked;
+          const error = document.getElementById('playground-error').checked;
+
+          playgroundRating.value = parseFloat(value);
+          playgroundRating.max = parseInt(max);
+          playgroundRating.size = size;
+          playgroundRating.allowHalf = allowHalf;
+          playgroundRating.showValue = showValue;
+          playgroundRating.showCount = showCount;
+          playgroundRating.readonly = readonly;
+          playgroundRating.disabled = disabled;
+          playgroundRating.error = error;
+
+          playgroundDisplay.textContent = `Value: ${value}`;
+        }
+
+        // Add event listeners to all playground controls
+        document.getElementById('playground-value').addEventListener('input', updatePlayground);
+        document.getElementById('playground-max').addEventListener('change', updatePlayground);
+        document.getElementById('playground-size').addEventListener('change', updatePlayground);
+        document.getElementById('playground-half').addEventListener('change', updatePlayground);
+        document.getElementById('playground-show-value').addEventListener('change', updatePlayground);
+        document.getElementById('playground-show-count').addEventListener('change', updatePlayground);
+        document.getElementById('playground-readonly').addEventListener('change', updatePlayground);
+        document.getElementById('playground-disabled').addEventListener('change', updatePlayground);
+        document.getElementById('playground-error').addEventListener('change', updatePlayground);
+
+        playgroundRating.addEventListener('change', (e) => {
+          document.getElementById('playground-value').value = e.detail.value;
+          playgroundDisplay.textContent = `Value: ${e.detail.value}`;
+        });
+
+        // Event monitoring
+        const eventDemo = document.getElementById('event-demo');
+        const eventLog = document.getElementById('event-log');
+
+        function logEvent(type, detail) {
+          const timestamp = new Date().toLocaleTimeString();
+          const logEntry = `[${timestamp}] ${type}: ${JSON.stringify(detail)}`;
+          eventLog.innerHTML += logEntry + '\n';
+          eventLog.scrollTop = eventLog.scrollHeight;
+        }
+
+        eventDemo.addEventListener('change', (e) => {
+          logEvent('change', e.detail);
+        });
+
+        eventDemo.addEventListener('hover', (e) => {
+          logEvent('hover', e.detail);
+        });
+
+        window.clearEventLog = () => {
+          eventLog.innerHTML = 'Event log cleared...\n';
+        };
+      });
+    </script>
+  </body>
+</html>
