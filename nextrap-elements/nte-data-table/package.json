@@ -1,0 +1,29 @@
+{
+    "name": "@nextrap/nte-data-table",
+    "version": "1.0.0",
+    "main": "./index.js",
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite dev",
+        "test": "npm run test:component && npm run test:e2e",
+        "test:component": "cypress run --component",
+        "test:coverage": "cypress run --component --reporter json --reporter-options output=coverage/coverage.json",
+        "test:e2e": "cypress run --e2e",
+        "test:e2e:open": "cypress open --e2e",
+        "test:headless": "cypress run --component --headless",
+        "test:open": "cypress open --component"
+    },
+    "dependencies": {
+        "@nextrap/style-base": "*",
+        "lit": "^3.3.1"
+    },
+    "devDependencies": {
+        "@cypress/vite-dev-server": "^5.2.0",
+        "@cypress/webpack-preprocessor": "^6.0.2",
+        "@nx/cypress": "21.1.2",
+        "cypress": "^13.16.1",
+        "cypress-lit": "^0.0.8"
+    },
+    "type": "module",
+    "types": "./index.d.ts"
+}
