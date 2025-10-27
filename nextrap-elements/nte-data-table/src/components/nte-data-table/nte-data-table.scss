@@ -1,0 +1,178 @@
+/* NTE Data Table - Airtable-inspired design */
+
+nte-data-table {
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'SF Pro Display', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #1a1a1a;
+  background: #ffffff;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  height: auto; /* Allow natural height */
+  max-height: 100%; /* Respect parent height constraints */
+  /* Proper box sizing for predictable dimensions */
+  box-sizing: border-box;
+
+  /* CSS Custom Properties for theming */
+  --data-table-header-bg: #f4f4f4;
+  --data-table-footer-bg: #f4f4f4;
+  --data-table-border-color: #e1e5e9;
+  --data-table-header-border: #d1d5d9;
+}
+
+/* Removed .data-table-container - merged into nte-data-table component */
+
+/* Create a scrollable wrapper for the table body */
+.data-table-table-wrapper {
+  max-height: 100%; /* Responsive max height */
+  /* Removed fixed height - let it size to content up to max-height */
+  overflow-y: auto;
+  overflow-x: auto; /* Allow horizontal scrolling if needed */
+  position: relative;
+  /* Let it size naturally, but ensure minimum for very small content */
+  min-height: 100px;
+  /* Ensure proper box sizing */
+  box-sizing: border-box;
+}
+
+/* Ensure the table maintains its structure */
+.data-table-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  background: #ffffff;
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+  /* Remove position relative to avoid conflicts with sticky positioning */
+}
+
+/* Header styling - sticky to top */
+.data-table-table thead {
+  position: sticky;
+  top: -1px;
+  z-index: 10;
+  background: var(--data-table-header-bg);
+}
+
+.data-table-table thead th {
+  background: var(--data-table-header-bg);
+  font-weight: 600;
+  color: #1a1a1a;
+  font-size: 13px;
+  text-transform: none;
+  letter-spacing: normal;
+  border-bottom: 1px solid var(--data-table-header-border);
+}
+
+.data-table-table thead th:hover {
+  background-color: #e8e8e8;
+}
+
+/* Data row styling */
+.data-table-table tbody tr {
+  background: #ffffff;
+  transition: background-color 0.15s ease;
+}
+
+.data-table-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Alternating row colors */
+.data-table-table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.data-table-table tbody tr:nth-child(even):hover {
+  background-color: #f0f1f2;
+}
+
+/* Footer styling - sticky to bottom of scrollable area */
+.data-table-table tfoot {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  background: var(--data-table-footer-bg);
+  /* Ensure footer stays visible during scroll */
+  box-shadow: 0 -1px 0 0 var(--data-table-header-border);
+}
+
+.data-table-table tfoot tr {
+  background: var(--data-table-footer-bg);
+  border-top: 1px solid var(--data-table-header-border);
+}
+
+.data-table-table tfoot td {
+  font-weight: 500;
+  color: #6b7280;
+  border-bottom: none;
+}
+
+/* Simple, clean cell styling */
+.data-table-table th,
+.data-table-table td {
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: middle;
+  border: 1px solid var(--data-table-border-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  height: 32px;
+  box-sizing: border-box;
+  background: inherit;
+  display: table-cell;
+}
+
+/* Resize handle styling */
+.resize-handle {
+  position: absolute;
+  top: 0;
+  right: -4px;
+  width: 8px;
+  height: 100%;
+  cursor: col-resize;
+  background: transparent;
+  z-index: 2;
+}
+
+.resize-handle:hover {
+  background-color: #0073ea;
+  opacity: 0.3;
+}
+
+.resize-handle.dragging {
+  background-color: #0073ea;
+  opacity: 0.6;
+}
+
+/* Ensure content doesn't interfere with resize handles */
+.data-table-table th > * {
+  pointer-events: none;
+}
+
+.data-table-table th .resize-handle,
+.data-table-table td .resize-handle {
+  pointer-events: auto;
+}
+
+/* Remove any content-specific styling - let users style their own content */
+.data-table-table button,
+.data-table-table .btn,
+.data-table-table .status-tag,
+.data-table-table .avatar,
+.data-table-table .priority-high,
+.data-table-table .priority-medium,
+.data-table-table .priority-low {
+  all: unset;
+  display: inline;
+}

@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NTE Data Table Demo</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background-color: #f5f5f5;
+      }
+
+      .demo-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .demo-header {
+        padding: 20px;
+        background: #007bff;
+        color: white;
+      }
+
+      .demo-header h1 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 500;
+      }
+
+      .demo-content {
+        padding: 20px;
+      }
+
+      .controls {
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 4px;
+        border: 1px solid #e9ecef;
+      }
+
+      .controls button {
+        margin-right: 10px;
+        padding: 8px 16px;
+        border: 1px solid #007bff;
+        background: white;
+        color: #007bff;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .controls button:hover {
+        background: #007bff;
+        color: white;
+      }
+
+      .controls button:active {
+        transform: translateY(1px);
+      }
+
+      .data-table-wrapper {
+        height: 500px;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="demo-container">
+      <div class="demo-header">
+        <h1>NTE DataTable Demo</h1>
+      </div>
+
+      <div class="demo-content">
+        <div class="controls">
+          <button onclick="resetColumns()">Reset Column Widths</button>
+          <button onclick="setCustomWidths()">Set Custom Widths</button>
+          <button onclick="showStorageKey()">Show Storage Key</button>
+        </div>
+
+        <div class="data-table-wrapper">
+          <!-- 
+          Note: Each nte-data-table component automatically gets a unique localStorage key
+          based on its ID. For example:
+          - This table: localStorage key = "nte-data-table-demo-data-table-columns"
+          - Another table with id="projects-table": localStorage key = "nte-data-table-projects-table-columns"
+          - No conflicts between multiple tables on the same page!
+        -->
+          <nte-data-table
+            id="demo-data-table"
+            default-column-width="120"
+            min-column-width="15"
+            max-column-width="300"
+            enable-column-resize="true"
+            class="demo-table"
+          >
+            <table class="data-table-table">
+              <!-- Header -->
+              <thead>
+                <tr>
+                  <th style="width: 50px">#</th>
+                  <th style="width: 40px"></th>
+                  <th>Title</th>
+                  <th>Assignee</th>
+                  <th>Status</th>
+                  <th>Priority</th>
+                  <th>Start Date</th>
+                  <th>Due Date</th>
+                  <th>Progress</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+
+              <!-- Body -->
+              <tbody>
+                <tr>
+                  <td class="row-number">1</td>
+                  <td><input type="checkbox" class="form-check-input" /></td>
+                  <td>Website Redesign - Leuffen GmbH</td>
+                  <td>
+                    <div class="avatar">JD</div>
+                    John Doe
+                  </td>
+                  <td><span class="status-tag status-lead">Lead</span></td>
+                  <td><span class="priority-high">High</span></td>
+                  <td>Dec 1, 2024</td>
+                  <td>Jan 15, 2025</td>
+                  <td>25%</td>
+                  <td><button>Edit</button></td>
+                </tr>
+                <tr>
+                  <td class="row-number">2</td>
+                  <td><input type="checkbox" class="form-check-input" /></td>
+                  <td>E-commerce Platform Development</td>
+                  <td>
+                    <div class="avatar">JS</div>
+                    Jane Smith
+                  </td>
+                  <td><span class="status-tag status-offer">Offer Sent</span></td>
+                  <td><span class="priority-medium">Medium</span></td>
+                  <td>Nov 15, 2024</td>
+                  <td>Mar 1, 2025</td>
+                  <td>0%</td>
+                  <td><button>Edit</button></td>
+                </tr>
+                <tr>
+                  <td class="row-number">3</td>
+                  <td><input type="checkbox" class="form-check-input" /></td>
+                  <td>Mobile App for Retail Chain</td>
+                  <td>
+                    <div class="avatar">MJ</div>
+                    Mike Johnson
+                  </td>
+                  <td><span class="status-tag status-invoice">Invoice Sent</span></td>
+                  <td><span class="priority-high">High</span></td>
+                  <td>Oct 20, 2024</td>
+                  <td>Dec 10, 2024</td>
+                  <td>75%</td>
+                  <td><button>Edit</button></td>
+                </tr>
+                <tr>
+                  <td class="row-number">4</td>
+                  <td><input type="checkbox" class="form-check-input" /></td>
+                  <td>Database Migration Project</td>
+                  <td>
+                    <div class="avatar">AL</div>
+                    Alice Lee
+                  </td>
+                  <td><span class="status-tag status-cancelled">Cancelled</span></td>
+                  <td><span class="priority-low">Low</span></td>
+                  <td>Sep 10, 2024</td>
+                  <td>Nov 30, 2024</td>
+                  <td>0%</td>
+                  <td><button>Edit</button></td>
+                </tr>
+                <tr>
+                  <td class="row-number">5</td>
+                  <td><input type="checkbox" class="form-check-input" /></td>
+                  <td>API Integration Services</td>
+                  <td>
+                    <div class="avatar">RK</div>
+                    Robert Kim
+                  </td>
+                  <td><span class="status-tag status-lead">Lead</span></td>
+                  <td><span class="priority-medium">Medium</span></td>
+                  <td>Dec 5, 2024</td>
+                  <td>Feb 28, 2025</td>
+                  <td>10%</td>
+                  <td><button>Edit</button></td>
+                </tr>
+                <tr>
+                  <td class="row-number">6</td>
+                  <td><input type="checkbox" class="form-check-input" /></td>
+                  <td>Cloud Infrastructure Setup</td>
+                  <td>
+                    <div class="avatar">SC</div>
+                    Sarah Chen
+                  </td>
+                  <td><span class="status-tag status-offer">Offer Sent</span></td>
+                  <td><span class="priority-high">High</span></td>
+                  <td>Nov 25, 2024</td>
+                  <td>Jan 31, 2025</td>
+                  <td>0%</td>
+                  <td><button>Edit</button></td>
+                </tr>
+                <tr>
+                  <td class="row-number">7</td>
+                  <td><input type="checkbox" class="form-check-input" /></td>
+                  <td>Security Audit Implementation</td>
+                  <td>
+                    <div class="avatar">DW</div>
+                    David Wilson
+                  </td>
+                  <td><span class="status-tag status-invoice">Invoice Sent</span></td>
+                  <td><span class="priority-high">High</span></td>
+                  <td>Oct 15, 2024</td>
+                  <td>Dec 20, 2024</td>
+                  <td>60%</td>
+                  <td><button>Edit</button></td>
+                </tr>
+                <tr>
+                  <td class="row-number">8</td>
+                  <td><input type="checkbox" class="form-check-input" /></td>
+                  <td>User Experience Research</td>
+                  <td>
+                    <div class="avatar">EM</div>
+                    Emma Martinez
+                  </td>
+                  <td><span class="status-tag status-lead">Lead</span></td>
+                  <td><span class="priority-medium">Medium</span></td>
+                  <td>Dec 10, 2024</td>
+                  <td>Mar 15, 2025</td>
+                  <td>5%</td>
+                  <td><button>Edit</button></td>
+                </tr>
+                <tr>
+                  <td class="row-number">9</td>
+                  <td><input type="checkbox" class="form-check-input" /></td>
+                  <td>Performance Optimization</td>
+                  <td>
+                    <div class="avatar">TL</div>
+                    Tom Liu
+                  </td>
+                  <td><span class="status-tag status-offer">Offer Sent</span></td>
+                  <td><span class="priority-low">Low</span></td>
+                  <td>Nov 30, 2024</td>
+                  <td>Feb 15, 2025</td>
+                  <td>0%</td>
+                  <td><button>Edit</button></td>
+                </tr>
+                <tr>
+                  <td class="row-number">10</td>
+                  <td><input type="checkbox" class="form-check-input" /></td>
+                  <td>Legacy System Modernization</td>
+                  <td>
+                    <div class="avatar">HC</div>
+                    Hannah Clark
+                  </td>
+                  <td><span class="status-tag status-invoice">Invoice Sent</span></td>
+                  <td><span class="priority-high">High</span></td>
+                  <td>Sep 25, 2024</td>
+                  <td>Dec 31, 2024</td>
+                  <td>80%</td>
+                  <td><button>Edit</button></td>
+                </tr>
+                <tr>
+                  <td class="row-number">10</td>
+                  <td><input type="checkbox" class="form-check-input" /></td>
+                  <td>Legacy System Modernization</td>
+                  <td>
+                    <div class="avatar">HC</div>
+                    Hannah Clark
+                  </td>
+                  <td><span class="status-tag status-invoice">Invoice Sent</span></td>
+                  <td><span class="priority-high">High</span></td>
+                  <td>Sep 25, 2024</td>
+                  <td>Dec 31, 2024</td>
+                  <td>80%</td>
+                  <td><button>Edit</button></td>
+                </tr>
+                <tr>
+                  <td class="row-number">10</td>
+                  <td><input type="checkbox" class="form-check-input" /></td>
+                  <td>Legacy System Modernization</td>
+                  <td>
+                    <div class="avatar">HC</div>
+                    Hannah Clark
+                  </td>
+                  <td><span class="status-tag status-invoice">Invoice Sent</span></td>
+                  <td><span class="priority-high">High</span></td>
+                  <td>Sep 25, 2024</td>
+                  <td>Dec 31, 2024</td>
+                  <td>80%</td>
+                  <td><button>Edit</button></td>
+                </tr>
+                <tr>
+                  <td class="row-number">10</td>
+                  <td><input type="checkbox" class="form-check-input" /></td>
+                  <td>Legacy System Modernization</td>
+                  <td>
+                    <div class="avatar">HC</div>
+                    Hannah Clark
+                  </td>
+                  <td><span class="status-tag status-invoice">Invoice Sent</span></td>
+                  <td><span class="priority-high">High</span></td>
+                  <td>Sep 25, 2024</td>
+                  <td>Dec 31, 2024</td>
+                  <td>80%</td>
+                  <td><button>Edit</button></td>
+                </tr>
+                <tr>
+                  <td class="row-number">10</td>
+                  <td><input type="checkbox" class="form-check-input" /></td>
+                  <td>Legacy System Modernization</td>
+                  <td>
+                    <div class="avatar">HC</div>
+                    Hannah Clark
+                  </td>
+                  <td><span class="status-tag status-invoice">Invoice Sent</span></td>
+                  <td><span class="priority-high">High</span></td>
+                  <td>Sep 25, 2024</td>
+                  <td>Dec 31, 2024</td>
+                  <td>80%</td>
+                  <td><button>Edit</button></td>
+                </tr>
+                <tr>
+                  <td class="row-number">10</td>
+                  <td><input type="checkbox" class="form-check-input" /></td>
+                  <td>Legacy System Modernization</td>
+                  <td>
+                    <div class="avatar">HC</div>
+                    Hannah Clark
+                  </td>
+                  <td><span class="status-tag status-invoice">Invoice Sent</span></td>
+                  <td><span class="priority-high">High</span></td>
+                  <td>Sep 25, 2024</td>
+                  <td>Dec 31, 2024</td>
+                  <td>80%</td>
+                  <td><button>Edit</button></td>
+                </tr>
+                <tr>
+                  <td class="row-number">10</td>
+                  <td><input type="checkbox" class="form-check-input" /></td>
+                  <td>Legacy System Modernization</td>
+                  <td>
+                    <div class="avatar">HC</div>
+                    Hannah Clark
+                  </td>
+                  <td><span class="status-tag status-invoice">Invoice Sent</span></td>
+                  <td><span class="priority-high">High</span></td>
+                  <td>Sep 25, 2024</td>
+                  <td>Dec 31, 2024</td>
+                  <td>80%</td>
+                  <td><button>Edit</button></td>
+                </tr>
+                <tr>
+                  <td class="row-number">10</td>
+                  <td><input type="checkbox" class="form-check-input" /></td>
+                  <td>Legacy System Modernization</td>
+                  <td>
+                    <div class="avatar">HC</div>
+                    Hannah Clark
+                  </td>
+                  <td><span class="status-tag status-invoice">Invoice Sent</span></td>
+                  <td><span class="priority-high">High</span></td>
+                  <td>Sep 25, 2024</td>
+                  <td>Dec 31, 2024</td>
+                  <td>80%</td>
+                  <td><button>Edit</button></td>
+                </tr>
+                <tr>
+                  <td class="row-number">10</td>
+                  <td><input type="checkbox" class="form-check-input" /></td>
+                  <td>Legacy System Modernization</td>
+                  <td>
+                    <div class="avatar">HC</div>
+                    Hannah Clark
+                  </td>
+                  <td><span class="status-tag status-invoice">Invoice Sent</span></td>
+                  <td><span class="priority-high">High</span></td>
+                  <td>Sep 25, 2024</td>
+                  <td>Dec 31, 2024</td>
+                  <td>80%</td>
+                  <td><button>Edit</button></td>
+                </tr>
+                <tr>
+                  <td class="row-number">10</td>
+                  <td><input type="checkbox" class="form-check-input" /></td>
+                  <td>Legacy System Modernization</td>
+                  <td>
+                    <div class="avatar">HC</div>
+                    Hannah Clark
+                  </td>
+                  <td><span class="status-tag status-invoice">Invoice Sent</span></td>
+                  <td><span class="priority-high">High</span></td>
+                  <td>Sep 25, 2024</td>
+                  <td>Dec 31, 2024</td>
+                  <td>80%</td>
+                  <td><button>Edit</button></td>
+                </tr>
+                <tr>
+                  <td class="row-number">10</td>
+                  <td><input type="checkbox" /></td>
+                  <td>Legacy System Modernization</td>
+                  <td>
+                    <div class="avatar">HC</div>
+                    Hannah Clark
+                  </td>
+                  <td><span class="status-tag status-invoice">Invoice Sent</span></td>
+                  <td><span class="priority-high">High</span></td>
+                  <td>Sep 25, 2024</td>
+                  <td>Dec 31, 2024</td>
+                  <td>80%</td>
+                  <td><button>Edit</button></td>
+                </tr>
+              </tbody>
+
+              <!-- Footer -->
+              <tfoot>
+                <tr>
+                  <td>Total: 10</td>
+                  <td></td>
+                  <td>Projects</td>
+                  <td>Active: 8</td>
+                  <td>Leads: 3</td>
+                  <td>High: 4</td>
+                  <td>Avg: Nov</td>
+                  <td>Avg: Feb</td>
+                  <td>Avg: 25%</td>
+                  <td>Actions</td>
+                </tr>
+              </tfoot>
+            </table>
+          </nte-data-table>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import './src/components/nte-data-table/nte-data-table.ts';
+
+      // Demo functions
+      window.resetColumns = function () {
+        const dataTable = document.getElementById('demo-data-table');
+        dataTable.resetColumnWidths();
+      };
+
+      window.setCustomWidths = function () {
+        const dataTable = document.getElementById('demo-data-table');
+        dataTable.setColumnWidth('Title', 250);
+        dataTable.setColumnWidth('Assignee', 140);
+        dataTable.setColumnWidth('Status', 120);
+        dataTable.setColumnWidth('Priority', 100);
+        dataTable.setColumnWidth('Start Date', 120);
+        dataTable.setColumnWidth('Due Date', 120);
+        dataTable.setColumnWidth('Progress', 80);
+        dataTable.setColumnWidth('Actions', 100);
+      };
+
+      window.showStorageKey = function () {
+        const dataTable = document.getElementById('demo-data-table');
+        const key = dataTable.getLocalStorageKey();
+        alert('Current localStorage key: ' + key);
+      };
+
+      // Checkbox toggle function
+      window.toggleCheckbox = function (checkbox) {
+        checkbox.classList.toggle('checked');
+      };
+
+      // Add some interactivity to the demo
+      document.addEventListener('DOMContentLoaded', function () {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach((button) => {
+          if (button.textContent === 'Edit') {
+            button.addEventListener('click', function () {
+              alert(
+                'Edit button clicked for project: ' + this.closest('tr').querySelector('td:nth-child(3)').textContent,
+              );
+            });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
