@@ -1,0 +1,19 @@
+{
+    "name": "@nextrap/nte-image",
+    "version": "1.2.3",
+    "main": "./index.js",
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite dev"
+    },
+    "dependencies": {
+        "@nextrap/style-base": "1.1.14",
+        "jsdom": "~26.1.0",
+        "lit": "^3.3.1",
+        "vitest": "^3.2.0"
+    },
+    "devDependencies": {},
+    "type": "module",
+    "types": "./index.d.ts",
+    "web-types": "./web-types.json"
+}

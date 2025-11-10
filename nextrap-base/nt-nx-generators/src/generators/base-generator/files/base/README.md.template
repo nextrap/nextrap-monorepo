@@ -1,11 +1,26 @@
 # <%= name %>
 
-## Description
+Short description of the component.
 
-## Visual Demo
+## Example
 
-```bash
-nx dev <%= name %>
+## Component1
+
+```html
+<<%= name %>></<%= name %>>
 ```
+
+
+| Attribute | Type    | Description               | Default |
+|-----------|---------|---------------------------|---------|
+| attr1     | string  | Description of attr1      | 'value' |
+
+### Attr1
+
+Description of attr1.
+
+### Attr2
+
+Description of attr2.
 
 ## Example Usage

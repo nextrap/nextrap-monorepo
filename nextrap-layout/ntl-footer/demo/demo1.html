@@ -10,106 +10,6 @@
       margin: 0;
     }
 
-    .grid {
-      display: grid;
-    }
-
-    .grid-cols-12 {
-      grid-template-columns: repeat(12, 1fr);
-    }
-
-    .cols-1 {
-      grid-column-end: span 1;
-    }
-
-    .cols-2 {
-      grid-column-end: span 2;
-    }
-
-    .cols-3 {
-      grid-column-end: span 3;
-    }
-
-    .cols-4 {
-      grid-column-end: span 4;
-    }
-
-    .cols-5 {
-      grid-column-end: span 5;
-    }
-
-    .cols-6 {
-      grid-column-end: span 6;
-    }
-
-    .cols-7 {
-      grid-column-end: span 7;
-    }
-
-    .cols-8 {
-      grid-column-end: span 8;
-    }
-
-    .cols-9 {
-      grid-column-end: span 9;
-    }
-
-    .cols-10 {
-      grid-column-end: span 10;
-    }
-
-    .cols-11 {
-      grid-column-end: span 11;
-    }
-
-    .cols-12 {
-      grid-column-end: span 12;
-    }
-
-    .col-start-1 {
-      grid-column-start: 1;
-    }
-
-    .col-start-2 {
-      grid-column-start: 2;
-    }
-
-    .col-start-3 {
-      grid-column-start: 3;
-    }
-
-    .col-start-4 {
-      grid-column-start: 4;
-    }
-
-    .col-start-5 {
-      grid-column-start: 5;
-    }
-
-    .col-start-6 {
-      grid-column-start: 6;
-    }
-
-    .col-start-7 {
-      grid-column-start: 7;
-    }
-
-    .col-start-8 {
-      grid-column-start: 8;
-    }
-
-    .col-start-9 {
-      grid-column-start: 9;
-    }
-
-    .col-start-10 {
-      grid-column-start: 10;
-    }
-
-    .col-start-11 {
-      grid-column-start: 11;
-    }
-
     h3 {
       font-size: 1rem;
     }
@@ -120,108 +20,19 @@
       margin: 0;
     }
 
-    .square-1 {
+    .square {
+      --width: 50px;
+      --color: #f5ceb2;
       position: absolute;
-      width: 50px;
-      height: 50px;
+      width: var(--width);
+      height: auto;
+      aspect-ratio: 1 / 1;
       border-radius: 0.25rem;
-      top: 25%;
-      left: 5%;
-      background-color: #f5ceb2;
-    }
-
-    .square-2 {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      border-radius: 0.25rem;
-      top: 35%;
-      left: 8%;
-      background-color: #dcdde8;
-    }
-
-    .square-3 {
-      position: absolute;
-      width: 70px;
-      height: 70px;
-      border-radius: 0.25rem;
-      top: 70%;
-      left: 4%;
-      background-color: #edf1f8;
-    }
-
-    .square-4 {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      top: 60%;
-      right: 10%;
-      border-radius: 0.25rem;
-      background-color: #dcdde8;
-    }
-
-    .square-5 {
-      position: absolute;
-      width: 60px;
-      height: 60px;
-      top: 66%;
-      right: 6%;
-      border-radius: 0.25rem;
-      background-color: #dcdde8;
-    }
-
-    .square-6 {
-      position: absolute;
-      width: 70px;
-      height: 70px;
-      top: 65%;
-      right: 5%;
-      border-radius: 0.25rem;
-      background-color: #f5ceb2;
-    }
-
-    .square-7 {
-      position: absolute;
-      width: 120px;
-      height: 120px;
-      top: 90%;
-      right: 8%;
-      border-radius: 0.25rem;
-      background-color: #dcdde8;
-    }
-
-    .square-8 {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      top: 70%;
-      right: 55%;
-      border-radius: 0.25rem;
-      background-color: #edf1f8;
-    }
-
-    .square-9 {
-      position: absolute;
-      width: 30px;
-      height: 30px;
-      top: 80%;
-      right: 52%;
-      border-radius: 0.25rem;
-      background-color: #f5ceb2;
-    }
-
-    .square-10 {
-      position: absolute;
-      width: 110px;
-      height: 110px;
-      top: 120%;
-      left: 5%;
-      border-radius: 0.25rem;
-      background-color: #dcdde8;
+      background-color: var(--color);
     }
 
     main {
-      height: 70vh;
+      height: 7000vh;
     }
   </style>
 
@@ -234,20 +45,28 @@
         <!-- Slot Background mit verschiedenen Parallax-Methoden -->
         <div slot="background">
           <!-- Auto-generierte Geschwindigkeiten (Standard) -->
-          <div class="square-1"></div>
-          <div class="square-2"></div>
-          <div class="square-3"></div>
+          <div class="square" style="--width: 50px; top: 25%; left: 5%; --color: #f5ceb2"></div>
+          <div class="square" style="--width: 40px; top: 35%; left: 8%; --color: #dcdde8"></div>
+          <div class="square" style="--width: 70px; top: 70%; left: 4%; --color: #edf1f8"></div>
 
           <!-- Benutzerdefinierte Geschwindigkeiten über data-parallax-speed -->
-          <div class="square-4" data-parallax-speed="0.7"></div>
-          <div class="square-5" data-parallax-speed="0.2"></div>
+          <div
+            class="square"
+            style="--width: 40px; top: 60%; right: 10%; --color: #dcdde8"
+            data-parallax-speed="0.7"
+          ></div>
+          <div
+            class="square"
+            style="--width: 60px; top: 66%; right: 6%; --color: #dcdde8"
+            data-parallax-speed="0.2"
+          ></div>
 
           <!-- Benutzerdefinierte Geschwindigkeiten über CSS Custom Properties -->
-          <div class="square-6" style="--parallax-speed: 0.9"></div>
-          <div class="square-7"></div>
-          <div class="square-8"></div>
-          <div class="square-9"></div>
-          <div class="square-10"></div>
+          <div class="square" style="--width: 70px; top: 65%; right: 5%; --color: #f5ceb2" --parallax-speed="0.9"></div>
+          <div class="square" style="--width: 120px; top: 90%; right: 8%; --color: #dcdde8"></div>
+          <div class="square" style="--width: 40px; top: 70%; right: 55%; --color: #edf1f8"></div>
+          <div class="square" style="--width: 30px; top: 80%; right: 52%; --color: #f5ceb2"></div>
+          <div class="square" style="--width: 110px; top: 120%; left: 5%; --color: #dcdde8"></div>
         </div>
         <!-- Slot Content -->
         <div class="container row">

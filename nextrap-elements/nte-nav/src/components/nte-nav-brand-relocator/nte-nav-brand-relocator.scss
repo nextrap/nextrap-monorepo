@@ -1,0 +1,60 @@
+:host {
+  display: block;
+
+  --animation-duration: 0.3s;
+  --auto-aspect-ratio: unset;
+  aspect-ratio: var(--auto-aspect-ratio);
+  height: auto;
+  width: auto;
+}
+
+.wrapper {
+  --orig-top: 0;
+  --orig-left: 0;
+  --orig-width: 0;
+  --orig-height: 0;
+
+  --self-top: 0;
+  --self-left: 0;
+  --self-width: 100%;
+  --self-height: 100%;
+
+  display: inline-block;
+  width: var(--self-width);
+  height: var(--self-height);
+  object-fit: contain;
+  overflow: visible;
+
+  position: fixed;
+
+  opacity: 0;
+  &.initialized {
+    opacity: 1;
+  }
+
+  top: var(--self-top);
+  left: var(--self-left);
+
+  transition: all var(--animation-duration) ease-in-out;
+  &.inactive {
+    z-index: 99999;
+    top: calc(var(--orig-top));
+    left: calc(var(--orig-left));
+    width: var(--orig-width);
+    height: var(--orig-height);
+    &.done {
+      z-index: inherit;
+      visibility: hidden;
+    }
+  }
+
+  & > slot {
+    display: contents;
+  }
+  ::slotted(*) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: all 0.3s ease-in-out;
+  }
+}

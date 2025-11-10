@@ -43,6 +43,20 @@ export class NteSplitViewElement extends LitElement {
     `;
   }
 
+  override firstUpdated() {
+    // Set initial flex on nested split-views
+    this._updateNestedSplitViewFlex();
+  }
+
+  private _updateNestedSplitViewFlex() {
+    const assigned = this._assignedElements();
+    if (assigned.length > 0 && assigned[0].tagName === 'NTE-SPLIT-VIEW') {
+      const cs = getComputedStyle(this);
+      const size = cs.getPropertyValue('--primary-size').trim() || '50%';
+      assigned[0].style.flex = `0 0 ${size}`;
+    }
+  }
+
   private _onSlotChange = () => {
     const assigned = this._assignedElements();
     if (assigned.length > 2) {
@@ -100,7 +114,14 @@ export class NteSplitViewElement extends LitElement {
 
     const { min, max } = this._getMinMax(total);
     const clamped = Math.max(min, Math.min(max, raw));
-    this.style.setProperty('--primary-size', `${Math.round(clamped)}px`);
+    const size = `${Math.round(clamped)}px`;
+    this.style.setProperty('--primary-size', size);
+
+    // Also set flex directly on the first slotted element if it's a split-view
+    const assigned = this._assignedElements();
+    if (assigned.length > 0 && assigned[0].tagName === 'NTE-SPLIT-VIEW') {
+      assigned[0].style.flex = `0 0 ${size}`;
+    }
   };
 
   private _onPointerUp = (e: PointerEvent) => {
@@ -151,7 +172,14 @@ export class NteSplitViewElement extends LitElement {
 
     const { min, max } = this._getMinMax(total);
     const next = Math.max(min, Math.min(max, currentPx + delta));
-    this.style.setProperty('--primary-size', `${Math.round(next)}px`);
+    const size = `${Math.round(next)}px`;
+    this.style.setProperty('--primary-size', size);
+
+    // Also set flex directly on the first slotted element if it's a split-view
+    const assigned = this._assignedElements();
+    if (assigned.length > 0 && assigned[0].tagName === 'NTE-SPLIT-VIEW') {
+      assigned[0].style.flex = `0 0 ${size}`;
+    }
     e.preventDefault();
   };
 

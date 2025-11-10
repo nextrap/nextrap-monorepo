@@ -3,9 +3,12 @@ import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import style from './ntl-footer-shadow.scss?inline';
 
+// Styles for the light DOM
+import { resetStyle } from '@nextrap/style-reset';
+
 @customElement('ntl-footer')
 export class NtlFooter extends LitElement {
-  static override styles = [unsafeCSS(style)];
+  static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
   @property({ type: String, reflect: true })
   breakAt = 'md';
@@ -64,22 +67,39 @@ export class NtlFooter extends LitElement {
     }
 
     const scrollTop = window.pageYOffset;
+
     const footerRect = this.getBoundingClientRect();
     const windowHeight = window.innerHeight;
 
-    // Calculate if footer is in viewport
+    // Calculate if footer is in viewport or approaching
     const footerTop = footerRect.top + scrollTop;
     const footerBottom = footerTop + footerRect.height;
     const viewportTop = scrollTop;
     const viewportBottom = scrollTop + windowHeight;
 
-    // Apply parallax when footer is visible OR when forced (initial load)
-    if (forceUpdate || (footerBottom > viewportTop && footerTop < viewportBottom)) {
-      const parallaxOffset = (scrollTop - footerTop) * this.parallaxIntensity;
+    // Add a buffer zone - start showing elements when footer is within 1.5 viewport heights
+    const approachBuffer = windowHeight * 2;
+    const footerApproaching = footerTop <= viewportBottom + approachBuffer;
+
+    // Only apply parallax when footer is approaching or visible
+    if (forceUpdate || footerApproaching) {
+      // Calculate parallax offset relative to when footer starts approaching
+      const parallaxStartPoint = footerTop - approachBuffer;
+
+      // Limit parallax movement to a reasonable range
+      const maxParallaxDistance = windowHeight * 0.5; // Limit to half viewport height
+      const scrollProgress = Math.min(1, Math.max(0, (scrollTop - parallaxStartPoint) / approachBuffer));
+      const parallaxOffset = scrollProgress * maxParallaxDistance * this.parallaxIntensity;
 
       this.backgroundElements.forEach((item) => {
         const yPos = parallaxOffset * item.speed;
         item.element.style.transform = `translateY(${yPos}px)`;
+        item.element.style.opacity = '1';
+      });
+    } else {
+      // Hide background elements when footer is not approaching
+      this.backgroundElements.forEach((item) => {
+        item.element.style.opacity = '0';
       });
     }
   }
