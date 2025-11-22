@@ -1,0 +1,77 @@
+/* The ShadowDOM Styles */
+
+:host {
+  display: block;
+  position: relative;
+  width: 100%;
+  min-height: 500px;
+  overflow: hidden;
+}
+
+.hero-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+}
+
+/* Background layer - positioned absolutely behind everything */
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Slider layer - positioned absolutely, fills the hero */
+.hero-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+/* Content layer - positioned absolutely on top, centered */
+.hero-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  pointer-events: none;
+}
+
+.hero-content::slotted(*) {
+  pointer-events: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  :host {
+    min-height: 400px;
+  }
+
+  .hero-content {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  :host {
+    min-height: 350px;
+  }
+
+  .hero-content {
+    padding: 1rem;
+  }
+}
