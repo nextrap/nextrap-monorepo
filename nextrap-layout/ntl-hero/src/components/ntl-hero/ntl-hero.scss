@@ -1,77 +1,174 @@
-/* The ShadowDOM Styles */
+/* Shadow DOM Styles for ntl-hero */
 
 :host {
+  /* Layout */
   display: block;
   position: relative;
   width: 100%;
-  min-height: 500px;
+
+  /* Design tokens / CSS custom properties */
+  --ntl-hero-bg-color: var(--nt-body, #e4e6ef);
+  --ntl-hero-max-height: 950px;
+  --ntl-hero-shell-max-width: 1200px;
+  --ntl-hero-content-max-width: 940px;
+  --ntl-hero-slider-max-height: auto;
+  --ntl-hero-outer-radius: 30px;
+  --ntl-hero-inner-radius: 20px;
+  --ntl-hero-height-offset: 0px; /* e.g. 80px, 10vh */
+  --ntl-hero-slider-offset: 3rem; /* positive values move the slider card further down (can overflow host) */
+  --ntl-hero-padding-inline: 1.5rem;
+  --ntl-hero-padding-top: 3rem;
+  --ntl-hero-padding-bottom: 0rem;
+  --ntl-hero-gap: 0rem;
+
+  background-color: var(--ntl-hero-bg-color);
+}
+
+.hero-root {
+  position: relative;
+  width: 100%;
+  min-height: calc(100vh - var(--ntl-hero-height-offset, 0px));
+  max-height: var(--ntl-hero-max-height);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: var(--ntl-hero-padding-top) var(--ntl-hero-padding-inline) var(--ntl-hero-padding-bottom)
+    var(--ntl-hero-padding-inline);
+  box-sizing: border-box;
+}
+
+/* Navigation bar at the top of the hero */
+.hero-nav {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--ntl-hero-shell-max-width);
+  margin: 0 auto 1.5rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-nav::slotted(*) {
+  width: 100%;
+}
+
+/* Background layer – fills the host and sits behind all content */
+.hero-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
   overflow: hidden;
 }
 
-.hero-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  min-height: inherit;
-}
-
-/* Background layer - positioned absolutely behind everything */
-.hero-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
-
-/* Slider layer - positioned absolutely, fills the hero */
-.hero-slider {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 2;
-}
-
-/* Content layer - positioned absolutely on top, centered */
-.hero-content {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 3;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-  pointer-events: none;
-}
-
-.hero-content::slotted(*) {
+.hero-background::slotted(*) {
   pointer-events: auto;
 }
 
+/* Foreground shell – centers content and slider */
+.hero-shell {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--ntl-hero-shell-max-width);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ntl-hero-gap);
+  flex: 1 1 auto;
+}
+
+/* Text / content block above the slider */
+.hero-content {
+  width: 100%;
+  max-width: var(--ntl-hero-content-max-width);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex: 1 1 auto;
+}
+
+.hero-content::slotted(*) {
+  margin-inline: auto;
+}
+
+/* Slider card frame */
+.hero-slider-wrapper {
+  width: 100%;
+  margin-top: auto; /* push slider to the bottom of the hero shell */
+  transform: translateY(var(--ntl-hero-slider-offset));
+  border-radius: var(--ntl-hero-outer-radius);
+  padding: 1.25rem;
+  background-color: rgba(228, 230, 239, 0.9);
+  box-sizing: border-box;
+}
+
+.hero-slider-frame {
+  position: relative;
+  height: var(--ntl-hero-slider-max-height);
+  max-height: var(--ntl-hero-slider-max-height);
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--ntl-hero-inner-radius);
+  background-color: #ffffff;
+}
+
+.hero-slider {
+  width: 100%;
+  height: 100%;
+}
+
+.hero-slider::slotted(*) {
+  width: 100%;
+  height: 100%;
+}
+
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   :host {
-    min-height: 400px;
+    --ntl-hero-slider-max-height: 480px;
   }
 
-  .hero-content {
-    padding: 1.5rem;
+  .hero-slider-wrapper {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  :host {
+    --ntl-hero-padding-block: 2.5rem;
+    --ntl-hero-padding-inline: 1.25rem;
+    --ntl-hero-slider-max-height: 420px;
+  }
+
+  .hero-slider-wrapper {
+    border-radius: 24px;
+  }
+
+  .hero-slider-frame {
+    border-radius: 18px;
   }
 }
 
 @media (max-width: 480px) {
   :host {
-    min-height: 350px;
+    --ntl-hero-padding-block: 2rem;
+    --ntl-hero-padding-inline: 1rem;
+    --ntl-hero-slider-max-height: 360px;
   }
 
-  .hero-content {
-    padding: 1rem;
+  .hero-slider-wrapper {
+    padding: 0.75rem;
   }
 }

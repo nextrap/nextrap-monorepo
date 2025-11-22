@@ -1,11 +1,11 @@
 import { expect } from 'vitest';
-import { NtlParallaxBgElement } from './ntl-parallax-bg';
+import { NtlParallaxBg } from './ntl-parallax-bg';
 
 describe('ntl-parallax-bg', () => {
-  let el: NtlParallaxBgElement;
+  let el: NtlParallaxBg;
 
   beforeEach(() => {
-    el = document.createElement('ntl-parallax-bg') as NtlParallaxBgElement;
+    el = document.createElement('ntl-parallax-bg') as NtlParallaxBg;
     document.body.appendChild(el);
   });
 
@@ -14,8 +14,8 @@ describe('ntl-parallax-bg', () => {
   });
 
   it('should create an element', () => {
-    const element = new NtlParallaxBgElement();
-    expect(element).toBeInstanceOf(NtlParallaxBgElement);
+    const element = new NtlParallaxBg();
+    expect(element).toBeInstanceOf(NtlParallaxBg);
   });
 
   it('should have default property values', () => {
@@ -126,7 +126,7 @@ describe('ntl-parallax-bg', () => {
   });
 
   it('should set attributes via HTML', async () => {
-    const customEl = document.createElement('ntl-parallax-bg') as NtlParallaxBgElement;
+    const customEl = document.createElement('ntl-parallax-bg') as NtlParallaxBg;
     customEl.setAttribute('image', 'https://example.com/attr.jpg');
     customEl.setAttribute('height', '45vh');
     customEl.setAttribute('width', '75%');

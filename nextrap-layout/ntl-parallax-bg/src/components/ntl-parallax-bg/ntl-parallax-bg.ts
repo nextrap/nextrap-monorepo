@@ -9,7 +9,7 @@ import { resetStyle } from '@nextrap/style-reset';
 import style from './ntl-parallax-bg.scss?inline';
 
 @customElement('ntl-parallax-bg')
-export class NtlParallaxBgElement extends EventBindingsMixin(LoggingMixin(LitElement)) {
+export class NtlParallaxBg extends EventBindingsMixin(LoggingMixin(LitElement)) {
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
   @property({ type: String })
@@ -46,9 +46,12 @@ export class NtlParallaxBgElement extends EventBindingsMixin(LoggingMixin(LitEle
     return html`
       <div
         class="parallax-wrapper"
-        style="height: ${this.height}; width: ${this.width}; background-color: ${this.backgroundColor};"
+        style="height: ${this.height}; width: ${this.width}; background-color: ${this.backgroundColor}"
       >
-        <div class="parallax-container" style="background-image: url('${this.image}');"></div>
+        <div
+          class="parallax-container"
+          style="background-image: url('${this.image}'); background-size: auto; background-position: center;"
+        ></div>
       </div>
     `;
   }

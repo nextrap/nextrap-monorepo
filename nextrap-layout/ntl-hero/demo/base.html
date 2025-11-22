@@ -8,224 +8,61 @@
       body {
         margin: 0;
         padding: 0;
-        font-family:
-          system-ui,
-          -apple-system,
-          sans-serif;
-      }
-
-      /* Example styling for the hero content */
-      .hero-text-content {
-        max-width: 900px;
-        padding: 2rem;
-        text-align: center;
-      }
-
-      .hero-subtitle {
-        color: #ff6b35;
-        font-size: 0.875rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        margin-bottom: 1rem;
-      }
-
-      .hero-title {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: #1e3a5f;
-        line-height: 1.2;
-        margin: 0 0 1.5rem 0;
-      }
-
-      .hero-description {
-        font-size: 1.125rem;
-        color: #4a5568;
-        line-height: 1.6;
-        margin-bottom: 2rem;
-      }
-
-      .hero-cta {
-        display: inline-block;
-        background-color: #ff6b35;
-        color: white;
-        padding: 0.875rem 2rem;
-        border-radius: 2rem;
-        text-decoration: none;
-        font-weight: 600;
-        transition:
-          transform 0.2s,
-          box-shadow 0.2s;
-      }
-
-      .hero-cta:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
-      }
-
-      /* Example slider styling */
-      .slider-container {
-        width: 100%;
-        height: 100%;
-        min-height: 600px;
-        position: relative;
-      }
-
-      .slider-item {
-        width: 100%;
-        height: 100%;
-        display: none;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .slider-item.active {
-        display: flex;
-      }
-
-      .slider-item img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      .slider-dots {
-        position: absolute;
-        bottom: 2rem;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 0.5rem;
-        z-index: 10;
-      }
-
-      .slider-dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background-color: rgba(255, 255, 255, 0.5);
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-
-      .slider-dot.active {
-        background-color: #ff6b35;
-      }
-
-      .demo-section {
-        padding: 2rem;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-
-      @media (max-width: 768px) {
-        .hero-title {
-          font-size: 2rem;
-        }
-
-        .hero-description {
-          font-size: 1rem;
-        }
       }
     </style>
   </head>
   <body>
-    <!-- Example 1: Hero with all slots -->
-    <ntl-hero style="min-height: 600px">
-      <!-- Background slot: can use ntl-parallax-bg or any other background element -->
-      <div
-        slot="background"
-        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 100%; height: 100%"
-      ></div>
-
-      <!-- Slider slot: custom slider implementation -->
-      <div slot="slider" class="slider-container">
-        <div class="slider-item active">
-          <img
-            src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=1200&h=600&fit=crop"
-            alt="Medical professionals"
-          />
-        </div>
-        <div class="slider-item">
-          <img
-            src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=1200&h=600&fit=crop"
-            alt="Healthcare technology"
-          />
-        </div>
-        <div class="slider-item">
-          <img
-            src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&h=600&fit=crop"
-            alt="Medical equipment"
-          />
-        </div>
-        <div class="slider-dots">
-          <span class="slider-dot active" data-slide="0"></span>
-          <span class="slider-dot" data-slide="1"></span>
-          <span class="slider-dot" data-slide="2"></span>
-        </div>
+    <ntl-hero style="--ntl-hero-height-offset: 10vh; --ntl-hero-bg-color: #e4e6ef; --ntl-hero-slider-offset: 3rem">
+      <div slot="nav">
+        <nte-nav
+          class="nav-horizontal"
+          mode="master"
+          data-group-name="nav1"
+          breakpoint="1008px"
+          transfer-to="#navSidebar"
+          style="--text-color: blue"
+        >
+          <span slot="menu-text">Menü</span>
+          <ul>
+            <li><a href="#" class="active">Home</a></li>
+            <li><a href="#">Products</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+            <li>
+              <a href="javascript:void(0);">More</a>
+              <ul>
+                <li><a href="#">Team</a></li>
+                <li><a href="#">Careers</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nte-nav>
       </div>
-
-      <!-- Content slot: text and CTA -->
-      <div slot="content" class="hero-text-content">
-        <div class="hero-subtitle">EPRAXIS.DIGITAL - DAS MAGAZIN FÜR DIE DIGITALISIERUNG IN DER GESUNDHEITSBRANCHE</div>
-        <h2 class="hero-title">
-          Digitale Transformation im Gesundheitswesen<br />
-          – verständlich, unabhängig, praxisnah.
-        </h2>
-        <p class="hero-description">
-          Effizient, präziser, patientenorientierter<br />
-          – der moderne Zahnarzt 2.0
-        </p>
-        <a href="#" class="hero-cta">Jetzt lesen</a>
+      <div slot="bg">
+        <ntl-parallax-bg image="header-bg.svg"></ntl-parallax-bg>
+      </div>
+      <div>
+        <h5 style="margin-bottom: 0.5rem">
+          <span style="color: var(--nt-primary); text-transform: uppercase">EPRAXIS.DIGITAL</span>
+          – DAS MAGAZIN FÜR DIE DIGITALISIERUNG IN DER GESUNDHEITSBRANCHE
+        </h5>
+        <h1>Digitale Transformation im Gesundheitswesen – verständlich, unabhängig, praxisnah.</h1>
+      </div>
+      <div slot="slider">
+        <nte-image
+          data-features="slideshow arrows indicators fullsize round-borders"
+          interval="4000"
+          style="height: 600px"
+        >
+          <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b" alt="Slide 1" />
+          <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b" alt="Slide 2" />
+          <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b" alt="Slide 3" />
+        </nte-image>
       </div>
     </ntl-hero>
-
-    <div class="demo-section">
-      <h2>Example 2: Simple Hero with Gradient Background</h2>
+    <div style="height: 1000px; display: flex; align-items: center; justify-content: center">
+      Just some content so that you can scroll down and see a nice parallax
     </div>
-
-    <!-- Example 2: Simple hero without slider -->
-    <ntl-hero style="min-height: 400px">
-      <div
-        slot="background"
-        style="background: linear-gradient(to right, #1e3a5f, #2d5a8f); width: 100%; height: 100%"
-      ></div>
-      <div slot="content" class="hero-text-content" style="color: white">
-        <h2 class="hero-title" style="color: white">Simple Hero Section</h2>
-        <p class="hero-description" style="color: rgba(255, 255, 255, 0.9)">
-          This example shows a hero without a slider, just background and content.
-        </p>
-      </div>
-    </ntl-hero>
-
     <script src="/demo/main.js" type="module"></script>
-    <script>
-      // Simple slider logic
-      let currentSlide = 0;
-      const slides = document.querySelectorAll('.slider-item');
-      const dots = document.querySelectorAll('.slider-dot');
-
-      function showSlide(index) {
-        slides.forEach((slide, i) => {
-          slide.classList.toggle('active', i === index);
-        });
-        dots.forEach((dot, i) => {
-          dot.classList.toggle('active', i === index);
-        });
-      }
-
-      dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-          currentSlide = index;
-          showSlide(currentSlide);
-        });
-      });
-
-      // Auto-advance slides every 5 seconds
-      setInterval(() => {
-        currentSlide = (currentSlide + 1) % slides.length;
-        showSlide(currentSlide);
-      }, 5000);
-    </script>
   </body>
 </html>
