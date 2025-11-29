@@ -1,0 +1,157 @@
+/* The ShadowDOM Styles for nte-tab */
+
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  user-select: none;
+  outline: none;
+  font-family: inherit;
+  position: relative;
+
+  /* Default inactive color - will be overridden by parent CSS custom properties */
+  color: var(--nte-tabs-color-inactive, #9ca3af);
+  transition: color 0.3s ease;
+}
+
+:host([disabled]) {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+:host(:hover:not([disabled]):not([selected])) {
+  color: var(--nte-tabs-color-hover, #6b7280);
+}
+
+:host([selected]) {
+  color: var(--nte-tabs-color-selected, #374151);
+}
+/* Card variant styles */
+:host(.card:not([selected])) {
+  background: transparent;
+  border: var(--nte-tabs-border-width, 2px) solid transparent;
+  border-bottom: var(--nte-tabs-border-width, 2px) solid var(--nte-tabs-border-color, #e0e0e0);
+  /*  margin-bottom: calc( var(--nte-tabs-border-width, 2px)); */
+}
+
+:host(.card[selected]) {
+  background: white;
+  border: var(--nte-tabs-border-width, 2px) solid var(--nte-tabs-border-color, #e0e0e0);
+  border-bottom: var(--nte-tabs-border-width, 2px) solid transparent;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+:host(.card:hover:not([disabled]):not([selected])) {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* Divider between tabs */
+:host(.card:not(:first-child):not([selected]))::before {
+  content: '';
+  position: absolute;
+  left: calc(-1 * var(--nte-tabs-gap) / 2);
+  top: 25%;
+  bottom: 25%;
+  width: 1px;
+  background: var(--nte-tabs-border-color, #e0e0e0);
+}
+
+/* Card variant vertical styles */
+:host(.card.vertical) {
+  border: 1px solid transparent;
+  border-right: 1px solid var(--nte-tabs-border-color, #e0e0e0);
+  border-bottom: none;
+  margin-bottom: 0;
+  margin-right: -1px;
+}
+
+:host(.card.vertical[selected]) {
+  border: 1px solid var(--nte-tabs-border-color, #e0e0e0);
+  border-right: 1px solid white;
+  border-radius: 0;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+:host(.card.vertical:not(:first-child):not([selected]))::before {
+  content: '';
+  position: absolute;
+  left: 25%;
+  right: 25%;
+  top: -1px;
+  height: 1px;
+  width: auto;
+  background: var(--nte-tabs-border-color, #e0e0e0);
+}
+
+/* Line variant styles */
+:host(.line) {
+  border-bottom: var(--nte-tabs-border-width, 2px) solid transparent;
+  margin-bottom: calc(-1 * var(--nte-tabs-border-width, 2px));
+}
+
+:host(.line.vertical) {
+  border-bottom: none;
+  border-right: var(--nte-tabs-border-width, 2px) solid transparent;
+  margin-bottom: 0;
+  margin-right: calc(-1 * var(--nte-tabs-border-width, 2px));
+}
+
+.tab-content {
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  margin: 0.5rem 0;
+  padding-inline: 0.5rem;
+}
+
+.tab-icon ::slotted(*) {
+  display: flex;
+  align-items: center;
+  font-size: 1.2em;
+}
+
+.tab-label {
+  flex: 1 1 auto;
+  padding-inline: 0.5rem;
+  text-align: center;
+}
+
+.tab-action {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+
+  ::slotted(*) {
+    display: flex;
+    align-items: center;
+  }
+}
+
+/* Size adjustments inherited from parent */
+:host(.sm) {
+  .tab-icon ::slotted(*) {
+    font-size: 1rem;
+  }
+}
+
+:host(.md) {
+  .tab-icon ::slotted(*) {
+    font-size: 1.2rem;
+  }
+}
+
+:host(.lg) {
+  .tab-icon ::slotted(*) {
+    font-size: 1.4rem;
+  }
+}
+
+:host(.xl) {
+  .tab-icon ::slotted(*) {
+    font-size: 1.6rem;
+  }
+}
