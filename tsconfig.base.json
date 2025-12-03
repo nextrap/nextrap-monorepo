@@ -8,6 +8,7 @@
         "esModuleInterop": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
+        "useDefineForClassFields": false,
         "importHelpers": true,
         "target": "es2022",
         "module": "esnext",
@@ -43,6 +44,7 @@
             "@nextrap/style-reset": ["nextrap-base/style-reset/index.ts"],
             "@nextrap/style-typography": ["nextrap-base/style-typography/src/index.ts"],
             "@nextrap/style-utils": ["nextrap-base/style-utils/src/index.ts"],
+            "@nte-multiselect": ["nextrap-elements/nte-multiselect/src/index.ts"],
             "@nte-tree-node": ["nextrap-elements/nte-tree-node/src/index.ts"]
         }
     },
