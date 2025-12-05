@@ -1,3 +1,7 @@
+## 1.2.0 (2025-12-05)
+
+This was a version bump only for nte-nav to align it with other projects, there were no code changes.
+
 ## 1.1.29 (2025-09-12)
 
 This was a version bump only for nte-nav to align it with other projects, there were no code changes.
