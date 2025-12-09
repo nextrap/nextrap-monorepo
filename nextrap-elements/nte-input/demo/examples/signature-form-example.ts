@@ -1,5 +1,6 @@
 import { html, LitElement } from 'lit';
 import { customElement, query, state } from 'lit/decorators.js';
+import '../../src/components/nte-input-control/nte-input-control';
 import '../../src/components/nte-input-group/nte-input-group';
 import '../../src/components/nte-input-signature/nte-input-signature';
 import type { NteInputSignature } from '../../src/components/nte-input-signature/nte-input-signature';
@@ -162,22 +163,15 @@ export class SignatureFormExample extends LitElement {
       <form method="get" @submit="${this.handleSubmit}">
         <div class="form-section">
           <nte-input-group>
-            <nte-input label="Full Name" name="name" type="text" required helper-text="Enter your full legal name">
-              <input slot="input" type="text" name="name" class="form-control" required placeholder="John Doe" />
-            </nte-input>
+            <nte-input-control label="Full Name" helperText="Enter your full legal name">
+              <nte-input type="text" name="name" required placeholder="John Doe"></nte-input>
+            </nte-input-control>
           </nte-input-group>
 
           <nte-input-group>
-            <nte-input label="Email" name="email" type="email" required helper-text="We'll never share your email">
-              <input
-                slot="input"
-                type="email"
-                name="email"
-                class="form-control"
-                required
-                placeholder="john@example.com"
-              />
-            </nte-input>
+            <nte-input-control label="Email" helperText="We'll never share your email">
+              <nte-input type="email" name="email" required placeholder="john@example.com"></nte-input>
+            </nte-input-control>
           </nte-input-group>
         </div>
 

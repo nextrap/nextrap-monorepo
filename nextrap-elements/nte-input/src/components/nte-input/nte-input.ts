@@ -1,6 +1,11 @@
-import { html, LitElement, unsafeCSS } from 'lit';
+import { css, html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import style from './nte-input.scss?inline';
+
+const hostStyles = css`
+  :host {
+    display: block;
+  }
+`;
 
 type SelectOption =
   | {
@@ -17,20 +22,9 @@ type SupportedElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaEleme
 @customElement('nte-input')
 export class NteInput extends LitElement {
   static formAssociated = true;
-  static override styles = [unsafeCSS(style)];
 
-  @property() label = '';
-  @property() name = '';
   @property() type = 'text';
-  @property() size: 'sm' | 'md' | 'lg' = 'md';
-  @property({ type: Boolean }) required = false;
-  @property({ type: Boolean }) floating = false;
-  @property({ type: Boolean }) inline = false;
-  @property() helperText = '';
-  @property() switchStyle: 'classic' | 'modern' = 'classic';
-  @property({ type: Boolean, reflect: true }) modern = false;
-  @property() invalidFeedback = '';
-  @property() validFeedback = '';
+  @property({ attribute: false }) controlStyleText?: string;
   @property({
     attribute: 'select-options',
     converter: {
@@ -62,10 +56,6 @@ export class NteInput extends LitElement {
 
   private input: SupportedElement | null = null;
 
-  constructor() {
-    super();
-  }
-
   get inputElement(): SupportedElement | null {
     return this.input;
   }
@@ -78,38 +68,8 @@ export class NteInput extends LitElement {
     return result;
   }
 
-  private updateFloatingState(input: SupportedElement) {
-    if (!this.floating) return;
-
-    const floatingWrapper = this.shadowRoot?.querySelector('.form-floating');
-    if (!floatingWrapper) return;
-
-    if (input.value) {
-      floatingWrapper.classList.add('has-value');
-    } else {
-      floatingWrapper.classList.remove('has-value');
-    }
-  }
-
-  override createRenderRoot() {
-    const root = super.createRenderRoot();
-    root.addEventListener('click', (event) => {
-      if ((event.target as HTMLElement).tagName === 'LABEL') {
-        const slot = this.shadowRoot?.querySelector('slot[name="input"]') as HTMLSlotElement | undefined;
-        const slotted = slot?.assignedElements()[0] as SupportedElement | undefined;
-        if (slotted) {
-          slotted.focus();
-          if (slotted instanceof HTMLInputElement && (slotted.type === 'checkbox' || slotted.type === 'radio')) {
-            slotted.click();
-          }
-        }
-      }
-    });
-    return root;
-  }
-
   override firstUpdated() {
-    const slot = this.shadowRoot?.querySelector('slot[name="input"]') as HTMLSlotElement | undefined;
+    const slot = this.shadowRoot?.querySelector('slot:not([name])') as HTMLSlotElement | undefined;
     slot?.addEventListener('slotchange', () => this.hydrateSlottedElement(slot));
     if (slot) {
       this.hydrateSlottedElement(slot);
@@ -128,9 +88,9 @@ export class NteInput extends LitElement {
     if (!slotted) return;
 
     this.input = slotted;
-    this.input.id = this._uniqueId;
-    this.required = this.input.hasAttribute('required');
-    this.name = this.input.getAttribute('name') || this.name;
+    if (!this.input.id) {
+      this.input.id = this._uniqueId;
+    }
 
     if (this.input instanceof HTMLInputElement) {
       this.bindInputElement(this.input);
@@ -142,17 +102,15 @@ export class NteInput extends LitElement {
 
     if (this.input.value) {
       this._validate(this.input);
-      this.updateFloatingState(this.input);
     }
   }
 
   private bindInputElement(input: HTMLInputElement) {
-    const uiType = this.type || input.type;
+    const uiType = this.uiTypeFor(input);
 
     if (!['checkbox', 'radio'].includes(uiType)) {
       input.addEventListener('input', (event) => {
         this._handleInput(event);
-        this.updateFloatingState(input);
       });
       input.addEventListener('blur', (event) => this._handleBlur(event));
     }
@@ -172,7 +130,6 @@ export class NteInput extends LitElement {
   private bindSelectElement(select: HTMLSelectElement) {
     select.addEventListener('change', (event) => {
       this._handleInput(event);
-      this.updateFloatingState(select);
     });
     select.addEventListener('blur', (event) => this._handleBlur(event));
     if (this.selectOptions.length > 0) {
@@ -183,7 +140,6 @@ export class NteInput extends LitElement {
   private bindTextAreaElement(textarea: HTMLTextAreaElement) {
     textarea.addEventListener('input', (event) => {
       this._handleInput(event);
-      this.updateFloatingState(textarea);
     });
     textarea.addEventListener('blur', (event) => this._handleBlur(event));
   }
@@ -241,17 +197,18 @@ export class NteInput extends LitElement {
   private _validate(input: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement): boolean {
     if (!input) return false;
 
-    if (this.type === 'range') {
+    const uiType = this.uiTypeFor(input);
+    const required = input.hasAttribute('required') || this.hasAttribute('required');
+
+    if (uiType === 'range') {
       this.valid = true;
       this.invalid = false;
-      this.style.setProperty('--show-valid-feedback', 'none');
-      this.style.setProperty('--show-invalid-feedback', 'none');
       return true;
     }
 
-    if (input instanceof HTMLInputElement && (this.type === 'checkbox' || this.type === 'radio')) {
-      if (this.type === 'radio') {
-        if (this.required && this.touched) {
+    if (input instanceof HTMLInputElement && (uiType === 'checkbox' || uiType === 'radio')) {
+      if (uiType === 'radio') {
+        if (required && this.touched) {
           const groupName = input.getAttribute('name');
           if (!groupName) return false;
 
@@ -266,41 +223,29 @@ export class NteInput extends LitElement {
           if (!isGroupValid) {
             input.classList.add('is-invalid');
             input.classList.remove('is-valid');
-            this.style.setProperty('--show-valid-feedback', 'none');
-            this.style.setProperty('--show-invalid-feedback', 'block');
           } else {
             input.classList.remove('is-invalid', 'is-valid');
-            this.style.setProperty('--show-valid-feedback', 'none');
-            this.style.setProperty('--show-invalid-feedback', 'none');
           }
         } else {
           input.classList.remove('is-invalid', 'is-valid');
-          this.style.setProperty('--show-valid-feedback', 'none');
-          this.style.setProperty('--show-invalid-feedback', 'none');
         }
       } else {
-        if (this.required) {
+        if (required) {
           this.valid = input.checked;
           this.invalid = !input.checked;
           if (this.touched) {
             if (this.valid) {
               input.classList.remove('is-invalid');
               input.classList.add('is-valid');
-              this.style.setProperty('--show-valid-feedback', 'block');
-              this.style.setProperty('--show-invalid-feedback', 'none');
             } else {
               input.classList.add('is-invalid');
               input.classList.remove('is-valid');
-              this.style.setProperty('--show-valid-feedback', 'none');
-              this.style.setProperty('--show-invalid-feedback', 'block');
             }
           }
         } else {
           input.classList.remove('is-invalid');
           this.valid = true;
           this.invalid = false;
-          this.style.setProperty('--show-valid-feedback', 'none');
-          this.style.setProperty('--show-invalid-feedback', 'none');
         }
       }
       this.syncHostState();
@@ -309,23 +254,19 @@ export class NteInput extends LitElement {
 
     this.isEmpty = !input.value;
 
-    if (this.required && this.isEmpty) {
+    if (required && this.isEmpty) {
       this.valid = false;
       this.invalid = true;
       input.classList.add('is-invalid');
       input.classList.remove('is-valid');
-      this.style.setProperty('--show-valid-feedback', 'none');
-      this.style.setProperty('--show-invalid-feedback', 'block');
       this.syncHostState();
       return false;
     }
 
-    if (!this.required && this.isEmpty) {
+    if (!required && this.isEmpty) {
       this.valid = false;
       this.invalid = false;
       input.classList.remove('is-valid', 'is-invalid');
-      this.style.setProperty('--show-valid-feedback', 'none');
-      this.style.setProperty('--show-invalid-feedback', 'none');
       this.syncHostState();
       return true;
     }
@@ -336,13 +277,9 @@ export class NteInput extends LitElement {
     if (this.valid) {
       input.classList.add('is-valid');
       input.classList.remove('is-invalid');
-      this.style.setProperty('--show-valid-feedback', 'block');
-      this.style.setProperty('--show-invalid-feedback', 'none');
     } else {
       input.classList.add('is-invalid');
       input.classList.remove('is-valid');
-      this.style.setProperty('--show-valid-feedback', 'none');
-      this.style.setProperty('--show-invalid-feedback', 'block');
     }
 
     this.syncHostState();
@@ -355,60 +292,22 @@ export class NteInput extends LitElement {
       this.appendChild(element);
     }
 
-    const uniqueId = this._uniqueId;
-
-    if (this.type === 'checkbox' || this.type === 'radio') {
-      return html`
-        <div class="form-check ${this.switchStyle === 'modern' ? 'form-switch' : ''}">
-          <slot name="input"></slot>
-          <label class="form-check-label" for="${uniqueId}">
-            ${this.label}${this.required ? html`<span class="required-indicator">*</span>` : ''}
-          </label>
-          ${this.helperText ? html`<div class="form-text">${this.helperText}</div>` : ''}
-          ${this.invalidFeedback ? html`<div class="invalid-feedback">${this.invalidFeedback}</div>` : ''}
-        </div>
-      `;
-    }
-
-    const inputContent = html`
-      <slot name="input"></slot>
-      ${this.helperText ? html`<div class="form-text">${this.helperText}</div>` : ''}
-      ${this.invalidFeedback ? html`<div class="invalid-feedback">${this.invalidFeedback}</div>` : ''}
-      ${this.validFeedback ? html`<div class="valid-feedback">${this.validFeedback}</div>` : ''}
-    `;
-
-    if (this.floating) {
-      return html`
-        <div class="form-floating ${this.isEmpty ? '' : 'has-value'}">
-          ${inputContent}
-          <label class="form-label ${this.size}" for="${uniqueId}">
-            ${this.label}${this.required ? html`<span class="required-indicator">*</span>` : ''}
-          </label>
-        </div>
-      `;
-    }
-
-    if (this.inline) {
-      return html`
-        <div class="form-inline">
-          ${this.label
-            ? html`<label class="form-label" for="${uniqueId}">
-                ${this.label}${this.required ? html`<span class="required-indicator">*</span>` : ''}
-              </label>`
-            : ''}
-          <div class="input-wrapper">${inputContent}</div>
-        </div>
-      `;
-    }
-
     return html`
-      ${this.label
-        ? html`<label class="form-label" for="${uniqueId}">
-            ${this.label}${this.required ? html`<span class="required-indicator">*</span>` : ''}
-          </label>`
-        : ''}
-      ${inputContent}
+      <style>
+        ${this.controlStyleText
+          ? css`
+              ${unsafeCSS(this.controlStyleText)}
+            `
+          : hostStyles}
+      </style>
+      <slot></slot>
     `;
+  }
+
+  private uiTypeFor(control: SupportedElement): string {
+    if (control instanceof HTMLSelectElement) return 'select';
+    if (control instanceof HTMLTextAreaElement) return 'textarea';
+    return (control as HTMLInputElement).type || this.type || 'text';
   }
 
   private createNativeControl(): SupportedElement {
@@ -463,8 +362,6 @@ export class NteInput extends LitElement {
         element.setAttribute(attribute, attrValue);
       }
     });
-
-    element.setAttribute('slot', 'input');
 
     if (element instanceof HTMLInputElement) {
       if (this.type === 'checkbox' || this.type === 'radio') {

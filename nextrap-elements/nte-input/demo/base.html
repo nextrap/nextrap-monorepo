@@ -53,10 +53,6 @@
         box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
       }
 
-      nte-input {
-        display: block;
-      }
-
       nte-input-group {
         display: block;
       }
@@ -120,6 +116,31 @@
         margin-bottom: 0.5rem;
       }
 
+      .combo-grid {
+        display: grid;
+        gap: 1.5rem;
+        grid-template-columns: 1fr;
+      }
+
+      .combo-card {
+        padding: 1.25rem;
+        border: 1px solid #dee2e6;
+        border-radius: 1rem;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+      }
+
+      .combo-card h3 {
+        margin: 0 0 1rem;
+        font-size: 1rem;
+      }
+
+      .combo-card p {
+        margin: 0 0 1rem;
+        color: #6c757d;
+        font-size: 0.875rem;
+      }
+
       .form-actions {
         display: flex;
         gap: 1rem;
@@ -162,280 +183,199 @@
   </head>
   <body>
     <h1>nte-input</h1>
-    <p class="subtitle">Demo playground for the input primitives.</p>
+    <p class="subtitle">Concise demo for input primitives and styling options.</p>
 
-    <hr />
+    <div class="demo-note">
+      <strong>Usage</strong>
+      <div>
+        <div>
+          - `nte-input` renders its own native control; don’t provide an `&lt;input&gt;`/`&lt;select&gt;` child.
+        </div>
+        <div>- Inline layout is default; add class `multiline` for stacked label layout.</div>
+        <div>- Use `--nxa-label-cols` / `--nxa-input-cols` with `var(--cols-X)` (12-col grid) to tune widths.</div>
+        <div>- Use classes `size-sm` / `size-lg` and `style-modern` for sizing and modern styling.</div>
+      </div>
+    </div>
 
     <section>
-      <h2 class="form-title">Classic Form Style</h2>
-      <form action="/submit" method="get">
-        <nte-input label="Username">
-          <input
-            slot="input"
-            type="text"
-            class="form-control"
-            placeholder="Enter username"
-            id="username"
-            name="username"
+      <h2>Combinations</h2>
+      <div class="combo-grid">
+        <div class="combo-card">
+          <h3>Default (inline)</h3>
+          <p>Label left, input right (default label 4/12, input 6/12).</p>
+          <nte-input-control label="Email" helperText="Inline is default">
+            <nte-input type="email" name="comboEmail" placeholder="name@example.com" required></nte-input>
+          </nte-input-control>
+        </div>
+
+        <div class="combo-card">
+          <h3>Multiline</h3>
+          <p>Add class `multiline` to stack label above the field.</p>
+          <nte-input-control class="multiline" label="Notes">
+            <nte-input type="textarea" name="comboNotes" rows="3" placeholder="Write a note..."></nte-input>
+          </nte-input-control>
+        </div>
+
+        <div class="combo-card">
+          <h3>Floating Label</h3>
+          <p>Uses the `floating` property (layout/cols don’t apply).</p>
+          <nte-input-control floating label="Username">
+            <nte-input type="text" name="comboUsername" placeholder=" "></nte-input>
+          </nte-input-control>
+        </div>
+
+        <div class="combo-card">
+          <h3>Cols + Size (1/3)</h3>
+          <p>2/10 split + `size-sm`.</p>
+          <nte-input-control
+            class="size-sm"
+            label="2/10"
+            style="--nxa-label-cols: var(--cols-2); --nxa-input-cols: var(--cols-10)"
+          >
+            <nte-input type="text" name="comboCols" placeholder="Wider input"></nte-input>
+          </nte-input-control>
+        </div>
+
+        <div class="combo-card">
+          <h3>Cols + Size (2/3)</h3>
+          <p>4/8 split + default size.</p>
+          <nte-input-control label="4/8" style="--nxa-label-cols: var(--cols-4); --nxa-input-cols: var(--cols-8)">
+            <nte-input type="email" name="comboColsEmail" placeholder="name@example.com"></nte-input>
+          </nte-input-control>
+        </div>
+
+        <div class="combo-card">
+          <h3>Cols + Size (3/3)</h3>
+          <p>6/6 split + `size-lg`.</p>
+          <nte-input-control
+            class="size-lg"
+            label="6/6"
+            style="--nxa-label-cols: var(--cols-6); --nxa-input-cols: var(--cols-6)"
+          >
+            <nte-input type="text" name="comboColsLarge" placeholder="Balanced"></nte-input>
+          </nte-input-control>
+        </div>
+
+        <div class="combo-card">
+          <h3>Modern Style</h3>
+          <p>Add class `style-modern`.</p>
+          <nte-input-control class="style-modern" label="Address">
+            <nte-input type="text" name="comboAddress" placeholder="Street, City"></nte-input>
+          </nte-input-control>
+        </div>
+
+        <div class="combo-card">
+          <h3>Label Fallback</h3>
+          <p>If no label is provided, the control `name` becomes the label (placeholder is ignored).</p>
+          <nte-input-control helperText="No label set → uses name">
+            <nte-input type="text" name="nameAsLabel" placeholder="Placeholder is not used"></nte-input>
+          </nte-input-control>
+        </div>
+
+        <div class="combo-card">
+          <h3>No Label</h3>
+          <p>No label is shown when neither label nor name is provided.</p>
+          <nte-input-control helperText="No label and no name → empty label">
+            <nte-input type="text" placeholder="Still works"></nte-input>
+          </nte-input-control>
+        </div>
+
+        <div class="combo-card">
+          <h3>Native Input</h3>
+          <p>`nte-input-control` can also wrap native controls directly.</p>
+          <nte-input-control label="Native">
+            <input class="form-control" name="comboNative" placeholder="Plain &lt;input&gt;" />
+          </nte-input-control>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="form-title">Classic Form</h2>
+      <form method="get">
+        <nte-input-control invalidFeedback="Please enter a valid email." validFeedback="Looks good!">
+          <span slot="label">Email <span style="color: #6c757d; font-size: 0.875em">(work)</span></span>
+          <nte-input type="email" name="email" placeholder="name@example.com" required></nte-input>
+        </nte-input-control>
+
+        <nte-input-control label="Password" invalidFeedback="At least 8 characters" helperText="Minimum 8 characters">
+          <nte-input type="password" name="password" minlength="8" placeholder="••••••••" required></nte-input>
+        </nte-input-control>
+
+        <nte-input-control label="Country" helperText="Required selection">
+          <nte-input
+            type="select"
+            name="country"
             required
-          />
-        </nte-input>
-
-        <nte-input-group cols="1-2-3">
-          <nte-input
-            label="Username"
-            inline
-            invalidFeedback="This username is already taken!"
-            validFeedback="This username is available!"
-          >
-            <input slot="input" type="text" class="form-control" required />
-          </nte-input>
-        </nte-input-group>
-
-        <nte-input-group cols="1-2-3">
-          <nte-input label="First Name">
-            <input
-              slot="input"
-              type="text"
-              class="form-control"
-              placeholder="Enter first name"
-              id="firstName"
-              name="firstName"
-            />
-          </nte-input>
-          <nte-input label="Last Name">
-            <input
-              slot="input"
-              type="text"
-              class="form-control"
-              placeholder="Enter last name"
-              id="lastName"
-              name="lastName"
-            />
-          </nte-input>
-        </nte-input-group>
-
-        <nte-input-group cols="1-2-3">
-          <nte-input floating label="Small Input" size="sm">
-            <input
-              slot="input"
-              type="text"
-              class="form-control form-control-sm"
-              placeholder=" "
-              id="smallInput"
-              name="smallInput"
-            />
-          </nte-input>
-          <nte-input floating label="Regular Input">
-            <input
-              slot="input"
-              type="text"
-              class="form-control"
-              placeholder=" "
-              id="regularInput"
-              name="regularInput"
-            />
-          </nte-input>
-          <nte-input floating label="Large Input" size="lg">
-            <input
-              slot="input"
-              type="text"
-              class="form-control form-control-lg"
-              placeholder=" "
-              id="largeInput"
-              name="largeInput"
-            />
-          </nte-input>
-        </nte-input-group>
-
-        <nte-input-group cols="1-2-3">
-          <nte-input
-            label="Country"
-            type="select"
-            helper-text="Required selection"
             select-options='[
-                  {"key":"","value":"Select a country"},
-                  {"key":"us","value":"United States"},
-                  {"key":"uk","value":"United Kingdom"},
-                  {"key":"ca","value":"Canada"}
-              ]'
-          >
-            <select slot="input" class="form-control" name="countryRequired" required></select>
-          </nte-input>
+              {"key":"","value":"Select a country"},
+              {"key":"us","value":"United States"},
+              {"key":"uk","value":"United Kingdom"},
+              {"key":"ca","value":"Canada"}
+            ]'
+          ></nte-input>
+        </nte-input-control>
 
-          <nte-input
-            label="Country (optional)"
-            type="select"
-            helper-text="Same options without required"
-            select-options='["Select a country", "United States", "United Kingdom", "Canada"]'
-          >
-            <select slot="input" class="form-control" name="countryOptional"></select>
-          </nte-input>
-        </nte-input-group>
+        <nte-input-control class="multiline" label="Comment (optional)">
+          <nte-input type="textarea" name="comment" rows="3" placeholder="Anything else?"></nte-input>
+        </nte-input-control>
 
-        <nte-input-group cols="1-2-3">
-          <nte-input type="checkbox" label="Classic Checkbox" name="classic-check" required>
-            <input slot="input" type="checkbox" class="form-check-input" id="classicCheck" name="classic-check" />
-          </nte-input>
+        <nte-input-control type="checkbox" label="I agree to the Terms" invalidFeedback="Please agree" required>
+          <nte-input type="checkbox" name="agree" required></nte-input>
+        </nte-input-control>
 
-          <nte-input type="checkbox" label="Disabled Checkbox">
-            <input
-              slot="input"
-              type="checkbox"
-              class="form-check-input"
-              id="disabledCheck"
-              name="disabled-check"
-              disabled
-              checked
-            />
-          </nte-input>
-        </nte-input-group>
-
-        <nte-input-group cols="1-2-3">
-          <nte-input type="radio" label="Option 1" required>
-            <input slot="input" type="radio" class="form-check-input" id="option1" name="required-group" required />
-          </nte-input>
-          <nte-input type="radio" label="Option 2" required>
-            <input slot="input" type="radio" class="form-check-input" id="option2" name="required-group" required />
-          </nte-input>
-        </nte-input-group>
-
-        <button type="submit">Submit</button>
+        <div class="form-actions">
+          <button type="submit">Submit</button>
+          <button type="reset" class="btn-secondary">Reset</button>
+        </div>
       </form>
     </section>
 
-    <hr />
-
     <section>
-      <h2 class="form-title">Modern Form Style</h2>
-      <form action="/submit" method="get" modern>
-        <nte-input-group cols="1-2-3">
-          <nte-input
-            modern
-            label="Country"
-            type="select"
-            helper-text="Required"
-            select-options='[
-                  {"key":"","value":"Select a country"},
-                  {"key":"us","value":"United States"},
-                  {"key":"uk","value":"United Kingdom"},
-                  {"key":"ca","value":"Canada"}
-              ]'
-          >
-            <select slot="input" class="form-control" name="countryModernRequired" required></select>
-          </nte-input>
+      <h2 class="form-title">Extras</h2>
+      <form>
+        <nte-input-tags
+          label="Tags"
+          name="tags"
+          helperText="Type and press Enter, or select from suggestions."
+          search-suggestions-list='["JavaScript","TypeScript","Lit","Web Components"]'
+        ></nte-input-tags>
 
-          <nte-input
-            modern
-            label="Country (optional)"
-            type="select"
-            helper-text="No required attribute"
-            select-options='["Select a country", "United States", "United Kingdom", "Canada"]'
-          >
-            <select slot="input" class="form-control" name="countryModernOptional"></select>
-          </nte-input>
-        </nte-input-group>
-
-        <nte-input-group cols="1-2-3">
-          <nte-input modern floating label="Email">
-            <input slot="input" type="email" class="form-control" placeholder=" " id="email" name="email" />
-          </nte-input>
-          <nte-input modern floating label="Password">
-            <input slot="input" type="password" class="form-control" placeholder=" " id="password" name="password" />
-          </nte-input>
-        </nte-input-group>
-
-        <nte-input-group cols="1-2-3">
-          <nte-input modern label="Address">
-            <input
-              slot="input"
-              type="text"
-              class="form-control"
-              placeholder="Enter address"
-              id="address"
-              name="address"
-            />
-          </nte-input>
-        </nte-input-group>
-
-        <nte-input-group cols="1-2-3">
-          <nte-input modern type="checkbox" switchStyle="modern" label="Modern Switch" name="modern-switch">
-            <input
-              slot="input"
-              type="checkbox"
-              class="form-check-input"
-              id="modernSwitch"
-              name="modern-switch"
-              required
-            />
-          </nte-input>
-
-          <nte-input modern type="checkbox" switchStyle="modern" label="Disabled Switch">
-            <input
-              slot="input"
-              type="checkbox"
-              class="form-check-input"
-              id="disabledSwitch"
-              name="disabled-switch"
-              disabled
-              checked
-            />
-          </nte-input>
-        </nte-input-group>
-
-        <nte-input-group cols="1-2-3">
-          <nte-input modern type="radio" switchStyle="modern" label="Modern Radio 1">
-            <input slot="input" type="radio" class="form-check-input" id="modernRadio1" name="modern-radio" required />
-          </nte-input>
-
-          <nte-input modern type="radio" switchStyle="modern" label="Modern Radio 2">
-            <input slot="input" type="radio" class="form-check-input" id="modernRadio2" name="modern-radio" required />
-          </nte-input>
-        </nte-input-group>
-
-        <nte-input modern type="range" label="Volume">
-          <input
-            slot="input"
-            type="range"
-            class="form-control"
-            id="volume"
-            name="volume"
-            min="0"
-            max="100"
-            step="1"
-            value="50"
-          />
-        </nte-input>
-
-        <button type="submit">Submit</button>
+        <nte-input-signature
+          label="Signature"
+          name="signature"
+          height="150"
+          required
+          helperText="Sign with your mouse or finger"
+          invalidFeedback="Signature is required"
+        ></nte-input-signature>
       </form>
     </section>
 
-    <hr />
-
     <section>
-      <h2 class="form-title">Search Input with Tags</h2>
-      <nte-input-tags
-        label="Search Tags"
-        name="tagSearch"
-        helperText="Type and press Enter, or select from suggestions."
-        id="tag-search-example"
-        search-suggestions-list='["JavaScript", "TypeScript", "Lit", "Web Components", "CSS", "HTML", "Node.js", "React", "Angular", "Vue"]'
-      ></nte-input-tags>
-    </section>
+      <h2 class="form-title">Modern Form</h2>
+      <form method="get" style="--nxa-label-cols: var(--cols-3); --nxa-input-cols: var(--cols-9)">
+        <nte-input-control class="style-modern" floating label="Email">
+          <nte-input class="style-modern" type="email" name="modernEmail" placeholder=" " required></nte-input>
+        </nte-input-control>
 
-    <hr />
+        <nte-input-control class="style-modern" label="Address">
+          <nte-input type="text" name="modernAddress" placeholder="Street, City"></nte-input>
+        </nte-input-control>
 
-    <section>
-      <h2 class="form-title">User Registration Example</h2>
-      <user-registration-form></user-registration-form>
-    </section>
+        <nte-input-control class="style-modern size-lg" label="Volume" type="range">
+          <nte-input type="range" name="modernVolume" min="0" max="100" step="1" value="50"></nte-input>
+        </nte-input-control>
 
-    <hr />
+        <nte-input-control class="style-modern" type="checkbox" switchStyle="modern" label="Marketing emails">
+          <nte-input type="checkbox" name="modernMarketing"></nte-input>
+        </nte-input-control>
 
-    <section>
-      <h2 class="form-title">Digital Signature Example</h2>
-      <signature-form-example></signature-form-example>
+        <div class="form-actions">
+          <button type="submit">Submit</button>
+          <button type="reset" class="btn-secondary">Reset</button>
+        </div>
+      </form>
     </section>
 
     <script src="/demo/main.ts" type="module"></script>

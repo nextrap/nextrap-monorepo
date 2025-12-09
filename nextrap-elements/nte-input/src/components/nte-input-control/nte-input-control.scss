@@ -1,5 +1,22 @@
+@import './_input-check-switch.scss';
 :host {
   display: block;
+  --nxa-grid-cols: 12;
+  --cols-1: 1;
+  --cols-2: 2;
+  --cols-3: 3;
+  --cols-4: 4;
+  --cols-5: 5;
+  --cols-6: 6;
+  --cols-7: 7;
+  --cols-8: 8;
+  --cols-9: 9;
+  --cols-10: 10;
+  --cols-11: 11;
+  --cols-12: 12;
+  --nxa-label-cols: var(--cols-4);
+  --nxa-input-cols: var(--cols-6);
+
   /* Base variables */
   --nxa-primary: #0d6efd;
   --nxa-secondary: #6c757d;
@@ -9,7 +26,8 @@
   /* Border styles */
   --nxa-border-color: #dee2e6;
   --nxa-border-width: 1px;
-  --nxa-border-radius: 0.375rem;
+  --nxa-border-radius-base: 0.375rem;
+  --nxa-border-radius: var(--nxa-border-radius-base);
   --nxa-border-bottom: var(--nxa-border-width) solid var(--nxa-border-color);
 
   /* Input styles */
@@ -64,9 +82,36 @@
   --nxa-switch-thumb-size: calc(var(--nxa-switch-height) - 4px);
   --nxa-switch-bg: var(--nxa-secondary);
   --nxa-switch-checked-bg: var(--nxa-primary);
+
+  /* Select sizing */
+  --nxa-select-padding-right: 2.25rem;
+  --nxa-select-bg-position-x: 0.75rem;
+  --nxa-select-min-height: calc(1.5em + 0.75rem + 2px);
+}
+
+:host(.size-sm) {
+  --nxa-input-font-size: var(--nxa-font-size-sm);
+  --nxa-input-padding-x: 0.5rem;
+  --nxa-input-padding-y: 0.25rem;
+  --nxa-border-radius: calc(var(--nxa-border-radius-base) * 0.75);
+  --nxa-select-padding-right: 2rem;
+  --nxa-select-bg-position-x: 0.5rem;
+  --nxa-select-min-height: calc(1.5em + 0.5rem + 2px);
+}
+
+:host(.size-lg) {
+  --nxa-input-font-size: var(--nxa-font-size-lg);
+  --nxa-input-padding-x: 1rem;
+  --nxa-input-padding-y: 0.5rem;
+  --nxa-border-radius: calc(var(--nxa-border-radius-base) * 1.25);
+  --nxa-select-padding-right: 2.5rem;
+  --nxa-select-bg-position-x: 1rem;
+  --nxa-select-min-height: calc(1.5em + 1rem + 2px);
 }
 
 /* Modern style overrides */
+:host(.style-modern),
+:host(.modern),
 :host([modern]) {
   --nxa-border-width: 0;
   --nxa-border-radius: 0;
@@ -78,15 +123,25 @@
 }
 
 /* Modern floating label specific styles */
+:host(.style-modern) .form-floating,
+:host(.modern) .form-floating,
 :host([modern]) .form-floating {
   border-bottom: 1px solid var(--nxa-border-color);
   transition: border-bottom-color 0.15s ease-in-out;
 }
 
+:host(.style-modern) .form-floating:focus-within,
+:host(.modern) .form-floating:focus-within,
 :host([modern]) .form-floating:focus-within {
   border-bottom: 2px solid var(--nxa-primary);
 }
 
+:host(.style-modern) .form-floating ::slotted(input.form-control),
+:host(.style-modern) .form-floating ::slotted(select.form-control),
+:host(.style-modern) .form-floating ::slotted(textarea.form-control),
+:host(.modern) .form-floating ::slotted(input.form-control),
+:host(.modern) .form-floating ::slotted(select.form-control),
+:host(.modern) .form-floating ::slotted(textarea.form-control),
 :host([modern]) .form-floating ::slotted(input.form-control),
 :host([modern]) .form-floating ::slotted(select.form-control),
 :host([modern]) .form-floating ::slotted(textarea.form-control) {
@@ -98,6 +153,22 @@
   padding: 0.5rem 0 !important;
 }
 
+:host(.style-modern) .form-floating ::slotted(nte-input),
+:host(.modern) .form-floating ::slotted(nte-input),
+:host([modern]) .form-floating ::slotted(nte-input) {
+  --nxa-control-border: none;
+  --nxa-control-border-bottom: none;
+  --nxa-control-border-radius: 0;
+  --nxa-control-height: 2.5rem;
+  --nxa-control-min-height: 2.5rem;
+  --nxa-control-padding-top: 0.5rem;
+  --nxa-control-padding-right: 0;
+  --nxa-control-padding-bottom: 0.5rem;
+  --nxa-control-padding-left: 0;
+}
+
+:host(.style-modern) .form-floating > label,
+:host(.modern) .form-floating > label,
 :host([modern]) .form-floating > label {
   padding-left: 0;
   padding: 0.5rem 0;
@@ -105,18 +176,42 @@
 }
 
 /* Override focus and filled state padding for modern style */
+:host(.style-modern) .form-floating:focus-within ::slotted(input.form-control),
+:host(.style-modern) .form-floating.has-value ::slotted(input.form-control),
+:host(.modern) .form-floating:focus-within ::slotted(input.form-control),
+:host(.modern) .form-floating.has-value ::slotted(input.form-control),
 :host([modern]) .form-floating:focus-within ::slotted(input.form-control),
 :host([modern]) .form-floating.has-value ::slotted(input.form-control) {
-  padding-top: 1rem !important;
-  padding-bottom: 0 !important;
+  padding-top: 1.125rem !important;
+  padding-bottom: 0.125rem !important;
 }
 
+:host(.style-modern) .form-floating:focus-within ::slotted(nte-input),
+:host(.style-modern) .form-floating.has-value ::slotted(nte-input),
+:host(.modern) .form-floating:focus-within ::slotted(nte-input),
+:host(.modern) .form-floating.has-value ::slotted(nte-input),
+:host([modern]) .form-floating:focus-within ::slotted(nte-input),
+:host([modern]) .form-floating.has-value ::slotted(nte-input) {
+  --nxa-control-padding-top: 1.125rem;
+  --nxa-control-padding-bottom: 0.125rem;
+}
+
+:host(.style-modern) .form-floating:focus-within > label,
+:host(.style-modern) .form-floating.has-value > label,
+:host(.modern) .form-floating:focus-within > label,
+:host(.modern) .form-floating.has-value > label,
 :host([modern]) .form-floating:focus-within > label,
 :host([modern]) .form-floating.has-value > label {
-  transform: scale(0.75) translateY(-0.5rem) translateX(0);
+  transform: scale(0.75) translateY(-0.75rem) translateX(0);
 }
 
 /* Modern input alignment - remove left padding */
+:host(.style-modern) ::slotted(input.form-control),
+:host(.style-modern) ::slotted(select.form-control),
+:host(.style-modern) ::slotted(textarea.form-control),
+:host(.modern) ::slotted(input.form-control),
+:host(.modern) ::slotted(select.form-control),
+:host(.modern) ::slotted(textarea.form-control),
 :host([modern]) ::slotted(input.form-control),
 :host([modern]) ::slotted(select.form-control),
 :host([modern]) ::slotted(textarea.form-control) {
@@ -144,20 +239,68 @@
 ::slotted(input.form-control) {
   display: block;
   width: 100%;
-  padding: var(--nxa-input-padding-y) var(--nxa-input-padding-x);
+  height: var(--nxa-control-height);
+  min-height: var(--nxa-control-min-height);
+  padding-top: var(--nxa-control-padding-top, var(--nxa-input-padding-y));
+  padding-right: var(--nxa-control-padding-right, var(--nxa-input-padding-x));
+  padding-bottom: var(--nxa-control-padding-bottom, var(--nxa-input-padding-y));
+  padding-left: var(--nxa-control-padding-left, var(--nxa-input-padding-x));
   font-size: var(--nxa-input-font-size);
   font-weight: 400;
-  line-height: var(--nxa-input-line-height);
+  line-height: var(--nxa-control-line-height, var(--nxa-input-line-height));
   color: var(--nxa-input-color);
   background-color: var(--nxa-input-bg);
   background-clip: padding-box;
-  border: var(--nxa-input-border);
-  border-bottom: var(--nxa-border-bottom);
-  border-radius: var(--nxa-border-radius);
+  border: var(--nxa-control-border, var(--nxa-input-border));
+  border-bottom: var(--nxa-control-border-bottom, var(--nxa-border-bottom));
+  border-radius: var(--nxa-control-border-radius, var(--nxa-border-radius));
   transition:
     border-color 0.15s ease-in-out,
     box-shadow 0.15s ease-in-out;
   box-sizing: border-box;
+}
+
+::slotted(textarea.form-control) {
+  display: block;
+  width: 100%;
+  min-height: var(--nxa-textarea-min-height, 6rem);
+  padding-top: var(--nxa-control-padding-top, var(--nxa-input-padding-y));
+  padding-right: var(--nxa-control-padding-right, var(--nxa-input-padding-x));
+  padding-bottom: var(--nxa-control-padding-bottom, var(--nxa-input-padding-y));
+  padding-left: var(--nxa-control-padding-left, var(--nxa-input-padding-x));
+  font-size: var(--nxa-input-font-size);
+  font-weight: 400;
+  line-height: var(--nxa-control-line-height, var(--nxa-input-line-height));
+  color: var(--nxa-input-color);
+  background-color: var(--nxa-input-bg);
+  background-clip: padding-box;
+  border: var(--nxa-control-border, var(--nxa-input-border));
+  border-bottom: var(--nxa-control-border-bottom, var(--nxa-border-bottom));
+  border-radius: var(--nxa-control-border-radius, var(--nxa-border-radius));
+  transition:
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+::slotted(textarea.form-control:focus) {
+  color: var(--nxa-input-color);
+  background-color: var(--nxa-input-bg);
+  border-color: var(--nxa-focus-border-color);
+  outline: 0;
+  box-shadow: var(--nxa-focus-box-shadow);
+}
+
+::slotted(textarea.form-control::placeholder) {
+  color: var(--nxa-placeholder-color);
+  opacity: var(--nxa-placeholder-opacity);
+}
+
+::slotted(textarea.form-control:disabled),
+::slotted(textarea.form-control[readonly]) {
+  background-color: var(--nxa-input-disabled-bg);
+  opacity: 1;
 }
 
 ::slotted(input.form-control.is-invalid) {
@@ -176,6 +319,14 @@
   background-repeat: no-repeat;
   background-position: right calc(0.375em + 0.1875rem) center;
   background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+::slotted(textarea.form-control.is-invalid) {
+  border-color: var(--nxa-danger);
+}
+
+::slotted(textarea.form-control.is-valid) {
+  border-color: var(--nxa-success);
 }
 
 ::slotted(input.form-control:focus) {
@@ -197,136 +348,6 @@
   opacity: 1;
 }
 
-/* Input Sizes */
-::slotted(input.form-control-sm) {
-  padding: 0.25rem 0.5rem;
-  font-size: var(--nxa-font-size-sm);
-  border-radius: calc(var(--nxa-border-radius) * 0.75);
-}
-
-::slotted(input.form-control-lg) {
-  padding: 0.5rem 1rem;
-  font-size: var(--nxa-font-size-lg);
-  border-radius: calc(var(--nxa-border-radius) * 1.25);
-}
-
-/* Common base styles for both checkbox and radio */
-.form-check {
-  display: flex;
-  align-items: center;
-  min-height: 1.5rem;
-  padding-left: 1.5em;
-  margin-bottom: 0.125rem;
-}
-
-.form-check-label {
-  margin-left: 0.5rem;
-  margin-bottom: 0;
-  cursor: pointer;
-}
-
-/* Base input styles for both */
-::slotted(input[type='checkbox'].form-check-input),
-::slotted(input[type='radio'].form-check-input) {
-  float: left;
-  margin-left: -1.5em;
-  width: 1em;
-  height: 1em;
-  margin-top: 0.25em;
-  vertical-align: top;
-  background-color: #fff;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  border: 1px solid rgba(0, 0, 0, 0.25);
-  appearance: none;
-  border-radius: 0.25em;
-}
-
-/* Checked state - same for both */
-::slotted(input[type='checkbox'].form-check-input:checked),
-::slotted(input[type='radio'].form-check-input:checked) {
-  background-color: var(--nxa-primary);
-  border-color: var(--nxa-primary);
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
-}
-
-/* Focus states */
-::slotted(input[type='checkbox'].form-check-input:focus),
-::slotted(input[type='radio'].form-check-input:focus) {
-  border-color: var(--nxa-primary);
-  outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-}
-
-/* Hover states */
-::slotted(input[type='checkbox'].form-check-input:hover),
-::slotted(input[type='radio'].form-check-input:hover) {
-  cursor: pointer;
-}
-
-/* Disabled states */
-::slotted(input[type='checkbox'].form-check-input:disabled),
-::slotted(input[type='radio'].form-check-input:disabled) {
-  pointer-events: none;
-  filter: none;
-  opacity: 0.5;
-}
-
-::slotted(input[type='checkbox'].form-check-input:disabled) ~ .form-check-label,
-::slotted(input[type='radio'].form-check-input:disabled) ~ .form-check-label {
-  opacity: 0.5;
-  cursor: default;
-}
-
-/* Validation states */
-::slotted(input[type='checkbox'].form-check-input.is-invalid),
-::slotted(input[type='radio'].form-check-input.is-invalid) {
-  border: 1px solid var(--nxa-danger);
-}
-
-::slotted(input[type='checkbox'].form-check-input.is-valid),
-::slotted(input[type='radio'].form-check-input.is-valid) {
-  border-color: var(--nxa-success);
-}
-
-/* Modern Switch Base Styles */
-.form-switch {
-  padding-left: 3.5em;
-  min-height: 2em;
-}
-
-.form-switch ::slotted(input.form-check-input) {
-  width: 3em;
-  height: 1.5em;
-  margin-left: -3.5em;
-  margin-top: 0.25em;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%280, 0, 0, 0.25%29'/%3e%3c/svg%3e") !important;
-  background-position: left center;
-  border-radius: 2em;
-  transition: background-position 0.15s ease-in-out;
-  border: 0;
-  background-color: #e9ecef;
-}
-
-.form-switch ::slotted(input.form-check-input:checked) {
-  background-position: right center;
-  background-color: var(--nxa-primary);
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
-}
-
-/* Focus states */
-.form-switch ::slotted(input.form-check-input:focus) {
-  outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-}
-
-/* Disabled state */
-.form-switch ::slotted(input.form-check-input:disabled) {
-  opacity: 0.5;
-}
-
-/* Modern Radio Buttons - same as switches */
 .form-switch ::slotted(input[type='radio'].form-check-input) {
   width: 3em;
   height: 1.5em;
@@ -343,6 +364,22 @@
 /* Floating Labels */
 .form-floating {
   position: relative;
+}
+
+.form-floating ::slotted(nte-input) {
+  --nxa-control-height: calc(3.5rem + 2px);
+  --nxa-control-min-height: calc(3.5rem + 2px);
+  --nxa-control-line-height: 1.25;
+  --nxa-control-padding-top: 1rem;
+  --nxa-control-padding-right: 0.75rem;
+  --nxa-control-padding-bottom: 1rem;
+  --nxa-control-padding-left: 0.75rem;
+}
+
+.form-floating:focus-within ::slotted(nte-input),
+.form-floating.has-value ::slotted(nte-input) {
+  --nxa-control-padding-top: 1.625rem;
+  --nxa-control-padding-bottom: 0.625rem;
 }
 
 .form-floating > label {
@@ -394,38 +431,80 @@
 }
 
 /* Small size variants */
-.form-floating ::slotted(input.form-control-sm) {
+:host(.size-sm) .form-floating ::slotted(input.form-control),
+:host(.size-sm) .form-floating ::slotted(select.form-control),
+:host(.size-sm) .form-floating ::slotted(textarea.form-control) {
   height: calc(2.5rem + 2px);
   min-height: calc(2.5rem + 2px);
   padding: 0.75rem 0.75rem;
 }
 
-.form-floating:focus-within ::slotted(input.form-control-sm),
-.form-floating.has-value ::slotted(input.form-control-sm) {
+:host(.size-sm) .form-floating ::slotted(nte-input) {
+  --nxa-control-height: calc(2.5rem + 2px);
+  --nxa-control-min-height: calc(2.5rem + 2px);
+  --nxa-control-padding-top: 0.75rem;
+  --nxa-control-padding-right: 0.75rem;
+  --nxa-control-padding-bottom: 0.75rem;
+  --nxa-control-padding-left: 0.75rem;
+}
+
+:host(.size-sm) .form-floating:focus-within ::slotted(nte-input),
+:host(.size-sm) .form-floating.has-value ::slotted(nte-input) {
+  --nxa-control-padding-top: 1.25rem;
+  --nxa-control-padding-bottom: 0.25rem;
+}
+
+:host(.size-sm) .form-floating:focus-within ::slotted(input.form-control),
+:host(.size-sm) .form-floating.has-value ::slotted(input.form-control),
+:host(.size-sm) .form-floating:focus-within ::slotted(select.form-control),
+:host(.size-sm) .form-floating.has-value ::slotted(select.form-control),
+:host(.size-sm) .form-floating:focus-within ::slotted(textarea.form-control),
+:host(.size-sm) .form-floating.has-value ::slotted(textarea.form-control) {
   padding-top: 1.25rem;
   padding-bottom: 0.25rem;
 }
 
-.form-floating:focus-within > label.small,
-.form-floating.has-value > label.small {
+:host(.size-sm) .form-floating:focus-within > label,
+:host(.size-sm) .form-floating.has-value > label {
   transform: scale(0.85) translateY(-0.7rem);
 }
 
 /* Large size variants */
-.form-floating ::slotted(input.form-control-lg) {
+:host(.size-lg) .form-floating ::slotted(input.form-control),
+:host(.size-lg) .form-floating ::slotted(select.form-control),
+:host(.size-lg) .form-floating ::slotted(textarea.form-control) {
   height: calc(4.5rem + 2px);
   min-height: calc(4.5rem + 2px);
   padding: 1.25rem 0.75rem;
 }
 
-.form-floating:focus-within ::slotted(input.form-control-lg),
-.form-floating.has-value ::slotted(input.form-control-lg) {
+:host(.size-lg) .form-floating ::slotted(nte-input) {
+  --nxa-control-height: calc(4.5rem + 2px);
+  --nxa-control-min-height: calc(4.5rem + 2px);
+  --nxa-control-padding-top: 1.25rem;
+  --nxa-control-padding-right: 0.75rem;
+  --nxa-control-padding-bottom: 1.25rem;
+  --nxa-control-padding-left: 0.75rem;
+}
+
+:host(.size-lg) .form-floating:focus-within ::slotted(nte-input),
+:host(.size-lg) .form-floating.has-value ::slotted(nte-input) {
+  --nxa-control-padding-top: 2rem;
+  --nxa-control-padding-bottom: 0.5rem;
+}
+
+:host(.size-lg) .form-floating:focus-within ::slotted(input.form-control),
+:host(.size-lg) .form-floating.has-value ::slotted(input.form-control),
+:host(.size-lg) .form-floating:focus-within ::slotted(select.form-control),
+:host(.size-lg) .form-floating.has-value ::slotted(select.form-control),
+:host(.size-lg) .form-floating:focus-within ::slotted(textarea.form-control),
+:host(.size-lg) .form-floating.has-value ::slotted(textarea.form-control) {
   padding-top: 2rem;
   padding-bottom: 0.5rem;
 }
 
-.form-floating:focus-within > label.large,
-.form-floating.has-value > label.large {
+:host(.size-lg) .form-floating:focus-within > label,
+:host(.size-lg) .form-floating.has-value > label {
   transform: scale(0.85) translateY(-1.3rem) translateX(0.35rem);
 }
 
@@ -447,12 +526,13 @@
     border-color 0.15s ease-in-out,
     box-shadow 0.15s ease-in-out;
   appearance: none;
-  padding-right: 2.25rem;
+  padding-right: var(--nxa-select-padding-right);
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
   background-repeat: no-repeat;
-  background-position: right 0.75rem center;
+  background-position: right var(--nxa-select-bg-position-x) center;
   background-size: 16px 12px;
   box-sizing: border-box;
+  min-height: var(--nxa-select-min-height);
 }
 
 /* Select Focus State */
@@ -463,26 +543,6 @@
   border-color: var(--nxa-focus-border-color);
   outline: 0;
   box-shadow: var(--nxa-focus-box-shadow);
-}
-
-/* Select Sizes */
-
-::slotted(select.form-control-sm) {
-  padding: 0.25rem 0.5rem;
-  padding-right: 2rem;
-  font-size: var(--nxa-font-size-sm);
-  border-radius: calc(var(--nxa-border-radius) * 0.75);
-  background-position: right 0.5rem center;
-  min-height: calc(1.5em + 0.5rem + 2px);
-}
-
-::slotted(select.form-control-lg) {
-  padding: 0.5rem 1rem;
-  padding-right: 2.5rem;
-  font-size: var(--nxa-font-size-lg);
-  border-radius: calc(var(--nxa-border-radius) * 1.25);
-  background-position: right 1rem center;
-  min-height: calc(1.5em + 1rem + 2px);
 }
 
 /* Select Disabled State */
@@ -532,34 +592,10 @@
   padding: 1rem 0.75rem;
 }
 
-.form-floating ::slotted(select.form-control-sm) {
-  height: calc(2.5rem + 2px);
-  min-height: calc(2.5rem + 2px);
-  padding: 0.75rem 0.75rem;
-}
-
-.form-floating ::slotted(select.form-control-lg) {
-  height: calc(4.5rem + 2px);
-  min-height: calc(4.5rem + 2px);
-  padding: 1.25rem 0.75rem;
-}
-
 .form-floating:focus-within ::slotted(select.form-control),
 .form-floating.has-value ::slotted(select.form-control) {
   padding-top: 1.625rem;
   padding-bottom: 0.625rem;
-}
-
-.form-floating:focus-within ::slotted(select.form-control-sm),
-.form-floating.has-value ::slotted(select.form-control-sm) {
-  padding-top: 1.25rem;
-  padding-bottom: 0.25rem;
-}
-
-.form-floating:focus-within ::slotted(select.form-control-lg),
-.form-floating.has-value ::slotted(select.form-control-lg) {
-  padding-top: 2rem;
-  padding-bottom: 0.5rem;
 }
 
 /* Multiple Select Support */
@@ -614,17 +650,51 @@
 
 /* Inline form styles */
 .form-inline {
-  display: flex;
+  display: grid;
+  grid-template-columns: calc(100% * var(--nxa-label-cols, 4) / var(--nxa-grid-cols, 12)) calc(
+      100% * var(--nxa-input-cols, 6) / var(--nxa-grid-cols, 12)
+    );
+  grid-template-areas:
+    'label control'
+    '. messages';
+  column-gap: var(--nxa-spacing-md);
+  row-gap: var(--nxa-spacing-sm);
   align-items: center;
+  justify-content: start;
 }
 
 .form-inline .form-label {
-  margin-right: var(--nxa-spacing-md);
-  margin-bottom: 0;
+  grid-area: label;
+  margin: 0;
 }
 
-.form-inline .input-wrapper {
-  flex-grow: 1;
+.form-inline .control-wrapper {
+  grid-area: control;
+  min-width: 0;
+}
+
+.form-inline .messages {
+  grid-area: messages;
+  align-self: start;
+}
+
+:host(.multiline) .form-inline {
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    'label'
+    'control'
+    'messages';
+  justify-content: stretch;
+  align-items: start;
+}
+
+:host(.multiline) .form-inline .form-label {
+  margin-bottom: var(--nxa-spacing-sm);
+  align-self: start;
+}
+
+:host(.multiline) .form-inline .control-wrapper {
+  width: 100%;
 }
 
 /* Required indicator */

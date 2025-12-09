@@ -12,36 +12,20 @@ describe('NteInput', () => {
     document.body.appendChild(element);
     await element.updateComplete;
 
-    const inputSlot = element.shadowRoot?.querySelector('slot[name="input"]');
+    const inputSlot = element.shadowRoot?.querySelector('slot:not([name])');
     expect(inputSlot).not.toBeNull();
 
     document.body.removeChild(element);
   });
 
-  it('renders with a label', async () => {
-    const labelText = 'Test Label';
+  it('does not render styling elements (handled by nte-input-control)', async () => {
     const element = document.createElement('nte-input') as NteInput;
-    element.label = labelText;
+    element.setAttribute('label', 'Unused Label');
     document.body.appendChild(element);
     await element.updateComplete;
 
-    const labelElement = element.shadowRoot?.querySelector('label.form-label');
-    expect(labelElement).not.toBeNull();
-    expect(labelElement?.textContent).toContain(labelText);
-
-    document.body.removeChild(element);
-  });
-
-  it('renders a checkbox input', async () => {
-    const element = document.createElement('nte-input') as NteInput;
-    element.type = 'checkbox';
-    element.label = 'Checkbox Test';
-    document.body.appendChild(element);
-    await element.updateComplete;
-
-    const labelElement = element.shadowRoot?.querySelector('label.form-check-label');
-    expect(labelElement).not.toBeNull();
-    expect(labelElement?.textContent).toContain('Checkbox Test');
+    const labelElement = element.shadowRoot?.querySelector('label');
+    expect(labelElement).toBeNull();
 
     document.body.removeChild(element);
   });

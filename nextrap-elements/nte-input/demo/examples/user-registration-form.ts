@@ -1,5 +1,6 @@
 import { html, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+import '../../src/components/nte-input-control/nte-input-control';
 import '../../src/components/nte-input-group/nte-input-group';
 import '../../src/components/nte-input/nte-input';
 
@@ -83,81 +84,73 @@ export class UserRegistrationForm extends LitElement {
       <form method="get" @submit="${this.handleSubmit}" @input="${this.handleInputChange}">
         <!-- Name fields -->
         <nte-input-group cols="1-2-2">
-          <nte-input label="First Name" name="firstName" required>
-            <input
-              slot="input"
-              type="text"
-              class="form-control"
-              name="firstName"
-              placeholder="Enter your first name"
-              required
-            />
-          </nte-input>
+          <nte-input-control label="First Name" helperText="Required">
+            <nte-input type="text" name="firstName" placeholder="Enter your first name" required></nte-input>
+          </nte-input-control>
 
-          <nte-input label="Last Name" name="lastName" required>
-            <input
-              slot="input"
-              type="text"
-              class="form-control"
-              name="lastName"
-              placeholder="Enter your last name"
-              required
-            />
-          </nte-input>
+          <nte-input-control label="Last Name" helperText="Required">
+            <nte-input type="text" name="lastName" placeholder="Enter your last name" required></nte-input>
+          </nte-input-control>
         </nte-input-group>
 
         <!-- Email field -->
-        <nte-input label="Email Address" name="email" required>
-          <input slot="input" type="email" class="form-control" name="email" placeholder="Enter your email" required />
-        </nte-input>
+        <nte-input-control
+          label="Email Address"
+          helperText="We’ll never share your email"
+          invalidFeedback="Please enter a valid email."
+        >
+          <nte-input type="email" name="email" placeholder="Enter your email" required></nte-input>
+        </nte-input-control>
 
         <!-- Password fields -->
         <nte-input-group cols="1-2-2">
-          <nte-input label="Password" name="password" required>
-            <input
-              slot="input"
+          <nte-input-control label="Password" invalidFeedback="At least 8 characters" validFeedback="Looks good!">
+            <nte-input
               type="password"
-              class="form-control"
               name="password"
               placeholder="Create a password"
+              minlength="8"
               required
-            />
-          </nte-input>
+            ></nte-input>
+          </nte-input-control>
 
-          <nte-input label="Confirm Password" name="confirmPassword" required>
-            <input
-              slot="input"
-              type="password"
-              class="form-control"
-              name="confirmPassword"
-              placeholder="Confirm your password"
-              required
-            />
-          </nte-input>
+          <nte-input-control label="Confirm Password" invalidFeedback="Passwords must match">
+            <nte-input type="password" name="confirmPassword" placeholder="Confirm your password" required></nte-input>
+          </nte-input-control>
         </nte-input-group>
 
         <!-- Country selection -->
-        <nte-input label="Country" type="select" name="country" required>
-          <select slot="input" class="form-control" name="country" required>
-            <option value="">Select your country</option>
-            <option value="us">United States</option>
-            <option value="uk">United Kingdom</option>
-            <option value="ca">Canada</option>
-            <option value="de">Germany</option>
-            <option value="fr">France</option>
-            <option value="au">Australia</option>
-          </select>
-        </nte-input>
+        <nte-input-control label="Country" helperText="Required" invalidFeedback="Please select a country">
+          <nte-input
+            type="select"
+            name="country"
+            required
+            select-options='[
+              {"key":"","value":"Select your country"},
+              {"key":"us","value":"United States"},
+              {"key":"uk","value":"United Kingdom"},
+              {"key":"ca","value":"Canada"},
+              {"key":"de","value":"Germany"},
+              {"key":"fr","value":"France"},
+              {"key":"au","value":"Australia"}
+            ]'
+          ></nte-input>
+        </nte-input-control>
 
         <!-- Checkboxes -->
         <nte-input-group cols="1-1-1">
-          <nte-input type="checkbox" label="I agree to the Terms and Conditions" name="agreeToTerms" required>
-            <input slot="input" type="checkbox" class="form-check-input" name="agreeToTerms" required />
-          </nte-input>
+          <nte-input-control
+            type="checkbox"
+            label="I agree to the Terms and Conditions"
+            invalidFeedback="Please agree"
+            required
+          >
+            <nte-input type="checkbox" name="agreeToTerms" required></nte-input>
+          </nte-input-control>
 
-          <nte-input type="checkbox" label="Subscribe to newsletter" name="newsletter">
-            <input slot="input" type="checkbox" class="form-check-input" name="newsletter" />
-          </nte-input>
+          <nte-input-control type="checkbox" label="Subscribe to newsletter">
+            <nte-input type="checkbox" name="newsletter"></nte-input>
+          </nte-input-control>
         </nte-input-group>
 
         <!-- Submit buttons -->
