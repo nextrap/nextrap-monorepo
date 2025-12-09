@@ -1,3 +1,4 @@
+export * from './components/nte-input-control/nte-input-control';
 export * from './components/nte-input-group/nte-input-group';
 export * from './components/nte-input-signature/nte-input-signature';
 export * from './components/nte-input-tags/nte-input-tags';

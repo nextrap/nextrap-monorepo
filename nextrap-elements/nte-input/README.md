@@ -4,7 +4,8 @@ This library was generated with [Nx](https://nx.dev).
 
 It provides form primitives for Nextrap projects:
 
-- `nte-input`: general purpose form control wrapper.
+- `nte-input-control`: styling wrapper that provides label/error/hint and layout around inputs.
+- `nte-input`: logic/validation wrapper for native inputs; use it inside `nte-input-control` when you need styling.
 - `nte-input-tags`: tag/autocomplete input.
 - `nte-input-signature`: canvas-based signature capture.
 - `nte-input-group`: layout helper for responsive form grids.
