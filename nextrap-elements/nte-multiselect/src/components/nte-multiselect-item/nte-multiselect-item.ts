@@ -2,12 +2,11 @@ import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 
-import { resetStyle } from '@nextrap/style-reset';
 import style from './nte-multiselect-item.scss?inline';
 
 @customElement('nte-multiselect-item')
 export class NteMultiselectItemElement extends LitElement {
-  static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
+  static override styles = [unsafeCSS(style)];
 
   @property({ type: String, reflect: true })
   type: 'radio' | 'checkbox' = 'radio';
@@ -33,7 +32,7 @@ export class NteMultiselectItemElement extends LitElement {
   @state()
   private _focused: boolean = false;
 
-  override render(): LitElement {
+  override render() {
     const classes = {
       card: true,
       checked: this.checked,
