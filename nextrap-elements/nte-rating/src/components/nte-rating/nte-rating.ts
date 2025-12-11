@@ -77,7 +77,7 @@ export class NteRatingElement extends EventBindingsMixin(LoggingMixin(LitElement
 
   // ARIA label
   @property({ type: String, attribute: 'aria-label' })
-  public accessor ariaLabel = '';
+  public override accessor ariaLabel: string | null = '';
 
   // Internal state
   @state()
