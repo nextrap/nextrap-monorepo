@@ -2,11 +2,12 @@
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import * as path from 'path';
+import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
-const projectName = '<%= name %>';
-const dirName = `<%= path %>`;
+const projectName = 'nte-multiselect';
+const dirName = `nextrap-elements/nte-multiselect`;
 
 export default defineConfig(() => ({
   server: {
@@ -36,16 +37,29 @@ export default defineConfig(() => ({
     },
     lib: {
       // Could also be a dictionary or array of multiple entry points.
-      entry: 'src/index.ts',
-      name: projectName,
-      fileName: 'index',
+      entry: resolve(__dirname, 'src/index.ts'),
+      name: 'NteMultiselect',
+      fileName: 'nte-multiselect',
       // Change this to the formats you want to support.
       // Don't forget to update your package.json as well.
-      formats: ['es' as const],
+      formats: ['es'],
     },
     rollupOptions: {
       // External packages that should not be bundled into your library. IMPORTANT!
-      external: (id) => !id.startsWith('.') && !path.isAbsolute(id),
+      external: (id) => !id.startsWith('.') && !path.isAbsolute(id) && !['lit', '@nextrap/style-reset'].includes(id),
+      output: {
+        globals: {
+          lit: 'Lit',
+        },
+      },
+    },
+    target: 'es2020',
+    sourcemap: true,
+    minify: 'terser',
+  },
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, './src'),
     },
   },
   test: {
