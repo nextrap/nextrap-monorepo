@@ -35,7 +35,6 @@ These packages are grouped into their respective directories ([`nextrap-base`](.
 | [`nte-stepper`](nextrap-elements/nte-stepper)                         | [@marliedev](https://github.com/marliedev)   |
 | [`ntl-scrollspy`](nextrap-elements/ntl-scrollspy)                     | [@marliedev](https://github.com/marliedev)   |
 | [`nte-progress`](nextrap-elements/nte-progress)                       | [@marliedev](https://github.com/marliedev)   |
-| [`nte-multiselect`](nextrap-elements/nte-multiselect)                 | [@marliedev](https://github.com/marliedev)   |
 
 _) Do not include any style-_ packages (except 'style-reset') in the Shadow DOM of components!
 
