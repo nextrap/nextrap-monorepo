@@ -25,6 +25,13 @@ export class NtlAccordionItemElement extends SubLayoutApplyMixin(LoggingMixin(Li
     }
   }
 
+  override updated(changedProperties: Map<string, unknown>) {
+    super.updated(changedProperties);
+    if (changedProperties.has('open') && this._detailsElement) {
+      this._detailsElement.open = this.open;
+    }
+  }
+
   private _onToggle(e: Event) {
     const details = e.target as HTMLDetailsElement;
     this.open = details.open;
