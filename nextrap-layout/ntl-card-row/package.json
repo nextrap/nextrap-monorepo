@@ -6,12 +6,12 @@
         "@nextrap/nte-card": "^1.0.0",
         "@nextrap/style-reset": "^1.0.0",
         "@trunkjs/browser-utils": "^1.0.12",
+        "@trunkjs/content-pane": "^1.0.0",
         "lit": "^3.3.1"
     },
     "devDependencies": {
         "@nextrap/style-base": "^1.0.0",
         "@nextrap/style-utils": "^1.0.0",
-        "@trunkjs/content-pane": "^1.0.0",
         "@trunkjs/markdown-loader": "^1.0.0"
     },
     "type": "module",

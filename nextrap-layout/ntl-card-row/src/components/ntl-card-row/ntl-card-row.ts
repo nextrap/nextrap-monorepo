@@ -1,4 +1,5 @@
-import { LoggingMixin } from '@trunkjs/browser-utils';
+import { BreakPointMixin, LoggingMixin } from '@trunkjs/browser-utils';
+import { SubLayoutApplyMixin } from '@trunkjs/content-pane';
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
@@ -9,7 +10,7 @@ import { resetStyle } from '@nextrap/style-reset';
 import style from './ntl-card-row.scss?inline';
 
 @customElement('ntl-card-row')
-export class NtlCardRowElement extends LoggingMixin(LitElement) {
+export class NtlCardRowElement extends BreakPointMixin(SubLayoutApplyMixin(LoggingMixin(LitElement))) {
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
   @state()
@@ -22,13 +23,13 @@ export class NtlCardRowElement extends LoggingMixin(LitElement) {
     return html`
       <div class="wrapper">
         <div class="header" part="header">
-          <slot name="header"></slot>
+          <slot name="header" data-query=":scope > .header | :scope > h2,h3,h4,h5,h6:first-of-type:not(.keep)"></slot>
         </div>
-        <div class="row">
-          <slot></slot>
+        <div class="flex row">
+          <slot data-query=":scope > section" data-set-attribute-layout="nte-card"></slot>
         </div>
         <div class="footer" part="footer">
-          <slot name="footer"></slot>
+          <slot name="footer" data-query=":scope > footer"></slot>
         </div>
       </div>
     `;

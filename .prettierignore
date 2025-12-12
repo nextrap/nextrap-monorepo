@@ -1,4 +1,7 @@
 # Add files here to ignore them from prettier formatting
+
+
+
 /dist
 /coverage
 /.nx/cache
@@ -7,3 +10,7 @@
 
 # Avoid invalid template expressions
 nextrap-base/nt-nx-generators/src/generators/files/**/*.scss
+
+
+# Avoid Parsedown padded to separate lines
+*.md
