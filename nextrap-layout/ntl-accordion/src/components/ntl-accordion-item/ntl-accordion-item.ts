@@ -3,10 +3,11 @@ import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 import { resetStyle } from '@nextrap/style-reset';
+import { SubLayoutApplyMixin } from '@trunkjs/content-pane';
 import style from './ntl-accordion-item.scss?inline';
 
 @customElement('ntl-accordion-item')
-export class NtlAccordionItemElement extends LoggingMixin(LitElement) {
+export class NtlAccordionItemElement extends SubLayoutApplyMixin(LoggingMixin(LitElement)) {
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
   @property({ type: Boolean, reflect: true })
@@ -20,12 +21,6 @@ export class NtlAccordionItemElement extends LoggingMixin(LitElement) {
   override firstUpdated() {
     this._detailsElement = this.shadowRoot?.querySelector('details') ?? null;
     if (this._detailsElement) {
-      this._detailsElement.open = this.open;
-    }
-  }
-
-  override updated(changedProperties: Map<string, unknown>) {
-    if (changedProperties.has('open') && this._detailsElement) {
       this._detailsElement.open = this.open;
     }
   }
@@ -51,7 +46,7 @@ export class NtlAccordionItemElement extends LoggingMixin(LitElement) {
             <slot name="icon"></slot>
           </span>
           <span class="title">
-            <slot name="title"></slot>
+            <slot name="title" data-query=":scope > h1,h2,h3,h4,h5,h6"></slot>
           </span>
           <span class="marker">
             <slot name="marker">
