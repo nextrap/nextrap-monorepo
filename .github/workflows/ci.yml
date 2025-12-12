@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - feat/**
   pull_request:
 
 concurrency:
@@ -25,6 +26,7 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
+      - run: npm install
       - run: npm ci
       - uses: nrwl/nx-set-shas@v4
       - run: npx nx affected -t test build
