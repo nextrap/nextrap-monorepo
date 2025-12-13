@@ -2,7 +2,7 @@
 
 
 ## Accordion Demo
-{: layout="ntl-accordion"}
+{: layout="ntl-accordion" style="margin-top:2rem"}
 
 ### Summary 1
 
@@ -19,7 +19,7 @@ Text für die Details 3
 ---
 
 ## Accordion mit initialem Open
-{: layout="ntl-accordion[initial-open-index='1']"}
+{: layout="ntl-accordion[initial-open-index='1']" style="margin-top:2rem"}
 
 ### Erstes Element
 
@@ -36,7 +36,7 @@ Dieser Text ist auch initial geschlossen.
 ---
 
 ## Exclusive Accordion
-{: layout="ntl-accordion[exclusive]"}
+{: layout="ntl-accordion[exclusive='true']" style="margin-top:2rem"}
 
 ### Exklusiv Item 1
 
@@ -49,3 +49,57 @@ Wenn du dieses öffnest, schließt sich das andere.
 ### Exklusiv Item 3
 
 Das gilt für alle Items in diesem Accordion.
+
+---
+
+## Accordion mit Plus/Minus Icons
+{: layout="ntl-accordion[marker-icon='plus']" style="margin-top:2rem"}
+
+### Plus Item 1
+
+Dieses Accordion verwendet Plus/Minus Icons statt Chevrons.
+
+### Plus Item 2
+
+Das Icon wechselt zwischen + und - beim Öffnen/Schließen.
+
+### Chevron Override
+{: marker-icon="chevron"}
+
+Individuell auf Chevron zurückgesetzt via `marker-icon="chevron"` Attribut.
+
+---
+
+## Accordion mit Marker links
+{: layout="ntl-accordion[marker-position='start']" style="margin-top:2rem"}
+
+### Marker Start 1
+
+Bei diesem Accordion ist der Marker links positioniert.
+
+### Marker Start 2
+
+Das gilt für alle Items in diesem Accordion.
+
+### Marker Start 3
+
+Der Chevron zeigt nach rechts und rotiert beim Öffnen.
+
+---
+
+## Gemischte Marker-Icons
+{: layout="ntl-accordion"}
+
+### Chevron (Standard)
+
+Standard Chevron-Icon durch Rotation.
+
+### Plus/Minus Icon
+{: style="--marker-icon: plus"}
+
+Individuell auf Plus/Minus umgestellt via `style="--marker-icon: plus"`.
+
+### Marker links positioniert
+{: marker-position="start"}
+
+Chevron links positioniert via `marker-position="start"`.

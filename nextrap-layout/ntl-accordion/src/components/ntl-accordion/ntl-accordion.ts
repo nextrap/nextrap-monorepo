@@ -41,11 +41,41 @@ export class NtlAccordionElement extends SubLayoutApplyMixin(LoggingMixin(LitEle
   @property({ converter: initialOpenIndexConverter, attribute: 'initial-open-index' })
   public accessor initialOpenIndex: number | undefined = undefined;
 
+  @property({ type: String, reflect: true, attribute: 'marker-icon' })
+  public accessor markerIcon: 'chevron' | 'plus' | null = null;
+
+  @property({ type: String, reflect: true, attribute: 'marker-position' })
+  public accessor markerPosition: 'start' | 'end' | null = null;
+
   private _initialized = false;
 
   override firstUpdated() {
+    this.addEventListener('accordion-toggle', this._onItemToggle.bind(this) as EventListener);
+
+    // Listen for slotchange to initialize items
+    const slot = this.shadowRoot?.querySelector('slot:not([name])') as HTMLSlotElement | null;
+    slot?.addEventListener('slotchange', () => this._onSlotChange());
+  }
+
+  private _onSlotChange() {
+    this._propagateProperties();
     this._applyInitialOpenIndex();
-    this.addEventListener('toggle', this._onItemToggle.bind(this) as EventListener);
+  }
+
+  private _propagateProperties() {
+    const items = this._getAccordionItems();
+
+    for (const item of items) {
+      // Propagate marker-icon if set on accordion and not on item
+      if (this.markerIcon && !item.hasAttribute('marker-icon')) {
+        item.markerIcon = this.markerIcon;
+      }
+
+      // Propagate marker-position if set on accordion and not on item
+      if (this.markerPosition && !item.hasAttribute('marker-position')) {
+        item.markerPosition = this.markerPosition;
+      }
+    }
   }
 
   private _applyInitialOpenIndex() {
