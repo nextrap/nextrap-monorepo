@@ -1,0 +1,21 @@
+/* ShadowDOM Styles for ntl-accordion */
+
+:host {
+  display: block;
+  --accordion-border-color: var(--nt-border-color, #e5e7eb);
+  --accordion-border-radius: var(--nt-border-radius, 0.5rem);
+}
+
+.accordion {
+  border: 1px solid var(--accordion-border-color);
+  border-radius: var(--accordion-border-radius);
+  overflow: hidden;
+}
+
+::slotted(ntl-accordion-item:first-child) {
+  border-top: none;
+}
+
+::slotted(ntl-accordion-item:last-child) {
+  border-bottom: none;
+}

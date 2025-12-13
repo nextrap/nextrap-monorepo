@@ -1,0 +1,120 @@
+/* ShadowDOM Styles for ntl-accordion-item */
+
+:host {
+  display: block;
+  --accordion-border-color: var(--nt-border-color, #e5e7eb);
+  --accordion-header-padding: var(--nt-spacing-md, 1rem);
+  --accordion-content-padding: var(--nt-spacing-md, 1rem);
+  --accordion-transition-duration: 300ms;
+  --accordion-marker-size: 1.5rem;
+}
+
+details {
+  border-bottom: 1px solid var(--accordion-border-color);
+}
+
+summary {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: var(--accordion-header-padding);
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  &::marker {
+    display: none;
+    content: '';
+  }
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.title {
+  flex: 1;
+  font-weight: 500;
+}
+
+.marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--accordion-marker-size);
+  height: var(--accordion-marker-size);
+  flex-shrink: 0;
+  transition: transform var(--accordion-transition-duration) ease;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/* Marker position */
+:host([marker-position='start']) .summary {
+  flex-direction: row-reverse;
+}
+
+:host([marker-position='start']) .marker {
+  transform: rotate(-90deg);
+}
+
+/* Marker rotation when open */
+details[open] .marker {
+  transform: rotate(180deg);
+}
+
+:host([marker-position='start']) details[open] .marker {
+  transform: rotate(90deg);
+}
+
+/* Content animation using modern CSS */
+.content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition:
+    grid-template-rows var(--accordion-transition-duration) ease,
+    visibility var(--accordion-transition-duration);
+  transition-behavior: allow-discrete;
+  visibility: hidden;
+}
+
+.content-inner {
+  overflow: hidden;
+  padding-inline: var(--accordion-content-padding);
+}
+
+details[open] .content {
+  grid-template-rows: 1fr;
+  visibility: visible;
+
+  @starting-style {
+    grid-template-rows: 0fr;
+  }
+}
+
+details[open] .content-inner {
+  padding-block: var(--accordion-content-padding);
+}
+
+/* Hover states */
+summary:hover {
+  background-color: var(--nt-hover-bg, rgba(0, 0, 0, 0.02));
+}
+
+summary:focus-visible {
+  outline: 2px solid var(--nt-focus-ring-color, #3b82f6);
+  outline-offset: -2px;
+}
