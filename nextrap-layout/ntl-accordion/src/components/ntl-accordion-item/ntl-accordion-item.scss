@@ -1,0 +1,141 @@
+/* ShadowDOM Styles for ntl-accordion-item */
+
+:host {
+  display: block;
+  --border-color: var(--nt-border-color, #e5e7eb);
+  --background-color-heading: var(--nt-light-subtle);
+  --background-color-heading-hover: var(--nt-light);
+  --header-padding: var(--nt-spacing-md, 1rem);
+  --content-padding: var(--nt-spacing-md, 1rem);
+  --marker-size: 1.5rem;
+  --padding: 0.5rem 1rem;
+  interpolate-size: allow-keywords;
+}
+
+details {
+  border-bottom: 1px solid var(--border-color);
+  overflow: hidden;
+}
+details::details-content {
+  block-size: 0;
+  overflow: hidden;
+  transition:
+    block-size 0.5s,
+    content-visibility 0.5s;
+  transition-behavior: allow-discrete;
+
+  padding-inline: var(--content-padding);
+}
+details:open::details-content {
+  block-size: auto;
+}
+details * {
+  margin: 0;
+}
+summary {
+  display: flex;
+  align-items: center;
+  line-height: 1.3;
+  padding: var(--header-padding);
+  list-style-position: outside;
+  gap: 0.75rem;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+  background-color: var(--background-color-heading);
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  &::marker {
+    display: none;
+    content: '';
+  }
+  &:hover {
+    background-color: var(--background-color-heading-hover);
+  }
+}
+
+.content {
+  padding-block: 1rem;
+}
+.title {
+  flex: 1;
+  font-weight: 500;
+}
+
+/* Marker icon using CSS mask-image */
+.marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--marker-size);
+  height: var(--marker-size);
+  flex-shrink: 0;
+
+  &::before {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: currentColor;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    /* Default: Chevron icon */
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  }
+}
+
+/* Marker position */
+:host([marker-position='start']) .summary {
+  flex-direction: row-reverse;
+}
+
+/* :host([marker-position='start']) .marker {
+  transform: rotate(-90deg);
+} */
+
+/* Marker rotation when open */
+details[open] .marker {
+  transform: rotate(180deg);
+}
+
+/* :host([marker-position='start']) details[open] .marker {
+  transform: rotate(90deg);
+} */
+
+/* Plus/Minus marker variant */
+details.marker-plus .marker {
+  transition: none; /* No rotation for plus/minus */
+
+  &::before {
+    /* Plus icon */
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E");
+  }
+}
+
+details.marker-plus[open] .marker {
+  transform: none; /* Override rotation */
+
+  &::before {
+    /* Minus icon */
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14'/%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14'/%3E%3C/svg%3E");
+  }
+}
+
+:host([marker-position='start']) details.marker-plus .marker,
+:host([marker-position='start']) details.marker-plus[open] .marker {
+  transform: none;
+}
+
+summary:focus-visible {
+  outline: 2px solid var(--nt-focus-ring-color, #3b82f6);
+  outline-offset: -2px;
+}
