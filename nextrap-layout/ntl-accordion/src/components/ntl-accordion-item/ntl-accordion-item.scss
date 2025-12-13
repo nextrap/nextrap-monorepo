@@ -96,21 +96,21 @@ summary {
   flex-direction: row-reverse;
 }
 
-:host([marker-position='start']) .marker {
+/* :host([marker-position='start']) .marker {
   transform: rotate(-90deg);
-}
+} */
 
 /* Marker rotation when open */
 details[open] .marker {
   transform: rotate(180deg);
 }
 
-:host([marker-position='start']) details[open] .marker {
+/* :host([marker-position='start']) details[open] .marker {
   transform: rotate(90deg);
-}
+} */
 
 /* Plus/Minus marker variant */
-:host([marker-icon='plus']) .marker {
+details.marker-plus .marker {
   transition: none; /* No rotation for plus/minus */
 
   &::before {
@@ -120,7 +120,7 @@ details[open] .marker {
   }
 }
 
-:host([marker-icon='plus']) details[open] .marker {
+details.marker-plus[open] .marker {
   transform: none; /* Override rotation */
 
   &::before {
@@ -130,8 +130,8 @@ details[open] .marker {
   }
 }
 
-:host([marker-icon='plus'][marker-position='start']) .marker,
-:host([marker-icon='plus'][marker-position='start']) details[open] .marker {
+:host([marker-position='start']) details.marker-plus .marker,
+:host([marker-position='start']) details.marker-plus[open] .marker {
   transform: none;
 }
 

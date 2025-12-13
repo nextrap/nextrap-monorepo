@@ -66,8 +66,8 @@ export class NtlAccordionElement extends SubLayoutApplyMixin(LoggingMixin(LitEle
     const items = this._getAccordionItems();
 
     for (const item of items) {
-      // Propagate marker-icon if set on accordion and not on item
-      if (this.markerIcon && !item.hasAttribute('marker-icon')) {
+      // Always propagate marker-icon from accordion (no attribute check needed)
+      if (this.markerIcon) {
         item.markerIcon = this.markerIcon;
       }
 

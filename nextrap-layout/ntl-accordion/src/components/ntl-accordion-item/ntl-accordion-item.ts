@@ -16,8 +16,17 @@ export class NtlAccordionItemElement extends SubLayoutApplyMixin(LoggingMixin(Li
   @property({ type: String, reflect: true, attribute: 'marker-position' })
   public accessor markerPosition: 'start' | 'end' = 'end';
 
-  @property({ type: String, reflect: true, attribute: 'marker-icon' })
-  public accessor markerIcon: 'chevron' | 'plus' | null = null;
+  // Internal property set by parent or CSS variable, not exposed as attribute
+  private _markerIcon: 'chevron' | 'plus' | null = null;
+
+  get markerIcon(): 'chevron' | 'plus' | null {
+    return this._markerIcon;
+  }
+
+  set markerIcon(value: 'chevron' | 'plus' | null) {
+    this._markerIcon = value;
+    this.requestUpdate();
+  }
 
   private _detailsElement: HTMLDetailsElement | null = null;
 
@@ -26,15 +35,13 @@ export class NtlAccordionItemElement extends SubLayoutApplyMixin(LoggingMixin(Li
 
     // Delay reading marker-icon to ensure parent is fully initialized
     // This is needed because SubLayoutApplyMixin creates elements dynamically
-    if (!this.hasAttribute('marker-icon')) {
+    requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          if (!this.markerIcon) {
-            this._readMarkerIconFromHost();
-          }
-        });
+        if (!this._markerIcon) {
+          this._readMarkerIconFromHost();
+        }
       });
-    }
+    });
   }
 
   override firstUpdated() {
@@ -50,8 +57,7 @@ export class NtlAccordionItemElement extends SubLayoutApplyMixin(LoggingMixin(Li
   }
 
   private _onTitleSlotChange() {
-    // Skip if marker-icon is already set via attribute
-    if (this.hasAttribute('marker-icon')) return;
+    // Always check for CSS variable override from slotted elements
 
     const titleSlot = this.shadowRoot?.querySelector('slot[name="title"]') as HTMLSlotElement | null;
     const slottedElements = titleSlot?.assignedElements({ flatten: true }) ?? [];
@@ -87,7 +93,8 @@ export class NtlAccordionItemElement extends SubLayoutApplyMixin(LoggingMixin(Li
     }
 
     if (value) {
-      this.markerIcon = value;
+      this._markerIcon = value;
+      this.requestUpdate();
     }
   }
 
@@ -129,8 +136,10 @@ export class NtlAccordionItemElement extends SubLayoutApplyMixin(LoggingMixin(Li
   }
 
   override render() {
+    const markerClass = this._markerIcon === 'plus' ? 'marker-plus' : '';
+
     return html`
-      <details @toggle="${this._onToggle}">
+      <details @toggle="${this._onToggle}" class="${markerClass}">
         <summary class="summary" part="summary">
           <span class="title">
             <slot name="title" data-query=":scope > h1,h2,h3,h4,h5,h6"></slot>

@@ -64,9 +64,9 @@ Dieses Accordion verwendet Plus/Minus Icons statt Chevrons.
 Das Icon wechselt zwischen + und - beim Öffnen/Schließen.
 
 ### Chevron Override
-{: marker-icon="chevron"}
+{: style="--marker-icon: chevron"}
 
-Individuell auf Chevron zurückgesetzt via `marker-icon="chevron"` Attribut.
+Individuell auf Chevron zurückgesetzt via `style="--marker-icon: chevron"`.
 
 ---
 
