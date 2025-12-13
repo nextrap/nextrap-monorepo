@@ -7,21 +7,38 @@
   --gutter-y: var(--nt-gap);
 }
 
+:host([mode='desktop']) {
+  .flex.row {
+    flex-direction: row;
+    ::slotted(*) {
+      --cols: var(--default-cols);
+    }
+  }
+}
+
+:host([mode='mobile']) {
+  .flex.row {
+    flex-direction: column;
+    ::slotted(*) {
+      --cols: 12 !important;
+    }
+  }
+}
+
 .wrapper {
   max-width: var(--container-width);
   margin-right: auto;
   margin-left: auto;
 }
 
-.row {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: var(--gutter-y) var(--gutter-x);
-  slot {
-    display: contents;
-  }
+.flex.row {
+  display: flex;
+  flex-wrap: wrap;
+
+  justify-content: center;
+
+  gap: var(--gutter-y);
   ::slotted(*) {
-    --cols: var(--default-cols);
-    grid-column: span var(--cols, 3);
+    width: calc(100% / 12 * var(--cols, 1) - var(--gutter-x));
   }
 }
