@@ -4,43 +4,36 @@
     "sourceRoot": "nextrap-elements/nte-multiselect/src",
     "projectType": "library",
     "tags": ["type:element", "scope:nextrap"],
+    "release": {
+        "version": {
+            "currentVersionResolver": "disk",
+            "preserveLocalDependencyProtocols": false,
+            "manifestRootsToUpdate": ["{projectRoot}"]
+        }
+    },
     "targets": {
         "build": {
             "executor": "@nx/vite:build",
             "outputs": ["{options.outputPath}"],
+            "defaultConfiguration": "production",
             "options": {
                 "outputPath": "dist/nextrap-elements/nte-multiselect",
-                "configFile": "nextrap-elements/nte-multiselect/vite.config.ts"
-            }
-        },
-        "serve": {
-            "executor": "@nx/vite:dev-server",
-            "defaultConfiguration": "development",
-            "options": {
-                "buildTarget": "nte-multiselect:build",
                 "configFile": "nextrap-elements/nte-multiselect/vite.config.ts"
             },
             "configurations": {
                 "development": {
-                    "buildTarget": "nte-multiselect:build:development"
+                    "mode": "development"
                 },
                 "production": {
-                    "buildTarget": "nte-multiselect:build:production"
+                    "mode": "production"
                 }
             }
         },
-        "test": {
-            "executor": "@nx/vite:test",
-            "inputs": ["default", "^production"],
-            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+        "nx-release-publish": {
+            "executor": "@nx/js:release-publish",
             "options": {
-                "reportsDirectory": "../../coverage/nextrap-elements/nte-multiselect",
-                "coverage": true,
-                "configFile": "nextrap-elements/nte-multiselect/vite.config.ts"
+                "packageRoot": "dist/{projectRoot}"
             }
-        },
-        "lint": {
-            "executor": "@nx/eslint:lint"
         }
     }
 }
