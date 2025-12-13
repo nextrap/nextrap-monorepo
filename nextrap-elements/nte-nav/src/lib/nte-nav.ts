@@ -1,7 +1,6 @@
 import { isBiggerThanBreakpoint, waitForDomContentLoaded } from '@nextrap/nt-framework';
 import '@nextrap/nte-offcanvas';
 import { NteOffcanvas } from '@nextrap/nte-offcanvas';
-import { sleep } from '@trunkjs/browser-utils';
 import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import style from './nav.scss?inline';
@@ -120,31 +119,23 @@ export class NteNav extends LitElement {
 
     super.connectedCallback();
 
-    const updateTransferred = () => {
-      if (this.transferTo === '') {
-        this._isTransferred = false;
-        return;
-      }
-      if (this.breakpoint !== '') {
-        if (!isBiggerThanBreakpoint(this.breakpoint)) {
-          this._isTransferred = true;
-        } else {
-          this._isTransferred = false;
-        }
-      }
-    };
-
     if (this.mode === 'slave') {
       return;
     }
-
-    if (this.breakpoint !== '') {
-      updateTransferred();
-      window.addEventListener('breakpoint-changed', updateTransferred);
-      (async () => {
-        await sleep(1000);
-        updateTransferred();
-      })();
+    if (this.transferTo !== '') {
+      this._isTransferred = false;
+      if (this.breakpoint !== '') {
+        if (!isBiggerThanBreakpoint(this.breakpoint)) {
+          this._isTransferred = true;
+        }
+        window.addEventListener('breakpoint-changed', (event: Event) => {
+          if (isBiggerThanBreakpoint(this.breakpoint)) {
+            this._isTransferred = false;
+          } else {
+            this._isTransferred = true;
+          }
+        });
+      }
     }
   }
 }
