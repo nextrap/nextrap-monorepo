@@ -1,0 +1,39 @@
+{
+    "name": "nte-multiselect",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "nextrap-elements/nte-multiselect/src",
+    "projectType": "library",
+    "tags": ["type:element", "scope:nextrap"],
+    "release": {
+        "version": {
+            "currentVersionResolver": "disk",
+            "preserveLocalDependencyProtocols": false,
+            "manifestRootsToUpdate": ["{projectRoot}"]
+        }
+    },
+    "targets": {
+        "build": {
+            "executor": "@nx/vite:build",
+            "outputs": ["{options.outputPath}"],
+            "defaultConfiguration": "production",
+            "options": {
+                "outputPath": "dist/nextrap-elements/nte-multiselect",
+                "configFile": "nextrap-elements/nte-multiselect/vite.config.ts"
+            },
+            "configurations": {
+                "development": {
+                    "mode": "development"
+                },
+                "production": {
+                    "mode": "production"
+                }
+            }
+        },
+        "nx-release-publish": {
+            "executor": "@nx/js:release-publish",
+            "options": {
+                "packageRoot": "dist/{projectRoot}"
+            }
+        }
+    }
+}
