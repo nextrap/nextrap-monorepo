@@ -1,7 +1,387 @@
 /**
- * This file contains LightDOM Styles
+ * This file contains LightDOM Styles for nte-demo-viewer
  */
 
 nte-demo-viewer {
-  /* Put styles here */
+  // CSS Custom Properties for theming
+  --nte-fab-size: 56px;
+  --nte-fab-bg: var(--nt-primary);
+  --nte-fab-bg-hover: var(--nt-primary-emphasis);
+  --nte-fab-color: var(--text-on-primary);
+  --nte-fab-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --nte-fab-z-index: 10000;
+
+  --nte-menu-width: 300px;
+  --nte-menu-bg: var(--nt-light);
+  --nte-menu-border: var(--nt-light-emphasis);
+  --nte-menu-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  --nte-menu-border-radius: 12px;
+  --nte-menu-item-color: var(--nt-secondary-emphasis);
+  --nte-menu-item-hover-bg: var(--nt-primary-subtle);
+  --nte-menu-item-active-bg: var(--nt-primary);
+  --nte-menu-item-active-color: var(--nt-text-on-primary);
+
+  --nte-badge-bg: var(--nt-warning);
+  --nte-badge-color: var(--nt-text-on-warning);
+
+  --nte-backdrop-bg: rgba(0, 0, 0, 0.1);
+
+  --nte-code-bg: var(--nt-dark);
+  --nte-code-color: var(--nt-text-on-dark);
+  --nte-code-header-bg: var(--nt-dark-emphasis);
+  --nte-code-border: var(--nt-dark-emphasis);
+  --nte-code-font: 'Consolas', 'Monaco', 'Courier New', monospace;
+
+  display: block;
+
+  // Hide demo configuration elements
+  demo {
+    display: none;
+  }
+}
+
+// Floating Action Button
+.nte-fab {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: var(--nte-fab-size);
+  height: var(--nte-fab-size);
+  border-radius: 50%;
+  background: var(--nte-fab-bg);
+  color: var(--nte-fab-color);
+  border: none;
+  box-shadow: var(--nte-fab-shadow);
+  cursor: pointer;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--nte-fab-z-index);
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+
+  &:hover {
+    background: var(--nte-fab-bg-hover);
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+// Badge on FAB
+.nte-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--nte-badge-bg);
+  color: var(--nte-badge-color);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 20px;
+  text-align: center;
+}
+
+// Menu
+.nte-menu {
+  position: fixed;
+  bottom: calc(var(--nte-fab-size) + 3rem);
+  right: 2rem;
+  width: var(--nte-menu-width);
+  background: var(--nte-menu-bg);
+  border-radius: var(--nte-menu-border-radius);
+  box-shadow: var(--nte-menu-shadow);
+  z-index: calc(var(--nte-fab-z-index) + 1);
+  overflow: hidden;
+  animation: nte-menu-appear 0.2s ease;
+}
+
+@keyframes nte-menu-appear {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.nte-menu-header {
+  padding: 1rem 1.25rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border-bottom: 1px solid var(--nte-menu-border);
+  background: var(--nte-menu-bg);
+  color: var(--nte-menu-item-color);
+}
+
+.nte-menu-item {
+  width: 100%;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  background: var(--nte-menu-bg);
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--nte-menu-item-color);
+  transition: background 0.15s ease;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #f3f4f6;
+  }
+
+  &:hover {
+    background: var(--nte-menu-item-hover-bg);
+  }
+
+  &.active {
+    background: var(--nte-menu-item-active-bg);
+    color: var(--nte-menu-item-active-color);
+
+    .nte-menu-item-title {
+      font-weight: 500;
+    }
+  }
+}
+
+.nte-menu-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.nte-menu-item-title {
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.nte-menu-item-description {
+  font-size: 0.75rem;
+  color: #6b7280;
+  line-height: 1.4;
+
+  .active & {
+    color: var(--nte-menu-item-active-color);
+    opacity: 0.8;
+  }
+}
+
+.nte-menu-item-check {
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+// Backdrop
+.nte-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--nte-backdrop-bg);
+  z-index: calc(var(--nte-fab-z-index) - 1);
+  animation: nte-fade-in 0.15s ease;
+}
+
+@keyframes nte-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// ============================================
+// Split View & Code Editor Styles
+// ============================================
+
+/* nte-demo-viewer {
+  --nte-code-bg: ;
+  --nte-code-color: #d4d4d4;
+  --nte-code-header-bg: #252526;
+  --nte-code-border: #333;
+  --nte-code-font: 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+ */
+// Container
+.nte-container {
+  display: block;
+  min-height: 100vh;
+  transition: padding-right 0.3s ease;
+}
+
+// Split View Mode
+.nte-split-view {
+  .nte-demo-content {
+    margin-right: 50%;
+    transition: margin-right 0.3s ease;
+
+    @media (max-width: 1024px) {
+      margin-right: 0;
+      margin-bottom: 50vh;
+    }
+  }
+}
+
+// Demo Content Area
+.nte-demo-content {
+  /*  padding: 2rem; */
+  transition: margin 0.3s ease;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+}
+
+// Code Panel
+.nte-code-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--nte-code-bg);
+  border-left: 1px solid var(--nte-code-border);
+  z-index: 100;
+  animation: nte-slide-in 0.3s ease;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+    height: 50vh;
+    top: auto;
+    bottom: 0;
+    border-left: none;
+    border-top: 1px solid var(--nte-code-border);
+  }
+}
+
+@keyframes nte-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Code Header
+.nte-code-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--nte-code-header-bg);
+  border-bottom: 1px solid var(--nte-code-border);
+  color: var(--nte-code-color);
+  font-size: 0.875rem;
+}
+
+.nte-code-title {
+  font-weight: 600;
+  color: #fff;
+}
+
+.nte-code-file {
+  flex: 1;
+  color: var(--nt-primary-subtle);
+  font-size: 0.8125rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nte-code-close {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: var(--nt-primary);
+  color: var(--nt-text-on-primary);
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: var(--nt-primary-emphasis);
+    color: var(--nt-text-on-primary);
+  }
+}
+
+// Code Editor Textarea
+.nte-code-editor {
+  flex: 1;
+  padding: 1rem;
+  background: var(--nte-code-bg);
+  color: var(--nte-code-color);
+  border: none;
+  outline: none;
+  font-family: var(--nte-code-font);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  resize: none;
+  tab-size: 2;
+
+  &:focus {
+    outline: none;
+  }
+
+  &::placeholder {
+    color: #5a5a5a;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+// Code Toggle Button in Menu Header
+.nte-menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nte-code-toggle {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #d1d5db;
+  background: transparent;
+  color: #6b7280;
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: #e5e7eb;
+    border-color: #9ca3af;
+    color: #374151;
+  }
+
+  &.active {
+    background: var(--nte-fab-bg);
+    border-color: var(--nte-fab-bg);
+    color: white;
+  }
 }
