@@ -44,8 +44,8 @@ export class NteDemoViewerElement extends LitElement {
   accessor readme: string = '';
 
   /** Title for the welcome screen */
-  @property({ type: String })
-  accessor title: string = 'Component Demos';
+  @property({ type: String, attribute: 'welcome-title' })
+  accessor welcomeTitle: string = 'Component Demos';
 
   @state()
   private accessor _demos: DemoConfig[] = [];
@@ -353,7 +353,7 @@ export class NteDemoViewerElement extends LitElement {
     return html`
       <div class="nte-welcome">
         <header class="nte-welcome-header">
-          <h1 class="nte-welcome-title">${this.title}</h1>
+          <h1 class="nte-welcome-title">${this.welcomeTitle}</h1>
           ${this.readme
             ? html`
                 <button class="nte-readme-link" @click="${this._showReadme}">
