@@ -33,8 +33,8 @@ Container-Komponente für das Accordion-Layout.
 | -------------------- | -------------------- | ------------------------------------------------- | ----------- |
 | `exclusive`          | boolean              | Nur ein Item kann gleichzeitig geöffnet sein      | `false`     |
 | `initial-open-index` | number               | Index des initial geöffneten Items (0-basiert)    | `undefined` |
-| `marker-icon`        | `'chevron'` \| `'plus'` | Icon-Typ für alle Items                        | `'chevron'` |
-| `marker-position`    | `'start'` \| `'end'` | Position des Markers (links oder rechts)          | `'end'`     |
+| `marker-icon`        | `'chevron'` `'plus'` | Icon-Typ für alle Items                        | `'chevron'` |
+| `marker-position`    | `'start'`  `'end'` | Position des Markers (links oder rechts)          | `'end'`     |
 
 ## ntl-accordion-item
 
@@ -43,7 +43,7 @@ Einzelnes Accordion-Item (wird automatisch aus `###`-Überschriften generiert).
 | Attribut          | Typ                  | Beschreibung                              | Default     |
 | ----------------- | -------------------- | ----------------------------------------- | ----------- |
 | `open`            | boolean              | Ob das Item geöffnet ist                  | `false`     |
-| `marker-position` | `'start'` \| `'end'` | Position des Markers (überschreibt Parent)| `'end'`     |
+| `marker-position` | `'start'` `'end'` | Position des Markers (überschreibt Parent)| `'end'`     |
 
 ## Beispiele
 
