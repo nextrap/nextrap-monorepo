@@ -1,4 +1,4 @@
-import { html, LitElement, unsafeCSS } from 'lit';
+import { html, LitElement, unsafeCSS, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import componentStyles from './nte-image.scss?inline';
 import type { SlideShowConfig } from './nte-image.types';
@@ -251,12 +251,6 @@ export class NteImage extends LitElement {
   constructor() {
     super();
     this._instanceId = `nte-image-${Math.random().toString(36).substring(2, 11)}`;
-    if (!this.style.width) {
-      this.style.width = '100%';
-    }
-    if (!this.style.height) {
-      this.style.height = '100%';
-    }
   }
 
   /**
@@ -277,6 +271,14 @@ export class NteImage extends LitElement {
   override connectedCallback() {
     super.connectedCallback();
     this.debugLog('Component connected to DOM');
+
+    // Set default styles if not specified
+    if (!this.style.width) {
+      this.style.width = '100%';
+    }
+    if (!this.style.height) {
+      this.style.height = '100%';
+    }
 
     // Initialize arrays and objects to ensure they exist
     this.childDataCrop = [];
@@ -478,8 +480,7 @@ export class NteImage extends LitElement {
    */
   override render() {
     return html`
-      <div class="image-container">
-        <slot @slotchange=${this.handleSlotChange}></slot>
+      <div class="nte-image-root" part="root">
         ${this.slidesShowConfig.showArrows && this.slidesShowConfig.enabled && !this.isMobileDevice
           ? html`
               <div class="navigation-arrows">
@@ -487,20 +488,23 @@ export class NteImage extends LitElement {
                 <button class="arrow-button next" @click=${this.nextSlide}>&gt;</button>
               </div>
             `
-          : ''}
+          : nothing}
         ${this.slidesShowConfig.showIndicators && this.slidesShowConfig.enabled
           ? html` <div class="indicators">${this.renderIndicators()}</div> `
-          : ''}
-        ${this.slidesShowConfig.enabled && this.isPaused
-          ? html`
-              <div class="pause-indicator">
-                <div class="pause-icon"></div>
-              </div>
-            `
-          : ''}
-      </div>
-      <div class="caption-container">
-        <div class="caption">${this.currentCaption || ''}</div>
+          : nothing}
+        <div class="image-container">
+          <slot @slotchange=${this.handleSlotChange}></slot>
+          ${this.slidesShowConfig.enabled && this.isPaused
+            ? html`
+                <div class="pause-indicator">
+                  <div class="pause-icon"></div>
+                </div>
+              `
+            : nothing}
+        </div>
+        <div class="caption-container">
+          <div class="caption">${this.currentCaption || ''}</div>
+        </div>
       </div>
     `;
   }
@@ -938,7 +942,6 @@ export class NteImage extends LitElement {
    */
   cropImages() {
     const children = Array.from(this.children) as HTMLElement[];
-
     children.forEach((child, index) => {
       if (!(child instanceof HTMLImageElement)) {
         return;
@@ -964,19 +967,17 @@ export class NteImage extends LitElement {
    */
   renderIndicators() {
     const images = Array.from(this.querySelectorAll('img'));
+    if (images.length === 0) {
+      return nothing;
+    }
     return images.map((_, index) => {
       const isActive = index === this.getCurrentSlideIndex();
       return html`
         <div class="indicator-container">
           <div class="indicator ${isActive ? 'active' : ''}" @click=${() => this.goToSlide(index)}>
             ${isActive
-              ? html`
-                  <div
-                    class="progress-bar ${this.isPaused ? 'paused' : ''}"
-                    style="width: ${this.slideProgress}%"
-                  ></div>
-                `
-              : ''}
+              ? html`<div class="progress-bar ${this.isPaused ? 'paused' : ''}" style="width: ${this.slideProgress}%"></div>`
+              : nothing}
           </div>
         </div>
       `;
