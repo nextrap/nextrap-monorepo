@@ -23,7 +23,6 @@ import style from './ntl-hero.scss?inline';
  * @csspart slider - Inner slider container.
  *
  * @cssprop --ntl-hero-bg-color - Background color of the hero if no `bg` slot content is provided. Defaults to `var(--nt-body, #e4e6ef)`.
- * @cssprop --ntl-hero-max-height - Maximum height of the hero container. Defaults to `950px`.
  * @cssprop --ntl-hero-shell-max-width - Maximum width of the inner hero shell. Defaults to `1200px`.
  * @cssprop --ntl-hero-content-max-width - Maximum width of the centered content block. Defaults to `940px`.
  * @cssprop --ntl-hero-slider-max-height - Maximum height of the framed slider area. Defaults to `560px`.

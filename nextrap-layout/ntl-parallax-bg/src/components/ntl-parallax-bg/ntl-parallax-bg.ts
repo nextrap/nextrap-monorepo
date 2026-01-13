@@ -1,4 +1,4 @@
-import { EventBindingsMixin, Listen, LoggingMixin } from '@trunkjs/browser-utils';
+import { LoggingMixin } from '@trunkjs/browser-utils';
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
@@ -9,7 +9,7 @@ import { resetStyle } from '@nextrap/style-reset';
 import style from './ntl-parallax-bg.scss?inline';
 
 @customElement('ntl-parallax-bg')
-export class NtlParallaxBg extends EventBindingsMixin(LoggingMixin(LitElement)) {
+export class NtlParallaxBg extends LoggingMixin(LitElement) {
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
   @property({ type: String })
@@ -25,20 +25,68 @@ export class NtlParallaxBg extends EventBindingsMixin(LoggingMixin(LitElement)) 
   public accessor backgroundColor = 'transparent';
 
   // Listen to window scroll events for parallax effect
-  @Listen('scroll', { target: 'window', options: { passive: true } })
-  private onScroll() {
+  private onScroll = () => {
     const scrolled = window.scrollY;
     const rect = this.getBoundingClientRect();
     const elementTop = rect.top + scrolled;
-    const elementBottom = elementTop + rect.height;
 
-    // Only apply parallax when element is in viewport
-    if (scrolled + window.innerHeight > elementTop && scrolled < elementBottom) {
-      const parallaxOffset = (scrolled - elementTop) * 0.5;
-      const container = this.shadowRoot?.querySelector('.parallax-container') as HTMLElement;
-      if (container) {
-        container.style.transform = `translateY(${parallaxOffset}px)`;
+    // Calculate and apply parallax offset (negative to move up as you scroll down)
+    const parallaxOffset = (scrolled - elementTop) * -0.3;
+    const container = this.shadowRoot?.querySelector('.parallax-container') as HTMLElement;
+    if (container) {
+      container.style.transform = `translateY(${parallaxOffset}px)`;
+    }
+  };
+
+  override connectedCallback() {
+    super.connectedCallback();
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+    this.updateComplete.then(() => {
+      this.setupSlotObserver();
+      this.extractImageFromSlot();
+      // Initialize parallax position on load
+      this.onScroll();
+    });
+  }
+
+  override disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('scroll', this.onScroll);
+  }
+
+  private setupSlotObserver() {
+    const slot = this.shadowRoot?.querySelector('slot');
+    if (slot) {
+      slot.addEventListener('slotchange', () => {
+        this.extractImageFromSlot();
+      });
+    }
+  }
+
+  private extractImageFromSlot() {
+    const slot = this.shadowRoot?.querySelector('slot') as HTMLSlotElement;
+    if (!slot) {
+      return;
+    }
+
+    const assignedElements = slot.assignedElements();
+    let foundImage = false;
+    assignedElements.forEach((element) => {
+      if (element instanceof HTMLElement) {
+        // Extract image source from slotted element
+        const imgSrc = element.getAttribute('src') || element.querySelector('img')?.getAttribute('src');
+        if (imgSrc && imgSrc !== this.image) {
+          this.image = imgSrc;
+          foundImage = true;
+        }
+        // Hide the slotted element since we're using it as background
+        element.style.display = 'none';
       }
+    });
+    
+    // Trigger re-render if we found a new image
+    if (foundImage) {
+      this.requestUpdate();
     }
   }
 
@@ -50,8 +98,9 @@ export class NtlParallaxBg extends EventBindingsMixin(LoggingMixin(LitElement)) 
       >
         <div
           class="parallax-container"
-          style="background-image: url('${this.image}'); background-size: auto; background-position: center;"
+          style="background-image: url('${this.image}')"
         ></div>
+        <slot></slot>
       </div>
     `;
   }

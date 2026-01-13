@@ -7,11 +7,10 @@
   width: 100%;
 
   /* Design tokens / CSS custom properties */
-  --ntl-hero-bg-color: var(--nt-body, #e4e6ef);
-  --ntl-hero-max-height: 950px;
+  --ntl-hero-bg-color: var(--nt-body-teritary, #e4e6ef);
   --ntl-hero-shell-max-width: 1200px;
-  --ntl-hero-content-max-width: 940px;
-  --ntl-hero-slider-max-height: auto;
+  --ntl-hero-content-max-width: 1040px;
+  --ntl-hero-slider-max-height: 560px;
   --ntl-hero-outer-radius: 30px;
   --ntl-hero-inner-radius: 20px;
   --ntl-hero-height-offset: 0px; /* e.g. 80px, 10vh */
@@ -25,10 +24,11 @@
 }
 
 .hero-root {
+  margin-bottom: calc(var(--ntl-hero-slider-offset) * 1.5);
   position: relative;
   width: 100%;
   min-height: calc(100vh - var(--ntl-hero-height-offset, 0px));
-  max-height: var(--ntl-hero-max-height);
+  /* max-height: calc(100vh - var(--ntl-hero-height-offset, 0px)); TODO: Check how to make it max 100vh in combination with the image component*/
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -64,6 +64,7 @@
   justify-content: center;
   pointer-events: none;
   overflow: hidden;
+  background-color: var(--ntl-hero-bg-color);
 }
 
 .hero-background::slotted(*) {
@@ -113,7 +114,6 @@
 
 .hero-slider-frame {
   position: relative;
-  height: var(--ntl-hero-slider-max-height);
   max-height: var(--ntl-hero-slider-max-height);
   width: 100%;
   overflow: hidden;
@@ -121,12 +121,11 @@
   align-items: center;
   justify-content: center;
   border-radius: var(--ntl-hero-inner-radius);
-  background-color: #ffffff;
 }
 
 .hero-slider {
   width: 100%;
-  height: 100%;
+  height: -webkit-fill-available;
 }
 
 .hero-slider::slotted(*) {
