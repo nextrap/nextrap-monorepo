@@ -20,7 +20,7 @@ export class NtlCardRowElementElement extends BreakPointMixin(SubLayoutApplyMixi
 
   override render() {
     return html`
-      <nte-card>
+      <nte-card exportparts="card, body, header, image, footer">
         <slot slot="header" name="header" data-query=":scope > .header | :scope > h2,h3:not(.keep),h4,h5,h6:not(.keep)"
         <slot slot="image" name="image" data-query=":scope > .image | :scope > img:not(.keep)"></slot>
         <slot></slot>

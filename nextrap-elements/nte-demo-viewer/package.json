@@ -5,6 +5,8 @@
     "dependencies": {
         "@nextrap/style-reset": "^1.0.0",
         "@trunkjs/browser-utils": "^1.0.12",
+        "@trunkjs/content-pane": "^1.0.18",
+        "@trunkjs/markdown-loader": "^1.0.0",
         "lit": "^3.3.1"
     },
     "devDependencies": {

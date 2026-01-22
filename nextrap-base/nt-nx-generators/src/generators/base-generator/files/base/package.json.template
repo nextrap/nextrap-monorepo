@@ -9,7 +9,8 @@
     },
     "devDependencies": {
         "@nextrap/style-base": "^1.0.0",
-        "@nextrap/style-utils": "^1.0.0"
+        "@nextrap/style-utils": "^1.0.0",
+        "@nextrap/nte-demo-viewer": "^1.0.0"
     },
     "type": "module",
     "types": "./index.d.ts",

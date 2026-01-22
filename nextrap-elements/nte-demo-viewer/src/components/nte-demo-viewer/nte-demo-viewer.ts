@@ -1,6 +1,9 @@
 import { html, LitElement, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
+import '@trunkjs/content-pane';
+import '@trunkjs/markdown-loader';
+
 /**
  * Demo configuration parsed from <demo> child elements
  */

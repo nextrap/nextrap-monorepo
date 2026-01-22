@@ -27,7 +27,8 @@ content 4
 Hello World
 
 ### Col 1
-{: slot=""}
+
+
 
 Text
 
