@@ -2,18 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Error</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ntl-accordion Demos</title>
   </head>
   <body>
-    <h1>Error: 404 Not found</h1>
-    <p>The requested URL was not found on this server.</p>
-
-    <nte-demo-viewer>
-      <demo name="base" src="/demo/base.md">Beschreibung</demo>
-      <demo name="base2" src="/demo/base2.md"></demo>
-      <demo name="base2" src="/demo/base2.md"></demo>
+    <nte-demo-viewer welcome-title="ntl-accordion" readme="/README.md">
+      <demo title="Allgemeine Demo" description="Grundlegende Accordion-Funktionalität" src="/demo/base.md"></demo>
+      <demo title="Exclusive Accordion" description="Nur ein Element kann geöffnet werden" src="/demo/base2.md"></demo>
+      <demo
+        title="Marker Links"
+        description="Die Buttons auf der linken Seite positioniert"
+        src="/demo/base3.md"
+      ></demo>
+      <demo
+        title="Accordion mit Plus/Minus Icons"
+        description="Einsatz von unterschiedlichen Icons"
+        src="/demo/base4.md"
+      ></demo>
     </nte-demo-viewer>
 
-    <a href="/demo/index.html">Got to /demo/index.html</a>
+    <script src="/demo/main.js" type="module"></script>
   </body>
 </html>

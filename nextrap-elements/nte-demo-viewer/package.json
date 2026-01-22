@@ -1,16 +1,17 @@
 {
-    "name": "@nextrap/<%= name %>",
+    "name": "@nextrap/nte-demo-viewer",
     "version": "1.0.0",
     "main": "./index.js",
     "dependencies": {
-        "@trunkjs/browser-utils": "^1.0.12",
         "@nextrap/style-reset": "^1.0.0",
+        "@trunkjs/browser-utils": "^1.0.12",
+        "@trunkjs/content-pane": "^1.0.18",
+        "@trunkjs/markdown-loader": "^1.0.0",
         "lit": "^3.3.1"
     },
     "devDependencies": {
         "@nextrap/style-base": "^1.0.0",
-        "@nextrap/style-utils": "^1.0.0",
-        "@nextrap/nte-demo-viewer": "^1.0.0"
+        "@nextrap/style-utils": "^1.0.0"
     },
     "type": "module",
     "types": "./index.d.ts",

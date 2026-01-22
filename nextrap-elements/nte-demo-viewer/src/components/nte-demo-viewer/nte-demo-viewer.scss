@@ -1,0 +1,12 @@
+/**
+ * Shadow DOM Styles for nte-demo-viewer
+ * 
+ * Note: This component uses Light DOM (createRenderRoot returns this),
+ * so these styles are NOT applied. All styles are in src/styles/index.scss.
+ * 
+ * This file is kept for potential future use if Shadow DOM is needed.
+ */
+
+:host {
+  display: block;
+}

@@ -1,2 +1,4 @@
+import '@nextrap/nte-demo-viewer';
 import '@nextrap/style-base';
-import '../src/index.ts';
+import '../index.ts';
+import './main.scss';
