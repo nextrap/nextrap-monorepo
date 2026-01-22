@@ -6,7 +6,7 @@
   --border-radius: var(--nt-border-radius);
 }
 
-::part(wrapper) {
+#wrapper {
   border: var(--nt-border-width) solid var(--border-color);
   border-radius: var(--border-radius);
   background-color: var(--background-color);
@@ -14,11 +14,11 @@
   flex-direction: column;
 }
 
-::part(header) {
+#header {
   order: 2;
 }
 
-::part(image) {
+#image {
   order: 1;
   width: 100%;
 }
@@ -27,7 +27,10 @@
   display: contents;
 }
 
-::part(content) {
+#image:has(slot:empty) {
+  display: none;
+}
+
+#content {
   order: 50;
-  flex-grow: 1;
 }

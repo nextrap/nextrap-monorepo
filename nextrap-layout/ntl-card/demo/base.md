@@ -24,3 +24,18 @@ Style: --ascpect-ratio 16/9
 ![Bild1](https://picsum.photos/200/400)
 
 Text
+
+### img-overlay
+{: layout="ntl-card.col-3.img-overlay" }
+
+![Bild1](https://picsum.photos/200/400)
+
+Lorem ipsum dolor sit amet
+
+## Variants 2
+{: layout=".row"}
+
+### Card without image
+{: layout="ntl-card.col-3"}
+
+Test
