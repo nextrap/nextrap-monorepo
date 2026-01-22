@@ -12,3 +12,7 @@ ntl-card-row {
     z-index: 1;
   }
 }
+
+ntl-card-row-element::part(header) {
+  background-color: red !important;
+}

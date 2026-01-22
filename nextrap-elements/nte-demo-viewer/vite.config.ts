@@ -5,8 +5,8 @@ import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
-const projectName = '<%= name %>';
-const dirName = `<%= path %>`;
+const projectName = 'nte-demo-viewer';
+const dirName = `nextrap-elements/nte-demo-viewer`;
 
 export default defineConfig(() => ({
   server: {
@@ -19,19 +19,7 @@ export default defineConfig(() => ({
   plugins: [
     nxViteTsPaths(),
     nxCopyAssetsPlugin(['*.md']),
-    {
-      name: 'watch-md-reload',
-      handleHotUpdate({ file, server }) {
-        if (file.endsWith('.md')) {
-          server.ws.send({ type: 'full-reload' });
-        }
-      }
-    },
-    dts({
-      entryRoot: 'src',
-      aliasesExclude: [/@nextrap\/.*/],
-      tsconfigPath: path.join(__dirname, 'tsconfig.lib.json')
-    }),
+    dts({ entryRoot: 'src', tsconfigPath: path.join(__dirname, 'tsconfig.lib.json') }),
   ],
   // Uncomment this if you are using workers.
   // worker: {
