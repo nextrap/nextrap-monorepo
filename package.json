@@ -53,7 +53,8 @@
     "workspaces": [
         "nextrap-base/*",
         "nextrap-elements/*",
-        "nextrap-layout/*"
+        "nextrap-layout/*",
+        "workspaces/trunkjs-monorepo/packages/*"
     ],
     "nx": {
         "includedScripts": []
