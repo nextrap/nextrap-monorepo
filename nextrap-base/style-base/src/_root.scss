@@ -2,14 +2,22 @@
 @use 'sass:math';
 @use 'sass:color';
 
-@function luminance($color) {
-  $r: math.div(color.red($color), 255);
-  $g: math.div(color.green($color), 255);
-  $b: math.div(color.blue($color), 255);
+@function _linear-channel($c) {
+  @if $c < 0.03928 {
+    @return math.div($c, 12.92);
+  }
 
-  $r: if($r < 0.03928, math.div($r, 12.92), pow(math.div(($r + 0.055), 1.055), 2.4));
-  $g: if($g < 0.03928, math.div($g, 12.92), pow(math.div(($g + 0.055), 1.055), 2.4));
-  $b: if($b < 0.03928, math.div($b, 12.92), pow(math.div(($b + 0.055), 1.055), 2.4));
+  @return math.pow(math.div($c + 0.055, 1.055), 2.4);
+}
+
+@function luminance($color) {
+  $r: math.div(color.channel($color, 'red', $space: rgb), 255);
+  $g: math.div(color.channel($color, 'green', $space: rgb), 255);
+  $b: math.div(color.channel($color, 'blue', $space: rgb), 255);
+
+  $r: _linear-channel($r);
+  $g: _linear-channel($g);
+  $b: _linear-channel($b);
 
   @return $r * 0.2126 + $g * 0.7152 + $b * 0.0722;
 }
@@ -17,24 +25,39 @@
 @function contrast($color1, $color2) {
   $l1: luminance($color1) + 0.05;
   $l2: luminance($color2) + 0.05;
-  @return if($l1 > $l2, math.div($l1, $l2), math.div($l2, $l1));
+
+  @if $l1 > $l2 {
+    @return math.div($l1, $l2);
+  } @else {
+    @return math.div($l2, $l1);
+  }
+}
+
+/// Return an accessible text color for a background color.
+/// Usage: text-on($bg) or text-on($bg, $fallback)
+@function text-on($bg, $fallback: $white) {
+  @if contrast($bg, $text) > 4.5 {
+    @return $text;
+  } @else {
+    @return $fallback;
+  }
 }
 
 $text: $black !default;
-$text-on-primary: $white !default;
-// Calculate if contrast is needed
-$text-on-primary: if(contrast($primary, $text) > 4.5, $text, $white) !default;
-$text-on-secondary: if(contrast($secondary, $text) > 4.5, $text, $white) !default;
 
-$text-on-accent: if(contrast($accent, $text) > 4.5, $text, $white) !default;
-$text-on-success: if(contrast($success, $text) > 4.5, $text, $white) !default;
-$text-on-info: if(contrast($info, $text) > 4.5, $text, $white) !default;
-$text-on-warning: if(contrast($warning, $text) > 4.5, $text, $white) !default;
-$text-on-danger: if(contrast($danger, $text) > 4.5, $text, $white) !default;
-$text-on-light: if(contrast($light, $text) > 4.5, $text, $black) !default;
-$text-on-dark: if(contrast($dark, $text) > 4.5, $text, $white) !default;
-$text-on-white: if(contrast($white, $text) > 4.5, $text, $black) !default;
-$text-on-black: if(contrast($black, $text) > 4.5, $text, $white) !default;
+// Calculate if contrast is needed (use helper to avoid deprecated if())
+$text-on-primary: text-on($primary) !default;
+$text-on-secondary: text-on($secondary) !default;
+
+$text-on-accent: text-on($accent) !default;
+$text-on-success: text-on($success) !default;
+$text-on-info: text-on($info) !default;
+$text-on-warning: text-on($warning) !default;
+$text-on-danger: text-on($danger) !default;
+$text-on-light: text-on($light, $black) !default;
+$text-on-dark: text-on($dark) !default;
+$text-on-white: text-on($white, $black) !default;
+$text-on-black: text-on($black) !default;
 $background: $white !default;
 
 // Register the css variables

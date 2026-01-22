@@ -1,37 +1,45 @@
-
-
 // Border base
 .border {
   --border-width: var(--nt-border-width, 1px);
   --border-style: solid;
   --border-color: var(--nt-primary);
-  border: var(--border-width) var(--border-style) var(--border-color) !important
+  border: var(--border-width) var(--border-style) var(--border-color) !important;
 }
 
 // Sides
 .border-top {
   border-top: var(--nt-border-width) solid
-  rgb(from var(--border-color, var(--nt-dark)) r g b / var(--border-opacity, 1)) !important;
+    rgb(from var(--border-color, var(--nt-dark)) r g b / var(--border-opacity, 1)) !important;
 }
 .border-end {
   border-inline-end: var(--nt-border-width) solid
-  rgb(from var(--border-color, var(--nt-dark)) r g b / var(--border-opacity, 1)) !important;
+    rgb(from var(--border-color, var(--nt-dark)) r g b / var(--border-opacity, 1)) !important;
 }
 .border-bottom {
   border-bottom: var(--nt-border-width) solid
-  rgb(from var(--border-color, var(--nt-dark)) r g b / var(--border-opacity, 1)) !important;
+    rgb(from var(--border-color, var(--nt-dark)) r g b / var(--border-opacity, 1)) !important;
 }
 .border-start {
   border-inline-start: var(--nt-border-width) solid
-  rgb(from var(--border-color, var(--nt-dark)) r g b / var(--border-opacity, 1)) !important;
+    rgb(from var(--border-color, var(--nt-dark)) r g b / var(--border-opacity, 1)) !important;
 }
 
 // Remove
-.border-0 { border: 0 !important; }
-.border-top-0 { border-top: 0 !important; }
-.border-end-0 { border-inline-end: 0 !important; }
-.border-bottom-0 { border-bottom: 0 !important; }
-.border-start-0 { border-inline-start: 0 !important; }
+.border-0 {
+  border: 0 !important;
+}
+.border-top-0 {
+  border-top: 0 !important;
+}
+.border-end-0 {
+  border-inline-end: 0 !important;
+}
+.border-bottom-0 {
+  border-bottom: 0 !important;
+}
+.border-start-0 {
+  border-inline-start: 0 !important;
+}
 
 // Widths
 $border-widths: (
@@ -39,7 +47,7 @@ $border-widths: (
   2: 2px,
   3: 3px,
   4: 4px,
-  5: 5px
+  5: 5px,
 );
 
 @each $n, $w in $border-widths {
@@ -59,8 +67,8 @@ $border-colors: (
   danger: var(--nt-danger),
   light: var(--nt-light),
   dark: var(--nt-dark),
-  white: var(--nt-white),
-  black: var(--nt-black)
+  'white': var(--nt-white),
+  'black': var(--nt-black),
 );
 
 @each $name, $val in $border-colors {
@@ -70,7 +78,13 @@ $border-colors: (
 }
 
 // Opacity
-$border-opacities: (10: .1, 25: .25, 50: .5, 75: .75, 100: 1);
+$border-opacities: (
+  10: 0.1,
+  25: 0.25,
+  50: 0.5,
+  75: 0.75,
+  100: 1,
+);
 
 @each $step, $alpha in $border-opacities {
   .border-opacity-#{$step} {
@@ -83,17 +97,24 @@ $border-opacities: (10: .1, 25: .25, 50: .5, 75: .75, 100: 1);
 // Default based on --nt-border-radius
 // ====================================
 $radius-map: (
-  null: 1, // default (multiplier 1x)
+  null: 1,
+  // default (multiplier 1x)
   0: 0,
-  1: .25,
-  2: .5,
+  1: 0.25,
+  2: 0.5,
   3: 1,
   4: 1.5,
-  5: 3
+  5: 3,
 );
 
 @each $suffix, $mult in $radius-map {
-  $class: if($suffix == null, "", "-#{$suffix}");
+  // Sass `if()` ist hier deprecated (kollidiert mit moderner CSS `if()`-Syntax).
+  // Daher Suffix-String vorab per @if berechnen.
+  $class: '';
+  @if $suffix != null {
+    $class: '-#{$suffix}';
+  }
+
   .rounded#{$class} {
     border-radius: calc(var(--nt-border-radius) * #{$mult}) !important;
   }
@@ -101,7 +122,11 @@ $radius-map: (
 
 // Sides
 @each $suffix, $mult in $radius-map {
-  $class: if($suffix == null, "", "-#{$suffix}");
+  $class: '';
+  @if $suffix != null {
+    $class: '-#{$suffix}';
+  }
+
   .rounded-top#{$class} {
     border-top-left-radius: calc(var(--nt-border-radius) * #{$mult}) !important;
     border-top-right-radius: calc(var(--nt-border-radius) * #{$mult}) !important;

@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 .row {
   --gutter-x: var(--nt-gap, 1rem);
   --gutter-y: 0;
@@ -23,8 +25,8 @@
 
 @for $i from 1 through 6 {
   .row-cols-#{$i} > * {
-    flex: 0 0 percentage(1 / $i);
-    width: percentage(1 / $i);
+    flex: 0 0 math.percentage(math.div(1, $i));
+    width: math.percentage(math.div(1, $i));
   }
 }
 
@@ -40,7 +42,7 @@
 @for $i from 1 through 12 {
   .col-#{$i} {
     flex: 0 0 auto;
-    width: percentage($i / 12);
+    width: math.percentage(math.div($i, 12));
   }
 }
 
