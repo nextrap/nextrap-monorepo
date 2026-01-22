@@ -21,20 +21,22 @@ These packages are grouped into their respective directories ([`nextrap-base`](.
 
 <!-- Please also maintain the CODEOWNERS file when adjusting the table below -->
 
-| Name                                                                  | Contact                                                |
-| --------------------------------------------------------------------- | ------------------------------------------------------ |
-| [`nt-framework`](nextrap-base/nt-framework)                           | [@dermatthes](https://github.com/dermatthes)           |
-| [`style-base`](nextrap-base/style-base)                               | [@dermatthes](https://github.com/dermatthes)           |
-| [`style-reset`](nextrap-base/style-reset)                             | [@dermatthes](https://github.com/dermatthes)           |
-| [`style-button`](nextrap-base/style-button)                           | [@dermatthes](https://github.com/dermatthes)           |
-| [`nte-element-highlighter`](nextrap-elements/nte-element-highlighter) | [@evolkmann](https://github.com/evolkmann)             |
-| [`nte-scroll-to-top`](nextrap-elements/nte-scroll-to-top)             | [@dermatthes](https://github.com/dermatthes)           |
-| [`nte-dialog`](nextrap-elements/nte-dialog)                           | [@evolkmann](https://github.com/evolkmann)             |
-| [`ntl-infiniscroll`](nextrap-layout/ntl-infiniscroll)                 | [@dermatthes](https://github.com/dermatthes)           |
-| [`ntl-2col`](nextrap-layout/ntl-2col)                                 | [@evolkmann](https://github.com/evolkmann)             |
-| [`nte-stepper`](nextrap-elements/nte-stepper)                         | [@marliedev](https://github.com/marliedev)             |
-| [`ntl-scrollspy`](nextrap-elements/ntl-scrollspy)                     | [@marliedev](https://github.com/marliedev)             |
-| [`nte-progress`](nextrap-elements/nte-progress)                       | [@marliedev](https://github.com/marliedev)             |
+| Name                                                                  | Contact                                      |
+| --------------------------------------------------------------------- | -------------------------------------------- |
+| [`nt-framework`](nextrap-base/nt-framework)                           | [@dermatthes](https://github.com/dermatthes) |
+| [`style-base`](nextrap-base/style-base)                               | [@dermatthes](https://github.com/dermatthes) |
+| [`style-reset`](nextrap-base/style-reset)                             | [@dermatthes](https://github.com/dermatthes) |
+| [`style-button`](nextrap-base/style-button)                           | [@dermatthes](https://github.com/dermatthes) |
+| [`nte-element-highlighter`](nextrap-elements/nte-element-highlighter) | [@evolkmann](https://github.com/evolkmann)   |
+| [`nte-scroll-to-top`](nextrap-elements/nte-scroll-to-top)             | [@dermatthes](https://github.com/dermatthes) |
+| [`nte-dialog`](nextrap-elements/nte-dialog)                           | [@evolkmann](https://github.com/evolkmann)   |
+| [`ntl-infiniscroll`](nextrap-layout/ntl-infiniscroll)                 | [@dermatthes](https://github.com/dermatthes) |
+| [`ntl-2col`](nextrap-layout/ntl-2col)                                 | [@evolkmann](https://github.com/evolkmann)   |
+| [`nte-stepper`](nextrap-elements/nte-stepper)                         | [@marliedev](https://github.com/marliedev)   |
+| [`ntl-scrollspy`](nextrap-elements/ntl-scrollspy)                     | [@marliedev](https://github.com/marliedev)   |
+| [`nte-progress`](nextrap-elements/nte-progress)                       | [@marliedev](https://github.com/marliedev)   |
+| [`nte-multiselect`](nextrap-elements/nte-multiselect)                 | [@marliedev](https://github.com/marliedev)   |
+| [`ntl-accordion`](nextrap-layout/ntl-accordion)                       | [@marliedev](https://github.com/marliedev)   |
 | [`ntl-hero`](nextrap-layout/ntl-hero)                                 | [@marcelfrank-dev](https://github.com/marcelfrank-dev) |
 | [`ntl-parallax-bg`](nextrap-layout/ntl-parallax-bg)                   | [@marcelfrank-dev](https://github.com/marcelfrank-dev) |
 

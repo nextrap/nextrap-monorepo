@@ -1,0 +1,19 @@
+/* ShadowDOM Styles for ntl-accordion */
+
+:host {
+  --heading-margin-bottom: 1rem;
+  --heading-margin-top: 1rem;
+  --heading-color: var(--nt-primary);
+  display: block;
+}
+
+::slotted(h1),
+::slotted(h2),
+::slotted(h3),
+::slotted(h4),
+::slotted(h5),
+::slotted(h6) {
+  margin-top: var(--heading-margin-top) !important;
+  margin-bottom: var(--heading-margin-bottom) !important;
+  color: var(--heading-color);
+}

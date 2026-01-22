@@ -30,6 +30,7 @@ export default defineConfig(() => ({
     nxCopyAssetsPlugin(['*.md', 'web-types.json']),
     dts({
       entryRoot: 'src',
+      aliasesExclude: [/@nextrap\/.*/],
       tsconfigPath: path.join(__dirname, 'tsconfig.lib.json'),
     }),
   ],
@@ -48,7 +49,7 @@ export default defineConfig(() => ({
     },
     lib: {
       // Could also be a dictionary or array of multiple entry points.
-      entry: 'index.ts',
+      entry: 'src/index.ts',
       name: 'ntl-2col',
       fileName: 'index',
       // Change this to the formats you want to support.

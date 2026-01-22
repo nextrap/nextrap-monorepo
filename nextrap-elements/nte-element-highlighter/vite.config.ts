@@ -22,12 +22,6 @@ export default defineConfig(() => ({
       reportsDirectory: `../../coverage/nextrap-elements/nte-element-highlighter`,
       provider: 'v8' as const,
     },
-    browser: {
-      provider: 'playwright',
-      enabled: true,
-      headless: true,
-      instances: [{ browser: 'chromium' }],
-    },
   },
   root: __dirname,
   cacheDir: '../../node_modules/.vite/nextrap-elements/nte-element-highlighter',
@@ -36,6 +30,7 @@ export default defineConfig(() => ({
     nxCopyAssetsPlugin(['*.md']),
     dts({
       entryRoot: 'src',
+      aliasesExclude: [/@nextrap\/.*/],
       tsconfigPath: path.join(__dirname, 'tsconfig.lib.json'),
     }),
   ],
