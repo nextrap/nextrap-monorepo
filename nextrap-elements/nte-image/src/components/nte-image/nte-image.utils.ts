@@ -250,11 +250,11 @@ export const detectMobileDevice = (): boolean => {
  */
 export const getSlideshowStyles = (transition?: string): string => {
   return `
-        nxa-image img {
+        nte-image img {
           transition: opacity 0.5s ease;
         }
 
-        nxa-image.slideshow img:not(.active) {
+        nte-image.slideshow img:not(.active) {
           opacity: 0;
           position: absolute;
           top: 0;
@@ -264,7 +264,7 @@ export const getSlideshowStyles = (transition?: string): string => {
           pointer-events: none;
         }
 
-        nxa-image.slideshow img.active {
+        nte-image.slideshow img.active {
           opacity: 1;
           z-index: 1;
           pointer-events: auto;
@@ -273,7 +273,7 @@ export const getSlideshowStyles = (transition?: string): string => {
         ${
           transition === 'blend'
             ? `
-        nxa-image.slideshow img.active {
+        nte-image.slideshow img.active {
           animation: blendTransition 0.5s ease;
         }
         @keyframes blendTransition {

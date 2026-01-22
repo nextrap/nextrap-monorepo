@@ -47,7 +47,9 @@
             "@nte-demo-viewer": ["nextrap-elements/nte-demo-viewer/src/index.ts"],
             "@nte-multiselect": ["nextrap-elements/nte-multiselect/src/index.ts"],
             "@nte-tree-node": ["nextrap-elements/nte-tree-node/src/index.ts"],
-            "@ntl-accordion": ["nextrap-layout/ntl-accordion/src/index.ts"]
+            "@ntl-accordion": ["nextrap-layout/ntl-accordion/src/index.ts"],
+            "@ntl-hero": ["nextrap-layout/ntl-hero/src/index.ts"],
+            "@ntl-parallax-bg": ["nextrap-layout/ntl-parallax-bg/src/index.ts"]
         }
     },
     "exclude": ["node_modules", "tmp"]

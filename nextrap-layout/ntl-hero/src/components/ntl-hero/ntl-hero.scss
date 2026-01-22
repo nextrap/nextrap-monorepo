@@ -1,0 +1,173 @@
+/* Shadow DOM Styles for ntl-hero */
+
+:host {
+  /* Layout */
+  display: block;
+  position: relative;
+  width: 100%;
+
+  /* Design tokens / CSS custom properties */
+  --ntl-hero-bg-color: var(--nt-body-teritary, #e4e6ef);
+  --ntl-hero-shell-max-width: 1200px;
+  --ntl-hero-content-max-width: 1040px;
+  --ntl-hero-slider-max-height: 560px;
+  --ntl-hero-outer-radius: 30px;
+  --ntl-hero-inner-radius: 20px;
+  --ntl-hero-height-offset: 0px; /* e.g. 80px, 10vh */
+  --ntl-hero-slider-offset: 3rem; /* positive values move the slider card further down (can overflow host) */
+  --ntl-hero-padding-inline: 1.5rem;
+  --ntl-hero-padding-top: 3rem;
+  --ntl-hero-padding-bottom: 0rem;
+  --ntl-hero-gap: 0rem;
+
+  background-color: var(--ntl-hero-bg-color);
+}
+
+.hero-root {
+  margin-bottom: calc(var(--ntl-hero-slider-offset) * 1.5);
+  position: relative;
+  width: 100%;
+  min-height: calc(100vh - var(--ntl-hero-height-offset, 0px));
+  /* max-height: calc(100vh - var(--ntl-hero-height-offset, 0px)); TODO: Check how to make it max 100vh in combination with the image component*/
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: var(--ntl-hero-padding-top) var(--ntl-hero-padding-inline) var(--ntl-hero-padding-bottom)
+    var(--ntl-hero-padding-inline);
+  box-sizing: border-box;
+}
+
+/* Navigation bar at the top of the hero */
+.hero-nav {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--ntl-hero-shell-max-width);
+  margin: 0 auto 1.5rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-nav::slotted(*) {
+  width: 100%;
+}
+
+/* Background layer – fills the host and sits behind all content */
+.hero-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  overflow: hidden;
+  background-color: var(--ntl-hero-bg-color);
+}
+
+.hero-background::slotted(*) {
+  pointer-events: auto;
+}
+
+/* Foreground shell – centers content and slider */
+.hero-shell {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--ntl-hero-shell-max-width);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ntl-hero-gap);
+  flex: 1 1 auto;
+}
+
+/* Text / content block above the slider */
+.hero-content {
+  width: 100%;
+  max-width: var(--ntl-hero-content-max-width);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex: 1 1 auto;
+}
+
+.hero-content::slotted(*) {
+  margin-inline: auto;
+}
+
+/* Slider card frame */
+.hero-slider-wrapper {
+  width: 100%;
+  margin-top: auto; /* push slider to the bottom of the hero shell */
+  transform: translateY(var(--ntl-hero-slider-offset));
+  border-radius: var(--ntl-hero-outer-radius);
+  padding: 1.25rem;
+  background-color: rgba(228, 230, 239, 0.9);
+  box-sizing: border-box;
+}
+
+.hero-slider-frame {
+  position: relative;
+  max-height: var(--ntl-hero-slider-max-height);
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--ntl-hero-inner-radius);
+}
+
+.hero-slider {
+  width: 100%;
+  height: -webkit-fill-available;
+}
+
+.hero-slider::slotted(*) {
+  width: 100%;
+  height: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  :host {
+    --ntl-hero-slider-max-height: 480px;
+  }
+
+  .hero-slider-wrapper {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  :host {
+    --ntl-hero-padding-block: 2.5rem;
+    --ntl-hero-padding-inline: 1.25rem;
+    --ntl-hero-slider-max-height: 420px;
+  }
+
+  .hero-slider-wrapper {
+    border-radius: 24px;
+  }
+
+  .hero-slider-frame {
+    border-radius: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  :host {
+    --ntl-hero-padding-block: 2rem;
+    --ntl-hero-padding-inline: 1rem;
+    --ntl-hero-slider-max-height: 360px;
+  }
+
+  .hero-slider-wrapper {
+    padding: 0.75rem;
+  }
+}

@@ -3,17 +3,17 @@
 
 :host {
   /* Public CSS variables (host API) */
-  --nxa-image-border-radius: var(--nt-radius-lg, 12px);
-  --nxa-image-shadow: var(--nt-shadow-md, 0 4px 20px rgba(0, 0, 0, 0.08));
-  --nxa-image-gap: var(--nt-base-gap, 8px);
+  --nte-image-border-radius: var(--nt-radius-lg, 12px);
+  --nte-image-shadow: var(--nt-shadow-md, 0 4px 20px rgba(0, 0, 0, 0.08));
+  --nte-image-gap: var(--nt-base-gap, 8px);
 
-  --nxa-image-caption-fg: var(--nt-text, #333);
-  --nxa-image-caption-bg: var(--nt-surface, rgba(255, 255, 255, 0.95));
-  --nxa-image-caption-border: var(--nt-border-subtle, rgba(0, 0, 0, 0.05));
+  --nte-image-caption-fg: var(--nt-text, #333);
+  --nte-image-caption-bg: var(--nt-body-tertiary, #e4e6ef);
+  --nte-image-caption-border: var(--nt-border-subtle, rgba(0, 0, 0, 0.05));
 
-  --nxa-image-arrow-bg: rgba(0, 0, 0, 0.2);
-  --nxa-image-arrow-bg-hover: rgba(0, 0, 0, 0.5);
-  --nxa-image-progress-bg: var(--nt-text-on-primary, #ffffff);
+  --nte-image-arrow-bg: rgba(0, 0, 0, 0.2);
+  --nte-image-arrow-bg-hover: rgba(0, 0, 0, 0.5);
+  --nte-image-progress-bg: var(--nt-text-on-primary, #ffffff);
 
   width: inherit;
   height: inherit;
@@ -24,7 +24,7 @@
 }
 
 :host(.round-borders) {
-  border-radius: var(--nxa-image-border-radius);
+  border-radius: var(--nte-image-border-radius);
   overflow: hidden;
 }
 
@@ -54,13 +54,13 @@
   transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.image-container:hover .navigation-arrows {
+.nte-image-root:hover .navigation-arrows {
   opacity: 1;
 }
 
 .arrow-button {
   pointer-events: all;
-  background: var(--nxa-image-arrow-bg);
+  background: var(--nte-image-arrow-bg);
   color: white;
   border: none;
   width: 40px;
@@ -85,46 +85,58 @@
 }
 
 .arrow-button:hover {
-  background: var(--nxa-image-arrow-bg-hover);
+  background: var(--nte-image-arrow-bg-hover);
   width: 50px;
+}
+
+.nte-image-root {
+    height: 100%;
+    position: relative;
+    overflow: hidden;
 }
 
 .image-container {
   position: relative;
   flex: 1;
   overflow: hidden;
+  height: 100%;
   width: 100%;
-  box-shadow: var(--nxa-image-shadow);
+  box-shadow: var(--nte-image-shadow);
 }
 
 .caption-container {
-  position: relative;
   overflow: hidden;
   transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   max-height: 80px;
-  box-shadow: var(--nxa-image-shadow);
+  box-shadow: var(--nte-image-shadow);
   margin-top: -1px;
+
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 9999;
 }
 
 :host(.round-borders) .caption-container {
-  border-radius: 0 0 var(--nxa-image-border-radius) var(--nxa-image-border-radius);
+  border-radius: 0 0 var(--nte-image-border-radius) var(--nte-image-border-radius);
   overflow: hidden;
 }
 
 .caption {
   min-height: 0;
   width: 100%;
-  color: var(--nxa-image-caption-fg);
+  color: var(--nte-image-caption-fg);
   font-size: 14px;
   text-align: center;
   padding: 12px 16px;
   z-index: 2;
   font-weight: 500;
   letter-spacing: 0.3px;
-  background-color: var(--nxa-image-caption-bg);
+  background-color: var(--nte-image-caption-bg);
   backdrop-filter: blur(10px);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border-top: 1px solid var(--nxa-image-caption-border);
+  border-top: 1px solid var(--nte-image-caption-border);
   margin: 0;
   line-height: 1.5;
 }
@@ -139,24 +151,32 @@
 
 @media (prefers-color-scheme: dark) {
   :host {
-    --nxa-image-caption-fg: var(--nt-text, #f0f0f0);
-    --nxa-image-caption-bg: var(--nt-surface, rgba(30, 30, 30, 0.95));
-    --nxa-image-caption-border: var(--nt-border-subtle, rgba(255, 255, 255, 0.05));
+    --nte-image-caption-fg: var(--nt-text, #f0f0f0);
+    --nte-image-caption-bg: var(--nt-body-tertiary, rgba(30, 30, 30, 0.95));
+    --nte-image-caption-border: var(--nt-border-subtle, rgba(255, 255, 255, 0.05));
   }
 }
 
 .indicators {
   position: absolute;
-  bottom: 15px;
   left: 0;
   right: 0;
+  bottom: 16px;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: var(--nxa-image-gap);
+  gap: var(--nte-image-gap);
   z-index: 2;
   opacity: 0.9;
   transition: opacity 0.3s ease;
+}
+
+
+// add more space to bottom, if the element .caption-container > .caption has content
+.nte-image-root:has(.caption-container .caption:not(:empty)) {
+  .indicators {
+    bottom: 62px;
+  }
 }
 
 .indicator-container {
@@ -169,7 +189,7 @@
   width: 30px;
   height: 5px;
   border-radius: 2.5px;
-  background-color: var(--nxa-image-indicator-bg, rgba(0, 0, 0, 0.3));
+  background-color: var(--nte-image-indicator-bg, rgba(0, 0, 0, 0.3));
   margin: 0;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -180,7 +200,7 @@
 }
 
 .indicator.active {
-  background-color: var(--nxa-image-indicator-active-bg, rgba(0, 0, 0, 0.6));
+  background-color: var(--nte-image-indicator-active-bg, rgba(0, 0, 0, 0.6));
   width: 40px;
 }
 
@@ -189,7 +209,7 @@
   top: 0;
   left: 0;
   height: 100%;
-  background-color: var(--nxa-image-progress-bg);
+  background-color: var(--nte-image-progress-bg);
   transition: width 0.05s linear;
 }
 
@@ -250,13 +270,13 @@
 }
 
 :host(.round-borders) img {
-  border-radius: var(--nxa-image-border-radius);
+  border-radius: var(--nte-image-border-radius);
 }
 
 /* When captions are present, adjust the image container to only have top rounded corners */
 :host(.round-borders) .caption-container:not(:empty) ~ .image-container,
 :host(.round-borders) .caption:not(:empty) ~ .image-container {
-  border-radius: var(--nxa-image-border-radius) var(--nxa-image-border-radius) 0 0;
+  border-radius: var(--nte-image-border-radius) var(--nte-image-border-radius) 0 0;
 }
 
 /* Ensure the entire component has proper overflow handling */
