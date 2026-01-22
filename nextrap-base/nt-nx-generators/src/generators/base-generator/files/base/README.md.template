@@ -4,11 +4,9 @@ Short description of the component.
 
 ## Example
 
-## Component1
 
-```html
-<<%= component1 %>></<%= component1 %>>
-```
+
+
 
 
 | Attribute | Type    | Description               | Default |

@@ -1,0 +1,33 @@
+/* The ShadowDOM Styles */
+
+:host {
+  --border-color: var(--nt-primary);
+  --background-color: var(--nt-body, #fff);
+  --border-radius: var(--nt-border-radius);
+}
+
+::part(wrapper) {
+  border: var(--nt-border-width) solid var(--border-color);
+  border-radius: var(--border-radius);
+  background-color: var(--background-color);
+  display: flex;
+  flex-direction: column;
+}
+
+::part(header) {
+  order: 2;
+}
+
+::part(image) {
+  order: 1;
+  width: 100%;
+}
+
+#image::slotted(p) {
+  display: contents;
+}
+
+::part(content) {
+  order: 50;
+  flex-grow: 1;
+}

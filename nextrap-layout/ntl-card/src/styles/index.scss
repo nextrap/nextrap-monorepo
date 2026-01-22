@@ -1,0 +1,29 @@
+/**
+ * This file contains LightDOM Styles
+ */
+
+ntl-card {
+  /* Put styles here */
+
+  --aspect-ratio: 5 / 4;
+
+  [slot='image'] {
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  &::part(image) {
+    aspect-ratio: var(--aspect-ratio);
+  }
+  &.img-fullsize {
+    &::part(image) {
+      aspect-ratio: initial;
+    }
+    [slot='image'] {
+      width: 100%;
+      height: auto;
+    }
+  }
+}

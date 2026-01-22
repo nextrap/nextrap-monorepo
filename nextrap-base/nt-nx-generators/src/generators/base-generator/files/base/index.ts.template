@@ -5,4 +5,4 @@ export * from './src/components/<%= name %>/<%= name %>';
 
 
 /* this bundles light dom styles by default */
-export * from './src/styles/index.scss';
+import './src/styles/index.scss';

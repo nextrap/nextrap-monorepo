@@ -23,7 +23,7 @@ export class <%= elementClassName %> extends EventBindingsMixin(LoggingMixin(Lit
   // Example of listening to window scroll events
   @Listen('scroll', { target: 'window', options: { passive: true } })
   private onScroll(e: Event) {
-    this._log('info', 'Window scrolled', e);
+    this.log('info', 'Window scrolled', e);
   }
 
   override render() {
