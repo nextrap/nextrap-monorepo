@@ -13,6 +13,5 @@
         "@nextrap/style-reset": "^1.0.0"
     },
     "type": "module",
-    "style": "./index.css",
     "types": "./index.d.ts"
 }
