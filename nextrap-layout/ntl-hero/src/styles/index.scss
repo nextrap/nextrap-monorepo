@@ -3,5 +3,8 @@
  */
 
 ntl-hero {
-  /* Put styles here */
+  // adds a offset to the footer component
+  &.style-slider-offset {
+    --ntl-hero-slider-offset: 2rem;
+  }
 }

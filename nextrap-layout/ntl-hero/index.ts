@@ -4,4 +4,4 @@ export * from './src/components/ntl-hero/ntl-hero';
 // export * from './src/mixins/NtlHeroMixin';
 
 /* this bundles light dom styles by default */
-export * from './src/styles/index.scss';
+import './src/styles/index.scss';
