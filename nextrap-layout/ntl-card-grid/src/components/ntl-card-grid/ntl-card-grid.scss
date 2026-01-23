@@ -1,0 +1,34 @@
+/* The ShadowDOM Styles */
+
+:host {
+  --container-width: var(--nt-container-width) /* Refer to README.md for style guidelines */;
+  --gap: var(--nt-gap);
+  --breakpoint: md, lg; // xs,sm,md,lg,xl,xxl
+  --cols: 3;
+  --cols-tablet: 2;
+  --cols-mobile: 1;
+}
+
+:host([mode='tablet']) {
+  --cols: var(--cols-tablet) !important;
+}
+
+:host([mode='mobile']) {
+  --cols: var(--cols-mobile) !important;
+}
+
+#wrapper {
+  width: var(--container-width);
+  margin: 0 auto;
+}
+
+#main {
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+
+  & > ::slotted(*) {
+    width: 100%;
+    height: 100%;
+  }
+}

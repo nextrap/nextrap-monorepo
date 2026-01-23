@@ -33,6 +33,7 @@ ntl-card {
     }
   }
 
+  // TODO: Update style to use grid for overlay, instead of absolute
   &.img-overlay {
     isolation: isolate;
     container-type: inline-size;
