@@ -33,11 +33,16 @@ export class NtlCardGridElement extends SlotVisibilityMixin(
         <div part="header" id="header">
           <slot
             name="header"
-            data-query=":scope > .header | :scope > h1:not(.keep),h2:not(.keep),h3:not(.keep),h4:not(.keep),h5:not(.keep),h6:not(.keep)"
+            data-query=":scope > .header | :scope > h1:not(.keep),:scope > h2:not(.keep),:scope > h3:not(.keep),:scope > h4:not(.keep),:scope > h5:not(.keep),:scope > h6:not(.keep)"
           ></slot>
         </div>
-        <div part="main" id="main">
-          <slot data-query=":scope > section:not(.keep)" data-set-attribute-layout="${this.childLayout}"></slot>
+        <div part="content-wrapper" id="content-wrapper">
+          <div part="main" id="main">
+            <slot data-query=":scope > section:not(.aside)" data-set-attribute-layout="${this.childLayout}"></slot>
+          </div>
+          <div part="aside" id="aside">
+            <slot name="aside" data-query=".aside"></slot>
+          </div>
         </div>
         <div part="footer" id="footer">
           <slot name="footer" data-query=":scope > .footer"></slot>

@@ -11,10 +11,18 @@
 
 :host([mode='tablet']) {
   --cols: var(--cols-tablet) !important;
+
+  #content-wrapper {
+    flex-direction: column;
+  }
 }
 
 :host([mode='mobile']) {
   --cols: var(--cols-mobile) !important;
+
+  #content-wrapper {
+    flex-direction: column;
+  }
 }
 
 #wrapper {
@@ -22,7 +30,16 @@
   margin: 0 auto;
 }
 
+#content-wrapper {
+  display: flex;
+  gap: var(--gap);
+  margin-top: var(--gap);
+  margin-bottom: var(--gap);
+  flex-wrap: wrap;
+}
+
 #main {
+  flex: 1;
   display: grid;
   gap: var(--gap);
   grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
