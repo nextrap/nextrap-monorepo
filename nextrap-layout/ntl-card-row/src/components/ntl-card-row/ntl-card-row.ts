@@ -26,7 +26,7 @@ export class NtlCardRowElement extends BreakPointMixin(SubLayoutApplyMixin(Loggi
           <slot name="header" data-query=":scope > .header | :scope > h2,h3,h4,h5,h6:first-of-type:not(.keep)"></slot>
         </div>
         <div class="flex row">
-          <slot data-query=":scope > section" data-set-attribute-layout="ntl-card-row-element" data-query-opt=""></slot>
+          <slot data-query=":scope > section" data-set-attribute-layout="ntl-card" data-query-opt=""></slot>
         </div>
         <div class="footer" part="footer">
           <slot name="footer" data-query=":scope > footer"></slot>

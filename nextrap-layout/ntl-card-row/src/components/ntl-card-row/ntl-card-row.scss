@@ -5,6 +5,7 @@
   --default-cols: 4;
   --gutter-x: var(--nt-gap);
   --gutter-y: var(--nt-gap);
+  --breakpoint: md;
 }
 
 :host([mode='desktop']) {

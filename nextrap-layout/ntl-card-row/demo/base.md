@@ -2,22 +2,22 @@
 {: layout="ntl-card-row[style='--default-cols: 3']" slot="header"}
 
 ### Col 1
-{: layout="nte-card"}
+{: layout="ntl-card"}
 
 content 1
 
 ### Col 2
-{: layout="nte-card.highlight[style='--cols: 6']" layout-style="--cols: 12"}
+{: layout="ntl-card.highlight[style='--cols: 6']" layout-style="--cols: 12"}
 
 content 2
 
 ### Col 3
-{: layout="nte-card"}
+{: layout="ntl-card"}
 
 content 3
 
 ### Col 4
-{: layout="nte-card"}
+{: layout="ntl-card"}
 
 content 4
 
