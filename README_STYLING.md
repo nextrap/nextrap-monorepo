@@ -51,7 +51,7 @@ baseline for your styling:
     --spacing: var(--nt-base-gap, 4px);
 }
 
-.some-internal-element {
+#some-internal-element {
     padding: var(--spacing);
 }
 ```
@@ -86,7 +86,7 @@ its internal structure. (see also: [Lit Docs](https://lit.dev/docs/components/st
     --fg-color: var(--nt-text-on-primary);
 }
 
-.some-internal-element {
+#some-internal-element {
     background-color: var(--bg-color);
     color: var(--fg-color);
 }
@@ -123,3 +123,88 @@ You can also use the following syntax to define a public API in terms of CSS cla
     --height: 200px;
 }
 ```
+
+
+## Best Practices
+
+### Shadow Dom HTML
+
+```html
+<div id="wrapper" part="wrapper">
+    <div id="header" part="header">
+        <slot name="header"></slot>
+    </div>
+    <main part="body">
+        <slot></slot>
+    </main>
+    <footer part="footer">
+        <slot name="footer"></slot>
+    </footer>
+</div>
+```
+
+- Always add `part` attributes to the main elements inside your shadow DOM. 
+- Reference elements by ID in shadow DOM styles.
+- Do not prefix shadow DOM IDs with the component name.
+
+### Shadow DOM Stylesheet
+
+```scss
+
+:host {
+    --variables: var(--nt-primary);
+}
+
+#wrapper {
+    ... styles ...
+}
+
+slot[name="header"]::slotted() {
+    ... styles ...
+}
+
+```
+
+- Define all Variables in the `:host` selector.
+- Use only CSS variables from `@nextrap/style-base` as default values for your component's CSS variables.
+- Use only IDs to reference elements inside shadow DOM styles.
+- Use ::slotted() to style slotted elements from the light DOM. (only main elements, not deep styling)
+
+
+### LightDom Stylesheet
+
+```css
+
+nte-my-component {
+    --styling-variables: default-values;
+    
+    &.variant1 {
+        --styling-variables: variant1-values;
+    }
+    
+    &.img-fullsize {
+        &::part(partname) {
+            ... styles ...
+        }
+    }
+    
+}
+
+
+
+## Don'ts
+
+### part() in shadow DOM styles
+
+Do not use ::part() inside shadow DOM styles! It will not work as expected.
+
+```
+::part(header) {
+    background-color: red; /* This will not work in  */
+}
+```
+
+Use only to style elmeents from the light DOM:
+
+
+### 
