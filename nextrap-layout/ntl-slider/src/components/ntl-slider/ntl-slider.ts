@@ -54,27 +54,14 @@ export class NtlSliderElement extends SlotVisibilityMixin(
     this.setActiveSlide(this.activeIndex);
   }
 
-  private setActiveSlide(activeIndex: number, forward: boolean = false) {
+  private setActiveSlide(activeIndex: number) {
     this.slides.forEach((slide, index) => {
-      slide.classList.toggle(
-        'hide',
-        forward && (index === activeIndex - 1 || (activeIndex === 0 && index === this.slides.length - 1)),
-      );
-      slide.classList.toggle(
-        'hide',
-        !forward && (index === activeIndex + 1 || (activeIndex === this.slides.length - 1 && index === 0)),
-      );
-
-      slide.classList.toggle(
-        'prev',
-        index === activeIndex - 1 || (activeIndex === 0 && index === this.slides.length - 1),
-      );
-      slide.classList.toggle('active', index === activeIndex);
-      slide.classList.toggle(
-        'next',
-        index === activeIndex + 1 || (activeIndex === this.slides.length - 1 && index === 0),
-      );
+      slide.classList.remove('prev', 'active', 'next');
+      if (index === activeIndex) {
+        slide.classList.add('active');
+      }
     });
+    this.renderIndicators();
   }
 
   /**
@@ -82,17 +69,14 @@ export class NtlSliderElement extends SlotVisibilityMixin(
    * @private
    */
   public goToSlide(index: number) {
-    let isForward = index > this.activeIndex;
     if (index < 0) {
       index = this.slides.length - 1;
-      isForward = false;
     }
     if (index >= this.slides.length) {
       index = 0;
-      isForward = true;
     }
-    this.setActiveSlide(index, isForward);
     this.activeIndex = index;
+    this.setActiveSlide(index);
     this.dispatchEvent(new CustomEvent('slide-change', { detail: { index: this.activeIndex } }));
   }
 

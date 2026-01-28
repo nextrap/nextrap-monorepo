@@ -4,13 +4,13 @@
   --aspect-ratio: 16/9;
 
   --nav-button-size: 48px;
-  --nav-button-bg: rgba(0, 0, 0, 0.5);
+  --nav-button-bg: color-mix(in srgb, var(--nt-primary, #000000), transparent 50%);
   --nav-button-color: #fff;
   --indicator-size: 12px;
   --indicator-gap: 8px;
-  --indicator-color: rgba(255, 255, 255, 0.5);
-  --indicator-active-color: #fff;
-  --transition-duration: 0.3s;
+  --indicator-color: var(--nt-primary-subtle, rgba(255, 255, 255, 0.5));
+  --indicator-active-color: var(--nt-primary, #fff);
+  --transition-duration: 0.5s;
 
   display: block;
 }
@@ -30,46 +30,34 @@
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
+  place-items: center;
+  justify-items: center;
+  align-items: center;
 
   & > ::slotted(.hide) {
     display: none !important;
   }
 
   & > ::slotted(*) {
-    display: none;
     grid-column: 1;
     grid-row: 1;
-  }
-
-  & > ::slotted(.prev) {
-    display: block;
-    transform: translateX(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--transition-duration) ease-in-out,
+      visibility var(--transition-duration) ease-in-out;
   }
 
   & > ::slotted(.active) {
-    display: block;
-    transform: translateX(0);
-    transition: transform 0.5s;
+    opacity: 1;
+    visibility: visible;
   }
 
+  & > ::slotted(.prev),
   & > ::slotted(.next) {
-    display: block;
-    transform: translateX(100%);
+    opacity: 0;
+    visibility: hidden;
   }
-}
-
-// GENERIERT
-::slotted(section) {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity var(--transition-duration) ease-in-out;
-}
-
-::slotted(section[active]) {
-  opacity: 1;
-  visibility: visible;
 }
 
 #navigation {
@@ -96,7 +84,7 @@
   transition: background var(--transition-duration);
 
   &:hover {
-    background: rgba(0, 0, 0, 0.7);
+    background: color-mix(in srgb, var(--nav-button-bg), transparent 50%);
   }
 
   &:focus-visible {
