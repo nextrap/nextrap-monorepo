@@ -133,8 +133,8 @@ export class NtlSliderElement extends SlotVisibilityMixin(
             ></slot>
           </div>
           <div part="navigation" id="navigation">
-            <button part="nav-prev" @click=${this.prev}>&#8249;</button>
-            <button part="nav-next" @click=${this.next}>&#8250;</button>
+            <button part="nav-prev" @click=${this.prev}>&#10094;</button>
+            <button part="nav-next" @click=${this.next}>&#10095;</button>
           </div>
           <div part="indicator" id="indicator"></div>
         </div>

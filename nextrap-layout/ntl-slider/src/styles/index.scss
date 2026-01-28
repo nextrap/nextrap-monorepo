@@ -1,7 +1,51 @@
 /**
  * This file contains LightDOM Styles
  */
+ntl-slider.theme1 {
+  --nav-inset: -42px !important;
+  --nav-button-size: 50px;
+  --nav-button-bg: var(--nt-body-teritary, #e4e6ef);
+  --nav-button-color: var(--nt-primary, #fe6606);
+  --indicator-size: 12px;
+  --indicator-gap: 8px;
+  --indicator-color: var(--nt-body-teritary, #e4e6ef);
+  --indicator-active-color: var(--nt-primary, #fe6606);
+  --transition-duration: 0.5s;
+  --aspect-ratio: none;
 
-ntl-slider {
-  /* Put styles here */
+  padding: 1rem;
+  background: var(--nt-body-teritary, #e4e6ef);
+  border-radius: 1rem;
+  overflow: hidden;
+  height: auto;
+
+  ntl-slide {
+    height: 100%;
+    border-radius: 0.7rem;
+    overflow: hidden;
+  }
+
+  ::part(content) {
+    height: 100%;
+    background: var(--nt-secondary, #1f3655);
+    padding: 2rem;
+  }
+
+  ::part(gradient) {
+    background: transparent
+      linear-gradient(
+        90deg,
+        var(--nt-secondary, #1f3655),
+        color-mix(in srgb, var(--nt-secondary, #1f3655), transparent 100%)
+      );
+  }
+
+  p:has(img) {
+    margin: 0 !important;
+    height: 100%;
+
+    > img {
+      height: 100%;
+    }
+  }
 }

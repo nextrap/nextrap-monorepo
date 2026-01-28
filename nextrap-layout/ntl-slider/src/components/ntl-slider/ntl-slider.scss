@@ -3,9 +3,10 @@
 :host {
   --aspect-ratio: 16/9;
 
+  --nav-inset: 0;
   --nav-button-size: 48px;
   --nav-button-bg: color-mix(in srgb, var(--nt-primary, #000000), transparent 50%);
-  --nav-button-color: #fff;
+  --nav-button-color: var(--nt-teritary, #fff);
   --indicator-size: 12px;
   --indicator-gap: 8px;
   --indicator-color: var(--nt-primary-subtle, rgba(255, 255, 255, 0.5));
@@ -20,7 +21,6 @@
   aspect-ratio: var(--aspect-ratio);
   display: block;
   position: relative;
-  overflow: hidden;
 }
 
 #content {
@@ -63,7 +63,7 @@
 #navigation {
   z-index: 10;
   position: absolute;
-  inset: 0;
+  inset: var(--nav-inset);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -83,10 +83,6 @@
   cursor: pointer;
   transition: background var(--transition-duration);
 
-  &:hover {
-    background: color-mix(in srgb, var(--nav-button-bg), transparent 50%);
-  }
-
   &:focus-visible {
     outline: 2px solid var(--nav-button-color);
     outline-offset: 2px;
@@ -100,6 +96,7 @@
   transform: translateX(-50%);
   display: flex;
   gap: var(--indicator-gap);
+  z-index: 100;
 }
 
 #indicator button {

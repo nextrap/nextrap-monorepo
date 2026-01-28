@@ -20,15 +20,13 @@ export class NtlSlideElement extends SlotVisibilityMixin(
 
   override render() {
     return html`
-      <div>
-        <div part="wrapper" id="wrapper">
-          <div part="image" id="image">
-            <slot name="image" data-query=":scope > img:not(.keep) | :scope > p:has(img:not(.keep))"></slot>
-          </div>
-          <div part="gradient" id="gradient"></div>
-          <div part="content" id="content">
-            <slot></slot>
-          </div>
+      <div part="wrapper" id="wrapper">
+        <div part="image" id="image">
+          <slot name="image" data-query=":scope > img:not(.keep) | :scope > p:has(img:not(.keep))"></slot>
+        </div>
+        <div part="gradient" id="gradient"></div>
+        <div part="content" id="content">
+          <slot></slot>
         </div>
       </div>
     `;
