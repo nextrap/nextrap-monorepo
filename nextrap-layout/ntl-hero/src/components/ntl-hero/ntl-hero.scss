@@ -8,7 +8,8 @@
 #root {
   position: relative;
   width: 100%;
-  min-height: calc(100vh - var(--height-offset, 0px));
+  height: 100%;
+  max-height: calc(100vh - var(--height-offset, 0px));
   display: grid;
 
   grid-template-rows: 1fr;
@@ -45,6 +46,8 @@
   grid-column: 1;
   background-color: var(--bg-color);
   z-index: 0;
+  height: 100%;
+  position: absolute;
 }
 
 .background::slotted(*) {

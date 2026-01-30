@@ -1,10 +1,6 @@
 /**
  * This file contains LightDOM Styles
  */
-
-ntl-hero {
-  // adds a offset to the footer component
-  &.style-slider-offset {
-    --ntl-hero-slider-offset: 2rem;
-  }
+ntl-hero.theme1 {
+  --height-offset: 10vh;
 }

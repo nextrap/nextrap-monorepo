@@ -1,6 +1,6 @@
 
 ---
-{: layout="1;ntl-hero"}
+{: layout="1;ntl-hero.theme1"}
 
 ![Header](../assets/header-bg.svg)
 {: layout="2;ntl-parallax-bg" slot="bg"}
@@ -12,7 +12,7 @@
 {: .h1 section-slot="title"}
 
 ---
-{: layout="2;ntl-slider"}
+{: layout="2;ntl-slider.theme1"}
 
 ### Slide 1
 
