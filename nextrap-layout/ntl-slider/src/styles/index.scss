@@ -18,17 +18,23 @@ ntl-slider.theme1 {
   border-radius: 1rem;
   overflow: hidden;
   height: auto;
+  margin-bottom: 0 !important;
 
   ntl-slide {
     height: 100%;
     border-radius: 0.7rem;
     overflow: hidden;
+    margin-bottom: 0 !important;
+  }
+
+  ::part(wrapper) {
+    grid-template-columns: 4fr 5fr;
   }
 
   ::part(content) {
     height: 100%;
     background: var(--nt-secondary, #1f3655);
-    padding: 2rem;
+    padding: 4rem 0 4rem 4rem;
   }
 
   ::part(gradient) {

@@ -2,5 +2,32 @@
  * This file contains LightDOM Styles
  */
 ntl-hero.theme1 {
-  --height-offset: 10vh;
+  --height-offset: 40vh;
+  --top-offset: var(--brand-height, 0px);
+  --slider-offset: var(--slider-offset, 64px);
+
+  &::part(root) {
+    min-height: 1000px;
+    margin-bottom: calc(var(--slider-offset, 64px) * 1.4);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    margin: 0 !important;
+  }
+
+  &::part(title) {
+    align-items: baseline;
+    flex-grow: 1;
+  }
+
+  &::part(top-title) {
+    flex-grow: 2;
+    align-items: end;
+  }
+
+  &::part(content) {
+    flex-grow: unset !important;
+    height: auto;
+    margin-bottom: calc(var(--slider-offset, 64px) * -1);
+  }
 }
