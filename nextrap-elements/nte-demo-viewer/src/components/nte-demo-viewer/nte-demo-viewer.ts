@@ -65,16 +65,14 @@ export class NteDemoViewerElement extends LitElement {
   @state()
   private accessor _codeViewOpen = false;
 
-  @state()
-  private accessor _markdownContent = '';
+  private _markdownContent = '';
 
   @state()
   private accessor _isLoadingCode = false;
 
-  @state()
-  private accessor _readmeContent = '';
-
   private _debounceTimer: number | null = null;
+  private _currentBlobUrl: string | null = null;
+  private _iframeObservers: Map<HTMLIFrameElement, MutationObserver> = new Map();
 
   override connectedCallback() {
     super.connectedCallback();
@@ -86,6 +84,22 @@ export class NteDemoViewerElement extends LitElement {
   override disconnectedCallback() {
     super.disconnectedCallback();
     window.removeEventListener('popstate', this._handlePopState);
+
+    // Cleanup: Revoke blob URL if exists
+    if (this._currentBlobUrl) {
+      URL.revokeObjectURL(this._currentBlobUrl);
+      this._currentBlobUrl = null;
+    }
+
+    // Cleanup: Disconnect all MutationObservers
+    this._iframeObservers.forEach((observer) => observer.disconnect());
+    this._iframeObservers.clear();
+
+    // Cleanup: Clear debounce timer
+    if (this._debounceTimer) {
+      clearTimeout(this._debounceTimer);
+      this._debounceTimer = null;
+    }
   }
 
   private _handlePopState = () => {
@@ -120,17 +134,10 @@ export class NteDemoViewerElement extends LitElement {
   }
 
   /**
-   * Generate URL-safe slug from title
+   * Extract filename with extension from a path
    */
-  private _generateSlug(title: string): string {
-    return title
-      .toLowerCase()
-      .replace(/[äöüß]/g, (char) => {
-        const map: Record<string, string> = { ä: 'ae', ö: 'oe', ü: 'ue', ß: 'ss' };
-        return map[char] || char;
-      })
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-|-$/g, '');
+  private _extractFilename(src: string): string {
+    return src.split('/').pop() || '';
   }
 
   /**
@@ -140,11 +147,12 @@ export class NteDemoViewerElement extends LitElement {
     const demoElements = Array.from(this.querySelectorAll('demo'));
     this._demos = demoElements.map((el) => {
       const title = el.getAttribute('title') || 'Untitled Demo';
+      const src = el.getAttribute('src') || '';
       return {
         title,
-        src: el.getAttribute('src') || '',
+        src,
         description: el.getAttribute('description') || undefined,
-        slug: this._generateSlug(title),
+        slug: this._extractFilename(src),
       };
     });
   }
@@ -187,26 +195,87 @@ export class NteDemoViewerElement extends LitElement {
   }
 
   /**
+   * Check if file is HTML based on extension
+   */
+  private _isHtmlFile(src: string): boolean {
+    return src.toLowerCase().endsWith('.html') || src.toLowerCase().endsWith('.htm');
+  }
+
+  /**
+   * Setup auto-resize for iframe based on content
+   */
+  private _setupIframeAutoResize(iframe: HTMLIFrameElement) {
+    iframe.onload = () => {
+      try {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+        if (iframeDoc) {
+          const resizeIframe = () => {
+            const height = iframeDoc.body.scrollHeight;
+            iframe.style.height = height + 'px';
+          };
+
+          // Initial resize
+          resizeIframe();
+
+          // Observe changes in iframe content
+          const observer = new MutationObserver(resizeIframe);
+          observer.observe(iframeDoc.body, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+          });
+
+          // Store observer for cleanup
+          this._iframeObservers.set(iframe, observer);
+        }
+      } catch (e) {
+        // Cross-origin iframe, can't access content
+        iframe.style.height = '600px';
+      }
+    };
+  }
+
+  /**
+   * Load HTML file in an iframe for proper execution
+   */
+  private _loadHtmlContent(src: string, container: Element) {
+    const iframe = document.createElement('iframe');
+    iframe.src = src;
+    iframe.style.width = '100%';
+    iframe.style.border = 'none';
+    iframe.style.minHeight = '400px';
+
+    this._setupIframeAutoResize(iframe);
+    container.appendChild(iframe);
+  }
+
+  /**
    * Reload the markdown loader by removing and recreating it
    */
   private _reloadMarkdownLoader() {
-    const contentPane = this.querySelector('tj-content-pane');
-    if (!contentPane) return;
+    const container = this.querySelector('#demo-content-container');
+    if (!container) return;
 
-    // Remove old loader
-    const oldLoader = this.querySelector('.nte-demo-content tj-markdown-loader');
-    if (oldLoader) oldLoader.remove();
+    // Clear container
+    container.innerHTML = '';
 
-    // Clear content
-    contentPane.innerHTML = '';
-
-    // Create new loader with current demo src
+    // Create new content pane and loader in Light DOM
     const currentDemo = this._demos[this._currentIndex];
     if (currentDemo) {
-      const loader = document.createElement('tj-markdown-loader');
-      loader.setAttribute('target', 'tj-content-pane');
-      loader.setAttribute('src', currentDemo.src);
-      contentPane.parentElement?.appendChild(loader);
+      // Check if it's an HTML file
+      if (this._isHtmlFile(currentDemo.src)) {
+        // Load HTML directly without markdown parser
+        this._loadHtmlContent(currentDemo.src, container);
+      } else {
+        // Use markdown loader for .md files
+        const contentPane = document.createElement('tj-content-pane');
+        container.appendChild(contentPane);
+
+        const loader = document.createElement('tj-markdown-loader');
+        loader.setAttribute('target', 'tj-content-pane');
+        loader.setAttribute('src', currentDemo.src);
+        container.appendChild(loader);
+      }
     }
   }
 
@@ -230,21 +299,26 @@ export class NteDemoViewerElement extends LitElement {
    * Reload the README markdown loader
    */
   private _reloadReadmeLoader() {
-    const contentPane = this.querySelector('.nte-readme-content tj-content-pane');
-    if (!contentPane) return;
+    const container = this.querySelector('#readme-content-container');
+    if (!container) return;
 
-    // Remove old loader
-    const oldLoader = this.querySelector('.nte-readme-content tj-markdown-loader');
-    if (oldLoader) oldLoader.remove();
+    // Clear container
+    container.innerHTML = '';
 
-    // Clear content
-    contentPane.innerHTML = '';
+    // Check if README is HTML file
+    if (this._isHtmlFile(this.readme)) {
+      // Load HTML directly
+      this._loadHtmlContent(this.readme, container);
+    } else {
+      // Use markdown loader for .md files
+      const contentPane = document.createElement('tj-content-pane');
+      container.appendChild(contentPane);
 
-    // Create new loader
-    const loader = document.createElement('tj-markdown-loader');
-    loader.setAttribute('target', 'tj-content-pane');
-    loader.setAttribute('src', this.readme);
-    contentPane.parentElement?.appendChild(loader);
+      const loader = document.createElement('tj-markdown-loader');
+      loader.setAttribute('target', 'tj-content-pane');
+      loader.setAttribute('src', this.readme);
+      container.appendChild(loader);
+    }
   }
 
   /**
@@ -283,31 +357,57 @@ export class NteDemoViewerElement extends LitElement {
   }
 
   /**
-   * Reload demo from edited markdown content (for live editing)
+   * Reload demo from edited content (for live editing)
    */
-  private _reloadDemoFromContent(markdownContent: string) {
-    const contentPane = this.querySelector('tj-content-pane');
-    if (!contentPane) return;
+  private _reloadDemoFromContent(content: string) {
+    const container = this.querySelector('#demo-content-container');
+    if (!container) return;
 
-    // Remove old markdown-loader
-    const oldLoader = this.querySelector('tj-markdown-loader');
-    if (oldLoader) oldLoader.remove();
+    const currentDemo = this._demos[this._currentIndex];
+    if (!currentDemo) return;
 
-    // Clear content
-    contentPane.innerHTML = '';
+    // Clear container
+    container.innerHTML = '';
 
-    // Create a blob URL for the edited content
-    const blob = new Blob([markdownContent], { type: 'text/markdown' });
-    const blobUrl = URL.createObjectURL(blob);
+    // Check if it's HTML or Markdown
+    if (this._isHtmlFile(currentDemo.src)) {
+      // Revoke previous blob URL if exists
+      if (this._currentBlobUrl) {
+        URL.revokeObjectURL(this._currentBlobUrl);
+        this._currentBlobUrl = null;
+      }
 
-    // Create new markdown-loader with blob URL
-    const loader = document.createElement('tj-markdown-loader');
-    loader.setAttribute('target', 'tj-content-pane');
-    loader.setAttribute('src', blobUrl);
-    this.appendChild(loader);
+      // For HTML: create blob URL and load in iframe
+      const blob = new Blob([content], { type: 'text/html' });
+      const blobUrl = URL.createObjectURL(blob);
+      this._currentBlobUrl = blobUrl;
 
-    // Revoke blob URL after a short delay
-    setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+      const iframe = document.createElement('iframe');
+      iframe.setAttribute('data-demo-iframe', '');
+      iframe.src = blobUrl;
+      iframe.style.width = '100%';
+      iframe.style.border = 'none';
+      iframe.style.minHeight = '400px';
+      iframe.style.display = 'block';
+
+      this._setupIframeAutoResize(iframe);
+      container.appendChild(iframe);
+    } else {
+      // For Markdown: use markdown-loader with blob URL
+      const contentPane = document.createElement('tj-content-pane');
+      container.appendChild(contentPane);
+
+      const blob = new Blob([content], { type: 'text/markdown' });
+      const blobUrl = URL.createObjectURL(blob);
+
+      const loader = document.createElement('tj-markdown-loader');
+      loader.setAttribute('target', 'tj-content-pane');
+      loader.setAttribute('src', blobUrl);
+      container.appendChild(loader);
+
+      // Revoke blob URL after a short delay
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+    }
   }
 
   /**
@@ -315,6 +415,7 @@ export class NteDemoViewerElement extends LitElement {
    */
   private _handleCodeInput(e: Event) {
     const textarea = e.target as HTMLTextAreaElement;
+    // Update content without triggering re-render
     this._markdownContent = textarea.value;
 
     // Debounce the reload
@@ -340,10 +441,16 @@ export class NteDemoViewerElement extends LitElement {
   }
 
   private _toggleCodeView() {
-    this._codeViewOpen = !this._codeViewOpen;
-    this._menuOpen = false;
+    const currentDemo = this._demos[this._currentIndex];
 
-    if (this._codeViewOpen && !this._markdownContent) {
+    // Don't allow code editing for HTML files (iframe-based demos)
+    if (currentDemo && this._isHtmlFile(currentDemo.src)) {
+      return;
+    }
+
+    this._codeViewOpen = !this._codeViewOpen;
+
+    if (this._codeViewOpen) {
       this._loadMarkdownContent();
     }
   }
@@ -354,29 +461,29 @@ export class NteDemoViewerElement extends LitElement {
 
   private _renderWelcomeScreen() {
     return html`
-      <div class="nte-welcome">
-        <header class="nte-welcome-header">
-          <h1 class="nte-welcome-title">${this.welcomeTitle}</h1>
+      <div class="welcome">
+        <header class="welcome-header">
+          <h1 class="welcome-title">${this.welcomeTitle}</h1>
           ${this.readme
             ? html`
-                <button class="nte-readme-link" @click="${this._showReadme}">
-                  <span class="nte-readme-icon">📄</span>
+                <button class="readme-link" @click="${this._showReadme}">
+                  <span class="readme-icon">📄</span>
                   README.md
                 </button>
               `
             : nothing}
         </header>
 
-        <div class="nte-demo-cards">
+        <div class="demo-cards">
           ${this._demos.map(
             (demo, i) => html`
-              <button class="nte-demo-card" @click="${() => this._selectDemo(i)}">
-                <span class="nte-demo-card-index">${i + 1}</span>
-                <div class="nte-demo-card-content">
-                  <h3 class="nte-demo-card-title">${demo.title}</h3>
-                  ${demo.description ? html`<p class="nte-demo-card-description">${demo.description}</p>` : nothing}
+              <button class="demo-card" @click="${() => this._selectDemo(i)}">
+                <span class="demo-card-index">${i + 1}</span>
+                <div class="demo-card-content">
+                  <h3 class="demo-card-title">${demo.title}</h3>
+                  ${demo.description ? html`<p class="demo-card-description">${demo.description}</p>` : nothing}
                 </div>
-                <span class="nte-demo-card-arrow">→</span>
+                <span class="demo-card-arrow">→</span>
               </button>
             `,
           )}
@@ -390,22 +497,23 @@ export class NteDemoViewerElement extends LitElement {
     if (!currentDemo) return nothing;
 
     return html`
-      <div class="nte-container ${this._codeViewOpen ? 'nte-split-view' : ''}">
-        <div class="nte-demo-content">
-          <tj-content-pane></tj-content-pane>
-          <tj-markdown-loader target="tj-content-pane" src="${currentDemo.src}"></tj-markdown-loader>
+      <div class="container ${this._codeViewOpen ? 'nte-split-view' : ''}">
+        <div class="demo-content" id="demo-content-container">
+          <!-- tj-content-pane and tj-markdown-loader will be inserted here dynamically -->
         </div>
 
-        ${this._codeViewOpen
+        ${this._codeViewOpen && !(currentDemo && this._isHtmlFile(currentDemo.src))
           ? html`
-              <div class="nte-code-panel">
-                <div class="nte-code-header">
-                  <span class="nte-code-title">Markdown Source</span>
-                  <span class="nte-code-file">${currentDemo.src}</span>
-                  <button class="nte-code-close" @click="${this._toggleCodeView}" title="Close editor">✕</button>
+              <div class="code-panel">
+                <div class="code-header">
+                  <span class="code-title"
+                    >${this._isHtmlFile(currentDemo.src) ? 'HTML Source' : 'Markdown Source'}</span
+                  >
+                  <span class="code-file">${currentDemo.src}</span>
+                  <button class="code-close" @click="${this._toggleCodeView}" title="Close editor">✕</button>
                 </div>
                 <textarea
-                  class="nte-code-editor"
+                  class="code-editor"
                   .value="${this._markdownContent}"
                   @input="${this._handleCodeInput}"
                   spellcheck="false"
@@ -421,10 +529,9 @@ export class NteDemoViewerElement extends LitElement {
 
   private _renderReadmeView() {
     return html`
-      <div class="nte-container">
-        <div class="nte-demo-content nte-readme-content">
-          <tj-content-pane></tj-content-pane>
-          <tj-markdown-loader target="tj-content-pane" src="${this.readme}"></tj-markdown-loader>
+      <div class="container">
+        <div class="demo-content nte-readme-content" id="readme-content-container">
+          <!-- tj-content-pane and tj-markdown-loader will be inserted here dynamically -->
         </div>
       </div>
     `;
@@ -439,13 +546,13 @@ export class NteDemoViewerElement extends LitElement {
       ${isInDemoOrReadme
         ? html`
             <button
-              class="nte-fab"
+              class="fab"
               @click="${this._toggleMenu}"
               title="Menu"
               aria-label="Open menu"
               aria-expanded="${this._menuOpen}"
             >
-              📋 ${this._demos.length > 0 ? html`<span class="nte-badge">${this._demos.length}</span>` : ''}
+              📋 ${this._demos.length > 0 ? html`<span class="badge">${this._demos.length}</span>` : ''}
             </button>
           `
         : nothing}
@@ -453,14 +560,14 @@ export class NteDemoViewerElement extends LitElement {
       <!-- Menu -->
       ${this._menuOpen
         ? html`
-            <div class="nte-backdrop" @click="${this._toggleMenu}"></div>
-            <nav class="nte-menu" role="menu" aria-label="Demo selection">
-              <div class="nte-menu-header">
+            <div class="backdrop" @click="${this._toggleMenu}"></div>
+            <nav class="menu" role="menu" aria-label="Demo selection">
+              <div class="menu-header">
                 <span>Navigation</span>
-                ${this._viewState === 'demo'
+                ${this._viewState === 'demo' && !(currentDemo && this._isHtmlFile(currentDemo.src))
                   ? html`
                       <button
-                        class="nte-code-toggle ${this._codeViewOpen ? 'active' : ''}"
+                        class="code-toggle ${this._codeViewOpen ? 'active' : ''}"
                         @click="${this._toggleCodeView}"
                         title="${this._codeViewOpen ? 'Hide Code' : 'Show Code'}"
                       >
@@ -471,9 +578,9 @@ export class NteDemoViewerElement extends LitElement {
               </div>
 
               <!-- Home Button -->
-              <button class="nte-menu-item nte-menu-home" role="menuitem" @click="${this._goHome}">
-                <div class="nte-menu-item-content">
-                  <span class="nte-menu-item-title">🏠 Home</span>
+              <button class="menu-item nte-menu-home" role="menuitem" @click="${this._goHome}">
+                <div class="menu-item-content">
+                  <span class="menu-item-title">🏠 Home</span>
                 </div>
               </button>
 
@@ -481,39 +588,39 @@ export class NteDemoViewerElement extends LitElement {
               ${this.readme
                 ? html`
                     <button
-                      class="nte-menu-item ${this._viewState === 'readme' ? 'active' : ''}"
+                      class="menu-item ${this._viewState === 'readme' ? 'active' : ''}"
                       role="menuitem"
                       @click="${this._showReadme}"
                     >
-                      <div class="nte-menu-item-content">
-                        <span class="nte-menu-item-title">📄 README.md</span>
+                      <div class="menu-item-content">
+                        <span class="menu-item-title">📄 README.md</span>
                       </div>
                       ${this._viewState === 'readme'
-                        ? html`<span class="nte-menu-item-check" aria-hidden="true">✓</span>`
+                        ? html`<span class="menu-item-check" aria-hidden="true">✓</span>`
                         : ''}
                     </button>
                   `
                 : nothing}
 
-              <div class="nte-menu-divider"></div>
+              <div class="menu-divider"></div>
 
               <!-- Demo List -->
               ${this._demos.map(
                 (demo, i) => html`
                   <button
-                    class="nte-menu-item ${i === this._currentIndex && this._viewState === 'demo' ? 'active' : ''}"
+                    class="menu-item ${i === this._currentIndex && this._viewState === 'demo' ? 'active' : ''}"
                     role="menuitem"
                     aria-current="${i === this._currentIndex && this._viewState === 'demo' ? 'true' : 'false'}"
                     @click="${() => this._selectDemo(i)}"
                   >
-                    <div class="nte-menu-item-content">
-                      <span class="nte-menu-item-title">${demo.title}</span>
+                    <div class="menu-item-content">
+                      <span class="menu-item-title">${demo.title}</span>
                       ${demo.description
-                        ? html`<span class="nte-menu-item-description">${demo.description}</span>`
+                        ? html`<span class="menu-item-description">${demo.description}</span>`
                         : nothing}
                     </div>
                     ${i === this._currentIndex && this._viewState === 'demo'
-                      ? html`<span class="nte-menu-item-check" aria-hidden="true">✓</span>`
+                      ? html`<span class="menu-item-check" aria-hidden="true">✓</span>`
                       : ''}
                   </button>
                 `,
