@@ -16,19 +16,39 @@ details {
   border-bottom: 1px solid var(--border-color);
   overflow: hidden;
 }
-details::details-content {
-  block-size: 0;
-  overflow: hidden;
-  transition:
-    block-size 0.5s,
-    content-visibility 0.5s;
-  transition-behavior: allow-discrete;
 
-  padding-inline: var(--content-padding);
+/* Fallback for browsers without ::details-content support */
+details:not([open]) .content {
+  display: none;
 }
-details:open::details-content {
-  block-size: auto;
+
+details[open] .content {
+  display: block;
 }
+
+/* Progressive enhancement: Smooth animation for browsers that support ::details-content */
+@supports selector(::details-content) {
+  details::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition:
+      block-size 0.5s,
+      content-visibility 0.5s;
+    transition-behavior: allow-discrete;
+    padding-inline: var(--content-padding);
+  }
+
+  details[open]::details-content {
+    block-size: auto;
+  }
+
+  /* When using ::details-content, let it handle visibility */
+  details:not([open]) .content,
+  details[open] .content {
+    display: block;
+  }
+}
+
 details * {
   margin: 0;
 }
