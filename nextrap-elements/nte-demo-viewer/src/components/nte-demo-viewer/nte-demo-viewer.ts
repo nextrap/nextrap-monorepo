@@ -14,6 +14,10 @@ interface DemoConfig {
   src: string;
   description?: string;
   slug: string;
+  /** Whether the source file exists and is accessible */
+  valid?: boolean;
+  /** Error message if validation failed */
+  error?: string;
 }
 
 /** View states */
@@ -69,9 +73,13 @@ export class NteDemoViewerElement extends LitElement {
   private _currentBlobUrl: string | null = null;
   private _iframeObservers: Map<HTMLIFrameElement, MutationObserver> = new Map();
 
+  @state()
+  private accessor _isValidating = false;
+
   override connectedCallback() {
     super.connectedCallback();
     this._parseDemos();
+    this._validateDemos();
     this._handleInitialRoute();
     window.addEventListener('popstate', this._handlePopState);
   }
@@ -153,6 +161,88 @@ export class NteDemoViewerElement extends LitElement {
   }
 
   /**
+   * Validate all demo sources by checking if files exist (HEAD request)
+   */
+  private async _validateDemos() {
+    if (this._demos.length === 0) return;
+
+    console.log('[nte-demo-viewer] Starting validation for', this._demos.length, 'demos');
+    this._isValidating = true;
+
+    // Create a new array to trigger reactivity
+    const updatedDemos = [...this._demos];
+
+    const validationPromises = updatedDemos.map(async (demo, index) => {
+      if (!demo.src) {
+        updatedDemos[index] = { ...demo, valid: false, error: 'No source path specified' };
+        console.log(`[nte-demo-viewer] Demo ${index} (${demo.title}): No source path`);
+        return;
+      }
+
+      try {
+        console.log(`[nte-demo-viewer] Validating demo ${index} (${demo.title}): ${demo.src}`);
+        // Use GET instead of HEAD to avoid CORS issues, but don't read the body
+        const response = await fetch(demo.src, { method: 'GET' });
+
+        const contentType = response.headers.get('content-type') || '';
+
+        console.log(`[nte-demo-viewer] Response for demo ${index}:`, {
+          status: response.status,
+          ok: response.ok,
+          type: response.type,
+          statusText: response.statusText,
+          contentType: contentType,
+        });
+
+        // Check if response is valid
+        // For .md files, expect text/markdown or text/plain, not text/html (which indicates fallback to index.html)
+        // For .html files, expect text/html
+        const isMarkdown = demo.src.toLowerCase().endsWith('.md');
+        const isHtml = demo.src.toLowerCase().endsWith('.html') || demo.src.toLowerCase().endsWith('.htm');
+
+        let isValidResponse = response.ok && response.type !== 'opaque';
+
+        // Additional check: If it's a markdown file but we get HTML, it's likely a 404 fallback
+        if (isValidResponse && isMarkdown && contentType.includes('text/html')) {
+          isValidResponse = false;
+          console.log(`[nte-demo-viewer] Demo ${index}: Expected markdown but got HTML (likely 404 fallback)`);
+        }
+
+        if (!isValidResponse) {
+          updatedDemos[index] = {
+            ...demo,
+            valid: false,
+            error:
+              response.type === 'opaque'
+                ? 'CORS error'
+                : contentType.includes('text/html') && isMarkdown
+                  ? 'File not found (404 fallback)'
+                  : `File not found (${response.status})`,
+          };
+          console.log(`[nte-demo-viewer] Demo ${index} (${demo.title}): INVALID`);
+        } else {
+          updatedDemos[index] = { ...demo, valid: true, error: undefined };
+          console.log(`[nte-demo-viewer] Demo ${index} (${demo.title}): VALID`);
+        }
+      } catch (error) {
+        updatedDemos[index] = {
+          ...demo,
+          valid: false,
+          error: error instanceof Error ? error.message : 'Failed to load',
+        };
+        console.log(`[nte-demo-viewer] Demo ${index} (${demo.title}): ERROR - ${error}`);
+      }
+    });
+
+    await Promise.all(validationPromises);
+
+    // Assign the new array to trigger LitElement reactivity
+    this._demos = updatedDemos;
+    this._isValidating = false;
+    console.log('[nte-demo-viewer] Validation complete. Updated demos:', this._demos);
+  }
+
+  /**
    * Update URL hash
    */
   private _updateUrl(hash: string) {
@@ -165,6 +255,13 @@ export class NteDemoViewerElement extends LitElement {
    */
   private _selectDemo(index: number, updateUrl = true) {
     if (index < 0 || index >= this._demos.length) return;
+
+    const demo = this._demos[index];
+
+    // Prevent selecting invalid or not-yet-validated demos
+    if (demo.valid !== true) {
+      return;
+    }
 
     this._currentIndex = index;
     this._viewState = 'demo';
@@ -282,6 +379,19 @@ export class NteDemoViewerElement extends LitElement {
     // Create new content pane and loader in Light DOM
     const currentDemo = this._demos[this._currentIndex];
     if (currentDemo) {
+      // Show error message for invalid demos (or still validating)
+      if (currentDemo.valid === false) {
+        this._renderErrorMessage(container, currentDemo);
+        return;
+      }
+
+      // Show loading state if still validating
+      if (currentDemo.valid === undefined) {
+        container.innerHTML =
+          '<div style="padding: 2rem; text-align: center; color: #666;">Validating demo file...</div>';
+        return;
+      }
+
       // Check if it's an HTML file
       if (this._isHtmlFile(currentDemo.src)) {
         // Load HTML directly without markdown parser
@@ -297,6 +407,34 @@ export class NteDemoViewerElement extends LitElement {
         container.appendChild(loader);
       }
     }
+  }
+
+  /**
+   * Render error message for invalid demo files
+   */
+  private _renderErrorMessage(container: Element, demo: DemoConfig) {
+    const errorDiv = document.createElement('div');
+    errorDiv.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+      padding: 2rem;
+      text-align: center;
+      background: rgba(220, 53, 69, 0.05);
+      border: 1px solid rgba(220, 53, 69, 0.2);
+      border-radius: 8px;
+      margin: 2rem;
+    `;
+    errorDiv.innerHTML = `
+      <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+      <h2 style="margin: 0 0 0.5rem 0; color: #dc3545; font-size: 1.5rem;">File Not Found</h2>
+      <p style="margin: 0 0 0.5rem 0; color: #666;">${demo.error || 'The requested file could not be loaded.'}</p>
+      <p style="margin: 0 0 1.5rem 0;"><code style="background: #f1f1f1; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.875rem;">${demo.src}</code></p>
+      <button style="padding: 0.5rem 1rem; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.875rem;" onclick="this.getRootNode().host._goHome()">← Back to Home</button>
+    `;
+    container.appendChild(errorDiv);
   }
 
   /**
@@ -493,18 +631,38 @@ export class NteDemoViewerElement extends LitElement {
         </header>
 
         <div class="demo-cards">
-          ${this._demos.map(
-            (demo, i) => html`
-              <button class="demo-card" @click="${() => this._selectDemo(i)}">
-                <span class="demo-card-index">${i + 1}</span>
+          ${this._demos.map((demo, i) => {
+            console.log(`[nte-demo-viewer] Rendering demo ${i}:`, demo.title, 'valid:', demo.valid);
+            return html`
+              <button
+                class="demo-card ${demo.valid === false ? 'demo-card-invalid' : ''} ${demo.valid === undefined
+                  ? 'demo-card-pending'
+                  : ''}"
+                @click="${() => this._selectDemo(i)}"
+                ?disabled="${demo.valid !== true}"
+                title="${demo.valid === false
+                  ? demo.error || 'File not found'
+                  : demo.valid === undefined
+                    ? 'Validating...'
+                    : demo.title}"
+              >
+                <span class="demo-card-index"
+                  >${demo.valid === false ? '⚠' : demo.valid === undefined ? '⏳' : i + 1}</span
+                >
                 <div class="demo-card-content">
                   <h3 class="demo-card-title">${demo.title}</h3>
-                  ${demo.description ? html`<p class="demo-card-description">${demo.description}</p>` : nothing}
+                  ${demo.valid === false
+                    ? html`<p class="demo-card-error">⚠ ${demo.error || 'File not found'}</p>`
+                    : demo.valid === undefined
+                      ? html`<p class="demo-card-description" style="color: #999;">Validating...</p>`
+                      : demo.description
+                        ? html`<p class="demo-card-description">${demo.description}</p>`
+                        : nothing}
                 </div>
-                <span class="demo-card-arrow">→</span>
+                ${demo.valid === true ? html`<span class="demo-card-arrow">→</span>` : nothing}
               </button>
-            `,
-          )}
+            `;
+          })}
         </div>
       </div>
     `;
@@ -626,16 +784,32 @@ export class NteDemoViewerElement extends LitElement {
               ${this._demos.map(
                 (demo, i) => html`
                   <button
-                    class="menu-item ${i === this._currentIndex && this._viewState === 'demo' ? 'active' : ''}"
+                    class="menu-item ${i === this._currentIndex && this._viewState === 'demo'
+                      ? 'active'
+                      : ''} ${demo.valid === false ? 'menu-item-invalid' : ''} ${demo.valid === undefined
+                      ? 'menu-item-pending'
+                      : ''}"
                     role="menuitem"
                     aria-current="${i === this._currentIndex && this._viewState === 'demo' ? 'true' : 'false'}"
                     @click="${() => this._selectDemo(i)}"
+                    ?disabled="${demo.valid !== true}"
+                    title="${demo.valid === false
+                      ? demo.error || 'File not found'
+                      : demo.valid === undefined
+                        ? 'Validating...'
+                        : ''}"
                   >
                     <div class="menu-item-content">
-                      <span class="menu-item-title">${demo.title}</span>
-                      ${demo.description
-                        ? html`<span class="menu-item-description">${demo.description}</span>`
-                        : nothing}
+                      <span class="menu-item-title"
+                        >${demo.valid === false ? '⚠ ' : demo.valid === undefined ? '⏳ ' : ''}${demo.title}</span
+                      >
+                      ${demo.valid === false
+                        ? html`<span class="menu-item-error">${demo.error || 'File not found'}</span>`
+                        : demo.valid === undefined
+                          ? html`<span class="menu-item-description" style="color: #999;">Validating...</span>`
+                          : demo.description
+                            ? html`<span class="menu-item-description">${demo.description}</span>`
+                            : nothing}
                     </div>
                     ${i === this._currentIndex && this._viewState === 'demo'
                       ? html`<span class="menu-item-check" aria-hidden="true">✓</span>`
