@@ -1,8 +1,10 @@
-import { html, LitElement, nothing } from 'lit';
+import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
 import '@trunkjs/content-pane';
 import '@trunkjs/markdown-loader';
+
+import styles from '../../styles/index.scss?inline';
 
 /**
  * Demo configuration parsed from <demo> child elements
@@ -33,14 +35,7 @@ type ViewState = 'welcome' | 'demo' | 'readme';
  */
 @customElement('nte-demo-viewer')
 export class NteDemoViewerElement extends LitElement {
-  /**
-   * Render to Light DOM instead of Shadow DOM.
-   * This is required because tj-markdown-loader needs to find tj-content-pane
-   * in the same DOM tree.
-   */
-  override createRenderRoot() {
-    return this;
-  }
+  static override styles = unsafeCSS(styles);
 
   /** Path to the component's README.md file */
   @property({ type: String })
@@ -250,11 +245,36 @@ export class NteDemoViewerElement extends LitElement {
   }
 
   /**
+   * Get or create the demo content container in Light DOM
+   */
+  private _getDemoContentContainer(): HTMLDivElement {
+    let container = this.querySelector<HTMLDivElement>('[slot="demo-content"]');
+    if (!container) {
+      container = document.createElement('div');
+      container.setAttribute('slot', 'demo-content');
+      this.appendChild(container);
+    }
+    return container;
+  }
+
+  /**
+   * Get or create the readme content container in Light DOM
+   */
+  private _getReadmeContentContainer(): HTMLDivElement {
+    let container = this.querySelector<HTMLDivElement>('[slot="readme-content"]');
+    if (!container) {
+      container = document.createElement('div');
+      container.setAttribute('slot', 'readme-content');
+      this.appendChild(container);
+    }
+    return container;
+  }
+
+  /**
    * Reload the markdown loader by removing and recreating it
    */
   private _reloadMarkdownLoader() {
-    const container = this.querySelector('#demo-content-container');
-    if (!container) return;
+    const container = this._getDemoContentContainer();
 
     // Clear container
     container.innerHTML = '';
@@ -299,8 +319,7 @@ export class NteDemoViewerElement extends LitElement {
    * Reload the README markdown loader
    */
   private _reloadReadmeLoader() {
-    const container = this.querySelector('#readme-content-container');
-    if (!container) return;
+    const container = this._getReadmeContentContainer();
 
     // Clear container
     container.innerHTML = '';
@@ -360,8 +379,7 @@ export class NteDemoViewerElement extends LitElement {
    * Reload demo from edited content (for live editing)
    */
   private _reloadDemoFromContent(content: string) {
-    const container = this.querySelector('#demo-content-container');
-    if (!container) return;
+    const container = this._getDemoContentContainer();
 
     const currentDemo = this._demos[this._currentIndex];
     if (!currentDemo) return;
@@ -497,9 +515,9 @@ export class NteDemoViewerElement extends LitElement {
     if (!currentDemo) return nothing;
 
     return html`
-      <div class="container ${this._codeViewOpen ? 'nte-split-view' : ''}">
-        <div class="demo-content" id="demo-content-container">
-          <!-- tj-content-pane and tj-markdown-loader will be inserted here dynamically -->
+      <div class="container ${this._codeViewOpen ? 'split-view' : ''}">
+        <div class="demo-content">
+          <slot name="demo-content"></slot>
         </div>
 
         ${this._codeViewOpen && !(currentDemo && this._isHtmlFile(currentDemo.src))
@@ -530,8 +548,8 @@ export class NteDemoViewerElement extends LitElement {
   private _renderReadmeView() {
     return html`
       <div class="container">
-        <div class="demo-content nte-readme-content" id="readme-content-container">
-          <!-- tj-content-pane and tj-markdown-loader will be inserted here dynamically -->
+        <div class="demo-content readme-content">
+          <slot name="readme-content"></slot>
         </div>
       </div>
     `;
@@ -578,7 +596,7 @@ export class NteDemoViewerElement extends LitElement {
               </div>
 
               <!-- Home Button -->
-              <button class="menu-item nte-menu-home" role="menuitem" @click="${this._goHome}">
+              <button class="menu-item menu-home" role="menuitem" @click="${this._goHome}">
                 <div class="menu-item-content">
                   <span class="menu-item-title">🏠 Home</span>
                 </div>
