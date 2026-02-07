@@ -52,7 +52,6 @@
             "@ntl-card-grid": ["nextrap-layout/ntl-card-grid/src/index.ts"],
             "@ntl-hero": ["nextrap-layout/ntl-hero/src/index.ts"],
             "@ntl-parallax-bg": ["nextrap-layout/ntl-parallax-bg/src/index.ts"],
-            "@ntl-slide": ["nextrap-layout/ntl-slide/src/index.ts"],
             "@ntl-slider": ["nextrap-layout/ntl-slider/src/index.ts"]
         }
     },
