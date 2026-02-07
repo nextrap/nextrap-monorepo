@@ -1,6 +1,6 @@
 {
     "name": "@nextrap/ntl-core",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "main": "./index.js",
     "dependencies": {
         "@nextrap/nte-core": "^1.0.0",
