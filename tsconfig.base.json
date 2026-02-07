@@ -17,6 +17,7 @@
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
         "paths": {
+            "@nextrap/nte-core": ["nextrap-elements/nte-core/index.ts"],
             "@nextrap/element-navbar": ["nextrap-elements/nxa-element-navbar/src/index.ts"],
             "@nextrap/nt-framework": ["nextrap-base/nt-framework/src/index.ts"],
             "@nextrap/nt-meta": ["nextrap-base/nt-meta/src/index.ts"],
@@ -50,6 +51,7 @@
             "@ntl-accordion": ["nextrap-layout/ntl-accordion/src/index.ts"],
             "@ntl-card": ["nextrap-layout/ntl-card/src/index.ts"],
             "@ntl-card-grid": ["nextrap-layout/ntl-card-grid/src/index.ts"],
+            "@nextrap/ntl-core": ["nextrap-layout/ntl-core/index.ts"],
             "@ntl-hero": ["nextrap-layout/ntl-hero/src/index.ts"],
             "@ntl-parallax-bg": ["nextrap-layout/ntl-parallax-bg/src/index.ts"],
             "@ntl-slider": ["nextrap-layout/ntl-slider/src/index.ts"]

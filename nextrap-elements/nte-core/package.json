@@ -1,0 +1,12 @@
+{
+    "name": "@nextrap/nte-core",
+    "version": "1.0.0",
+    "main": "./index.js",
+    "dependencies": {
+        "@trunkjs/browser-utils": "^1.0.34",
+        "lit": "^3.3.2"
+    },
+    "devDependencies": {},
+    "type": "module",
+    "types": "./index.d.ts"
+}

@@ -39,3 +39,5 @@ export class NtlCardRowElement extends BreakPointMixin(SubLayoutApplyMixin(Loggi
     this._count++;
   }
 }
+
+type wurst = typeof NtlCardRowElement;

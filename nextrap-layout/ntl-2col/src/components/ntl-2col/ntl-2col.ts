@@ -1,10 +1,11 @@
 import { isBiggerThanBreakpoint } from '@nextrap/nt-framework';
-import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
+import { nextrap_layout } from '@nextrap/ntl-core';
+import { html, PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import style from './ntl-2col.scss?inline';
 
 @customElement('ntl-2col')
-export class Ntl2Col extends LitElement {
+export class Ntl2Col extends nextrap_layout({ breakpoints: true, subLayoutApplyMixin: true }) {
   static override styles = [unsafeCSS(style)];
 
   @property({ type: String, reflect: true })
