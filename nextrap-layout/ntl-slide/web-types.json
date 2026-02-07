@@ -1,0 +1,45 @@
+{
+    "name": "ntl-slide",
+    "version": "1.0.0",
+    "contributions": {
+        "html": {
+            "elements": [
+                {
+                    "name": "ntl-slide",
+                    "description": "Add logic scope to the html elements below",
+                    "slots": [{ "name": "default", "description": "Content of button" }],
+                    "events": [{ "name": "click", "description": "Fired on click" }],
+                    "attributes": [
+                        {
+                            "name": "debug",
+                            "type": "boolean",
+                            "description": "Enable debug mode (output debug information to the console)"
+                        },
+                        {
+                            "name": "init",
+                            "type": "string",
+                            "description": "Initialize component scope by evaluating a JSON/JS expression (supports await fetch, DOM access)."
+                        }
+                    ]
+                }
+            ]
+        },
+        "css": {
+            "classes": [
+                {
+                    "name": "variant1",
+                    "description": "Css Class variant1"
+                }
+            ],
+            "scopes": [
+                {
+                    "name": "my-button",
+                    "description": "Button specific classes",
+                    "css": {
+                        "classes": [{ "name": "icon-left" }, { "name": "icon-right" }]
+                    }
+                }
+            ]
+        }
+    }
+}

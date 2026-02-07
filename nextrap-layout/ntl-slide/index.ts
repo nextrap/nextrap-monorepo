@@ -1,4 +1,4 @@
-export * from './src/components/ntl-slider/ntl-slider';
+export * from './src/components/ntl-slide/ntl-slide';
 
 // If mixin exisists, export it
 // export * from './src/mixins/NtlSliderMixin';
