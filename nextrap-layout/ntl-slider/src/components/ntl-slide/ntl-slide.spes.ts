@@ -1,10 +1,10 @@
 import { expect } from 'vitest';
-import { NtlSliderElement } from './ntl-slider';
+import { NtlSlideElement } from './ntl-slide';
 
-describe('ntl-slider', () => {
+describe('ntl-slide', () => {
   it('should create an element', () => {
-    const el = new NtlSliderElement();
-    expect(el).toBeInstanceOf(NtlSliderElement);
+    const el = new NtlSlideElement();
+    expect(el).toBeInstanceOf(NtlSlideElement);
   });
 
   it.todo('write some real tests!');
