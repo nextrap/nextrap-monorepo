@@ -5,7 +5,12 @@ import { customElement, property } from 'lit/decorators.js';
 import style from './ntl-2col.scss?inline';
 
 @customElement('ntl-2col')
-export class Ntl2Col extends nextrap_layout({ breakpoints: true, subLayoutApplyMixin: true }) {
+export class Ntl2Col extends nextrap_layout({
+  breakpoints: true,
+  subLayoutApplyMixin: true,
+  slotVisibility: false,
+  eventBinding: false,
+}) {
   static override styles = [unsafeCSS(style)];
 
   @property({ type: String, reflect: true })
