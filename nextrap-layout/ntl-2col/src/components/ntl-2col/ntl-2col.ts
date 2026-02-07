@@ -43,18 +43,18 @@ export class Ntl2Col extends nextrap_layout({
     return html`
       <section part="section" style="--cols: ${this.cols};">
         <div part="top">
-          <slot name="top"></slot>
+          <slot name="top" data-query=":scope > .top"></slot>
         </div>
         <div id="row" class="${isBigger ? 'row' : 'col'}">
           <div part="main">
             <slot></slot>
           </div>
-          <div part="aside">
-            <slot name="aside"></slot>
+          <div part="aside" >
+            <slot name="aside" data-query=":scope > aside | :scope > p:has(img)"></slot>
           </div>
         </div>
         <div part="bottom">
-          <slot name="bottom"></slot>
+          <slot name="bottom" data-query=":scope > .bottom"></slot>
         </div>
       </section>
     `;
