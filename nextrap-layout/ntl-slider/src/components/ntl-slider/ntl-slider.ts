@@ -1,7 +1,7 @@
 import { EventBindingsMixin, LoggingMixin, SlotVisibilityMixin } from '@trunkjs/browser-utils';
 import { SubLayoutApplyMixin } from '@trunkjs/content-pane';
 import { html, LitElement, unsafeCSS } from 'lit';
-import { customElement, property, queryAssignedElements, state } from 'lit/decorators.js';
+import { customElement, property, queryAssignedElements } from 'lit/decorators.js';
 
 // Styles for the light DOM
 import { resetStyle } from '@nextrap/style-reset';
@@ -27,7 +27,6 @@ export class NtlSliderElement extends SlotVisibilityMixin(
   @property({ type: Number, attribute: 'autoplay-interval' })
   public accessor autoplayInterval = 5000;
 
-  @state()
   private accessor slides: Element[] = [];
 
   private autoplayTimer?: number;
