@@ -76,10 +76,10 @@ export class NteDemoViewerElement extends LitElement {
   @state()
   private accessor _isValidating = false;
 
-  override connectedCallback() {
+  override async connectedCallback() {
     super.connectedCallback();
     this._parseDemos();
-    this._validateDemos();
+    await this._validateDemos();
     this._handleInitialRoute();
     window.addEventListener('popstate', this._handlePopState);
   }
@@ -137,13 +137,6 @@ export class NteDemoViewerElement extends LitElement {
   }
 
   /**
-   * Extract filename with extension from a path
-   */
-  private _extractFilename(src: string): string {
-    return src.split('/').pop() || '';
-  }
-
-  /**
    * Parse <demo> child elements to extract demo configurations
    */
   private _parseDemos() {
@@ -155,7 +148,7 @@ export class NteDemoViewerElement extends LitElement {
         title,
         src,
         description: el.getAttribute('description') || undefined,
-        slug: this._extractFilename(src),
+        slug: src.substring(1),
       };
     });
   }
@@ -166,7 +159,6 @@ export class NteDemoViewerElement extends LitElement {
   private async _validateDemos() {
     if (this._demos.length === 0) return;
 
-    console.log('[nte-demo-viewer] Starting validation for', this._demos.length, 'demos');
     this._isValidating = true;
 
     // Create a new array to trigger reactivity
@@ -175,24 +167,14 @@ export class NteDemoViewerElement extends LitElement {
     const validationPromises = updatedDemos.map(async (demo, index) => {
       if (!demo.src) {
         updatedDemos[index] = { ...demo, valid: false, error: 'No source path specified' };
-        console.log(`[nte-demo-viewer] Demo ${index} (${demo.title}): No source path`);
         return;
       }
 
       try {
-        console.log(`[nte-demo-viewer] Validating demo ${index} (${demo.title}): ${demo.src}`);
         // Use GET instead of HEAD to avoid CORS issues, but don't read the body
         const response = await fetch(demo.src, { method: 'GET' });
 
         const contentType = response.headers.get('content-type') || '';
-
-        console.log(`[nte-demo-viewer] Response for demo ${index}:`, {
-          status: response.status,
-          ok: response.ok,
-          type: response.type,
-          statusText: response.statusText,
-          contentType: contentType,
-        });
 
         // Check if response is valid
         // For .md files, expect text/markdown or text/plain, not text/html (which indicates fallback to index.html)
@@ -205,7 +187,6 @@ export class NteDemoViewerElement extends LitElement {
         // Additional check: If it's a markdown file but we get HTML, it's likely a 404 fallback
         if (isValidResponse && isMarkdown && contentType.includes('text/html')) {
           isValidResponse = false;
-          console.log(`[nte-demo-viewer] Demo ${index}: Expected markdown but got HTML (likely 404 fallback)`);
         }
 
         if (!isValidResponse) {
@@ -219,10 +200,8 @@ export class NteDemoViewerElement extends LitElement {
                   ? 'File not found (404 fallback)'
                   : `File not found (${response.status})`,
           };
-          console.log(`[nte-demo-viewer] Demo ${index} (${demo.title}): INVALID`);
         } else {
           updatedDemos[index] = { ...demo, valid: true, error: undefined };
-          console.log(`[nte-demo-viewer] Demo ${index} (${demo.title}): VALID`);
         }
       } catch (error) {
         updatedDemos[index] = {
@@ -230,7 +209,6 @@ export class NteDemoViewerElement extends LitElement {
           valid: false,
           error: error instanceof Error ? error.message : 'Failed to load',
         };
-        console.log(`[nte-demo-viewer] Demo ${index} (${demo.title}): ERROR - ${error}`);
       }
     });
 
@@ -239,7 +217,6 @@ export class NteDemoViewerElement extends LitElement {
     // Assign the new array to trigger LitElement reactivity
     this._demos = updatedDemos;
     this._isValidating = false;
-    console.log('[nte-demo-viewer] Validation complete. Updated demos:', this._demos);
   }
 
   /**
@@ -632,7 +609,6 @@ export class NteDemoViewerElement extends LitElement {
 
         <div class="demo-cards">
           ${this._demos.map((demo, i) => {
-            console.log(`[nte-demo-viewer] Rendering demo ${i}:`, demo.title, 'valid:', demo.valid);
             return html`
               <button
                 class="demo-card ${demo.valid === false ? 'demo-card-invalid' : ''} ${demo.valid === undefined
