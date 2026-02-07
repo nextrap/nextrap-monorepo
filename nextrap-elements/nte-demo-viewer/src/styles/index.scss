@@ -1,8 +1,8 @@
 /**
- * This file contains LightDOM Styles for nte-demo-viewer
+ * ShadowDOM Styles for nte-demo-viewer
  */
 
-nte-demo-viewer {
+:host {
   // CSS Custom Properties for theming
   --nte-fab-size: 56px;
   --nte-fab-bg: var(--nt-primary);
@@ -33,15 +33,15 @@ nte-demo-viewer {
   --nte-code-font: 'Consolas', 'Monaco', 'Courier New', monospace;
 
   display: block;
+}
 
-  // Hide demo configuration elements
-  demo {
-    display: none;
-  }
+// Hide demo configuration elements (in Light DOM, selected via ::slotted)
+::slotted(demo) {
+  display: none;
 }
 
 // Floating Action Button
-.nte-fab {
+.fab {
   position: fixed;
   bottom: 2rem;
   right: 2rem;
@@ -73,7 +73,7 @@ nte-demo-viewer {
 }
 
 // Badge on FAB
-.nte-badge {
+.badge {
   position: absolute;
   top: -4px;
   right: -4px;
@@ -88,7 +88,7 @@ nte-demo-viewer {
 }
 
 // Menu
-.nte-menu {
+.menu {
   position: fixed;
   bottom: calc(var(--nte-fab-size) + 3rem);
   right: 2rem;
@@ -98,10 +98,10 @@ nte-demo-viewer {
   box-shadow: var(--nte-menu-shadow);
   z-index: calc(var(--nte-fab-z-index) + 1);
   overflow: hidden;
-  animation: nte-menu-appear 0.2s ease;
+  animation: menu-appear 0.2s ease;
 }
 
-@keyframes nte-menu-appear {
+@keyframes menu-appear {
   from {
     opacity: 0;
     transform: translateY(10px) scale(0.95);
@@ -112,7 +112,7 @@ nte-demo-viewer {
   }
 }
 
-.nte-menu-header {
+.menu-header {
   padding: 1rem 1.25rem;
   font-weight: 600;
   font-size: 0.875rem;
@@ -121,7 +121,7 @@ nte-demo-viewer {
   color: var(--nte-menu-item-color);
 }
 
-.nte-menu-item {
+.menu-item {
   width: 100%;
   padding: 0.75rem 1.25rem;
   border: none;
@@ -148,13 +148,13 @@ nte-demo-viewer {
     background: var(--nte-menu-item-active-bg);
     color: var(--nte-menu-item-active-color);
 
-    .nte-menu-item-title {
+    .menu-item-title {
       font-weight: 500;
     }
   }
 }
 
-.nte-menu-item-content {
+.menu-item-content {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -162,12 +162,12 @@ nte-demo-viewer {
   min-width: 0;
 }
 
-.nte-menu-item-title {
+.menu-item-title {
   font-size: 0.875rem;
   line-height: 1.4;
 }
 
-.nte-menu-item-description {
+.menu-item-description {
   font-size: 0.75rem;
   color: #6b7280;
   line-height: 1.4;
@@ -178,21 +178,51 @@ nte-demo-viewer {
   }
 }
 
-.nte-menu-item-check {
+.menu-item-check {
   flex-shrink: 0;
   margin-top: 0.125rem;
 }
 
+// Invalid Menu Item (file not found)
+.menu-item-invalid {
+  opacity: 0.5;
+  cursor: not-allowed;
+
+  &:hover {
+    background: var(--nte-menu-bg);
+  }
+
+  .menu-item-title {
+    color: var(--nt-danger, #dc3545);
+  }
+}
+
+.menu-item-error {
+  font-size: 0.7rem;
+  color: var(--nt-danger, #dc3545);
+  line-height: 1.3;
+}
+
+// Pending Menu Item (still validating)
+.menu-item-pending {
+  opacity: 0.6;
+  cursor: wait;
+
+  &:hover {
+    background: var(--nte-menu-bg);
+  }
+}
+
 // Backdrop
-.nte-backdrop {
+.backdrop {
   position: fixed;
   inset: 0;
   background: var(--nte-backdrop-bg);
   z-index: calc(var(--nte-fab-z-index) - 1);
-  animation: nte-fade-in 0.15s ease;
+  animation: fade-in 0.15s ease;
 }
 
-@keyframes nte-fade-in {
+@keyframes fade-in {
   from {
     opacity: 0;
   }
@@ -205,24 +235,16 @@ nte-demo-viewer {
 // Split View & Code Editor Styles
 // ============================================
 
-/* nte-demo-viewer {
-  --nte-code-bg: ;
-  --nte-code-color: #d4d4d4;
-  --nte-code-header-bg: #252526;
-  --nte-code-border: #333;
-  --nte-code-font: 'Consolas', 'Monaco', 'Courier New', monospace;
-}
- */
 // Container
-.nte-container {
+.container {
   display: block;
   min-height: 100vh;
   transition: padding-right 0.3s ease;
 }
 
 // Split View Mode
-.nte-split-view {
-  .nte-demo-content {
+.split-view {
+  .demo-content {
     margin-right: 50%;
     transition: margin-right 0.3s ease;
 
@@ -234,7 +256,7 @@ nte-demo-viewer {
 }
 
 // Demo Content Area
-.nte-demo-content {
+.demo-content {
   /*  padding: 2rem; */
   transition: margin 0.3s ease;
 
@@ -244,7 +266,7 @@ nte-demo-viewer {
 }
 
 // Code Panel
-.nte-code-panel {
+.code-panel {
   position: fixed;
   top: 0;
   right: 0;
@@ -255,7 +277,7 @@ nte-demo-viewer {
   background: var(--nte-code-bg);
   border-left: 1px solid var(--nte-code-border);
   z-index: 100;
-  animation: nte-slide-in 0.3s ease;
+  animation: slide-in 0.3s ease;
 
   @media (max-width: 1024px) {
     width: 100%;
@@ -267,7 +289,7 @@ nte-demo-viewer {
   }
 }
 
-@keyframes nte-slide-in {
+@keyframes slide-in {
   from {
     opacity: 0;
     transform: translateX(20px);
@@ -279,7 +301,7 @@ nte-demo-viewer {
 }
 
 // Code Header
-.nte-code-header {
+.code-header {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -290,12 +312,12 @@ nte-demo-viewer {
   font-size: 0.875rem;
 }
 
-.nte-code-title {
+.code-title {
   font-weight: 600;
   color: #fff;
 }
 
-.nte-code-file {
+.code-file {
   flex: 1;
   color: var(--nt-primary-subtle);
   font-size: 0.8125rem;
@@ -304,7 +326,7 @@ nte-demo-viewer {
   white-space: nowrap;
 }
 
-.nte-code-close {
+.code-close {
   width: 28px;
   height: 28px;
   border: none;
@@ -325,7 +347,7 @@ nte-demo-viewer {
 }
 
 // Code Editor Textarea
-.nte-code-editor {
+.code-editor {
   flex: 1;
   padding: 1rem;
   background: var(--nte-code-bg);
@@ -352,13 +374,13 @@ nte-demo-viewer {
 }
 
 // Code Toggle Button in Menu Header
-.nte-menu-header {
+.menu-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.nte-code-toggle {
+.code-toggle {
   width: 32px;
   height: 32px;
   border: 1px solid #d1d5db;
@@ -387,7 +409,7 @@ nte-demo-viewer {
 }
 
 // Menu Divider
-.nte-menu-divider {
+.menu-divider {
   height: 1px;
   background: var(--nte-menu-border);
   margin: 0.5rem 0;
@@ -397,7 +419,7 @@ nte-demo-viewer {
 // Welcome Screen Styles
 // ============================================
 
-.nte-welcome {
+.welcome {
   min-height: 100vh;
   padding: 3rem 2rem;
   background: linear-gradient(90deg, var(--nt-white) 0%, var(--nt-body) 100%);
@@ -407,7 +429,7 @@ nte-demo-viewer {
   }
 }
 
-.nte-welcome-header {
+.welcome-header {
   display: flex;
   align-items: center;
   justify-content: space-start;
@@ -416,7 +438,7 @@ nte-demo-viewer {
   flex-wrap: wrap;
 }
 
-.nte-welcome-title {
+.welcome-title {
   font-size: 2.5rem;
   font-weight: 700;
   color: var(--nt-dark);
@@ -427,7 +449,7 @@ nte-demo-viewer {
   }
 }
 
-.nte-readme-link {
+.readme-link {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -452,12 +474,12 @@ nte-demo-viewer {
   }
 }
 
-.nte-readme-icon {
+.readme-icon {
   font-size: 1rem;
 }
 
 // Demo Cards Grid
-.nte-demo-cards {
+.demo-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.25rem;
@@ -468,7 +490,7 @@ nte-demo-viewer {
 }
 
 // Individual Demo Card
-.nte-demo-card {
+.demo-card {
   display: flex;
   align-items: flex-start;
   gap: 1rem;
@@ -485,12 +507,12 @@ nte-demo-viewer {
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 
-    .nte-demo-card-index {
+    .demo-card-index {
       background: var(--nt-primary);
       color: var(--nt-text-on-primary);
     }
 
-    .nte-demo-card-arrow {
+    .demo-card-arrow {
       opacity: 1;
       transform: translateX(0);
       color: var(--nt-primary);
@@ -502,7 +524,7 @@ nte-demo-viewer {
   }
 }
 
-.nte-demo-card-index {
+.demo-card-index {
   flex-shrink: 0;
   width: 36px;
   height: 36px;
@@ -517,12 +539,12 @@ nte-demo-viewer {
   transition: all 0.2s ease;
 }
 
-.nte-demo-card-content {
+.demo-card-content {
   flex: 1;
   min-width: 0;
 }
 
-.nte-demo-card-title {
+.demo-card-title {
   margin: 0 0 0.375rem 0;
   font-size: 1rem;
   font-weight: 600;
@@ -530,14 +552,14 @@ nte-demo-viewer {
   line-height: 1.4;
 }
 
-.nte-demo-card-description {
+.demo-card-description {
   margin: 0;
   font-size: 0.875rem;
   color: var(--nt-text);
   line-height: 1.5;
 }
 
-.nte-demo-card-arrow {
+.demo-card-arrow {
   flex-shrink: 0;
   font-size: 1.25rem;
   color: var(--nt-secondary-subtle);
@@ -547,8 +569,55 @@ nte-demo-viewer {
   align-self: center;
 }
 
+// Invalid Demo Card (file not found)
+.demo-card-invalid {
+  opacity: 0.6;
+  cursor: not-allowed;
+  border-color: var(--nt-danger, #dc3545);
+  background: var(--nt-danger-subtle, rgba(220, 53, 69, 0.05));
+
+  &:hover {
+    transform: none;
+    box-shadow: none;
+    background: var(--nt-danger-subtle, rgba(220, 53, 69, 0.05));
+  }
+
+  .demo-card-index {
+    background: var(--nt-danger, #dc3545);
+    color: var(--nt-text-on-danger, #fff);
+  }
+
+  .demo-card-title {
+    color: var(--nt-danger, #dc3545);
+  }
+}
+
+.demo-card-error {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--nt-danger, #dc3545);
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+// Pending Demo Card (still validating)
+.demo-card-pending {
+  opacity: 0.7;
+  cursor: wait;
+
+  &:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .demo-card-index {
+    background: var(--nt-secondary, #6c757d);
+    color: white;
+  }
+}
+
 // README Content styling
-.nte-readme-content {
+.readme-content {
   padding: 2rem;
   max-width: 900px;
   margin: 0 auto;
@@ -559,166 +628,8 @@ nte-demo-viewer {
 }
 
 // ============================================
-// Markdown Content Styles (for README/docs)
+// Note: Demo content is rendered in Light DOM via slots,
+// allowing external stylesheets to style the content.
+// Define your own styles for h1, h2, p, code, etc. in your
+// global stylesheet or use tj-content-pane's built-in styles.
 // ============================================
-
-.nte-demo-content,
-.nte-readme-content {
-  // Typography
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    color: var(--nt-dark);
-    font-weight: 600;
-    line-height: 1.3;
-    margin-top: 1.5em;
-    margin-bottom: 0.5em;
-
-    &:first-child {
-      margin-top: 0;
-    }
-  }
-
-  h1 {
-    font-size: 2rem;
-    border-bottom: 2px solid var(--nt-primary);
-    padding-bottom: 0.5rem;
-  }
-
-  h2 {
-    font-size: 1.5rem;
-    border-bottom: 1px solid var(--nt-light-emphasis);
-    padding-bottom: 0.375rem;
-  }
-
-  h3 {
-    font-size: 1.25rem;
-  }
-
-  h4 {
-    font-size: 1.1rem;
-  }
-
-  p {
-    margin: 1em 0;
-    line-height: 1.7;
-  }
-
-  // Links
-  a {
-    color: var(--nt-primary);
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
-  // Lists
-  ul,
-  ol {
-    margin: 1em 0;
-    padding-left: 2em;
-
-    li {
-      margin: 0.5em 0;
-      line-height: 1.6;
-    }
-  }
-
-  // Code - Inline
-  code {
-    background: var(--nte-code-bg);
-    color: var(--nte-code-color);
-    padding: 0.2em 0.4em;
-    border-radius: 4px;
-    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-    font-size: 0.875em;
-  }
-
-  // Code - Block
-  pre {
-    background: var(--nte-code-bg);
-    color: var(--nte-code-color);
-    padding: 1rem 1.25rem;
-    border-radius: 8px;
-    overflow-x: auto;
-    margin: 1.5em 0;
-    font-size: 0.875rem;
-    line-height: 1.6;
-
-    code {
-      background: transparent;
-      color: inherit;
-      padding: 0;
-      border-radius: 0;
-      font-size: inherit;
-    }
-  }
-
-  // Tables
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1.5em 0;
-    font-size: 0.9rem;
-
-    th,
-    td {
-      padding: 0.75rem 1rem;
-      text-align: left;
-      border: 1px solid var(--nt-light-emphasis);
-    }
-
-    th {
-      background: var(--nt-light);
-      font-weight: 600;
-      color: var(--nt-dark);
-    }
-
-    tr:nth-child(even) {
-      background: rgba(0, 0, 0, 0.02);
-    }
-
-    tr:hover {
-      background: var(--nt-primary-subtle);
-    }
-
-    // Responsive table
-    @media (max-width: 768px) {
-      display: block;
-      overflow-x: auto;
-      white-space: nowrap;
-    }
-  }
-
-  // Blockquotes
-  blockquote {
-    margin: 1.5em 0;
-    padding: 1rem 1.5rem;
-    border-left: 4px solid var(--nt-primary);
-    background: var(--nt-primary-subtle);
-    color: var(--nt-dark);
-
-    p {
-      margin: 0;
-    }
-  }
-
-  // Horizontal Rule
-  hr {
-    border: none;
-    border-top: 1px solid var(--nt-light-emphasis);
-    margin: 2em 0;
-  }
-
-  // Images
-  img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-  }
-}

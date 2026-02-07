@@ -1,8 +1,10 @@
-import { html, LitElement, nothing } from 'lit';
+import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
 import '@trunkjs/content-pane';
 import '@trunkjs/markdown-loader';
+
+import styles from '../../styles/index.scss?inline';
 
 /**
  * Demo configuration parsed from <demo> child elements
@@ -12,6 +14,10 @@ interface DemoConfig {
   src: string;
   description?: string;
   slug: string;
+  /** Whether the source file exists and is accessible */
+  valid?: boolean;
+  /** Error message if validation failed */
+  error?: string;
 }
 
 /** View states */
@@ -33,14 +39,7 @@ type ViewState = 'welcome' | 'demo' | 'readme';
  */
 @customElement('nte-demo-viewer')
 export class NteDemoViewerElement extends LitElement {
-  /**
-   * Render to Light DOM instead of Shadow DOM.
-   * This is required because tj-markdown-loader needs to find tj-content-pane
-   * in the same DOM tree.
-   */
-  override createRenderRoot() {
-    return this;
-  }
+  static override styles = unsafeCSS(styles);
 
   /** Path to the component's README.md file */
   @property({ type: String })
@@ -65,20 +64,22 @@ export class NteDemoViewerElement extends LitElement {
   @state()
   private accessor _codeViewOpen = false;
 
-  @state()
-  private accessor _markdownContent = '';
+  private _markdownContent = '';
 
   @state()
   private accessor _isLoadingCode = false;
 
-  @state()
-  private accessor _readmeContent = '';
-
   private _debounceTimer: number | null = null;
+  private _currentBlobUrl: string | null = null;
+  private _iframeObservers: Map<HTMLIFrameElement, MutationObserver> = new Map();
+
+  @state()
+  private accessor _isValidating = false;
 
   override connectedCallback() {
     super.connectedCallback();
     this._parseDemos();
+    this._validateDemos();
     this._handleInitialRoute();
     window.addEventListener('popstate', this._handlePopState);
   }
@@ -86,6 +87,22 @@ export class NteDemoViewerElement extends LitElement {
   override disconnectedCallback() {
     super.disconnectedCallback();
     window.removeEventListener('popstate', this._handlePopState);
+
+    // Cleanup: Revoke blob URL if exists
+    if (this._currentBlobUrl) {
+      URL.revokeObjectURL(this._currentBlobUrl);
+      this._currentBlobUrl = null;
+    }
+
+    // Cleanup: Disconnect all MutationObservers
+    this._iframeObservers.forEach((observer) => observer.disconnect());
+    this._iframeObservers.clear();
+
+    // Cleanup: Clear debounce timer
+    if (this._debounceTimer) {
+      clearTimeout(this._debounceTimer);
+      this._debounceTimer = null;
+    }
   }
 
   private _handlePopState = () => {
@@ -120,17 +137,10 @@ export class NteDemoViewerElement extends LitElement {
   }
 
   /**
-   * Generate URL-safe slug from title
+   * Extract filename with extension from a path
    */
-  private _generateSlug(title: string): string {
-    return title
-      .toLowerCase()
-      .replace(/[äöüß]/g, (char) => {
-        const map: Record<string, string> = { ä: 'ae', ö: 'oe', ü: 'ue', ß: 'ss' };
-        return map[char] || char;
-      })
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-|-$/g, '');
+  private _extractFilename(src: string): string {
+    return src.split('/').pop() || '';
   }
 
   /**
@@ -140,13 +150,96 @@ export class NteDemoViewerElement extends LitElement {
     const demoElements = Array.from(this.querySelectorAll('demo'));
     this._demos = demoElements.map((el) => {
       const title = el.getAttribute('title') || 'Untitled Demo';
+      const src = el.getAttribute('src') || '';
       return {
         title,
-        src: el.getAttribute('src') || '',
+        src,
         description: el.getAttribute('description') || undefined,
-        slug: this._generateSlug(title),
+        slug: this._extractFilename(src),
       };
     });
+  }
+
+  /**
+   * Validate all demo sources by checking if files exist (HEAD request)
+   */
+  private async _validateDemos() {
+    if (this._demos.length === 0) return;
+
+    console.log('[nte-demo-viewer] Starting validation for', this._demos.length, 'demos');
+    this._isValidating = true;
+
+    // Create a new array to trigger reactivity
+    const updatedDemos = [...this._demos];
+
+    const validationPromises = updatedDemos.map(async (demo, index) => {
+      if (!demo.src) {
+        updatedDemos[index] = { ...demo, valid: false, error: 'No source path specified' };
+        console.log(`[nte-demo-viewer] Demo ${index} (${demo.title}): No source path`);
+        return;
+      }
+
+      try {
+        console.log(`[nte-demo-viewer] Validating demo ${index} (${demo.title}): ${demo.src}`);
+        // Use GET instead of HEAD to avoid CORS issues, but don't read the body
+        const response = await fetch(demo.src, { method: 'GET' });
+
+        const contentType = response.headers.get('content-type') || '';
+
+        console.log(`[nte-demo-viewer] Response for demo ${index}:`, {
+          status: response.status,
+          ok: response.ok,
+          type: response.type,
+          statusText: response.statusText,
+          contentType: contentType,
+        });
+
+        // Check if response is valid
+        // For .md files, expect text/markdown or text/plain, not text/html (which indicates fallback to index.html)
+        // For .html files, expect text/html
+        const isMarkdown = demo.src.toLowerCase().endsWith('.md');
+        const isHtml = demo.src.toLowerCase().endsWith('.html') || demo.src.toLowerCase().endsWith('.htm');
+
+        let isValidResponse = response.ok && response.type !== 'opaque';
+
+        // Additional check: If it's a markdown file but we get HTML, it's likely a 404 fallback
+        if (isValidResponse && isMarkdown && contentType.includes('text/html')) {
+          isValidResponse = false;
+          console.log(`[nte-demo-viewer] Demo ${index}: Expected markdown but got HTML (likely 404 fallback)`);
+        }
+
+        if (!isValidResponse) {
+          updatedDemos[index] = {
+            ...demo,
+            valid: false,
+            error:
+              response.type === 'opaque'
+                ? 'CORS error'
+                : contentType.includes('text/html') && isMarkdown
+                  ? 'File not found (404 fallback)'
+                  : `File not found (${response.status})`,
+          };
+          console.log(`[nte-demo-viewer] Demo ${index} (${demo.title}): INVALID`);
+        } else {
+          updatedDemos[index] = { ...demo, valid: true, error: undefined };
+          console.log(`[nte-demo-viewer] Demo ${index} (${demo.title}): VALID`);
+        }
+      } catch (error) {
+        updatedDemos[index] = {
+          ...demo,
+          valid: false,
+          error: error instanceof Error ? error.message : 'Failed to load',
+        };
+        console.log(`[nte-demo-viewer] Demo ${index} (${demo.title}): ERROR - ${error}`);
+      }
+    });
+
+    await Promise.all(validationPromises);
+
+    // Assign the new array to trigger LitElement reactivity
+    this._demos = updatedDemos;
+    this._isValidating = false;
+    console.log('[nte-demo-viewer] Validation complete. Updated demos:', this._demos);
   }
 
   /**
@@ -162,6 +255,13 @@ export class NteDemoViewerElement extends LitElement {
    */
   private _selectDemo(index: number, updateUrl = true) {
     if (index < 0 || index >= this._demos.length) return;
+
+    const demo = this._demos[index];
+
+    // Prevent selecting invalid or not-yet-validated demos
+    if (demo.valid !== true) {
+      return;
+    }
 
     this._currentIndex = index;
     this._viewState = 'demo';
@@ -187,27 +287,154 @@ export class NteDemoViewerElement extends LitElement {
   }
 
   /**
+   * Check if file is HTML based on extension
+   */
+  private _isHtmlFile(src: string): boolean {
+    return src.toLowerCase().endsWith('.html') || src.toLowerCase().endsWith('.htm');
+  }
+
+  /**
+   * Setup auto-resize for iframe based on content
+   */
+  private _setupIframeAutoResize(iframe: HTMLIFrameElement) {
+    iframe.onload = () => {
+      try {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+        if (iframeDoc) {
+          const resizeIframe = () => {
+            const height = iframeDoc.body.scrollHeight;
+            iframe.style.height = height + 'px';
+          };
+
+          // Initial resize
+          resizeIframe();
+
+          // Observe changes in iframe content
+          const observer = new MutationObserver(resizeIframe);
+          observer.observe(iframeDoc.body, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+          });
+
+          // Store observer for cleanup
+          this._iframeObservers.set(iframe, observer);
+        }
+      } catch (e) {
+        // Cross-origin iframe, can't access content
+        iframe.style.height = '600px';
+      }
+    };
+  }
+
+  /**
+   * Load HTML file in an iframe for proper execution
+   */
+  private _loadHtmlContent(src: string, container: Element) {
+    const iframe = document.createElement('iframe');
+    iframe.src = src;
+    iframe.style.width = '100%';
+    iframe.style.border = 'none';
+    iframe.style.minHeight = '400px';
+
+    this._setupIframeAutoResize(iframe);
+    container.appendChild(iframe);
+  }
+
+  /**
+   * Get or create the demo content container in Light DOM
+   */
+  private _getDemoContentContainer(): HTMLDivElement {
+    let container = this.querySelector<HTMLDivElement>('[slot="demo-content"]');
+    if (!container) {
+      container = document.createElement('div');
+      container.setAttribute('slot', 'demo-content');
+      this.appendChild(container);
+    }
+    return container;
+  }
+
+  /**
+   * Get or create the readme content container in Light DOM
+   */
+  private _getReadmeContentContainer(): HTMLDivElement {
+    let container = this.querySelector<HTMLDivElement>('[slot="readme-content"]');
+    if (!container) {
+      container = document.createElement('div');
+      container.setAttribute('slot', 'readme-content');
+      this.appendChild(container);
+    }
+    return container;
+  }
+
+  /**
    * Reload the markdown loader by removing and recreating it
    */
   private _reloadMarkdownLoader() {
-    const contentPane = this.querySelector('tj-content-pane');
-    if (!contentPane) return;
+    const container = this._getDemoContentContainer();
 
-    // Remove old loader
-    const oldLoader = this.querySelector('.nte-demo-content tj-markdown-loader');
-    if (oldLoader) oldLoader.remove();
+    // Clear container
+    container.innerHTML = '';
 
-    // Clear content
-    contentPane.innerHTML = '';
-
-    // Create new loader with current demo src
+    // Create new content pane and loader in Light DOM
     const currentDemo = this._demos[this._currentIndex];
     if (currentDemo) {
-      const loader = document.createElement('tj-markdown-loader');
-      loader.setAttribute('target', 'tj-content-pane');
-      loader.setAttribute('src', currentDemo.src);
-      contentPane.parentElement?.appendChild(loader);
+      // Show error message for invalid demos (or still validating)
+      if (currentDemo.valid === false) {
+        this._renderErrorMessage(container, currentDemo);
+        return;
+      }
+
+      // Show loading state if still validating
+      if (currentDemo.valid === undefined) {
+        container.innerHTML =
+          '<div style="padding: 2rem; text-align: center; color: #666;">Validating demo file...</div>';
+        return;
+      }
+
+      // Check if it's an HTML file
+      if (this._isHtmlFile(currentDemo.src)) {
+        // Load HTML directly without markdown parser
+        this._loadHtmlContent(currentDemo.src, container);
+      } else {
+        // Use markdown loader for .md files
+        const contentPane = document.createElement('tj-content-pane');
+        container.appendChild(contentPane);
+
+        const loader = document.createElement('tj-markdown-loader');
+        loader.setAttribute('target', 'tj-content-pane');
+        loader.setAttribute('src', currentDemo.src);
+        container.appendChild(loader);
+      }
     }
+  }
+
+  /**
+   * Render error message for invalid demo files
+   */
+  private _renderErrorMessage(container: Element, demo: DemoConfig) {
+    const errorDiv = document.createElement('div');
+    errorDiv.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+      padding: 2rem;
+      text-align: center;
+      background: rgba(220, 53, 69, 0.05);
+      border: 1px solid rgba(220, 53, 69, 0.2);
+      border-radius: 8px;
+      margin: 2rem;
+    `;
+    errorDiv.innerHTML = `
+      <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+      <h2 style="margin: 0 0 0.5rem 0; color: #dc3545; font-size: 1.5rem;">File Not Found</h2>
+      <p style="margin: 0 0 0.5rem 0; color: #666;">${demo.error || 'The requested file could not be loaded.'}</p>
+      <p style="margin: 0 0 1.5rem 0;"><code style="background: #f1f1f1; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.875rem;">${demo.src}</code></p>
+      <button style="padding: 0.5rem 1rem; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.875rem;" onclick="this.getRootNode().host._goHome()">← Back to Home</button>
+    `;
+    container.appendChild(errorDiv);
   }
 
   /**
@@ -230,21 +457,25 @@ export class NteDemoViewerElement extends LitElement {
    * Reload the README markdown loader
    */
   private _reloadReadmeLoader() {
-    const contentPane = this.querySelector('.nte-readme-content tj-content-pane');
-    if (!contentPane) return;
+    const container = this._getReadmeContentContainer();
 
-    // Remove old loader
-    const oldLoader = this.querySelector('.nte-readme-content tj-markdown-loader');
-    if (oldLoader) oldLoader.remove();
+    // Clear container
+    container.innerHTML = '';
 
-    // Clear content
-    contentPane.innerHTML = '';
+    // Check if README is HTML file
+    if (this._isHtmlFile(this.readme)) {
+      // Load HTML directly
+      this._loadHtmlContent(this.readme, container);
+    } else {
+      // Use markdown loader for .md files
+      const contentPane = document.createElement('tj-content-pane');
+      container.appendChild(contentPane);
 
-    // Create new loader
-    const loader = document.createElement('tj-markdown-loader');
-    loader.setAttribute('target', 'tj-content-pane');
-    loader.setAttribute('src', this.readme);
-    contentPane.parentElement?.appendChild(loader);
+      const loader = document.createElement('tj-markdown-loader');
+      loader.setAttribute('target', 'tj-content-pane');
+      loader.setAttribute('src', this.readme);
+      container.appendChild(loader);
+    }
   }
 
   /**
@@ -283,31 +514,56 @@ export class NteDemoViewerElement extends LitElement {
   }
 
   /**
-   * Reload demo from edited markdown content (for live editing)
+   * Reload demo from edited content (for live editing)
    */
-  private _reloadDemoFromContent(markdownContent: string) {
-    const contentPane = this.querySelector('tj-content-pane');
-    if (!contentPane) return;
+  private _reloadDemoFromContent(content: string) {
+    const container = this._getDemoContentContainer();
 
-    // Remove old markdown-loader
-    const oldLoader = this.querySelector('tj-markdown-loader');
-    if (oldLoader) oldLoader.remove();
+    const currentDemo = this._demos[this._currentIndex];
+    if (!currentDemo) return;
 
-    // Clear content
-    contentPane.innerHTML = '';
+    // Clear container
+    container.innerHTML = '';
 
-    // Create a blob URL for the edited content
-    const blob = new Blob([markdownContent], { type: 'text/markdown' });
-    const blobUrl = URL.createObjectURL(blob);
+    // Check if it's HTML or Markdown
+    if (this._isHtmlFile(currentDemo.src)) {
+      // Revoke previous blob URL if exists
+      if (this._currentBlobUrl) {
+        URL.revokeObjectURL(this._currentBlobUrl);
+        this._currentBlobUrl = null;
+      }
 
-    // Create new markdown-loader with blob URL
-    const loader = document.createElement('tj-markdown-loader');
-    loader.setAttribute('target', 'tj-content-pane');
-    loader.setAttribute('src', blobUrl);
-    this.appendChild(loader);
+      // For HTML: create blob URL and load in iframe
+      const blob = new Blob([content], { type: 'text/html' });
+      const blobUrl = URL.createObjectURL(blob);
+      this._currentBlobUrl = blobUrl;
 
-    // Revoke blob URL after a short delay
-    setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+      const iframe = document.createElement('iframe');
+      iframe.setAttribute('data-demo-iframe', '');
+      iframe.src = blobUrl;
+      iframe.style.width = '100%';
+      iframe.style.border = 'none';
+      iframe.style.minHeight = '400px';
+      iframe.style.display = 'block';
+
+      this._setupIframeAutoResize(iframe);
+      container.appendChild(iframe);
+    } else {
+      // For Markdown: use markdown-loader with blob URL
+      const contentPane = document.createElement('tj-content-pane');
+      container.appendChild(contentPane);
+
+      const blob = new Blob([content], { type: 'text/markdown' });
+      const blobUrl = URL.createObjectURL(blob);
+
+      const loader = document.createElement('tj-markdown-loader');
+      loader.setAttribute('target', 'tj-content-pane');
+      loader.setAttribute('src', blobUrl);
+      container.appendChild(loader);
+
+      // Revoke blob URL after a short delay
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+    }
   }
 
   /**
@@ -315,6 +571,7 @@ export class NteDemoViewerElement extends LitElement {
    */
   private _handleCodeInput(e: Event) {
     const textarea = e.target as HTMLTextAreaElement;
+    // Update content without triggering re-render
     this._markdownContent = textarea.value;
 
     // Debounce the reload
@@ -340,10 +597,16 @@ export class NteDemoViewerElement extends LitElement {
   }
 
   private _toggleCodeView() {
-    this._codeViewOpen = !this._codeViewOpen;
-    this._menuOpen = false;
+    const currentDemo = this._demos[this._currentIndex];
 
-    if (this._codeViewOpen && !this._markdownContent) {
+    // Don't allow code editing for HTML files (iframe-based demos)
+    if (currentDemo && this._isHtmlFile(currentDemo.src)) {
+      return;
+    }
+
+    this._codeViewOpen = !this._codeViewOpen;
+
+    if (this._codeViewOpen) {
       this._loadMarkdownContent();
     }
   }
@@ -354,32 +617,52 @@ export class NteDemoViewerElement extends LitElement {
 
   private _renderWelcomeScreen() {
     return html`
-      <div class="nte-welcome">
-        <header class="nte-welcome-header">
-          <h1 class="nte-welcome-title">${this.welcomeTitle}</h1>
+      <div class="welcome">
+        <header class="welcome-header">
+          <h1 class="welcome-title">${this.welcomeTitle}</h1>
           ${this.readme
             ? html`
-                <button class="nte-readme-link" @click="${this._showReadme}">
-                  <span class="nte-readme-icon">📄</span>
+                <button class="readme-link" @click="${this._showReadme}">
+                  <span class="readme-icon">📄</span>
                   README.md
                 </button>
               `
             : nothing}
         </header>
 
-        <div class="nte-demo-cards">
-          ${this._demos.map(
-            (demo, i) => html`
-              <button class="nte-demo-card" @click="${() => this._selectDemo(i)}">
-                <span class="nte-demo-card-index">${i + 1}</span>
-                <div class="nte-demo-card-content">
-                  <h3 class="nte-demo-card-title">${demo.title}</h3>
-                  ${demo.description ? html`<p class="nte-demo-card-description">${demo.description}</p>` : nothing}
+        <div class="demo-cards">
+          ${this._demos.map((demo, i) => {
+            console.log(`[nte-demo-viewer] Rendering demo ${i}:`, demo.title, 'valid:', demo.valid);
+            return html`
+              <button
+                class="demo-card ${demo.valid === false ? 'demo-card-invalid' : ''} ${demo.valid === undefined
+                  ? 'demo-card-pending'
+                  : ''}"
+                @click="${() => this._selectDemo(i)}"
+                ?disabled="${demo.valid !== true}"
+                title="${demo.valid === false
+                  ? demo.error || 'File not found'
+                  : demo.valid === undefined
+                    ? 'Validating...'
+                    : demo.title}"
+              >
+                <span class="demo-card-index"
+                  >${demo.valid === false ? '⚠' : demo.valid === undefined ? '⏳' : i + 1}</span
+                >
+                <div class="demo-card-content">
+                  <h3 class="demo-card-title">${demo.title}</h3>
+                  ${demo.valid === false
+                    ? html`<p class="demo-card-error">⚠ ${demo.error || 'File not found'}</p>`
+                    : demo.valid === undefined
+                      ? html`<p class="demo-card-description" style="color: #999;">Validating...</p>`
+                      : demo.description
+                        ? html`<p class="demo-card-description">${demo.description}</p>`
+                        : nothing}
                 </div>
-                <span class="nte-demo-card-arrow">→</span>
+                ${demo.valid === true ? html`<span class="demo-card-arrow">→</span>` : nothing}
               </button>
-            `,
-          )}
+            `;
+          })}
         </div>
       </div>
     `;
@@ -390,22 +673,23 @@ export class NteDemoViewerElement extends LitElement {
     if (!currentDemo) return nothing;
 
     return html`
-      <div class="nte-container ${this._codeViewOpen ? 'nte-split-view' : ''}">
-        <div class="nte-demo-content">
-          <tj-content-pane></tj-content-pane>
-          <tj-markdown-loader target="tj-content-pane" src="${currentDemo.src}"></tj-markdown-loader>
+      <div class="container ${this._codeViewOpen ? 'split-view' : ''}">
+        <div class="demo-content">
+          <slot name="demo-content"></slot>
         </div>
 
-        ${this._codeViewOpen
+        ${this._codeViewOpen && !(currentDemo && this._isHtmlFile(currentDemo.src))
           ? html`
-              <div class="nte-code-panel">
-                <div class="nte-code-header">
-                  <span class="nte-code-title">Markdown Source</span>
-                  <span class="nte-code-file">${currentDemo.src}</span>
-                  <button class="nte-code-close" @click="${this._toggleCodeView}" title="Close editor">✕</button>
+              <div class="code-panel">
+                <div class="code-header">
+                  <span class="code-title"
+                    >${this._isHtmlFile(currentDemo.src) ? 'HTML Source' : 'Markdown Source'}</span
+                  >
+                  <span class="code-file">${currentDemo.src}</span>
+                  <button class="code-close" @click="${this._toggleCodeView}" title="Close editor">✕</button>
                 </div>
                 <textarea
-                  class="nte-code-editor"
+                  class="code-editor"
                   .value="${this._markdownContent}"
                   @input="${this._handleCodeInput}"
                   spellcheck="false"
@@ -421,10 +705,9 @@ export class NteDemoViewerElement extends LitElement {
 
   private _renderReadmeView() {
     return html`
-      <div class="nte-container">
-        <div class="nte-demo-content nte-readme-content">
-          <tj-content-pane></tj-content-pane>
-          <tj-markdown-loader target="tj-content-pane" src="${this.readme}"></tj-markdown-loader>
+      <div class="container">
+        <div class="demo-content readme-content">
+          <slot name="readme-content"></slot>
         </div>
       </div>
     `;
@@ -439,13 +722,13 @@ export class NteDemoViewerElement extends LitElement {
       ${isInDemoOrReadme
         ? html`
             <button
-              class="nte-fab"
+              class="fab"
               @click="${this._toggleMenu}"
               title="Menu"
               aria-label="Open menu"
               aria-expanded="${this._menuOpen}"
             >
-              📋 ${this._demos.length > 0 ? html`<span class="nte-badge">${this._demos.length}</span>` : ''}
+              📋 ${this._demos.length > 0 ? html`<span class="badge">${this._demos.length}</span>` : ''}
             </button>
           `
         : nothing}
@@ -453,14 +736,14 @@ export class NteDemoViewerElement extends LitElement {
       <!-- Menu -->
       ${this._menuOpen
         ? html`
-            <div class="nte-backdrop" @click="${this._toggleMenu}"></div>
-            <nav class="nte-menu" role="menu" aria-label="Demo selection">
-              <div class="nte-menu-header">
+            <div class="backdrop" @click="${this._toggleMenu}"></div>
+            <nav class="menu" role="menu" aria-label="Demo selection">
+              <div class="menu-header">
                 <span>Navigation</span>
-                ${this._viewState === 'demo'
+                ${this._viewState === 'demo' && !(currentDemo && this._isHtmlFile(currentDemo.src))
                   ? html`
                       <button
-                        class="nte-code-toggle ${this._codeViewOpen ? 'active' : ''}"
+                        class="code-toggle ${this._codeViewOpen ? 'active' : ''}"
                         @click="${this._toggleCodeView}"
                         title="${this._codeViewOpen ? 'Hide Code' : 'Show Code'}"
                       >
@@ -471,9 +754,9 @@ export class NteDemoViewerElement extends LitElement {
               </div>
 
               <!-- Home Button -->
-              <button class="nte-menu-item nte-menu-home" role="menuitem" @click="${this._goHome}">
-                <div class="nte-menu-item-content">
-                  <span class="nte-menu-item-title">🏠 Home</span>
+              <button class="menu-item menu-home" role="menuitem" @click="${this._goHome}">
+                <div class="menu-item-content">
+                  <span class="menu-item-title">🏠 Home</span>
                 </div>
               </button>
 
@@ -481,39 +764,55 @@ export class NteDemoViewerElement extends LitElement {
               ${this.readme
                 ? html`
                     <button
-                      class="nte-menu-item ${this._viewState === 'readme' ? 'active' : ''}"
+                      class="menu-item ${this._viewState === 'readme' ? 'active' : ''}"
                       role="menuitem"
                       @click="${this._showReadme}"
                     >
-                      <div class="nte-menu-item-content">
-                        <span class="nte-menu-item-title">📄 README.md</span>
+                      <div class="menu-item-content">
+                        <span class="menu-item-title">📄 README.md</span>
                       </div>
                       ${this._viewState === 'readme'
-                        ? html`<span class="nte-menu-item-check" aria-hidden="true">✓</span>`
+                        ? html`<span class="menu-item-check" aria-hidden="true">✓</span>`
                         : ''}
                     </button>
                   `
                 : nothing}
 
-              <div class="nte-menu-divider"></div>
+              <div class="menu-divider"></div>
 
               <!-- Demo List -->
               ${this._demos.map(
                 (demo, i) => html`
                   <button
-                    class="nte-menu-item ${i === this._currentIndex && this._viewState === 'demo' ? 'active' : ''}"
+                    class="menu-item ${i === this._currentIndex && this._viewState === 'demo'
+                      ? 'active'
+                      : ''} ${demo.valid === false ? 'menu-item-invalid' : ''} ${demo.valid === undefined
+                      ? 'menu-item-pending'
+                      : ''}"
                     role="menuitem"
                     aria-current="${i === this._currentIndex && this._viewState === 'demo' ? 'true' : 'false'}"
                     @click="${() => this._selectDemo(i)}"
+                    ?disabled="${demo.valid !== true}"
+                    title="${demo.valid === false
+                      ? demo.error || 'File not found'
+                      : demo.valid === undefined
+                        ? 'Validating...'
+                        : ''}"
                   >
-                    <div class="nte-menu-item-content">
-                      <span class="nte-menu-item-title">${demo.title}</span>
-                      ${demo.description
-                        ? html`<span class="nte-menu-item-description">${demo.description}</span>`
-                        : nothing}
+                    <div class="menu-item-content">
+                      <span class="menu-item-title"
+                        >${demo.valid === false ? '⚠ ' : demo.valid === undefined ? '⏳ ' : ''}${demo.title}</span
+                      >
+                      ${demo.valid === false
+                        ? html`<span class="menu-item-error">${demo.error || 'File not found'}</span>`
+                        : demo.valid === undefined
+                          ? html`<span class="menu-item-description" style="color: #999;">Validating...</span>`
+                          : demo.description
+                            ? html`<span class="menu-item-description">${demo.description}</span>`
+                            : nothing}
                     </div>
                     ${i === this._currentIndex && this._viewState === 'demo'
-                      ? html`<span class="nte-menu-item-check" aria-hidden="true">✓</span>`
+                      ? html`<span class="menu-item-check" aria-hidden="true">✓</span>`
                       : ''}
                   </button>
                 `,
