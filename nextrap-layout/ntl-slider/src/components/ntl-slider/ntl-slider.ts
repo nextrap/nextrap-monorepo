@@ -49,7 +49,6 @@ export class NtlSliderElement extends SlotVisibilityMixin(
   private handleSlotChange() {
     this.warn('handleSlotChange: slides = ', this.slottedElements, '');
     this.slides = this.slottedElements.filter((el) => el.matches(':not(hr)'));
-    this.activeIndex = 0;
     this.setActiveSlide(this.activeIndex);
   }
 
