@@ -1,16 +1,18 @@
-import { BreakPointMixin, LoggingMixin } from '@trunkjs/browser-utils';
-import { SubLayoutApplyMixin } from '@trunkjs/content-pane';
-import { html, LitElement, unsafeCSS } from 'lit';
+import { html, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
 // Styles for the light DOM
 import { resetStyle } from '@nextrap/style-reset';
 
 // Styles for your component's shadow DOM
+import { nextrap_layout } from '@nextrap/ntl-core';
 import style from './ntl-card-row.scss?inline';
 
 @customElement('ntl-card-row')
-export class NtlCardRowElement extends BreakPointMixin(SubLayoutApplyMixin(LoggingMixin(LitElement))) {
+export class NtlCardRowElement extends nextrap_layout({
+  breakpoints: true,
+  subLayoutApplyMixin: true,
+}) {
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
   @state()

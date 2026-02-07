@@ -5,29 +5,28 @@ import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
+const projectName = 'ntl-core';
+const dirName = `nextrap-layout/ntl-core`;
+
 export default defineConfig(() => ({
   server: {
     port: 4000,
     host: '0.0.0.0',
     hmr: true,
   },
-  test: {
-    passWithNoTests: true,
-    watch: false,
-    globals: true,
-    environment: 'node',
-    include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    reporters: ['default'],
-    coverage: {
-      reportsDirectory: `../../coverage/nextrap-layout/ntl-2col`,
-      provider: 'v8' as const,
-    },
-  },
   root: __dirname,
-  cacheDir: '../../node_modules/.vite/nextrap-layout/ntl-2col',
+  cacheDir: `../../node_modules/.vite/${dirName}`,
   plugins: [
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md', 'web-types.json']),
+    nxCopyAssetsPlugin(['*.md']),
+    {
+      name: 'watch-md-reload',
+      handleHotUpdate({ file, server }) {
+        if (file.endsWith('.md')) {
+          server.ws.send({ type: 'full-reload' });
+        }
+      },
+    },
     dts({
       entryRoot: 'src',
       aliasesExclude: [/@nextrap\/.*/],
@@ -41,7 +40,7 @@ export default defineConfig(() => ({
   // Configuration for building your library.
   // See: https://vitejs.dev/guide/build.html#library-mode
   build: {
-    outDir: '../../dist/nextrap-layout/ntl-2col',
+    reportsDirectory: `../../coverage/${dirName}`,
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {
@@ -49,16 +48,28 @@ export default defineConfig(() => ({
     },
     lib: {
       // Could also be a dictionary or array of multiple entry points.
-      entry: 'src/index.ts',
-      name: 'ntl-2col',
+      entry: 'index.ts',
+      name: projectName,
       fileName: 'index',
       // Change this to the formats you want to support.
       // Don't forget to update your package.json as well.
       formats: ['es' as const],
     },
     rollupOptions: {
-      // External packages that should not be bundled into your library.
-      external: [],
+      // External packages that should not be bundled into your library. IMPORTANT!
+      external: (id) => !id.startsWith('.') && !path.isAbsolute(id),
+    },
+  },
+  test: {
+    passWithNoTests: true,
+    watch: false,
+    globals: true,
+    environment: 'jsdom',
+    include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    reporters: ['default'],
+    coverage: {
+      reportsDirectory: `../../coverage/${dirName}`,
+      provider: 'v8' as const,
     },
   },
 }));

@@ -1,6 +1,6 @@
 import { isBiggerThanBreakpoint } from '@nextrap/nt-framework';
 import { nextrap_layout } from '@nextrap/ntl-core';
-import { html, PropertyValues, unsafeCSS } from 'lit';
+import { html, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import style from './ntl-2col.scss?inline';
 
@@ -8,7 +8,7 @@ import style from './ntl-2col.scss?inline';
 export class Ntl2Col extends nextrap_layout({
   breakpoints: true,
   subLayoutApplyMixin: true,
-  slotVisibility: false,
+  slotVisibility: true,
   eventBinding: false,
 }) {
   static override styles = [unsafeCSS(style)];
@@ -21,20 +21,6 @@ export class Ntl2Col extends nextrap_layout({
 
   override connectedCallback() {
     super.connectedCallback();
-
-    window.addEventListener('breakpoint-changed', () => this.requestUpdate());
-  }
-
-  protected override firstUpdated(_changedProperties: PropertyValues) {
-    super.firstUpdated(_changedProperties);
-
-    this.shadowRoot?.querySelectorAll('slot').forEach((slot) => {
-      if (slot.assignedElements().length === 0) {
-        slot.classList.add('is-empty');
-      } else {
-        slot.classList.remove('is-empty');
-      }
-    });
   }
 
   protected override render(): unknown {
