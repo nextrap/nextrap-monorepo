@@ -48,6 +48,7 @@ $text: $black !default;
 // Calculate if contrast is needed (use helper to avoid deprecated if())
 $text-on-primary: text-on($primary) !default;
 $text-on-secondary: text-on($secondary) !default;
+$text-on-tertiary: text-on($tertiary) !default;
 
 $text-on-accent: text-on($accent) !default;
 $text-on-success: text-on($success) !default;
@@ -70,6 +71,10 @@ $background: $white !default;
   --nt-secondary: #{$secondary};
   --nt-secondary-subtle: #{$secondary-subtle};
   --nt-secondary-emphasis: #{$secondary-emphasis};
+
+  --nt-tertiary: #{$tertiary};
+  --nt-tertiary-subtle: #{$tertiary-subtle};
+  --nt-tertiary-emphasis: #{$tertiary-emphasis};
 
   --nt-accent: #{$accent};
   --nt-accent-subtle: #{$accent-subtle};
@@ -112,6 +117,7 @@ $background: $white !default;
 
   --nt-text-on-primary: #{$text-on-primary};
   --nt-text-on-secondary: #{$text-on-secondary};
+  --nt-text-on-tertiary: #{$text-on-tertiary};
   --nt-text-on-accent: #{$text-on-accent};
   --nt-text-on-success: #{$text-on-success};
   --nt-text-on-info: #{$text-on-info};

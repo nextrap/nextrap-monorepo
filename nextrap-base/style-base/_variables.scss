@@ -15,6 +15,10 @@ $secondary: #6c757d !default;
 $secondary-subtle: color.adjust($secondary, $lightness: $lighten-factor) !default;
 $secondary-emphasis: color.adjust($secondary, $lightness: calc(-1 * $lighten-factor / 2)) !default;
 
+$tertiary: #17a2b8 !default;
+$tertiary-subtle: color.adjust($tertiary, $lightness: $lighten-factor) !default;
+$tertiary-emphasis: color.adjust($tertiary, $lightness: calc(-1 * $lighten-factor / 2)) !default;
+
 $success: #28a745 !default;
 $success-subtle: color.adjust($success, $lightness: $lighten-factor) !default;
 $success-emphasis: color.adjust($success, $lightness: calc(-1 * $lighten-factor / 2)) !default;
