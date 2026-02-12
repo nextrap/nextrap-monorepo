@@ -1,12 +1,14 @@
 :host {
   --container-width: var(--nt-container-width, 100%);
+  --container-bg: var(--nt-light);
   --gap: var(--nt-gap);
 
+  --border: 1px solid var(--nt-primary);
   --cols: 6;
+  --breakpoint: xl;
 
   --x-direction: row;
   --y-direction: column;
-  --breakpoint: 'xl';
 }
 
 :host(.desktop-reverse) {
@@ -26,6 +28,22 @@
       order: 1;
     }
   }
+}
+
+#container {
+  width: var(--container-width);
+  margin: 0 auto;
+  background: var(--container-bg);
+  border: var(--border);
+}
+
+#top {
+}
+
+#main {
+}
+
+#bottom {
 }
 
 #row {

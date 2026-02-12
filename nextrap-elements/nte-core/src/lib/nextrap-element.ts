@@ -17,7 +17,6 @@ export interface NteFeatures {
   slotVisibility?: boolean;
   eventBinding?: boolean;
   breakpoints?: boolean;
-  subLayoutApplyMixin?: boolean;
 }
 
 export const defaultNteFeatures: NteFeatures = {
@@ -25,7 +24,6 @@ export const defaultNteFeatures: NteFeatures = {
   slotVisibility: false,
   eventBinding: false,
   breakpoints: false,
-  subLayoutApplyMixin: false,
 };
 
 export type Ctor<T = object> = abstract new (...args: any[]) => T;
