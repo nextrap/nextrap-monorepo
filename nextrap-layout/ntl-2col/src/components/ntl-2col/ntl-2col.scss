@@ -34,17 +34,18 @@
 
 :host([mode='desktop']) {
   #wrapper {
+    position: relative;
     flex-direction: row;
   }
 
   #main {
     order: 1;
-    width: calc(100% * (12 - var(--cols, 1)) / 12);
+    width: calc(100% * var(--cols, 1) / 12);
   }
 
   #aside {
     order: 2;
-    width: calc(100% * var(--cols, 1) / 12);
+    width: calc(100% * (12 - var(--cols, 1)) / 12);
   }
 
   &:host(.reverse) {
