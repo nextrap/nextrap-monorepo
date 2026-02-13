@@ -22,15 +22,15 @@
 
 #header {
   order: 2;
+
+  &:has(.slot-empty) {
+    display: none;
+  }
 }
 
 #image {
   order: 1;
   width: 100%;
-}
-
-#image-slot::slotted(p) {
-  display: contents;
 }
 
 #content {
