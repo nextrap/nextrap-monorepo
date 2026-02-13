@@ -137,7 +137,7 @@ $background: $white !default;
   --nt-font-family-header: #{$font-family-header};
   --nt-font-size-base: #{$font-size-base};
   --nt-font-size-header: #{$font-size-header};
-  --nt-header: #{header};
+  --nt-header: #{$header};
 
   --nt-font-size-small: #{$font-size-small};
 
