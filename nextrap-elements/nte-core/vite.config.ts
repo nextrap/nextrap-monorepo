@@ -42,6 +42,7 @@ export default defineConfig(() => ({
   build: {
     reportsDirectory: `../../coverage/${dirName}`,
     emptyOutDir: true,
+    target: 'es2022',
     reportCompressedSize: true,
     commonjsOptions: {
       transformMixedEsModules: true,

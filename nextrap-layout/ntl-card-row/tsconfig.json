@@ -2,6 +2,7 @@
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
         "module": "commonjs",
+        "target": "esnext",
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "useDefineForClassFields": false,
