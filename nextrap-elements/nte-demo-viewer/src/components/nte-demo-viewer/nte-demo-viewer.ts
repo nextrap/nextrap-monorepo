@@ -4,7 +4,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import '@trunkjs/content-pane';
 import '@trunkjs/markdown-loader';
 
-import styles from '../../styles/index.scss?inline';
+import styles from './nte-demo-viewer.scss?inline';
 
 /**
  * Demo configuration parsed from <demo> child elements
