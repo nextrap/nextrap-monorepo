@@ -11,7 +11,7 @@ import style from './ntl-card-row.scss?inline';
 @customElement('ntl-card-row')
 export class NtlCardRowElement extends nextrap_layout({
   breakpoints: true,
-  subLayoutApplyMixin: true,
+  subLayoutApply: true,
 }) {
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
