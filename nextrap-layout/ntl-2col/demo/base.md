@@ -1,27 +1,48 @@
 # ntl-2col component
 
-## Header 1
-{: layout="ntl-2col" section-style="background:red; display:block;--container-bg:white" }
+---
+{: layout="1;.alternating"}
 
-> Some Subheader
+## HERZLICH WILLKOMMEN IN DER AUGENPRAXIS OSMAN
+{: layout="ntl-2col"}
 
-Some Text
+Moderne Augenheilkunde in Wiesbaden - Für den Erhalt Ihrer Augengesundheit und Sehkraft durch Erfahrung, Präzision und neueste Technologie.
 
-content 1
+- Abklärung von Sehminderungen und Sehstörungen
+- Spezialisiert auf Netzhaut- und Makulaerkrankungen
+- Konservative Behandlung von Glaukom, Entzündungen und Verletzungen
+- Laser- und operative Verfahren zur Therapie verschiedener Augenerkrankungen
+- Zuverlässig in allen Bereichen der augenärztlichen Vorsorge
+
+Unsere Augenpraxis in der Wiesbadener Innenstadt empfängt Sie in einer moderner und angenehmen Atmosphäre. Unser engagiertes Team steht Ihnen telefonisch, online und vor Ort jederzeit kompetent und vertrauensvoll zur Seite.
+
+![alt](https://placehold.co/600x400?text=Hello+World)
 
 ---
-{: .top}
+{: layout="2;.container"}
 
-Seitenelement
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure porro, numquam tenetur rerum minima, aliquid est eligendi aut dolorem sequi excepturi, cumque ratione possimus quam dicta nemo itaque voluptates? Magnam.
 
-## Header 2
-{: layout="ntl-2col" section-style="background:red; display:block;--container-bg:white" }
 
-![alt](https://placehold.co/600x400?font=roboto)
+## HERZLICH WILLKOMMEN IN DER AUGENPRAXIS OSMAN
+{: layout="ntl-2col"}
 
-> Some Subheader
+Moderne Augenheilkunde in Wiesbaden - Für den Erhalt Ihrer Augengesundheit und Sehkraft durch Erfahrung, Präzision und neueste Technologie.
 
-Some Text
+- Abklärung von Sehminderungen und Sehstörungen
+- Spezialisiert auf Netzhaut- und Makulaerkrankungen
+- Konservative Behandlung von Glaukom, Entzündungen und Verletzungen
+- Laser- und operative Verfahren zur Therapie verschiedener Augenerkrankungen
+- Zuverlässig in allen Bereichen der augenärztlichen Vorsorge
 
-content 1
+Unsere Augenpraxis in der Wiesbadener Innenstadt empfängt Sie in einer moderner und angenehmen Atmosphäre. Unser engagiertes Team steht Ihnen telefonisch, online und vor Ort jederzeit kompetent und vertrauensvoll zur Seite.
 
+![alt](https://placehold.co/600x400?text=Hello+World)
+
+
+## Testimonial
+{: layout="ntl-2col.testimonal"}
+
+Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptates distinctio saepe temporibus eius doloribus, mollitia quae nisi excepturi. Error similique perferendis voluptatem ipsa dicta quidem, nesciunt voluptates fugit ut quisquam!
+
+![alt](https://placehold.co/600x400?text=Hello+World)

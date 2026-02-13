@@ -1,7 +1,27 @@
 // global styles
 
-// ntl-2col{
-//   &.alternating{
+ntl-2col {
+  & > p[slot='aside'] {
+    height: 100%;
 
-//   }
-// }
+    & > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+.alternating ntl-2col:nth-of-type(odd)::part(wrapper) {
+  flex-direction: row-reverse;
+}
+
+// THEME
+ntl-2col {
+  &.testimonial {
+    & > p[slot='aside'] {
+      & > img {
+      }
+    }
+  }
+}

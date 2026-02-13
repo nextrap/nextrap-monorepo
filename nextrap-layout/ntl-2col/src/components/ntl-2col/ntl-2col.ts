@@ -21,7 +21,7 @@ export class Ntl2Col extends nextrap_layout({
         <div part="top">
           <slot name="top" data-query=":scope > .top"></slot>
         </div>
-        <div id="wrapper">
+        <div part="wrapper" id="wrapper">
           <div part="main" id="main">
             <slot></slot>
           </div>
