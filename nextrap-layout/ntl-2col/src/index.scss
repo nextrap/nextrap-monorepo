@@ -12,15 +12,11 @@ ntl-2col {
   }
 }
 
-.alternating ntl-2col:nth-of-type(odd)::part(wrapper) {
-  flex-direction: row-reverse;
-}
-
-// THEME
-ntl-2col {
-  &.testimonial {
-    & > p[slot='aside'] {
-      & > img {
+.alternating ntl-2col {
+  &[mode='desktop'] {
+    &:nth-of-type(even) {
+      &::part(wrapper) {
+        flex-direction: row-reverse;
       }
     }
   }
