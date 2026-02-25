@@ -1,7 +1,7 @@
 nte-navbar-line {
   [slot='brand'] {
     height: 100%;
-    width: 100%;
+
     display: flex;
     align-items: center;
     img {
@@ -18,6 +18,25 @@ nte-navbar-line {
       white-space: nowrap;
       text-decoration: none;
       width: 100%;
+    }
+  }
+}
+
+nte-navbar-line.zoom-brand {
+  --brand-zoom-level: 1.6;
+  --brand-translate: 20px;
+
+  [slot='brand'] {
+    img {
+      transition: transform 0.2s ease-in-out;
+      transform: scale(var(--brand-zoom-level)) translateY(var(--brand-translate));
+    }
+  }
+  &.is-scrolled {
+    [slot='brand'] {
+      img {
+        transform: translateY(0) scale(1);
+      }
     }
   }
 }
