@@ -1,3 +1,13 @@
+## 1.1.30 (2026-02-25)
+
+### 🩹 Fixes
+
+- use aliasesExclude to avoid internal relative paths ([6b8123e](https://github.com/nextrap/nextrap-monorepo/commit/6b8123e))
+
+### ❤️ Thank You
+
+- Enzo Volkmann @evolkmann
+
 ## 1.1.29 (2025-09-12)
 
 This was a version bump only for nte-nav to align it with other projects, there were no code changes.
