@@ -31,9 +31,7 @@ export class NtlCardElement extends SlotVisibilityMixin(
     return html`
       <div part="wrapper" id="wrapper">
         <div part="header" id="header">
-          <slot name="header"
-                data-query=":scope > .header | :scope > h1:not(.keep),h2:not(.keep),h3:not(.keep),h4:not(.keep),h5:not(.keep),h6:not(.keep)"
-          "></slot>
+          <slot name="header" data-query=":scope > .header"></slot>
         </div>
         <div part="image" id="image">
           <slot id="image-slot" name="image"

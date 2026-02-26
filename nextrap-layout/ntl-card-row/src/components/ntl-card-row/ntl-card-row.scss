@@ -1,38 +1,26 @@
 /* The ShadowDOM Styles */
 
 :host {
+  --container-bg: transparent;
+  --container-border: none;
   --container-width: var(--nt-container-width) /* Refer to README.md for style guidelines */;
   --default-cols: 4;
   --gutter-x: var(--nt-gap);
   --gutter-y: var(--nt-gap);
-  --breakpoint: md;
+  --breakpoint: xl;
+
+  display: block;
 }
 
-:host([mode='desktop']) {
-  .flex.row {
-    flex-direction: row;
-    ::slotted(*) {
-      --cols: var(--default-cols);
-    }
-  }
+#container {
+  margin: 0 auto;
+  width: var(--container-width);
+
+  background: var(--container-bg);
+  border: var(--container-border);
 }
 
-:host([mode='mobile']) {
-  .flex.row {
-    flex-direction: column;
-    ::slotted(*) {
-      --cols: 12 !important;
-    }
-  }
-}
-
-.wrapper {
-  max-width: var(--container-width);
-  margin-right: auto;
-  margin-left: auto;
-}
-
-.flex.row {
+#main {
   display: flex;
   flex-wrap: wrap;
 
@@ -41,5 +29,27 @@
   gap: var(--gutter-y);
   ::slotted(*) {
     width: calc(100% / 12 * var(--cols, 1) - var(--gutter-x));
+  }
+}
+
+:host([mode='desktop']) {
+  #main {
+    margin-left: calc(var(--gutter-x) / -2);
+    width: calc(100% + var(--gutter-x));
+
+    flex-direction: row;
+    ::slotted(*) {
+      --cols: var(--default-cols);
+    }
+  }
+}
+
+:host([mode='mobile']) {
+  #main {
+    flex-direction: column;
+    ::slotted(*) {
+      --cols: 12 !important;
+      --gutter-x: 0;
+    }
   }
 }

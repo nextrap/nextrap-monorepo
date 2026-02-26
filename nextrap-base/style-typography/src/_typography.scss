@@ -88,3 +88,107 @@ body a {
     text-decoration: underline;
   }
 }
+
+/* Text emphasis */
+strong {
+  font-weight: 700;
+}
+em {
+  font-style: italic;
+}
+small {
+  font-size: 0.875em;
+}
+mark {
+  background: rgb(from var(--nt-warning) r g b / var(--nt-alpha));
+  padding: 0 0.25em;
+  border-radius: 0.125rem;
+}
+
+/* Links */
+
+/* Lists */
+ul,
+ol {
+  padding-left: var(--nt-space-4);
+}
+ul {
+  list-style: disc;
+}
+ol {
+  list-style: decimal;
+}
+li {
+  margin-top: var(--nt-text-gap);
+}
+li > ul,
+li > ol {
+  margin-top: var(--nt-text-gap);
+}
+
+/* Definition lists (nice for interviews too) */
+dl {
+}
+dt {
+  font-weight: 600;
+}
+dd {
+  margin-left: var(--nt-space-3);
+  color: var(--nt-dark-subtle);
+}
+
+/* Horizontal rule */
+hr {
+  border: 0;
+  border-top: var(--nt-border-width) solid var(--nt-primary);
+}
+
+/* Code & Pre */
+code {
+  background: rgb(from var(--nt-dark) r g b / 0.06);
+  padding: 0.125em 0.375em;
+  border-radius: var(--nt-border-radius);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.875em;
+}
+pre {
+  background: rgb(from var(--nt-dark) r g b / 0.06);
+  padding: var(--nt-space-4);
+  border-radius: var(--nt-border-radius);
+  overflow: auto;
+  code {
+    background: transparent;
+    padding: 0;
+  }
+}
+
+/* Blockquote */
+blockquote {
+  padding: var(--nt-space-3) var(--nt-space-4);
+  border-left: 0.25rem solid var(--nt-primary-emphasis);
+  color: var(--nt-dark-subtle);
+  font-size: 1.125em;
+}
+
+/* Figures & images (flow text) */
+figure {
+  margin: 0;
+}
+
+figcaption,
+.figure-caption {
+  color: var(--nt-dark-subtle);
+  font-size: var(--nt-font-size-small);
+  margin-top: var(--nt-space-2);
+  text-align: center;
+}
+
+/* Lead & muted */
+.lead {
+  font-size: calc(var(--nt-fs-2));
+  color: var(--nt-text);
+}
+.muted,
+.text-muted {
+  color: var(--nt-dark-subtle);
+}

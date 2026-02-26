@@ -1,0 +1,23 @@
+// global styles
+
+ntl-2col.ntl-2col {
+  & > p[slot='aside'] {
+    height: 100%;
+
+    & > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+.alternating ntl-2col {
+  &[mode='desktop'] {
+    &:nth-of-type(even) {
+      &::part(wrapper) {
+        flex-direction: row-reverse;
+      }
+    }
+  }
+}

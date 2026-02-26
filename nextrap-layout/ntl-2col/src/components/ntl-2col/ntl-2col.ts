@@ -15,13 +15,18 @@ export class Ntl2Col extends nextrap_layout({
 }) {
   static override styles = [unsafeCSS(resetStyle), unsafeCSS(style)];
 
+  override connectedCallback() {
+    super.connectedCallback();
+    this.classList.add('ntl-2col');
+  }
+
   protected override render(): unknown {
     return html`
       <div part="container" id="container">
         <div part="top">
           <slot name="top" data-query=":scope > .top"></slot>
         </div>
-        <div id="wrapper">
+        <div part="wrapper" id="wrapper">
           <div part="main" id="main">
             <slot></slot>
           </div>
