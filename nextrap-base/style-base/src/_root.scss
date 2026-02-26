@@ -63,7 +63,7 @@ $background: $white !default;
 
 // Register the css variables
 
-:root {
+@mixin root {
   --nt-primary: #{$primary};
   --nt-primary-subtle: #{$primary-subtle};
   --nt-primary-emphasis: #{$primary-emphasis};
@@ -174,4 +174,8 @@ $background: $white !default;
   --nt-scroll-padding-top: calc(0.33 * 100vh); // Scroll element to upper 1/3 of the viewport height
 
   // Display font size
+}
+
+:root {
+  @include root;
 }

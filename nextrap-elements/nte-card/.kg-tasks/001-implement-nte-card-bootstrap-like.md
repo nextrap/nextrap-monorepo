@@ -3,7 +3,7 @@ slugName: implement-nte-card-bootstrap-like
 includeFiles:
     - ./src/components/nte-card/nte-card.ts
     - ./src/components/nte-card/nte-card.scss
-    - ./src/styles/index.scss
+    - ./src/styles/stylestyle.scss
     - ./src/components/nte-card/nte-card.spec.ts
     - ./demo/base.html
     - ./demo/main.ts
@@ -12,7 +12,7 @@ includeFiles:
 editFiles:
     - ./src/components/nte-card/nte-card.ts
     - ./src/components/nte-card/nte-card.scss
-    - ./src/styles/index.scss
+    - ./src/styles/stylestyle.scss
     - ./src/components/nte-card/nte-card.spec.ts
     - ./README.md
     - ./web-types.json
