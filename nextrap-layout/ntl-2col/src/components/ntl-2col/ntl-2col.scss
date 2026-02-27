@@ -38,6 +38,14 @@
   #wrapper {
     position: relative;
     flex-direction: row;
+
+    &:has(#aside > .slot-empty) {
+      flex-direction: column;
+
+      #main {
+        width: 100%;
+      }
+    }
   }
 
   #main {

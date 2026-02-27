@@ -4,10 +4,11 @@
   --border-color: var(--nt-primary);
   --background-color: var(--nt-body, #fff);
   --border-radius: var(--nt-border-radius);
+  --border: var(--nt-border-width) solid var(--border-color);
 }
 
 #wrapper {
-  border: var(--nt-border-width) solid var(--border-color);
+  border: var(--border);
   border-radius: var(--border-radius);
   background-color: var(--background-color);
   display: flex;
@@ -35,4 +36,9 @@
 
 #content {
   order: 50;
+  flex-grow: 1;
+}
+
+#footer {
+  order: 999;
 }

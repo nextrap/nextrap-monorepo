@@ -4,7 +4,8 @@
   --container-bg: transparent;
   --container-border: none;
   --container-width: var(--nt-container-width) /* Refer to README.md for style guidelines */;
-  --default-cols: 4;
+  --default-cols: var(--cols);
+  --cols: 6;
   --gutter-x: var(--nt-gap);
   --gutter-y: var(--nt-gap);
   --breakpoint: xl;

@@ -41,6 +41,9 @@ export class NtlCardElement extends SlotVisibilityMixin(
         <div part="content" id="content">
           <slot></slot>
         </div>
+        <div part="footer" id="footer">
+          <slot name="footer" data-query=":scope > .footer"></slot>
+        </div>
       </div>
     `;
   }

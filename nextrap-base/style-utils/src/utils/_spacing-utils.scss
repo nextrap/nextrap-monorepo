@@ -92,6 +92,18 @@ $base-content-space: var(--nt-base-content-space);
 .py-0 {
   padding-block: 0 !important;
 }
+.mt-auto {
+  margin-top: auto;
+}
+.me-auto {
+  margin-right: auto;
+}
+.mb-auto {
+  margin-left: auto;
+}
+.ms-auto {
+  margin-left: auto;
+}
 // Spacing Utilities
 
 .content-space-top-0 {

@@ -36,10 +36,10 @@ export class NtlAccordionElement extends SubLayoutApplyMixin(LoggingMixin(LitEle
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
   @property({ type: Boolean, reflect: true })
-  public accessor exclusive = false;
+  public accessor exclusive = true;
 
   @property({ converter: initialOpenIndexConverter, attribute: 'initial-open-index' })
-  public accessor initialOpenIndex: number | undefined = undefined;
+  public accessor initialOpenIndex: number | undefined = 0;
 
   @property({ type: String, reflect: true, attribute: 'marker-icon' })
   public accessor markerIcon: 'chevron' | 'plus' | null = null;
