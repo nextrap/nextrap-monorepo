@@ -1,6 +1,6 @@
 import { LoggingMixin } from '@trunkjs/browser-utils';
 import { SubLayoutApplyMixin } from '@trunkjs/content-pane';
-import { html, LitElement, unsafeCSS } from 'lit';
+import {html, LitElement, PropertyValues, unsafeCSS} from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 import { resetStyle } from '@nextrap/style-reset';
@@ -49,7 +49,8 @@ export class NtlAccordionElement extends SubLayoutApplyMixin(LoggingMixin(LitEle
 
   private _initialized = false;
 
-  override firstUpdated() {
+  override firstUpdated(__changedProperties : PropertyValues) {
+    super.firstUpdated(__changedProperties); // Important for SubLayoutApplyMixin
     this.addEventListener('accordion-toggle', this._onItemToggle.bind(this) as EventListener);
 
     // Listen for slotchange to initialize items

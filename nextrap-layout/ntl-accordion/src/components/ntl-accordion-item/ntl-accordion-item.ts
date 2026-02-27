@@ -44,7 +44,8 @@ export class NtlAccordionItemElement extends SubLayoutApplyMixin(LoggingMixin(Li
     });
   }
 
-  override firstUpdated() {
+  override firstUpdated(__changedProperties: Map<string, unknown>) {
+    super.firstUpdated(__changedProperties);
     this._detailsElement = this.shadowRoot?.querySelector('details') ?? null;
 
     if (this._detailsElement) {
@@ -142,7 +143,7 @@ export class NtlAccordionItemElement extends SubLayoutApplyMixin(LoggingMixin(Li
       <details @toggle="${this._onToggle}" class="${markerClass}">
         <summary class="summary" part="summary">
           <span class="title">
-            <slot name="title" data-query=":scope > h1,h2,h3,h4,h5,h6"></slot>
+            <slot name="title" data-query=":scope > h1,:scope > h2,:scope > h3,:scope > h4,:scope > h5,:scope > h6"></slot>
           </span>
           <span class="marker" part="marker"></span>
         </summary>
