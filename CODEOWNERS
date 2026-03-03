@@ -19,6 +19,7 @@ nextrap-elements/nte-progress @marliedev
 nextrap-elements/nte-multiselect @marliedev
 nextrap-elements/nte-image @marcelfrank-dev
 nextrap-elements/nte-form @Wasilewskiii
+nextrap-elements/nte-theme-switcher @marliedev
 
 nextrap-layout/ntl-2col @evolkmann
 nextrap-layout/ntl-infiniscroll @dermatthes
