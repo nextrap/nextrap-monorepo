@@ -9,6 +9,25 @@
 /* -------------------------------------------------------------------------- */
 
 .nav-vertical {
+  --border-color: none;
+  --text-color: var(--nt-text);
+  --hover-color: var(--nt-primary);
+  --hover-text-color: var(--nt-text-on-primary);
+
+  &.style-primary {
+    --border-color: var(--nt-white);
+    --text-color: var(--nt-text-on-primary);
+    --hover-color: var(--nt-primary-emphasis);
+    --hover-text-color: var(--nt-white);
+
+    ul > li {
+      border-top: 1px solid var(--border-color);
+      &:last-child {
+        border-bottom: 1px solid var(--border-color);
+      }
+    }
+  }
+
   /* Main unordered list container */
   width: 100%;
 
