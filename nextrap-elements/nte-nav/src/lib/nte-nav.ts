@@ -58,8 +58,10 @@ export class NteNav extends LitElement {
           <!-- fallback icon -->
           ${this._isTransferred
             ? html`<div id="burger-default" style="display:flex; align-items: center; justify-content: center;">
-                <div id="text"><slot name="menu-text"></slot></div>
+                <div id="text" part="menutext"><slot name="menu-text"></slot></div>
                 <nte-burger
+                  part="burger"
+                  label="Menu"
                   data-group-name="${this.dataGroupName}"
                   id="open-burger"
                   onclick="this.open = true"

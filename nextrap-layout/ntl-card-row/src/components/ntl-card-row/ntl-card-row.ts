@@ -1,5 +1,5 @@
 import { html, unsafeCSS } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators.js';
 
 // Styles for the light DOM
 import { resetStyle } from '@nextrap/style-reset';
@@ -19,7 +19,10 @@ export class NtlCardRowElement extends nextrap_layout({
     return html`
       <div part="container" id="container">
         <div id="header" part="header">
-          <slot name="header" data-query=":scope > .header | :scope > h2,:scope > h3,:scope > h4,:scope > h5,:scope > h6"></slot>
+          <slot
+            name="header"
+            data-query=":scope > .header | :scope > h1,:scope > h2,:scope > h3,:scope > h4,:scope > h5,:scope > h6"
+          ></slot>
         </div>
         <div part="main" id="main">
           <slot data-query=":scope > section" data-set-attribute-layout="ntl-card" data-query-opt=""></slot>
