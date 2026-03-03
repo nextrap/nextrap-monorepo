@@ -2,13 +2,42 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Base Demo of nte-demo-viewer</title>
+    <title>nte-demo-viewer Demos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
-    <h1>Demo of nte-demo-viewer</h1>
-
-    <nte-demo-viewer></nte-demo-viewer>
+    <nte-demo-viewer welcome-title="nte-demo-viewer" readme="/README.md">
+      <demo
+        title="Basic Usage"
+        description="Properties, attributes and minimal setup"
+        src="/demo/basic-usage.md"
+      ></demo>
+      <demo
+        title="Features Overview"
+        description="Welcome screen, routing, code editor, validation and events"
+        src="/demo/features.md"
+      ></demo>
+      <demo
+        title="CSS Customization"
+        description="All available CSS Custom Properties for theming"
+        src="/demo/css-customization.md"
+      ></demo>
+      <demo
+        title="Error Handling"
+        description="File validation, error states and fallback detection"
+        src="/demo/error-handling.md"
+      ></demo>
+      <demo
+        title="HTML Demo Support"
+        description="Loading HTML files in iframes with auto-resize"
+        src="/demo/html-demo.html"
+      ></demo>
+      <demo
+        title="Invalid File Test"
+        description="This demo references a non-existent file"
+        src="/demo/nonexistent.md"
+      ></demo>
+    </nte-demo-viewer>
 
     <script src="/demo/main.js" type="module"></script>
   </body>
