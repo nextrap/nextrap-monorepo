@@ -89,7 +89,7 @@ export class NteOffcanvas extends LitElement {
         class=${classMap({ closed: this.closedClass })}
         ?backdrop="${this.backdrop}"
       >
-        <div id="header">
+        <div id="header" part="header">
           <slot name="header"></slot>
         </div>
 
