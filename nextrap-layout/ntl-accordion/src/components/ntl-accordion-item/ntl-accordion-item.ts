@@ -141,13 +141,13 @@ export class NtlAccordionItemElement extends SubLayoutApplyMixin(LoggingMixin(Li
 
     return html`
       <details @toggle="${this._onToggle}" class="${markerClass}">
-        <summary class="summary" part="summary">
-          <span class="title">
+        <summary id="summary" part="summary">
+          <span id="title" part="title">
             <slot name="title" data-query=":scope > h1,:scope > h2,:scope > h3,:scope > h4,:scope > h5,:scope > h6"></slot>
           </span>
-          <span class="marker" part="marker"></span>
+          <span id="marker" part="marker"></span>
         </summary>
-        <div class="content" part="content">
+        <div id="content" part="content">
           <slot></slot>
         </div>
       </details>
