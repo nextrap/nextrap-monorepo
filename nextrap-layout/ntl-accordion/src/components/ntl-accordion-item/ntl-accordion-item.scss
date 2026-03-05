@@ -10,6 +10,35 @@
   --marker-size: 1.5rem;
   --padding: 0.5rem 1rem;
   interpolate-size: allow-keywords;
+
+  /* Icon data URLs as CSS variables — reference --ntl-icon-* from :root (index.scss)
+   * with inline SVG fallbacks for standalone usage.
+   * Override these from outside to change individual icons. */
+  --icon-chevron-down: var(
+    --ntl-icon-chevron-down,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E")
+  );
+  --icon-chevron-up: var(
+    --ntl-icon-chevron-up,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='18 15 12 9 6 15'/%3E%3C/svg%3E")
+  );
+  --icon-plus: var(
+    --ntl-icon-plus,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E")
+  );
+  --icon-minus: var(
+    --ntl-icon-minus,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14'/%3E%3C/svg%3E")
+  );
+
+  /* Active icon — defaults to chevron.
+   * --marker-icon-closed / --marker-icon-open can be set from outside
+   * (e.g. via section-style in markdown) to override with custom SVG URLs. */
+  --active-marker-icon: var(--marker-icon-closed, var(--icon-chevron-down));
+}
+
+:host([open]) {
+  --active-marker-icon: var(--marker-icon-open, var(--icon-chevron-up));
 }
 
 details {
@@ -105,54 +134,23 @@ summary {
     -webkit-mask-size: contain;
     -webkit-mask-repeat: no-repeat;
     -webkit-mask-position: center;
-    /* Default: Chevron icon */
-    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    mask-image: var(--active-marker-icon);
+    -webkit-mask-image: var(--active-marker-icon);
   }
+}
+
+/* Marker icon variants */
+:host([marker-icon='plus']) {
+  --active-marker-icon: var(--marker-icon-closed, var(--icon-plus));
+}
+
+:host([marker-icon='plus'][open]) {
+  --active-marker-icon: var(--marker-icon-open, var(--icon-minus));
 }
 
 /* Marker position */
 :host([marker-position='start']) #summary {
   flex-direction: row-reverse;
-}
-
-/* :host([marker-position='start']) .marker {
-  transform: rotate(-90deg);
-} */
-
-/* Marker rotation when open */
-details[open] #marker {
-  transform: rotate(180deg);
-}
-
-/* :host([marker-position='start']) details[open] .marker {
-  transform: rotate(90deg);
-} */
-
-/* Plus/Minus marker variant */
-details.marker-plus #marker {
-  transition: none; /* No rotation for plus/minus */
-
-  &::before {
-    /* Plus icon */
-    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E");
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E");
-  }
-}
-
-details.marker-plus[open] #marker {
-  transform: none; /* Override rotation */
-
-  &::before {
-    /* Minus icon */
-    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14'/%3E%3C/svg%3E");
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14'/%3E%3C/svg%3E");
-  }
-}
-
-:host([marker-position='start']) details.marker-plus #marker,
-:host([marker-position='start']) details.marker-plus[open] #marker {
-  transform: none;
 }
 
 summary:focus-visible {
