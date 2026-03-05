@@ -18,11 +18,11 @@ details {
 }
 
 /* Fallback for browsers without ::details-content support */
-details:not([open]) .content {
+details:not([open]) #content {
   display: none;
 }
 
-details[open] .content {
+details[open] #content {
   display: block;
 }
 
@@ -43,8 +43,8 @@ details[open] .content {
   }
 
   /* When using ::details-content, let it handle visibility */
-  details:not([open]) .content,
-  details[open] .content {
+  details:not([open]) #content,
+  details[open] #content {
     display: block;
   }
 }
@@ -76,16 +76,16 @@ summary {
   }
 }
 
-.content {
+#content {
   padding-block: 1rem;
 }
-.title {
+#title {
   flex: 1;
   font-weight: 500;
 }
 
 /* Marker icon using CSS mask-image */
-.marker {
+#marker {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -112,7 +112,7 @@ summary {
 }
 
 /* Marker position */
-:host([marker-position='start']) .summary {
+:host([marker-position='start']) #summary {
   flex-direction: row-reverse;
 }
 
@@ -121,7 +121,7 @@ summary {
 } */
 
 /* Marker rotation when open */
-details[open] .marker {
+details[open] #marker {
   transform: rotate(180deg);
 }
 
@@ -130,7 +130,7 @@ details[open] .marker {
 } */
 
 /* Plus/Minus marker variant */
-details.marker-plus .marker {
+details.marker-plus #marker {
   transition: none; /* No rotation for plus/minus */
 
   &::before {
@@ -140,7 +140,7 @@ details.marker-plus .marker {
   }
 }
 
-details.marker-plus[open] .marker {
+details.marker-plus[open] #marker {
   transform: none; /* Override rotation */
 
   &::before {
@@ -150,8 +150,8 @@ details.marker-plus[open] .marker {
   }
 }
 
-:host([marker-position='start']) details.marker-plus .marker,
-:host([marker-position='start']) details.marker-plus[open] .marker {
+:host([marker-position='start']) details.marker-plus #marker,
+:host([marker-position='start']) details.marker-plus[open] #marker {
   transform: none;
 }
 
