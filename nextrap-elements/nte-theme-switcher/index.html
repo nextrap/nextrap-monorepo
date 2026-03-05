@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>nte-theme-switcher Demo</title>
+    <style>
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        max-width: 720px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        color: #333;
+      }
+      h1 {
+        margin-bottom: 0.5rem;
+      }
+      h2 {
+        margin-top: 2rem;
+        color: #555;
+        font-size: 1.1rem;
+      }
+      code {
+        background: #f3f3f3;
+        padding: 0.15rem 0.35rem;
+        border-radius: 3px;
+        font-size: 0.9em;
+      }
+      pre {
+        background: #f3f3f3;
+        padding: 1rem;
+        border-radius: 6px;
+        overflow-x: auto;
+        font-size: 0.85rem;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1rem 0;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 0.5rem 0.75rem;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      th {
+        background: #fafafa;
+        font-weight: 600;
+      }
+      .badge {
+        display: inline-block;
+        background: #e8f5e9;
+        color: #2e7d32;
+        padding: 0.15rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+      .theme-preview {
+        padding: 1.5rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        margin: 1rem 0;
+      }
+      .theme-preview p {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>nte-theme-switcher</h1>
+    <p>
+      A lightweight Web Component for switching themes via <code>data-theme</code> attribute.
+      <span class="badge">Lit</span>
+    </p>
+
+    <h2>Live Demo</h2>
+    <p>
+      The theme switcher is active in the bottom-left corner of this page. Select a theme to see the
+      <code>data-theme</code> attribute change on <code>&lt;html&gt;</code>.
+    </p>
+
+    <nte-theme-switcher themes="light, dark, high-contrast" target="html"></nte-theme-switcher>
+
+    <div class="theme-preview">
+      <p>
+        <strong>Current <code>data-theme</code>:</strong> Check <code>&lt;html&gt;</code> element in DevTools to see the
+        applied attribute.
+      </p>
+    </div>
+
+    <h2>Usage</h2>
+    <pre>
+&lt;nte-theme-switcher
+  themes="light, dark, high-contrast"
+  target="html"
+&gt;&lt;/nte-theme-switcher&gt;</pre
+    >
+
+    <h2>Properties</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Property</th>
+          <th>Type</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>themes</code></td>
+          <td><code>string</code></td>
+          <td><code>""</code></td>
+          <td>Comma-separated list of theme names</td>
+        </tr>
+        <tr>
+          <td><code>target</code></td>
+          <td><code>string</code></td>
+          <td><code>"html"</code></td>
+          <td>Target element: <code>"html"</code>, <code>"body"</code>, <code>"current"</code>, or an element ID</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Features</h2>
+    <ul>
+      <li><strong>URL Sync</strong> &mdash; Theme persists via <code>?theme=...</code> URL parameter</li>
+      <li>
+        <strong>Flexible Target</strong> &mdash; Set <code>data-theme</code> on <code>html</code>, <code>body</code>,
+        the component itself, or any element by ID
+      </li>
+      <li><strong>Default Option</strong> &mdash; "Default / System" removes the attribute and cleans the URL</li>
+      <li><strong>No Dependencies</strong> &mdash; Only requires Lit</li>
+      <li><strong>Shadow DOM</strong> &mdash; Styles are encapsulated</li>
+    </ul>
+
+    <h2>Target Options</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Value</th>
+          <th>Behavior</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>"html"</code></td>
+          <td>Sets <code>data-theme</code> on <code>document.documentElement</code></td>
+        </tr>
+        <tr>
+          <td><code>"body"</code></td>
+          <td>Sets <code>data-theme</code> on <code>document.body</code></td>
+        </tr>
+        <tr>
+          <td><code>"current"</code></td>
+          <td>Sets <code>data-theme</code> on the <code>&lt;nte-theme-switcher&gt;</code> element itself</td>
+        </tr>
+        <tr>
+          <td>Any other string</td>
+          <td>Interpreted as element ID via <code>document.getElementById()</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <script src="/demo/main.js" type="module"></script>
+  </body>
+</html>
