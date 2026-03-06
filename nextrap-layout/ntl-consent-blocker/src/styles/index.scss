@@ -3,7 +3,8 @@
  */
 
 ntl-consent-blocker {
-  //--default-bg: '<p><img loading="lazy" src="https://cdn.leuffen.de/hyperpage-components/v1.0/google-maps/maps-preview.jpg"></p>';
+  --default-bg: '<p><img loading="lazy" src="https://cdn.leuffen.de/hyperpage-components/v1.0/google-maps/maps-preview.jpg"></p>';
+  --default-pre-consent: '<button class="btn btn-primary" data-action="consent"> Daten von Google laden</button><p>Mit clicke auf Daten von google laden, wird die Karte geladen und die Datenschutzerklärung von Google akzeptiert.</p>';
 
   p[slot='background'] {
     display: block;
