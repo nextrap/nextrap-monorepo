@@ -1,5 +1,5 @@
 import { Listen} from "@trunkjs/browser-utils";
-import { nextrap_layout } from '@nextrap/ntl-core';
+import { nextrap_layout, NtlFeatures } from '@nextrap/ntl-core';
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, state, property } from 'lit/decorators.js';
 
@@ -11,9 +11,9 @@ import style from './<%= name %>.scss?inline';
 
 // use nextrap_element for pure elements
 
-const features = {
+const features: NtlFeatures = {
   breakpoints: true, // Enables responsive design features
-  subLayoutApplyMixin: true, // For NTL only: Enable <slot data-query= support for sub-layouts
+  subLayoutApply: true, // For NTL only: Enable <slot data-query= support for sub-layouts
   slotVisibility: false, // quick fix for marking empty slots (unless CSS Standard supports :empty for slots)
   eventBinding: true // Switch event binding using @Listen decorators
 };

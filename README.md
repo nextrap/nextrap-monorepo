@@ -51,13 +51,13 @@ If you want to know how to utilize/consume the nextrap monorepo, go [here](/docs
 
 ### Common Commands
 
-- `npx nx dev <package>`: Start the development server for a package
-- `npx nx build <package>`: Build a package
-- `npx nx test <package>`: Run unit tests for a package
-- `npx nx lint <package>`: Run linter for a package
-- `npx nx show project <package>`: Show all targets of a package
+- `nx dev <package>`: Start the development server for a package
+- `nx build <package>`: Build a package
+- `nx test <package>`: Run unit tests for a package
+- `nx lint <package>`: Run linter for a package
+- `nx show project <package>`: Show all targets of a package
 
-Try out `npx nx dev ntl-2col` and make some changes [to the code](nextrap-elements/nte-element-highlighter/src).
+Try out `nx dev ntl-2col` and make some changes [to the code](nextrap-elements/nte-element-highlighter/src).
 
 **Note**: When renaming packages or moving them to a different directory, make sure to update all import paths
 and run `npm update` on the monorepos root to update the package links.
