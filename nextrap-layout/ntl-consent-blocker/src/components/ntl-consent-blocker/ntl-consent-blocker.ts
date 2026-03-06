@@ -34,7 +34,6 @@ export class NtlConsentBlockerElement extends nextrap_layout(features) {
       );
       return;
     }
-    debugger;
     Array.from(template.content.childNodes).forEach((el) => {
       const clone = el.cloneNode(true);
       if (clone instanceof HTMLElement) {
@@ -45,7 +44,7 @@ export class NtlConsentBlockerElement extends nextrap_layout(features) {
     this.consentGiven = true;
   }
 
-  // Example of listening to window scroll events
+  // Example of listening to window click events
   @Listen('click', { target: 'host' })
   private onClick(e: Event) {
     if (e.target instanceof HTMLButtonElement && e.target.closest('[data-action="consent"]')) {
