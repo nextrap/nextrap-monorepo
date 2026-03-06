@@ -1,5 +1,5 @@
 ---
-{: layout=".container" }
+{: layout="1;.container.prose" }
 
 # ntl-consent-blocker component
 
