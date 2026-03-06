@@ -1,6 +1,6 @@
 import { nextrap_layout, NtlFeatures } from '@nextrap/ntl-core';
 import { resetStyle } from '@nextrap/style-reset';
-import { create_element, Listen } from '@trunkjs/browser-utils';
+import { Listen } from '@trunkjs/browser-utils';
 import { html, PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import style from './ntl-consent-blocker.scss?inline';
@@ -34,7 +34,8 @@ export class NtlConsentBlockerElement extends nextrap_layout(features) {
       );
       return;
     }
-    Array.from(template.content.children).forEach((el) => {
+    debugger;
+    Array.from(template.content.childNodes).forEach((el) => {
       const clone = el.cloneNode(true);
       if (clone instanceof HTMLElement) {
         clone.setAttribute('slot', 'consented-content');
@@ -60,7 +61,7 @@ export class NtlConsentBlockerElement extends nextrap_layout(features) {
     if (this.querySelector(':scope > template') === null) {
       const defaultTemplate = getComputedStyle(this).getPropertyValue('--default-template');
       if (defaultTemplate) {
-        const wrapper = create_element('template');
+        const wrapper = document.createElement('template');
         this.#copyElementFromString(defaultTemplate, null, wrapper);
         this.appendChild(wrapper);
       }
@@ -91,7 +92,10 @@ export class NtlConsentBlockerElement extends nextrap_layout(features) {
         clone.setAttribute('slot', slotName);
       }
 
-      wrapperElement.appendChild(clone);
+      // Append to content if wrapper is a template, otherwise to the wrapper itself
+      wrapperElement instanceof HTMLTemplateElement
+        ? wrapperElement.content.appendChild(clone)
+        : wrapperElement.appendChild(clone);
     });
   }
 
