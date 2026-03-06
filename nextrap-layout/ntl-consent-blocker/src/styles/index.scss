@@ -3,5 +3,18 @@
  */
 
 ntl-consent-blocker {
-  /* Put styles here */
+  //--default-bg: '<p><img loading="lazy" src="https://cdn.leuffen.de/hyperpage-components/v1.0/google-maps/maps-preview.jpg"></p>';
+
+  p[slot='background'] {
+    display: block;
+    width: 100%;
+    height: 100%;
+
+    > img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
 }
