@@ -2,7 +2,7 @@
 
 :host {
   --border-color: var(--nt-primary);
-  --background-color: var(--nt-body, #fff);
+  --background-color: unset;
   --border-radius: var(--nt-border-radius);
   --border: var(--nt-border-width) solid var(--border-color);
 }

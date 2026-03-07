@@ -2,6 +2,8 @@
  * This file contains LightDOM Styles
  */
 
+@use './footer';
+
 ntl-card-row {
   nte-card.highlight {
     transform: scale(1.05);

@@ -118,13 +118,6 @@ ul {
 ol {
   list-style: decimal;
 }
-li {
-  margin-top: var(--nt-text-gap);
-}
-li > ul,
-li > ol {
-  margin-top: var(--nt-text-gap);
-}
 
 /* Definition lists (nice for interviews too) */
 dl {
