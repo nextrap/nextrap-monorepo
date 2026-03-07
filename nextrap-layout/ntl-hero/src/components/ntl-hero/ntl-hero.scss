@@ -3,6 +3,7 @@
 :host {
   --bg-color: var(--nt-body-teritary, #e4e6ef);
   --container-width: var(--nt-container-width, 100%);
+  --height-offset: 0px;
 }
 
 #root {
@@ -53,6 +54,7 @@
   z-index: 0;
   height: 100%;
   position: absolute;
+  inset: 0;
 }
 
 .background::slotted(*) {

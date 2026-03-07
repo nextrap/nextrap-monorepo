@@ -1,6 +1,6 @@
-import { LoggingMixin, SlotVisibilityMixin } from '@trunkjs/browser-utils';
+import { LoggingMixin, sleep, SlotVisibilityMixin } from '@trunkjs/browser-utils';
 import { SubLayoutApplyMixin } from '@trunkjs/content-pane';
-import { html, LitElement, unsafeCSS } from 'lit';
+import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
 // Styles for the light DOM
@@ -12,6 +12,12 @@ import style from './ntl-hero.scss?inline';
 @customElement('ntl-hero')
 export class NtlHero extends SlotVisibilityMixin(SubLayoutApplyMixin(LoggingMixin(LitElement))) {
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
+
+  protected override async updated(changedProperties: PropertyValues) {
+    super.updated(changedProperties);
+    await sleep(1000);
+    this.style.setProperty('--height-offset', `${this.offsetTop}px`);
+  }
 
   protected override render(): unknown {
     return html`

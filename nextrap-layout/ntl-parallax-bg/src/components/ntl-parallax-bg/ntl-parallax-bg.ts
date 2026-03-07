@@ -19,7 +19,7 @@ export class NtlParallaxBg extends LoggingMixin(LitElement) {
   public accessor height = '100vh';
 
   @property({ type: String })
-  public accessor width = '100vw';
+  public accessor width = '100%';
 
   @property({ type: String })
   public accessor backgroundColor = 'transparent';

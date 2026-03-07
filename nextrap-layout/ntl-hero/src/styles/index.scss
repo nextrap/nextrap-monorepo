@@ -1,6 +1,20 @@
 /**
  * This file contains LightDOM Styles
  */
+
+ntl-hero {
+  p[slot="bg"] {
+    width: 100%;
+    height: 100%;
+
+    > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
 ntl-hero.theme1 {
   --height-offset: 40vh;
   --top-offset: var(--brand-height, 0px);

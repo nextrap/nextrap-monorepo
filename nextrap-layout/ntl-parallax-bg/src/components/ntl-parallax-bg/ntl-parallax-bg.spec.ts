@@ -21,7 +21,7 @@ describe('ntl-parallax-bg', () => {
   it('should have default property values', () => {
     expect(el.image).toBe('');
     expect(el.height).toBe('100vh');
-    expect(el.width).toBe('100vw');
+    expect(el.width).toBe('100%');
     expect(el.backgroundColor).toBe('transparent');
   });
 
@@ -31,7 +31,7 @@ describe('ntl-parallax-bg', () => {
     const wrapper = el.shadowRoot?.querySelector('.parallax-wrapper') as HTMLElement;
     expect(wrapper).toBeDefined();
     expect(wrapper.style.height).toBe('100vh');
-    expect(wrapper.style.width).toBe('100vw');
+    expect(wrapper.style.width).toBe('100%');
     expect(wrapper.style.backgroundColor).toBe('transparent');
   });
 
