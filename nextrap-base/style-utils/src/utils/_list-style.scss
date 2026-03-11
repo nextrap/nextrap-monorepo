@@ -1,9 +1,11 @@
-.list-unstyled {
+// add html to be more specific than themed defaults
+
+html ul.list-unstyled {
   list-style: none;
   padding-left: 0;
 }
 
-.list-inline {
+html ul.list-inline {
   padding-left: 0;
 
   > li {
@@ -15,7 +17,7 @@
   }
 }
 
-.list-checked {
+html ul.list-checked {
   list-style: none;
   padding-left: 0;
 
