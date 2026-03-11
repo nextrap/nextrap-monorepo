@@ -13,9 +13,9 @@ Dieses Accordion verwendet Plus/Minus Icons statt Chevrons.
 Das Icon wechselt zwischen + und - beim Öffnen/Schließen.
 
 ### Chevron Override
-{: style="--marker-icon: chevron"}
+{: section-marker-icon="chevron"}
 
-Individuell auf Chevron zurückgesetzt via `style="--marker-icon: chevron"`.
+Individuell auf Chevron zurückgesetzt via `section-marker-icon`.
 
 ---
 
@@ -27,9 +27,9 @@ Individuell auf Chevron zurückgesetzt via `style="--marker-icon: chevron"`.
 Standard Chevron-Icon durch Rotation.
 
 ### Plus/Minus Icon
-{: style="--marker-icon: plus"}
+{: section-marker-icon="plus"}
 
-Individuell auf Plus/Minus umgestellt via `style="--marker-icon: plus"`.
+Individuell auf Plus/Minus umgestellt via `section-marker-icon`.
 
 ### Marker links positioniert
 {: marker-position="start"}

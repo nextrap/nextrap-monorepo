@@ -1,6 +1,6 @@
 import { LoggingMixin } from '@trunkjs/browser-utils';
 import { SubLayoutApplyMixin } from '@trunkjs/content-pane';
-import {html, LitElement, PropertyValues, unsafeCSS} from 'lit';
+import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 import { resetStyle } from '@nextrap/style-reset';
@@ -41,15 +41,15 @@ export class NtlAccordionElement extends SubLayoutApplyMixin(LoggingMixin(LitEle
   @property({ converter: initialOpenIndexConverter, attribute: 'initial-open-index' })
   public accessor initialOpenIndex: number | undefined = 0;
 
-  @property({ type: String, reflect: true, attribute: 'marker-icon' })
-  public accessor markerIcon: 'chevron' | 'plus' | null = null;
-
   @property({ type: String, reflect: true, attribute: 'marker-position' })
   public accessor markerPosition: 'start' | 'end' | null = null;
 
+  @property({ type: String, reflect: true, attribute: 'marker-icon' })
+  public accessor markerIcon: 'chevron' | 'plus' | null = null;
+
   private _initialized = false;
 
-  override firstUpdated(__changedProperties : PropertyValues) {
+  override firstUpdated(__changedProperties: PropertyValues) {
     super.firstUpdated(__changedProperties); // Important for SubLayoutApplyMixin
     this.addEventListener('accordion-toggle', this._onItemToggle.bind(this) as EventListener);
 
@@ -67,14 +67,13 @@ export class NtlAccordionElement extends SubLayoutApplyMixin(LoggingMixin(LitEle
     const items = this._getAccordionItems();
 
     for (const item of items) {
-      // Always propagate marker-icon from accordion (no attribute check needed)
-      if (this.markerIcon) {
-        item.markerIcon = this.markerIcon;
-      }
-
       // Propagate marker-position if set on accordion and not on item
       if (this.markerPosition && !item.hasAttribute('marker-position')) {
         item.markerPosition = this.markerPosition;
+      }
+      // Propagate marker-icon if set on accordion and not on item
+      if (this.markerIcon && !item.hasAttribute('marker-icon')) {
+        item.markerIcon = this.markerIcon;
       }
     }
   }

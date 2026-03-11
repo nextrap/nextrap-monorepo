@@ -29,21 +29,22 @@ Inhalt für Item 2
 
 Container-Komponente für das Accordion-Layout.
 
-| Attribut             | Typ                  | Beschreibung                                      | Default     |
-| -------------------- | -------------------- | ------------------------------------------------- | ----------- |
-| `exclusive`          | boolean              | Nur ein Item kann gleichzeitig geöffnet sein      | `false`     |
-| `initial-open-index` | number               | Index des initial geöffneten Items (0-basiert)    | `undefined` |
-| `marker-icon`        | `'chevron'` `'plus'` | Icon-Typ für alle Items                        | `'chevron'` |
-| `marker-position`    | `'start'`  `'end'` | Position des Markers (links oder rechts)          | `'end'`     |
+| Attribut             | Typ                        | Beschreibung                                      | Default     |
+| -------------------- | -------------------------- | ------------------------------------------------- | ----------- |
+| `exclusive`          | boolean                    | Nur ein Item kann gleichzeitig geöffnet sein      | `false`     |
+| `initial-open-index` | number                     | Index des initial geöffneten Items (0-basiert)    | `undefined` |
+| `marker-position`    | `'start'` \| `'end'`      | Position des Markers (links oder rechts)          | `'end'`     |
+| `marker-icon`        | `'chevron'` \| `'plus'`   | Icon-Variante für den Marker                      | `'chevron'` |
 
 ## ntl-accordion-item
 
 Einzelnes Accordion-Item (wird automatisch aus `###`-Überschriften generiert).
 
-| Attribut          | Typ                  | Beschreibung                              | Default     |
-| ----------------- | -------------------- | ----------------------------------------- | ----------- |
-| `open`            | boolean              | Ob das Item geöffnet ist                  | `false`     |
-| `marker-position` | `'start'` `'end'` | Position des Markers (überschreibt Parent)| `'end'`     |
+| Attribut          | Typ                        | Beschreibung                              | Default     |
+| ----------------- | -------------------------- | ----------------------------------------- | ----------- |
+| `open`            | boolean                    | Ob das Item geöffnet ist                  | `false`     |
+| `marker-position` | `'start'` \| `'end'`      | Position des Markers (überschreibt Parent)| `'end'`     |
+| `marker-icon`     | `'chevron'` \| `'plus'`   | Icon-Variante (überschreibt Parent)       | `'chevron'` |
 
 ## Beispiele
 
@@ -87,34 +88,59 @@ Initial geöffnet
 Der Chevron ist links positioniert
 ```
 
-### Plus/Minus Icons
-
-```markdown
-## Accordion
-{: layout="ntl-accordion[marker-icon='plus']"}
-
-### Plus Item
-Verwendet + / - statt Chevron
-```
-
 ## CSS Custom Properties
 
-Styling kann über CSS Custom Properties angepasst werden:
+| Variable                       | Beschreibung                                    | Default                  |
+| ------------------------------ | ----------------------------------------------- | ------------------------ |
+| `--marker-icon-closed`         | Icon im geschlossenen Zustand (Data-URL)        | SVG Chevron Down         |
+| `--marker-icon-open`           | Icon im geöffneten Zustand (Data-URL)           | SVG Chevron Up           |
+| `--marker-size`                | Größe des Marker-Icons                          | `1.5rem`                 |
+| `--border-color`               | Farbe der Trennlinien                           | `#e5e7eb`                |
+| `--background-color-heading`   | Hintergrundfarbe der Überschrift                | `var(--nt-light-subtle)` |
 
-| Property            | Beschreibung                     |
-| ------------------- | -------------------------------- |
-| `--marker-icon`     | Icon-Typ (`chevron` oder `plus`) |
+### Beispiel: Plus/Minus Icons in Markdown
 
-### Individuelles Item-Styling
-
-Einzelne Items können individuell gestylt werden:
+Über das `marker-icon` Attribut auf dem Accordion-Container:
 
 ```markdown
-### Item mit Plus-Icon
-{: style="--marker-icon: plus"}
+## Accordion mit Plus/Minus Icons
+{: layout="ntl-accordion[marker-icon='plus']"}
 
-### Item mit Marker links
-{: marker-position="start"}
+### Item 1
+Inhalt 1
+
+### Item 2
+Inhalt 2
+```
+
+Einzelnes Item mit `section-marker-icon` überschreiben:
+
+```markdown
+### Plus/Minus Item
+{: section-marker-icon="plus"}
+```
+
+### Eigene Icons via CSS
+
+Eigene SVG-Icons können über CSS-Variablen auf dem `ntl-accordion-item` Element gesetzt werden:
+
+```css
+ntl-accordion-item.custom-icon {
+  --marker-icon-closed: url("data:image/svg+xml,...");
+  --marker-icon-open: url("data:image/svg+xml,...");
+}
+```
+
+### Styling mit ::part()
+
+Das Marker-Element kann von außen über `::part(marker)` gestylt werden:
+
+```css
+ntl-accordion-item::part(marker) {
+  color: blue;
+  width: 2rem;
+  height: 2rem;
+}
 ```
 
 ## Events
