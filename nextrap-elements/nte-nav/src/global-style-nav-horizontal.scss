@@ -154,7 +154,7 @@
       }
 
       &:active > a:after,
-      &:focus-within > a:after {
+      &:has(a:focus) > a:after {
         transform: rotate(-135deg) scale(0.85);
       }
 
@@ -184,7 +184,7 @@
         transform: translateY(-0.7em);
 
         &:hover,
-        &:focus-within {
+        &:has(a:focus) {
           visibility: visible;
           opacity: 1;
           pointer-events: all;
@@ -215,7 +215,7 @@
         }
       }
 
-      &:focus-within > ul {
+      &:has(a:focus) > ul {
         visibility: visible;
         opacity: 1;
         pointer-events: all;

@@ -111,7 +111,7 @@
 
         /* Reveal submenu on hover or focus */
         li > &,
-        &:focus-within {
+        &:has(a:focus) {
           display: flex;
         }
 
