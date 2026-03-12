@@ -1,6 +1,7 @@
 import { isBiggerThanBreakpoint, waitForDomContentLoaded } from '@nextrap/nt-framework';
 import '@nextrap/nte-offcanvas';
 import { NteOffcanvas } from '@nextrap/nte-offcanvas';
+import { sleep } from '@trunkjs/browser-utils';
 import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import style from './nav.scss?inline';
@@ -116,9 +117,15 @@ export class NteNav extends LitElement {
     }
   }
 
-  override async connectedCallback() {
-    await waitForDomContentLoaded();
+  private updateTransferState() {
+    if (isBiggerThanBreakpoint(this.breakpoint)) {
+      this._isTransferred = false;
+    } else {
+      this._isTransferred = true;
+    }
+  }
 
+  override async connectedCallback() {
     super.connectedCallback();
 
     if (this.mode === 'slave') {
@@ -131,13 +138,13 @@ export class NteNav extends LitElement {
           this._isTransferred = true;
         }
         window.addEventListener('breakpoint-changed', (event: Event) => {
-          if (isBiggerThanBreakpoint(this.breakpoint)) {
-            this._isTransferred = false;
-          } else {
-            this._isTransferred = true;
-          }
+          this.updateTransferState();
         });
       }
     }
+    await waitForDomContentLoaded();
+    this.updateTransferState();
+    await sleep(3000);
+    this.updateTransferState();
   }
 }
