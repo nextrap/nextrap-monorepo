@@ -1,7 +1,7 @@
-import { isBiggerThanBreakpoint, waitForDomContentLoaded } from '@nextrap/nt-framework';
+import { isBiggerThanBreakpoint } from '@nextrap/nt-framework';
 import '@nextrap/nte-offcanvas';
 import { NteOffcanvas } from '@nextrap/nte-offcanvas';
-import { sleep } from '@trunkjs/browser-utils';
+import { sleep, waitForLoad } from '@trunkjs/browser-utils';
 import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import style from './nav.scss?inline';
@@ -142,8 +142,10 @@ export class NteNav extends LitElement {
         });
       }
     }
-    await waitForDomContentLoaded();
+
+    await waitForLoad();
     this.updateTransferState();
+
     await sleep(3000);
     this.updateTransferState();
   }
