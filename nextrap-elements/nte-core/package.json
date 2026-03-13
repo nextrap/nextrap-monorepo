@@ -1,6 +1,6 @@
 {
     "name": "@nextrap/nte-core",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "main": "./index.js",
     "dependencies": {
         "@trunkjs/browser-utils": "^1.0.37",

@@ -1,3 +1,7 @@
+## 1.0.6 (2026-03-13)
+
+This was a version bump only for nte-core to align it with other projects, there were no code changes.
+
 ## 1.0.5 (2026-03-13)
 
 This was a version bump only for nte-core to align it with other projects, there were no code changes.
