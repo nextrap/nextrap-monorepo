@@ -54,5 +54,3 @@ export function nextrap_element(features: NteFeatures = {}) {
 
   return constructor as InternalNextrapElementType;
 }
-
-class xy extends nextrap_element() {}
