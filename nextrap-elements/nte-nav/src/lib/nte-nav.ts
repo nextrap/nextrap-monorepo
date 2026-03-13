@@ -1,10 +1,16 @@
 import { isBiggerThanBreakpoint } from '@nextrap/nt-framework';
+import { nextrap_element, NteFeatures } from '@nextrap/nte-core';
 import '@nextrap/nte-offcanvas';
 import { NteOffcanvas } from '@nextrap/nte-offcanvas';
-import { sleep, waitForLoad } from '@trunkjs/browser-utils';
-import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
+import { Listen, sleep, waitForLoad } from '@trunkjs/browser-utils';
+import { html, PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import style from './nav.scss?inline';
+
+const features: NteFeatures = {
+  eventBinding: true,
+  logging: true,
+};
 
 /**
  * <nte-nav>
@@ -15,7 +21,7 @@ import style from './nav.scss?inline';
  * </nte-nav>
  */
 @customElement('nte-nav')
-export class NteNav extends LitElement {
+export class NteNav extends nextrap_element(features) {
   static override styles = [unsafeCSS(style)];
 
   @property({ type: String, reflect: true }) accessor mode: 'master' | 'slave' = 'slave';
@@ -28,6 +34,36 @@ export class NteNav extends LitElement {
   @property({ type: String, reflect: false, attribute: 'data-group-name' }) accessor dataGroupName = '';
 
   @state() private accessor _isTransferred = false;
+
+  #curClickLi: HTMLLIElement | null = null;
+
+  @Listen('click', { target: 'host' })
+  private handleClickOnSubmenu(e: Event) {
+    const clickLi = (e.target as HTMLElement | null)?.closest('li:has(ul)') as HTMLLIElement | null;
+    if (this.#curClickLi) {
+      this.#curClickLi.classList.remove('is-open');
+      this.#curClickLi = null;
+    }
+
+    if (!clickLi) {
+      return;
+    }
+
+    this.#curClickLi = clickLi;
+    clickLi.classList.add('is-open');
+  }
+
+  @Listen('click', { target: 'window' })
+  private handleClickOutside(e: Event) {
+    if (!this.#curClickLi) {
+      return;
+    }
+    const clickInside = this.#curClickLi.contains(e.target as Node);
+    if (!clickInside) {
+      this.#curClickLi.classList.remove('is-open');
+      this.#curClickLi = null;
+    }
+  }
 
   private getOffcanvas(): NteOffcanvas | null {
     if (!this.transferTo) {

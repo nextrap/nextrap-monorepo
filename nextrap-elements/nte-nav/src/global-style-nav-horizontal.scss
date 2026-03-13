@@ -103,6 +103,10 @@
       align-items: center;
       height: inherit;
 
+      &.is-open > a:after {
+        transform: rotate(-135deg) scale(0.85);
+      }
+
       > a {
         display: flex;
         align-items: center;
@@ -154,7 +158,7 @@
       }
 
       &:active > a:after,
-      &:has(a:focus) > a:after {
+      &:has(.is-open) > a:after {
         transform: rotate(-135deg) scale(0.85);
       }
 
@@ -184,7 +188,7 @@
         transform: translateY(-0.7em);
 
         &:hover,
-        &:has(a:focus) {
+        &:has(.is-open) {
           visibility: visible;
           opacity: 1;
           pointer-events: all;
@@ -215,7 +219,7 @@
         }
       }
 
-      &:has(a:focus) > ul {
+      &.is-open > ul {
         visibility: visible;
         opacity: 1;
         pointer-events: all;

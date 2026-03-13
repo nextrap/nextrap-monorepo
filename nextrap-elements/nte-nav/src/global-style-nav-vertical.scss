@@ -92,11 +92,11 @@
 
       /* Rotate caret on hover/focus */
       &:active > a:after,
-      &:focus-within > a:after {
+      &.is-open > a:after {
         transform: rotate(135deg) scale(0.85);
       }
 
-      &:focus-within > ul {
+      &.is-open > ul {
         display: flex;
       }
 
@@ -108,12 +108,6 @@
         padding-left: 0.7em; /* Indent submenu items */
         display: none;
         flex-direction: column;
-
-        /* Reveal submenu on hover or focus */
-        li > &,
-        &:has(a:focus) {
-          display: flex;
-        }
 
         /* Submenu links */
         > li > a {
