@@ -127,7 +127,7 @@ export class NteNav extends nextrap_element(features) {
     });
   }
 
-  protected override updated(_changedProperties: PropertyValues) {
+  override updated(_changedProperties: PropertyValues) {
     super.updated(_changedProperties);
 
     if (this._isTransferred) {
@@ -143,7 +143,7 @@ export class NteNav extends nextrap_element(features) {
     }
   }
 
-  protected override firstUpdated(_changedProperties: PropertyValues) {
+  override firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
     // Copy all styles from the parent element to the offcanvas
 
