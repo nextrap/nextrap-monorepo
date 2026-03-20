@@ -3,14 +3,12 @@ import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import style from './nte-theme-switcher.scss?inline';
 /**
- * Theme Switcher component that sets a `data-theme` attribute on a target element
+ * Theme Switcher component that sets a theme class on the body element
  * and syncs the selected theme with URL parameters.
  *
  * @element nte-theme-switcher
  *
  * @property {string} themes - Comma-separated list of available theme names
- * @property {string} target - Target element for `data-theme` attribute:
- *   "html" (default), "body", "current" (self), or an element ID
  */
 @customElement('nte-theme-switcher')
 export class NteThemeSwitcherElement extends LitElement {
@@ -21,13 +19,6 @@ export class NteThemeSwitcherElement extends LitElement {
    */
   @property({ type: String })
   public themes = '';
-
-  /**
-   * Target element for the data-theme attribute.
-   * "html" | "body" | "current" | element ID
-   */
-  @property({ type: String })
-  public target = 'html';
 
   /**
    * Currently active theme
@@ -50,7 +41,7 @@ export class NteThemeSwitcherElement extends LitElement {
 
   override disconnectedCallback() {
     super.disconnectedCallback();
-    this._removeThemeAttribute();
+    this._removeThemeClass();
   }
 
   /**
@@ -92,43 +83,22 @@ export class NteThemeSwitcherElement extends LitElement {
   }
 
   /**
-   * Resolve the target DOM element
-   */
-  private _getTargetElement(): HTMLElement | null {
-    switch (this.target) {
-      case 'html':
-        return document.documentElement;
-      case 'body':
-        return document.body;
-      case 'current':
-        return this;
-      default:
-        return document.getElementById(this.target);
-    }
-  }
-
-  /**
-   * Apply the data-theme attribute to the target element
+   * Apply the theme class to the body element
    */
   private _applyTheme() {
-    const el = this._getTargetElement();
-    if (!el) return;
+    this._removeThemeClass();
 
-    if (this._activeTheme === 'default') {
-      el.removeAttribute('data-theme');
-    } else {
-      el.setAttribute('data-theme', this._activeTheme);
+    if (this._activeTheme !== 'default') {
+      document.body.classList.add(`theme-${this._activeTheme}`);
     }
   }
 
   /**
-   * Remove the data-theme attribute from the target element (cleanup)
+   * Remove all theme classes from the body element (cleanup)
    */
-  private _removeThemeAttribute() {
-    const el = this._getTargetElement();
-    if (el) {
-      el.removeAttribute('data-theme');
-    }
+  private _removeThemeClass() {
+    const allThemeClasses = this._themeList.map((t) => `theme-${t}`);
+    document.body.classList.remove(...allThemeClasses);
   }
 
   /**
