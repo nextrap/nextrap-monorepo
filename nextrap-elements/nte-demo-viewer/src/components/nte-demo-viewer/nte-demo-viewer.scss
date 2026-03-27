@@ -267,7 +267,7 @@
   transition: margin 0.3s ease;
 
   @media (max-width: 768px) {
-    padding: 1rem;
+    //padding: 1rem; Never padding
   }
 }
 
