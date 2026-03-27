@@ -1,3 +1,86 @@
 /**
  * Light DOM Styles for Demo Viewer
+ * 
+ * These styles restore margins/paddings for markdown content
+ * that may be reset by global CSS resets.
  */
+
+// Restore typography spacing for markdown content
+nte-demo-viewer {
+  [slot='demo-content'],
+  [slot='readme-content'] {
+    // Headings
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin-top: 1.5em;
+      margin-bottom: 0.5em;
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+
+    // Paragraphs
+    p {
+      margin-top: 0;
+      margin-bottom: 1em;
+    }
+
+    // Lists
+    ul,
+    ol {
+      margin-top: 0;
+      margin-bottom: 1em;
+      padding-left: 2em;
+    }
+
+    ul {
+      list-style: disc;
+    }
+
+    ol {
+      list-style: decimal;
+    }
+
+    li {
+      margin-bottom: 0.25em;
+    }
+
+    // Blockquotes
+    blockquote {
+      margin: 1em 0;
+      padding-left: 1em;
+      border-left: 4px solid #e0e0e0;
+    }
+
+    // Code blocks
+    pre {
+      margin: 1em 0;
+      padding: 1em;
+    }
+
+    // Inline code
+    code {
+      padding: 0.2em 0.4em;
+    }
+
+    // Tables
+    table {
+      margin: 1em 0;
+    }
+
+    th,
+    td {
+      padding: 0.5em 0.75em;
+    }
+
+    // Horizontal rules
+    hr {
+      margin: 1.5em 0;
+    }
+  }
+}

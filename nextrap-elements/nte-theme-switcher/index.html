@@ -74,22 +74,22 @@
   <body>
     <h1>nte-theme-switcher</h1>
     <p>
-      A lightweight Web Component for switching themes via <code>data-theme</code> attribute.
+      A lightweight Web Component for switching themes via CSS classes on the <code>&lt;body&gt;</code> element.
       <span class="badge">Lit</span>
     </p>
 
     <h2>Live Demo</h2>
     <p>
-      The theme switcher is active in the bottom-left corner of this page. Select a theme to see the
-      <code>data-theme</code> attribute change on <code>&lt;html&gt;</code>.
+      The theme switcher is active below. Select a theme to see the CSS class change on <code>&lt;body&gt;</code> (e.g.
+      <code>class="theme-dark"</code>).
     </p>
 
-    <nte-theme-switcher themes="light, dark, high-contrast" target="html"></nte-theme-switcher>
+    <nte-theme-switcher themes="light, dark, high-contrast"></nte-theme-switcher>
 
     <div class="theme-preview">
       <p>
-        <strong>Current <code>data-theme</code>:</strong> Check <code>&lt;html&gt;</code> element in DevTools to see the
-        applied attribute.
+        <strong>Current theme class:</strong> Check <code>&lt;body&gt;</code> element in DevTools to see the applied
+        class (e.g. <code>theme-light</code>, <code>theme-dark</code>).
       </p>
     </div>
 
@@ -97,7 +97,6 @@
     <pre>
 &lt;nte-theme-switcher
   themes="light, dark, high-contrast"
-  target="html"
 &gt;&lt;/nte-theme-switcher&gt;</pre
     >
 
@@ -116,56 +115,34 @@
           <td><code>themes</code></td>
           <td><code>string</code></td>
           <td><code>""</code></td>
-          <td>Comma-separated list of theme names</td>
-        </tr>
-        <tr>
-          <td><code>target</code></td>
-          <td><code>string</code></td>
-          <td><code>"html"</code></td>
-          <td>Target element: <code>"html"</code>, <code>"body"</code>, <code>"current"</code>, or an element ID</td>
+          <td>Comma-separated list of theme names (classes will be prefixed with <code>theme-</code>)</td>
         </tr>
       </tbody>
     </table>
 
     <h2>Features</h2>
     <ul>
-      <li><strong>URL Sync</strong> &mdash; Theme persists via <code>?theme=...</code> URL parameter</li>
       <li>
-        <strong>Flexible Target</strong> &mdash; Set <code>data-theme</code> on <code>html</code>, <code>body</code>,
-        the component itself, or any element by ID
+        <strong>CSS Class Based</strong> &mdash; Sets <code>theme-{name}</code> class on <code>&lt;body&gt;</code>
       </li>
-      <li><strong>Default Option</strong> &mdash; "Default / System" removes the attribute and cleans the URL</li>
+      <li><strong>URL Sync</strong> &mdash; Theme persists via <code>?theme=...</code> URL parameter</li>
+      <li><strong>Default Option</strong> &mdash; "Default / System" removes the class and cleans the URL</li>
       <li><strong>No Dependencies</strong> &mdash; Only requires Lit</li>
       <li><strong>Shadow DOM</strong> &mdash; Styles are encapsulated</li>
     </ul>
 
-    <h2>Target Options</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Value</th>
-          <th>Behavior</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><code>"html"</code></td>
-          <td>Sets <code>data-theme</code> on <code>document.documentElement</code></td>
-        </tr>
-        <tr>
-          <td><code>"body"</code></td>
-          <td>Sets <code>data-theme</code> on <code>document.body</code></td>
-        </tr>
-        <tr>
-          <td><code>"current"</code></td>
-          <td>Sets <code>data-theme</code> on the <code>&lt;nte-theme-switcher&gt;</code> element itself</td>
-        </tr>
-        <tr>
-          <td>Any other string</td>
-          <td>Interpreted as element ID via <code>document.getElementById()</code></td>
-        </tr>
-      </tbody>
-    </table>
+    <h2>Styling with Theme Classes</h2>
+    <p>Use the theme classes in your CSS to style elements based on the selected theme:</p>
+    <pre>
+/* Default styles */
+.my-element { background: white; color: black; }
+
+/* Dark theme */
+.theme-dark .my-element { background: #1a1a1a; color: white; }
+
+/* Light theme */
+.theme-light .my-element { background: #fafafa; color: #333; }</pre
+    >
 
     <script src="/demo/main.js" type="module"></script>
   </body>

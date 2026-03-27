@@ -18,19 +18,19 @@ export class NteThemeSwitcherElement extends LitElement {
    * Comma-separated list of available theme names
    */
   @property({ type: String })
-  public themes = '';
+  accessor themes = '';
 
   /**
    * Currently active theme
    */
   @state()
-  private _activeTheme = 'default';
+  private accessor _activeTheme = 'default';
 
   /**
    * Parsed list of available themes
    */
   @state()
-  private _themeList: string[] = [];
+  private accessor _themeList: string[] = [];
 
   override connectedCallback() {
     super.connectedCallback();
