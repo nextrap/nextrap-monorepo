@@ -1,0 +1,117 @@
+/* The ShadowDOM Styles */
+
+:host {
+  --container-width: var(--nt-container-width) /* Refer to README.md for style guidelines */;
+  display: none;
+}
+
+:host([open]) {
+  display: block;
+}
+
+#backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(9px);
+}
+#wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  #offcanvas {
+    position: fixed;
+    top: 4px;
+
+    box-shadow:
+      0 4px 6px rgba(0, 0, 0, 0.1),
+      0 1px 3px rgba(0, 0, 0, 0.06);
+    margin: 0 auto;
+    width: var(--container-width);
+    bottom: 4px;
+    border-radius: 0.5rem;
+    border: 2px solid gray;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+#header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #ccc;
+
+  p {
+  }
+
+  #close-button {
+    margin: 5px;
+    cursor: pointer;
+    font-size: 1.5rem;
+  }
+
+  /* Wichtig für Ellipsis in Flex-Containern: Flex-Items dürfen schrumpfen (min-width: 0) */
+
+  #title {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    > slot {
+      min-width: 0;
+    }
+
+    > slot::slotted(*) {
+      margin: 0 !important;
+      padding: 0;
+
+      /* Ellipsis bei zu wenig Platz */
+      display: block;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+#content {
+  flex: 1;
+  padding: 1rem;
+
+  display: grid;
+  > slot::slotted(*) {
+    display: grid;
+    grid-column: 1;
+    grid-row: 1;
+    transition: all 0.5s ease;
+  }
+
+  > slot::slotted(.prev) {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  > slot::slotted(.next) {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  > slot::slotted(.active) {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
