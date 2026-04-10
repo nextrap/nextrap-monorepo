@@ -9,8 +9,8 @@
   $lighten-factor: map.get($override, lighten-factor) or 40%;
 
   // === BASE COLORS ===
-  $primary: map.get($override, colors, primary);
-  $accent: map.get($override, colors, accent);
+  $primary: map.get($override, primary);
+  $accent: map.get($override, accent);
 
   // Calculate inverse colors if only one is provided
   @if $primary == null and $accent == null {
@@ -23,142 +23,143 @@
     $accent: color.adjust($primary, $hue: 180deg);
   }
 
-  $secondary: map.get($override, colors, secondary) or #6c757d;
-  $tertiary: map.get($override, colors, tertiary) or #17a2b8;
-  $success: map.get($override, colors, success) or #28a745;
-  $info: map.get($override, colors, info) or #17a2b8;
-  $warning: map.get($override, colors, warning) or #ffc107;
-  $danger: map.get($override,colors,  danger) or #dc3545;
-  $light: map.get($override, colors, light) or #f8f9fa;
-  $dark: map.get($override, colors, dark) or #212529;
-  $white: map.get($override,colors,  white) or #fff;
-  $black: map.get($override, colors, black) or #000;
+  $secondary: map.get($override, secondary) or #6c757d;
+  $tertiary: map.get($override, tertiary) or #17a2b8;
+  $success: map.get($override, success) or #28a745;
+  $info: map.get($override, info) or #17a2b8;
+  $warning: map.get($override, warning) or #ffc107;
+  $danger: map.get($override, danger) or #dc3545;
+  $light: map.get($override, light) or #f8f9fa;
+  $dark: map.get($override, dark) or #212529;
+  $white: map.get($override, white) or #fff;
+  $black: map.get($override, black) or #000;
 
-  $textColor: map.get($override, typography, text) or $black;
+  $textColor: map.get($override, text) or $black;
 
-  // === THEME MAP ===
+  // === SCALES (keep as maps) ===
+  $space-scale: map.get($override, space-scale) or (
+    '1': 0.25,
+    '2': 0.5,
+    '3': 1,
+    '4': 1.5,
+    '5': 3,
+  );
+
+  $text-scales: map.get($override, text-scales) or (
+    '1': 1.5,
+    '2': 1.25,
+    '3': 1,
+    '4': 0.9,
+    '5': 0.85,
+    '6': 0.75,
+  );
+
+  $header-scales: map.get($override, header-scales) or (
+    '1': 2.5,
+    '2': 2,
+    '3': 1.75,
+    '4': 1.5,
+    '5': 1.25,
+    '6': 1,
+  );
+
+  // === THEME MAP (flat) ===
   $theme: (
-    colors: (
-      primary: $primary,
-      primary-subtle: color.adjust($primary, $lightness: $lighten-factor),
-      primary-emphasis: color.adjust($primary, $lightness: math.div(-$lighten-factor, 2)),
-      text-on-primary: text-on($primary, $textColor, $white),
+    // Colors
+    primary: $primary,
+    primary-subtle: color.adjust($primary, $lightness: $lighten-factor),
+    primary-emphasis: color.adjust($primary, $lightness: math.div(-$lighten-factor, 2)),
+    text-on-primary: text-on($primary, $textColor, $white),
 
-      accent: $accent,
-      accent-subtle: color.adjust($accent, $lightness: $lighten-factor),
-      accent-emphasis: color.adjust($accent, $lightness: math.div(-$lighten-factor, 2)),
-      text-on-accent: text-on($accent, $textColor, $white),
+    accent: $accent,
+    accent-subtle: color.adjust($accent, $lightness: $lighten-factor),
+    accent-emphasis: color.adjust($accent, $lightness: math.div(-$lighten-factor, 2)),
+    text-on-accent: text-on($accent, $textColor, $white),
 
-      secondary: $secondary,
-      secondary-subtle: color.adjust($secondary, $lightness: $lighten-factor),
-      secondary-emphasis: color.adjust($secondary, $lightness: math.div(-$lighten-factor, 2)),
-      text-on-secondary: text-on($secondary, $textColor, $white),
+    secondary: $secondary,
+    secondary-subtle: color.adjust($secondary, $lightness: $lighten-factor),
+    secondary-emphasis: color.adjust($secondary, $lightness: math.div(-$lighten-factor, 2)),
+    text-on-secondary: text-on($secondary, $textColor, $white),
 
-      tertiary: $tertiary,
-      tertiary-subtle: color.adjust($tertiary, $lightness: $lighten-factor),
-      tertiary-emphasis: color.adjust($tertiary, $lightness: math.div(-$lighten-factor, 2)),
-      text-on-tertiary: text-on($tertiary, $textColor, $white),
+    tertiary: $tertiary,
+    tertiary-subtle: color.adjust($tertiary, $lightness: $lighten-factor),
+    tertiary-emphasis: color.adjust($tertiary, $lightness: math.div(-$lighten-factor, 2)),
+    text-on-tertiary: text-on($tertiary, $textColor, $white),
 
-      success: $success,
-      success-subtle: color.adjust($success, $lightness: $lighten-factor),
-      success-emphasis: color.adjust($success, $lightness: math.div(-$lighten-factor, 2)),
-      text-on-success: text-on($success, $textColor, $white),
+    success: $success,
+    success-subtle: color.adjust($success, $lightness: $lighten-factor),
+    success-emphasis: color.adjust($success, $lightness: math.div(-$lighten-factor, 2)),
+    text-on-success: text-on($success, $textColor, $white),
 
-      info: $info,
-      info-subtle: color.adjust($info, $lightness: $lighten-factor),
-      info-emphasis: color.adjust($info, $lightness: math.div(-$lighten-factor, 2)),
-      text-on-info: text-on($info, $textColor, $white),
+    info: $info,
+    info-subtle: color.adjust($info, $lightness: $lighten-factor),
+    info-emphasis: color.adjust($info, $lightness: math.div(-$lighten-factor, 2)),
+    text-on-info: text-on($info, $textColor, $white),
 
-      warning: $warning,
-      warning-subtle: color.adjust($warning, $lightness: $lighten-factor),
-      warning-emphasis: color.adjust($warning, $lightness: math.div(-$lighten-factor, 2)),
-      text-on-warning: text-on($warning, $textColor, $white),
+    warning: $warning,
+    warning-subtle: color.adjust($warning, $lightness: $lighten-factor),
+    warning-emphasis: color.adjust($warning, $lightness: math.div(-$lighten-factor, 2)),
+    text-on-warning: text-on($warning, $textColor, $white),
 
-      danger: $danger,
-      danger-subtle: color.adjust($danger, $lightness: $lighten-factor),
-      danger-emphasis: color.adjust($danger, $lightness: math.div(-$lighten-factor, 2)),
-      text-on-danger: text-on($danger, $textColor, $white),
+    danger: $danger,
+    danger-subtle: color.adjust($danger, $lightness: $lighten-factor),
+    danger-emphasis: color.adjust($danger, $lightness: math.div(-$lighten-factor, 2)),
+    text-on-danger: text-on($danger, $textColor, $white),
 
-      light: $light,
-      light-subtle: color.adjust($light, $lightness: 1%),
-      light-emphasis: color.adjust($light, $lightness: -$lighten-factor * 2),
-      text-on-light: text-on($light, $textColor, $white),
+    light: $light,
+    light-subtle: color.adjust($light, $lightness: 1%),
+    light-emphasis: color.adjust($light, $lightness: -$lighten-factor * 2),
+    text-on-light: text-on($light, $textColor, $white),
 
-      dark: $dark,
-      dark-subtle: color.adjust($dark, $lightness: $lighten-factor),
-      dark-emphasis: color.adjust($dark, $lightness: math.div(-$lighten-factor, 2)),
-      text-on-dark: text-on($dark, $textColor, $white),
+    dark: $dark,
+    dark-subtle: color.adjust($dark, $lightness: $lighten-factor),
+    dark-emphasis: color.adjust($dark, $lightness: math.div(-$lighten-factor, 2)),
+    text-on-dark: text-on($dark, $textColor, $white),
 
-      white: $white,
-      text-on-white: text-on($white, $textColor, $white),
+    white: $white,
+    text-on-white: text-on($white, $textColor, $white),
 
-      black: $black,
-      text-on-black: text-on($black, $textColor, $white),
+    black: $black,
+    text-on-black: text-on($black, $textColor, $white),
 
-      body: color.adjust($dark, $lightness: 90%),
-      body-secondary: color.adjust($dark, $lightness: 60%),
-      body-tertiary: color.adjust($dark, $lightness: 80%),
-    ),
+    body: color.adjust($dark, $lightness: 90%),
+    body-secondary: color.adjust($dark, $lightness: 60%),
+    body-tertiary: color.adjust($dark, $lightness: 80%),
 
-    typography: (
-      font-family-base: map.get($override, font-family-base) or sans-serif,
-      font-size-base: map.get($override, font-size-base) or 1rem,
-      line-height-base: map.get($override, line-height-base) or 1.5,
+    // Typography
+    font-family-base: map.get($override, font-family-base) or sans-serif,
+    font-size-base: map.get($override, font-size-base) or 1rem,
+    line-height-base: map.get($override, line-height-base) or 1.5,
 
-      font-family-header: map.get($override, font-family-header) or sans-serif,
-      font-size-header: map.get($override, font-size-header) or 1rem,
-      line-height-header: map.get($override, line-height-header) or 1.2,
+    font-family-header: map.get($override, font-family-header) or sans-serif,
+    font-size-header: map.get($override, font-size-header) or 1rem,
+    line-height-header: map.get($override, line-height-header) or 1.2,
 
-      text: $black,
-      text-on-soft-colors: $black,
-      header: $black,
+    text: $textColor,
+    text-on-soft-colors: map.get($override, text-on-soft-colors) or $textColor,
+    header: map.get($override, header) or $textColor,
 
-      text-decoration-link: underline,
-      link-color: $primary,
-      link-on-dark: $white,
+    text-decoration-link: map.get($override, text-decoration-link) or underline,
+    link: map.get($override, link) or $primary,
+    link-on-dark: map.get($override, link-on-dark) or $white,
 
-      font-size-small: 0.875rem,
-    ),
+    font-size-small: map.get($override, font-size-small) or 0.875rem,
 
-    spacing: (
-      gap: 1.25rem,
-      text-gap: 1rem,
-      space: 1rem,
-      content-space: 10rem,
+    // Spacing
+    gap: map.get($override, gap) or 1.25rem,
+    text-gap: map.get($override, text-gap) or 1rem,
+    space: map.get($override, space) or 1rem,
+    content-space: map.get($override, content-space) or 10rem,
 
-      scale: (
-        '1': 0.25,
-        '2': 0.5,
-        '3': 1,
-        '4': 1.5,
-        '5': 3,
-      ),
-    ),
+    // Scales
+    space-scale: $space-scale,
+    text-scales: $text-scales,
+    header-scales: $header-scales,
 
-    font-scales: (
-      text: (
-        '1': 1.5,
-        '2': 1.25,
-        '3': 1,
-        '4': 0.9,
-        '5': 0.85,
-        '6': 0.75,
-      ),
-      header: (
-        '1': 2.5,
-        '2': 2,
-        '3': 1.75,
-        '4': 1.5,
-        '5': 1.25,
-        '6': 1,
-      ),
-    ),
-
-    config: (
-      enableRcs: false,
-      enableFontConfig: false,
-      enableScrollOffset: false,
-    )
+    // Config (flat)
+    rcs: map.get($override, rcs) or false,
+    enableFontConfig: map.get($override, enableFontConfig) or false,
+    enableScrollOffset: map.get($override, enableScrollOffset) or false,
   );
 
   // === MERGE WITH OVERRIDES ===

@@ -11,7 +11,7 @@ $colors: ('primary', 'accent', 'secondary', 'success', 'danger', 'warning', 'inf
   --btn-bg: var(--nt-primary);
   display: inline-block;
   padding: 0.5rem 1rem;
-  background-color: rgb(from var(--btn-bg) r g b / 0.8);
+  background-color: rgb(from var(--btn-bg) r g b / 0.9);
   color: var(--btn-txt);
   border-radius: var(--nt-border-radius);
   border: 1px solid var(--btn-bg);
@@ -24,7 +24,8 @@ $colors: ('primary', 'accent', 'secondary', 'success', 'danger', 'warning', 'inf
 
   &:hover {
     background-color: rgb(from var(--btn-bg) r g b / 1);
-    color: white;
+    color: rgb(from var(--btn-txt) r g b / 1);
+    text-decoration: none;
   }
 
   &.btn-link {
@@ -80,7 +81,7 @@ $colors: ('primary', 'accent', 'secondary', 'success', 'danger', 'warning', 'inf
     }
   }
 
-  &:active,
+  &:active + .dropdown-menu,
   &:focus + .dropdown-menu {
     display: block; // Show dropdown on active state
     opacity: 1; // Make dropdown visible
@@ -89,18 +90,14 @@ $colors: ('primary', 'accent', 'secondary', 'success', 'danger', 'warning', 'inf
   // Loop through colors and create classes
   @each $color in $colors {
     &.btn-#{$color} {
-      --btn-bg: rgb(from var(--nt-#{$color}) r g b / 0.8);
-      --btn-txt: rgb(from var(--nt-text-on-#{$color}) r g b / 0.8);
-      border-color: var(--nt-#{$color});
+      --btn-bg: var(--nt-#{$color}) !important;
+      --btn-txt: var(--nt-text-on-#{$color}) !important;
 
-      &:hover {
-        --btn-bg: var(--nt-#{$color});
-      }
     }
     &.btn-outline-#{$color} {
       background-color: transparent;
       --btn-txt: var(--nt-text);
-      border: 1px solid rgb(from var(--nt-#{$color}) r g b / 0.8);
+      border: 1px solid rgb(from var(--nt-#{$color}) r g b);
 
       &:hover {
         background-color: var(--nt-#{$color});

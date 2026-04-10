@@ -4,6 +4,7 @@
   --bg-color: var(--nt-body-teritary, #e4e6ef);
   --container-width: var(--nt-container-width, 100%);
   --height-offset: 0px;
+  --min-height:  500px;
 }
 
 #root {
@@ -13,6 +14,7 @@
   max-height: calc(100vh - var(--height-offset, 0px));
   display: grid;
 
+  min-height: var(--min-height);
   grid-template-rows: 1fr;
   grid-template-columns: 1fr;
 }

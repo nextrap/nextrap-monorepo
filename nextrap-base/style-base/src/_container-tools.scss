@@ -1,12 +1,11 @@
 @use 'sass:map';
 
 @mixin containerTools($theme) {
-  $config: map.get($theme, 'config');
   // Responsive sizing (RCS)
   // This is the root size all rem units are based on. (also space, content-space, etc.)
   // RCS is
 
-  @if map.get($config, "rcs") == true {
+  @if map.get($theme, "rcs") == true {
     // Responsive root size
     // This will adjust the root font size based on the viewport width
     font-size: clamp(0.875rem, 1vw + 0.5rem, 1.125rem);
@@ -15,11 +14,11 @@
     font-size: 1rem;
   }
 
-  @if map.get($config, "enableFontConfig") == true {
-    font-family: #{$font-family-base};
+  @if map.get($theme, "enableFontConfig") == true {
+    font-family: #{map.get($theme, "font-family-base")};
   }
 
-  @if map.get($config, "enableScrollOffset") == true {
+  @if map.get($theme, "enableScrollOffset") == true {
     // Scroll offset for fixed elements
     scroll-padding-top: var(--nt-scroll-padding-top);
   }
