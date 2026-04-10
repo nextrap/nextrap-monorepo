@@ -1,0 +1,133 @@
+@use "sass:map";
+
+
+
+
+// Register the css variables
+
+@mixin cssVariables($theme) {
+  $colors: map.get($theme, colors);
+  $typography: map.get($theme, typography);
+  $spacing: map.get($theme, spacing);
+  $font-scales: map.get($theme, font-scales);
+
+  $space-scale: map.get($spacing, scale);
+  $text-scales: map.get($font-scales, text);
+  $header-scales: map.get($font-scales, header);
+
+  --nt-primary: #{map.get($colors, primary)};
+  --nt-primary-subtle: #{map.get($colors, primary-subtle)};
+  --nt-primary-emphasis: #{map.get($colors, primary-emphasis)};
+
+  --nt-secondary: #{map.get($colors, secondary)};
+  --nt-secondary-subtle: #{map.get($colors, secondary-subtle)};
+  --nt-secondary-emphasis: #{map.get($colors, secondary-emphasis)};
+
+  --nt-tertiary: #{map.get($colors, tertiary)};
+  --nt-tertiary-subtle: #{map.get($colors, tertiary-subtle)};
+  --nt-tertiary-emphasis: #{map.get($colors, tertiary-emphasis)};
+
+  --nt-accent: #{map.get($colors, accent)};
+  --nt-accent-subtle: #{map.get($colors, accent-subtle)};
+  --nt-accent-emphasis: #{map.get($colors, accent-emphasis)};
+
+  --nt-success: #{map.get($colors, success)};
+  --nt-success-subtle: #{map.get($colors, success-subtle)};
+  --nt-success-emphasis: #{map.get($colors, success-emphasis)};
+
+  --nt-info: #{map.get($colors, info)};
+  --nt-info-subtle: #{map.get($colors, info-subtle)};
+  --nt-info-emphasis: #{map.get($colors, info-emphasis)};
+
+  --nt-warning: #{map.get($colors, warning)};
+  --nt-warning-subtle: #{map.get($colors, warning-subtle)};
+  --nt-warning-emphasis: #{map.get($colors, warning-emphasis)};
+
+  --nt-danger: #{map.get($colors, danger)};
+  --nt-danger-subtle: #{map.get($colors, danger-subtle)};
+  --nt-danger-emphasis: #{map.get($colors, danger-emphasis)};
+
+  --nt-gray: #6c757d;
+  --nt-gray-dark: #343a40;
+  --nt-gray-100: #f8f9fa;
+  --nt-gray-200: #e9ecef;
+  --nt-gray-300: #dee2e6;
+  --nt-gray-400: #ced4da;
+  --nt-gray-500: #adb5bd;
+  --nt-gray-600: #6c757d;
+  --nt-gray-700: #495057;
+  --nt-gray-800: #343a40;
+  --nt-gray-900: #212529;
+
+  --nt-light: #{map.get($colors, light)};
+  --nt-light-subtle: #{map.get($colors, light-subtle)};
+  --nt-light-emphasis: #{map.get($colors, light-emphasis)};
+
+  --nt-dark: #{map.get($colors, dark)};
+  --nt-dark-subtle: #{map.get($colors, dark-subtle)};
+  --nt-dark-emphasis: #{map.get($colors, dark-emphasis)};
+
+  --nt-white: #{map.get($colors, white)};
+  --nt-black: #{map.get($colors, black)};
+
+  --nt-body: #{map.get($colors, body)};
+  --nt-body-secondary: #{map.get($colors, body-secondary)};
+  --nt-body-tertiary: #{map.get($colors, body-tertiary)};
+
+  // Text colors
+  --nt-text: #{map.get($typography, text)};
+
+  --nt-text-on-primary: #{map.get($colors, text-on-primary)};
+  --nt-text-on-secondary: #{map.get($colors, text-on-secondary)};
+  --nt-text-on-tertiary: #{map.get($colors, text-on-tertiary)};
+  --nt-text-on-accent: #{map.get($colors, text-on-accent)};
+  --nt-text-on-success: #{map.get($colors, text-on-success)};
+  --nt-text-on-info: #{map.get($colors, text-on-info)};
+  --nt-text-on-warning: #{map.get($colors, text-on-warning)};
+  --nt-text-on-danger: #{map.get($colors, text-on-danger)};
+  --nt-text-on-light: #{map.get($colors, text-on-light)};
+  --nt-text-on-dark: #{map.get($colors, text-on-dark)};
+  --nt-text-on-white: #{map.get($colors, text-on-white)};
+  --nt-text-on-black: #{map.get($colors, text-on-black)};
+  --nt-background: #{map.get($colors, white)};
+
+  --nt-link: #{map.get($typography, link-color)};
+  --nt-link-on-dark: #{map.get($typography, link-on-dark)};
+  --nt-text-decoration-link: #{map.get($typography, text-decoration-link)};
+
+  --nt-font-family-base: #{map.get($typography, font-family-base)};
+  --nt-font-family-header: #{map.get($typography, font-family-header)};
+  --nt-font-size-base: #{map.get($typography, font-size-base)};
+  --nt-font-size-header: #{map.get($typography, font-size-header)};
+  --nt-header: #{map.get($typography, header)};
+
+  --nt-font-size-small: #{map.get($typography, font-size-small)};
+
+  // Spacing
+  --nt-gap: #{map.get($spacing, gap)};
+  --nt-text-gap: #{map.get($spacing, text-gap)};
+
+  --nt-border-radius: 0.25rem;
+  --nt-border-width: 1px;
+
+  --nt-space: #{map.get($spacing, space)};
+  @each $i, $val in $space-scale {
+    --nt-space-#{$i}: calc(var(--nt-space) * #{$val});
+  }
+
+  --nt-content-space: #{map.get($spacing, content-space)};
+  @each $i, $val in $space-scale {
+    --nt-content-space-#{$i}: calc(var(--nt-content-space) * #{$val});
+  }
+
+  // =============== FONT SIZES =============== //
+  @each $i, $val in $text-scales {
+    --nt-fs-#{$i}: calc(var(--nt-font-size-base) * #{$val});
+  }
+
+  @each $i, $val in $header-scales {
+    --nt-fs-h#{$i}: calc(var(--nt-font-size-header) * #{$val});
+  }
+
+  --nt-scroll-padding-top: calc(0.33 * 100vh);
+}

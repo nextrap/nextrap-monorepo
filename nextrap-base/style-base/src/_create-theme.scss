@@ -1,0 +1,167 @@
+@use "sass:map";
+@use "sass:color";
+@use "sass:math";
+@use "./functions" as *;
+
+
+
+@function create-theme($override: ()) {
+  $lighten-factor: map.get($override, lighten-factor) or 40%;
+
+  // === BASE COLORS ===
+  $primary: map.get($override, colors, primary);
+  $accent: map.get($override, colors, accent);
+
+  // Calculate inverse colors if only one is provided
+  @if $primary == null and $accent == null {
+    $primary: #007bff;
+  }
+  @if $primary == null and $accent != null {
+    $primary: color.adjust($accent, $hue: 180deg);
+  }
+  @if $accent == null {
+    $accent: color.adjust($primary, $hue: 180deg);
+  }
+
+  $secondary: map.get($override, colors, secondary) or #6c757d;
+  $tertiary: map.get($override, colors, tertiary) or #17a2b8;
+  $success: map.get($override, colors, success) or #28a745;
+  $info: map.get($override, colors, info) or #17a2b8;
+  $warning: map.get($override, colors, warning) or #ffc107;
+  $danger: map.get($override,colors,  danger) or #dc3545;
+  $light: map.get($override, colors, light) or #f8f9fa;
+  $dark: map.get($override, colors, dark) or #212529;
+  $white: map.get($override,colors,  white) or #fff;
+  $black: map.get($override, colors, black) or #000;
+
+  $textColor: map.get($override, typography, text) or $black;
+
+  // === THEME MAP ===
+  $theme: (
+    colors: (
+      primary: $primary,
+      primary-subtle: color.adjust($primary, $lightness: $lighten-factor),
+      primary-emphasis: color.adjust($primary, $lightness: math.div(-$lighten-factor, 2)),
+      text-on-primary: text-on($primary, $textColor, $white),
+
+      accent: $accent,
+      accent-subtle: color.adjust($accent, $lightness: $lighten-factor),
+      accent-emphasis: color.adjust($accent, $lightness: math.div(-$lighten-factor, 2)),
+      text-on-accent: text-on($accent, $textColor, $white),
+
+      secondary: $secondary,
+      secondary-subtle: color.adjust($secondary, $lightness: $lighten-factor),
+      secondary-emphasis: color.adjust($secondary, $lightness: math.div(-$lighten-factor, 2)),
+      text-on-secondary: text-on($secondary, $textColor, $white),
+
+      tertiary: $tertiary,
+      tertiary-subtle: color.adjust($tertiary, $lightness: $lighten-factor),
+      tertiary-emphasis: color.adjust($tertiary, $lightness: math.div(-$lighten-factor, 2)),
+      text-on-tertiary: text-on($tertiary, $textColor, $white),
+
+      success: $success,
+      success-subtle: color.adjust($success, $lightness: $lighten-factor),
+      success-emphasis: color.adjust($success, $lightness: math.div(-$lighten-factor, 2)),
+      text-on-success: text-on($success, $textColor, $white),
+
+      info: $info,
+      info-subtle: color.adjust($info, $lightness: $lighten-factor),
+      info-emphasis: color.adjust($info, $lightness: math.div(-$lighten-factor, 2)),
+      text-on-info: text-on($info, $textColor, $white),
+
+      warning: $warning,
+      warning-subtle: color.adjust($warning, $lightness: $lighten-factor),
+      warning-emphasis: color.adjust($warning, $lightness: math.div(-$lighten-factor, 2)),
+      text-on-warning: text-on($warning, $textColor, $white),
+
+      danger: $danger,
+      danger-subtle: color.adjust($danger, $lightness: $lighten-factor),
+      danger-emphasis: color.adjust($danger, $lightness: math.div(-$lighten-factor, 2)),
+      text-on-danger: text-on($danger, $textColor, $white),
+
+      light: $light,
+      light-subtle: color.adjust($light, $lightness: 1%),
+      light-emphasis: color.adjust($light, $lightness: -$lighten-factor * 2),
+      text-on-light: text-on($light, $textColor, $white),
+
+      dark: $dark,
+      dark-subtle: color.adjust($dark, $lightness: $lighten-factor),
+      dark-emphasis: color.adjust($dark, $lightness: math.div(-$lighten-factor, 2)),
+      text-on-dark: text-on($dark, $textColor, $white),
+
+      white: $white,
+      text-on-white: text-on($white, $textColor, $white),
+
+      black: $black,
+      text-on-black: text-on($black, $textColor, $white),
+
+      body: color.adjust($dark, $lightness: 90%),
+      body-secondary: color.adjust($dark, $lightness: 60%),
+      body-tertiary: color.adjust($dark, $lightness: 80%),
+    ),
+
+    typography: (
+      font-family-base: map.get($override, font-family-base) or sans-serif,
+      font-size-base: map.get($override, font-size-base) or 1rem,
+      line-height-base: map.get($override, line-height-base) or 1.5,
+
+      font-family-header: map.get($override, font-family-header) or sans-serif,
+      font-size-header: map.get($override, font-size-header) or 1rem,
+      line-height-header: map.get($override, line-height-header) or 1.2,
+
+      text: $black,
+      text-on-soft-colors: $black,
+      header: $black,
+
+      text-decoration-link: underline,
+      link-color: $primary,
+      link-on-dark: $white,
+
+      font-size-small: 0.875rem,
+    ),
+
+    spacing: (
+      gap: 1.25rem,
+      text-gap: 1rem,
+      space: 1rem,
+      content-space: 10rem,
+
+      scale: (
+        '1': 0.25,
+        '2': 0.5,
+        '3': 1,
+        '4': 1.5,
+        '5': 3,
+      ),
+    ),
+
+    font-scales: (
+      text: (
+        '1': 1.5,
+        '2': 1.25,
+        '3': 1,
+        '4': 0.9,
+        '5': 0.85,
+        '6': 0.75,
+      ),
+      header: (
+        '1': 2.5,
+        '2': 2,
+        '3': 1.75,
+        '4': 1.5,
+        '5': 1.25,
+        '6': 1,
+      ),
+    ),
+
+    config: (
+      enableRcs: false,
+      enableFontConfig: false,
+      enableScrollOffset: false,
+    )
+  );
+
+  // === MERGE WITH OVERRIDES ===
+  $theme: map.deep-merge($theme, $override);
+  @return $theme;
+}

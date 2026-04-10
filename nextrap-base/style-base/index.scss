@@ -1,3 +1,11 @@
-@forward './variables';
-@forward './src/root';
-@use './src/html' as *;
+@use "module" as nextrap-base;
+
+/**
+ * For themes use the module import (do not use the default import)
+ */
+
+$theme: () !default;
+
+html {
+  @include nextrap-base.nextrap-theme($theme, ());
+}
