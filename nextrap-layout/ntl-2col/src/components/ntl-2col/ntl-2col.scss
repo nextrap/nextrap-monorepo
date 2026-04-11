@@ -5,6 +5,9 @@
   --container-border: var(--nt-border-width) solid var(--nt-primary-subtle);
   --container-bg: var(--nt-light);
 
+  --padding-x: var(--nt-default-gap-x);
+  --padding-y: var(--nt-default-gap-y);
+
   --cols: 6;
   --breakpoint: md;
 
@@ -28,6 +31,7 @@
 
 #main {
   order: 2;
+  padding: var(--padding-y) var(--padding-x);
 }
 
 #aside {
@@ -51,11 +55,16 @@
   #main {
     order: 1;
     width: calc(100% * var(--cols, 1) / 12);
+
   }
 
   #aside {
     order: 2;
     width: calc(100% * (12 - var(--cols, 1)) / 12);
+
+    &:has(.slot-empty) {
+      display: none;
+    }
   }
 
   &:host(.reverse) {

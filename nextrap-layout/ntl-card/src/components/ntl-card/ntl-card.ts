@@ -22,10 +22,7 @@ export class NtlCardElement extends SlotVisibilityMixin(
   public accessor name = 'ntl-card';
 
   // Example of listening to window scroll events
-  @Listen('scroll', { target: 'window', options: { passive: true } })
-  private onScroll(e: Event) {
-    this.log('info', 'Window scrolled', e);
-  }
+
 
   override render() {
     return html`

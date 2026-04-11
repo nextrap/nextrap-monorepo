@@ -94,9 +94,10 @@
   --nt-font-family-header: #{map.get($theme, font-family-header)};
   --nt-font-size-base: #{map.get($theme, font-size-base)};
   --nt-font-size-header: #{map.get($theme, font-size-header)};
+  --nt-font-size-small: #{map.get($theme, font-size-small)};
+
   --nt-header: #{map.get($theme, header)};
 
-  --nt-font-size-small: #{map.get($theme, font-size-small)};
 
   // Spacing
   --nt-gap: #{map.get($theme, gap)};
@@ -104,6 +105,10 @@
 
   --nt-border-radius: 0.25rem;
   --nt-border-width: 1px;
+
+  // Use these for padding
+  --nt-default-gap-x: clamp(8px, 2vw, 24px);
+  --nt-default-gap-y: 24px;
 
   --nt-space: #{map.get($theme, space)};
   @each $i, $val in $space-scale {

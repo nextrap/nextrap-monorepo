@@ -4,4 +4,10 @@
 
 ntl-card-grid {
   /* Put styles here */
+  &[mode="mobile"] > ntl-card {
+    padding: 0 var(--nt-default-gap-x);
+  }
+  &[mode="desktop"] > ntl-card {
+    padding: 0;
+  }
 }

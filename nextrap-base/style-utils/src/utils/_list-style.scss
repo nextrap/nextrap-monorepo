@@ -1,25 +1,25 @@
 // add html to be more specific than themed defaults
 
 html ul.list-unstyled {
-  list-style: none;
-  padding-left: 0;
+  list-style: none !important;
+  padding-left: 0 !important;
 }
 
 html ul.list-inline {
-  padding-left: 0;
+  padding-left: 0 !important;
 
   > li {
-    display: inline-block;
+    display: inline-block !important;
 
     &:not(:last-child) {
-      margin-right: var(--nt-space-3);
+      margin-right: var(--nt-space-3) !important;
     }
   }
 }
 
 html ul.list-checked {
-  list-style: none;
-  padding-left: 0;
+  list-style: none !important;
+  padding-left: 0 !important;
 
   > li {
     vertical-align: center;

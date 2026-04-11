@@ -34,7 +34,7 @@
   $white: map.get($override, white) or #fff;
   $black: map.get($override, black) or #000;
 
-  $textColor: map.get($override, text) or $black;
+  $textColor: map.get($override, text) or #222;
 
   // === SCALES (keep as maps) ===
   $space-scale: map.get($override, space-scale) or (

@@ -1,5 +1,12 @@
 // global styles
 
+ntl-2col {
+  & > .aside {
+    // Manual element for aside content
+    padding: var(--padding-y) var(--padding-x);
+  }
+}
+
 ntl-2col.ntl-2col {
   & > p[slot='aside'] {
     height: 100%;
@@ -11,6 +18,8 @@ ntl-2col.ntl-2col {
     }
   }
 }
+
+
 
 .alternating ntl-2col {
   &[mode='desktop'] {

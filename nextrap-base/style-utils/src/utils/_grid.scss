@@ -4,45 +4,45 @@
   --gutter-x: var(--nt-gap, 1rem);
   --gutter-y: 0;
 
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
 
   // Remove padding on first element start and last element end of each row
-  margin-right: calc(var(--gutter-x) * -0.5);
-  margin-left: calc(var(--gutter-x) * -0.5);
+  margin-right: calc(var(--gutter-x) * -0.5) !important;
+  margin-left: calc(var(--gutter-x) * -0.5) !important;
 
   // Ensure child elements can shrink properly
   & > * {
-    flex-shrink: 0;
-    width: 100%;
-    max-width: 100%;
-    padding-right: calc(var(--gutter-x) * 0.5);
-    padding-left: calc(var(--gutter-x) * 0.5);
-    margin-top: var(--gutter-y);
+    flex-shrink: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-right: calc(var(--gutter-x) * 0.5) !important;
+    padding-left: calc(var(--gutter-x) * 0.5) !important;
+    margin-top: var(--gutter-y) !important;
   }
 }
 
 @for $i from 1 through 6 {
   .row-cols-#{$i} > * {
-    flex: 0 0 math.percentage(math.div(1, $i));
-    width: math.percentage(math.div(1, $i));
+    flex: 0 0 math.percentage(math.div(1, $i)) !important;
+    width: math.percentage(math.div(1, $i)) !important;
   }
 }
 
 .col-auto {
-  flex: 0 0 auto;
-  width: auto;
+  flex: 0 0 auto !important;
+  width: auto !important;
 }
 
 .col {
-  flex: 1 0 0;
+  flex: 1 0 0 !important;
 }
 
 @for $i from 1 through 12 {
   .col-#{$i} {
-    flex: 0 0 auto;
-    width: math.percentage(math.div($i, 12));
+    flex: 0 0 auto !important;
+    width: math.percentage(math.div($i, 12)) !important;
   }
 }
 

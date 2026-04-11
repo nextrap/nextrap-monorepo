@@ -5,6 +5,8 @@
   --background-color: unset;
   --border-radius: var(--nt-border-radius);
   --border: var(--nt-border-width) solid var(--border-color);
+  --x-padding: var(--nt-default-gap-x);
+  --y-padding: var(--nt-default-gap-y);
 }
 
 #wrapper {
@@ -23,7 +25,8 @@
 
 #header {
   order: 2;
-
+  padding: var(--y-padding) var(--x-padding);
+  padding-bottom: 0;
   &:has(.slot-empty) {
     display: none;
   }
@@ -37,6 +40,7 @@
 #content {
   order: 50;
   flex-grow: 1;
+  padding: var(--y-padding) var(--x-padding);
 }
 
 #footer {
