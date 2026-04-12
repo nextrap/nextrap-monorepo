@@ -129,13 +129,14 @@
     // Typography
     font-family-base: map.get($override, font-family-base) or sans-serif,
     font-size-base: map.get($override, font-size-base) or 1rem,
-    font-weight-base: map.get($override, font-weight-base) or 200,
-    line-height-base: map.get($override, line-height-base) or 1.5,
+    font-weight-base: map.get($override, font-weight-base) or 400,
+    line-height-base: map.get($override, line-height-base) or 1.4,
 
-    font-weight-bold: map.get($override, font-weight-bold) or 500,
+    font-weight-bold: map.get($override, font-weight-bold) or 600,
 
     font-family-header: map.get($override, font-family-header) or sans-serif,
-    font-size-header: map.get($override, font-size-header) or 1rem,
+    // Maximum header size (h1)
+    font-size-header: map.get($override, font-size-header) or 2rem,
     font-weight-header: map.get($override, font-weight-header) or 500,
     line-height-header: map.get($override, line-height-header) or 1.2,
 

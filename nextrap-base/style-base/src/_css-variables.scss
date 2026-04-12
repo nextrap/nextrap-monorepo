@@ -1,6 +1,6 @@
 @use "sass:map";
 
-
+@use "./mixins/header-size";
 
 
 // Register the css variables
@@ -99,6 +99,10 @@
   --nt-font-weight-header: #{map.get($theme, font-weight-header)};
   --nt-font-weight-bold: #{map.get($theme, font-weight-bold)};
 
+  --nt-line-height-base: #{map.get($theme, line-height-base)};
+  --nt-line-height-header: #{map.get($theme, line-height-header)};
+
+
   --nt-header: #{map.get($theme, header)};
 
 
@@ -128,9 +132,9 @@
     --nt-fs-#{$i}: calc(var(--nt-font-size-base) * #{$val});
   }
 
-  @each $i, $val in $header-scales {
-    --nt-fs-h#{$i}: calc(var(--nt-font-size-header) * #{$val});
-  }
+  @include header-size.header-size;
+
+
 
   --nt-scroll-padding-top: calc(0.33 * 100vh);
 }

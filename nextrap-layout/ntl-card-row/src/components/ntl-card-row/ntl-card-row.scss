@@ -50,7 +50,7 @@
     flex-direction: column;
     ::slotted(*) {
       --cols: 12 !important;
-      --gutter-x: 0;
+      --gutter-x: 0px; // Must be 0px - otherwise: error in Firefox
     }
   }
 }

@@ -19,6 +19,7 @@ export class NteCardElement extends LoggingMixin(LitElement) {
   @property({ type: Boolean, reflect: true })
   public accessor fill = false;
 
+
   @state() private accessor _hasHeader = false;
   @state() private accessor _hasImage = false;
   @state() private accessor _hasFooter = false;

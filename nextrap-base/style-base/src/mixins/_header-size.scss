@@ -1,0 +1,20 @@
+@use 'sass:math';
+
+/**
+ * Calculates the font sizes in rem for headers (h1 to h6) based on a minimum and maximum size.
+ *
+ * Creates CSS custom properties:
+ *   --nt-fs-h1 ... --nt-fs-h6
+ *
+ * The sizes are distributed evenly between $min-size (h6) and $max-size (h1).
+ * Uses native CSS calc() so units like rem/px can work as long as they are compatible in calc().
+ */
+@mixin header-size {
+
+    // Map: h1 => max, h6 => min (5 equal steps between them)
+    @for $i from 1 through 6 {
+      $t: math.div(6 - $i, 5); // 1 for h1 ... 0 for h6
+      --nt-fs-h#{$i}: calc(var(--nt-font-size-base) + (var(--nt-font-size-header) - var(--nt-font-size-base)) * #{$t});
+    }
+
+}

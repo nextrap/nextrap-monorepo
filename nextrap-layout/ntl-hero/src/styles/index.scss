@@ -34,8 +34,10 @@ ntl-hero.theme1 {
   }
 
   &::part(title) {
-    align-items: baseline;
     flex-grow: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 
   &::part(top-title) {

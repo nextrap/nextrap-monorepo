@@ -1,5 +1,3 @@
-import { BreakPointMixin, EventBindingsMixin, Listen, LoggingMixin, SlotVisibilityMixin } from '@trunkjs/browser-utils';
-import { SubLayoutApplyMixin } from '@trunkjs/content-pane';
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
@@ -8,11 +6,13 @@ import { resetStyle } from '@nextrap/style-reset';
 
 // Styles for your component's shadow DOM
 import style from './ntl-card-grid.scss?inline';
+import { nextrap_layout } from '@nextrap/ntl-core';
 
 @customElement('ntl-card-grid')
-export class NtlCardGridElement extends SlotVisibilityMixin(
-  BreakPointMixin(SubLayoutApplyMixin(EventBindingsMixin(LoggingMixin(LitElement)))),
-) {
+export class NtlCardGridElement extends nextrap_layout({
+  breakpoints: true,
+  subLayoutApply: true,
+}) {
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
   @property({ type: String, reflect: true })
@@ -36,7 +36,7 @@ export class NtlCardGridElement extends SlotVisibilityMixin(
             <slot data-query=":scope > section:not(.aside)" data-set-attribute-layout="${this.childLayout}"></slot>
           </div>
           <div part="aside" id="aside">
-            <slot name="aside" data-query=".aside"></slot>
+            <slot name="aside" data-query=":scope > .aside"></slot>
           </div>
         </div>
         <div part="footer" id="footer">
