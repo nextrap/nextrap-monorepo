@@ -15,10 +15,16 @@ export class NteThemeSwitcherElement extends LitElement {
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
   /**
-   * Comma-separated list of available theme names
+   * Space-separated list of available theme names
    */
   @property({ type: String })
   public themes = '';
+
+  /**
+   * The target element to apply the theme class to (default: 'html', can be set to 'body' if needed)
+   */
+  @property({ type: String, reflect: true })
+  public target = 'html';
 
   /**
    * Currently active theme
@@ -53,7 +59,7 @@ export class NteThemeSwitcherElement extends LitElement {
       return;
     }
     this._themeList = this.themes
-      .split(',')
+      .split(' ')
       .map((t) => t.trim())
       .filter((t) => t.length > 0);
   }
@@ -64,8 +70,10 @@ export class NteThemeSwitcherElement extends LitElement {
   private _readThemeFromUrl() {
     const params = new URLSearchParams(window.location.search);
     const urlTheme = params.get('theme');
-    if (urlTheme && (this._themeList.includes(urlTheme) || urlTheme === 'default')) {
+    if (urlTheme && (this._themeList.includes(urlTheme))) {
       this._activeTheme = urlTheme;
+    } else {
+      this._activeTheme = this._themeList[0] || 'default';
     }
   }
 
@@ -89,7 +97,7 @@ export class NteThemeSwitcherElement extends LitElement {
     this._removeThemeClass();
 
     if (this._activeTheme !== 'default') {
-      document.body.classList.add(`theme-${this._activeTheme}`);
+      document.querySelector(this.target)?.classList.add(`${this._activeTheme}`) || console.log(`Target element "${this.target}" not found for theme application.`);
     }
   }
 
@@ -97,8 +105,8 @@ export class NteThemeSwitcherElement extends LitElement {
    * Remove all theme classes from the body element (cleanup)
    */
   private _removeThemeClass() {
-    const allThemeClasses = this._themeList.map((t) => `theme-${t}`);
-    document.body.classList.remove(...allThemeClasses);
+    const allThemeClasses = this._themeList.map((t) => `${t}`);
+    document.querySelector(this.target)?.classList.remove(...allThemeClasses);
   }
 
   /**
@@ -118,7 +126,6 @@ export class NteThemeSwitcherElement extends LitElement {
       <div class="switcher">
         <span class="label">Theme:</span>
         <select @change="${this._onThemeChange}" .value="${this._activeTheme}">
-          <option value="default">Default / System</option>
           ${this._themeList.map(
             (theme) => html` <option value="${theme}" ?selected="${theme === this._activeTheme}">${theme}</option> `,
           )}

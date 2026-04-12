@@ -11,16 +11,19 @@ npm install @nextrap/nte-theme-switcher
 ## Usage
 
 ```html
-<nte-theme-switcher themes="light, dark, high-contrast"></nte-theme-switcher>
+<nte-theme-switcher themes="light, dark, high-contrast" target="html"></nte-theme-switcher>
 ```
 
-The component adds a `theme-{name}` class to the `<body>` element when a theme is selected.
+The component adds a `{name}` class to the `<body>` element when a theme is selected.
 
 ## Properties
 
-| Property | Type   | Default | Description                                                    |
-| -------- | ------ | ------- | -------------------------------------------------------------- |
-| themes   | string | `""`    | Comma-separated list of theme names (prefixed with `theme-`)  |
+| Property | Type   | Default  | Description                     |
+| -------- | ------ |----------|---------------------------------|
+| themes   | string | `""`     | Space-separated list of classes |
+| target   | string | `"html"` | CSS selector for theme target    |
+
+Default theme is the first theme in the list.
 
 ## Styling
 
@@ -39,7 +42,7 @@ Use the theme classes in your CSS:
 
 ## Features
 
-- **CSS Class Based** — Sets `theme-{name}` class on `<body>` for easy CSS styling
+- **CSS Class Based** — Sets `{name}` class on `<body>` for easy CSS styling
 - **URL Sync** — Theme persists via `?theme=...` URL parameter
 - **Default Option** — "Default / System" removes the class and cleans the URL
 - **Shadow DOM** — Component styles are encapsulated

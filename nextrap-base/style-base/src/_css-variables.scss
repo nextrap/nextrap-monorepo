@@ -95,6 +95,9 @@
   --nt-font-size-base: #{map.get($theme, font-size-base)};
   --nt-font-size-header: #{map.get($theme, font-size-header)};
   --nt-font-size-small: #{map.get($theme, font-size-small)};
+  --nt-font-weight-base: #{map.get($theme, font-weight-base)};
+  --nt-font-weight-header: #{map.get($theme, font-weight-header)};
+  --nt-font-weight-bold: #{map.get($theme, font-weight-bold)};
 
   --nt-header: #{map.get($theme, header)};
 

@@ -3,6 +3,7 @@ h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
   color: var(--nt-text);
   line-height: var(--nt-line-height-header);
   font-family: var(--nt-font-family-header);
+  font-weight: var(--nt-font-weight-header);
 }
 
 
@@ -36,7 +37,12 @@ h6,
 
 body {
   color: var(--nt-text);
+  font-weight: var(--nt-font-weight-base);
   //font-size: var(--nt-font-size-base);
+}
+
+b,strong {
+  font-weight: var(--nt-font-weight-bold);
 }
 
 html {
@@ -76,9 +82,6 @@ body a {
 }
 
 /* Text emphasis */
-strong {
-  font-weight: 700;
-}
 em {
   font-style: italic;
 }
