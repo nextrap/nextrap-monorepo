@@ -42,21 +42,19 @@
 @for $i from 1 through 12 {
   .col-#{$i} {
     flex: 0 0 auto !important;
-    width: math.percentage(math.div($i, 12)) !important;
+    width: calc(#{math.percentage(math.div($i, 12))}) !important;
   }
 }
 
 @for $i from 0 through 6 {
   .g-#{$i} {
-    --gutter-y: calc(#{$i} * var(--nt-gap, 1rem));
-    --gutter-x: calc(#{$i} * var(--nt-gap, 1rem));
+    --gutter-y: calc(#{$i} * var(--nt-gap, 1rem)) !important;
+    --gutter-x: calc(#{$i} * var(--nt-gap, 1rem)) !important;
   }
   .gx-#{$i} {
-    --nt-gap: 0;
-    --gutter-x: calc(#{$i} * var(--nt-gap, 1rem));
+    --gutter-x: calc(#{$i} * var(--nt-gap, 1rem)) !important;
   }
   .gy-#{$i} {
-    --nt-gap: calc(#{$i} * var(--nt-gap, 1rem));
-    --gutter-y: 0;
+    --gutter-y: calc(#{$i} * var(--nt-gap, 1rem)) !important;
   }
 }
