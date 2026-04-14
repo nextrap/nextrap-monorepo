@@ -174,3 +174,22 @@ figcaption,
 .text-muted {
   color: var(--nt-dark-subtle);
 }
+
+p,
+ul,
+ol,
+blockquote,
+code,
+pre,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-bottom: var(--nt-text-gap);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
