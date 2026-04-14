@@ -98,7 +98,10 @@ export class NteNav extends nextrap_element(features) {
                 <div id="text" part="menutext"><slot name="menu-text"></slot></div>
                 <nte-burger
                   part="burger"
-                  label="Menu"
+                  aria-label="Menu"
+                  role="button"
+                  aria-haspopup="menu"
+                  aria-controls="main-menu"
                   data-group-name="${this.dataGroupName}"
                   id="open-burger"
                   onclick="this.open = true"
