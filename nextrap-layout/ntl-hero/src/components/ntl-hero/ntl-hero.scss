@@ -4,17 +4,23 @@
   --bg-color: var(--nt-body-teritary, #e4e6ef);
   --container-width: var(--nt-container-width, 100%);
   --height-offset: 0px;
-  --min-height:  500px;
+  --min-height:  600px;
+  --max-height: 1800px;
+
 }
 
 #root {
-  position: relative;
   width: 100%;
-  height: calc(100vh - var(--height-offset, 0px));
-  max-height: calc(100vh - var(--height-offset, 0px));
+  isolation: isolate;
+  min-height: var(--min-height);
   display: grid;
 
-  min-height: var(--min-height);
+  position: relative;
+
+  height: calc(100vh - var(--height-offset, 0px));
+  max-height: var(--max-height);
+
+  //min-height: var(--min-height);
   grid-template-rows: 1fr;
   grid-template-columns: 1fr;
 }
@@ -52,12 +58,14 @@
 }
 
 #background {
-  grid-row: 1;
-  grid-column: 1;
+  position: absolute; // Important: This allows the background to fill the entire hero area without affecting the layout of the content.
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
   background-color: var(--bg-color);
   z-index: 0;
   height: 100%;
-  position: absolute;
   inset: 0;
 }
 

@@ -1,0 +1,66 @@
+@use 'sass:math';
+
+.row {
+  --gutters-x: 0;
+  --gutters-y: 0;
+
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  margin-top: calc(-1 * var(--gutters-y)) !important;
+  margin-right: calc(-0.5 * var(--gutters-x)) !important;
+  margin-left: calc(-0.5 * var(--gutters-x)) !important;
+}
+
+.row > * {
+  box-sizing: border-box;
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 100%;
+  padding-right: calc(var(--gutters-x) * 0.5) !important;
+  padding-left: calc(var(--gutters-x) * 0.5) !important;
+  margin-top: var(--gutters-y) !important;
+}
+
+@for $i from 1 through 6 {
+  .row-cols-#{$i} > * {
+    flex: 0 0 auto !important;
+    width: #{math.percentage(math.div(1, $i))} !important;
+  }
+}
+
+.col-auto {
+  flex: 0 0 auto !important;
+  width: auto !important;
+}
+
+.col {
+  flex: 1 0 0 !important;
+  width: 0 !important;
+}
+
+@for $i from 1 through 12 {
+  .col-#{$i} {
+    flex: 0 0 auto !important;
+    width: #{math.percentage(math.div($i, 12))} !important;
+  }
+
+  .offset-#{$i} {
+    margin-left: #{math.percentage(math.div($i, 12))} !important;
+  }
+}
+
+@for $i from 0 through 6 {
+  .g-#{$i} {
+    --gutters-x: var(--nt-space-#{$i}) !important;
+    --gutters-y: var(--nt-space-#{$i}) !important;
+  }
+
+  .gx-#{$i} {
+    --gutters-x: var(--nt-space-#{$i}) !important;
+  }
+
+  .gy-#{$i} {
+    --gutters-y: var(--nt-space-#{$i}) !important;
+  }
+}

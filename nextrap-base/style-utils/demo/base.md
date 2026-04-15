@@ -33,3 +33,24 @@
     <li class="list-item-unavailable">Item 2</li>
     <li>Item 3</li>
 </ul>
+
+
+## Row
+
+### Row with 3 columns
+
+<div class="row g-2 border-1 border-dark">
+    <div class="col-4" style="background-color: lightgray; padding: 1rem;">col-4</div>
+    <div class="col-4" style="background-color: lightgray; padding: 1rem;">col-4</div>
+    <div class="col-4" style="background-color: lightgray; padding: 1rem;">col-4</div>
+</div>
+<div class="row g-2 border-1 border-dark">
+    <div class="col-2" style="background-color: lightgray; padding: 1rem;">col-2</div>
+    <div class="col-3" style="background-color: lightgray; padding: 1rem;">col-3</div>
+    <div class="col-4" style="background-color: lightgray; padding: 1rem;">col-4</div>
+</div>
+<div class="row g-2 border-1 border-dark">
+    <div class="offset-2 col-3" style="background-color: lightgray; padding: 1rem;">col-2</div>
+    <div class="col-3" style="background-color: lightgray; padding: 1rem;">col-3</div>
+    <div class="col-3" style="background-color: lightgray; padding: 1rem;">col-4</div>
+</div>
