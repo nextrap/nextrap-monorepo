@@ -142,30 +142,28 @@
   order: -1 !important;
 }
 
-.order-0 {
-  order: 0 !important;
-}
-
-.order-1 {
-  order: 1 !important;
-}
-
-.order-2 {
-  order: 2 !important;
-}
-
-.order-3 {
-  order: 3 !important;
-}
-
-.order-4 {
-  order: 4 !important;
-}
-
-.order-5 {
-  order: 5 !important;
+@for $i from 0 through 5 {
+  .order-#{$i} {
+    order: $i !important;
+  }
 }
 
 .order-last {
   order: 6 !important;
+}
+
+.gap-0 {
+  gap: 0 !important;
+}
+
+@for $i from 1 through 5 {
+  .gap-#{$i} {
+    gap: var(--nt-space-#{$i}) !important;
+  }
+  .gap-x-#{$i} {
+    column-gap: var(--nt-space-#{$i}) !important;
+  }
+  .gap-y-#{$i} {
+    row-gap: var(--nt-space-#{$i}) !important;
+  }
 }

@@ -2,10 +2,12 @@
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
         "module": "commonjs",
+        "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
-        "strict": true,
+        "useDefineForClassFields": false,
         "experimentalDecorators": false,
         "emitDecoratorMetadata": false,
+        "strict": true,
         "importHelpers": true,
         "noImplicitOverride": true,
         "noImplicitReturns": true,

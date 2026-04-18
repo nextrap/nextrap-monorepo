@@ -1,0 +1,26 @@
+@use 'sass:color';
+@use 'sass:map';
+
+@mixin gray-scales($cgray) {
+  $nt-gray-h: color.channel($cgray, 'hue', $space: hsl);
+  $nt-gray-s: color.channel($cgray, 'saturation', $space: hsl);
+  $nt-gray-l: color.channel($cgray, 'lightness', $space: hsl);
+
+  $nt-gray-scale: (
+    100: hsl($nt-gray-h $nt-gray-s 98%),
+    200: hsl($nt-gray-h $nt-gray-s 93%),
+    300: hsl($nt-gray-h $nt-gray-s 88%),
+    400: hsl($nt-gray-h $nt-gray-s 80%),
+    500: hsl($nt-gray-h $nt-gray-s 70%),
+    600: hsl($nt-gray-h $nt-gray-s $nt-gray-l),
+    700: hsl($nt-gray-h $nt-gray-s 35%),
+    800: hsl($nt-gray-h $nt-gray-s 25%),
+    900: hsl($nt-gray-h $nt-gray-s 15%),
+  );
+
+  @each $step, $value in $nt-gray-scale {
+    --nt-gray-#{$step}: #{$value};
+  }
+
+  --nt-gray-dark: #{hsl($nt-gray-h $nt-gray-s 25%)};
+}

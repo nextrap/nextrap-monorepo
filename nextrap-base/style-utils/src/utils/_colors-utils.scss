@@ -54,6 +54,31 @@
   }
 }
 
+// von 100 bis 900
+@for $i from 1 through 9 {
+  .bg-gray-#{$i * 100} {
+    background-color: var(--nt-gray-#{$i * 100}) !important;
+    --background-color: var(--nt-gray-#{$i * 100}) !important;
+  }
+  .text-gray-#{$i} {
+    --text-color: var(--nt-gray-#{$i * 100}) !important;
+    color: var(--nt-gray-#{$i * 100}) !important;
+  }
+  .border-gray-#{$i} {
+    --border-color: var(--nt-gray-#{$i * 100}) !important;
+    border-color: var(--nt-gray-#{$i * 100}) !important;
+  }
+}
+
+.bg-gray {
+  background-color: var(--nt-gray) !important;
+  --background-color: var(--nt-gray) !important;
+}
+.bg-gray-dark {
+  background-color: var(--nt-gray-dark) !important;
+  --background-color: var(--nt-gray-dark) !important;
+}
+
 .text-auto {
   color: var(--text-color) !important;
 }
