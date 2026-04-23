@@ -1,12 +1,13 @@
 import { nextrap_layout, NtlFeatures } from '@nextrap/ntl-core';
-import { Listen } from '@trunkjs/browser-utils';
+import { create_element, Listen } from '@trunkjs/browser-utils';
 import { html, unsafeCSS } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 
 // Styles for the light DOM
 import { resetStyle } from '@nextrap/style-reset';
 
 // Styles for your component's shadow DOM
+import { PropertyValues } from '@lit/reactive-element';
 import style from './ntl-form.scss?inline';
 
 // use nextrap_element for pure elements
@@ -18,27 +19,39 @@ const features: NtlFeatures = {
   eventBinding: true, // Switch event binding using @Listen decorators
 };
 
+let ids = 1;
+
 @customElement('ntl-form')
 export class NtlFormElement extends nextrap_layout(features) {
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
-  @state()
-  private accessor _count = 0;
-
   @property({ type: String, reflect: true })
-  public accessor name = 'ntl-form';
+  accessor formName = `form-${ids++}`;
+
+  #formElement: HTMLFormElement | null = null;
 
   // Example of listening to window scroll events
   @Listen('click', { target: 'host', options: { passive: true } })
-  private onScroll(e: Event) {
-    this.log('Click event', e);
+  private onClick(e: Event) {
+    const target = e.target as HTMLElement;
+    const element = target.closest('button') ?? target.closest('input[type="submit"]') ?? null;
+    if (!element) return; // not a Button click
+
+    console.log('Submit button clicked', element);
+  }
+
+  override firstUpdated(_changedProperties: PropertyValues) {
+    super.firstUpdated(_changedProperties);
+    this.#formElement = create_element('form', { id: this.formName }) as HTMLFormElement;
+    this.appendChild(this.#formElement);
+
+    this.querySelectorAll('input, select, textarea, [name]').forEach((el) => {
+      if (el.hasAttribute('form')) return;
+      el.setAttribute('form', this.formName);
+    });
   }
 
   override render() {
-    return html`
-      <form>
-        <slot></slot>
-      </form>
-    `;
+    return html` <slot></slot> `;
   }
 }

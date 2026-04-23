@@ -13,7 +13,7 @@ const style = `
 
 `;
 
-class NtlInfiniscroll extends HTMLElement {
+export class NtlInfiniscroll extends HTMLElement {
   private container: HTMLElement;
   private observer: IntersectionObserver;
   private autoScroll: boolean;
@@ -23,8 +23,8 @@ class NtlInfiniscroll extends HTMLElement {
   private easeStopOnDrag: boolean;
   private slowDownOnStop: boolean;
   private accelerationFactor: number;
-  private startX: number;
-  private scrollLeftStart: number;
+  private startX = 0;
+  private scrollLeftStart = 0;
   private scrollInterval: number | null;
 
   constructor() {
@@ -51,9 +51,7 @@ class NtlInfiniscroll extends HTMLElement {
     this.stopOnHover = this.hasAttribute('stop-on-hover');
     this.easeStopOnDrag = this.hasAttribute('ease-stop-on-drag');
     this.slowDownOnStop = this.hasAttribute('slow-down-on-stop');
-    this.accelerationFactor = parseFloat(
-      this.getAttribute('acceleration-factor') || '0.1',
-    );
+    this.accelerationFactor = parseFloat(this.getAttribute('acceleration-factor') || '0.1');
     this.scrollSpeed = parseFloat(this.getAttribute('scroll-speed') || '1');
     this.scrollInterval = null;
 
@@ -96,15 +94,12 @@ class NtlInfiniscroll extends HTMLElement {
   }
 
   disconnectedCallback() {
-    window.clearTimeout(this.#timer);
+    window.clearTimeout(this.#timer!);
     this.stopAutoScroll();
   }
 
   private repopulate(element: HTMLElement) {
-    if (
-      this.container.scrollLeft + this.container.clientWidth >=
-      this.container.scrollWidth
-    ) {
+    if (this.container.scrollLeft + this.container.clientWidth >= this.container.scrollWidth) {
       element.draggable = false; // Prevent dragging of dynamically added elements
       element.style.userSelect = 'none'; // Prevent text selection of dynamically added elements
       //element.style.webkitUserDrag = "none"; // Prevent dragging in WebKit browsers
@@ -119,7 +114,7 @@ class NtlInfiniscroll extends HTMLElement {
 
   private addDragEvents() {
     let isDragging = false;
-    let top = null;
+    let top: any = null;
     this.container.addEventListener('pointerdown', (e) => {
       isDragging = true;
       top = null;
@@ -195,10 +190,7 @@ class NtlInfiniscroll extends HTMLElement {
     if (this.#autoScroll === false) return;
 
     this.container.scrollLeft += this.scrollSpeed;
-    if (
-      this.container.scrollLeft + this.container.clientWidth >=
-      this.container.scrollWidth
-    ) {
+    if (this.container.scrollLeft + this.container.clientWidth >= this.container.scrollWidth) {
       this.container.scrollLeft = 0; // Reset scroll position to create an infinite loop
     }
   }
@@ -225,9 +217,7 @@ class NtlInfiniscroll extends HTMLElement {
   }
 
   private snapElements() {
-    const children = Array.from(
-      this.querySelectorAll('[slot="scrollslot"]'),
-    ) as HTMLElement[];
+    const children = Array.from(this.querySelectorAll('[slot="scrollslot"]')) as HTMLElement[];
     let closest = children[0];
     let minOffset = Math.abs(closest.offsetLeft - this.container.scrollLeft);
 

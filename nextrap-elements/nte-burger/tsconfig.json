@@ -3,8 +3,9 @@
     "compilerOptions": {
         "module": "commonjs",
         "forceConsistentCasingInFileNames": true,
-        "useDefineForClassFields": false,
         "strict": true,
+        "experimentalDecorators": false,
+        "emitDecoratorMetadata": false,
         "importHelpers": true,
         "noImplicitOverride": true,
         "noImplicitReturns": true,
