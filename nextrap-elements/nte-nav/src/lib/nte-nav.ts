@@ -1,5 +1,6 @@
 import { isBiggerThanBreakpoint } from '@nextrap/nt-framework';
 import { nextrap_element, NteFeatures } from '@nextrap/nte-core';
+import '@nextrap/nte-offcanvas';
 import { NteOffcanvas } from '@nextrap/nte-offcanvas';
 import { Listen, sleep, waitForLoad } from '@trunkjs/browser-utils';
 import { html, PropertyValues, unsafeCSS } from 'lit';
