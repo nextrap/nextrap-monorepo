@@ -1,9 +1,9 @@
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import style from './nte-form-group.scss?inline';
+import style from './nte-input-group.scss?inline';
 
-@customElement('nte-form-group')
-export class NteFormGroup extends LitElement {
+@customElement('nte-input-group')
+export class NteInputGroup extends LitElement {
   static override styles = [unsafeCSS(style)];
 
   @property({ type: Number }) gap = 1;
@@ -14,7 +14,6 @@ export class NteFormGroup extends LitElement {
     return html`
       <div
         class="form-group"
-        k
         style="
                     --gap: ${this.gap}rem;
                     --align-items: ${this.alignItems};

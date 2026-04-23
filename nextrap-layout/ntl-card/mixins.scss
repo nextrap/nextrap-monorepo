@@ -1,5 +1,3 @@
-
-
 @mixin img-fullsize {
   &::part(image) {
     aspect-ratio: initial;
@@ -10,7 +8,6 @@
     height: auto;
   }
 }
-
 
 @mixin img-overlay {
   &::part(wrapper) {
@@ -38,8 +35,7 @@
   &::part(gradient) {
     background: var(--overlay-background);
   }
-  p[slot="image"] {
-
+  p[slot='image'] {
     img {
       width: 100%;
       height: 100%;

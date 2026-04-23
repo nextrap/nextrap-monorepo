@@ -6,7 +6,7 @@
 .form-group {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--nxa-group-gap, 1rem); /* Default gap if not provided by nte-form-input styles */
+  gap: var(--nxa-group-gap, 1rem); /* Default gap if not provided by nte-input styles */
   margin-bottom: var(--nxa-spacing-md, 1rem); /* Default margin if not provided */
   width: 100%;
   box-sizing: border-box;

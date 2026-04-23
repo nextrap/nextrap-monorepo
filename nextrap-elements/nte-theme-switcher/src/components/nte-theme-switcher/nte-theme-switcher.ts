@@ -70,7 +70,7 @@ export class NteThemeSwitcherElement extends LitElement {
   private _readThemeFromUrl() {
     const params = new URLSearchParams(window.location.search);
     const urlTheme = params.get('theme');
-    if (urlTheme && (this._themeList.includes(urlTheme))) {
+    if (urlTheme && this._themeList.includes(urlTheme)) {
       this._activeTheme = urlTheme;
     } else {
       this._activeTheme = this._themeList[0] || 'default';
@@ -97,7 +97,8 @@ export class NteThemeSwitcherElement extends LitElement {
     this._removeThemeClass();
 
     if (this._activeTheme !== 'default') {
-      document.querySelector(this.target)?.classList.add(`${this._activeTheme}`) || console.log(`Target element "${this.target}" not found for theme application.`);
+      document.querySelector(this.target)?.classList.add(`${this._activeTheme}`) ||
+        console.log(`Target element "${this.target}" not found for theme application.`);
     }
   }
 

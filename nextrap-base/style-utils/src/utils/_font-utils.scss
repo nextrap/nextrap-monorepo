@@ -9,9 +9,6 @@
   }
 }
 
-
-
-
 .text-reset {
   color: inherit !important;
   text-decoration: none !important;
@@ -72,15 +69,7 @@
 }
 
 .font-monospace {
-  font-family: var(
-      --nt-font-monospace,
-      ui-monospace,
-      SFMono-Regular,
-      Menlo,
-      Monaco,
-      Consolas,
-      'Liberation Mono',
-      'Courier New'
-    ),
+  font-family:
+    var(--nt-font-monospace, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New'),
     monospace !important;
 }

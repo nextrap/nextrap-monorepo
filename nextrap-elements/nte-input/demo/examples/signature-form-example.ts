@@ -1,14 +1,15 @@
 import { html, LitElement } from 'lit';
 import { customElement, query, state } from 'lit/decorators.js';
-import '../lib/nte-form-group';
-import '../lib/nte-form-input';
-import '../lib/nte-form-signature';
-import type { NteFormSignature } from '../lib/nte-form-signature';
+import '../../src/components/nte-input-control/nte-input-control';
+import '../../src/components/nte-input-group/nte-input-group';
+import '../../src/components/nte-input-signature/nte-input-signature';
+import type { NteInputSignature } from '../../src/components/nte-input-signature/nte-input-signature';
+import '../../src/components/nte-input/nte-input';
 
 @customElement('signature-form-example')
 export class SignatureFormExample extends LitElement {
   @query('#signature')
-  private signatureElement!: NteFormSignature;
+  private signatureElement!: NteInputSignature;
 
   @state() private submittedData: any = null;
 
@@ -159,26 +160,19 @@ export class SignatureFormExample extends LitElement {
 
       <h2>Signature Form Example</h2>
 
-      <form @submit="${this.handleSubmit}">
+      <form method="get" @submit="${this.handleSubmit}">
         <div class="form-section">
-          <nte-form-group>
-            <nte-form-input label="Full Name" name="name" type="text" required helper-text="Enter your full legal name">
-              <input slot="input" type="text" name="name" class="form-control" required placeholder="John Doe" />
-            </nte-form-input>
-          </nte-form-group>
+          <nte-input-group>
+            <nte-input-control label="Full Name" helperText="Enter your full legal name">
+              <nte-input type="text" name="name" required placeholder="John Doe"></nte-input>
+            </nte-input-control>
+          </nte-input-group>
 
-          <nte-form-group>
-            <nte-form-input label="Email" name="email" type="email" required helper-text="We'll never share your email">
-              <input
-                slot="input"
-                type="email"
-                name="email"
-                class="form-control"
-                required
-                placeholder="john@example.com"
-              />
-            </nte-form-input>
-          </nte-form-group>
+          <nte-input-group>
+            <nte-input-control label="Email" helperText="We'll never share your email">
+              <nte-input type="email" name="email" required placeholder="john@example.com"></nte-input>
+            </nte-input-control>
+          </nte-input-group>
         </div>
 
         <div class="form-section">
@@ -187,7 +181,7 @@ export class SignatureFormExample extends LitElement {
             Please sign below using your mouse or finger. Your signature will be captured digitally.
           </p>
 
-          <nte-form-signature
+          <nte-input-signature
             id="signature"
             label="Signature"
             name="signature"
@@ -196,7 +190,7 @@ export class SignatureFormExample extends LitElement {
             invalid-feedback="Signature is required"
             valid-feedback="Signature captured"
             helper-text="Sign with your mouse or finger"
-          ></nte-form-signature>
+          ></nte-input-signature>
         </div>
 
         <div class="form-actions">

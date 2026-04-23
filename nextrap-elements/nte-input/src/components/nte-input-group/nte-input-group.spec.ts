@@ -1,14 +1,14 @@
 import { describe, expect } from 'vitest';
-import { NteFormGroup } from './nte-form-group';
+import { NteInputGroup } from './nte-input-group';
 
-describe('NteFormGroup', () => {
+describe('NteInputGroup', () => {
   it('should create an element', () => {
-    const el = new NteFormGroup();
-    expect(el).toBeInstanceOf(NteFormGroup);
+    const el = new NteInputGroup();
+    expect(el).toBeInstanceOf(NteInputGroup);
   });
 
   it('renders with default properties', async () => {
-    const element = document.createElement('nte-form-group') as NteFormGroup;
+    const element = document.createElement('nte-input-group') as NteInputGroup;
     document.body.appendChild(element);
     await element.updateComplete;
 
@@ -22,7 +22,7 @@ describe('NteFormGroup', () => {
   });
 
   it('renders with custom properties', async () => {
-    const element = document.createElement('nte-form-group') as NteFormGroup;
+    const element = document.createElement('nte-input-group') as NteInputGroup;
     element.gap = 2;
     element.alignItems = 'center';
     element.cols = '1-2-4';
@@ -47,7 +47,7 @@ describe('NteFormGroup', () => {
   });
 
   it('slots content', async () => {
-    const element = document.createElement('nte-form-group') as NteFormGroup;
+    const element = document.createElement('nte-input-group') as NteInputGroup;
     const slottedDiv = document.createElement('div');
     slottedDiv.textContent = 'Slotted Content';
     element.appendChild(slottedDiv);

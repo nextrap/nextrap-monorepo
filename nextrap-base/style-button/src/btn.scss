@@ -1,5 +1,3 @@
-
-
 // make Array of all BS colors
 $colors: ('primary', 'accent', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark');
 
@@ -92,7 +90,6 @@ $colors: ('primary', 'accent', 'secondary', 'success', 'danger', 'warning', 'inf
     &.btn-#{$color} {
       --btn-bg: var(--nt-#{$color}) !important;
       --btn-txt: var(--nt-text-on-#{$color}) !important;
-
     }
     &.btn-outline-#{$color} {
       background-color: transparent;

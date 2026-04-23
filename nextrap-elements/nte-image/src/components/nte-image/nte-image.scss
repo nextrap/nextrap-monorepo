@@ -90,9 +90,9 @@
 }
 
 .nte-image-root {
-    height: 100%;
-    position: relative;
-    overflow: hidden;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
 }
 
 .image-container {
@@ -170,7 +170,6 @@
   opacity: 0.9;
   transition: opacity 0.3s ease;
 }
-
 
 // add more space to bottom, if the element .caption-container > .caption has content
 .nte-image-root:has(.caption-container .caption:not(:empty)) {

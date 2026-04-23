@@ -19,9 +19,8 @@
 }
 
 :host([mode='mobile']) {
-  #main{
+  #main {
     grid-template-columns: repeat(var(--cols-mobile), minmax(0, 1fr));
-
   }
   #content-wrapper {
     flex-direction: column;
@@ -39,13 +38,12 @@
   gap: var(--gap);
   margin-top: var(--gap);
   margin-bottom: var(--gap);
-  &> * {
+  & > * {
     flex: 1 1 auto;
   }
 }
 
 #main {
-
   display: grid;
   gap: var(--gap);
   grid-template-columns: repeat(var(--cols), minmax(0, 1fr));

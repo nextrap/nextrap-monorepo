@@ -4,9 +4,8 @@
   --bg-color: var(--nt-body-teritary, #e4e6ef);
   --container-width: var(--nt-container-width, 100%);
   --height-offset: 0px;
-  --min-height:  600px;
+  --min-height: 600px;
   --max-height: 1800px;
-
 }
 
 #root {
@@ -36,7 +35,8 @@
   flex-direction: column;
   align-items: center;
 
-  #title, #top-title {
+  #title,
+  #top-title {
     text-align: center;
   }
 
@@ -72,4 +72,3 @@
 .background::slotted(*) {
   pointer-events: auto;
 }
-

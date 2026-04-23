@@ -1,4 +1,4 @@
-@use "../../mixins";
+@use '../../mixins';
 
 /**
  * This file contains LightDOM Styles
@@ -11,8 +11,6 @@ ntl-card {
     linear-gradient(0deg, var(--nt-secondary) 0%, rgb(from var(--nt-secondary) r g b / 0) 100%) 0 0 no-repeat
     padding-box;
 
-
-
   p[slot='image'] {
     img {
       width: 100%;
@@ -20,8 +18,6 @@ ntl-card {
       object-fit: cover;
     }
   }
-
-
 
   &.img-fullsize {
     @include mixins.img-fullsize;

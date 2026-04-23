@@ -1,4 +1,4 @@
-import { html, LitElement, unsafeCSS, nothing } from 'lit';
+import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import componentStyles from './nte-image.scss?inline';
 import type { SlideShowConfig } from './nte-image.types';
@@ -976,7 +976,10 @@ export class NteImage extends LitElement {
         <div class="indicator-container">
           <div class="indicator ${isActive ? 'active' : ''}" @click=${() => this.goToSlide(index)}>
             ${isActive
-              ? html`<div class="progress-bar ${this.isPaused ? 'paused' : ''}" style="width: ${this.slideProgress}%"></div>`
+              ? html`<div
+                  class="progress-bar ${this.isPaused ? 'paused' : ''}"
+                  style="width: ${this.slideProgress}%"
+                ></div>`
               : nothing}
           </div>
         </div>

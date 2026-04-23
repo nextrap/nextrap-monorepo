@@ -1,21 +1,19 @@
-import { html, LitElement, unsafeCSS } from 'lit';
+import { html, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
 // Styles for the light DOM
 import { resetStyle } from '@nextrap/style-reset';
 
 // Styles for your component's shadow DOM
-import { SubLayoutApplyMixin } from '@trunkjs/content-pane';
-import { Listen } from '@trunkjs/browser-utils';
-import style from './ntl-card.scss?inline';
 import { nextrap_layout } from '@nextrap/ntl-core';
+import style from './ntl-card.scss?inline';
 
 @customElement('ntl-card')
 export class NtlCardElement extends nextrap_layout({
   breakpoints: true,
   subLayoutApply: true,
   eventBinding: true,
-  slotVisibility: true
+  slotVisibility: true,
 }) {
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
@@ -66,7 +64,6 @@ export class NtlCardElement extends nextrap_layout({
   private onLinkSlotChange = (e: Event) => {
     this.updateClickableFromLinkSlot(e.target as HTMLSlotElement);
   };
-
 
   override render() {
     const wrapper = html`

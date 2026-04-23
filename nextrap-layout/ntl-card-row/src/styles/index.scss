@@ -5,10 +5,10 @@
 @use './footer';
 
 ntl-card-row {
-  &[mode="mobile"] > ntl-card {
+  &[mode='mobile'] > ntl-card {
     padding: 0 var(--nt-default-gap-x);
   }
-  &[mode="desktop"] > ntl-card {
+  &[mode='desktop'] > ntl-card {
     padding: 0;
   }
   nte-card.highlight {
