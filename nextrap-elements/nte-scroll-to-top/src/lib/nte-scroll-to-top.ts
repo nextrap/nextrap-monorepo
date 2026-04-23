@@ -4,15 +4,15 @@
 import { html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
-import { Debouncer, ka_sleep } from '@kasimirjs/core';
+import { Debouncer, sleep } from '@trunkjs/browser-utils';
 import { style } from './style';
 
 let debounceer = new Debouncer(100);
 @customElement('nte-scroll-to-top')
 export class NteScrollToTop extends LitElement {
-  static styles = style;
+  static override styles = style;
 
-  connectedCallback() {
+  override connectedCallback() {
     this.addEventListener('click', () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
@@ -21,15 +21,15 @@ export class NteScrollToTop extends LitElement {
     window.addEventListener(
       'scroll',
       async () => {
-        await debounceer.debounce();
+        await debounceer.wait();
         if (window.scrollY > 300 && active === false) {
-          await ka_sleep(200);
+          await sleep(200);
           this.classList.add('show');
           active = true;
         }
         if (window.scrollY < 300 && active === true) {
           this.classList.remove('show');
-          await ka_sleep(500);
+          await sleep(500);
           active = false;
         }
       },
@@ -38,7 +38,7 @@ export class NteScrollToTop extends LitElement {
     super.connectedCallback();
   }
 
-  render() {
+  override render() {
     return html`<div>
       <svg
         xmlns="http://www.w3.org/2000/svg"

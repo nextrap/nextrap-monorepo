@@ -4,7 +4,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import style from './nte-offcanvas.scss?inline';
 
-@customElement(NteOffcanvas.is)
+@customElement('nte-offcanvas')
 export class NteOffcanvas extends LitElement {
   static override styles = [unsafeCSS(style)];
 
@@ -13,12 +13,12 @@ export class NteOffcanvas extends LitElement {
   }
 
   @property({ type: Boolean, reflect: true })
-  public backdrop = true;
+  public accessor backdrop = true;
 
   @property({ type: Boolean, reflect: true })
-  public opened = false;
+  public accessor opened = false;
 
-  @property({ type: String, attribute: 'data-group-name' }) private dataGroupName = '';
+  @property({ type: String, attribute: 'data-group-name' }) private accessor dataGroupName = '';
 
   override connectedCallback() {
     super.connectedCallback();
@@ -26,7 +26,7 @@ export class NteOffcanvas extends LitElement {
   }
 
   @state()
-  protected closedClass = true;
+  protected accessor closedClass = true;
 
   public open() {
     this.opened = true;

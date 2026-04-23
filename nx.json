@@ -60,5 +60,6 @@
             "dependsOn": ["^build"],
             "inputs": ["default", "^default"]
         }
-    }
+    },
+    "analytics": false
 }
