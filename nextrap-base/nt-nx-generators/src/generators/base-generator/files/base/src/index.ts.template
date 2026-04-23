@@ -1,8 +1,0 @@
-export * from './components/<%= name %>/<%= name %>';
-
-// If mixin exisists, export it
-// export * from './mixins/<%= className %>Mixin';
-
-
-/* this bundles light dom styles by default */
-export * from './styles/index.scss';

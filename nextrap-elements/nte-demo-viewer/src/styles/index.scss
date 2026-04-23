@@ -1,0 +1,11 @@
+/**
+ * Light DOM Styles for Demo Viewer
+ * 
+ * These styles restore margins/paddings for markdown content
+ * that may be reset by global CSS resets.
+ */
+
+// Restore typography spacing for markdown content
+nte-demo-viewer {
+  // never add global css styles
+}

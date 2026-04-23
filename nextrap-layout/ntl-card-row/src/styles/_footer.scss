@@ -1,0 +1,17 @@
+ntl-card-row.style-footer {
+  --breakpoint: md;
+  --separator-color: red;
+
+  ntl-card {
+    --border: unset;
+    --border-radius: 0;
+  }
+
+  &[mode='desktop'] {
+    ntl-card {
+      &:not(:last-child)::part(wrapper) {
+        border-right: 1px solid var(--separator-color);
+      }
+    }
+  }
+}

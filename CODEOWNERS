@@ -9,6 +9,7 @@ nextrap-base/style-buttons @dermatthes
 nextrap-base/style-utils @dermatthes
 nextrap-base/style-typography @dermatthes
 
+nextrap-elements/nte-demo-viewer @marliedev
 nextrap-elements/nte-dialog @evolkmann
 nextrap-elements/nte-element-highlighter @evolkmann
 nextrap-elements/nte-scroll-to-top @dermatthes
@@ -18,6 +19,8 @@ nextrap-elements/nte-progress @marliedev
 nextrap-elements/nte-multiselect @marliedev
 nextrap-elements/nte-image @marcelfrank-dev
 nextrap-elements/nte-input @Wasilewskiii
+nextrap-elements/nte-form @Wasilewskiii
+nextrap-elements/nte-theme-switcher @marliedev
 
 nextrap-layout/ntl-2col @evolkmann
 nextrap-layout/ntl-infiniscroll @dermatthes

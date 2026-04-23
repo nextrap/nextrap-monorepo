@@ -20,6 +20,24 @@
   overflow: hidden;
 }
 
+:host(.brand-center) {
+  #container {
+    justify-content: space-between;
+    position: relative;
+
+    #brand {
+      justify-content: center;
+      width: 100%;
+    }
+    #nav {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+  }
+}
+
 #main {
   height: var(--height);
   transition: height 0.2s ease-in-out;

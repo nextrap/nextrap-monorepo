@@ -1,0 +1,74 @@
+/* Shadow DOM Styles for hero */
+
+:host {
+  --bg-color: var(--nt-body-teritary, #e4e6ef);
+  --container-width: var(--nt-container-width, 100%);
+  --height-offset: 0px;
+  --min-height: 600px;
+  --max-height: 1800px;
+}
+
+#root {
+  width: 100%;
+  isolation: isolate;
+  min-height: var(--min-height);
+  display: grid;
+
+  position: relative;
+
+  height: calc(100vh - var(--height-offset, 0px));
+  max-height: var(--max-height);
+
+  //min-height: var(--min-height);
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr;
+}
+
+#wrapper {
+  padding-top: var(--top-offset);
+  width: var(--container-width);
+  margin: 0 auto;
+  grid-row: 1;
+  grid-column: 1;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  #title,
+  #top-title {
+    text-align: center;
+  }
+
+  & > #title,
+  #content {
+    flex-grow: 1;
+    justify-content: center;
+  }
+
+  & > * {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  & > :has(.slot-empty) {
+    display: none !important;
+  }
+}
+
+#background {
+  position: absolute; // Important: This allows the background to fill the entire hero area without affecting the layout of the content.
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-color: var(--bg-color);
+  z-index: 0;
+  height: 100%;
+  inset: 0;
+}
+
+.background::slotted(*) {
+  pointer-events: auto;
+}

@@ -30,6 +30,7 @@ export default defineConfig(() => ({
     nxCopyAssetsPlugin(['*.md']),
     dts({
       entryRoot: 'src',
+      aliasesExclude: [/@nextrap\/.*/],
       tsconfigPath: path.join(__dirname, 'tsconfig.lib.json'),
     }),
   ],

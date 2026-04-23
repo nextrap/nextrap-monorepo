@@ -1,9 +1,16 @@
-import { isBiggerThanBreakpoint, waitForDomContentLoaded } from '@nextrap/nt-framework';
+import { isBiggerThanBreakpoint } from '@nextrap/nt-framework';
+import { nextrap_element, NteFeatures } from '@nextrap/nte-core';
 import '@nextrap/nte-offcanvas';
 import { NteOffcanvas } from '@nextrap/nte-offcanvas';
-import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
+import { Listen, sleep, waitForLoad } from '@trunkjs/browser-utils';
+import { html, PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import style from './nav.scss?inline';
+
+const features: NteFeatures = {
+  eventBinding: true,
+  logging: true,
+};
 
 /**
  * <nte-nav>
@@ -14,7 +21,7 @@ import style from './nav.scss?inline';
  * </nte-nav>
  */
 @customElement('nte-nav')
-export class NteNav extends LitElement {
+export class NteNav extends nextrap_element(features) {
   static override styles = [unsafeCSS(style)];
 
   @property({ type: String, reflect: true }) accessor mode: 'master' | 'slave' = 'slave';
@@ -27,6 +34,36 @@ export class NteNav extends LitElement {
   @property({ type: String, reflect: false, attribute: 'data-group-name' }) accessor dataGroupName = '';
 
   @state() private accessor _isTransferred = false;
+
+  #curClickLi: HTMLLIElement | null = null;
+
+  @Listen('click', { target: 'host' })
+  private handleClickOnSubmenu(e: Event) {
+    const clickLi = (e.target as HTMLElement | null)?.closest('li:has(ul)') as HTMLLIElement | null;
+    if (this.#curClickLi) {
+      this.#curClickLi.classList.remove('is-open');
+      this.#curClickLi = null;
+    }
+
+    if (!clickLi) {
+      return;
+    }
+
+    this.#curClickLi = clickLi;
+    clickLi.classList.add('is-open');
+  }
+
+  @Listen('click', { target: 'window' })
+  private handleClickOutside(e: Event) {
+    if (!this.#curClickLi) {
+      return;
+    }
+    const clickInside = this.#curClickLi.contains(e.target as Node);
+    if (!clickInside) {
+      this.#curClickLi.classList.remove('is-open');
+      this.#curClickLi = null;
+    }
+  }
 
   private getOffcanvas(): NteOffcanvas | null {
     if (!this.transferTo) {
@@ -58,8 +95,13 @@ export class NteNav extends LitElement {
           <!-- fallback icon -->
           ${this._isTransferred
             ? html`<div id="burger-default" style="display:flex; align-items: center; justify-content: center;">
-                <div id="text"><slot name="menu-text"></slot></div>
+                <div id="text" part="menutext"><slot name="menu-text"></slot></div>
                 <nte-burger
+                  part="burger"
+                  aria-label="Menu"
+                  role="button"
+                  aria-haspopup="menu"
+                  aria-controls="main-menu"
                   data-group-name="${this.dataGroupName}"
                   id="open-burger"
                   onclick="this.open = true"
@@ -88,7 +130,7 @@ export class NteNav extends LitElement {
     });
   }
 
-  protected override updated(_changedProperties: PropertyValues) {
+  override updated(_changedProperties: PropertyValues) {
     super.updated(_changedProperties);
 
     if (this._isTransferred) {
@@ -104,7 +146,7 @@ export class NteNav extends LitElement {
     }
   }
 
-  protected override firstUpdated(_changedProperties: PropertyValues) {
+  override firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
     // Copy all styles from the parent element to the offcanvas
 
@@ -114,9 +156,15 @@ export class NteNav extends LitElement {
     }
   }
 
-  override async connectedCallback() {
-    await waitForDomContentLoaded();
+  private updateTransferState() {
+    if (isBiggerThanBreakpoint(this.breakpoint)) {
+      this._isTransferred = false;
+    } else {
+      this._isTransferred = true;
+    }
+  }
 
+  override async connectedCallback() {
     super.connectedCallback();
 
     if (this.mode === 'slave') {
@@ -129,13 +177,15 @@ export class NteNav extends LitElement {
           this._isTransferred = true;
         }
         window.addEventListener('breakpoint-changed', (event: Event) => {
-          if (isBiggerThanBreakpoint(this.breakpoint)) {
-            this._isTransferred = false;
-          } else {
-            this._isTransferred = true;
-          }
+          this.updateTransferState();
         });
       }
     }
+
+    await waitForLoad();
+    this.updateTransferState();
+
+    await sleep(3000);
+    this.updateTransferState();
   }
 }

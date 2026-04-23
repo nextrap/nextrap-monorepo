@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Base Demo of ntl-parallax-bg</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        line-height: 1.6;
+      }
+
+      .content-section {
+        padding: 4rem 2rem;
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+      }
+
+      .content-section h2 {
+        margin-bottom: 1rem;
+        color: #333;
+      }
+
+      .content-section p {
+        margin-bottom: 1rem;
+        color: #666;
+      }
+
+      .demo-label {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(255, 255, 255, 0.9);
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+        z-index: 10;
+        pointer-events: none;
+      }
+
+      .wrapper {
+        position: relative;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content-section">
+      <h1>Parallax Background Component Demo</h1>
+      <p>
+        Scroll down to see the parallax effect in action. The background images move at a slower rate than the
+        foreground content, creating a sense of depth.
+      </p>
+    </div>
+
+    <!-- Default: Full viewport -->
+    <div class="wrapper">
+      <ntl-parallax-bg
+        image="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80"
+      ></ntl-parallax-bg>
+      <div class="demo-label">Default: 100vh × 100vw</div>
+    </div>
+
+    <div class="content-section">
+      <h2>Mountain Landscape</h2>
+      <p>
+        This first example uses the default settings - 100vh height and 100vw width. The parallax effect creates a
+        beautiful depth illusion as you scroll.
+      </p>
+    </div>
+
+    <!-- Custom height -->
+    <div class="wrapper">
+      <ntl-parallax-bg
+        image="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1920&q=80"
+        height="60vh"
+      ></ntl-parallax-bg>
+      <div class="demo-label">Custom Height: 60vh</div>
+    </div>
+
+    <div class="content-section">
+      <h2>Forest Scene</h2>
+      <p>
+        This example demonstrates a custom height of 60vh, perfect for creating smaller parallax sections within your
+        page layout.
+      </p>
+    </div>
+
+    <!-- Custom background color -->
+    <div class="wrapper">
+      <ntl-parallax-bg
+        image="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=80"
+        height="80vh"
+        backgroundColor="#1a1a2e"
+      ></ntl-parallax-bg>
+      <div class="demo-label">With Background Color</div>
+    </div>
+
+    <div class="content-section">
+      <h2>Night Sky</h2>
+      <p>
+        Here we've added a dark background color (#1a1a2e) that shows through if the image fails to load or during
+        loading, providing a better user experience.
+      </p>
+    </div>
+
+    <!-- Custom width and height -->
+    <div class="wrapper">
+      <ntl-parallax-bg
+        image="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&q=80"
+        height="50vh"
+        width="80%"
+        backgroundColor="#f0f0f0"
+      ></ntl-parallax-bg>
+      <div class="demo-label">Custom: 50vh × 80%</div>
+    </div>
+
+    <div class="content-section">
+      <h2>Flexible Sizing</h2>
+      <p>
+        This example shows custom width (80%) and height (50vh), demonstrating how the component can be sized to fit
+        your design needs. Notice how it's centered within the content section.
+      </p>
+    </div>
+
+    <!-- Final section -->
+    <div class="wrapper">
+      <ntl-parallax-bg
+        image="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=80"
+      ></ntl-parallax-bg>
+      <div class="demo-label">Full Viewport Finale</div>
+    </div>
+
+    <div class="content-section">
+      <h2>End of Demo</h2>
+      <p>
+        That's it! The parallax background component is simple to use yet powerful. Just set the image attribute and
+        optionally customize the height, width, and background color.
+      </p>
+      <p style="margin-top: 2rem; font-style: italic">
+        All images are from Unsplash and are used for demonstration purposes only.
+      </p>
+    </div>
+
+    <script src="/demo/main.js" type="module"></script>
+  </body>
+</html>

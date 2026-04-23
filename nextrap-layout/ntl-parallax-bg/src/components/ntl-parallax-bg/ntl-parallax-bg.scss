@@ -1,0 +1,34 @@
+/* The ShadowDOM Styles */
+
+:host {
+  display: block;
+  overflow: visible;
+  position: relative;
+}
+
+.parallax-wrapper {
+  position: relative;
+  overflow: visible;
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.parallax-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: 100% auto;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+slot {
+  display: none;
+}
+
+::slotted(*) {
+  display: none !important;
+}

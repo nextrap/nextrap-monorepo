@@ -1,0 +1,43 @@
+@use 'sass:math';
+@use 'sass:color';
+
+@function _linear-channel($c) {
+  @if $c < 0.03928 {
+    @return math.div($c, 12.92);
+  }
+
+  @return math.pow(math.div($c + 0.055, 1.055), 2.4);
+}
+
+@function luminance($color) {
+  $r: math.div(color.channel($color, 'red', $space: rgb), 255);
+  $g: math.div(color.channel($color, 'green', $space: rgb), 255);
+  $b: math.div(color.channel($color, 'blue', $space: rgb), 255);
+
+  $r: _linear-channel($r);
+  $g: _linear-channel($g);
+  $b: _linear-channel($b);
+
+  @return $r * 0.2126 + $g * 0.7152 + $b * 0.0722;
+}
+
+@function contrast($color1, $color2) {
+  $l1: luminance($color1) + 0.05;
+  $l2: luminance($color2) + 0.05;
+
+  @if $l1 > $l2 {
+    @return math.div($l1, $l2);
+  } @else {
+    @return math.div($l2, $l1);
+  }
+}
+
+/// Return an accessible text color for a background color.
+/// Usage: text-on($bg) or text-on($bg, $fallback)
+@function text-on($bg, $text, $fallback: 'white') {
+  @if contrast($bg, $text) > 4.5 {
+    @return $text;
+  } @else {
+    @return $fallback;
+  }
+}

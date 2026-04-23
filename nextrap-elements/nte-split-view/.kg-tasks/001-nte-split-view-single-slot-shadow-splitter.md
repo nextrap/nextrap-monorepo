@@ -9,7 +9,7 @@ includeFiles:
     - demo/main.ts
     - README.md
     - web-types.json
-    - src/styles/index.scss
+    - src/styles/all.scss
 editFiles:
     - src/components/nte-split-view/nte-split-view.ts
     - src/components/nte-split-view/nte-split-view.scss

@@ -88,7 +88,7 @@ This release includes a comprehensive testing suite to validate multiple instanc
 
 ### Technical Details
 
-- Each component instance now generates a unique ID using `nxa-image-{random}` format
+- Each component instance now generates a unique ID using `nte-image-{random}` format
 - Fullscreen elements are now scoped with `data-instance` attributes
 - Slideshow styles use instance-specific IDs to prevent conflicts
 - All DOM queries for fullscreen elements now include instance filtering

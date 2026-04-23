@@ -1,0 +1,128 @@
+@use 'sass:map';
+
+@use './mixins/header-size';
+@use './mixins/gray-scales';
+
+// Register the css variables
+
+@mixin cssVariables($theme) {
+  $space-scale: map.get($theme, space-scale);
+  $text-scales: map.get($theme, text-scales);
+  $header-scales: map.get($theme, header-scales);
+
+  --nt-primary: #{map.get($theme, primary)};
+  --nt-primary-subtle: #{map.get($theme, primary-subtle)};
+  --nt-primary-emphasis: #{map.get($theme, primary-emphasis)};
+
+  --nt-secondary: #{map.get($theme, secondary)};
+  --nt-secondary-subtle: #{map.get($theme, secondary-subtle)};
+  --nt-secondary-emphasis: #{map.get($theme, secondary-emphasis)};
+
+  --nt-tertiary: #{map.get($theme, tertiary)};
+  --nt-tertiary-subtle: #{map.get($theme, tertiary-subtle)};
+  --nt-tertiary-emphasis: #{map.get($theme, tertiary-emphasis)};
+
+  --nt-accent: #{map.get($theme, accent)};
+  --nt-accent-subtle: #{map.get($theme, accent-subtle)};
+  --nt-accent-emphasis: #{map.get($theme, accent-emphasis)};
+
+  --nt-success: #{map.get($theme, success)};
+  --nt-success-subtle: #{map.get($theme, success-subtle)};
+  --nt-success-emphasis: #{map.get($theme, success-emphasis)};
+
+  --nt-info: #{map.get($theme, info)};
+  --nt-info-subtle: #{map.get($theme, info-subtle)};
+  --nt-info-emphasis: #{map.get($theme, info-emphasis)};
+
+  --nt-warning: #{map.get($theme, warning)};
+  --nt-warning-subtle: #{map.get($theme, warning-subtle)};
+  --nt-warning-emphasis: #{map.get($theme, warning-emphasis)};
+
+  --nt-danger: #{map.get($theme, danger)};
+  --nt-danger-subtle: #{map.get($theme, danger-subtle)};
+  --nt-danger-emphasis: #{map.get($theme, danger-emphasis)};
+
+  --nt-gray: #{map.get($theme, gray)};
+
+  @include gray-scales.gray-scales(map.get($theme, gray));
+
+  --nt-light: #{map.get($theme, light)};
+  --nt-light-subtle: #{map.get($theme, light-subtle)};
+  --nt-light-emphasis: #{map.get($theme, light-emphasis)};
+
+  --nt-dark: #{map.get($theme, dark)};
+  --nt-dark-subtle: #{map.get($theme, dark-subtle)};
+  --nt-dark-emphasis: #{map.get($theme, dark-emphasis)};
+
+  --nt-white: #{map.get($theme, white)};
+  --nt-black: #{map.get($theme, black)};
+
+  --nt-body: #{map.get($theme, body)};
+  --nt-body-secondary: #{map.get($theme, body-secondary)};
+  --nt-body-tertiary: #{map.get($theme, body-tertiary)};
+
+  // Text colors
+  --nt-text: #{map.get($theme, text)};
+
+  --nt-text-on-primary: #{map.get($theme, text-on-primary)};
+  --nt-text-on-secondary: #{map.get($theme, text-on-secondary)};
+  --nt-text-on-tertiary: #{map.get($theme, text-on-tertiary)};
+  --nt-text-on-accent: #{map.get($theme, text-on-accent)};
+  --nt-text-on-success: #{map.get($theme, text-on-success)};
+  --nt-text-on-info: #{map.get($theme, text-on-info)};
+  --nt-text-on-warning: #{map.get($theme, text-on-warning)};
+  --nt-text-on-danger: #{map.get($theme, text-on-danger)};
+  --nt-text-on-light: #{map.get($theme, text-on-light)};
+  --nt-text-on-dark: #{map.get($theme, text-on-dark)};
+  --nt-text-on-white: #{map.get($theme, text-on-white)};
+  --nt-text-on-black: #{map.get($theme, text-on-black)};
+  --nt-background: #{map.get($theme, white)};
+
+  --nt-link: #{map.get($theme, link)};
+  --nt-link-on-dark: #{map.get($theme, link-on-dark)};
+  --nt-text-decoration-link: #{map.get($theme, text-decoration-link)};
+
+  --nt-font-family-base: #{map.get($theme, font-family-base)};
+  --nt-font-family-header: #{map.get($theme, font-family-header)};
+  --nt-font-size-base: #{map.get($theme, font-size-base)};
+  --nt-font-size-header: #{map.get($theme, font-size-header)};
+  --nt-font-size-small: #{map.get($theme, font-size-small)};
+  --nt-font-weight-base: #{map.get($theme, font-weight-base)};
+  --nt-font-weight-header: #{map.get($theme, font-weight-header)};
+  --nt-font-weight-bold: #{map.get($theme, font-weight-bold)};
+
+  --nt-line-height-base: #{map.get($theme, line-height-base)};
+  --nt-line-height-header: #{map.get($theme, line-height-header)};
+
+  --nt-header: #{map.get($theme, header)};
+
+  // Spacing
+  --nt-gap: #{map.get($theme, gap)};
+  --nt-text-gap: #{map.get($theme, text-gap)};
+
+  --nt-border-radius: 0.25rem;
+  --nt-border-width: 1px;
+
+  // Use these for padding
+  --nt-default-gap-x: clamp(8px, 2vw, 24px);
+  --nt-default-gap-y: 24px;
+
+  --nt-space: #{map.get($theme, space)};
+  @each $i, $val in $space-scale {
+    --nt-space-#{$i}: calc(var(--nt-space) * #{$val});
+  }
+
+  --nt-content-space: #{map.get($theme, content-space)};
+  @each $i, $val in $space-scale {
+    --nt-content-space-#{$i}: calc(var(--nt-content-space) * #{$val});
+  }
+
+  // =============== FONT SIZES =============== //
+  @each $i, $val in $text-scales {
+    --nt-fs-#{$i}: calc(var(--nt-font-size-base) * #{$val});
+  }
+
+  @include header-size.header-size;
+
+  --nt-scroll-padding-top: calc(0.33 * 100vh);
+}

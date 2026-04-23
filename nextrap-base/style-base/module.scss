@@ -1,0 +1,12 @@
+@use './src/create-theme' as *;
+@use './src/css-variables' as var;
+@use './src/container-tools' as ct;
+@use 'sass:map';
+
+@mixin nextrap-theme($override: (), $themeDefaults: ()) {
+  $override: map.deep-merge($themeDefaults, $override);
+  $theme: create-theme($override);
+
+  @include var.cssVariables($theme);
+  @include ct.containerTools($theme);
+}

@@ -1,0 +1,47 @@
+@use 'sass:map';
+
+@mixin containerTools($theme) {
+  // Responsive sizing (RCS)
+  // This is the root size all rem units are based on. (also space, content-space, etc.)
+  // RCS is
+
+  @if map.get($theme, 'rcs') == true {
+    // Responsive root size
+    // This will adjust the root font size based on the viewport width
+    --nt-font-size-root: clamp(16px, 2vw, 20px);
+  } @else {
+    // Fixed root size
+    --nt-font-size-root: 1rem;
+  }
+
+  @if map.get($theme, 'enableFontConfig') == true {
+    font-family: #{map.get($theme, 'font-family-base')};
+  }
+
+  @if map.get($theme, 'enableScrollOffset') == true {
+    // Scroll offset for fixed elements
+    scroll-padding-top: var(--nt-scroll-padding-top);
+  }
+
+  //--nt-container-width: 100%;
+  // Set the container size based on the media width like in Bootstrap
+  @media (min-width: 576px) {
+    --nt-container-width: 540px;
+  }
+
+  @media (min-width: 768px) {
+    --nt-container-width: 720px;
+  }
+
+  @media (min-width: 992px) {
+    --nt-container-width: 960px;
+  }
+
+  @media (min-width: 1200px) {
+    --nt-container-width: 1140px;
+  }
+
+  @media (min-width: 1400px) {
+    --nt-container-width: 1320px;
+  }
+}

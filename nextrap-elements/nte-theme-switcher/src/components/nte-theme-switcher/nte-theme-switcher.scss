@@ -1,0 +1,56 @@
+/* The ShadowDOM Styles - defined inline in the component via css`` tag */
+:host {
+  display: block;
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  z-index: 9999;
+}
+
+.switcher {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 0.375rem 0.625rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  font-size: 0.8125rem;
+}
+
+.label {
+  color: #666;
+  user-select: none;
+  white-space: nowrap;
+}
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: #f5f5f5
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E")
+    no-repeat right 0.5rem center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0.25rem 1.5rem 0.25rem 0.5rem;
+  font-size: 0.8125rem;
+  font-family: inherit;
+  color: #333;
+  cursor: pointer;
+  min-width: 100px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+select:hover {
+  border-color: #bbb;
+}
+
+select:focus {
+  border-color: #888;
+}

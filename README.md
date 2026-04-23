@@ -35,8 +35,11 @@ These packages are grouped into their respective directories ([`nextrap-base`](.
 | [`nte-stepper`](nextrap-elements/nte-stepper)                         | [@marliedev](https://github.com/marliedev)   |
 | [`ntl-scrollspy`](nextrap-elements/ntl-scrollspy)                     | [@marliedev](https://github.com/marliedev)   |
 | [`nte-progress`](nextrap-elements/nte-progress)                       | [@marliedev](https://github.com/marliedev)   |
+| [`ntl-theme-switcher`](nextrap-layout/nte-theme-switcher)             | [@marliedev](https://github.com/marliedev)   |
 | [`nte-multiselect`](nextrap-elements/nte-multiselect)                 | [@marliedev](https://github.com/marliedev)   |
 | [`ntl-accordion`](nextrap-layout/ntl-accordion)                       | [@marliedev](https://github.com/marliedev)   |
+| [`ntl-hero`](nextrap-layout/ntl-hero)                                 | [@marcelfrank-dev](https://github.com/marcelfrank-dev) |
+| [`ntl-parallax-bg`](nextrap-layout/ntl-parallax-bg)                   | [@marcelfrank-dev](https://github.com/marcelfrank-dev) |
 
 _) Do not include any style-_ packages (except 'style-reset') in the Shadow DOM of components!
 
@@ -48,13 +51,13 @@ If you want to know how to utilize/consume the nextrap monorepo, go [here](/docs
 
 ### Common Commands
 
-- `npx nx dev <package>`: Start the development server for a package
-- `npx nx build <package>`: Build a package
-- `npx nx test <package>`: Run unit tests for a package
-- `npx nx lint <package>`: Run linter for a package
-- `npx nx show project <package>`: Show all targets of a package
+- `nx dev <package>`: Start the development server for a package
+- `nx build <package>`: Build a package
+- `nx test <package>`: Run unit tests for a package
+- `nx lint <package>`: Run linter for a package
+- `nx show project <package>`: Show all targets of a package
 
-Try out `npx nx dev ntl-2col` and make some changes [to the code](nextrap-elements/nte-element-highlighter/src).
+Try out `nx dev ntl-2col` and make some changes [to the code](nextrap-elements/nte-element-highlighter/src).
 
 **Note**: When renaming packages or moving them to a different directory, make sure to update all import paths
 and run `npm update` on the monorepos root to update the package links.

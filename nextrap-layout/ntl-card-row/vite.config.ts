@@ -19,7 +19,19 @@ export default defineConfig(() => ({
   plugins: [
     nxViteTsPaths(),
     nxCopyAssetsPlugin(['*.md']),
-    dts({ entryRoot: 'src', tsconfigPath: path.join(__dirname, 'tsconfig.lib.json') }),
+    {
+      name: 'watch-md-reload',
+      handleHotUpdate({ file, server }) {
+        if (file.endsWith('.md')) {
+          server.ws.send({ type: 'full-reload' });
+        }
+      },
+    },
+    dts({
+      entryRoot: 'src',
+      aliasesExclude: [/@nextrap\/.*/],
+      tsconfigPath: path.join(__dirname, 'tsconfig.lib.json'),
+    }),
   ],
   // Uncomment this if you are using workers.
   // worker: {
@@ -36,7 +48,7 @@ export default defineConfig(() => ({
     },
     lib: {
       // Could also be a dictionary or array of multiple entry points.
-      entry: 'src/index.ts',
+      entry: 'index.ts',
       name: projectName,
       fileName: 'index',
       // Change this to the formats you want to support.

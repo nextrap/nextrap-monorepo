@@ -1,3 +1,113 @@
+## 1.1.40 (2026-04-14)
+
+### 🩹 Fixes
+
+- use aliasesExclude to avoid internal relative paths ([6b8123e](https://github.com/nextrap/nextrap-monorepo/commit/6b8123e))
+
+### ❤️ Thank You
+
+- Enzo Volkmann @evolkmann
+
+## 1.1.39 (2026-03-13)
+
+### 🩹 Fixes
+
+- use aliasesExclude to avoid internal relative paths ([6b8123e](https://github.com/nextrap/nextrap-monorepo/commit/6b8123e))
+
+### ❤️ Thank You
+
+- Enzo Volkmann @evolkmann
+
+## 1.1.38 (2026-03-13)
+
+### 🩹 Fixes
+
+- use aliasesExclude to avoid internal relative paths ([6b8123e](https://github.com/nextrap/nextrap-monorepo/commit/6b8123e))
+
+### ❤️ Thank You
+
+- Enzo Volkmann @evolkmann
+
+## 1.1.37 (2026-03-13)
+
+### 🩹 Fixes
+
+- use aliasesExclude to avoid internal relative paths ([6b8123e](https://github.com/nextrap/nextrap-monorepo/commit/6b8123e))
+
+### ❤️ Thank You
+
+- Enzo Volkmann @evolkmann
+
+## 1.1.36 (2026-03-12)
+
+### 🩹 Fixes
+
+- use aliasesExclude to avoid internal relative paths ([6b8123e](https://github.com/nextrap/nextrap-monorepo/commit/6b8123e))
+
+### ❤️ Thank You
+
+- Enzo Volkmann @evolkmann
+
+## 1.1.35 (2026-03-12)
+
+### 🩹 Fixes
+
+- use aliasesExclude to avoid internal relative paths ([6b8123e](https://github.com/nextrap/nextrap-monorepo/commit/6b8123e))
+
+### ❤️ Thank You
+
+- Enzo Volkmann @evolkmann
+
+## 1.1.34 (2026-03-12)
+
+### 🩹 Fixes
+
+- use aliasesExclude to avoid internal relative paths ([6b8123e](https://github.com/nextrap/nextrap-monorepo/commit/6b8123e))
+
+### ❤️ Thank You
+
+- Enzo Volkmann @evolkmann
+
+## 1.1.33 (2026-03-03)
+
+### 🩹 Fixes
+
+- use aliasesExclude to avoid internal relative paths ([6b8123e](https://github.com/nextrap/nextrap-monorepo/commit/6b8123e))
+
+### ❤️ Thank You
+
+- Enzo Volkmann @evolkmann
+
+## 1.1.32 (2026-03-03)
+
+### 🩹 Fixes
+
+- use aliasesExclude to avoid internal relative paths ([6b8123e](https://github.com/nextrap/nextrap-monorepo/commit/6b8123e))
+
+### ❤️ Thank You
+
+- Enzo Volkmann @evolkmann
+
+## 1.1.31 (2026-03-03)
+
+### 🩹 Fixes
+
+- use aliasesExclude to avoid internal relative paths ([6b8123e](https://github.com/nextrap/nextrap-monorepo/commit/6b8123e))
+
+### ❤️ Thank You
+
+- Enzo Volkmann @evolkmann
+
+## 1.1.30 (2026-02-25)
+
+### 🩹 Fixes
+
+- use aliasesExclude to avoid internal relative paths ([6b8123e](https://github.com/nextrap/nextrap-monorepo/commit/6b8123e))
+
+### ❤️ Thank You
+
+- Enzo Volkmann @evolkmann
+
 ## 1.1.29 (2025-09-12)
 
 This was a version bump only for nte-nav to align it with other projects, there were no code changes.

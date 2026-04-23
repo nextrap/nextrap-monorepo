@@ -5,67 +5,91 @@
   --border-color: var(--nt-border-color, #e5e7eb);
   --background-color-heading: var(--nt-light-subtle);
   --background-color-heading-hover: var(--nt-light);
-  --header-padding: var(--nt-spacing-md, 1rem);
-  --content-padding: var(--nt-spacing-md, 1rem);
   --marker-size: 1.5rem;
-  --padding: 0.5rem 1rem;
+  --padding: var(--nt-text-gap, 1rem);
   interpolate-size: allow-keywords;
+
+  /* Active icon — defaults to chevron.
+   * --marker-icon-closed / --marker-icon-open can be set from outside
+   * (e.g. via section-style in markdown) to override with custom SVG URLs. */
+  --marker-icon-closed: var(--ntl-icon-chevron-down);
+  --marker-icon-open: var(--ntl-icon-chevron-up);
+
+  --active-marker-icon: var(--marker-icon-closed);
 }
 
-details {
-  border-bottom: 1px solid var(--border-color);
-  overflow: hidden;
+:host([open]) {
+  --active-marker-icon: var(--marker-icon-open);
 }
-details::details-content {
-  block-size: 0;
-  overflow: hidden;
-  transition:
-    block-size 0.5s,
-    content-visibility 0.5s;
-  transition-behavior: allow-discrete;
 
-  padding-inline: var(--content-padding);
-}
-details:open::details-content {
-  block-size: auto;
-}
-details * {
-  margin: 0;
-}
-summary {
+/* Fallback for browsers without ::details-content support */
+
+#details {
   display: flex;
-  align-items: center;
-  line-height: 1.3;
-  padding: var(--header-padding);
-  list-style-position: outside;
-  gap: 0.75rem;
-  cursor: pointer;
-  user-select: none;
-  list-style: none;
-  background-color: var(--background-color-heading);
-  &::-webkit-details-marker {
+  overflow: hidden;
+  flex-direction: column;
+  #content {
+    display: block;
+    padding: var(--padding);
+  }
+  &:not([open]) #content {
     display: none;
   }
+  #summary {
+    order: 0;
+    display: flex;
+    align-items: center;
+    line-height: 1.3;
+    padding: var(--padding);
+    list-style-position: outside;
+    gap: 0.75rem;
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    background-color: var(--background-color-heading);
+    &::-webkit-details-marker {
+      display: none;
+    }
 
-  &::marker {
-    display: none;
-    content: '';
-  }
-  &:hover {
-    background-color: var(--background-color-heading-hover);
+    &::marker {
+      display: none;
+      content: '';
+    }
+    &:hover {
+      background-color: var(--background-color-heading-hover);
+    }
   }
 }
 
-.content {
-  padding-block: 1rem;
+/* Progressive enhancement: Smooth animation for browsers that support ::details-content */
+@supports selector(::details-content) {
+  details::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition:
+      block-size 0.5s,
+      content-visibility 0.5s;
+    transition-behavior: allow-discrete;
+  }
+
+  details[open]::details-content {
+    block-size: auto;
+  }
+
+  /* When using ::details-content, let it handle visibility */
+  details:not([open]) #content,
+  details[open] #content {
+    display: block;
+  }
 }
-.title {
+
+#title {
   flex: 1;
   font-weight: 500;
 }
 
 /* Marker icon using CSS mask-image */
-.marker {
+#marker {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -85,57 +109,12 @@ summary {
     -webkit-mask-size: contain;
     -webkit-mask-repeat: no-repeat;
     -webkit-mask-position: center;
-    /* Default: Chevron icon */
-    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    mask-image: var(--active-marker-icon);
+    -webkit-mask-image: var(--active-marker-icon);
   }
 }
 
-/* Marker position */
-:host([marker-position='start']) .summary {
-  flex-direction: row-reverse;
-}
-
-/* :host([marker-position='start']) .marker {
-  transform: rotate(-90deg);
-} */
-
-/* Marker rotation when open */
-details[open] .marker {
-  transform: rotate(180deg);
-}
-
-/* :host([marker-position='start']) details[open] .marker {
-  transform: rotate(90deg);
-} */
-
-/* Plus/Minus marker variant */
-details.marker-plus .marker {
-  transition: none; /* No rotation for plus/minus */
-
-  &::before {
-    /* Plus icon */
-    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E");
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E");
-  }
-}
-
-details.marker-plus[open] .marker {
-  transform: none; /* Override rotation */
-
-  &::before {
-    /* Minus icon */
-    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14'/%3E%3C/svg%3E");
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14'/%3E%3C/svg%3E");
-  }
-}
-
-:host([marker-position='start']) details.marker-plus .marker,
-:host([marker-position='start']) details.marker-plus[open] .marker {
-  transform: none;
-}
-
-summary:focus-visible {
+#summary:focus-visible {
   outline: 2px solid var(--nt-focus-ring-color, #3b82f6);
   outline-offset: -2px;
 }

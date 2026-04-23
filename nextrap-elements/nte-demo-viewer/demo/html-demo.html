@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        max-width: 720px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        color: #333;
+      }
+      h1 {
+        color: #0d6efd;
+        margin-bottom: 0.5rem;
+      }
+      h2 {
+        margin-top: 2rem;
+        color: #495057;
+        font-size: 1.1rem;
+      }
+      code {
+        background: #f3f3f3;
+        padding: 0.15rem 0.35rem;
+        border-radius: 3px;
+        font-size: 0.9em;
+      }
+      pre {
+        background: #f3f3f3;
+        padding: 1rem;
+        border-radius: 6px;
+        overflow-x: auto;
+        font-size: 0.85rem;
+      }
+      .info-box {
+        background: #e3f2fd;
+        border-left: 4px solid #0d6efd;
+        padding: 1rem;
+        border-radius: 0 6px 6px 0;
+        margin: 1rem 0;
+      }
+      .warning-box {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 1rem;
+        border-radius: 0 6px 6px 0;
+        margin: 1rem 0;
+      }
+      .counter {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+      .counter button {
+        padding: 0.5rem 1rem;
+        background: #0d6efd;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+      .counter button:hover {
+        background: #0a58ca;
+      }
+      .counter span {
+        font-size: 1.5rem;
+        font-weight: 600;
+        min-width: 3rem;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>HTML Demo Support</h1>
+    <p>This is an <strong>HTML demo file</strong> loaded inside an iframe by <code>nte-demo-viewer</code>.</p>
+
+    <div class="info-box">
+      <strong>Key difference:</strong> HTML demos run in an isolated iframe, so scripts execute normally. Markdown demos
+      are rendered inline via <code>tj-markdown-loader</code>.
+    </div>
+
+    <h2>Interactive Example</h2>
+    <p>HTML demos can contain interactive JavaScript. Try the counter below:</p>
+
+    <div class="counter">
+      <button onclick="decrement()">-</button>
+      <span id="count">0</span>
+      <button onclick="increment()">+</button>
+    </div>
+
+    <h2>How It Works</h2>
+    <ul>
+      <li>Files ending in <code>.html</code> or <code>.htm</code> are loaded in an <code>&lt;iframe&gt;</code></li>
+      <li>The iframe <strong>auto-resizes</strong> to match the content height</li>
+      <li>Content changes are observed via <code>MutationObserver</code></li>
+      <li>Code editing is <strong>disabled</strong> for HTML demos (the <code>&lt;/&gt;</code> button is hidden)</li>
+    </ul>
+
+    <div class="warning-box">
+      <strong>Note:</strong> Cross-origin iframes cannot be auto-resized. In that case, a fallback height of 600px is
+      used.
+    </div>
+
+    <h2>Usage</h2>
+    <pre>
+&lt;demo
+  title="HTML Demo"
+  description="Interactive HTML content"
+  src="/demo/my-demo.html"
+&gt;&lt;/demo&gt;</pre
+    >
+
+    <script>
+      let count = 0;
+      const countEl = document.getElementById('count');
+
+      function increment() {
+        count++;
+        countEl.textContent = count;
+      }
+
+      function decrement() {
+        count--;
+        countEl.textContent = count;
+      }
+    </script>
+  </body>
+</html>

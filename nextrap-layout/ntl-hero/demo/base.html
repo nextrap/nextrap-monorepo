@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Base Demo of ntl-hero</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <ntl-hero style="--ntl-hero-height-offset: 10vh; --ntl-hero-bg-color: #e4e6ef; --ntl-hero-slider-offset: 3rem">
+      <div slot="nav">
+        <nte-nav
+          class="nav-horizontal"
+          mode="master"
+          data-group-name="nav1"
+          breakpoint="1008px"
+          transfer-to="#navSidebar"
+          style="--text-color: blue"
+        >
+          <span slot="menu-text">Menü</span>
+          <ul>
+            <li><a href="#" class="active">Home</a></li>
+            <li><a href="#">Products</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+            <li>
+              <a href="javascript:void(0);">More</a>
+              <ul>
+                <li><a href="#">Team</a></li>
+                <li><a href="#">Careers</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nte-nav>
+      </div>
+      <div slot="bg">
+        <ntl-parallax-bg image="header-bg.svg"></ntl-parallax-bg>
+      </div>
+      <div>
+        <h5 style="margin-bottom: 0.5rem">
+          <span style="color: var(--nt-primary); text-transform: uppercase">EPRAXIS.DIGITAL</span>
+          – DAS MAGAZIN FÜR DIE DIGITALISIERUNG IN DER GESUNDHEITSBRANCHE
+        </h5>
+        <h1>Digitale Transformation im Gesundheitswesen – verständlich, unabhängig, praxisnah.</h1>
+      </div>
+      <div slot="slider">
+        <nte-image
+          data-features="slideshow arrows indicators fullsize round-borders"
+          interval="4000"
+          style="height: 600px"
+        >
+          <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b" alt="Slide 1" />
+          <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b" alt="Slide 2" />
+          <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b" alt="Slide 3" />
+        </nte-image>
+      </div>
+    </ntl-hero>
+    <div style="height: 1000px; display: flex; align-items: center; justify-content: center">
+      Just some content so that you can scroll down and see a nice parallax
+    </div>
+    <script src="/demo/main.js" type="module"></script>
+  </body>
+</html>

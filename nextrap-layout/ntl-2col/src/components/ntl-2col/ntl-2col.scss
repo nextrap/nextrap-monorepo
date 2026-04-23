@@ -1,66 +1,78 @@
 :host {
-  --container-width: var(--nt-container-width, 100%);
   --gap: var(--nt-gap);
 
-  --x-direction: row;
-  --y-direction: column;
+  --container-width: var(--nt-container-width, 100%);
+  --container-border: var(--nt-border-width) solid var(--nt-primary-subtle);
+  --container-bg: var(--nt-light);
+
+  --padding-x: var(--nt-default-gap-x);
+  --padding-y: var(--nt-default-gap-y);
+
+  --cols: 6;
+  --breakpoint: md;
+
+  display: block;
 }
 
-:host(.desktop-reverse) {
-  --x-direction: row-reverse;
+#container {
+  margin: 0 auto;
+  width: var(--container-width);
+
+  background: var(--container-bg);
+  border: var(--container-border);
 }
 
-:host(.mobile-reverse) {
-  --y-direction: column-reverse;
+#wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  align-items: stretch;
 }
 
-:host(.alternate:nth-child(odd)) {
-  .row {
-    div[part='main'] {
+#main {
+  order: 2;
+  padding: var(--padding-y) var(--padding-x);
+}
+
+#aside {
+  order: 1;
+}
+
+:host([mode='desktop']) {
+  #wrapper {
+    position: relative;
+    flex-direction: row;
+
+    &:has(#aside > .slot-empty) {
+      flex-direction: column;
+
+      #main {
+        width: 100%;
+      }
+    }
+  }
+
+  #main {
+    order: 1;
+    width: calc(100% * var(--cols, 1) / 12);
+  }
+
+  #aside {
+    order: 2;
+    width: calc(100% * (12 - var(--cols, 1)) / 12);
+
+    &:has(.slot-empty) {
+      display: none;
+    }
+  }
+
+  &:host(.reverse) {
+    #main {
       order: 2;
     }
-    div[part='aside'] {
+
+    #aside {
       order: 1;
     }
   }
-}
-
-#row {
-  width: var(--container-width);
-  display: flex;
-  gap: var(--gap);
-
-  &.row {
-    flex-direction: var(--x-direction);
-
-    div[part='main'] {
-      width: calc(100% * var(--cols, 1) / 12);
-    }
-
-    div[part='aside'] {
-      width: calc(100% * (12 - var(--cols, 1)) / 12);
-    }
-  }
-
-  &.col {
-    flex-direction: var(--y-direction);
-
-    slot {
-      width: 100%;
-    }
-  }
-}
-
-div[part] {
-  display: flex;
-  flex-grow: 1;
-
-  &:has(slot.is-empty) {
-    display: none;
-  }
-}
-
-section {
-  width: var(--container-width);
-  margin: 0 auto;
 }
