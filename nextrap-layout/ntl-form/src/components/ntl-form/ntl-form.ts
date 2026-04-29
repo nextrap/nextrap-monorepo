@@ -34,8 +34,16 @@ export class NtlFormElement extends nextrap_layout(features) {
   @Listen('click', { target: 'host', options: { passive: true } })
   private onClick(e: Event) {
     const target = e.target as HTMLElement;
-    const element = target.closest('button') ?? target.closest('input[type="submit"]') ?? null;
+    const element = target.closest('button') ?? target.closest('input[type="submit"]') ?? target.closest('input[type="button"]') ?? null;
     if (!element) return; // not a Button click
+
+    const type = (element.getAttribute('type') || '').toLowerCase() ?? null;
+    const dataAction = element.getAttribute('data-action') ?? null;
+
+
+
+
+
 
     console.log('Submit button clicked', element);
   }

@@ -141,6 +141,10 @@
 
     font-size-small: map.get($override, font-size-small) or 0.875rem,
 
+    border-radius: map.get($override, border-radius) or 0.5rem,
+    border-radius-lg: map.get($override, border-radius-lg) or 1rem,
+    border-radius-sm: map.get($override, border-radius-sm) or 0.25rem,
+
     // Spacing
     gap: map.get($override, gap) or 1.25rem,
     text-gap: map.get($override, text-gap) or 1rem,

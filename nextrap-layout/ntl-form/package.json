@@ -4,6 +4,7 @@
     "main": "./index.js",
     "dependencies": {
         "@nextrap/style-reset": "^1.0.0",
+        "@nextrap/nte-input": "^1.0.0",
         "@trunkjs/browser-utils": "^1.0.12",
         "lit": "^3.3.1"
     },
