@@ -48,6 +48,19 @@ export class NteBurger extends nextrap_element({
     this.open = event.detail.open;
   }
 
+  override firstUpdated(_changedProperties: Map<string | number | symbol, unknown>): void {
+    super.firstUpdated(_changedProperties);
+    // Copy all aria- attributes to the button element for accessibility
+    const button = this.renderRoot.querySelector('#button');
+    if (button) {
+      Array.from(this.attributes).forEach((attr) => {
+        if (attr.name.startsWith('aria-')) {
+          button.setAttribute(attr.name, attr.value);
+        }
+      });
+    }
+  }
+
   override update(changedProperties: Map<string | number | symbol, unknown>): void {
     super.update(changedProperties);
 

@@ -291,7 +291,7 @@
   transition: transform 0.2s ease;
 }
 
-:host([data-features*='fullsize']) ::slotted(img):hover {
+:host([data-features*='fullsize']) ::slotted(img:hover) {
   transform: scale(1.02);
 }
 
