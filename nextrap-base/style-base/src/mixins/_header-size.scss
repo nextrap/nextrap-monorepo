@@ -10,11 +10,9 @@
  * Uses native CSS calc() so units like rem/px can work as long as they are compatible in calc().
  */
 @mixin header-size {
-
-    // Map: h1 => max, h6 => min (5 equal steps between them)
-    @for $i from 1 through 6 {
-      $t: math.div(6 - $i, 5); // 1 for h1 ... 0 for h6
-      --nt-fs-h#{$i}: calc(var(--nt-font-size-base) + (var(--nt-font-size-header) - var(--nt-font-size-base)) * #{$t});
-    }
-
+  // Map: h1 => max, h6 => min (5 equal steps between them)
+  @for $i from 1 through 6 {
+    $t: math.div(6 - $i, 5); // 1 for h1 ... 0 for h6
+    --nt-fs-h#{$i}: calc(var(--nt-font-size-base) + (var(--nt-font-size-header) - var(--nt-font-size-base)) * #{$t});
+  }
 }

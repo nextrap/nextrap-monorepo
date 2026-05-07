@@ -1,12 +1,12 @@
-import { html, LitElement, unsafeCSS } from 'lit';
+import { html, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 // Styles for the light DOM
 import { resetStyle } from '@nextrap/style-reset';
 
 // Styles for your component's shadow DOM
-import style from './ntl-card-grid.scss?inline';
 import { nextrap_layout } from '@nextrap/ntl-core';
+import style from './ntl-card-grid.scss?inline';
 
 @customElement('ntl-card-grid')
 export class NtlCardGridElement extends nextrap_layout({
@@ -20,7 +20,6 @@ export class NtlCardGridElement extends nextrap_layout({
 
   @property({ type: String, reflect: true })
   public accessor name = 'ntl-card-grid';
-
 
   override render() {
     return html`

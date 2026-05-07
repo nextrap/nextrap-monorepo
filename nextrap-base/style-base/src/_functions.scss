@@ -34,7 +34,7 @@
 
 /// Return an accessible text color for a background color.
 /// Usage: text-on($bg) or text-on($bg, $fallback)
-@function text-on($bg, $text, $fallback: "white") {
+@function text-on($bg, $text, $fallback: 'white') {
   @if contrast($bg, $text) > 4.5 {
     @return $text;
   } @else {

@@ -1,7 +1,7 @@
-@use "sass:map";
+@use 'sass:map';
 
-@use "./mixins/header-size";
-
+@use './mixins/header-size';
+@use './mixins/gray-scales';
 
 // Register the css variables
 
@@ -42,17 +42,9 @@
   --nt-danger-subtle: #{map.get($theme, danger-subtle)};
   --nt-danger-emphasis: #{map.get($theme, danger-emphasis)};
 
-  --nt-gray: #6c757d;
-  --nt-gray-dark: #343a40;
-  --nt-gray-100: #f8f9fa;
-  --nt-gray-200: #e9ecef;
-  --nt-gray-300: #dee2e6;
-  --nt-gray-400: #ced4da;
-  --nt-gray-500: #adb5bd;
-  --nt-gray-600: #6c757d;
-  --nt-gray-700: #495057;
-  --nt-gray-800: #343a40;
-  --nt-gray-900: #212529;
+  --nt-gray: #{map.get($theme, gray)};
+
+  @include gray-scales.gray-scales(map.get($theme, gray));
 
   --nt-light: #{map.get($theme, light)};
   --nt-light-subtle: #{map.get($theme, light-subtle)};
@@ -102,15 +94,17 @@
   --nt-line-height-base: #{map.get($theme, line-height-base)};
   --nt-line-height-header: #{map.get($theme, line-height-header)};
 
-
   --nt-header: #{map.get($theme, header)};
-
 
   // Spacing
   --nt-gap: #{map.get($theme, gap)};
   --nt-text-gap: #{map.get($theme, text-gap)};
 
-  --nt-border-radius: 0.25rem;
+  // Border Radius
+  --nt-border-radius: 0.25rem; // default border radius
+  --nt-border-radius-sm: #{map.get($theme, border-radius-sm)}; // normal
+  --nt-border-radius-xl: #{map.get($theme, border-radius-xl)}; // groß
+
   --nt-border-width: 1px;
 
   // Use these for padding
@@ -133,8 +127,6 @@
   }
 
   @include header-size.header-size;
-
-
 
   --nt-scroll-padding-top: calc(0.33 * 100vh);
 }

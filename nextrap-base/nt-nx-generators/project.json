@@ -4,5 +4,12 @@
     "sourceRoot": "nextrap-base/nt-nx-generators/src",
     "projectType": "library",
     "tags": [],
-    "targets": {}
+    "targets": {
+        "build": {
+            "executor": "nx:noop"
+        },
+        "test": {
+            "executor": "nx:noop"
+        }
+    }
 }

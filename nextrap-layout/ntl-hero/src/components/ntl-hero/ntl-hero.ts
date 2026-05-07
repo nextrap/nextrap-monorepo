@@ -1,4 +1,4 @@
-import { LoggingMixin, sleep, SlotVisibilityMixin } from '@trunkjs/browser-utils';
+import {Listen, LoggingMixin, sleep, SlotVisibilityMixin, waitForReady} from '@trunkjs/browser-utils';
 import { SubLayoutApplyMixin } from '@trunkjs/content-pane';
 import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
 import { customElement } from 'lit/decorators.js';
@@ -8,16 +8,26 @@ import { resetStyle } from '@nextrap/style-reset';
 
 // Styles for your component's shadow DOM
 import style from './ntl-hero.scss?inline';
+import {nextrap_layout} from "@nextrap/ntl-core";
+
+
+const features = {
+  breakpoints: true,
+  subLayoutApply: true,
+  slotVisibility: true,
+  eventBinding: true
+}
 
 @customElement('ntl-hero')
-export class NtlHero extends SlotVisibilityMixin(SubLayoutApplyMixin(LoggingMixin(LitElement))) {
+export class NtlHero extends nextrap_layout(features) {
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
   protected override async updated(changedProperties: PropertyValues) {
     super.updated(changedProperties);
-    await sleep(1000);
+    await waitForReady();
     this.style.setProperty('--height-offset', `${this.offsetTop}px`);
   }
+
 
   protected override render(): unknown {
     return html`

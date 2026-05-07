@@ -83,7 +83,7 @@ export class NtlParallaxBg extends LoggingMixin(LitElement) {
         element.style.display = 'none';
       }
     });
-    
+
     // Trigger re-render if we found a new image
     if (foundImage) {
       this.requestUpdate();
@@ -96,10 +96,7 @@ export class NtlParallaxBg extends LoggingMixin(LitElement) {
         class="parallax-wrapper"
         style="height: ${this.height}; width: ${this.width}; background-color: ${this.backgroundColor}"
       >
-        <div
-          class="parallax-container"
-          style="background-image: url('${this.image}')"
-        ></div>
+        <div class="parallax-container" style="background-image: url('${this.image}')"></div>
         <slot></slot>
       </div>
     `;

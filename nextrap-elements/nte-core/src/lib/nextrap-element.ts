@@ -9,6 +9,7 @@ import {
   LoggingMixin,
   SlotVisibilityInterface,
   SlotVisibilityMixin,
+  LoaderMixin
 } from '@trunkjs/browser-utils';
 import { LitElement } from 'lit';
 
@@ -38,6 +39,9 @@ export function nextrap_element(features: NteFeatures = {}) {
 
   // Runtime-Konstruktion bleibt identisch; die Typen werden über ComposeNtlMixins abgebildet.
   let constructor = LitElement;
+
+  // Always add the loader
+  constructor = LoaderMixin(constructor);
 
   if (mergedFeatures.logging) {
     constructor = LoggingMixin(constructor);

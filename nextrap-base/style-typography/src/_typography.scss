@@ -1,11 +1,20 @@
-
-h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
   color: var(--nt-text);
   line-height: var(--nt-line-height-header);
   font-family: var(--nt-font-family-header);
   font-weight: var(--nt-font-weight-header);
 }
-
 
 h1,
 .h1 {
@@ -41,7 +50,8 @@ body {
   //font-size: var(--nt-font-size-base);
 }
 
-b,strong {
+b,
+strong {
   font-weight: var(--nt-font-weight-bold);
 }
 
@@ -63,7 +73,7 @@ body a {
 
   position: relative;
   text-decoration: underline;
-  text-decoration-color: var(-nt-link);
+  text-decoration-color: var(--nt-link);
   transition:
     color 0.15s ease-in-out,
     background-color 0.15s ease-in-out,
@@ -173,4 +183,23 @@ figcaption,
 .muted,
 .text-muted {
   color: var(--nt-dark-subtle);
+}
+
+p,
+ul,
+ol,
+blockquote,
+code,
+pre,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-bottom: var(--nt-text-gap);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }

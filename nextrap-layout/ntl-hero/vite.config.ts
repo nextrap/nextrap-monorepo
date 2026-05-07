@@ -20,10 +20,10 @@ export default defineConfig(() => ({
     nxViteTsPaths(),
     nxCopyAssetsPlugin(['*.md']),
     dts({
-          entryRoot: 'src',
-          aliasesExclude: [/@nextrap\/.*/],
-          tsconfigPath: path.join(__dirname, 'tsconfig.lib.json'),
-        }),
+      entryRoot: 'src',
+      aliasesExclude: [/@nextrap\/.*/],
+      tsconfigPath: path.join(__dirname, 'tsconfig.lib.json'),
+    }),
   ],
   // Uncomment this if you are using workers.
   // worker: {

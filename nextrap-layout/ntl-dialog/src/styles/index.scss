@@ -1,0 +1,13 @@
+/**
+ * This file contains LightDOM Styles
+ */
+
+ntl-dialog {
+  & > [slot='title'] {
+    margin: 0;
+  }
+  & > iframe {
+    width: 100%;
+    height: 100%;
+  }
+}

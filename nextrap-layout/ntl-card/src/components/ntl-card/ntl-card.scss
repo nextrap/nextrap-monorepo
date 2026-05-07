@@ -39,7 +39,6 @@
   height: 100%;
   display: block;
 
-
   slot::slotted(p) {
     display: contents;
   }

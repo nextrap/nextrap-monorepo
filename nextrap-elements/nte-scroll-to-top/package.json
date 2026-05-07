@@ -1,8 +1,11 @@
 {
-  "name": "@nextrap/nte-scroll-to-top",
-  "version": "0.1.2-0",
-  "main": "./index.js",
-  "dependencies": {},
-  "type": "module",
-  "types": "./index.d.ts"
+    "name": "@nextrap/nte-scroll-to-top",
+    "version": "0.1.2-0",
+    "main": "./index.js",
+    "dependencies": {
+        "@trunkjs/browser-utils": "^1.0.12",
+        "lit": "^3.3.1"
+    },
+    "type": "module",
+    "types": "./index.d.ts"
 }

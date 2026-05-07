@@ -1,0 +1,20 @@
+/* The ShadowDOM Styles */
+
+:host {
+  --container-width: var(--nt-container-width) /* Refer to README.md for style guidelines */;
+}
+
+
+#form-container {
+
+
+  .form-element {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5em;
+    label {
+      width: 50%;
+    }
+  }
+}

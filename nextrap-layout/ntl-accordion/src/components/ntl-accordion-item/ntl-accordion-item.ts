@@ -56,7 +56,7 @@ export class NtlAccordionItemElement extends SubLayoutApplyMixin(LoggingMixin(Li
 
   override render() {
     return html`
-      <details @toggle="${this._onToggle}">
+      <details part="details" id="details" @toggle="${this._onToggle}">
         <summary id="summary" part="summary">
           <span id="title" part="title">
             <slot
