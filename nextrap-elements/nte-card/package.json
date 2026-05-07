@@ -2,6 +2,11 @@
     "name": "@nextrap/nte-card",
     "version": "1.0.3",
     "main": "./index.js",
+    "repository": {
+        "directory": "nextrap-elements/nte-card",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
     "dependencies": {
         "@nextrap/style-reset": "^1.0.0",
         "@trunkjs/browser-utils": "^1.0.12",

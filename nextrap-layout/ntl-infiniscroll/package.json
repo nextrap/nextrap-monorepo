@@ -2,6 +2,11 @@
     "name": "@nextrap/ntl-infiniscroll",
     "version": "0.1.4",
     "main": "./index.js",
+    "repository": {
+        "directory": "nextrap-layout/ntl-infiniscroll",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
     "dependencies": {},
     "type": "module",
     "types": "./index.d.ts"

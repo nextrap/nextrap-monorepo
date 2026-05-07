@@ -6,6 +6,11 @@
         "src"
     ],
     "main": "./index.js",
+    "repository": {
+        "directory": "nextrap-base/style-base",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
     "dependencies": {},
     "devDependencies": {
         "@trunkjs/prolit-elements": "^1.0.0"

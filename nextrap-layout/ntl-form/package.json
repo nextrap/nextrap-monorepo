@@ -2,9 +2,14 @@
     "name": "@nextrap/ntl-form",
     "version": "1.0.0",
     "main": "./index.js",
+    "repository": {
+        "directory": "nextrap-layout/ntl-form",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
     "dependencies": {
-        "@nextrap/style-reset": "^1.0.0",
         "@nextrap/nte-input": "^1.0.0",
+        "@nextrap/style-reset": "^1.0.0",
         "@trunkjs/browser-utils": "^1.0.12",
         "lit": "^3.3.1"
     },

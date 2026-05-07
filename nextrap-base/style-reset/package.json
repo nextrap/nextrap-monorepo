@@ -2,6 +2,11 @@
     "name": "@nextrap/style-reset",
     "version": "1.0.0",
     "main": "./index.js",
+    "repository": {
+        "directory": "nextrap-base/style-reset",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
     "dependencies": {},
     "type": "module",
     "types": "./src/index.d.ts"

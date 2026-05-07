@@ -2,6 +2,11 @@
     "name": "@nextrap/nte-dialog",
     "version": "0.0.2",
     "main": "./index.js",
+    "repository": {
+        "directory": "nextrap-elements/nte-dialog",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
     "dependencies": {
         "@trunkjs/browser-utils": "^1.0.2"
     },

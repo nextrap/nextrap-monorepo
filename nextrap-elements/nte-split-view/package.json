@@ -2,6 +2,11 @@
     "name": "@nextrap/nte-split-view",
     "version": "1.0.1",
     "main": "./index.js",
+    "repository": {
+        "directory": "nextrap-elements/nte-split-view",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
     "dependencies": {
         "@nextrap/style-reset": "^1.0.0",
         "@trunkjs/browser-utils": "^1.0.12",
