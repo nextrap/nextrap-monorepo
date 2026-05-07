@@ -2,6 +2,11 @@
     "name": "@nextrap/<%= name %>",
     "version": "1.0.0",
     "main": "./index.js",
+    "repository": {
+        "directory": "<%= path %>",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
     "dependencies": {
         "@trunkjs/browser-utils": "^1.0.12",
         "@nextrap/style-reset": "^1.0.0",
