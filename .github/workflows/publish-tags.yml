@@ -9,6 +9,10 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: false
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   main:
     name: Publish
@@ -35,6 +39,6 @@ jobs:
         run: echo "name=${GITHUB_REF_NAME%@*}" >> "$GITHUB_OUTPUT"
 
       - run: npx nx run-many -p ${{ steps.pkg.outputs.name }} -t test build
-      - run: npx nx release publish --access public -p ${{ steps.pkg.outputs.name }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npx nx release publish --access public -p ${{ steps.pkg.outputs.name }} --provenance
+#        env:
+#          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
