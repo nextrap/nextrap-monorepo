@@ -1,3 +1,13 @@
+## 1.1.15 (2026-05-07)
+
+### 🩹 Fixes
+
+- use aliasesExclude to avoid internal relative paths ([6b8123e](https://github.com/nextrap/nextrap-monorepo/commit/6b8123e))
+
+### ❤️ Thank You
+
+- Enzo Volkmann @evolkmann
+
 ## 1.1.14 (2025-08-24)
 
 This was a version bump only for style-base to align it with other projects, there were no code changes.
