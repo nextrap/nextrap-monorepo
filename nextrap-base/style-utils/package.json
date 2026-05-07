@@ -2,6 +2,11 @@
     "name": "@nextrap/style-utils",
     "version": "1.0.10",
     "main": "./index.js",
+    "repository": {
+        "directory": "nextrap-base/style-utils",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
     "devDependencies": {
         "@nextrap/style-base": "^1.1.11"
     },

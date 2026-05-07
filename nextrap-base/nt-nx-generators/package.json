@@ -2,6 +2,11 @@
     "name": "@nextrap/nt-nx-generators",
     "version": "0.0.2",
     "main": "./src/index.js",
+    "repository": {
+        "directory": "nextrap-base/nt-nx-generators",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
     "dependencies": {
         "@nx/devkit": "^22.6.5"
     },

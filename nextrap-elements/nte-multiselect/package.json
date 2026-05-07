@@ -2,6 +2,11 @@
     "name": "@nextrap/nte-multiselect",
     "version": "0.0.1",
     "main": "./src/index.ts",
+    "repository": {
+        "directory": "nextrap-elements/nte-multiselect",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
     "dependencies": {
         "lit": "^3.0.0"
     },

@@ -2,6 +2,11 @@
     "name": "@nextrap/nt-meta",
     "version": "0.0.1",
     "main": "./src/index.js",
+    "repository": {
+        "directory": "nextrap-base/nt-meta",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
     "dependencies": {},
     "private": true,
     "type": "commonjs",

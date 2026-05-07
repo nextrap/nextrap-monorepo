@@ -2,6 +2,11 @@
     "name": "@nextrap/nte-offcanvas",
     "version": "1.0.19",
     "main": "./index.js",
+    "repository": {
+        "directory": "nextrap-elements/nte-offcanvas",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
     "dependencies": {
         "@nextrap/nt-framework": "^1.1.1"
     },

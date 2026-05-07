@@ -2,6 +2,11 @@
     "name": "@nextrap/nte-core",
     "version": "1.0.6",
     "main": "./index.js",
+    "repository": {
+        "directory": "nextrap-elements/nte-core",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
     "dependencies": {
         "@trunkjs/browser-utils": "^1.0.37",
         "lit": "^3.3.2"

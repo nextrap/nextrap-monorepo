@@ -2,6 +2,11 @@
     "name": "@nextrap/nte-image",
     "version": "1.2.3",
     "main": "./index.js",
+    "repository": {
+        "directory": "nextrap-elements/nte-image",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
     "scripts": {
         "build": "vite build",
         "dev": "vite dev"

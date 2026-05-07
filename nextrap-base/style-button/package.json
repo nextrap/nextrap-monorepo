@@ -2,6 +2,11 @@
     "name": "@nextrap/style-button",
     "version": "0.0.7",
     "main": "./index.js",
+    "repository": {
+        "directory": "nextrap-base/style-button",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
     "dependencies": {},
     "devDependencies": {},
     "type": "module",

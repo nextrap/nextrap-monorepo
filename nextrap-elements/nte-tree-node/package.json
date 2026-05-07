@@ -2,6 +2,11 @@
     "name": "@nextrap/nte-tree-node",
     "version": "1.0.0",
     "main": "./index.js",
+    "repository": {
+        "directory": "nextrap-elements/nte-tree-node",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
     "dependencies": {
         "@nextrap/style-reset": "^1.0.0",
         "@trunkjs/browser-utils": "^1.0.12",
