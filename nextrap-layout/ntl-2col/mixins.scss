@@ -1,0 +1,63 @@
+@mixin breakout-end {
+  &::part(aside) {
+    margin-right: calc((100vw - var(--nt-container-width)) / -2);
+    width: calc(var(--aside-width) + (100vw - var(--nt-container-width)) / 2);
+  }
+}
+@mixin breakout-start {
+  &::part(main) {
+    margin-left: calc((100vw - var(--nt-container-width)) / -2);
+    width: calc((100% - var(--aside-width)) + (100vw - var(--nt-container-width)) / 2);
+  }
+}
+@mixin reverse {
+  &::part(wrapper) {
+    flex-direction: row-reverse;
+  }
+}
+
+@mixin default-style(
+  $padding-x: var(--nt-text-gap),
+  $padding-y: var(--nt-text-gap),
+  $gap: var(--nt-gap),
+  $background: var(--nt-light),
+  $border: 1px solid var(--nt-dark),
+  $objectFit: yes,
+  $aspectRatio: none
+) {
+  --padding-x: #{$padding-x};
+  --padding-y: #{$padding-y};
+  --background: #{$background};
+  --border: #{$border};
+  --gap: #{$gap};
+  @if ($aspectRatio != none) {
+    --aspectRatio: #{$aspectRatio};
+    &::part(aside) {
+      aspect-ratio: #{$aspectRatio};
+    }
+  }
+
+  @if ($objectFit != none) {
+    p[slot='aside'] {
+      height: 100%;
+      width: 100%;
+      display: block;
+
+      & > img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+
+  &::part(wrapper) {
+    gap: var(--gap);
+    background: var(--background);
+    border: var(--border);
+  }
+
+  &::part(main) {
+    padding: var(--padding-y) var(--padding-x);
+  }
+}

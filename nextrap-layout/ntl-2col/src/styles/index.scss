@@ -1,22 +1,20 @@
 // global styles
 
-ntl-2col {
-  & > .aside {
-    // Manual element for aside content
-    padding: var(--padding-y) var(--padding-x);
-  }
+@use '../../mixins' as mixin;
+
+.default {
+  @include mixin.default-style(var(--nt-text-gap), var(--nt-text-gap));
 }
 
-ntl-2col.ntl-2col {
-  & > p[slot='aside'] {
-    height: 100%;
+.reverse {
+  @include mixin.reverse;
+}
 
-    & > img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
+.breakout-end {
+  @include mixin.breakout-end;
+}
+.breakout-start {
+  @include mixin.breakout-start;
 }
 
 .alternating ntl-2col {
