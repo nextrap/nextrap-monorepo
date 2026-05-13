@@ -1,6 +1,10 @@
 {
     "name": "@nextrap/style-button",
     "version": "0.0.7",
+    "files": [
+        "*.*",
+        "src"
+    ],
     "main": "./index.js",
     "repository": {
         "directory": "nextrap-base/style-button",

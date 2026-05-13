@@ -28,7 +28,7 @@ export default defineConfig((command) => ({
   cacheDir: '../../node_modules/.vite/nextrap-base/style-button',
   plugins: [
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md']),
+    nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss']),
     dts({
       entryRoot: 'src',
       aliasesExclude: [/@nextrap\/.*/],

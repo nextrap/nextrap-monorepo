@@ -15,7 +15,7 @@ export default defineConfig(() => ({
   cacheDir: '../../node_modules/.vite/nextrap-base/style-typography',
   plugins: [
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md']),
+    nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss']),
     dts({
       entryRoot: 'src',
       aliasesExclude: [/@nextrap\/.*/],
