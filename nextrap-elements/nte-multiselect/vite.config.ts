@@ -59,7 +59,6 @@ export default defineConfig(() => ({
     },
     target: 'es2020',
     sourcemap: true,
-    minify: 'terser',
   },
   resolve: {
     alias: {
@@ -73,9 +72,5 @@ export default defineConfig(() => ({
     environment: 'jsdom',
     include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     reporters: ['default'],
-    coverage: {
-      reportsDirectory: `../../coverage/${dirName}`,
-      provider: 'v8' as const,
-    },
   },
 }));
