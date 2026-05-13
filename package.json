@@ -6,7 +6,7 @@
         "prepare": "husky"
     },
     "dependencies": {
-        "@nx/devkit": "21.1.2"
+        "@nx/devkit": "^21.1.2"
     },
     "devDependencies": {
         "@eslint/js": "^9.28.0",
@@ -31,7 +31,7 @@
         "lint-staged": "^16.1.0",
         "lit": "^3.3.0",
         "lit-css-loader": "^3.0.1",
-        "nx": "21.1.2",
+        "nx": "^21.6.11",
         "prettier": "^3.5.3",
         "prettier-plugin-organize-imports": "^4.1.0",
         "sass-embedded": "^1.89.1",
@@ -39,7 +39,7 @@
         "typescript": "~5.8.3",
         "typescript-eslint": "^8.33.1",
         "verdaccio": "^6.1.6",
-        "vite": "^7.3.3",
+        "vite": "^6.3.3",
         "vite-plugin-dts": "~4.5.4",
         "vitest": "^3.2.0",
         "vitest-browser-lit": "^0.1.0"
