@@ -18,9 +18,9 @@ jobs:
     name: Publish
     runs-on: ubuntu-latest
     permissions:
-      id-token: write # needed for provenance data generation
       contents: read
-    timeout-minutes: 10
+      id-token: write
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -28,19 +28,19 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 22.14.0
           registry-url: https://registry.npmjs.org/
-          scope: '@nextrap'
+          scope: '@trunkjs'
 
-      - run: npm install
+      - run: npm install -g npm@latest
       - run: npm ci
       - run: npx nx report
+
       - name: Extract tagged package
         id: pkg
         shell: bash
         run: echo "name=${GITHUB_REF_NAME%@*}" >> "$GITHUB_OUTPUT"
 
       - run: npx nx run-many -p ${{ steps.pkg.outputs.name }} -t test build
+
       - run: npx nx release publish --access public -p ${{ steps.pkg.outputs.name }} --provenance
-#        env:
-#          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
