@@ -32,6 +32,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
           scope: '@nextrap'
 
+      - run: npm install
       - run: npm ci
       - run: npx nx report
       - name: Extract tagged package
