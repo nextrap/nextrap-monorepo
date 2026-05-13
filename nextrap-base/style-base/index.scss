@@ -4,7 +4,27 @@
  * For themes use the module import (do not use the default import)
  */
 
-$theme: () !default;
+$primary: #fe6606 !default;
+$accent: #fe6606 !default;
+$secondary: #6c757d !default;
+$success: #28a745 !default;
+$info: #17a2b8 !default;
+$warning: #ffc107 !default;
+$danger: #dc3545 !default;
+$light: #f8f9fa !default;
+$dark: #343a40 !default;
+
+$theme: (
+  primary: $primary,
+  accent: $accent,
+  secondary: $secondary,
+  success: $success,
+  info: $info,
+  warning: $warning,
+  danger: $danger,
+  light: $light,
+  dark: $dark,
+) !default;
 
 html {
   @include nextrap-base.nextrap-theme($theme, ());
