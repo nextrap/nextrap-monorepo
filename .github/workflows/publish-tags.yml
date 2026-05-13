@@ -33,6 +33,7 @@ jobs:
           scope: '@trunkjs'
 
       - run: npm install -g npm@latest
+      - run: npm install
       - run: npm ci
       - run: npx nx report
 
