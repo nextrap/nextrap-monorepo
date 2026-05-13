@@ -4,7 +4,16 @@
  * For themes use the module import (do not use the default import)
  */
 
-$theme: () !default;
+$primary: #007bff !default;
+$accent: #b83e8a !default;
+$secondary: #6c757d !default;
+$enableScrollOffset: false !default;
+
+$theme: (
+  'primary': $primary,
+  'secondary': $secondary,
+  'accent': $accent,
+) !default;
 
 html {
   @include nextrap-base.nextrap-theme($theme, ());
