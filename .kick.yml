@@ -13,5 +13,8 @@ command:
 
   run:
 
+  dev:
+    - "echo 'export OPENAI_API_KEY=$(cat /var/run/secrets/open_ai)' >> ~/.bashrc"
+
   killall:
     - killall jekyll
