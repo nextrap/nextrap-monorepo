@@ -1,0 +1,18 @@
+{
+    "name": "@nextrap/nte-spinner",
+    "version": "1.0.0",
+    "main": "./index.js",
+    "repository": {
+        "directory": "nextrap-elements/nte-spinner",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "@nextrap/nte-demo-viewer": "^1.0.0",
+        "@nextrap/style-base": "^1.0.0"
+    },
+    "type": "module",
+    "types": "./index.d.ts",
+    "web-types": "./web-types.json"
+}

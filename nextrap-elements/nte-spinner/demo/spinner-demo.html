@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>nte-spinner Demo</title>
+    <script src="/demo/main.ts" type="module"></script>
+  </head>
+  <body>
+    <nte-spinner style="width: 200px"></nte-spinner>
+    <nte-spinner class="progress" style="width: 200px; --percentage: 30; --percentage-txt: '30%'"></nte-spinner>
+    <nte-spinner class="checked" style="width: 200px"></nte-spinner>
+    <nte-spinner class="cross" style="width: 200px"></nte-spinner>
+    <nte-spinner class="info" style="width: 200px"></nte-spinner>
+    <nte-spinner class="warning" style="width: 200px"></nte-spinner>
+
+    <nte-spinner id="dyn" style="width: 200px"></nte-spinner>
+
+    <button onclick="document.getElementById('dyn')?.classList.toggle('checked')">Toggle checked</button>
+    <button onclick="document.getElementById('dyn')?.classList.toggle('cross')">Toggle cross</button>
+  </body>
+</html>

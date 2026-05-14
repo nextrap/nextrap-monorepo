@@ -1,0 +1,400 @@
+:host {
+  /*
+  * delta: 25 => 75% loaded
+  */
+  --delta: 50;
+  --percentage: 1;
+  --percentage-txt: '1%';
+  --playtime: 1250ms;
+
+  --color-loader: #6a6a6a;
+  --color-checked: #55c900;
+  --color-progress: #509dde;
+  --color-cross: #df2f2f;
+  --color-info: #2196f3;
+  --color-warning: #ff9800;
+
+  --check-pop-delay: calc(var(--playtime) * 0.35);
+  --check-pop-duration: calc(var(--playtime) * 0.65);
+
+  aspect-ratio: 1 / 1;
+  display: inline-block;
+}
+
+:host(.progress) {
+  #spinner {
+    animation: none;
+
+    #spinner-viewbox {
+      animation: none;
+    }
+
+    #spinner-text {
+      display: block;
+      animation: none;
+      opacity: 1;
+    }
+
+    #spinner-circle {
+      animation: none;
+      stroke: var(--color-progress);
+      stroke-dasharray: 100;
+      fill: transparent;
+      transform: rotate(180deg);
+      stroke-dashoffset: calc((100 - var(--percentage)) * 1px);
+      transition: stroke-dashoffset 0.2s ease-out;
+    }
+  }
+}
+
+:host(.cross) {
+  #spinner {
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-name: fill;
+    animation-duration: var(--playtime);
+    animation-timing-function: ease-in-out;
+
+    #spinner-circle {
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      animation-name: fill;
+      animation-duration: var(--playtime);
+      stroke: var(--color-cross);
+      animation-timing-function: ease-in-out;
+    }
+
+    #spinner-cross {
+      display: block;
+      animation-name: grow-cross;
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      animation-duration: var(--playtime);
+      animation-timing-function: ease-in-out;
+
+      line {
+        animation-name: draw-cross;
+        animation-iteration-count: 1;
+        animation-fill-mode: forwards;
+        animation-duration: var(--playtime);
+        animation-timing-function: ease-in-out;
+      }
+    }
+  }
+}
+
+:host(.checked) {
+  #spinner {
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-name: fill-checked;
+    animation-duration: var(--playtime);
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+
+    #spinner-circle {
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      animation-name: fill-checked;
+      animation-duration: var(--playtime);
+      stroke: var(--color-checked);
+      animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    #spinner-check {
+      display: block;
+      animation-name: check-pop;
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      animation-delay: var(--check-pop-delay);
+      animation-duration: var(--check-pop-duration);
+      animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+  }
+}
+
+:host(.info) {
+  #spinner {
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-name: fill-checked;
+    animation-duration: var(--playtime);
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+
+    #spinner-circle {
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      animation-name: fill-checked;
+      animation-duration: var(--playtime);
+      stroke: var(--color-info);
+      animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    #spinner-info {
+      display: block;
+      animation-name: check-pop;
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      animation-delay: var(--check-pop-delay);
+      animation-duration: var(--check-pop-duration);
+      animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+  }
+}
+
+:host(.warning) {
+  #spinner {
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-name: fill-checked;
+    animation-duration: var(--playtime);
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+
+    #spinner-circle {
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      animation-name: fill-checked;
+      animation-duration: var(--playtime);
+      stroke: var(--color-warning);
+      animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    #spinner-warning {
+      display: block;
+      animation-name: warning-pop;
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      animation-delay: var(--check-pop-delay);
+      animation-duration: var(--check-pop-duration);
+      animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+  }
+}
+
+#spinner {
+  position: relative;
+  height: 100%;
+  width: 100%;
+
+  animation: var(--playtime) linear infinite both spin;
+
+  #spinner-circle {
+    animation: var(--playtime) ease-in-out infinite both chase;
+    fill: transparent;
+    stroke: var(--color-loader);
+    stroke-dasharray: 100;
+    stroke-linecap: round;
+    stroke-width: 5px;
+    transform-origin: 50% 50%;
+  }
+
+  #spinner-text {
+    &:before {
+      position: absolute;
+      font-size: 2cqw;
+      color: var(--color-loader);
+      content: var(--percentage-txt);
+      top: 0;
+      left: 0;
+      text-align: center;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+    display: none;
+    opacity: 0;
+    transform-origin: 50% 50%;
+  }
+
+  #spinner-check {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    opacity: 0;
+    transform-origin: 50% 50%;
+
+    path {
+      transform: translate(25%, 25%) scale(2.5);
+      height: 1000px;
+      width: 100px;
+
+      fill: var(--color-checked);
+    }
+  }
+
+  #spinner-cross {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+
+    line {
+      stroke: var(--color-cross);
+      stroke-width: 6px;
+      stroke-linecap: round;
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+    }
+  }
+
+  #spinner-info {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    opacity: 0;
+    transform-origin: 50% 50%;
+
+    text {
+      fill: var(--color-info);
+    }
+  }
+
+  #spinner-warning {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    opacity: 0;
+    transform-origin: 50% 50%;
+
+    text {
+      fill: var(--color-warning);
+    }
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotateZ(0deg);
+  }
+  100% {
+    transform: rotateZ(360deg);
+  }
+}
+
+@keyframes chase {
+  0% {
+    stroke-dashoffset: 99;
+    transform: rotate(0deg);
+  }
+
+  50% {
+    stroke-dashoffset: var(--delta);
+    transform: rotate(180deg);
+  }
+
+  100% {
+    stroke-dashoffset: 99;
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fill {
+  0% {
+    stroke-dashoffset: 99;
+    transform: rotate(0deg);
+  }
+
+  50%,
+  100% {
+    stroke-dashoffset: 0;
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fill-checked {
+  0% {
+    stroke-dashoffset: 99;
+    transform: rotate(0deg);
+  }
+
+  45% {
+    stroke-dashoffset: 0;
+    transform: rotate(300deg);
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes grow {
+  0% {
+    transform: scale(0) rotate(0deg);
+  }
+
+  50%,
+  100% {
+    transform: scale(1) rotate(360deg);
+  }
+}
+
+@keyframes check-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotate(-14deg);
+  }
+
+  60% {
+    opacity: 1;
+    transform: scale(1.14) rotate(5deg);
+  }
+
+  80% {
+    transform: scale(0.96) rotate(-2deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes grow-cross {
+  0% {
+    transform: scale(0) rotate(0deg);
+  }
+
+  50%,
+  100% {
+    transform: scale(1) rotate(180deg);
+  }
+}
+
+@keyframes draw-cross {
+  0%,
+  30% {
+    stroke-dashoffset: 100;
+  }
+
+  60%,
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes warning-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(6px);
+  }
+
+  60% {
+    opacity: 1;
+    transform: scale(1.14) translateY(-3px);
+  }
+
+  80% {
+    transform: scale(0.96) translateY(1px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}

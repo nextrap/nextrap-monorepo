@@ -1,0 +1,23 @@
+{
+    "name": "nte-spinner",
+    "version": "1.0.0",
+    "contributions": {
+        "html": {
+            "elements": [
+                {
+                    "name": "nte-spinner",
+                    "description": "Animated spinner with loading, progress and status variants."
+                }
+            ]
+        },
+        "css": {
+            "classes": [
+                { "name": "progress", "description": "Displays determinate progress state." },
+                { "name": "checked", "description": "Displays success state." },
+                { "name": "cross", "description": "Displays error state." },
+                { "name": "info", "description": "Displays info state." },
+                { "name": "warning", "description": "Displays warning state." }
+            ]
+        }
+    }
+}
