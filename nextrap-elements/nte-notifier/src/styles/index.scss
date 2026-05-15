@@ -1,0 +1,5 @@
+@use '../../mixins' as notifier;
+
+nte-notifier.default {
+  @include notifier.notifier-default;
+}

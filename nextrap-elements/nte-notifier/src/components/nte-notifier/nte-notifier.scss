@@ -1,0 +1,113 @@
+:host {
+  position: relative;
+  z-index: 9999;
+}
+
+#dialog {
+  width: var(--nte-notifier-dialog-width, min(calc(100vw - 2rem), 42rem));
+  max-height: var(--nte-notifier-dialog-max-height, calc(100vh - 2rem));
+  margin: 0;
+  padding: 0;
+  background: white;
+  border: 1px solid darkgray;
+  color: var(--nte-notifier-dialog-color, inherit);
+  position: fixed;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  overflow: visible;
+}
+
+#dialog:not([open]) {
+  display: none;
+}
+
+#dialog::backdrop {
+  background: var(--nte-notifier-dialog-backdrop, rgba(0, 0, 0, 0.45));
+}
+
+#panel {
+  position: relative;
+  display: grid;
+  gap: var(--nte-notifier-panel-gap, 1rem);
+  overflow: auto;
+  max-height: var(--nte-notifier-dialog-max-height, calc(100vh - 2rem));
+}
+
+#header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--nte-notifier-header-gap, 1rem);
+  align-items: start;
+}
+
+#close {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  line-height: 1;
+}
+
+#spinner {
+  justify-self: center;
+  width: 110px;
+}
+
+#content {
+  display: grid;
+  gap: var(--nte-notifier-content-gap, 0.75rem);
+}
+
+#progress {
+  display: grid;
+  gap: var(--nte-notifier-progress-gap, 0.5rem);
+}
+
+#progress-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--nte-notifier-progress-meta-gap, 1rem);
+}
+
+#progress-bar {
+  width: 100%;
+  overflow: hidden;
+}
+
+#progress-value {
+  height: 100%;
+  transition: width 0.2s ease-out;
+}
+
+#details-summary {
+  cursor: pointer;
+}
+
+#details-content {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+#actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--nte-notifier-actions-gap, 0.75rem);
+}
+
+#assistive-context {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.btn {
+  border: 1px solid black;
+}

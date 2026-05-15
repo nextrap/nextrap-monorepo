@@ -1,4 +1,51 @@
-:/# AGENTS.md – AI Agent Guide for nextrap-monorepo
+# AGENTS.md – AI Agent Guide for nextrap-monorepo
+
+Diese Datei beschreibt, wie ein Coding-Agent in diesem Repository arbeiten soll.
+
+## Grundprinzipien
+
+- **Nicht unnötig kompliziert coden.** Bevorzuge einfache, gut lesbare und wartbare Lösungen.
+- **Nicht alles komplett umbauen, wenn es nicht ausdrücklich verlangt ist.** Änderungen sollen so klein und zielgerichtet wie möglich bleiben.
+- **Lieber nachfragen, wenn Anforderungen unklar sind.** Keine weitreichenden Annahmen treffen, wenn die Richtung nicht eindeutig ist.
+- **Lieber früher stoppen und nachfragen, ob weitergemacht werden soll.** Besonders bei größeren Refactorings, strukturellen Änderungen oder Folgearbeiten.
+- **An bestehendem Code orientieren.** Nutze vorhandene Patterns, Konventionen, Dateistrukturen und Stilmittel im Repository.
+
+## Vorgehen bei Änderungen
+
+- Arbeite bevorzugt **inkrementell** statt mit großen Rundum-Umbauten.
+- Passe vorhandene Lösungen an, bevor du neue Abstraktionen oder neue Architekturen einführst.
+- Vermeide "clevere" Lösungen, wenn eine einfache Lösung ausreicht.
+- Halte Diffs klein und nachvollziehbar.
+- Wenn eine Änderung potentiell mehrere sinnvolle Richtungen hat, stelle erst eine Rückfrage.
+
+## Rückfragen sind besonders sinnvoll, wenn
+
+- Anforderungen mehrdeutig sind.
+- ein Refactoring über den eigentlichen Auftrag hinausgehen würde.
+- bestehende Strukturen, APIs oder Dateiformate verändert werden müssten.
+- zusätzliche Folgearbeiten naheliegen, aber nicht ausdrücklich beauftragt wurden.
+- eine schnelle Minimaländerung ebenso möglich wäre wie eine größere "saubere" Lösung.
+
+## Orientierung an bestehendem Repository-Kontext
+
+- Bestehende Konventionen und Dokumentation im Repository haben Vorrang.
+- Vorhandene Hilfsfunktionen, Utilities und Muster sollen bevorzugt wiederverwendet werden.
+- Neue Strukturen nur dann einführen, wenn der vorhandene Aufbau dafür nicht geeignet ist.
+
+## Ziel
+
+Der Agent soll pragmatisch arbeiten: **einfach, passend zum Bestand, minimal-invasiv und mit rechtzeitigen Rückfragen statt unnötig großer Umbauten.**
+
+## Die .ai-usage-info.md Datei
+
+Diese Datei sollte für alle Pakete uptodate gehalten werden. In dieser sollten alle Informationen enthalten sein, um
+die AI zu informieren, damit sie die Anforderungen der Pakete versteht und entsprechend coden kann. In dieser Datei
+sollten hauptsächlich Beispiele enthalten sein. Suche ggf auch nach .ai-usage-info.md Dateien in anderen Paketen, um zu sehen, wie diese aufgebaut sind. (auch in node-modules)
+
+## Orientierung
+
+Orientiere dich beim Programmieren an Kompontneten wie nextrap-layout/ntl-2col und nextrap-elements/nte-notifier 
+
 
 ## Architecture Overview
 
@@ -11,6 +58,8 @@ Nx-managed npm monorepo with three package groups:
 | `nextrap-layout/` | `ntl-*` | Layout-level web components |
 
 All packages are independently versioned and published to npm under `@nextrap/`.
+
+New Packages should comply with de .ai-agent-info.md of ntl-core (for layout) or nte-core (for elements).
 
 ## Key Developer Commands
 
@@ -84,7 +133,7 @@ All npm dependencies are defined **only** in the root `package.json` (single ver
 ## Key Files
 
 - `tsconfig.base.json` – all `@nextrap/*` path aliases
-- `nextrap-base/nt-nx-generators/` – Nx generator for scaffolding new packages
+- `nextrap-base/nt-nx-generators/` – Nx generator for scaffolding new packages (see these how to create new packages and follow their patterns)
 - `nextrap-base/nt-nx-generators/src/generators/` – generator project templates that new projects should use as the primary reference/orientation
 - `nextrap-base/style-base/` – global CSS variables / theming foundation (These may not be used inside of nte or ntl components - only defined once per Project)
 - `nextrap-base/style-reset/` – Shadow DOM baseline reset (safe for Shadow DOM)

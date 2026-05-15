@@ -1,0 +1,24 @@
+{
+    "name": "@nextrap/nte-notifier",
+    "version": "1.0.0",
+    "main": "./index.js",
+    "repository": {
+        "directory": "nextrap-elements/nte-notifier",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
+    "dependencies": {
+        "@nextrap/nte-spinner": "^1.0.0",
+        "@nextrap/style-reset": "^1.0.0",
+        "lit": "^3.3.1"
+    },
+    "devDependencies": {
+        "@nextrap/style-base": "^1.0.0",
+        "@nextrap/style-button": "*",
+        "@nextrap/style-typography": "^1.0.0",
+        "@nextrap/style-utils": "^1.0.0"
+    },
+    "type": "module",
+    "types": "./index.d.ts",
+    "web-types": "./web-types.json"
+}

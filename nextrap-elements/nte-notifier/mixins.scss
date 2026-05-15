@@ -1,0 +1,103 @@
+@mixin notifier-default {
+  &::part(overlay) {
+    padding: var(--nt-space-3);
+    background: rgb(from var(--nt-dark) r g b / 0.5);
+    backdrop-filter: blur(4px);
+  }
+
+  &::part(dialog) {
+    padding: var(--nt-space-4);
+    background: var(--nt-body);
+    color: var(--nt-text);
+    border: 1px solid rgb(from var(--nt-dark) r g b / 0.12);
+    border-radius: calc(var(--nt-border-radius) * 4);
+    box-shadow: 0 1.5rem 3rem rgb(from var(--nt-dark) r g b / 0.18);
+  }
+
+  &::part(headline) {
+    font-size: var(--nt-fs-h4);
+    font-weight: var(--nt-font-weight-header);
+    line-height: var(--nt-line-height-header);
+  }
+
+  &::part(message) {
+    font-size: var(--nt-font-size-base);
+    line-height: var(--nt-line-height-base);
+  }
+
+  &::part(reference),
+  &::part(progress-meta) {
+    color: var(--nt-dark-subtle);
+    font-size: var(--nt-font-size-small);
+  }
+
+  &::part(details),
+  &::part(html) {
+    padding: 0.875rem 1rem;
+    background: rgb(from var(--nt-dark) r g b / 0.04);
+    border-radius: calc(var(--nt-border-radius));
+  }
+
+  &::part(progress-bar) {
+    height: 0.625rem;
+    background: rgb(from var(--nt-dark) r g b / 0.08);
+    border-radius: 999px;
+  }
+
+  &::part(progress-value) {
+    background: var(--color-progress);
+    border-radius: inherit;
+  }
+
+  &::part(button) {
+    min-width: 7.5rem;
+    min-height: 2.75rem;
+    padding: 0.625rem 1rem;
+    border: 0;
+    border-radius: calc(var(--nt-border-radius) * 3);
+    font: inherit;
+    cursor: pointer;
+    transition:
+      transform 0.15s ease,
+      opacity 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  &::part(button):hover {
+    transform: translateY(-1px);
+  }
+
+  &::part(button):active {
+    transform: translateY(0);
+  }
+
+  &::part(button):focus-visible {
+    outline: 2px solid var(--color-progress);
+    outline-offset: 2px;
+  }
+
+  &::part(button-primary) {
+    background: var(--nt-primary);
+    color: var(--nt-text-on-primary);
+  }
+
+  &::part(button-secondary) {
+    background: rgb(from var(--nt-dark) r g b / 0.08);
+    color: var(--nt-text);
+  }
+
+  &::part(button-danger) {
+    background: var(--nt-danger);
+    color: var(--nt-text-on-danger);
+  }
+
+  @media (max-width: 640px) {
+    &::part(panel) {
+      padding: var(--nt-space-3);
+    }
+
+    &::part(button) {
+      width: 100%;
+    }
+  }
+}

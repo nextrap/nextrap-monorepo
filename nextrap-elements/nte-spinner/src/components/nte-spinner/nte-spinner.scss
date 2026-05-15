@@ -190,7 +190,7 @@
   #spinner-text {
     &:before {
       position: absolute;
-      font-size: 2cqw;
+      font-size: 30px;
       color: var(--color-loader);
       content: var(--percentage-txt);
       top: 0;
