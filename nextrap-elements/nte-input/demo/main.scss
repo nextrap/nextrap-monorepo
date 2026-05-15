@@ -1,0 +1,79 @@
+@use '../mixins' as nte-input;
+
+body {
+  margin: 0;
+  font-family: var(--nt-font-family-base, system-ui, sans-serif);
+  background: var(--nt-body-bg, #f8f9fa);
+  color: var(--nt-dark, #212529);
+}
+
+main {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+section + section {
+  margin-top: 1.5rem;
+}
+
+form {
+  display: grid;
+  gap: 1rem;
+}
+
+nte-input + nte-input {
+  margin-top: 1rem;
+}
+
+.demo-actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+button {
+  padding: 0.625rem 1rem;
+  color: var(--nt-body, #fff);
+  font: inherit;
+  background: var(--nt-primary, #0d6efd);
+  border: 0;
+  border-radius: var(--nt-border-radius, 0.375rem);
+  cursor: pointer;
+}
+
+button:hover {
+  background: color-mix(in srgb, var(--nt-primary, #0d6efd) 90%, black);
+}
+
+.json-label {
+  display: inline-block;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+#formdata-json {
+  width: 100%;
+  min-height: 16rem;
+  padding: 0.75rem;
+  color: inherit;
+  font:
+    0.95rem/1.5 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Consolas,
+    monospace;
+  background: var(--nt-body, #fff);
+  border: 1px solid var(--nt-gray-light, #ced4da);
+  border-radius: var(--nt-border-radius, 0.375rem);
+  box-sizing: border-box;
+}
+
+#formdata-json[data-invalid='true'] {
+  border-color: var(--nt-danger, #dc3545);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--nt-danger, #dc3545) 14%, transparent);
+}
+
+nte-input.hoverlabel {
+  @include nte-input.hoverlabel;
+}

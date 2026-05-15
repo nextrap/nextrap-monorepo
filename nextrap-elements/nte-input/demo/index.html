@@ -1,16 +1,20 @@
-<html>
+<!doctype html>
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
     <title>nte-input Demos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
-    <h1>nte-input Demos</h1>
+    <nte-demo-viewer welcome-title="nte-input" readme="/README.md">
+      <demo title="Base Demo" description="Grundlegende Funktionalität und Plugins" src="/demo/base.html"></demo>
+      <demo
+        title="Form Action Demo"
+        description="FormData auswerten und JSON zurück in die Inputs syncen"
+        src="/demo/form-action.html"
+      ></demo>
+    </nte-demo-viewer>
 
-    <h2>Available demos</h2>
-    <ul>
-      <li><a href="/demo/base.html">Base demo</a></li>
-    </ul>
-
-    <script src="/demo/main.ts" type="module"></script>
+    <script src="/demo/main.js" type="module"></script>
   </body>
 </html>

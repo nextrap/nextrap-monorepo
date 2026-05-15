@@ -1,0 +1,67 @@
+{
+    "name": "nte-input",
+    "version": "1.0.0",
+    "contributions": {
+        "html": {
+            "elements": [
+                {
+                    "name": "nte-input",
+                    "description": "Minimal input frame with label, control container and validation area. Actual input rendering is provided by statically registered plugins.",
+                    "slots": [
+                        {
+                            "name": "validation",
+                            "description": "Custom validation content rendered below the control."
+                        }
+                    ],
+                    "events": [],
+                    "attributes": [
+                        {
+                            "name": "type",
+                            "type": "string",
+                            "description": "Input type used to resolve the registered plugin."
+                        },
+                        {
+                            "name": "label",
+                            "type": "string",
+                            "description": "Label rendered above the plugin content."
+                        },
+                        {
+                            "name": "placeholder",
+                            "type": "string",
+                            "description": "Placeholder forwarded to plugins like the built-in text and textarea plugins."
+                        },
+                        {
+                            "name": "value",
+                            "type": "string",
+                            "description": "Current value used by plugins such as the built-in textarea, select and select-radio plugins."
+                        },
+                        {
+                            "name": "multiple",
+                            "type": "boolean",
+                            "description": "Used by grouped plugins such as select-radio to switch from radios to checkboxes."
+                        },
+                        {
+                            "name": "data-options",
+                            "type": "string",
+                            "description": "Option source for built-in option-based plugins such as select and select-radio. Supports semicolon-separated strings or JSON."
+                        },
+                        {
+                            "name": "validation-message",
+                            "type": "string",
+                            "description": "Fallback validation text rendered in the validation area when no validation slot is provided."
+                        },
+                        {
+                            "name": "invalid",
+                            "type": "boolean",
+                            "description": "Marks the frame as invalid and switches the border styling to the invalid color."
+                        }
+                    ]
+                }
+            ]
+        },
+        "css": {
+            "classes": [],
+            "scopes": []
+        }
+    }
+}

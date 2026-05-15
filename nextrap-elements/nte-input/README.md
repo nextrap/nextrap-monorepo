@@ -1,63 +1,139 @@
 # nte-input
 
-This library was generated with [Nx](https://nx.dev).
+Minimal input wrapper for Nextrap.
 
-It provides form primitives for Nextrap projects:
+`nte-input` itself only renders the frame around a control:
 
-- `nte-input-control`: styling wrapper that provides label/error/hint/layout and ships the input CSS.
-- `nte-input`: logic/validation wrapper for native inputs; use it inside `nte-input-control` for styling.
-- `nte-input-tags`: tag/autocomplete input.
-- `nte-input-signature`: canvas-based signature capture.
-- `nte-input-group`: layout helper for responsive form grids.
+- a label above the control
+- a bordered control box
+- a validation area below the control
+
+The actual control markup is provided through statically registered plugins.
+
+Built-in plugins currently cover:
+- text / email / password
+- textarea
+- select
+- select-radio
+- checkbox
+
+## Installation
+
+```bash
+npm install @nextrap/nte-input
+```
+
+## Plugin interface
+
+```ts
+export interface NteInputPlugin {
+  types: string[];
+  getHtml?: (context: unknown) => unknown;
+  init?: (element: NteInput) => void;
+  shouldHoverlabelFloat?: (element: NteInput) => boolean;
+}
+```
+
+A plugin may register multiple input types, but each type may only be registered once.
 
 ## Usage
 
-```html
-<!-- Default: inline label + control (control is the default slot) -->
-<nte-input-control label="Email">
-    <nte-input type="email" name="email" placeholder="name@example.com" required></nte-input>
-</nte-input-control>
+```ts
+import { html } from 'lit';
+import { NteInput, type NteInputRenderContext } from '@nextrap/nte-input';
 
-<!-- Native inputs also work (still default slot) -->
-<nte-input-control label="Native">
-    <input class="form-control" name="native" placeholder="Plain input" />
-</nte-input-control>
+NteInput.registerPlugin({
+  types: ['text', 'email', 'password'],
+  getHtml: (context) => {
+    const { element, controlId, validationId } = context as NteInputRenderContext;
 
-<!-- Multiline layout (label above) via CSS class -->
-<nte-input-control class="multiline" label="Comment">
-    <nte-input type="textarea" name="comment" rows="3"></nte-input>
-</nte-input-control>
-
-<!-- Width tuning (12-col grid) -->
-<nte-input-control style="--nxa-label-cols: var(--cols-3); --nxa-input-cols: var(--cols-9)" label="Wider input">
-    <nte-input type="text" name="wide"></nte-input>
-</nte-input-control>
-
-<!-- Size + modern styling via CSS classes -->
-<nte-input-control class="size-sm style-modern" label="Small modern">
-    <nte-input type="text" name="smallModern"></nte-input>
-</nte-input-control>
-
-<!-- Floating label uses the `floating` property (layout/cols do not apply); give a placeholder -->
-<nte-input-control floating label="Username">
-    <nte-input type="text" name="username" placeholder=" "></nte-input>
-</nte-input-control>
-
-<!-- Custom label content -->
-<nte-input-control>
-    <span slot="label">Email <small>(work)</small></span>
-    <nte-input type="email" name="email" required></nte-input>
-</nte-input-control>
+    return html`
+      <input
+        id=${controlId}
+        type=${element.type}
+        placeholder=${element.getAttribute('placeholder') ?? ''}
+        aria-describedby=${validationId}
+      />
+    `;
+  },
+});
 ```
 
-## Building
+```html
+<nte-input label="E-Mail" type="email" placeholder="name@example.com"></nte-input>
+<nte-input label="Kommentar" type="textarea" value="Erster Text"></nte-input>
+<nte-input label="Status" type="select" validation-message="Bitte auswählen.">
+  <options>
+    <option value="draft">Entwurf</option>
+    <option value="active">Aktiv</option>
+  </options>
+</nte-input>
+<nte-input label="Status" type="select" data-options="draft|Entwurf;active|Aktiv"></nte-input>
+<nte-input label="Status" type="select-radio" value="active" data-options="draft|Entwurf;active|Aktiv"></nte-input>
+<nte-input label="Tags" type="select-radio" multiple value='["news"]' data-options='[{"value":"news","label":"News"},{"value":"events","label":"Events"}]'></nte-input>
+<nte-input label="AGB akzeptieren" type="checkbox" checked></nte-input>
+```
 
-Run `nx build nte-input` to build the library.
+## Textarea auto grow
 
-## Running unit tests
+The built-in `textarea` plugin grows with its content.
+The height is clamped between the configured CSS min and max height.
+It also syncs the host `value` attribute with the internal `<textarea>`.
 
-Run `nx test nte-input` to execute the unit tests via [Vitest](https://vitest.dev/).
+Relevant CSS variables:
 
-## Developing
+```css
+nte-input {
+  --nte-input-textarea-min-height: 6rem;
+  --nte-input-textarea-max-height: 16rem;
+}
+```
 
-Run `nx serve nte-input` to serve the `index.html` for development.
+## Select options
+
+The built-in `select` and `select-radio` plugins support two option sources:
+
+1. `data-options` attribute
+2. an `<options>` wrapper inside `<nte-input>`
+
+If parsed `data-options` exist, they have priority and `<options>` content is ignored.
+
+Supported `data-options` formats:
+
+```html
+<nte-input type="select" data-options="draft|Entwurf;active|Aktiv"></nte-input>
+<nte-input type="select" data-options='[{"value":"draft","label":"Entwurf"},{"value":"active","label":"Aktiv"}]'></nte-input>
+```
+
+For `type="select"`, the plugin copies either `data-options` or the `<options>` content into the internal `<select>`.
+After syncing, it applies the current `value` attribute to select the matching option.
+
+For `type="select-radio"`, the same options are rendered as a radio group.
+If `multiple` is set, it renders checkboxes instead.
+The current `value` attribute is synced into the checked state, and user changes are written back to `value`.
+In multiple mode, `value` is stored as a JSON array string.
+
+## SCSS mixins
+
+The package ships a root `mixins.scss` file.
+
+```scss
+@use '@nextrap/nte-input/mixins' as nte-input;
+
+nte-input.hoverlabel {
+  @include nte-input.hoverlabel;
+}
+```
+
+The `hoverlabel` mixin turns the normal label into a floating Bootstrap-like label.
+It keeps extra control height and input padding so the label has enough room across browsers.
+The label floats automatically on focus, when a value exists, when a placeholder exists, or when the active plugin returns `true` from `shouldHoverlabelFloat()`.
+
+## Notes
+
+- Plugins are registered via TypeScript.
+- `registerPlugin()` stores every type individually in the internal registry.
+- During render, `nte-input` resolves the plugin by its `type`.
+- If available, `getHtml()` renders the control.
+- If available, `init()` runs after render.
+- For `type="checkbox"`, the label text is rendered by the checkbox plugin next to the checkbox, and the normal frame is omitted.

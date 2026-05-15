@@ -1,0 +1,58 @@
+@mixin hoverlabel {
+  --nte-input-control-min-height: var(--nte-input-hoverlabel-control-min-height, 3.75rem);
+  --nte-input-inner-padding-top: var(--nte-input-hoverlabel-input-padding-top, 1.1rem);
+  --nte-input-inner-padding-bottom: var(--nte-input-hoverlabel-input-padding-bottom, 0.15rem);
+  --nte-input-inner-min-height: var(--nte-input-hoverlabel-input-min-height, 1.5rem);
+  --nte-input-hoverlabel-inline-padding: var(--nte-input-padding-x, 0.75rem);
+  --nte-input-hoverlabel-label-padding-x: var(--nte-input-hoverlabel-label-padding-inline, 0.25rem);
+  --nte-input-hoverlabel-label-padding-y: var(--nte-input-hoverlabel-label-padding-block, 0.125rem);
+  --nte-input-hoverlabel-label-rest-color: var(--nt-dark-subtle, var(--nte-input-label-color));
+  --nte-input-hoverlabel-label-active-color: var(--nte-input-label-color);
+  --nte-input-hoverlabel-label-background: var(--nte-input-control-background, var(--nt-body, #fff));
+  --nte-input-hoverlabel-label-scale: var(--nte-input-hoverlabel-scale, 0.82);
+  --nte-input-hoverlabel-label-radius: var(--nte-input-hoverlabel-radius, 999px);
+  --nte-input-hoverlabel-label-shadow: var(--nte-input-hoverlabel-shadow, none);
+  --nte-input-hoverlabel-label-rest-offset-y: var(--nte-input-hoverlabel-rest-offset-y, 50%);
+  --nte-input-hoverlabel-label-active-top: var(--nte-input-hoverlabel-active-top, 0.3rem);
+
+  &::part(field) {
+    position: relative;
+    gap: 0;
+  }
+
+  &::part(label) {
+    position: absolute;
+    inset-block-start: var(--nte-input-hoverlabel-label-rest-offset-y);
+    inset-inline-start: calc(var(--nte-input-hoverlabel-inline-padding) - var(--nte-input-hoverlabel-label-padding-x));
+    z-index: 1;
+    max-inline-size: calc(
+      100% - (var(--nte-input-hoverlabel-inline-padding) * 2) + (var(--nte-input-hoverlabel-label-padding-x) * 2)
+    );
+    padding: var(--nte-input-hoverlabel-label-padding-y) var(--nte-input-hoverlabel-label-padding-x);
+    overflow: hidden;
+    color: var(--nte-input-hoverlabel-label-rest-color);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.2;
+    background: var(--nte-input-hoverlabel-label-background);
+    border-radius: var(--nte-input-hoverlabel-label-radius);
+    box-shadow: var(--nte-input-hoverlabel-label-shadow);
+    transform: translateY(-50%);
+    transform-origin: left top;
+    transition:
+      inset-block-start 0.18s ease,
+      transform 0.18s ease,
+      color 0.18s ease,
+      opacity 0.18s ease;
+  }
+
+  &:focus-within::part(label),
+  &[has-value]::part(label),
+  &[placeholder]::part(label),
+  &[has-placeholder]::part(label),
+  &[hoverlabel-active]::part(label) {
+    inset-block-start: var(--nte-input-hoverlabel-label-active-top);
+    color: var(--nte-input-hoverlabel-label-active-color);
+    transform: scale(var(--nte-input-hoverlabel-label-scale));
+  }
+}

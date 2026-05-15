@@ -1,394 +1,212 @@
-import { css, html, LitElement, unsafeCSS } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { nextrap_element } from '@nextrap/nte-core';
+import '@nextrap/style-base';
+import { resetStyle } from '@nextrap/style-reset';
+import { html, nothing, unsafeCSS } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 
-const hostStyles = css`
-  :host {
-    display: block;
-  }
-`;
+import { parseInputOptions, serializeInputOptions } from '../../lib/options';
+import type { InputOptionsType, NteInputPlugin, NteInputRenderContext } from '../../lib/types';
+import style from './nte-input.scss?inline';
 
-type SelectOption =
-  | {
-      key?: string;
-      value: string;
-    }
-  | {
-      [key: string]: string;
-    }
-  | string;
-
-type SupportedElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+type SupportedControl = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+type SupportedControlContainer = HTMLElement;
 
 @customElement('nte-input')
-export class NteInput extends LitElement {
-  static formAssociated = true;
+export class NteInput extends nextrap_element() {
+  static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
-  @property() type = 'text';
-  @property({ attribute: false }) controlStyleText?: string;
+  private static readonly plugins = new Map<string, NteInputPlugin>();
+
+  @property({ type: String, reflect: true }) accessor type = 'text';
+  @property({ type: String }) accessor label = '';
+  @property({ type: String }) accessor placeholder = '';
   @property({
-    attribute: 'select-options',
+    attribute: 'data-options',
     converter: {
-      fromAttribute: (value: string) => {
-        if (!value) return [];
-        try {
-          return JSON.parse(value);
-        } catch (error) {
-          console.warn('Invalid JSON in select-options:', error);
-          return [];
-        }
-      },
-      toAttribute: (value: SelectOption[]) => {
-        try {
-          return JSON.stringify(value);
-        } catch (error) {
-          console.warn('Failed to serialize select-options:', error);
-          return '[]';
-        }
-      },
+      fromAttribute: (value: string | null) => parseInputOptions(value),
+      toAttribute: (value: InputOptionsType) => serializeInputOptions(value),
     },
   })
-  selectOptions: SelectOption[] = [];
+  accessor options: InputOptionsType | null = null;
+  @property({ type: Boolean }) accessor multiple = false;
+  @property({ type: String, attribute: 'validation-message' }) accessor validationMessage = '';
+  @property({ type: Boolean, reflect: true }) accessor invalid = false;
+  @property({ type: Boolean, reflect: true, attribute: 'has-value' }) accessor hasValue = false;
+  @property({ type: Boolean, reflect: true, attribute: 'has-placeholder' }) accessor hasPlaceholder = false;
+  @property({ type: Boolean, reflect: true, attribute: 'hoverlabel-active' }) accessor hoverlabelActive = false;
 
-  @state() private touched = false;
-  @state() private valid = false;
-  @state() private invalid = false;
-  @state() private isEmpty = true;
+  #generatedId = `nte-input-${Math.random().toString(36).slice(2, 9)}`;
+  #initializedPluginType?: string;
+  #controlContainer?: SupportedControlContainer;
+  #controlEvents?: AbortController;
+  #handleControlStateChange = () => {
+    this.#syncValueState();
+  };
 
-  private input: SupportedElement | null = null;
+  static registerPlugin(plugin: NteInputPlugin) {
+    for (const rawType of plugin.types) {
+      const type = rawType.trim().toLowerCase();
 
-  get inputElement(): SupportedElement | null {
-    return this.input;
-  }
-
-  public validateOnSubmit(): boolean {
-    if (!this.input) return false;
-    this.touched = true;
-    const result = this._validate(this.input);
-    this.syncHostState();
-    return result;
-  }
-
-  override firstUpdated() {
-    const slot = this.shadowRoot?.querySelector('slot:not([name])') as HTMLSlotElement | undefined;
-    slot?.addEventListener('slotchange', () => this.hydrateSlottedElement(slot));
-    if (slot) {
-      this.hydrateSlottedElement(slot);
-    }
-  }
-
-  override updated(changed: Map<string, unknown>) {
-    super.updated(changed);
-    if (changed.has('selectOptions') && this.input instanceof HTMLSelectElement) {
-      this.updateSelectOptions(this.input);
-    }
-  }
-
-  private hydrateSlottedElement(slot: HTMLSlotElement) {
-    const slotted = slot.assignedElements()[0] as SupportedElement | undefined;
-    if (!slotted) return;
-
-    this.input = slotted;
-    if (!this.input.id) {
-      this.input.id = this._uniqueId;
-    }
-
-    if (this.input instanceof HTMLInputElement) {
-      this.bindInputElement(this.input);
-    } else if (this.input instanceof HTMLSelectElement) {
-      this.bindSelectElement(this.input);
-    } else if (this.input instanceof HTMLTextAreaElement) {
-      this.bindTextAreaElement(this.input);
-    }
-
-    if (this.input.value) {
-      this._validate(this.input);
-    }
-  }
-
-  private bindInputElement(input: HTMLInputElement) {
-    const uiType = this.uiTypeFor(input);
-
-    if (!['checkbox', 'radio'].includes(uiType)) {
-      input.addEventListener('input', (event) => {
-        this._handleInput(event);
-      });
-      input.addEventListener('blur', (event) => this._handleBlur(event));
-    }
-
-    if (uiType === 'checkbox' || uiType === 'file' || input.type === 'checkbox') {
-      input.addEventListener('change', (event) => this._handleInput(event));
-    }
-
-    if (uiType === 'radio') {
-      const groupName = input.getAttribute('name');
-      if (groupName) {
-        input.addEventListener('change', () => this.syncRadioGroup(groupName));
+      if (!type) {
+        continue;
       }
-    }
-  }
 
-  private bindSelectElement(select: HTMLSelectElement) {
-    select.addEventListener('change', (event) => {
-      this._handleInput(event);
-    });
-    select.addEventListener('blur', (event) => this._handleBlur(event));
-    if (this.selectOptions.length > 0) {
-      this.updateSelectOptions(select);
-    }
-  }
-
-  private bindTextAreaElement(textarea: HTMLTextAreaElement) {
-    textarea.addEventListener('input', (event) => {
-      this._handleInput(event);
-    });
-    textarea.addEventListener('blur', (event) => this._handleBlur(event));
-  }
-
-  private syncRadioGroup(groupName: string) {
-    const form = this.input?.closest('form');
-    const radios = form
-      ? form.querySelectorAll(`input[name="${groupName}"]`)
-      : document.querySelectorAll(`input[name="${groupName}"]`);
-
-    radios.forEach((radio) => {
-      const radioInput = radio as HTMLInputElement;
-      const parentComponent = radioInput.closest('nte-input') as NteInput | null;
-      parentComponent?._validate(radioInput);
-    });
-  }
-
-  private updateSelectOptions(select: HTMLSelectElement) {
-    select.innerHTML = '';
-    if (!Array.isArray(this.selectOptions)) return;
-
-    this.selectOptions.forEach((option) => {
-      const optionElement = document.createElement('option');
-      if (typeof option === 'string') {
-        optionElement.value = option;
-        optionElement.textContent = option;
-      } else if ('key' in option && 'value' in option) {
-        optionElement.value = option.key ?? '';
-        optionElement.textContent = option.value;
-      } else {
-        const [entry] = Object.entries(option);
-        if (entry) {
-          const [key, value] = entry;
-          optionElement.value = key;
-          optionElement.textContent = value;
-        }
+      if (this.plugins.has(type)) {
+        throw new Error(`Plugin for input type "${type}" is already registered.`);
       }
-      select.appendChild(optionElement);
-    });
+
+      this.plugins.set(type, plugin);
+    }
   }
 
-  private _handleInput(event: Event) {
-    const target = event.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
-    this.isEmpty = !target.value;
-    this._validate(target);
+  static getPlugin(type: string) {
+    return this.plugins.get(type.trim().toLowerCase());
   }
 
-  private _handleBlur(event: Event) {
-    this.touched = true;
-    const target = event.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
-    this._validate(target);
-    this.syncHostState();
+  get controlId() {
+    return `${this.#baseId}-control`;
   }
 
-  private _validate(input: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement): boolean {
-    if (!input) return false;
+  get validationId() {
+    return `${this.#baseId}-validation`;
+  }
 
-    const uiType = this.uiTypeFor(input);
-    const required = input.hasAttribute('required') || this.hasAttribute('required');
+  get renderContext(): NteInputRenderContext {
+    return {
+      element: this,
+      type: this.#normalizedType,
+      controlId: this.controlId,
+      validationId: this.validationId,
+    };
+  }
 
-    if (uiType === 'range') {
-      this.valid = true;
-      this.invalid = false;
-      return true;
+  override updated(changedProperties: Map<PropertyKey, unknown>) {
+    super.updated(changedProperties);
+
+    if (changedProperties.has('type')) {
+      this.#initializedPluginType = undefined;
     }
 
-    if (input instanceof HTMLInputElement && (uiType === 'checkbox' || uiType === 'radio')) {
-      if (uiType === 'radio') {
-        if (required && this.touched) {
-          const groupName = input.getAttribute('name');
-          if (!groupName) return false;
+    this.#runPluginInit();
+    this.#syncControl();
+  }
 
-          const form = input.closest('form');
-          const isGroupValid = form
-            ? form.querySelector(`input[name="${groupName}"]:checked`) !== null
-            : document.querySelector(`input[name="${groupName}"]:checked`) !== null;
-
-          this.valid = isGroupValid;
-          this.invalid = !isGroupValid;
-
-          if (!isGroupValid) {
-            input.classList.add('is-invalid');
-            input.classList.remove('is-valid');
-          } else {
-            input.classList.remove('is-invalid', 'is-valid');
-          }
-        } else {
-          input.classList.remove('is-invalid', 'is-valid');
-        }
-      } else {
-        if (required) {
-          this.valid = input.checked;
-          this.invalid = !input.checked;
-          if (this.touched) {
-            if (this.valid) {
-              input.classList.remove('is-invalid');
-              input.classList.add('is-valid');
-            } else {
-              input.classList.add('is-invalid');
-              input.classList.remove('is-valid');
-            }
-          }
-        } else {
-          input.classList.remove('is-invalid');
-          this.valid = true;
-          this.invalid = false;
-        }
-      }
-      this.syncHostState();
-      return this.valid;
-    }
-
-    this.isEmpty = !input.value;
-
-    if (required && this.isEmpty) {
-      this.valid = false;
-      this.invalid = true;
-      input.classList.add('is-invalid');
-      input.classList.remove('is-valid');
-      this.syncHostState();
-      return false;
-    }
-
-    if (!required && this.isEmpty) {
-      this.valid = false;
-      this.invalid = false;
-      input.classList.remove('is-valid', 'is-invalid');
-      this.syncHostState();
-      return true;
-    }
-
-    this.valid = input.checkValidity();
-    this.invalid = !this.valid;
-
-    if (this.valid) {
-      input.classList.add('is-valid');
-      input.classList.remove('is-invalid');
-    } else {
-      input.classList.add('is-invalid');
-      input.classList.remove('is-valid');
-    }
-
-    this.syncHostState();
-    return this.valid;
+  override disconnectedCallback() {
+    this.#controlEvents?.abort();
+    super.disconnectedCallback();
   }
 
   override render() {
-    if (!this.hasChildNodes()) {
-      const element = this.createNativeControl();
-      this.appendChild(element);
-    }
+    const plugin = NteInput.getPlugin(this.#normalizedType);
+    const pluginHtml = plugin?.getHtml?.(this.renderContext);
 
     return html`
-      <style>
-        ${this.controlStyleText
-          ? css`
-              ${unsafeCSS(this.controlStyleText)}
-            `
-          : hostStyles}
-      </style>
-      <slot></slot>
+      <div id="wrapper" part="wrapper">
+        <div id="field" part="field">
+          <label
+            id="label"
+            part="label"
+            for=${this.controlId}
+            ?hidden=${!this.label || this.#normalizedType === 'checkbox'}
+            >${this.label}</label
+          >
+
+          <div id="control" part="control">${pluginHtml ?? nothing}</div>
+        </div>
+
+        <div id=${this.validationId} part="validation" aria-live="polite">
+          <slot name="validation">${this.validationMessage}</slot>
+        </div>
+      </div>
     `;
   }
 
-  private uiTypeFor(control: SupportedElement): string {
-    if (control instanceof HTMLSelectElement) return 'select';
-    if (control instanceof HTMLTextAreaElement) return 'textarea';
-    return (control as HTMLInputElement).type || this.type || 'text';
-  }
+  #runPluginInit() {
+    const plugin = NteInput.getPlugin(this.#normalizedType);
 
-  private createNativeControl(): SupportedElement {
-    const attributesToMirror = [
-      'name',
-      'type',
-      'value',
-      'placeholder',
-      'required',
-      'min',
-      'max',
-      'step',
-      'pattern',
-      'autocomplete',
-      'autofocus',
-      'disabled',
-      'readonly',
-      'size',
-      'maxlength',
-      'minlength',
-      'multiple',
-      'accept',
-      'inputmode',
-      'list',
-      'form',
-      'formaction',
-      'formenctype',
-      'formmethod',
-      'formnovalidate',
-      'formtarget',
-      'rows',
-      'cols',
-    ];
-
-    let element: SupportedElement;
-
-    if (this.type === 'select') {
-      element = document.createElement('select');
-    } else if (this.type === 'textarea') {
-      element = document.createElement('textarea');
-    } else {
-      const input = document.createElement('input');
-      if (this.type) {
-        input.setAttribute('type', this.type);
-      }
-      element = input;
+    if (!plugin?.init || this.#initializedPluginType === this.#normalizedType) {
+      return;
     }
 
-    attributesToMirror.forEach((attribute) => {
-      const attrValue = this.getAttribute(attribute);
-      if (this.hasAttribute(attribute) && attrValue !== null) {
-        element.setAttribute(attribute, attrValue);
-      }
-    });
-
-    if (element instanceof HTMLInputElement) {
-      if (this.type === 'checkbox' || this.type === 'radio') {
-        element.classList.add('form-check-input');
-      } else {
-        element.classList.add('form-control');
-      }
-    } else {
-      element.classList.add('form-control');
-    }
-
-    if (element instanceof HTMLSelectElement && this.selectOptions.length > 0) {
-      this.updateSelectOptions(element);
-    }
-
-    return element;
+    plugin.init(this);
+    this.#initializedPluginType = this.#normalizedType;
   }
 
-  private _generatedId = `nte-input-${Math.random().toString(36).substring(2, 9)}`;
+  #syncControl() {
+    const nextControlContainer = this.renderRoot.querySelector('#control') as SupportedControlContainer | null;
 
-  private get _uniqueId() {
-    return this.id || this._generatedId;
+    if (nextControlContainer !== this.#controlContainer) {
+      this.#controlEvents?.abort();
+      this.#controlContainer = nextControlContainer ?? undefined;
+
+      if (this.#controlContainer) {
+        this.#controlEvents = new AbortController();
+        this.#controlContainer.addEventListener('input', this.#handleControlStateChange, {
+          signal: this.#controlEvents.signal,
+        });
+        this.#controlContainer.addEventListener('change', this.#handleControlStateChange, {
+          signal: this.#controlEvents.signal,
+        });
+      }
+    }
+
+    this.#syncValueState();
   }
 
-  private syncHostState() {
-    this.classList.toggle('touched', this.touched);
-    this.classList.toggle('valid', this.valid);
-    this.classList.toggle('invalid', this.invalid);
+  #syncValueState() {
+    const controls = Array.from(
+      this.renderRoot.querySelectorAll('#control input, #control select, #control textarea'),
+    ) as SupportedControl[];
+
+    if (controls.length === 0) {
+      this.hasValue = false;
+      this.hasPlaceholder = this.hasAttribute('placeholder');
+      this.#syncHoverlabelState();
+      return;
+    }
+
+    this.hasPlaceholder =
+      this.hasAttribute('placeholder') || controls.some((control) => control.hasAttribute('placeholder'));
+
+    const checkControls = controls.filter(
+      (control): control is HTMLInputElement =>
+        control instanceof HTMLInputElement && ['checkbox', 'radio'].includes(control.type),
+    );
+
+    if (checkControls.length === controls.length) {
+      this.hasValue = checkControls.some((control) => control.checked);
+      this.#syncHoverlabelState();
+      return;
+    }
+
+    const control = controls[0];
+
+    if (control instanceof HTMLSelectElement) {
+      this.hasValue = control.multiple ? control.selectedOptions.length > 0 : control.value.trim().length > 0;
+      this.#syncHoverlabelState();
+      return;
+    }
+
+    this.hasValue = control.value.trim().length > 0;
+    this.#syncHoverlabelState();
+  }
+
+  #syncHoverlabelState() {
+    const plugin = NteInput.getPlugin(this.#normalizedType);
+    this.hoverlabelActive = plugin?.shouldHoverlabelFloat?.(this) ?? false;
+  }
+
+  get #baseId() {
+    return this.id || this.#generatedId;
+  }
+
+  get #normalizedType() {
+    return this.type.trim().toLowerCase() || 'text';
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'nte-input': NteInput;
   }
 }

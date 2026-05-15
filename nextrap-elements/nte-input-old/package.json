@@ -1,0 +1,13 @@
+{
+    "name": "@nextrap/nte-input-old",
+    "version": "1.0.0",
+    "main": "./index.js",
+    "repository": {
+        "directory": "nextrap-elements/nte-input-old",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
+    "dependencies": {},
+    "type": "module",
+    "types": "./index.d.ts"
+}

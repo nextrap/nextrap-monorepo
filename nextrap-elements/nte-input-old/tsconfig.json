@@ -1,13 +1,12 @@
 {
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
+        "types": ["@vitest/browser/providers/playwright"],
         "module": "commonjs",
-        "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
-        "useDefineForClassFields": false,
-        "experimentalDecorators": false,
-        "emitDecoratorMetadata": false,
         "strict": true,
+        "experimentalDecorators": true,
+        "useDefineForClassFields": false,
         "importHelpers": true,
         "noImplicitOverride": true,
         "noImplicitReturns": true,

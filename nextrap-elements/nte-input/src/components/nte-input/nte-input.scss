@@ -1,0 +1,156 @@
+:host {
+  display: block;
+
+  --nte-input-gap: 0.5rem;
+  --nte-input-padding-x: 0.75rem;
+  --nte-input-padding-y: 0.625rem;
+  --nte-input-control-gap: 0.5rem;
+  --nte-input-control-min-height: 2.75rem;
+  --nte-input-label-color: var(--nt-dark, #212529);
+  --nte-input-control-color: var(--nt-dark, #212529);
+  --nte-input-control-background: var(--nt-body, #fff);
+  --nte-input-border-color: var(--nt-gray-light, #ced4da);
+  --nte-input-border-color-focus: var(--nt-primary, #0d6efd);
+  --nte-input-border-color-invalid: var(--nt-danger, #dc3545);
+  --nte-input-border-radius: var(--nt-border-radius, 0.375rem);
+  --nte-input-message-color: var(--nt-danger, #dc3545);
+  --nte-input-message-min-height: 1.25rem;
+  --nte-input-inner-padding-top: 0;
+  --nte-input-inner-padding-bottom: 0;
+  --nte-input-inner-min-height: auto;
+  --nte-input-textarea-min-height: 6rem;
+  --nte-input-textarea-max-height: 16rem;
+}
+
+:host([invalid]) {
+  --nte-input-border-color: var(--nte-input-border-color-invalid);
+}
+
+#wrapper {
+  display: grid;
+  gap: var(--nte-input-gap);
+}
+
+#field {
+  display: grid;
+  gap: var(--nte-input-gap);
+}
+
+#label {
+  margin: 0;
+  color: var(--nte-input-label-color);
+  font-weight: 600;
+}
+
+#label[hidden] {
+  display: none;
+}
+
+#control {
+  display: flex;
+  align-items: center;
+  gap: var(--nte-input-control-gap);
+  min-height: var(--nte-input-control-min-height);
+  padding: var(--nte-input-padding-y) var(--nte-input-padding-x);
+  color: var(--nte-input-control-color);
+  background: var(--nte-input-control-background);
+  border: 1px solid var(--nte-input-border-color);
+  border-radius: var(--nte-input-border-radius);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+#control:focus-within {
+  border-color: var(--nte-input-border-color-focus);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--nte-input-border-color-focus) 18%, transparent);
+}
+
+#control :where(input, select, textarea, button) {
+  width: 100%;
+  min-height: var(--nte-input-inner-min-height);
+  padding-top: var(--nte-input-inner-padding-top);
+  padding-bottom: var(--nte-input-inner-padding-bottom);
+  padding-inline: 0;
+  color: inherit;
+  font: inherit;
+  background: transparent;
+  border: 0;
+  outline: 0;
+}
+
+:host([type='checkbox']) #control {
+  min-height: auto;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+:host([type='checkbox']) #control:focus-within {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+:host([type='checkbox']) #control [part~='checkbox-label'] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  cursor: pointer;
+}
+
+:host([type='checkbox']) #control input {
+  width: 1rem;
+  min-width: 1rem;
+  min-height: 1rem;
+  margin: 0;
+  flex: 0 0 auto;
+  accent-color: var(--nte-input-border-color-focus);
+}
+
+:host([type='checkbox']) #control [part~='checkbox-text'] {
+  line-height: 1.4;
+}
+
+:host([type='select-radio']) #control {
+  align-items: flex-start;
+}
+
+:host([type='select-radio']) #control [part~='option-list'] {
+  display: grid;
+  gap: 0.625rem;
+  width: 100%;
+}
+
+:host([type='select-radio']) #control [part~='option-label'] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  cursor: pointer;
+}
+
+:host([type='select-radio']) #control input {
+  width: 1rem;
+  min-width: 1rem;
+  min-height: 1rem;
+  margin: 0;
+  flex: 0 0 auto;
+  accent-color: var(--nte-input-border-color-focus);
+}
+
+:host([type='select-radio']) #control [part~='option-text'] {
+  line-height: 1.4;
+}
+
+#control :where(textarea) {
+  min-height: var(--nte-input-textarea-min-height);
+  max-height: var(--nte-input-textarea-max-height);
+  overflow-y: hidden;
+  resize: none;
+}
+
+#validation {
+  min-height: var(--nte-input-message-min-height);
+  color: var(--nte-input-message-color);
+  font-size: 0.875rem;
+}

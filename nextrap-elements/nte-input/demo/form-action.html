@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>nte-input Form Action Demo</title>
+  </head>
+  <body>
+    <main>
+      <h1>nte-input</h1>
+      <p>Formularauswertung per <code>FormData</code> mit JSON-Sync zurück in die Inputs.</p>
+
+      <section>
+        <h2>FormData Beispiel</h2>
+        <p>
+          Mit <code>Absenden</code> wird das Formular per <code>FormData</code> ausgewertet und als JSON angezeigt.
+          Änderungen im JSON werden direkt zurück in die Form übernommen.
+        </p>
+
+        <form id="formdata-demo-form">
+          <nte-input class="hoverlabel" label="Name" type="text" name="name" value="Max Mustermann"></nte-input>
+
+          <nte-input
+            class="hoverlabel"
+            label="Kommentar"
+            type="textarea"
+            name="message"
+            value="Hallo aus dem Demo"
+          ></nte-input>
+
+          <nte-input class="hoverlabel" label="Status" type="select" name="status" value="inprogress">
+            <options>
+              <option value="wrust">Wartet auf Rückmeldung</option>
+              <option value="inprogress">In Bearbeitung</option>
+            </options>
+          </nte-input>
+
+          <nte-input
+            label="Kategorien"
+            type="select-radio"
+            name="categories"
+            multiple
+            value='["news"]'
+            data-options='[{"value":"news","label":"News"},{"value":"events","label":"Events"}]'
+          ></nte-input>
+
+          <nte-input label="AGB akzeptieren" type="checkbox" name="accepted" value="yes" checked></nte-input>
+
+          <div class="demo-actions">
+            <button id="formdata-submit" type="submit">Absenden</button>
+          </div>
+        </form>
+
+        <label class="json-label" for="formdata-json">JSON</label>
+        <textarea id="formdata-json" spellcheck="false"></textarea>
+      </section>
+    </main>
+
+    <script src="/demo/main.js" type="module"></script>
+  </body>
+</html>

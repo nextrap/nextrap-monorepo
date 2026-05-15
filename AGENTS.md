@@ -36,6 +36,15 @@ Diese Datei beschreibt, wie ein Coding-Agent in diesem Repository arbeiten soll.
 
 Der Agent soll pragmatisch arbeiten: **einfach, passend zum Bestand, minimal-invasiv und mit rechtzeitigen Rückfragen statt unnötig großer Umbauten.**
 
+## Shadow DOM Komponenten
+
+Der shadow dom css sollte lediglich für die funktion unbedingt nötige css und variablen enthalten. Das eigentliche
+Styling wird durch ein mixin in der mixin.scss vorgenommen (über parts). Im Shadow DOM können Globae css variablen
+aus @nextrap/style-base verwendet werden (--nt-*).
+
+Lege im SCSS eine klasse .default an, die das Styling Mixin mit Standardwerten included. Diese klasse sollte 
+für Beispiele genutzt werden. Später werden die Styles in einem noch zu entwickelnden Theme gestyled.
+
 ## Die .ai-usage-info.md Datei
 
 Diese Datei sollte für alle Pakete uptodate gehalten werden. In dieser sollten alle Informationen enthalten sein, um
