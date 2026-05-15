@@ -2,6 +2,8 @@ import { html } from 'lit';
 import { describe, expect, it, vi } from 'vitest';
 
 import '../../index';
+import { AbstractNteInputPlugin } from '../../lib/plugin';
+import type { NteInputValue } from '../../lib/types';
 import { NteInput } from './nte-input';
 
 describe('NteInput', () => {
@@ -29,10 +31,15 @@ describe('NteInput', () => {
     const type = 'spec-text';
 
     if (!NteInput.getPlugin(type)) {
-      NteInput.registerPlugin({
-        types: [type],
-        getHtml: () => html`<input id="plugin-control" />`,
-      });
+      class SpecTextPlugin extends AbstractNteInputPlugin {
+        static readonly types = [type];
+
+        override render() {
+          return html`<input id="plugin-control" />`;
+        }
+      }
+
+      NteInput.registerPlugin(SpecTextPlugin);
     }
 
     const element = document.createElement('nte-input') as NteInput;
@@ -50,28 +57,48 @@ describe('NteInput', () => {
     const type = 'spec-duplicate';
 
     if (!NteInput.getPlugin(type)) {
-      NteInput.registerPlugin({
-        types: [type],
-      });
+      class SpecDuplicatePlugin extends AbstractNteInputPlugin {
+        static readonly types = [type];
+
+        override render() {
+          return html``;
+        }
+      }
+
+      NteInput.registerPlugin(SpecDuplicatePlugin);
     }
 
-    expect(() =>
-      NteInput.registerPlugin({
-        types: [type],
-      }),
-    ).toThrow(`Plugin for input type "${type}" is already registered.`);
+    class SpecDuplicatePluginAgain extends AbstractNteInputPlugin {
+      static readonly types = [type];
+
+      override render() {
+        return html``;
+      }
+    }
+
+    expect(() => NteInput.registerPlugin(SpecDuplicatePluginAgain)).toThrow(
+      `Plugin for input type "${type}" is already registered.`,
+    );
   });
 
-  it('runs plugin init once per type', async () => {
+  it('calls plugin connected once per element lifecycle', async () => {
     const type = 'spec-init';
-    const init = vi.fn();
+    const connected = vi.fn();
 
     if (!NteInput.getPlugin(type)) {
-      NteInput.registerPlugin({
-        types: [type],
-        getHtml: () => html`<input />`,
-        init,
-      });
+      class SpecInitPlugin extends AbstractNteInputPlugin {
+        static readonly types = [type];
+
+        override render() {
+          return html`<input />`;
+        }
+
+        override connected() {
+          connected();
+        }
+      }
+
+      NteInput.registerPlugin(SpecInitPlugin);
     }
 
     const element = document.createElement('nte-input') as NteInput;
@@ -81,24 +108,14 @@ describe('NteInput', () => {
     await element.updateComplete;
     await element.updateComplete;
 
-    expect(init).toHaveBeenCalledTimes(1);
-    expect(init).toHaveBeenCalledWith(element);
+    expect(connected).toHaveBeenCalledTimes(1);
 
     element.remove();
   });
 
   it('reflects has-value when the rendered control changes', async () => {
-    const type = 'spec-value';
-
-    if (!NteInput.getPlugin(type)) {
-      NteInput.registerPlugin({
-        types: [type],
-        getHtml: () => html`<input />`,
-      });
-    }
-
     const element = document.createElement('nte-input') as NteInput;
-    element.type = type;
+    element.type = 'text';
     document.body.appendChild(element);
 
     await element.updateComplete;
@@ -123,11 +140,19 @@ describe('NteInput', () => {
     const type = 'spec-hoverlabel';
 
     if (!NteInput.getPlugin(type)) {
-      NteInput.registerPlugin({
-        types: [type],
-        getHtml: () => html`<input />`,
-        shouldHoverlabelFloat: () => true,
-      });
+      class SpecHoverlabelPlugin extends AbstractNteInputPlugin {
+        static readonly types = [type];
+
+        override render() {
+          return html`<input />`;
+        }
+
+        override isHoverlabelActive() {
+          return true;
+        }
+      }
+
+      NteInput.registerPlugin(SpecHoverlabelPlugin);
     }
 
     const element = document.createElement('nte-input') as NteInput;
@@ -138,6 +163,94 @@ describe('NteInput', () => {
     await element.updateComplete;
 
     expect(element.hasAttribute('hoverlabel-active')).toBe(true);
+
+    element.remove();
+  });
+
+  it('forwards plugin value accessors and selectedOptions via the host element', async () => {
+    const type = 'spec-accessors';
+
+    if (!NteInput.getPlugin(type)) {
+      class SpecAccessorsPlugin extends AbstractNteInputPlugin {
+        static readonly types = [type];
+
+        override render() {
+          return html`<input />`;
+        }
+
+        override getValue() {
+          return this.host.getAttribute('data-value') ?? '';
+        }
+
+        override setValue(value: NteInputValue) {
+          if (value === null || value === undefined || value === '') {
+            this.host.removeAttribute('data-value');
+          } else {
+            this.host.setAttribute('data-value', String(value));
+          }
+        }
+
+        override getSelectedOptions() {
+          return [{ value: 'one', label: 'One' }];
+        }
+      }
+
+      NteInput.registerPlugin(SpecAccessorsPlugin);
+    }
+
+    const element = document.createElement('nte-input') as NteInput;
+    element.type = type;
+    document.body.appendChild(element);
+
+    await element.updateComplete;
+
+    element.value = 'abc';
+
+    expect(element.value).toBe('abc');
+    expect(element.selectedOptions.map((option) => option.value)).toEqual(['one']);
+
+    element.remove();
+  });
+
+  it('does not switch the plugin instance after the first resolution', async () => {
+    const firstType = 'spec-fixed-plugin-a';
+    const secondType = 'spec-fixed-plugin-b';
+
+    if (!NteInput.getPlugin(firstType)) {
+      class SpecFixedPluginA extends AbstractNteInputPlugin {
+        static readonly types = [firstType];
+
+        override render() {
+          return html`<input data-plugin="a" />`;
+        }
+      }
+
+      NteInput.registerPlugin(SpecFixedPluginA);
+    }
+
+    if (!NteInput.getPlugin(secondType)) {
+      class SpecFixedPluginB extends AbstractNteInputPlugin {
+        static readonly types = [secondType];
+
+        override render() {
+          return html`<textarea data-plugin="b"></textarea>`;
+        }
+      }
+
+      NteInput.registerPlugin(SpecFixedPluginB);
+    }
+
+    const element = document.createElement('nte-input') as NteInput;
+    element.type = firstType;
+    document.body.appendChild(element);
+
+    await element.updateComplete;
+
+    element.type = secondType;
+    await element.updateComplete;
+
+    expect(element.shadowRoot?.querySelector('input[data-plugin="a"]')).toBeInstanceOf(HTMLInputElement);
+    expect(element.shadowRoot?.querySelector('textarea[data-plugin="b"]')).toBeNull();
 
     element.remove();
   });
@@ -161,6 +274,8 @@ describe('NteInput', () => {
     expect(select).toBeInstanceOf(HTMLSelectElement);
     expect(select?.options).toHaveLength(2);
     expect(select?.value).toBe('inprogress');
+    expect(element.value).toBe('inprogress');
+    expect(element.selectedOptions.map((option) => option.value)).toEqual(['inprogress']);
 
     element.remove();
   });
@@ -248,10 +363,10 @@ describe('NteInput', () => {
     element.remove();
   });
 
-  it('default select-radio plugin renders radios and syncs the selected value', async () => {
+  it('default select-radio plugin returns an array value and selected options', async () => {
     const element = document.createElement('nte-input') as NteInput;
     element.type = 'select-radio';
-    element.setAttribute('value', 'inprogress');
+    element.value = ['inprogress'];
     element.innerHTML = `
       <options>
         <option value="draft">Entwurf</option>
@@ -268,11 +383,14 @@ describe('NteInput', () => {
     expect(radios).toHaveLength(2);
     expect((radios[1] as HTMLInputElement).checked).toBe(true);
     expect(element.hasAttribute('has-value')).toBe(true);
+    expect(element.value).toEqual(['inprogress']);
+    expect(element.selectedOptions.map((option) => option.value)).toEqual(['inprogress']);
 
-    (radios[0] as HTMLInputElement).checked = true;
-    (radios[0] as HTMLInputElement).dispatchEvent(new Event('change', { bubbles: true, composed: true }));
+    element.value = ['draft'];
 
-    expect(element.getAttribute('value')).toBe('draft');
+    expect((radios[0] as HTMLInputElement).checked).toBe(true);
+    expect(element.value).toEqual(['draft']);
+    expect(JSON.parse(element.getAttribute('value') ?? '[]')).toEqual(['draft']);
 
     element.remove();
   });
@@ -285,7 +403,7 @@ describe('NteInput', () => {
       { value: 'draft', label: 'Entwurf' },
       { value: 'active', label: 'Aktiv' },
     ];
-    element.setAttribute('value', '["draft"]');
+    element.value = ['draft'];
     document.body.appendChild(element);
 
     await element.updateComplete;
@@ -296,21 +414,25 @@ describe('NteInput', () => {
     expect(checkboxes).toHaveLength(2);
     expect((checkboxes[0] as HTMLInputElement).checked).toBe(true);
     expect((checkboxes[1] as HTMLInputElement).checked).toBe(false);
+    expect(element.value).toEqual(['draft']);
 
     (checkboxes[1] as HTMLInputElement).checked = true;
     (checkboxes[1] as HTMLInputElement).dispatchEvent(new Event('change', { bubbles: true, composed: true }));
 
+    expect(element.value).toEqual(['draft', 'active']);
+    expect(element.selectedOptions.map((option) => option.value)).toEqual(['draft', 'active']);
     expect(JSON.parse(element.getAttribute('value') ?? '[]')).toEqual(['draft', 'active']);
     expect(element.hasAttribute('has-value')).toBe(true);
 
     element.remove();
   });
 
-  it('default checkbox plugin renders label text next to the checkbox', async () => {
+  it('default checkbox plugin uses boolean values via the host value accessor', async () => {
     const element = document.createElement('nte-input') as NteInput;
     element.type = 'checkbox';
     element.label = 'AGB akzeptieren';
-    element.setAttribute('checked', '');
+    element.setAttribute('value', 'yes');
+    element.value = true;
     document.body.appendChild(element);
 
     await element.updateComplete;
@@ -321,8 +443,32 @@ describe('NteInput', () => {
 
     expect(checkbox).toBeInstanceOf(HTMLInputElement);
     expect((checkbox as HTMLInputElement).checked).toBe(true);
+    expect(element.value).toBe(true);
+    expect(element.selectedOptions.map((option) => option.value)).toEqual(['yes']);
     expect(checkboxText?.textContent?.trim()).toBe('AGB akzeptieren');
     expect(topLabel?.hasAttribute('hidden')).toBe(true);
+
+    element.value = false;
+
+    expect((checkbox as HTMLInputElement).checked).toBe(false);
+    expect(element.value).toBe(false);
+    expect(element.selectedOptions).toEqual([]);
+
+    element.remove();
+  });
+
+  it('exposes the name accessor used by form-associated integration', async () => {
+    const element = document.createElement('nte-input') as NteInput;
+    element.type = 'text';
+    element.setAttribute('name', 'name');
+    element.value = 'Max';
+    document.body.appendChild(element);
+
+    await element.updateComplete;
+    await element.updateComplete;
+
+    expect(element.name).toBe('name');
+    expect(element.value).toBe('Max');
 
     element.remove();
   });

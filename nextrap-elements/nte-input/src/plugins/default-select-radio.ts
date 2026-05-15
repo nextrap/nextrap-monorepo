@@ -1,74 +1,21 @@
 import { html, nothing } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
-import type { NteInput } from '../components/nte-input/nte-input';
-import type { InputOption, NteInputPlugin, NteInputRenderContext } from '../lib/types';
-import { parseMultipleValues, resolveInputOptions } from './select-utils';
+import { AbstractNteInputPlugin } from '../lib/plugin';
+import type { InputOption, InputOptionsType, NteInputRenderContext, NteInputValue } from '../lib/types';
+import { normalizeValueArray, resolveInputOptions, resolveSelectedInputOptions } from './select-utils';
 
-const changeControllers = new WeakMap<NteInput, AbortController>();
-const valueObservers = new WeakMap<NteInput, MutationObserver>();
+export class DefaultSelectRadioPlugin extends AbstractNteInputPlugin {
+  static readonly types = ['select-radio'];
 
-function getGroupInputs(element: NteInput) {
-  return Array.from(element.renderRoot.querySelectorAll('#control input')) as HTMLInputElement[];
-}
-
-function getSelectedValues(element: NteInput) {
-  const value = element.getAttribute('value');
-
-  if (element.multiple) {
-    return new Set(value ? parseMultipleValues(value) : []);
+  protected get inputs() {
+    return this.queryAll<HTMLInputElement>('#control input');
   }
 
-  return new Set(value ? [value] : []);
-}
-
-function renderOptionLabel(option: InputOption) {
-  return option.html ? unsafeHTML(option.html) : option.label;
-}
-
-function syncInputsFromValue(element: NteInput) {
-  const selectedValues = getSelectedValues(element);
-  const inputs = getGroupInputs(element);
-
-  inputs.forEach((input) => {
-    input.checked = selectedValues.has(input.value);
-  });
-
-  element.hasValue = inputs.some((input) => input.checked);
-}
-
-function syncValueFromInputs(element: NteInput) {
-  const inputs = getGroupInputs(element);
-  const checkedInputs = inputs.filter((input) => input.checked);
-
-  if (element.multiple) {
-    if (checkedInputs.length > 0) {
-      element.setAttribute('value', JSON.stringify(checkedInputs.map((input) => input.value)));
-    } else {
-      element.removeAttribute('value');
-    }
-
-    element.hasValue = checkedInputs.length > 0;
-    return;
-  }
-
-  const checkedInput = checkedInputs[0];
-
-  if (checkedInput) {
-    element.setAttribute('value', checkedInput.value);
-  } else {
-    element.removeAttribute('value');
-  }
-
-  element.hasValue = Boolean(checkedInput);
-}
-
-export const defaultSelectRadioPlugin: NteInputPlugin = {
-  types: ['select-radio'],
-  getHtml: (context) => {
-    const { element, controlId, validationId } = context as NteInputRenderContext;
+  override render(context: NteInputRenderContext) {
+    const { element, controlId, validationId } = context;
     const options = resolveInputOptions(element);
-    const selectedValues = getSelectedValues(element);
+    const selectedValues = new Set(this.normalizeSelectedValues(element.getAttribute('value')));
     const inputType = element.multiple ? 'checkbox' : 'radio';
     const groupName = element.getAttribute('name') ?? controlId;
     const role = element.multiple ? 'group' : 'radiogroup';
@@ -91,56 +38,83 @@ export const defaultSelectRadioPlugin: NteInputPlugin = {
                 ?disabled=${Boolean(option.disabled) || element.hasAttribute('disabled')}
                 ?required=${!element.multiple && element.hasAttribute('required')}
               />
-              <span part="option-text">${renderOptionLabel(option) ?? nothing}</span>
+              <span part="option-text">${this.renderOptionLabel(option) ?? nothing}</span>
             </label>
           `;
         })}
       </div>
     `;
-  },
-  init: (element) => {
-    changeControllers.get(element)?.abort();
-    valueObservers.get(element)?.disconnect();
+  }
 
-    const controller = new AbortController();
-    const control = element.renderRoot.querySelector('#control');
+  override updated() {
+    const signal = this.prepareEventBindings();
 
-    control?.addEventListener(
-      'change',
-      (event) => {
-        const target = event.target;
-
-        if (!(target instanceof HTMLInputElement)) {
-          return;
-        }
-
-        if (!['radio', 'checkbox'].includes(target.type)) {
-          return;
-        }
-
-        syncValueFromInputs(element);
-      },
-      { signal: controller.signal },
-    );
-
-    changeControllers.set(element, controller);
-
-    const observer = new MutationObserver(() => {
-      void element.updateComplete.then(() => {
-        syncInputsFromValue(element);
-      });
+    this.inputs.forEach((input) => {
+      input.addEventListener(
+        'change',
+        () => {
+          this.setHostStringAttribute('value', this.serializeSelectedValues(this.getSelectedValuesFromInputs()));
+          this.syncHostState();
+        },
+        { signal },
+      );
     });
 
-    observer.observe(element, {
-      attributes: true,
-      attributeFilter: ['value', 'multiple', 'data-options'],
-    });
+    this.syncInputsFromValue();
+  }
 
-    valueObservers.set(element, observer);
+  override getValue() {
+    return this.inputs.length > 0
+      ? this.getSelectedValuesFromInputs()
+      : this.normalizeSelectedValues(this.getHostAttribute('value'));
+  }
 
-    void element.updateComplete.then(() => {
-      syncInputsFromValue(element);
+  override setValue(value: NteInputValue) {
+    const selectedValues = this.normalizeSelectedValues(value);
+    this.setHostStringAttribute('value', this.serializeSelectedValues(selectedValues));
+    this.syncInputsFromValue(selectedValues);
+  }
+
+  override getFormValue() {
+    return this.createFormData(this.getValue() as string[]);
+  }
+
+  override getSelectedOptions(): InputOptionsType {
+    return resolveSelectedInputOptions(this.host, this.getValue() as string[]);
+  }
+
+  override hasPlaceholder() {
+    return false;
+  }
+
+  override isHoverlabelActive() {
+    return this.hasValue();
+  }
+
+  protected normalizeSelectedValues(value: NteInputValue) {
+    const values = normalizeValueArray(value);
+    return this.host.multiple ? values : values.slice(0, 1);
+  }
+
+  protected getSelectedValuesFromInputs() {
+    return this.inputs.filter((input) => input.checked).map((input) => input.value);
+  }
+
+  protected syncInputsFromValue(value: NteInputValue = this.getHostAttribute('value')) {
+    const selectedValues = new Set(this.normalizeSelectedValues(value));
+
+    this.inputs.forEach((input) => {
+      input.checked = selectedValues.has(input.value);
     });
-  },
-  shouldHoverlabelFloat: (element) => element.hasValue,
-};
+  }
+
+  protected serializeSelectedValues(values: string[]) {
+    return values.length > 0 ? JSON.stringify(values) : '';
+  }
+
+  protected renderOptionLabel(option: InputOption) {
+    return option.html ? unsafeHTML(option.html) : option.label;
+  }
+}
+
+export const defaultSelectRadioPlugin = DefaultSelectRadioPlugin;

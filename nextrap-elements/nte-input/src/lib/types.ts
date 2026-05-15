@@ -8,13 +8,7 @@ export interface InputOption {
 }
 
 export type InputOptionsType = InputOption[];
-
-export interface NteInputPlugin {
-  types: string[];
-  getHtml?: (context: unknown) => unknown;
-  init?: (element: NteInput) => void;
-  shouldHoverlabelFloat?: (element: NteInput) => boolean;
-}
+export type NteInputValue = string | boolean | string[] | null | undefined;
 
 export interface NteInputRenderContext {
   element: NteInput;

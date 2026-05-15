@@ -1,51 +1,17 @@
 import { html } from 'lit';
 
-import type { NteInput } from '../components/nte-input/nte-input';
-import type { NteInputPlugin, NteInputRenderContext } from '../lib/types';
+import { AbstractNteInputPlugin } from '../lib/plugin';
+import type { NteInputRenderContext, NteInputValue } from '../lib/types';
 
-const inputControllers = new WeakMap<NteInput, AbortController>();
-const valueObservers = new WeakMap<NteInput, MutationObserver>();
+export class DefaultTextareaPlugin extends AbstractNteInputPlugin {
+  static readonly types = ['textarea'];
 
-function getTextarea(element: NteInput) {
-  return element.renderRoot.querySelector('textarea');
-}
-
-function parsePixelValue(value: string) {
-  const parsed = Number.parseFloat(value);
-  return Number.isFinite(parsed) ? parsed : undefined;
-}
-
-function clampHeight(textarea: HTMLTextAreaElement) {
-  textarea.style.height = 'auto';
-
-  const styles = getComputedStyle(textarea);
-  const minHeight = parsePixelValue(styles.minHeight) ?? 0;
-  const maxHeight = parsePixelValue(styles.maxHeight) ?? Number.POSITIVE_INFINITY;
-  const targetHeight = Math.min(Math.max(textarea.scrollHeight, minHeight), maxHeight);
-
-  textarea.style.height = `${targetHeight}px`;
-  textarea.style.overflowY = textarea.scrollHeight > maxHeight ? 'auto' : 'hidden';
-}
-
-function syncTextareaValue(element: NteInput) {
-  const textarea = getTextarea(element);
-  if (!(textarea instanceof HTMLTextAreaElement)) {
-    return;
+  protected get textarea() {
+    return this.query<HTMLTextAreaElement>('textarea');
   }
 
-  const value = element.getAttribute('value') ?? '';
-
-  if (textarea.value !== value) {
-    textarea.value = value;
-  }
-
-  clampHeight(textarea);
-}
-
-export const defaultTextareaPlugin: NteInputPlugin = {
-  types: ['textarea'],
-  getHtml: (context) => {
-    const { element, controlId, validationId } = context as NteInputRenderContext;
+  override render(context: NteInputRenderContext) {
+    const { element, controlId, validationId } = context;
 
     return html`
       <textarea
@@ -59,45 +25,66 @@ export const defaultTextareaPlugin: NteInputPlugin = {
         ?required=${element.hasAttribute('required')}
       ></textarea>
     `;
-  },
-  init: (element) => {
-    inputControllers.get(element)?.abort();
-    valueObservers.get(element)?.disconnect();
+  }
 
-    const textarea = getTextarea(element);
-    if (!(textarea instanceof HTMLTextAreaElement)) {
+  override updated() {
+    const textarea = this.textarea;
+    const signal = this.prepareEventBindings();
+
+    textarea?.addEventListener(
+      'input',
+      () => {
+        this.setHostStringAttribute('value', textarea.value);
+        this.clampHeight(textarea);
+        this.syncHostState();
+      },
+      { signal },
+    );
+
+    this.syncTextareaValue();
+  }
+
+  override getValue() {
+    return this.textarea?.value ?? this.getHostAttribute('value');
+  }
+
+  override setValue(value: NteInputValue) {
+    const nextValue = this.normalizeStringValue(value);
+    this.setHostStringAttribute('value', nextValue);
+    this.syncTextareaValue(nextValue);
+  }
+
+  protected syncTextareaValue(nextValue: NteInputValue = this.getHostAttribute('value')) {
+    const textarea = this.textarea;
+    const value = this.normalizeStringValue(nextValue);
+
+    if (!textarea) {
       return;
     }
 
-    const controller = new AbortController();
+    if (textarea.value !== value) {
+      textarea.value = value;
+    }
 
-    textarea.addEventListener(
-      'input',
-      () => {
-        if (textarea.value) {
-          element.setAttribute('value', textarea.value);
-        } else {
-          element.removeAttribute('value');
-        }
+    this.clampHeight(textarea);
+  }
 
-        clampHeight(textarea);
-      },
-      { signal: controller.signal },
-    );
+  protected clampHeight(textarea: HTMLTextAreaElement) {
+    textarea.style.height = 'auto';
 
-    inputControllers.set(element, controller);
+    const styles = getComputedStyle(textarea);
+    const minHeight = this.parsePixelValue(textarea.style.minHeight || styles.minHeight) ?? 0;
+    const maxHeight = this.parsePixelValue(textarea.style.maxHeight || styles.maxHeight) ?? Number.POSITIVE_INFINITY;
+    const targetHeight = Math.min(Math.max(textarea.scrollHeight, minHeight), maxHeight);
 
-    const observer = new MutationObserver(() => {
-      syncTextareaValue(element);
-    });
+    textarea.style.height = `${targetHeight}px`;
+    textarea.style.overflowY = textarea.scrollHeight > maxHeight ? 'auto' : 'hidden';
+  }
 
-    observer.observe(element, {
-      attributes: true,
-      attributeFilter: ['value'],
-    });
+  protected parsePixelValue(value: string) {
+    const parsed = Number.parseFloat(value);
+    return Number.isFinite(parsed) ? parsed : undefined;
+  }
+}
 
-    valueObservers.set(element, observer);
-    syncTextareaValue(element);
-  },
-  shouldHoverlabelFloat: (element) => element.hasPlaceholder || element.hasValue,
-};
+export const defaultTextareaPlugin = DefaultTextareaPlugin;

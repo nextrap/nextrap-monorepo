@@ -25,14 +25,40 @@ npm install @nextrap/nte-input
 
 ## Plugin interface
 
+Plugins are classes.
+The package exposes:
+
+- `NteInputPluginInterface`
+- `AbstractNteInputPlugin`
+
+Typical plugin shape:
+
 ```ts
-export interface NteInputPlugin {
-  types: string[];
-  getHtml?: (context: unknown) => unknown;
-  init?: (element: NteInput) => void;
-  shouldHoverlabelFloat?: (element: NteInput) => boolean;
+class MyPlugin extends AbstractNteInputPlugin {
+  static readonly types = ['text'];
+
+  render(context: NteInputRenderContext) {
+    return html`...`;
+  }
 }
 ```
+
+The host element forwards these plugin APIs via:
+
+```ts
+element.value;
+element.value = ...;
+element.selectedOptions;
+```
+
+`nte-input` is also form-associated, so `new FormData(form)` can read named `nte-input` elements directly.
+
+Built-in value behavior:
+
+- text / email / password / textarea → `string`
+- select → `string`
+- checkbox → `boolean`
+- select-radio → `string[]`
 
 A plugin may register multiple input types, but each type may only be registered once.
 
@@ -40,23 +66,26 @@ A plugin may register multiple input types, but each type may only be registered
 
 ```ts
 import { html } from 'lit';
-import { NteInput, type NteInputRenderContext } from '@nextrap/nte-input';
+import { AbstractNteInputPlugin, NteInput, type NteInputRenderContext } from '@nextrap/nte-input';
 
-NteInput.registerPlugin({
-  types: ['text', 'email', 'password'],
-  getHtml: (context) => {
-    const { element, controlId, validationId } = context as NteInputRenderContext;
+class TextPlugin extends AbstractNteInputPlugin {
+  static readonly types = ['text', 'email', 'password'];
+
+  render(context: NteInputRenderContext) {
+    const { type, controlId, validationId } = context;
 
     return html`
       <input
         id=${controlId}
-        type=${element.type}
-        placeholder=${element.getAttribute('placeholder') ?? ''}
+        type=${type}
+        placeholder=${this.host.getAttribute('placeholder') ?? ''}
         aria-describedby=${validationId}
       />
     `;
-  },
-});
+  }
+}
+
+NteInput.registerPlugin(TextPlugin);
 ```
 
 ```html
@@ -127,13 +156,12 @@ nte-input.hoverlabel {
 
 The `hoverlabel` mixin turns the normal label into a floating Bootstrap-like label.
 It keeps extra control height and input padding so the label has enough room across browsers.
-The label floats automatically on focus, when a value exists, when a placeholder exists, or when the active plugin returns `true` from `shouldHoverlabelFloat()`.
+The label floats automatically on focus, when a value exists, when a placeholder exists, or when the active plugin returns `true` from `isHoverlabelActive()`.
 
 ## Notes
 
-- Plugins are registered via TypeScript.
+- Plugins are registered via TypeScript classes.
 - `registerPlugin()` stores every type individually in the internal registry.
-- During render, `nte-input` resolves the plugin by its `type`.
-- If available, `getHtml()` renders the control.
-- If available, `init()` runs after render.
+- `nte-input` resolves the plugin once and keeps that plugin instance.
+- The plugin class handles render, lifecycle, value access, selected options and form value.
 - For `type="checkbox"`, the label text is rendered by the checkbox plugin next to the checkbox, and the normal frame is omitted.

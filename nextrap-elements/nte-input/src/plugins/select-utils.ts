@@ -1,8 +1,8 @@
 import type { NteInput } from '../components/nte-input/nte-input';
-import type { InputOption, InputOptionsType } from '../lib/types';
+import type { InputOption, InputOptionsType, NteInputValue } from '../lib/types';
 
 export function getSelect(element: NteInput) {
-  return element.renderRoot.querySelector('select');
+  return element.renderRoot?.querySelector('select') ?? null;
 }
 
 export function createOptionsFromData(dataOptions: InputOptionsType): HTMLOptionElement[] {
@@ -64,6 +64,28 @@ export function parseMultipleValues(value: string): string[] {
     .split(/[;,]/)
     .map((part) => part.trim())
     .filter(Boolean);
+}
+
+export function normalizeValueArray(value: NteInputValue): string[] {
+  if (Array.isArray(value)) {
+    return value.map((item) => String(item)).filter(Boolean);
+  }
+
+  if (typeof value === 'boolean') {
+    return value ? ['true'] : [];
+  }
+
+  if (value === null || value === undefined) {
+    return [];
+  }
+
+  return parseMultipleValues(String(value));
+}
+
+export function resolveSelectedInputOptions(element: NteInput, selectedValues: Iterable<string>): InputOptionsType {
+  const valueSet = new Set(Array.from(selectedValues).map((value) => String(value)));
+
+  return resolveInputOptions(element).filter((option) => valueSet.has(option.value));
 }
 
 export function syncSelectedValue(element: NteInput, select: HTMLSelectElement) {

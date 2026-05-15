@@ -5,17 +5,16 @@ import { html, nothing, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 import { parseInputOptions, serializeInputOptions } from '../../lib/options';
-import type { InputOptionsType, NteInputPlugin, NteInputRenderContext } from '../../lib/types';
+import type { NteInputPluginClass, NteInputPluginInterface } from '../../lib/plugin';
+import type { InputOptionsType, NteInputRenderContext, NteInputValue } from '../../lib/types';
 import style from './nte-input.scss?inline';
-
-type SupportedControl = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
-type SupportedControlContainer = HTMLElement;
 
 @customElement('nte-input')
 export class NteInput extends nextrap_element() {
+  static formAssociated = true;
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
-  private static readonly plugins = new Map<string, NteInputPlugin>();
+  private static readonly plugins = new Map<string, NteInputPluginClass>();
 
   @property({ type: String, reflect: true }) accessor type = 'text';
   @property({ type: String }) accessor label = '';
@@ -36,15 +35,20 @@ export class NteInput extends nextrap_element() {
   @property({ type: Boolean, reflect: true, attribute: 'hoverlabel-active' }) accessor hoverlabelActive = false;
 
   #generatedId = `nte-input-${Math.random().toString(36).slice(2, 9)}`;
-  #initializedPluginType?: string;
-  #controlContainer?: SupportedControlContainer;
-  #controlEvents?: AbortController;
-  #handleControlStateChange = () => {
-    this.#syncValueState();
-  };
+  #plugin?: NteInputPluginInterface;
+  #resolvedPluginType?: string;
+  #internals: ElementInternals | null = null;
 
-  static registerPlugin(plugin: NteInputPlugin) {
-    for (const rawType of plugin.types) {
+  constructor() {
+    super();
+
+    if (typeof this.attachInternals === 'function') {
+      this.#internals = this.attachInternals();
+    }
+  }
+
+  static registerPlugin(pluginClass: NteInputPluginClass) {
+    for (const rawType of pluginClass.types) {
       const type = rawType.trim().toLowerCase();
 
       if (!type) {
@@ -55,12 +59,59 @@ export class NteInput extends nextrap_element() {
         throw new Error(`Plugin for input type "${type}" is already registered.`);
       }
 
-      this.plugins.set(type, plugin);
+      this.plugins.set(type, pluginClass);
     }
   }
 
   static getPlugin(type: string) {
     return this.plugins.get(type.trim().toLowerCase());
+  }
+
+  override connectedCallback() {
+    super.connectedCallback();
+    this.#getPlugin()?.connected();
+  }
+
+  override disconnectedCallback() {
+    this.#plugin?.disconnected();
+    super.disconnectedCallback();
+  }
+
+  override attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null) {
+    super.attributeChangedCallback(name, oldValue, newValue);
+    this.#plugin?.onHostAttributeChange(name, oldValue, newValue);
+  }
+
+  override updated(changedProperties: Map<PropertyKey, unknown>) {
+    super.updated(changedProperties);
+    this.#getPlugin()?.updated(changedProperties);
+    this.syncPluginState();
+  }
+
+  override render() {
+    const plugin = this.#getPlugin();
+    const pluginHtml = plugin?.render(this.renderContext);
+
+    return html`
+      <div id="wrapper" part="wrapper">
+        <div id="field" part="field">
+          <label
+            id="label"
+            part="label"
+            for=${plugin?.getLabelFor() ?? this.controlId}
+            ?hidden=${!this.label || Boolean(plugin?.isLabelHidden())}
+          >
+            ${this.label}
+          </label>
+
+          <div id="control" part="control">${pluginHtml ?? nothing}</div>
+        </div>
+
+        <div id=${this.validationId} part="validation" aria-live="polite">
+          <slot name="validation">${this.validationMessage}</slot>
+        </div>
+      </div>
+    `;
   }
 
   get controlId() {
@@ -74,126 +125,78 @@ export class NteInput extends nextrap_element() {
   get renderContext(): NteInputRenderContext {
     return {
       element: this,
-      type: this.#normalizedType,
+      type: this.#resolvedPluginType ?? this.#normalizedType,
       controlId: this.controlId,
       validationId: this.validationId,
     };
   }
 
-  override updated(changedProperties: Map<PropertyKey, unknown>) {
-    super.updated(changedProperties);
-
-    if (changedProperties.has('type')) {
-      this.#initializedPluginType = undefined;
-    }
-
-    this.#runPluginInit();
-    this.#syncControl();
+  get form() {
+    return this.#internals?.form ?? null;
   }
 
-  override disconnectedCallback() {
-    this.#controlEvents?.abort();
-    super.disconnectedCallback();
+  get name() {
+    return this.getAttribute('name') ?? '';
   }
 
-  override render() {
-    const plugin = NteInput.getPlugin(this.#normalizedType);
-    const pluginHtml = plugin?.getHtml?.(this.renderContext);
-
-    return html`
-      <div id="wrapper" part="wrapper">
-        <div id="field" part="field">
-          <label
-            id="label"
-            part="label"
-            for=${this.controlId}
-            ?hidden=${!this.label || this.#normalizedType === 'checkbox'}
-            >${this.label}</label
-          >
-
-          <div id="control" part="control">${pluginHtml ?? nothing}</div>
-        </div>
-
-        <div id=${this.validationId} part="validation" aria-live="polite">
-          <slot name="validation">${this.validationMessage}</slot>
-        </div>
-      </div>
-    `;
+  get value(): NteInputValue {
+    return this.#getPlugin()?.getValue() ?? this.getAttribute('value') ?? '';
   }
 
-  #runPluginInit() {
-    const plugin = NteInput.getPlugin(this.#normalizedType);
+  set value(value: NteInputValue) {
+    this.#getPlugin()?.setValue(value);
+    this.syncPluginState();
+  }
 
-    if (!plugin?.init || this.#initializedPluginType === this.#normalizedType) {
+  get selectedOptions(): InputOptionsType {
+    return this.#getPlugin()?.getSelectedOptions() ?? [];
+  }
+
+  syncPluginState() {
+    const plugin = this.#getPlugin();
+
+    this.hasValue = plugin?.hasValue() ?? false;
+    this.hasPlaceholder = plugin?.hasPlaceholder() ?? this.hasAttribute('placeholder');
+    this.hoverlabelActive = plugin?.isHoverlabelActive() ?? false;
+    this.#syncFormValue();
+  }
+
+  formResetCallback() {
+    this.#getPlugin()?.formResetCallback();
+    this.syncPluginState();
+  }
+
+  formDisabledCallback(disabled: boolean) {
+    this.#getPlugin()?.formDisabledCallback(disabled);
+    this.syncPluginState();
+  }
+
+  #syncFormValue() {
+    if (!this.#internals || typeof this.#internals.setFormValue !== 'function') {
       return;
     }
 
-    plugin.init(this);
-    this.#initializedPluginType = this.#normalizedType;
+    if (!this.name || this.hasAttribute('disabled')) {
+      this.#internals.setFormValue(null);
+      return;
+    }
+
+    this.#internals.setFormValue(this.#getPlugin()?.getFormValue() ?? null);
   }
 
-  #syncControl() {
-    const nextControlContainer = this.renderRoot.querySelector('#control') as SupportedControlContainer | null;
+  #getPlugin() {
+    if (!this.#plugin) {
+      const pluginClass = NteInput.getPlugin(this.#normalizedType);
 
-    if (nextControlContainer !== this.#controlContainer) {
-      this.#controlEvents?.abort();
-      this.#controlContainer = nextControlContainer ?? undefined;
-
-      if (this.#controlContainer) {
-        this.#controlEvents = new AbortController();
-        this.#controlContainer.addEventListener('input', this.#handleControlStateChange, {
-          signal: this.#controlEvents.signal,
-        });
-        this.#controlContainer.addEventListener('change', this.#handleControlStateChange, {
-          signal: this.#controlEvents.signal,
-        });
+      if (!pluginClass) {
+        return undefined;
       }
+
+      this.#resolvedPluginType = this.#normalizedType;
+      this.#plugin = new pluginClass(this);
     }
 
-    this.#syncValueState();
-  }
-
-  #syncValueState() {
-    const controls = Array.from(
-      this.renderRoot.querySelectorAll('#control input, #control select, #control textarea'),
-    ) as SupportedControl[];
-
-    if (controls.length === 0) {
-      this.hasValue = false;
-      this.hasPlaceholder = this.hasAttribute('placeholder');
-      this.#syncHoverlabelState();
-      return;
-    }
-
-    this.hasPlaceholder =
-      this.hasAttribute('placeholder') || controls.some((control) => control.hasAttribute('placeholder'));
-
-    const checkControls = controls.filter(
-      (control): control is HTMLInputElement =>
-        control instanceof HTMLInputElement && ['checkbox', 'radio'].includes(control.type),
-    );
-
-    if (checkControls.length === controls.length) {
-      this.hasValue = checkControls.some((control) => control.checked);
-      this.#syncHoverlabelState();
-      return;
-    }
-
-    const control = controls[0];
-
-    if (control instanceof HTMLSelectElement) {
-      this.hasValue = control.multiple ? control.selectedOptions.length > 0 : control.value.trim().length > 0;
-      this.#syncHoverlabelState();
-      return;
-    }
-
-    this.hasValue = control.value.trim().length > 0;
-    this.#syncHoverlabelState();
-  }
-
-  #syncHoverlabelState() {
-    const plugin = NteInput.getPlugin(this.#normalizedType);
-    this.hoverlabelActive = plugin?.shouldHoverlabelFloat?.(this) ?? false;
+    return this.#plugin;
   }
 
   get #baseId() {
