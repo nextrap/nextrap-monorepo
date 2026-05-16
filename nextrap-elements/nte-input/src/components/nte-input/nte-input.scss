@@ -26,6 +26,10 @@
   --nte-input-border-color: var(--nte-input-border-color-invalid);
 }
 
+:host([valid]) {
+  --nte-input-border-color: var(--nt-success, #198754);
+}
+
 #wrapper {
   display: grid;
   gap: var(--nte-input-gap);
@@ -110,6 +114,14 @@
 
 :host([type='checkbox']) #control [part~='checkbox-text'] {
   line-height: 1.4;
+}
+
+:host([invalid][type='checkbox']) #control [part~='checkbox-text'] {
+  color: var(--nte-input-message-color);
+}
+
+:host([valid][type='checkbox']) #control [part~='checkbox-text'] {
+  color: var(--nt-success, #198754);
 }
 
 :host([type='select-radio']) #control {

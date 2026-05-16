@@ -1,27 +1,6 @@
 import type { NteInput } from '../components/nte-input/nte-input';
 import type { InputOption, InputOptionsType, NteInputValue } from '../lib/types';
 
-export function getSelect(element: NteInput) {
-  return element.renderRoot?.querySelector('select') ?? null;
-}
-
-export function createOptionsFromData(dataOptions: InputOptionsType): HTMLOptionElement[] {
-  return dataOptions.map((item) => {
-    const option = document.createElement('option');
-    option.value = item.value;
-    option.label = item.label;
-    option.disabled = Boolean(item.disabled);
-
-    if (item.html) {
-      option.innerHTML = item.html;
-    } else {
-      option.textContent = item.label;
-    }
-
-    return option;
-  });
-}
-
 export function getWrappedOptions(element: NteInput): InputOptionsType {
   const optionsWrapper = element.querySelector('options');
 
@@ -86,41 +65,4 @@ export function resolveSelectedInputOptions(element: NteInput, selectedValues: I
   const valueSet = new Set(Array.from(selectedValues).map((value) => String(value)));
 
   return resolveInputOptions(element).filter((option) => valueSet.has(option.value));
-}
-
-export function syncSelectedValue(element: NteInput, select: HTMLSelectElement) {
-  const value = element.getAttribute('value');
-
-  if (value === null) {
-    return;
-  }
-
-  if (select.multiple) {
-    const selectedValues = new Set(parseMultipleValues(value));
-    Array.from(select.options).forEach((option) => {
-      option.selected = selectedValues.has(option.value);
-    });
-    return;
-  }
-
-  select.value = value;
-
-  if (select.value !== value) {
-    const fallback = Array.from(select.options).find((option) => option.value === value);
-    if (fallback) {
-      fallback.selected = true;
-    }
-  }
-}
-
-export function syncOptions(element: NteInput) {
-  const select = getSelect(element);
-  if (!(select instanceof HTMLSelectElement)) {
-    return;
-  }
-
-  const options = createOptionsFromData(resolveInputOptions(element));
-  select.replaceChildren(...options);
-
-  syncSelectedValue(element, select);
 }

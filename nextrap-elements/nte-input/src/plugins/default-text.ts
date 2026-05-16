@@ -1,13 +1,19 @@
 import { html } from 'lit';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { AbstractNteInputPlugin } from '../lib/plugin';
-import type { NteInputRenderContext, NteInputValue } from '../lib/types';
+import type { NteInputRenderContext } from '../lib/types';
 
 export class DefaultTextPlugin extends AbstractNteInputPlugin {
   static readonly types = ['text', 'email', 'password'];
 
   protected get input() {
     return this.query<HTMLInputElement>('input');
+  }
+
+  public onInput(e) {
+    this.host.value = this.input?.value;
+    //this.host.requestUpdate();
   }
 
   override render(context: NteInputRenderContext) {
@@ -18,9 +24,12 @@ export class DefaultTextPlugin extends AbstractNteInputPlugin {
         id=${controlId}
         type=${type}
         name=${element.getAttribute('name') ?? ''}
-        .value=${this.normalizeStringValue(element.getAttribute('value'))}
+        .value=${this.normalizeStringValue(this.host.value)}
         placeholder=${element.getAttribute('placeholder') ?? ''}
         aria-describedby=${validationId}
+        pattern=${ifDefined(element.getAttribute('pattern') ?? undefined)}
+        minlength=${ifDefined(element.getAttribute('minlength') ?? undefined)}
+        maxlength=${ifDefined(element.getAttribute('maxlength') ?? undefined)}
         ?disabled=${element.hasAttribute('disabled')}
         ?readonly=${element.hasAttribute('readonly')}
         ?required=${element.hasAttribute('required')}
@@ -28,39 +37,12 @@ export class DefaultTextPlugin extends AbstractNteInputPlugin {
     `;
   }
 
-  override updated() {
-    const input = this.input;
-    const signal = this.prepareEventBindings();
-
-    input?.addEventListener(
-      'input',
-      () => {
-        this.setHostStringAttribute('value', input.value);
-        this.syncHostState();
-      },
-      { signal },
-    );
-
-    this.syncInputValue();
+  override isValid(): boolean | null {
+    return (this.query('input') as HTMLInputElement).checkValidity();
   }
 
   override getValue() {
-    return this.input?.value ?? this.getHostAttribute('value');
-  }
-
-  override setValue(value: NteInputValue) {
-    const nextValue = this.normalizeStringValue(value);
-    this.setHostStringAttribute('value', nextValue);
-    this.syncInputValue(nextValue);
-  }
-
-  protected syncInputValue(nextValue: NteInputValue = this.getHostAttribute('value')) {
-    const input = this.input;
-    const value = this.normalizeStringValue(nextValue);
-
-    if (input && input.value !== value) {
-      input.value = value;
-    }
+    return this.input?.value;
   }
 }
 

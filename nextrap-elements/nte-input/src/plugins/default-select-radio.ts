@@ -12,10 +12,14 @@ export class DefaultSelectRadioPlugin extends AbstractNteInputPlugin {
     return this.queryAll<HTMLInputElement>('#control input');
   }
 
+  override getInitValue(): NteInputValue {
+    return this.normalizeSelectedValues(this.host.getAttribute('value'));
+  }
+
   override render(context: NteInputRenderContext) {
     const { element, controlId, validationId } = context;
     const options = resolveInputOptions(element);
-    const selectedValues = new Set(this.normalizeSelectedValues(element.getAttribute('value')));
+    const selectedValues = new Set(this.normalizeSelectedValues(this.host.value));
     const inputType = element.multiple ? 'checkbox' : 'radio';
     const groupName = element.getAttribute('name') ?? controlId;
     const role = element.multiple ? 'group' : 'radiogroup';
@@ -46,41 +50,24 @@ export class DefaultSelectRadioPlugin extends AbstractNteInputPlugin {
     `;
   }
 
-  override updated() {
-    const signal = this.prepareEventBindings();
+  override onInput() {
+    this.host.value = this.getSelectedValuesFromInputs();
+  }
 
-    this.inputs.forEach((input) => {
-      input.addEventListener(
-        'change',
-        () => {
-          this.setHostStringAttribute('value', this.serializeSelectedValues(this.getSelectedValuesFromInputs()));
-          this.syncHostState();
-        },
-        { signal },
-      );
-    });
-
-    this.syncInputsFromValue();
+  override onChange() {
+    this.onInput();
   }
 
   override getValue() {
-    return this.inputs.length > 0
-      ? this.getSelectedValuesFromInputs()
-      : this.normalizeSelectedValues(this.getHostAttribute('value'));
-  }
-
-  override setValue(value: NteInputValue) {
-    const selectedValues = this.normalizeSelectedValues(value);
-    this.setHostStringAttribute('value', this.serializeSelectedValues(selectedValues));
-    this.syncInputsFromValue(selectedValues);
+    return this.host.value;
   }
 
   override getFormValue() {
-    return this.createFormData(this.getValue() as string[]);
+    return this.createFormData(this.normalizeSelectedValues(this.host.value));
   }
 
   override getSelectedOptions(): InputOptionsType {
-    return resolveSelectedInputOptions(this.host, this.getValue() as string[]);
+    return resolveSelectedInputOptions(this.host, this.normalizeSelectedValues(this.host.value));
   }
 
   override hasPlaceholder() {
@@ -98,18 +85,6 @@ export class DefaultSelectRadioPlugin extends AbstractNteInputPlugin {
 
   protected getSelectedValuesFromInputs() {
     return this.inputs.filter((input) => input.checked).map((input) => input.value);
-  }
-
-  protected syncInputsFromValue(value: NteInputValue = this.getHostAttribute('value')) {
-    const selectedValues = new Set(this.normalizeSelectedValues(value));
-
-    this.inputs.forEach((input) => {
-      input.checked = selectedValues.has(input.value);
-    });
-  }
-
-  protected serializeSelectedValues(values: string[]) {
-    return values.length > 0 ? JSON.stringify(values) : '';
   }
 
   protected renderOptionLabel(option: InputOption) {

@@ -19,17 +19,16 @@ export abstract class NteInputPluginInterface {
 
   updated(_changedProperties: Map<PropertyKey, unknown>) {}
 
+  onClick(e: Event) {}
+
+  onInput(e: Event) {}
+
   getValue(): NteInputValue {
-    return this.host.getAttribute('value') ?? '';
+    return this.host.value;
   }
 
   setValue(value: NteInputValue) {
-    if (value === null || value === undefined || value === '') {
-      this.host.removeAttribute('value');
-      return;
-    }
-
-    this.host.setAttribute('value', String(value));
+    this.host.value = value;
   }
 
   getFormValue(): NteInputFormValue | undefined {
@@ -60,6 +59,21 @@ export abstract class NteInputPluginInterface {
     return this.host.controlId;
   }
 
+  isValid(): boolean | null {
+    return null;
+  }
+
+  onChange(newValue: any): void {}
+
+  /**
+   * Called once on startup to determine the initial value of the value propierty.
+   *
+   * Will normaly return the value or the Property value
+   */
+  getInitValue(): NteInputValue {
+    return this.host.getAttribute('value') ?? null;
+  }
+
   onHostAttributeChange(_name: string, _oldValue: string | null, _newValue: string | null) {}
 
   formResetCallback() {}
@@ -69,7 +83,6 @@ export abstract class NteInputPluginInterface {
 
 export abstract class AbstractNteInputPlugin extends NteInputPluginInterface {
   #eventController?: AbortController;
-  #observers = new Set<MutationObserver>();
 
   protected get controlId() {
     return this.host.controlId;
@@ -95,24 +108,6 @@ export abstract class AbstractNteInputPlugin extends NteInputPluginInterface {
     return this.host.hasAttribute(name);
   }
 
-  protected setHostStringAttribute(name: string, value: string | null | undefined) {
-    if (!value) {
-      this.host.removeAttribute(name);
-      return;
-    }
-
-    this.host.setAttribute(name, value);
-  }
-
-  protected setHostBooleanAttribute(name: string, active: boolean) {
-    if (active) {
-      this.host.setAttribute(name, '');
-      return;
-    }
-
-    this.host.removeAttribute(name);
-  }
-
   protected normalizeStringValue(value: NteInputValue) {
     if (value === null || value === undefined) {
       return '';
@@ -133,47 +128,12 @@ export abstract class AbstractNteInputPlugin extends NteInputPluginInterface {
     return formData;
   }
 
-  protected prepareEventBindings() {
-    this.#eventController?.abort();
-    this.#eventController = new AbortController();
-    return this.#eventController.signal;
-  }
-
-  protected bindEvent(
-    target: EventTarget | null | undefined,
-    type: string,
-    listener: EventListenerOrEventListenerObject,
-    options: AddEventListenerOptions = {},
-  ) {
-    if (!target) {
-      return;
-    }
-
-    if (!this.#eventController) {
-      this.#eventController = new AbortController();
-    }
-
-    target.addEventListener(type, listener, {
-      ...options,
-      signal: this.#eventController.signal,
-    });
-  }
-
-  protected observe(target: Node, options: MutationObserverInit, callback: MutationCallback) {
-    const observer = new MutationObserver(callback);
-    observer.observe(target, options);
-    this.#observers.add(observer);
-    return observer;
-  }
-
   protected syncHostState() {
     this.host.syncPluginState();
   }
 
   override disconnected() {
     this.#eventController?.abort();
-    this.#observers.forEach((observer) => observer.disconnect());
-    this.#observers.clear();
   }
 
   override getFormValue(): NteInputFormValue {

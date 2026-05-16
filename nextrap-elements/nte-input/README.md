@@ -107,7 +107,7 @@ NteInput.registerPlugin(TextPlugin);
 
 The built-in `textarea` plugin grows with its content.
 The height is clamped between the configured CSS min and max height.
-It also syncs the host `value` attribute with the internal `<textarea>`.
+It also syncs the host `value` property with the internal `<textarea>`.
 
 Relevant CSS variables:
 
@@ -134,13 +134,13 @@ Supported `data-options` formats:
 <nte-input type="select" data-options='[{"value":"draft","label":"Entwurf"},{"value":"active","label":"Aktiv"}]'></nte-input>
 ```
 
-For `type="select"`, the plugin copies either `data-options` or the `<options>` content into the internal `<select>`.
-After syncing, it applies the current `value` attribute to select the matching option.
+For `type="select"`, the plugin renders either `data-options` or the `<options>` content into the internal `<select>`.
+The option matching the current host `value` is selected.
 
 For `type="select-radio"`, the same options are rendered as a radio group.
 If `multiple` is set, it renders checkboxes instead.
-The current `value` attribute is synced into the checked state, and user changes are written back to `value`.
-In multiple mode, `value` is stored as a JSON array string.
+The current host `value` is synced into the checked state, and user changes are written back to `value`.
+For `select-radio`, `value` is handled as a `string[]`.
 
 ## SCSS mixins
 

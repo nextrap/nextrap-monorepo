@@ -10,6 +10,14 @@ export class DefaultCheckboxPlugin extends AbstractNteInputPlugin {
     return this.query<HTMLInputElement>('input[type="checkbox"]');
   }
 
+  override getInitValue(): NteInputValue {
+    return this.host.hasAttribute('checked');
+  }
+
+  override onInput() {
+    this.host.value = this.checkbox?.checked;
+  }
+
   override render(context: NteInputRenderContext) {
     const { element, controlId, validationId } = context;
 
@@ -21,7 +29,7 @@ export class DefaultCheckboxPlugin extends AbstractNteInputPlugin {
           aria-describedby=${validationId}
           name=${element.getAttribute('name') ?? ''}
           value=${element.getAttribute('value') ?? 'on'}
-          ?checked=${element.hasAttribute('checked')}
+          ?checked=${this.host.value === true}
           ?disabled=${element.hasAttribute('disabled')}
           ?required=${element.hasAttribute('required')}
         />
@@ -30,39 +38,8 @@ export class DefaultCheckboxPlugin extends AbstractNteInputPlugin {
     `;
   }
 
-  override updated(changedProperties: Map<PropertyKey, unknown>) {
-    const checkbox = this.checkbox;
-    const signal = this.prepareEventBindings();
-
-    checkbox?.addEventListener(
-      'change',
-      () => {
-        this.setHostBooleanAttribute('checked', checkbox.checked);
-        this.syncHostState();
-      },
-      { signal },
-    );
-
-    if (checkbox) {
-      checkbox.checked = this.host.hasAttribute('checked');
-
-      if (changedProperties.has('value')) {
-        checkbox.value = this.getHostAttribute('value', 'on');
-      }
-    }
-  }
-
-  override getValue() {
-    return this.checkbox?.checked ?? this.hasHostAttribute('checked');
-  }
-
-  override setValue(value: NteInputValue) {
-    const nextValue = Boolean(value);
-    this.setHostBooleanAttribute('checked', nextValue);
-
-    if (this.checkbox) {
-      this.checkbox.checked = nextValue;
-    }
+  override isValid(): boolean | null {
+    return this.checkbox?.checkValidity() ?? null;
   }
 
   override getSelectedOptions(): InputOptionsType {

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>nte-input Validation Demo</title>
+  </head>
+  <body>
+    <main>
+      <h1>nte-input</h1>
+      <p>
+        Beispiel zum Testen der Formular-Validation mit <code>form</code>, <code>action</code> und <code>method</code>.
+      </p>
+
+      <section>
+        <h2>Validation Beispiel</h2>
+        <p>
+          Das Formular nutzt native Submit-Validierung. Bitte die Pflichtfelder leer lassen oder ausfüllen und dann
+          <code>Absenden</code> testen.
+        </p>
+
+        <form action="/demo/validation.html" method="post">
+          <nte-input
+            class="hoverlabel"
+            label="Name *"
+            type="text"
+            name="name"
+            placeholder="Max Mustermann"
+            required
+          ></nte-input>
+
+          <nte-input
+            class="hoverlabel"
+            label="E-Mail *"
+            type="email"
+            name="email"
+            placeholder="name@example.com"
+            required
+          ></nte-input>
+
+          <nte-input
+            class="hoverlabel"
+            label="PLZ * (5 Ziffern)"
+            type="text"
+            name="zip"
+            pattern="^\d{5}$"
+            placeholder="12345"
+            required
+          ></nte-input>
+
+          <nte-input class="hoverlabel" label="Kommentar *" type="textarea" name="message" required></nte-input>
+
+          <nte-input class="hoverlabel" label="Status *" type="select" name="status" required>
+            <options>
+              <option value="">Bitte wählen</option>
+              <option value="draft">Entwurf</option>
+              <option value="inprogress">In Bearbeitung</option>
+            </options>
+          </nte-input>
+
+          <nte-input label="AGB akzeptieren *" type="checkbox" name="accepted" value="yes" required></nte-input>
+
+          <div class="demo-actions">
+            <button type="submit">Absenden</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <script src="/demo/main.js" type="module"></script>
+  </body>
+</html>

@@ -1,24 +1,21 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 import { AbstractNteInputPlugin } from '../lib/plugin';
-import type { InputOptionsType, NteInputRenderContext, NteInputValue } from '../lib/types';
-import {
-  getSelect,
-  normalizeValueArray,
-  resolveSelectedInputOptions,
-  syncOptions,
-  syncSelectedValue,
-} from './select-utils';
+import type { InputOption, InputOptionsType, NteInputRenderContext } from '../lib/types';
+import { normalizeValueArray, resolveInputOptions, resolveSelectedInputOptions } from './select-utils';
 
 export class DefaultSelectPlugin extends AbstractNteInputPlugin {
   static readonly types = ['select'];
 
   protected get select() {
-    return getSelect(this.host);
+    return this.query<HTMLSelectElement>('select');
   }
 
   override render(context: NteInputRenderContext) {
     const { element, controlId, validationId } = context;
+    const options = resolveInputOptions(element);
+    const selectedValue = normalizeValueArray(this.host.value)[0] ?? '';
 
     return html`
       <select
@@ -27,42 +24,40 @@ export class DefaultSelectPlugin extends AbstractNteInputPlugin {
         aria-describedby=${validationId}
         ?disabled=${element.hasAttribute('disabled')}
         ?required=${element.hasAttribute('required')}
-      ></select>
+      >
+        ${options.map(
+          (option) => html`
+            <option
+              value=${option.value}
+              ?disabled=${Boolean(option.disabled)}
+              ?selected=${option.value === selectedValue}
+            >
+              ${this.renderOptionLabel(option) ?? nothing}
+            </option>
+          `,
+        )}
+      </select>
     `;
   }
 
-  override updated() {
-    const select = this.select;
-    const signal = this.prepareEventBindings();
+  override onInput() {
+    this.host.value = this.select?.value ?? '';
+  }
 
-    select?.addEventListener(
-      'change',
-      () => {
-        this.setHostStringAttribute('value', select.value);
-        this.syncHostState();
-      },
-      { signal },
-    );
-
-    syncOptions(this.host);
+  override onChange() {
+    this.onInput();
   }
 
   override getValue() {
-    return this.select?.value ?? this.getHostAttribute('value');
-  }
-
-  override setValue(value: NteInputValue) {
-    const nextValue = normalizeValueArray(value)[0] ?? '';
-    this.setHostStringAttribute('value', nextValue);
-
-    const select = this.select;
-    if (select) {
-      syncSelectedValue(this.host, select);
-    }
+    return this.host.value;
   }
 
   override getSelectedOptions(): InputOptionsType {
-    return resolveSelectedInputOptions(this.host, normalizeValueArray(this.getValue()));
+    return resolveSelectedInputOptions(this.host, normalizeValueArray(this.host.value));
+  }
+
+  protected renderOptionLabel(option: InputOption) {
+    return option.html ? unsafeHTML(option.html) : option.label;
   }
 }
 

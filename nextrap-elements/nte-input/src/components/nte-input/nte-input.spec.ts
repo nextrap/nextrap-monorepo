@@ -327,7 +327,7 @@ describe('NteInput', () => {
       textarea.value = 'A lot more text';
       textarea.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
 
-      expect(element.getAttribute('value')).toBe('A lot more text');
+      expect(element.value).toBe('A lot more text');
       expect(textarea.style.height).toBe('100px');
       expect(textarea.style.overflowY).toBe('auto');
     }
@@ -387,10 +387,10 @@ describe('NteInput', () => {
     expect(element.selectedOptions.map((option) => option.value)).toEqual(['inprogress']);
 
     element.value = ['draft'];
+    await element.updateComplete;
 
     expect((radios[0] as HTMLInputElement).checked).toBe(true);
     expect(element.value).toEqual(['draft']);
-    expect(JSON.parse(element.getAttribute('value') ?? '[]')).toEqual(['draft']);
 
     element.remove();
   });
@@ -421,7 +421,6 @@ describe('NteInput', () => {
 
     expect(element.value).toEqual(['draft', 'active']);
     expect(element.selectedOptions.map((option) => option.value)).toEqual(['draft', 'active']);
-    expect(JSON.parse(element.getAttribute('value') ?? '[]')).toEqual(['draft', 'active']);
     expect(element.hasAttribute('has-value')).toBe(true);
 
     element.remove();
@@ -449,6 +448,7 @@ describe('NteInput', () => {
     expect(topLabel?.hasAttribute('hidden')).toBe(true);
 
     element.value = false;
+    await element.updateComplete;
 
     expect((checkbox as HTMLInputElement).checked).toBe(false);
     expect(element.value).toBe(false);

@@ -1,7 +1,8 @@
 import { html } from 'lit';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { AbstractNteInputPlugin } from '../lib/plugin';
-import type { NteInputRenderContext, NteInputValue } from '../lib/types';
+import type { NteInputRenderContext } from '../lib/types';
 
 export class DefaultTextareaPlugin extends AbstractNteInputPlugin {
   static readonly types = ['textarea'];
@@ -18,8 +19,11 @@ export class DefaultTextareaPlugin extends AbstractNteInputPlugin {
         id=${controlId}
         rows=${element.getAttribute('rows') ?? '3'}
         name=${element.getAttribute('name') ?? ''}
+        .value=${this.normalizeStringValue(this.host.value)}
         placeholder=${element.getAttribute('placeholder') ?? ''}
         aria-describedby=${validationId}
+        minlength=${ifDefined(element.getAttribute('minlength') ?? undefined)}
+        maxlength=${ifDefined(element.getAttribute('maxlength') ?? undefined)}
         ?disabled=${element.hasAttribute('disabled')}
         ?readonly=${element.hasAttribute('readonly')}
         ?required=${element.hasAttribute('required')}
@@ -28,48 +32,28 @@ export class DefaultTextareaPlugin extends AbstractNteInputPlugin {
   }
 
   override updated() {
-    const textarea = this.textarea;
-    const signal = this.prepareEventBindings();
+    this.clampHeight();
+  }
 
-    textarea?.addEventListener(
-      'input',
-      () => {
-        this.setHostStringAttribute('value', textarea.value);
-        this.clampHeight(textarea);
-        this.syncHostState();
-      },
-      { signal },
-    );
-
-    this.syncTextareaValue();
+  override onInput() {
+    this.host.value = this.textarea?.value ?? '';
+    this.clampHeight();
   }
 
   override getValue() {
-    return this.textarea?.value ?? this.getHostAttribute('value');
+    return this.host.value;
   }
 
-  override setValue(value: NteInputValue) {
-    const nextValue = this.normalizeStringValue(value);
-    this.setHostStringAttribute('value', nextValue);
-    this.syncTextareaValue(nextValue);
+  override isValid(): boolean | null {
+    return this.textarea?.checkValidity() ?? null;
   }
 
-  protected syncTextareaValue(nextValue: NteInputValue = this.getHostAttribute('value')) {
+  protected clampHeight() {
     const textarea = this.textarea;
-    const value = this.normalizeStringValue(nextValue);
-
     if (!textarea) {
       return;
     }
 
-    if (textarea.value !== value) {
-      textarea.value = value;
-    }
-
-    this.clampHeight(textarea);
-  }
-
-  protected clampHeight(textarea: HTMLTextAreaElement) {
     textarea.style.height = 'auto';
 
     const styles = getComputedStyle(textarea);

@@ -1,16 +1,25 @@
-import { nextrap_element } from '@nextrap/nte-core';
+import {
+  Listen,
+  customElement,
+  html,
+  nextrap_element,
+  nothing,
+  property,
+  state,
+  unsafeCSS,
+  waitForDomContentLoaded,
+} from '@nextrap/nte-core';
 import '@nextrap/style-base';
 import { resetStyle } from '@nextrap/style-reset';
-import { html, nothing, unsafeCSS } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
 
+import { PropertyValues } from 'lit';
 import { parseInputOptions, serializeInputOptions } from '../../lib/options';
 import type { NteInputPluginClass, NteInputPluginInterface } from '../../lib/plugin';
 import type { InputOptionsType, NteInputRenderContext, NteInputValue } from '../../lib/types';
 import style from './nte-input.scss?inline';
 
 @customElement('nte-input')
-export class NteInput extends nextrap_element() {
+export class NteInput extends nextrap_element({ eventBinding: true }) {
   static formAssociated = true;
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
@@ -30,13 +39,16 @@ export class NteInput extends nextrap_element() {
   @property({ type: Boolean }) accessor multiple = false;
   @property({ type: String, attribute: 'validation-message' }) accessor validationMessage = '';
   @property({ type: Boolean, reflect: true }) accessor invalid = false;
+  @property({ type: Boolean, reflect: true }) accessor valid = false;
   @property({ type: Boolean, reflect: true, attribute: 'has-value' }) accessor hasValue = false;
   @property({ type: Boolean, reflect: true, attribute: 'has-placeholder' }) accessor hasPlaceholder = false;
   @property({ type: Boolean, reflect: true, attribute: 'hoverlabel-active' }) accessor hoverlabelActive = false;
 
+  @state()
+  protected accessor _value: NteInputValue | undefined = undefined;
+
   #generatedId = `nte-input-${Math.random().toString(36).slice(2, 9)}`;
   #plugin?: NteInputPluginInterface;
-  #resolvedPluginType?: string;
   #internals: ElementInternals | null = null;
 
   constructor() {
@@ -67,9 +79,25 @@ export class NteInput extends nextrap_element() {
     return this.plugins.get(type.trim().toLowerCase());
   }
 
-  override connectedCallback() {
+  override async connectedCallback() {
+    await waitForDomContentLoaded();
+
+    const pluginClass = NteInput.getPlugin(this.#normalizedType);
+
+    if (!pluginClass) {
+      throw new Error(`No plugin for type ${this.#normalizedType}`);
+    }
+    this.#plugin = new pluginClass(this);
+    this.#plugin?.connected();
+
+    if (this._value === undefined) {
+      this._value = this.#plugin?.getInitValue();
+    }
+
+    if (this.#willValidate()) {
+      this.#internals?.setValidity({ customError: true, badInput: true }, 'Invalid value');
+    }
     super.connectedCallback();
-    this.#getPlugin()?.connected();
   }
 
   override disconnectedCallback() {
@@ -84,12 +112,13 @@ export class NteInput extends nextrap_element() {
 
   override updated(changedProperties: Map<PropertyKey, unknown>) {
     super.updated(changedProperties);
-    this.#getPlugin()?.updated(changedProperties);
+    this.#plugin?.updated(changedProperties);
     this.syncPluginState();
   }
 
   override render() {
-    const plugin = this.#getPlugin();
+    const plugin = this.#plugin;
+
     const pluginHtml = plugin?.render(this.renderContext);
 
     return html`
@@ -114,6 +143,10 @@ export class NteInput extends nextrap_element() {
     `;
   }
 
+  protected override update(changedProperties: PropertyValues) {
+    super.update(changedProperties);
+  }
+
   get controlId() {
     return `${this.#baseId}-control`;
   }
@@ -125,7 +158,7 @@ export class NteInput extends nextrap_element() {
   get renderContext(): NteInputRenderContext {
     return {
       element: this,
-      type: this.#resolvedPluginType ?? this.#normalizedType,
+      type: this.#normalizedType,
       controlId: this.controlId,
       validationId: this.validationId,
     };
@@ -140,20 +173,20 @@ export class NteInput extends nextrap_element() {
   }
 
   get value(): NteInputValue {
-    return this.#getPlugin()?.getValue() ?? this.getAttribute('value') ?? '';
+    return this._value;
   }
 
   set value(value: NteInputValue) {
-    this.#getPlugin()?.setValue(value);
+    this._value = value;
     this.syncPluginState();
   }
 
   get selectedOptions(): InputOptionsType {
-    return this.#getPlugin()?.getSelectedOptions() ?? [];
+    return this.#plugin?.getSelectedOptions() ?? [];
   }
 
   syncPluginState() {
-    const plugin = this.#getPlugin();
+    const plugin = this.#plugin;
 
     this.hasValue = plugin?.hasValue() ?? false;
     this.hasPlaceholder = plugin?.hasPlaceholder() ?? this.hasAttribute('placeholder');
@@ -162,12 +195,12 @@ export class NteInput extends nextrap_element() {
   }
 
   formResetCallback() {
-    this.#getPlugin()?.formResetCallback();
+    this.#plugin?.formResetCallback();
     this.syncPluginState();
   }
 
   formDisabledCallback(disabled: boolean) {
-    this.#getPlugin()?.formDisabledCallback(disabled);
+    this.#plugin?.formDisabledCallback(disabled);
     this.syncPluginState();
   }
 
@@ -181,22 +214,41 @@ export class NteInput extends nextrap_element() {
       return;
     }
 
-    this.#internals.setFormValue(this.#getPlugin()?.getFormValue() ?? null);
+    this.#internals.setFormValue(this.#plugin?.getFormValue() ?? null);
   }
 
-  #getPlugin() {
-    if (!this.#plugin) {
-      const pluginClass = NteInput.getPlugin(this.#normalizedType);
-
-      if (!pluginClass) {
-        return undefined;
-      }
-
-      this.#resolvedPluginType = this.#normalizedType;
-      this.#plugin = new pluginClass(this);
+  @Listen('input', { target: 'host' })
+  @Listen('invalid', { target: 'host' })
+  onMustRevalidateInternal() {
+    if (!this.#willValidate()) {
+      return;
     }
+    if (this.#plugin?.isValid() === true) {
+      this.#internals?.setValidity({});
+      this.removeAttribute('invalid');
+      this.setAttribute('valid', '');
+    } else {
+      this.#internals?.setValidity({ customError: true, badInput: true }, 'Invalid value');
+      this.setAttribute('invalid', '');
+      this.removeAttribute('valid');
+    }
+  }
 
-    return this.#plugin;
+  @Listen('change')
+  onChange(e) {
+    this.#plugin?.onChange(e);
+  }
+
+  @Listen('input')
+  onInput(e) {
+    this.#plugin?.onInput(e);
+  }
+
+  #willValidate() {
+    if (this.hasAttribute('required') && !this.hasAttribute('disabled')) {
+      return true;
+    }
+    return false;
   }
 
   get #baseId() {
