@@ -35,7 +35,7 @@ $themeDefaults: (
   aid-border-radius: var(--nt-border-radius, 0.375rem),
   aid-padding-x: 0.75rem,
   aid-padding-y: 0.625rem,
-  aid-arrow-size: 0.75rem,
+  aid-arrow-size: 0.625rem,
   bubble-shadow: 0 0.5rem 1rem color-mix(in srgb, var(--nt-dark, #212529) 10%, transparent),
   textarea-min-height: 6rem,
   textarea-max-height: 16rem,
@@ -189,14 +189,39 @@ $themeCarbon: map.merge(
     max-height: calc(#{map.get($theme, textarea-max-height)} * #{$input-scale});
   }
 
+  &::part(input-aid) {
+    grid-template-rows: 0fr;
+    transition:
+      grid-template-rows 0.2s ease,
+      padding-top 0.2s ease;
+  }
+
+  &:focus-within::part(input-aid) {
+    grid-template-rows: 1fr;
+  }
+
+  &::part(validation-inner),
+  &::part(input-aid-inner) {
+    min-height: 0;
+    overflow: visible;
+  }
+
+  &::part(validation-bubble),
+  &::part(input-aid-bubble) {
+    position: relative;
+  }
+
   &::part(validation-arrow),
   &::part(input-aid-arrow) {
     position: absolute;
-    top: calc((#{map.get($theme, aid-arrow-size)} * 0.125) * #{$spacing-scale});
-    left: calc((#{map.get($theme, control-padding-x)} + 0.25rem) * #{$spacing-scale});
+    top: 0;
+
+    left: calc(#{map.get($theme, control-padding-x)} * #{$spacing-scale});
+    display: block;
     width: calc(#{map.get($theme, aid-arrow-size)} * #{$spacing-scale});
     height: calc(#{map.get($theme, aid-arrow-size)} * #{$spacing-scale});
-    transform: rotate(45deg);
+    box-sizing: border-box;
+    transform: translateY(-50%) rotate(45deg);
   }
 
   &::part(validation-arrow) {
@@ -206,21 +231,27 @@ $themeCarbon: map.merge(
   }
 
   &::part(input-aid-arrow) {
-    opacity: 0;
     background: map.get($theme, aid-background);
     border-top: 1px solid map.get($theme, aid-border-color);
     border-left: 1px solid map.get($theme, aid-border-color);
+  }
+
+  &::part(input-aid-bubble) {
+    opacity: 0;
+    transform: translateY(-0.25rem);
     transition:
       opacity 0.2s ease,
       transform 0.2s ease;
   }
 
-  &:focus-within::part(input-aid-arrow) {
+  &:focus-within::part(input-aid-bubble) {
     opacity: 1;
+    transform: translateY(0);
   }
 
   &::part(validation-content),
   &::part(input-aid-content) {
+    display: block;
     padding: calc(#{map.get($theme, aid-padding-y)} * #{$spacing-scale})
       calc(#{map.get($theme, aid-padding-x)} * #{$spacing-scale});
     border-radius: map.get($theme, aid-border-radius);

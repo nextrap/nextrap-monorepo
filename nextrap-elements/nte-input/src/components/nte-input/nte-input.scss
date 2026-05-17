@@ -72,6 +72,7 @@
 :host([invalid]) :where(#validation:has(slot:not(.slot-empty))),
 :host([invalid][validation-message]) :where(#validation) {
   display: grid;
+  padding-top: 0.175rem; // Space for the arrow
 }
 
 :where(#input-aid) {
