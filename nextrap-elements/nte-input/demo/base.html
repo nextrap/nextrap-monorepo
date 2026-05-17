@@ -52,6 +52,16 @@
       </section>
 
       <section>
+        <h2>Select-Radio Vertical</h2>
+        <nte-input label="Status" type="select-radio" value="inprogress" class="default vertical">
+          <options>
+            <option value="wrust">Wartet auf Rückmeldung</option>
+            <option value="inprogress">In Bearbeitung</option>
+          </options>
+        </nte-input>
+      </section>
+
+      <section>
         <h2>Select-Radio Multiple</h2>
         <nte-input
           label="Kategorien"
@@ -59,6 +69,29 @@
           multiple
           value='["news"]'
           data-options='[{"value":"news","label":"News"},{"value":"events","label":"Events"}]'
+        ></nte-input>
+      </section>
+
+      <section>
+        <h2>Token Input</h2>
+        <nte-input
+          class="hoverlabel"
+          label="Schlagworte"
+          type="token-input"
+          value='["news"]'
+          data-options='[{"value":"news","label":"News"},{"value":"events","label":"Events"},{"value":"docs","label":"Dokumentation"}]'
+        ></nte-input>
+      </section>
+
+      <section>
+        <h2>Token Input (strict)</h2>
+        <nte-input
+          class="hoverlabel"
+          label="Schlagworte"
+          type="token-input"
+          value='["news"]'
+          strict
+          data-options='[{"value":"news","label":"News"},{"value":"events","label":"Events"},{"value":"docs","label":"Dokumentation"}]'
         ></nte-input>
       </section>
 

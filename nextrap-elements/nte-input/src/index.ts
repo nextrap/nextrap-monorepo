@@ -10,15 +10,18 @@ export * from './plugins/default-select';
 export * from './plugins/default-select-radio';
 export * from './plugins/default-text';
 export * from './plugins/default-textarea';
+export * from './plugins/default-token-input';
 
 import { DefaultCheckboxPlugin } from './plugins/default-checkbox';
 import { DefaultSelectPlugin } from './plugins/default-select';
 import { DefaultSelectRadioPlugin } from './plugins/default-select-radio';
 import { DefaultTextPlugin } from './plugins/default-text';
 import { DefaultTextareaPlugin } from './plugins/default-textarea';
+import { DefaultTokenInputPlugin } from './plugins/default-token-input';
 
 NteInput.registerPlugin(DefaultTextPlugin);
 NteInput.registerPlugin(DefaultTextareaPlugin);
 NteInput.registerPlugin(DefaultSelectPlugin);
 NteInput.registerPlugin(DefaultSelectRadioPlugin);
 NteInput.registerPlugin(DefaultCheckboxPlugin);
+NteInput.registerPlugin(DefaultTokenInputPlugin);

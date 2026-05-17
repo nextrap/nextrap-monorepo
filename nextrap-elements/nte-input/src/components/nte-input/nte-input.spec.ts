@@ -426,6 +426,115 @@ describe('NteInput', () => {
     element.remove();
   });
 
+  it('default token-input plugin keeps an array value and supports add/remove interactions', async () => {
+    const element = document.createElement('nte-input') as NteInput;
+    element.type = 'token-input';
+    element.options = [
+      { value: 'news', label: 'News' },
+      { value: 'events', label: 'Events' },
+    ];
+    element.value = ['news'];
+    document.body.appendChild(element);
+
+    await element.updateComplete;
+    await element.updateComplete;
+
+    const input = element.shadowRoot?.querySelector('input[type="text"]');
+    expect(input).toBeInstanceOf(HTMLInputElement);
+    expect(element.value).toEqual(['news']);
+    expect(element.selectedOptions.map((option) => option.value)).toEqual(['news']);
+
+    if (input instanceof HTMLInputElement) {
+      input.value = 'events';
+      input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, composed: true }));
+    }
+
+    await element.updateComplete;
+
+    expect(element.value).toEqual(['news', 'events']);
+    expect(element.selectedOptions.map((option) => option.value)).toEqual(['news', 'events']);
+    expect(element.hasAttribute('has-value')).toBe(true);
+
+    const removeButton = element.shadowRoot?.querySelector('[part="token-remove"]');
+    expect(removeButton).toBeInstanceOf(HTMLButtonElement);
+
+    if (removeButton instanceof HTMLButtonElement) {
+      removeButton.click();
+    }
+
+    await element.updateComplete;
+
+    expect(element.value).toEqual(['events']);
+    expect(element.selectedOptions.map((option) => option.value)).toEqual(['events']);
+
+    element.remove();
+  });
+
+  it('default token-input plugin can restrict values to configured options via strict', async () => {
+    const element = document.createElement('nte-input') as NteInput;
+    element.type = 'token-input';
+    element.setAttribute('strict', '');
+    element.options = [
+      { value: 'news', label: 'News' },
+      { value: 'events', label: 'Events' },
+    ];
+    element.value = ['news', 'custom'];
+    document.body.appendChild(element);
+
+    await element.updateComplete;
+    await element.updateComplete;
+
+    expect(element.value).toEqual(['news']);
+
+    const input = element.shadowRoot?.querySelector('input[type="text"]');
+    expect(input).toBeInstanceOf(HTMLInputElement);
+
+    if (input instanceof HTMLInputElement) {
+      input.value = 'custom';
+      input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, composed: true }));
+    }
+
+    await element.updateComplete;
+
+    expect(element.value).toEqual(['news']);
+
+    if (input instanceof HTMLInputElement) {
+      input.value = 'events';
+      input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, composed: true }));
+    }
+
+    await element.updateComplete;
+
+    expect(element.value).toEqual(['news', 'events']);
+
+    element.remove();
+  });
+
+  it('default token-input plugin validates required by token count', async () => {
+    const element = document.createElement('nte-input') as NteInput;
+    element.type = 'token-input';
+    element.setAttribute('required', '');
+    document.body.appendChild(element);
+
+    await element.updateComplete;
+    await element.updateComplete;
+
+    expect(element.hasAttribute('invalid')).toBe(false);
+
+    element.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
+    await element.updateComplete;
+
+    expect(element.hasAttribute('invalid')).toBe(true);
+
+    element.value = ['alpha'];
+    element.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
+    await element.updateComplete;
+
+    expect(element.hasAttribute('valid')).toBe(true);
+
+    element.remove();
+  });
+
   it('default checkbox plugin uses boolean values via the host value accessor', async () => {
     const element = document.createElement('nte-input') as NteInput;
     element.type = 'checkbox';

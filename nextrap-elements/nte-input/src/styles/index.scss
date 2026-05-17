@@ -1,3 +1,15 @@
+@use '../../mixins' as nte-input-mixins;
+
 nte-input {
   display: block;
+}
+
+.default {
+  @include nte-input-mixins.hoverlabel();
+}
+
+.default.vertical {
+  nte-input[type='select-radio'] {
+    @include nte-input-mixins.select-radio-vertical;
+  }
 }

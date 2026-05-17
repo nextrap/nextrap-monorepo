@@ -16,6 +16,7 @@ Built-in plugins currently cover:
 - select
 - select-radio
 - checkbox
+- token-input
 
 ## Installation
 
@@ -59,6 +60,7 @@ Built-in value behavior:
 - select → `string`
 - checkbox → `boolean`
 - select-radio → `string[]`
+- token-input → `string[]`
 
 A plugin may register multiple input types, but each type may only be registered once.
 
@@ -100,6 +102,7 @@ NteInput.registerPlugin(TextPlugin);
 <nte-input label="Status" type="select" data-options="draft|Entwurf;active|Aktiv"></nte-input>
 <nte-input label="Status" type="select-radio" value="active" data-options="draft|Entwurf;active|Aktiv"></nte-input>
 <nte-input label="Tags" type="select-radio" multiple value='["news"]' data-options='[{"value":"news","label":"News"},{"value":"events","label":"Events"}]'></nte-input>
+<nte-input label="Schlagworte" type="token-input" value='["news"]' data-options='[{"value":"news","label":"News"},{"value":"events","label":"Events"}]'></nte-input>
 <nte-input label="AGB akzeptieren" type="checkbox" checked></nte-input>
 ```
 
@@ -142,6 +145,13 @@ If `multiple` is set, it renders checkboxes instead.
 The current host `value` is synced into the checked state, and user changes are written back to `value`.
 For `select-radio`, `value` is handled as a `string[]`.
 
+For `type="token-input"`, the same option sources are used as suggestions for a token field.
+The plugin renders selected values as removable tokens and keeps `value` as a `string[]`.
+Users can add tokens with `Enter`, `,` or `;` and remove tokens via the built-in remove button.
+Values are deduplicated automatically.
+If the boolean `strict` attribute is set, only option values from `data-options` or `<options>` may be added.
+Free custom values are ignored in that mode.
+
 ## SCSS mixins
 
 The package ships a root `mixins.scss` file.
@@ -150,13 +160,30 @@ The package ships a root `mixins.scss` file.
 @use '@nextrap/nte-input/mixins' as nte-input;
 
 nte-input.hoverlabel {
-  @include nte-input.hoverlabel;
+  @include nte-input.hoverlabel();
 }
 ```
 
 The `hoverlabel` mixin turns the normal label into a floating Bootstrap-like label.
 It keeps extra control height and input padding so the label has enough room across browsers.
+The required spacing is calculated from the `$minHeight` SCSS argument.
 The label floats automatically on focus, when a value exists, when a placeholder exists, or when the active plugin returns `true` from `isHoverlabelActive()`.
+
+The package also exposes a `select-radio-vertical` mixin for `type="select-radio"`.
+It is intended to be applied to a form or container selector and styles only descendant `nte-input[type="select-radio"]` elements.
+Inside each input, the radio / checkbox options are rendered next to each other with a minimum width of `350px`.
+Between columns a vertical separator is shown, and when the options wrap into a new row an additional horizontal separator becomes visible.
+The mixin uses SCSS arguments with default values instead of CSS custom properties.
+
+```scss
+@use '@nextrap/nte-input/mixins' as nte-input;
+
+.default.select-radio-vertical {
+  nte-input[type='select-radio'] {
+    @include nte-input.select-radio-vertical();
+  }
+}
+```
 
 ## Notes
 
@@ -165,3 +192,4 @@ The label floats automatically on focus, when a value exists, when a placeholder
 - `nte-input` resolves the plugin once and keeps that plugin instance.
 - The plugin class handles render, lifecycle, value access, selected options and form value.
 - For `type="checkbox"`, the label text is rendered by the checkbox plugin next to the checkbox, and the normal frame is omitted.
+- For `type="token-input"`, option labels are used as suggestions, but free custom values are also allowed.

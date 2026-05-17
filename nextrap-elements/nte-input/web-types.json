@@ -18,7 +18,7 @@
                         {
                             "name": "type",
                             "type": "string",
-                            "description": "Input type used to resolve the registered plugin."
+                            "description": "Input type used to resolve the registered plugin. Built-in types include text, email, password, textarea, select, select-radio, checkbox and token-input."
                         },
                         {
                             "name": "label",
@@ -33,7 +33,7 @@
                         {
                             "name": "value",
                             "type": "string",
-                            "description": "Current value used by plugins such as the built-in textarea, select and select-radio plugins."
+                            "description": "Current value used by plugins such as the built-in textarea, select, select-radio and token-input plugins. For select-radio and token-input this is handled as a string array."
                         },
                         {
                             "name": "multiple",
@@ -43,7 +43,12 @@
                         {
                             "name": "data-options",
                             "type": "string",
-                            "description": "Option source for built-in option-based plugins such as select and select-radio. Supports semicolon-separated strings or JSON."
+                            "description": "Option source for built-in option-based plugins such as select, select-radio and token-input. Supports semicolon-separated strings or JSON."
+                        },
+                        {
+                            "name": "strict",
+                            "type": "boolean",
+                            "description": "For type=token-input: only configured option values may be added. Free custom tokens are ignored."
                         },
                         {
                             "name": "validation-message",

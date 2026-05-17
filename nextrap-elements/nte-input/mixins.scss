@@ -1,19 +1,25 @@
-@mixin hoverlabel {
-  --nte-input-control-min-height: var(--nte-input-hoverlabel-control-min-height, 3.75rem);
-  --nte-input-inner-padding-top: var(--nte-input-hoverlabel-input-padding-top, 1.1rem);
-  --nte-input-inner-padding-bottom: var(--nte-input-hoverlabel-input-padding-bottom, 0.15rem);
-  --nte-input-inner-min-height: var(--nte-input-hoverlabel-input-min-height, 1.5rem);
-  --nte-input-hoverlabel-inline-padding: var(--nte-input-padding-x, 0.75rem);
-  --nte-input-hoverlabel-label-padding-x: var(--nte-input-hoverlabel-label-padding-inline, 0.25rem);
-  --nte-input-hoverlabel-label-padding-y: var(--nte-input-hoverlabel-label-padding-block, 0.125rem);
-  --nte-input-hoverlabel-label-rest-color: var(--nt-dark-subtle, var(--nte-input-label-color));
-  --nte-input-hoverlabel-label-active-color: var(--nte-input-label-color);
-  --nte-input-hoverlabel-label-background: var(--nte-input-control-background, var(--nt-body, #fff));
-  --nte-input-hoverlabel-label-scale: var(--nte-input-hoverlabel-scale, 0.82);
-  --nte-input-hoverlabel-label-radius: var(--nte-input-hoverlabel-radius, 999px);
-  --nte-input-hoverlabel-label-shadow: var(--nte-input-hoverlabel-shadow, none);
-  --nte-input-hoverlabel-label-rest-offset-y: var(--nte-input-hoverlabel-rest-offset-y, 50%);
-  --nte-input-hoverlabel-label-active-top: var(--nte-input-hoverlabel-active-top, 0.3rem);
+@mixin hoverlabel(
+  $minHeight: 3.75rem,
+  $labelScale: 0.82,
+  $restOffsetY: 50%,
+  $labelRestColor: var(--nt-dark-subtle, var(--nte-input-label-color)),
+  $labelActiveColor: var(--nte-input-label-color),
+  $labelBackground: var(--nte-input-control-background, var(--nt-body, #fff)),
+  $labelRadius: 999px,
+  $labelShadow: none
+) {
+  $innerPaddingTop: $minHeight * 0.2933333333;
+  $innerPaddingBottom: $minHeight * 0.04;
+  $innerMinHeight: $minHeight * 0.4;
+  $inlinePadding: $minHeight * 0.2;
+  $labelPaddingX: $minHeight * 0.0666666667;
+  $labelPaddingY: $minHeight * 0.0333333333;
+  $activeTop: $minHeight * 0.08;
+
+  --nte-input-control-min-height: #{$minHeight};
+  --nte-input-inner-padding-top: #{$innerPaddingTop};
+  --nte-input-inner-padding-bottom: #{$innerPaddingBottom};
+  --nte-input-inner-min-height: #{$innerMinHeight};
 
   &::part(field) {
     position: relative;
@@ -22,21 +28,19 @@
 
   &::part(label) {
     position: absolute;
-    inset-block-start: var(--nte-input-hoverlabel-label-rest-offset-y);
-    inset-inline-start: calc(var(--nte-input-hoverlabel-inline-padding) - var(--nte-input-hoverlabel-label-padding-x));
+    inset-block-start: $restOffsetY;
+    inset-inline-start: calc(#{$inlinePadding} - #{$labelPaddingX});
     z-index: 1;
-    max-inline-size: calc(
-      100% - (var(--nte-input-hoverlabel-inline-padding) * 2) + (var(--nte-input-hoverlabel-label-padding-x) * 2)
-    );
-    padding: var(--nte-input-hoverlabel-label-padding-y) var(--nte-input-hoverlabel-label-padding-x);
+    max-inline-size: calc(100% - (#{$inlinePadding} * 2) + (#{$labelPaddingX} * 2));
+    padding: $labelPaddingY $labelPaddingX;
     overflow: hidden;
-    color: var(--nte-input-hoverlabel-label-rest-color);
+    color: $labelRestColor;
     text-overflow: ellipsis;
     white-space: nowrap;
     line-height: 1.2;
-    background: var(--nte-input-hoverlabel-label-background);
-    border-radius: var(--nte-input-hoverlabel-label-radius);
-    box-shadow: var(--nte-input-hoverlabel-label-shadow);
+    background: $labelBackground;
+    border-radius: $labelRadius;
+    box-shadow: $labelShadow;
     transform: translateY(-50%);
     transform-origin: left top;
     transition:
@@ -51,8 +55,38 @@
   &[placeholder]::part(label),
   &[has-placeholder]::part(label),
   &[hoverlabel-active]::part(label) {
-    inset-block-start: var(--nte-input-hoverlabel-label-active-top);
-    color: var(--nte-input-hoverlabel-label-active-color);
-    transform: scale(var(--nte-input-hoverlabel-label-scale));
+    inset-block-start: $activeTop;
+    color: $labelActiveColor;
+    transform: scale($labelScale);
+  }
+}
+
+@mixin select-radio-vertical(
+  $column-min-width: 350px,
+  $separator-width: 1px,
+  $separator-color: #d6d9dd,
+  $option-padding-x: 1rem,
+  $option-padding-y: 0.875rem,
+  $option-min-height: 2.75rem,
+  $option-background: #fff
+) {
+  &::part(option-list) {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, #{$column-min-width}), 1fr));
+    gap: $separator-width;
+    align-items: stretch;
+    background: $separator-color;
+  }
+
+  &::part(option-label) {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    width: 100%;
+    min-height: $option-min-height;
+    box-sizing: border-box;
+    padding: $option-padding-y $option-padding-x;
+    background: $option-background;
   }
 }

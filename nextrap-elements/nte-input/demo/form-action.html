@@ -14,7 +14,8 @@
         <h2>FormData Beispiel</h2>
         <p>
           Mit <code>Absenden</code> wird das Formular per <code>FormData</code> ausgewertet. Die Ausgabe erfolgt als
-          Array von Key-Value-Objekten.
+          Array von Key-Value-Objekten – auch für Mehrfachwerte wie <code>select-radio</code> und
+          <code>token-input</code>.
         </p>
 
         <form id="formdata-demo-form">
@@ -42,6 +43,15 @@
             multiple
             value='["news"]'
             data-options='[{"value":"news","label":"News"},{"value":"events","label":"Events"}]'
+          ></nte-input>
+
+          <nte-input
+            class="hoverlabel"
+            label="Schlagworte"
+            type="token-input"
+            name="tags"
+            value='["news","docs"]'
+            data-options='[{"value":"news","label":"News"},{"value":"events","label":"Events"},{"value":"docs","label":"Dokumentation"}]'
           ></nte-input>
 
           <nte-input label="AGB akzeptieren" type="checkbox" name="accepted" value="yes" checked></nte-input>

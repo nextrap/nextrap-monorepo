@@ -94,8 +94,8 @@ export class NteInput extends nextrap_element({ eventBinding: true }) {
       this._value = this.#plugin?.getInitValue();
     }
 
-    if (this.#willValidate()) {
-      this.#internals?.setValidity({ customError: true, badInput: true }, 'Invalid value');
+    if (this.#willValidate() && typeof this.#internals?.setValidity === 'function') {
+      this.#internals.setValidity({ customError: true, badInput: true }, 'Invalid value');
     }
     super.connectedCallback();
   }
@@ -224,23 +224,27 @@ export class NteInput extends nextrap_element({ eventBinding: true }) {
       return;
     }
     if (this.#plugin?.isValid() === true) {
-      this.#internals?.setValidity({});
+      if (typeof this.#internals?.setValidity === 'function') {
+        this.#internals.setValidity({});
+      }
       this.removeAttribute('invalid');
       this.setAttribute('valid', '');
     } else {
-      this.#internals?.setValidity({ customError: true, badInput: true }, 'Invalid value');
+      if (typeof this.#internals?.setValidity === 'function') {
+        this.#internals.setValidity({ customError: true, badInput: true }, 'Invalid value');
+      }
       this.setAttribute('invalid', '');
       this.removeAttribute('valid');
     }
   }
 
   @Listen('change')
-  onChange(e) {
+  onChange(e: Event) {
     this.#plugin?.onChange(e);
   }
 
   @Listen('input')
-  onInput(e) {
+  onInput(e: Event) {
     this.#plugin?.onInput(e);
   }
 

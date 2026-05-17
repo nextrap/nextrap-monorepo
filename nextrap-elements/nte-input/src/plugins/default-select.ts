@@ -48,6 +48,10 @@ export class DefaultSelectPlugin extends AbstractNteInputPlugin {
     this.onInput();
   }
 
+  override isValid(): boolean | null {
+    return this.select?.checkValidity() ?? null;
+  }
+
   override getValue() {
     return this.host.value;
   }

@@ -13,6 +13,10 @@ main {
   padding: 2rem 1rem 4rem;
 }
 
+body.wide-demo main {
+  max-width: 56rem;
+}
+
 section + section {
   margin-top: 1.5rem;
 }
@@ -77,6 +81,17 @@ button:hover {
   box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--nt-danger, #dc3545) 14%, transparent);
 }
 
-nte-input.hoverlabel {
+nte-input.hoverlabel,
+nte-input.default.hoverlabel {
   @include nte-input.hoverlabel;
+}
+
+.demo-select-radio-vertical-form {
+  display: grid;
+  gap: 1rem;
+  max-width: 52rem;
+}
+
+.demo-select-radio-vertical-form.narrow {
+  max-width: 33rem;
 }
