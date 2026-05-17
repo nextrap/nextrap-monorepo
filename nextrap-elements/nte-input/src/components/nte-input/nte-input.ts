@@ -136,6 +136,14 @@ export class NteInput extends nextrap_element({ eventBinding: true }) {
           <div id="control" part="control">${pluginHtml ?? nothing}</div>
         </div>
 
+        <div id="input-aid" part="input-aid">
+          <div id="input-aid-inner">
+            <div id="input-aid-bubble" part="input-aid-bubble">
+              <slot name="input-aid"></slot>
+            </div>
+          </div>
+        </div>
+
         <div id=${this.validationId} part="validation" aria-live="polite">
           <slot name="validation">${this.validationMessage}</slot>
         </div>
