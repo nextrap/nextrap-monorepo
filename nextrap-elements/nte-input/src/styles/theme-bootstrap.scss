@@ -1,0 +1,22 @@
+$themeBootstrapDefaults: (
+  background: var(--nt-white),
+  text: var(--nt-text),
+  border: var(--nt-gray-300),
+  shadow: 5px 5px 15px rgba(0, 0, 0, 0.1),
+);
+
+/**
+ * The default Bootstrap Theme for nte-input with border and rounded corners.
+ */
+@mixin theme-bootstrap($theme) {
+  $theme: map.merge($themeBootstrapDefaults, $theme);
+
+  // Do not use css variables here. Css Variables can be set in theme configuration.
+
+  &::part(input) {
+    background: map.get($theme, background);
+    color: map.get($theme, text);
+    border: 1px solid map.get($theme, border);
+    box-shadow: map.get($theme, shadow);
+  }
+}

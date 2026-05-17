@@ -3,8 +3,14 @@ import { html } from 'lit';
 import { AbstractNteInputPlugin } from '../lib/plugin';
 import type { InputOptionsType, NteInputRenderContext, NteInputValue } from '../lib/types';
 
+import style from './default-checkbox.scss?inline';
+
 export class DefaultCheckboxPlugin extends AbstractNteInputPlugin {
   static readonly types = ['checkbox'];
+
+  override getStyleSheet() {
+    return style;
+  }
 
   protected get checkbox() {
     return this.query<HTMLInputElement>('input[type="checkbox"]');

@@ -4,14 +4,20 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { AbstractNteInputPlugin } from '../lib/plugin';
 import type { NteInputRenderContext } from '../lib/types';
 
+import style from './default-text.scss?inline';
+
 export class DefaultTextPlugin extends AbstractNteInputPlugin {
   static readonly types = ['text', 'email', 'password'];
+
+  override getStyleSheet() {
+    return style;
+  }
 
   protected get input() {
     return this.query<HTMLInputElement>('input');
   }
 
-  public override onInput(_e: Event) {
+  public override onInput() {
     this.host.value = this.input?.value;
     //this.host.requestUpdate();
   }

@@ -1,0 +1,53 @@
+#control {
+  align-items: flex-start;
+}
+
+[part~='token-list'] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: var(--nte-input-inner-min-height);
+  padding-bottom: var(--nte-input-inner-padding-bottom);
+}
+
+[part~='token'] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  max-width: 100%;
+  padding: 0.25rem 0.625rem;
+  margin-bottom: -20px;
+  background: color-mix(in srgb, var(--nte-input-border-color-focus) 10%, var(--nte-input-control-background));
+  border-radius: 999px;
+}
+
+[part~='token-remove'] {
+  width: auto;
+  min-width: auto;
+  min-height: auto;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  line-height: 1;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  cursor: pointer;
+}
+
+[part~='token-input'] {
+  width: auto;
+  min-width: 8rem;
+  flex: 1 1 8rem;
+  min-height: var(--nte-input-inner-min-height);
+  padding-top: var(--nte-input-inner-padding-top);
+  padding-bottom: var(--nte-input-inner-padding-bottom);
+  padding-inline: 0;
+  color: inherit;
+  font: inherit;
+  background: transparent;
+  border: 0;
+  outline: 0;
+}

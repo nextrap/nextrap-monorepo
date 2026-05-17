@@ -4,8 +4,14 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { AbstractNteInputPlugin } from '../lib/plugin';
 import type { NteInputRenderContext } from '../lib/types';
 
+import style from './default-textarea.scss?inline';
+
 export class DefaultTextareaPlugin extends AbstractNteInputPlugin {
   static readonly types = ['textarea'];
+
+  override getStyleSheet() {
+    return style;
+  }
 
   protected get textarea() {
     return this.query<HTMLTextAreaElement>('textarea');

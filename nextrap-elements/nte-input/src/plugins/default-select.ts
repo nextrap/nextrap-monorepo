@@ -5,8 +5,14 @@ import { AbstractNteInputPlugin } from '../lib/plugin';
 import type { InputOption, InputOptionsType, NteInputRenderContext } from '../lib/types';
 import { normalizeValueArray, resolveInputOptions, resolveSelectedInputOptions } from './select-utils';
 
+import style from './default-select.scss?inline';
+
 export class DefaultSelectPlugin extends AbstractNteInputPlugin {
   static readonly types = ['select'];
+
+  override getStyleSheet() {
+    return style;
+  }
 
   protected get select() {
     return this.query<HTMLSelectElement>('select');

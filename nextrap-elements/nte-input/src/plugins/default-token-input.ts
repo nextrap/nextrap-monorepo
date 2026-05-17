@@ -5,8 +5,14 @@ import { AbstractNteInputPlugin } from '../lib/plugin';
 import type { InputOptionsType, NteInputRenderContext, NteInputValue } from '../lib/types';
 import { normalizeValueArray, resolveInputOptions } from './select-utils';
 
+import style from './default-token-input.scss?inline';
+
 export class DefaultTokenInputPlugin extends AbstractNteInputPlugin {
   static readonly types = ['token-input'];
+
+  override getStyleSheet() {
+    return style;
+  }
 
   protected get input() {
     return this.query<HTMLInputElement>('input[type="text"]');

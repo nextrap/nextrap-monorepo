@@ -5,8 +5,14 @@ import { AbstractNteInputPlugin } from '../lib/plugin';
 import type { InputOption, InputOptionsType, NteInputRenderContext, NteInputValue } from '../lib/types';
 import { normalizeValueArray, resolveInputOptions, resolveSelectedInputOptions } from './select-utils';
 
+import style from './default-select-radio.scss?inline';
+
 export class DefaultSelectRadioPlugin extends AbstractNteInputPlugin {
   static readonly types = ['select-radio'];
+
+  override getStyleSheet() {
+    return style;
+  }
 
   protected get inputs() {
     return this.queryAll<HTMLInputElement>('#control input');

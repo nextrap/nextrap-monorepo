@@ -14,7 +14,7 @@ import { resetStyle } from '@nextrap/style-reset';
 
 import { PropertyValues } from 'lit';
 import { parseInputOptions, serializeInputOptions } from '../../lib/options';
-import type { NteInputPluginClass, NteInputPluginInterface } from '../../lib/plugin';
+import type { NteInputPluginClass, NteInputPluginInterface, NteInputPluginStyleSheet } from '../../lib/plugin';
 import type { InputOptionsType, NteInputRenderContext, NteInputValue } from '../../lib/types';
 import style from './nte-input.scss?inline';
 
@@ -52,6 +52,8 @@ export class NteInput extends nextrap_element({
 
   #generatedId = `nte-input-${Math.random().toString(36).slice(2, 9)}`;
   #plugin?: NteInputPluginInterface;
+  #pluginStyleElement?: HTMLStyleElement;
+  #pluginConstructableStyleSheet?: CSSStyleSheet;
   #internals: ElementInternals | null = null;
 
   constructor() {
@@ -91,7 +93,6 @@ export class NteInput extends nextrap_element({
       throw new Error(`No plugin for type ${this.#normalizedType}`);
     }
     this.#plugin = new pluginClass(this);
-    this.#plugin?.connected();
 
     if (this._value === undefined) {
       this._value = this.#plugin?.getInitValue();
@@ -100,7 +101,11 @@ export class NteInput extends nextrap_element({
     if (this.#willValidate() && typeof this.#internals?.setValidity === 'function') {
       this.#internals.setValidity({ customError: true, badInput: true }, 'Invalid value');
     }
+
     super.connectedCallback();
+
+    this.#applyPluginStyleSheet(this.#plugin.getStyleSheet());
+    this.#plugin?.connected();
   }
 
   override disconnectedCallback() {
@@ -268,6 +273,46 @@ export class NteInput extends nextrap_element({
       return true;
     }
     return false;
+  }
+
+  #applyPluginStyleSheet(styleSheet: NteInputPluginStyleSheet | null) {
+    const renderRoot = this.renderRoot;
+
+    if (!(renderRoot instanceof ShadowRoot)) {
+      return;
+    }
+
+    if (this.#pluginConstructableStyleSheet && 'adoptedStyleSheets' in renderRoot) {
+      renderRoot.adoptedStyleSheets = renderRoot.adoptedStyleSheets.filter(
+        (sheet) => sheet !== this.#pluginConstructableStyleSheet,
+      );
+      this.#pluginConstructableStyleSheet = undefined;
+    }
+
+    this.#pluginStyleElement?.remove();
+    this.#pluginStyleElement = undefined;
+
+    if (!styleSheet) {
+      return;
+    }
+
+    if (
+      typeof CSSStyleSheet !== 'undefined' &&
+      styleSheet instanceof CSSStyleSheet &&
+      'adoptedStyleSheets' in renderRoot
+    ) {
+      renderRoot.adoptedStyleSheets = [...renderRoot.adoptedStyleSheets, styleSheet];
+      this.#pluginConstructableStyleSheet = styleSheet;
+      return;
+    }
+
+    const styleElement = document.createElement('style');
+    styleElement.setAttribute('data-plugin-style', this.#normalizedType);
+    styleElement.textContent =
+      typeof styleSheet === 'string' ? styleSheet : Array.from(styleSheet.cssRules, (rule) => rule.cssText).join('\n');
+
+    renderRoot.append(styleElement);
+    this.#pluginStyleElement = styleElement;
   }
 
   get #baseId() {

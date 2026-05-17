@@ -1,0 +1,40 @@
+#control {
+  min-height: auto;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+#control:focus-within {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+[part~='checkbox-label'] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  cursor: pointer;
+}
+
+input {
+  width: 1rem;
+  min-width: 1rem;
+  min-height: 1rem;
+  margin: 0;
+  flex: 0 0 auto;
+  accent-color: var(--nte-input-border-color-focus);
+}
+
+[part~='checkbox-text'] {
+  line-height: 1.4;
+}
+
+:host([invalid]) [part~='checkbox-text'] {
+  color: var(--nte-input-message-color);
+}
+
+:host([valid]) [part~='checkbox-text'] {
+  color: var(--nt-success, #198754);
+}

@@ -2,6 +2,7 @@ import type { NteInput } from '../components/nte-input/nte-input';
 import type { InputOptionsType, NteInputRenderContext, NteInputValue } from './types';
 
 export type NteInputFormValue = File | FormData | string | null;
+export type NteInputPluginStyleSheet = CSSStyleSheet | string;
 
 export interface NteInputPluginClass {
   readonly types: string[];
@@ -29,6 +30,10 @@ export abstract class NteInputPluginInterface {
 
   setValue(value: NteInputValue) {
     this.host.value = value;
+  }
+
+  getStyleSheet(): NteInputPluginStyleSheet | null {
+    return null;
   }
 
   getFormValue(): NteInputFormValue | undefined {

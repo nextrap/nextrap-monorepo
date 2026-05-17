@@ -53,6 +53,38 @@ describe('NteInput', () => {
     element.remove();
   });
 
+  it('injects plugin styles into the shared shadow root', async () => {
+    const type = 'spec-styles';
+
+    if (!NteInput.getPlugin(type)) {
+      class SpecStyledPlugin extends AbstractNteInputPlugin {
+        static readonly types = [type];
+
+        override getStyleSheet() {
+          return '#plugin-control { color: red; }';
+        }
+
+        override render() {
+          return html`<input id="plugin-control" />`;
+        }
+      }
+
+      NteInput.registerPlugin(SpecStyledPlugin);
+    }
+
+    const element = document.createElement('nte-input') as NteInput;
+    element.type = type;
+    document.body.appendChild(element);
+
+    await element.updateComplete;
+
+    const styleElement = element.shadowRoot?.querySelector('style[data-plugin-style="spec-styles"]');
+
+    expect(styleElement?.textContent).toContain('#plugin-control { color: red; }');
+
+    element.remove();
+  });
+
   it('throws when a type is registered twice', () => {
     const type = 'spec-duplicate';
 
