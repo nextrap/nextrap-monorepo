@@ -1,8 +1,8 @@
 @mixin select-radio-vertical(
-  $column-min-width: 350px,
+  $column-min-width: 150px,
   $separator-width: 1px,
   $separator-color: #d6d9dd,
-  $option-padding-x: 1rem,
+  $option-padding-x: 0.5rem,
   $option-padding-y: 0.875rem,
   $option-min-height: 2.75rem,
   $option-background: #fff
@@ -17,13 +17,19 @@
   }
 
   &::part(option-label) {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
     flex: 1 1 auto;
-    align-items: center;
+    align-items: start;
     width: 100%;
     min-height: $option-min-height;
     box-sizing: border-box;
     padding: $option-padding-y $option-padding-x;
     background: $option-background;
+  }
+
+  &::part(option-input) {
+    align-self: start;
+    margin-top: 0.2em;
   }
 }

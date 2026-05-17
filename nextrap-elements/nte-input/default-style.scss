@@ -16,10 +16,8 @@ nte-input.hoverlabel {
   @include nte-input.floating-labels();
 }
 
-.default.select-radio-vertical {
-  nte-input[type='select-radio'] {
-    @include nte-input.select-radio-vertical();
-  }
+nte-input[type='select-radio'].vertical {
+  @include nte-input.select-radio-vertical();
 }
 
 nte-input.sm {
