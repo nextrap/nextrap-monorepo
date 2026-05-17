@@ -16,6 +16,10 @@ export class DefaultCheckboxPlugin extends AbstractNteInputPlugin {
     return this.query<HTMLInputElement>('input[type="checkbox"]');
   }
 
+  override getFormElement() {
+    return this.checkbox;
+  }
+
   override getInitValue(): NteInputValue {
     return this.host.hasAttribute('checked');
   }

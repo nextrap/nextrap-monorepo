@@ -17,6 +17,10 @@ export class DefaultTextareaPlugin extends AbstractNteInputPlugin {
     return this.query<HTMLTextAreaElement>('textarea');
   }
 
+  override getFormElement() {
+    return this.textarea;
+  }
+
   override render(context: NteInputRenderContext) {
     const { element, controlId, validationId } = context;
 

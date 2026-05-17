@@ -1,1 +1,4 @@
-@use 'src/styles/index';
+@forward 'src/styles/theme';
+@forward 'src/styles/size';
+@forward 'src/styles/select-radio-vertical';
+@forward 'src/styles/floating-labels';

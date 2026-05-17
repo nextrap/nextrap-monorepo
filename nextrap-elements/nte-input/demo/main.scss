@@ -1,4 +1,4 @@
-@use '../src/styles/floating-labels' as nte-input-floating-labels;
+@use '../default-style';
 
 body {
   margin: 0;
@@ -79,19 +79,4 @@ button:hover {
 .demo-json[data-invalid='true'] {
   border-color: var(--nt-danger, #dc3545);
   box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--nt-danger, #dc3545) 14%, transparent);
-}
-
-nte-input.hoverlabel,
-nte-input.default.hoverlabel {
-  @include nte-input-floating-labels.floating-labels();
-}
-
-.demo-select-radio-vertical-form {
-  display: grid;
-  gap: 1rem;
-  max-width: 52rem;
-}
-
-.demo-select-radio-vertical-form.narrow {
-  max-width: 33rem;
 }

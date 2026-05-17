@@ -116,18 +116,22 @@ The built-in `textarea` plugin grows with its content.
 The height is clamped between the configured theme min and max height.
 It also syncs the host `value` property with the internal `<textarea>`.
 
-Those values are configured through the `theme-bootstrap()` SCSS mixin map:
+Those values are configured through the theme map passed to `theme()`:
 
 ```scss
-@use '@nextrap/nte-input/src/styles/theme-bootstrap';
+@use 'sass:map';
+@use '@nextrap/nte-input/src/styles/theme';
+
+$myTheme: map.merge(
+  theme.$themeBootstrap,
+  (
+    textarea-min-height: 6rem,
+    textarea-max-height: 16rem,
+  )
+);
 
 nte-input.default {
-  @include theme-bootstrap.theme-bootstrap(
-    (
-      textarea-min-height: 6rem,
-      textarea-max-height: 16rem,
-    )
-  );
+  @include theme.theme($myTheme);
 }
 ```
 
@@ -195,16 +199,21 @@ The package exposes its styling mixins from `src/styles/*`.
 The bundled `src/styles/index.scss` applies the same defaults automatically for `nte-input.default`.
 
 ```scss
-@use '@nextrap/nte-input/src/styles/theme-bootstrap';
+@use '@nextrap/nte-input/src/styles/theme';
 @use '@nextrap/nte-input/src/styles/floating-labels';
 @use '@nextrap/nte-input/src/styles/select-radio-vertical';
 @use '@nextrap/nte-input/src/styles/size';
 
 nte-input.default {
-  @include theme-bootstrap.theme-bootstrap();
+  @include theme.theme(theme.$themeBootstrap);
 }
 
-nte-input.default.hoverlabel {
+nte-input.carbon {
+  @include theme.theme(theme.$themeCarbon);
+}
+
+nte-input.default.hoverlabel,
+nte-input.carbon.hoverlabel {
   @include floating-labels.floating-labels();
 }
 
@@ -215,8 +224,10 @@ nte-input.default.hoverlabel {
 }
 ```
 
-`theme-bootstrap()` styles the shared nte-input frame, helper bubbles, checkbox/select-radio layout and token presentation.
-It uses a small SCSS map API instead of component-specific CSS variables.
+`theme()` styles the shared nte-input frame, helper bubbles, checkbox/select-radio layout and token presentation based on a theme map.
+The package exports `theme.$themeDefaults`, `theme.$themeBootstrap` and `theme.$themeCarbon`.
+`theme.$themeCarbon` applies a Carbon-like alternative with square corners, neutral filled controls and a stronger bottom-border focus style.
+It uses the same shared scale variables, so `hoverlabel` and the size classes also work there.
 
 `floating-labels()` turns the normal label into a floating Bootstrap-like label.
 It increases the control height / spacing from the `$minHeight` SCSS argument and floats the label automatically on focus, when a value exists, when a placeholder exists, or when the active plugin returns `true` from `isHoverlabelActive()`.
@@ -225,7 +236,7 @@ It increases the control height / spacing from the `$minHeight` SCSS argument an
 It styles only descendant `nte-input[type="select-radio"]` elements and lays out their options side by side inside the input.
 It uses SCSS arguments with defaults instead of component CSS variables.
 
-`size()` is a small helper mixin that sets the shared CSS scale variables used by `theme-bootstrap()` and `floating-labels()`.
+`size()` is a small helper mixin that sets the shared CSS scale variables used by `theme()` and `floating-labels()`.
 It accepts separate scales for spacing, label and input.
 The bundled `src/styles/index.scss` already defines example classes: `sm`, `md`, `lg`, `xl`, `xxl`.
 

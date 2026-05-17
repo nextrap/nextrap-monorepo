@@ -148,7 +148,9 @@ export class NteInput extends nextrap_element({
           <div id="validation-inner" part="validation-inner">
             <div id="validation-bubble" part="validation-bubble">
               <span id="validation-arrow" part="validation-arrow" aria-hidden="true"></span>
-              <slot name="validation" part="validation-content">${this.validationMessage}</slot>
+              <div id="validation-content" part="validation-content">
+                <slot name="validation">${this.validationMessage}</slot>
+              </div>
             </div>
           </div>
         </div>
@@ -157,7 +159,9 @@ export class NteInput extends nextrap_element({
           <div id="input-aid-inner" part="input-aid-inner">
             <div id="input-aid-bubble" part="input-aid-bubble">
               <span id="input-aid-arrow" part="input-aid-arrow" aria-hidden="true"></span>
-              <slot name="input-aid" part="input-aid-content"></slot>
+              <div id="input-aid-content" part="input-aid-content">
+                <slot name="input-aid"></slot>
+              </div>
             </div>
           </div>
         </div>
@@ -258,6 +262,16 @@ export class NteInput extends nextrap_element({
       this.setAttribute('invalid', '');
       this.removeAttribute('valid');
     }
+  }
+
+  @Listen('click')
+  onClick(e: Event) {
+    this.#plugin?.onClick(e);
+
+    if (this.hasAttribute('disabled')) {
+      return;
+    }
+    this.#plugin?.getFormElement()?.focus();
   }
 
   @Listen('change')

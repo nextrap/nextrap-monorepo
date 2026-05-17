@@ -52,7 +52,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     line-height: 1.2;
-    background: $labelBackground;
+    background: var(--nte-input-hoverlabel-background, #{$labelBackground});
     border-radius: $labelRadius;
     box-shadow: $labelShadow;
     transform: translateY(-50%);

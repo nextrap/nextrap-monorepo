@@ -1,12 +1,15 @@
 @use 'sass:map';
 
-$themeBootstrapDefaults: (
+$themeDefaults: (
   gap: 0.5rem,
   control-gap: 0.5rem,
   control-min-height: 2.75rem,
   control-padding-x: 0.75rem,
   control-padding-y: 0.625rem,
   label-color: var(--nt-dark, #212529),
+  label-font-size: 1em,
+  label-font-weight: 600,
+  label-letter-spacing: normal,
   control-color: var(--nt-dark, #212529),
   control-background: var(--nt-body, #fff),
   border-color: var(--nt-gray-light, #ced4da),
@@ -14,6 +17,15 @@ $themeBootstrapDefaults: (
   border-color-invalid: var(--nt-danger, #dc3545),
   border-color-valid: var(--nt-success, #198754),
   border-radius: var(--nt-border-radius, 0.375rem),
+  control-border-style: solid,
+  control-border-top-width: 1px,
+  control-border-right-width: 5px,
+  control-border-bottom-width: 1px,
+  control-border-left-width: 1px,
+  control-focus-border-bottom-width: 1px,
+  control-focus-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--nt-primary, #0d6efd) 18%, transparent),
+  control-invalid-shadow: none,
+  control-valid-shadow: none,
   validation-color: var(--nt-danger, #dc3545),
   validation-background: color-mix(in srgb, var(--nt-danger, #dc3545) 8%, var(--nt-body, #fff)),
   validation-border-color: color-mix(in srgb, var(--nt-danger, #dc3545) 20%, transparent),
@@ -28,19 +40,61 @@ $themeBootstrapDefaults: (
   textarea-min-height: 6rem,
   textarea-max-height: 16rem,
   option-gap: 0.625rem,
+  option-label-align-items: center,
+  checkbox-label-align-items: center,
   token-gap: 0.5rem,
   token-padding-x: 0.625rem,
   token-padding-y: 0.25rem,
   token-background: color-mix(in srgb, var(--nt-primary, #0d6efd) 10%, var(--nt-body, #fff)),
+  token-border: 0,
   token-radius: 999px,
   token-input-min-width: 8rem,
+  hoverlabel-background: var(--nt-body, #fff),
 );
 
-/**
- * Default Bootstrap-like theme for nte-input.
- */
-@mixin theme-bootstrap($theme: ()) {
-  $theme: map.merge($themeBootstrapDefaults, $theme);
+$themeBootstrap: map.merge($themeDefaults, ());
+
+$themeCarbon: map.merge(
+  $themeDefaults,
+  (
+    gap: 0.25rem,
+    control-min-height: 2.5rem,
+    control-padding-x: 1rem,
+    control-padding-y: 0.75rem,
+    label-color: var(--nt-dark-subtle, #525252),
+    label-font-weight: 400,
+    label-letter-spacing: 0.01em,
+    control-color: var(--nt-text, #161616),
+    control-background: #f4f4f4,
+    border-color: #8d8d8d,
+    border-color-focus: #0f62fe,
+    border-color-invalid: #da1e28,
+    border-radius: 0,
+    control-border-top-width: 0,
+    control-border-right-width: 0,
+    control-border-bottom-width: 1px,
+    control-border-left-width: 0,
+    control-focus-border-bottom-width: 2px,
+    control-focus-shadow: inset 0 -1px 0 0 #0f62fe,
+    control-invalid-shadow: inset 0 -1px 0 0 #da1e28,
+    control-valid-shadow: inset 0 -1px 0 0 #198754,
+    validation-color: #da1e28,
+    validation-background: #fff1f1,
+    validation-border-color: #da1e28,
+    aid-background: #f4f4f4,
+    aid-border-color: #c6c6c6,
+    aid-border-radius: 0,
+    bubble-shadow: none,
+    option-label-align-items: flex-start,
+    checkbox-label-align-items: flex-start,
+    token-background: #e0e0e0,
+    token-border: 1px solid #c6c6c6,
+    token-radius: 0,
+    hoverlabel-background: transparent,
+  )
+);
+
+@mixin theme($theme: $themeBootstrap) {
   $spacing-scale: var(--nte-input-scale-spacing, 1);
   $label-scale: var(--nte-input-scale-label, 1);
   $input-scale: var(--nte-input-scale-input, 1);
@@ -48,6 +102,7 @@ $themeBootstrapDefaults: (
   --nte-input-scale-spacing: 1;
   --nte-input-scale-label: 1;
   --nte-input-scale-input: 1;
+  --nte-input-hoverlabel-background: #{map.get($theme, hoverlabel-background)};
 
   &::part(wrapper),
   &::part(field) {
@@ -57,9 +112,10 @@ $themeBootstrapDefaults: (
   &::part(label) {
     margin: 0;
     color: map.get($theme, label-color);
-    font-size: calc(1em * #{$label-scale});
-    font-weight: 600;
+    font-size: calc(#{map.get($theme, label-font-size)} * #{$label-scale});
+    font-weight: map.get($theme, label-font-weight);
     line-height: 1.2;
+    letter-spacing: map.get($theme, label-letter-spacing);
   }
 
   &:not([type='checkbox'])::part(control) {
@@ -70,12 +126,17 @@ $themeBootstrapDefaults: (
       calc(#{map.get($theme, control-padding-x)} * #{$spacing-scale});
     color: map.get($theme, control-color);
     background: map.get($theme, control-background);
-    border: 1px solid map.get($theme, border-color);
-    border-right-width: 5px;
+    border-style: map.get($theme, control-border-style);
+    border-color: map.get($theme, border-color);
+    border-top-width: map.get($theme, control-border-top-width);
+    border-right-width: map.get($theme, control-border-right-width);
+    border-bottom-width: map.get($theme, control-border-bottom-width);
+    border-left-width: map.get($theme, control-border-left-width);
     border-radius: map.get($theme, border-radius);
     transition:
       border-color 0.2s ease,
-      box-shadow 0.2s ease;
+      box-shadow 0.2s ease,
+      border-width 0.2s ease;
   }
 
   &[type='select-radio']::part(control),
@@ -83,17 +144,29 @@ $themeBootstrapDefaults: (
     align-items: flex-start;
   }
 
+  &[type='checkbox']::part(control) {
+    min-height: auto;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
   &:not([type='checkbox']):focus-within::part(control) {
     border-color: map.get($theme, border-color-focus);
-    box-shadow: 0 0 0 0.2rem color-mix(in srgb, #{map.get($theme, border-color-focus)} 18%, transparent);
+    border-bottom-width: map.get($theme, control-focus-border-bottom-width);
+    box-shadow: map.get($theme, control-focus-shadow);
   }
 
   &[invalid]:not([type='checkbox'])::part(control) {
     border-color: map.get($theme, border-color-invalid);
+    box-shadow: map.get($theme, control-invalid-shadow);
   }
 
   &[valid]:not([type='checkbox'])::part(control) {
     border-color: map.get($theme, border-color-valid);
+    box-shadow: map.get($theme, control-valid-shadow);
   }
 
   &::part(input),
@@ -172,10 +245,16 @@ $themeBootstrapDefaults: (
     width: 100%;
   }
 
-  &[type='select-radio']::part(option-label),
+  &[type='select-radio']::part(option-label) {
+    display: inline-flex;
+    align-items: map.get($theme, option-label-align-items);
+    gap: calc(#{map.get($theme, option-gap)} * #{$spacing-scale});
+    cursor: pointer;
+  }
+
   &[type='checkbox']::part(checkbox-label) {
     display: inline-flex;
-    align-items: center;
+    align-items: map.get($theme, checkbox-label-align-items);
     gap: calc(#{map.get($theme, option-gap)} * #{$spacing-scale});
     cursor: pointer;
   }
@@ -219,6 +298,7 @@ $themeBootstrapDefaults: (
     padding: calc(#{map.get($theme, token-padding-y)} * #{$spacing-scale})
       calc(#{map.get($theme, token-padding-x)} * #{$spacing-scale});
     background: map.get($theme, token-background);
+    border: map.get($theme, token-border);
     border-radius: map.get($theme, token-radius);
   }
 

@@ -18,6 +18,10 @@ export class DefaultSelectPlugin extends AbstractNteInputPlugin {
     return this.query<HTMLSelectElement>('select');
   }
 
+  override getFormElement() {
+    return this.select;
+  }
+
   override render(context: NteInputRenderContext) {
     const { element, controlId, validationId } = context;
     const options = resolveInputOptions(element);

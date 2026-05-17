@@ -18,6 +18,10 @@ export class DefaultSelectRadioPlugin extends AbstractNteInputPlugin {
     return this.queryAll<HTMLInputElement>('#control input');
   }
 
+  override getFormElement() {
+    return this.inputs[0] ?? null;
+  }
+
   override getInitValue(): NteInputValue {
     return this.normalizeSelectedValues(this.host.getAttribute('value'));
   }

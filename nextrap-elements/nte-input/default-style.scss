@@ -1,0 +1,43 @@
+@use 'index' as nte-input;
+
+nte-input:not(.skip-style) {
+  @include nte-input.theme(nte-input.$themeBootstrap);
+}
+
+nte-input.default {
+  @include nte-input.theme(nte-input.$themeBootstrap);
+}
+
+nte-input.carbon {
+  @include nte-input.theme(nte-input.$themeCarbon);
+}
+
+nte-input.hoverlabel {
+  @include nte-input.floating-labels();
+}
+
+.default.select-radio-vertical {
+  nte-input[type='select-radio'] {
+    @include nte-input.select-radio-vertical();
+  }
+}
+
+nte-input.sm {
+  @include nte-input.size(0.875, 0.875, 0.875);
+}
+
+nte-input.md {
+  @include nte-input.size(1, 1, 1);
+}
+
+nte-input.lg {
+  @include nte-input.size(1.125, 1.05, 1.05);
+}
+
+nte-input.xl {
+  @include nte-input.size(1.25, 1.1, 1.1);
+}
+
+nte-input.xxl {
+  @include nte-input.size(1.35, 1.15, 1.15);
+}

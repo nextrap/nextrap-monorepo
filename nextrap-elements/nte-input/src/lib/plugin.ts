@@ -24,6 +24,13 @@ export abstract class NteInputPluginInterface {
 
   onInput(e: Event) {}
 
+  /**
+   * Returns the actual form element that is associated with this plugin.
+   */
+  getFormElement(): HTMLElement | null {
+    return null;
+  }
+
   getValue(): NteInputValue {
     return this.host.value;
   }

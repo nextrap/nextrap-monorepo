@@ -18,6 +18,10 @@ export class DefaultTokenInputPlugin extends AbstractNteInputPlugin {
     return this.query<HTMLInputElement>('input[type="text"]');
   }
 
+  override getFormElement() {
+    return this.input;
+  }
+
   protected get isStrict() {
     return this.host.hasAttribute('strict');
   }

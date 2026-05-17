@@ -17,6 +17,10 @@ export class DefaultTextPlugin extends AbstractNteInputPlugin {
     return this.query<HTMLInputElement>('input');
   }
 
+  override getFormElement() {
+    return this.input;
+  }
+
   public override onInput() {
     this.host.value = this.input?.value;
     //this.host.requestUpdate();
