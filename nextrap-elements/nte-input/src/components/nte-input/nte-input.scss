@@ -15,6 +15,13 @@
   --nte-input-border-radius: var(--nt-border-radius, 0.375rem);
   --nte-input-message-color: var(--nt-danger, #dc3545);
   --nte-input-message-min-height: 1.25rem;
+  --nte-input-validation-color: var(--nte-input-message-color);
+  --nte-input-validation-background: color-mix(
+    in srgb,
+    var(--nte-input-message-color) 8%,
+    var(--nte-input-control-background)
+  );
+  --nte-input-validation-border-color: color-mix(in srgb, var(--nte-input-message-color) 20%, transparent);
   --nte-input-aid-color: var(--nte-input-control-color);
   --nte-input-aid-background: color-mix(
     in srgb,
@@ -213,15 +220,24 @@
   resize: none;
 }
 
+#validation,
 #input-aid {
   display: none;
   overflow: clip;
 }
 
-:host(:has([slot='input-aid'])) #input-aid {
+#validation slot:not(.slot-empty),
+#input-aid slot:not(.slot-empty) {
   display: block;
 }
 
+:host([validation-message]:not([validation-message=''])) #validation,
+#validation:has(slot:not(.slot-empty)),
+#input-aid:has(slot:not(.slot-empty)) {
+  display: block;
+}
+
+#validation-inner,
 #input-aid-inner {
   display: grid;
   grid-template-rows: 0fr;
@@ -233,18 +249,22 @@
     transform 0.2s ease;
 }
 
-:host(:focus-within:has([slot='input-aid'])) #input-aid-inner {
+:host([validation-message]:not([validation-message=''])) #validation-inner,
+#validation:has(slot:not(.slot-empty)) #validation-inner,
+:host(:focus-within) #input-aid:has(slot:not(.slot-empty)) #input-aid-inner {
   grid-template-rows: 1fr;
   opacity: 1;
   transform: translateY(0);
 }
 
+#validation-bubble,
 #input-aid-bubble {
   position: relative;
   min-height: 0;
   overflow: hidden;
 }
 
+#validation-bubble::before,
 #input-aid-bubble::before {
   content: '';
   position: absolute;
@@ -252,9 +272,6 @@
   left: calc(var(--nte-input-padding-x) + 0.25rem);
   width: var(--nte-input-aid-arrow-size);
   height: var(--nte-input-aid-arrow-size);
-  background: var(--nte-input-aid-background);
-  border-top: 1px solid var(--nte-input-aid-border-color);
-  border-left: 1px solid var(--nte-input-aid-border-color);
   transform: translateY(-0.25rem) rotate(45deg);
   opacity: 0;
   transition:
@@ -262,28 +279,46 @@
     transform 0.2s ease;
 }
 
-:host(:focus-within:has([slot='input-aid'])) #input-aid-bubble::before {
+#validation-bubble::before {
+  background: var(--nte-input-validation-background);
+  border-top: 1px solid var(--nte-input-validation-border-color);
+  border-left: 1px solid var(--nte-input-validation-border-color);
+}
+
+#input-aid-bubble::before {
+  background: var(--nte-input-aid-background);
+  border-top: 1px solid var(--nte-input-aid-border-color);
+  border-left: 1px solid var(--nte-input-aid-border-color);
+}
+
+:host([validation-message]:not([validation-message=''])) #validation-bubble::before,
+#validation:has(slot:not(.slot-empty)) #validation-bubble::before,
+:host(:focus-within) #input-aid:has(slot:not(.slot-empty)) #input-aid-bubble::before {
   opacity: 1;
   transform: translateY(0) rotate(45deg);
 }
 
+#validation-bubble > slot,
 #input-aid-bubble > slot {
   display: block;
   width: 100%;
   max-width: 100%;
   padding: var(--nte-input-aid-padding-y) var(--nte-input-aid-padding-x);
   margin-top: calc(var(--nte-input-aid-arrow-size) * 0.5);
-  color: var(--nte-input-aid-color);
   font-size: 0.875rem;
   line-height: 1.4;
-  background: var(--nte-input-aid-background);
-  border: 1px solid var(--nte-input-aid-border-color);
   border-radius: var(--nte-input-aid-border-radius);
   box-shadow: 0 0.5rem 1rem color-mix(in srgb, var(--nt-dark, #212529) 10%, transparent);
 }
 
-#validation {
-  min-height: var(--nte-input-message-min-height);
-  color: var(--nte-input-message-color);
-  font-size: 0.875rem;
+#validation-bubble > slot {
+  color: var(--nte-input-validation-color);
+  background: var(--nte-input-validation-background);
+  border: 1px solid var(--nte-input-validation-border-color);
+}
+
+#input-aid-bubble > slot {
+  color: var(--nte-input-aid-color);
+  background: var(--nte-input-aid-background);
+  border: 1px solid var(--nte-input-aid-border-color);
 }

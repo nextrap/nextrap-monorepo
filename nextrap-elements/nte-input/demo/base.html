@@ -119,6 +119,19 @@
       </section>
 
       <section>
+        <h2>Validation + Input Aid</h2>
+        <nte-input
+          class="hoverlabel"
+          label="Passwort"
+          type="password"
+          invalid
+          validation-message="Bitte mindestens 12 Zeichen eingeben."
+        >
+          <span slot="input-aid">Nutze idealerweise Groß-/Kleinbuchstaben, Zahlen und Sonderzeichen.</span>
+        </nte-input>
+      </section>
+
+      <section>
         <h2>Custom validation slot</h2>
         <nte-input class="hoverlabel" label="Passwort" type="password">
           <span slot="validation">Mindestens 12 Zeichen und 1 Sonderzeichen.</span>

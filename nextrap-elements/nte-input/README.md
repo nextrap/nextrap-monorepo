@@ -7,6 +7,7 @@ Minimal input wrapper for Nextrap.
 - a label above the control
 - a bordered control box
 - a validation area below the control
+- an optional input aid area below the control
 
 The actual control markup is provided through statically registered plugins.
 
@@ -104,6 +105,9 @@ NteInput.registerPlugin(TextPlugin);
 <nte-input label="Tags" type="select-radio" multiple value='["news"]' data-options='[{"value":"news","label":"News"},{"value":"events","label":"Events"}]'></nte-input>
 <nte-input label="Schlagworte" type="token-input" value='["news"]' data-options='[{"value":"news","label":"News"},{"value":"events","label":"Events"}]'></nte-input>
 <nte-input label="AGB akzeptieren" type="checkbox" checked></nte-input>
+<nte-input label="Benutzername" type="text">
+  <span slot="input-aid">Nur Kleinbuchstaben, Zahlen, Punkt und Bindestrich verwenden.</span>
+</nte-input>
 ```
 
 ## Textarea auto grow
@@ -151,6 +155,33 @@ Users can add tokens with `Enter`, `,` or `;` and remove tokens via the built-in
 Values are deduplicated automatically.
 If the boolean `strict` attribute is set, only option values from `data-options` or `<options>` may be added.
 Free custom values are ignored in that mode.
+
+## Validation and input aid
+
+`nte-input` supports two helper areas below the control:
+
+- `validation-message` or `slot="validation"`
+- `slot="input-aid"`
+
+Behavior:
+- validation is rendered as a red bubble below the control
+- input aid is rendered as a neutral bubble below the validation bubble
+- input aid expands on `:focus-within`
+- if both exist, validation is shown first and input aid below it
+- empty named slots are detected through the `.slot-empty` class added by `nte_element`
+
+Example:
+
+```html
+<nte-input
+  label="Passwort"
+  type="password"
+  invalid
+  validation-message="Bitte mindestens 12 Zeichen eingeben."
+>
+  <span slot="input-aid">Nutze Groß-/Kleinbuchstaben, Zahlen und Sonderzeichen.</span>
+</nte-input>
+```
 
 ## SCSS mixins
 

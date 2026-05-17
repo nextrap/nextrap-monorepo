@@ -19,7 +19,10 @@ import type { InputOptionsType, NteInputRenderContext, NteInputValue } from '../
 import style from './nte-input.scss?inline';
 
 @customElement('nte-input')
-export class NteInput extends nextrap_element({ eventBinding: true }) {
+export class NteInput extends nextrap_element({
+  eventBinding: true,
+  slotVisibility: true, // This will add .slot-empty to empty slot elements. Rely on this to detect empty slots in css.
+}) {
   static formAssociated = true;
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
@@ -37,7 +40,7 @@ export class NteInput extends nextrap_element({ eventBinding: true }) {
   })
   accessor options: InputOptionsType | null = null;
   @property({ type: Boolean }) accessor multiple = false;
-  @property({ type: String, attribute: 'validation-message' }) accessor validationMessage = '';
+  @property({ type: String, attribute: 'validation-message', reflect: true }) accessor validationMessage = '';
   @property({ type: Boolean, reflect: true }) accessor invalid = false;
   @property({ type: Boolean, reflect: true }) accessor valid = false;
   @property({ type: Boolean, reflect: true, attribute: 'has-value' }) accessor hasValue = false;
@@ -136,16 +139,20 @@ export class NteInput extends nextrap_element({ eventBinding: true }) {
           <div id="control" part="control">${pluginHtml ?? nothing}</div>
         </div>
 
+        <div id=${this.validationId} part="validation" aria-live="polite">
+          <div id="validation-inner">
+            <div id="validation-bubble" part="validation-bubble">
+              <slot name="validation">${this.validationMessage}</slot>
+            </div>
+          </div>
+        </div>
+
         <div id="input-aid" part="input-aid">
           <div id="input-aid-inner">
             <div id="input-aid-bubble" part="input-aid-bubble">
               <slot name="input-aid"></slot>
             </div>
           </div>
-        </div>
-
-        <div id=${this.validationId} part="validation" aria-live="polite">
-          <slot name="validation">${this.validationMessage}</slot>
         </div>
       </div>
     `;
