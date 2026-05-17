@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { AbstractNteInputPlugin } from '../lib/plugin';
-import type { NteInputRenderContext } from '../lib/types';
+import { NTE_INPUT_CONTROL_ID, NTE_INPUT_VALIDATION_ID, type NteInputRenderContext } from '../lib/types';
 
 import style from './default-text.scss?inline';
 
@@ -27,17 +27,17 @@ export class DefaultTextPlugin extends AbstractNteInputPlugin {
   }
 
   override render(context: NteInputRenderContext) {
-    const { element, type, controlId, validationId } = context;
+    const { element, type } = context;
 
     return html`
       <input
-        id=${controlId}
+        id=${NTE_INPUT_CONTROL_ID}
         part="input"
         type=${type}
         name=${element.getAttribute('name') ?? ''}
         .value=${this.normalizeStringValue(this.host.value)}
         placeholder=${element.getAttribute('placeholder') ?? ''}
-        aria-describedby=${validationId}
+        aria-describedby=${NTE_INPUT_VALIDATION_ID}
         pattern=${ifDefined(element.getAttribute('pattern') ?? undefined)}
         minlength=${ifDefined(element.getAttribute('minlength') ?? undefined)}
         maxlength=${ifDefined(element.getAttribute('maxlength') ?? undefined)}

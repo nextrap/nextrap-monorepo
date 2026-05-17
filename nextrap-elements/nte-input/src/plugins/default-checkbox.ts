@@ -1,7 +1,13 @@
 import { html } from 'lit';
 
 import { AbstractNteInputPlugin } from '../lib/plugin';
-import type { InputOptionsType, NteInputRenderContext, NteInputValue } from '../lib/types';
+import {
+  NTE_INPUT_CONTROL_ID,
+  NTE_INPUT_VALIDATION_ID,
+  type InputOptionsType,
+  type NteInputRenderContext,
+  type NteInputValue,
+} from '../lib/types';
 
 import style from './default-checkbox.scss?inline';
 
@@ -29,15 +35,15 @@ export class DefaultCheckboxPlugin extends AbstractNteInputPlugin {
   }
 
   override render(context: NteInputRenderContext) {
-    const { element, controlId, validationId } = context;
+    const { element } = context;
 
     return html`
-      <label part="checkbox-label" for=${controlId}>
+      <label part="checkbox-label" for=${NTE_INPUT_CONTROL_ID}>
         <input
-          id=${controlId}
+          id=${NTE_INPUT_CONTROL_ID}
           part="checkbox-input"
           type="checkbox"
-          aria-describedby=${validationId}
+          aria-describedby=${NTE_INPUT_VALIDATION_ID}
           name=${element.getAttribute('name') ?? ''}
           value=${element.getAttribute('value') ?? 'on'}
           ?checked=${this.host.value === true}

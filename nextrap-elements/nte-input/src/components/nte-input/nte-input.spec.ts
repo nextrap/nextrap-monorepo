@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import '../../index';
 import { AbstractNteInputPlugin } from '../../lib/plugin';
-import type { NteInputValue } from '../../lib/types';
+import { NTE_INPUT_CONTROL_ID, NTE_INPUT_VALIDATION_ID, type NteInputValue } from '../../lib/types';
 import { NteInput } from './nte-input';
 
 describe('NteInput', () => {
@@ -23,6 +23,26 @@ describe('NteInput', () => {
 
     expect(element.shadowRoot?.getElementById('label')?.textContent?.trim()).toBe('E-Mail');
     expect(element.shadowRoot?.querySelector('[part="validation"]')?.textContent?.trim()).toContain('Pflichtfeld');
+
+    element.remove();
+  });
+
+  it('uses shared shadow-dom ids for the built-in label and validation hookup', async () => {
+    const element = document.createElement('nte-input') as NteInput;
+    element.type = 'text';
+    element.label = 'Name';
+    element.validationMessage = 'Pflichtfeld';
+    document.body.appendChild(element);
+
+    await element.updateComplete;
+    await element.updateComplete;
+
+    const label = element.shadowRoot?.getElementById('label');
+    const input = element.shadowRoot?.getElementById(NTE_INPUT_CONTROL_ID);
+
+    expect(label?.getAttribute('for')).toBe(NTE_INPUT_CONTROL_ID);
+    expect(input).toBeInstanceOf(HTMLInputElement);
+    expect(input?.getAttribute('aria-describedby')).toBe(NTE_INPUT_VALIDATION_ID);
 
     element.remove();
   });
@@ -49,6 +69,42 @@ describe('NteInput', () => {
     await element.updateComplete;
 
     expect(element.shadowRoot?.getElementById('plugin-control')).toBeInstanceOf(HTMLInputElement);
+
+    element.remove();
+  });
+
+  it('syncs the outer label with the plugin control id', async () => {
+    const type = 'spec-control-id';
+
+    if (!NteInput.getPlugin(type)) {
+      class SpecControlIdPlugin extends AbstractNteInputPlugin {
+        static readonly types = [type];
+
+        protected get input() {
+          return this.host.shadowRoot?.querySelector<HTMLInputElement>('#plugin-control') ?? null;
+        }
+
+        override getFormElement() {
+          return this.input;
+        }
+
+        override render() {
+          return html`<input id="plugin-control" />`;
+        }
+      }
+
+      NteInput.registerPlugin(SpecControlIdPlugin);
+    }
+
+    const element = document.createElement('nte-input') as NteInput;
+    element.type = type;
+    element.label = 'Custom';
+    document.body.appendChild(element);
+
+    await element.updateComplete;
+    await element.updateComplete;
+
+    expect(element.shadowRoot?.getElementById('label')?.getAttribute('for')).toBe('plugin-control');
 
     element.remove();
   });

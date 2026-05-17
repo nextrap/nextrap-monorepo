@@ -2,7 +2,13 @@ import { html, nothing } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 import { AbstractNteInputPlugin } from '../lib/plugin';
-import type { InputOptionsType, NteInputRenderContext, NteInputValue } from '../lib/types';
+import {
+  NTE_INPUT_CONTROL_ID,
+  NTE_INPUT_VALIDATION_ID,
+  type InputOptionsType,
+  type NteInputRenderContext,
+  type NteInputValue,
+} from '../lib/types';
 import { normalizeValueArray, resolveInputOptions } from './select-utils';
 
 import style from './default-token-input.scss?inline';
@@ -31,12 +37,12 @@ export class DefaultTokenInputPlugin extends AbstractNteInputPlugin {
   }
 
   override render(context: NteInputRenderContext) {
-    const { element, controlId, validationId } = context;
+    const { element } = context;
     const tokens = this.normalizeSelectedValues(this.host.value);
     const availableOptions = this.getAvailableOptions(tokens);
 
     return html`
-      <div part="token-list" aria-describedby=${validationId}>
+      <div part="token-list" aria-describedby=${NTE_INPUT_VALIDATION_ID}>
         ${tokens.map((token) => {
           const option = this.resolveOption(token);
           const label = option?.html ? unsafeHTML(option.html) : (option?.label ?? token);
@@ -58,12 +64,12 @@ export class DefaultTokenInputPlugin extends AbstractNteInputPlugin {
         })}
 
         <input
-          id=${controlId}
+          id=${NTE_INPUT_CONTROL_ID}
           part="token-input"
           type="text"
-          list=${availableOptions.length > 0 ? `${controlId}-options` : ''}
+          list=${availableOptions.length > 0 ? `${NTE_INPUT_CONTROL_ID}-options` : ''}
           placeholder=${element.getAttribute('placeholder') ?? ''}
-          aria-describedby=${validationId}
+          aria-describedby=${NTE_INPUT_VALIDATION_ID}
           ?disabled=${element.hasAttribute('disabled')}
           ?readonly=${element.hasAttribute('readonly')}
           @input=${this.handleDraftInput}
@@ -75,7 +81,7 @@ export class DefaultTokenInputPlugin extends AbstractNteInputPlugin {
 
       ${availableOptions.length > 0
         ? html`
-            <datalist id=${`${controlId}-options`}>
+            <datalist id=${`${NTE_INPUT_CONTROL_ID}-options`}>
               ${availableOptions.map((option) => html`<option value=${option.value}>${option.label}</option>`)}
             </datalist>
           `

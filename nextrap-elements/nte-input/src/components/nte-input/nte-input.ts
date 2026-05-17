@@ -15,7 +15,12 @@ import { resetStyle } from '@nextrap/style-reset';
 import { PropertyValues } from 'lit';
 import { parseInputOptions, serializeInputOptions } from '../../lib/options';
 import type { NteInputPluginClass, NteInputPluginInterface, NteInputPluginStyleSheet } from '../../lib/plugin';
-import type { InputOptionsType, NteInputRenderContext, NteInputValue } from '../../lib/types';
+import {
+  NTE_INPUT_CONTROL_ID,
+  type InputOptionsType,
+  type NteInputRenderContext,
+  type NteInputValue,
+} from '../../lib/types';
 import style from './nte-input.scss?inline';
 
 @customElement('nte-input')
@@ -50,7 +55,6 @@ export class NteInput extends nextrap_element({
   @state()
   protected accessor _value: NteInputValue | undefined = undefined;
 
-  #generatedId = `nte-input-${Math.random().toString(36).slice(2, 9)}`;
   #plugin?: NteInputPluginInterface;
   #pluginStyleElement?: HTMLStyleElement;
   #pluginConstructableStyleSheet?: CSSStyleSheet;
@@ -135,7 +139,7 @@ export class NteInput extends nextrap_element({
           <label
             id="label"
             part="label"
-            for=${plugin?.getLabelFor() ?? this.controlId}
+            for=${NTE_INPUT_CONTROL_ID}
             ?hidden=${!this.label || Boolean(plugin?.isLabelHidden())}
           >
             ${this.label}
@@ -144,7 +148,7 @@ export class NteInput extends nextrap_element({
           <div id="control" part="control">${pluginHtml ?? nothing}</div>
         </div>
 
-        <div id=${this.validationId} part="validation" aria-live="polite">
+        <div id="validation" part="validation" aria-live="polite">
           <div id="validation-inner" part="validation-inner">
             <div id="validation-bubble" part="validation-bubble">
               <span id="validation-arrow" part="validation-arrow" aria-hidden="true"></span>
@@ -173,20 +177,10 @@ export class NteInput extends nextrap_element({
     super.update(changedProperties);
   }
 
-  get controlId() {
-    return `${this.#baseId}-control`;
-  }
-
-  get validationId() {
-    return `${this.#baseId}-validation`;
-  }
-
   get renderContext(): NteInputRenderContext {
     return {
       element: this,
       type: this.#normalizedType,
-      controlId: this.controlId,
-      validationId: this.validationId,
     };
   }
 
@@ -329,10 +323,6 @@ export class NteInput extends nextrap_element({
 
     renderRoot.append(styleElement);
     this.#pluginStyleElement = styleElement;
-  }
-
-  get #baseId() {
-    return this.id || this.#generatedId;
   }
 
   get #normalizedType() {

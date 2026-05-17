@@ -1,5 +1,5 @@
 import type { NteInput } from '../components/nte-input/nte-input';
-import type { InputOptionsType, NteInputRenderContext, NteInputValue } from './types';
+import { NTE_INPUT_CONTROL_ID, type InputOptionsType, type NteInputRenderContext, type NteInputValue } from './types';
 
 export type NteInputFormValue = File | FormData | string | null;
 export type NteInputPluginStyleSheet = CSSStyleSheet | string;
@@ -67,8 +67,12 @@ export abstract class NteInputPluginInterface {
     return false;
   }
 
-  getLabelFor(): string | null {
-    return this.host.controlId;
+  getControlId(): string {
+    return this.getFormElement()?.id || NTE_INPUT_CONTROL_ID;
+  }
+
+  getLabelFor(): string {
+    return this.getControlId();
   }
 
   isValid(): boolean | null {
@@ -95,14 +99,6 @@ export abstract class NteInputPluginInterface {
 
 export abstract class AbstractNteInputPlugin extends NteInputPluginInterface {
   #eventController?: AbortController;
-
-  protected get controlId() {
-    return this.host.controlId;
-  }
-
-  protected get validationId() {
-    return this.host.validationId;
-  }
 
   protected query<T extends Element>(selector: string) {
     return (this.host.renderRoot?.querySelector(selector) as T | null) ?? null;

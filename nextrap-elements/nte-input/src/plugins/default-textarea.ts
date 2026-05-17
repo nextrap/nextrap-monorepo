@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { AbstractNteInputPlugin } from '../lib/plugin';
-import type { NteInputRenderContext } from '../lib/types';
+import { NTE_INPUT_CONTROL_ID, NTE_INPUT_VALIDATION_ID, type NteInputRenderContext } from '../lib/types';
 
 import style from './default-textarea.scss?inline';
 
@@ -22,17 +22,17 @@ export class DefaultTextareaPlugin extends AbstractNteInputPlugin {
   }
 
   override render(context: NteInputRenderContext) {
-    const { element, controlId, validationId } = context;
+    const { element } = context;
 
     return html`
       <textarea
-        id=${controlId}
+        id=${NTE_INPUT_CONTROL_ID}
         part="textarea"
         rows=${element.getAttribute('rows') ?? '3'}
         name=${element.getAttribute('name') ?? ''}
         .value=${this.normalizeStringValue(this.host.value)}
         placeholder=${element.getAttribute('placeholder') ?? ''}
-        aria-describedby=${validationId}
+        aria-describedby=${NTE_INPUT_VALIDATION_ID}
         minlength=${ifDefined(element.getAttribute('minlength') ?? undefined)}
         maxlength=${ifDefined(element.getAttribute('maxlength') ?? undefined)}
         ?disabled=${element.hasAttribute('disabled')}

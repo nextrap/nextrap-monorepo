@@ -2,7 +2,13 @@ import { html, nothing } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 import { AbstractNteInputPlugin } from '../lib/plugin';
-import type { InputOption, InputOptionsType, NteInputRenderContext } from '../lib/types';
+import {
+  NTE_INPUT_CONTROL_ID,
+  NTE_INPUT_VALIDATION_ID,
+  type InputOption,
+  type InputOptionsType,
+  type NteInputRenderContext,
+} from '../lib/types';
 import { normalizeValueArray, resolveInputOptions, resolveSelectedInputOptions } from './select-utils';
 
 import style from './default-select.scss?inline';
@@ -23,16 +29,16 @@ export class DefaultSelectPlugin extends AbstractNteInputPlugin {
   }
 
   override render(context: NteInputRenderContext) {
-    const { element, controlId, validationId } = context;
+    const { element } = context;
     const options = resolveInputOptions(element);
     const selectedValue = normalizeValueArray(this.host.value)[0] ?? '';
 
     return html`
       <select
-        id=${controlId}
+        id=${NTE_INPUT_CONTROL_ID}
         part="select"
         name=${element.getAttribute('name') ?? ''}
-        aria-describedby=${validationId}
+        aria-describedby=${NTE_INPUT_VALIDATION_ID}
         ?disabled=${element.hasAttribute('disabled')}
         ?required=${element.hasAttribute('required')}
       >

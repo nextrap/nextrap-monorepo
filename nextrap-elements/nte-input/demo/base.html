@@ -18,7 +18,11 @@
           label="No Style (if not importet scsss)"
           type="text"
           placeholder="Max Mustermann"
-        ></nte-input>
+          required
+          validation-message="This is a validation message only shown is it is invalid"
+        >
+          <p slot="input-aid">This is some text to display on focus</p>
+        </nte-input>
         <nte-input class="default" label="Name" type="text" placeholder="Max Mustermann"></nte-input>
         <nte-input class="default hoverlabel" label="Default mit Hoverlabel" type="text"></nte-input>
         <nte-input class="carbon" label="Carbon " type="text"></nte-input>

@@ -30,105 +30,98 @@
   border-color: #0d6efd;
 }
 
-:where(#validation),
-:where(#input-aid) {
+:where(#validation) {
   display: none;
-  overflow: clip;
+  grid-template-rows: 1fr;
+  padding-top: 0.375rem; // Space for the arrow
 }
 
-:where(#validation slot),
+:where(#validation slot) {
+  display: contents;
+}
+
+:where(#validation-inner) {
+  min-height: 0;
+  overflow: visible; // Important for the arrow to be visible outside the bubble
+}
+
+:where(#validation-bubble) {
+  position: relative;
+}
+
+:where(#validation-arrow) {
+  position: absolute;
+  top: 0;
+  left: 0.75rem;
+  display: block;
+  width: 0.625rem;
+  height: 0.625rem;
+  background: white;
+  border-top: 1px solid #dc3545;
+  border-left: 1px solid #dc3545;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+:where(#validation-content) {
+  display: block;
+  border: 1px solid #dc3545;
+}
+
+// Styles for Validation - Do not mix them with input aid!
+// Show is .slot-empty or if the validation message is set.
+:host([invalid]) :where(#validation:has(slot:not(.slot-empty))),
+:host([invalid][validation-message]) :where(#validation) {
+  display: grid;
+}
+
+:where(#input-aid) {
+  display: none;
+  grid-template-rows: 0fr;
+}
+
 :where(#input-aid slot) {
   display: contents;
 }
 
-:host([validation-message]:not([validation-message=''])) :where(#validation),
-:where(#validation:has(slot:not(.slot-empty))),
-:where(#input-aid:has(slot:not(.slot-empty))) {
-  display: block;
-}
-
-:where(#validation-inner),
 :where(#input-aid-inner) {
-  display: grid;
-  grid-template-rows: 0fr;
-  opacity: 0;
-  transform: translateY(-0.25rem);
-  transition:
-    grid-template-rows 0.2s ease,
-    opacity 0.2s ease,
-    transform 0.2s ease;
+  min-height: 0;
+  overflow: visible; // Important for the arrow to be visible outside the bubble
 }
 
-:host([validation-message]:not([validation-message=''])) :where(#validation-inner),
-:where(#validation:has(slot:not(.slot-empty)) #validation-inner),
-:host(:focus-within) :where(#input-aid:has(slot:not(.slot-empty)) #input-aid-inner) {
-  grid-template-rows: 1fr;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-:where(#validation-bubble),
 :where(#input-aid-bubble) {
   position: relative;
-  min-height: 0;
-  overflow: visible;
+  opacity: 0;
 }
 
-:where(#validation-arrow),
 :where(#input-aid-arrow) {
-  display: block;
   position: absolute;
-  top: 0.375rem;
-  left: 1rem;
-  z-index: 1;
-  width: 0.75rem;
-  height: 0.75rem;
-  box-sizing: border-box;
-  pointer-events: none;
+  top: 0;
+  left: 0.75rem;
+  display: block;
+  width: 0.625rem;
+  height: 0.625rem;
+  background: white;
+  border-top: 1px solid #0d6efd;
+  border-left: 1px solid #0d6efd;
   transform: translateY(-50%) rotate(45deg);
 }
 
-:where(#validation-arrow) {
-  background: #fff5f5;
-  border-top: 1px solid #dc3545;
-  border-left: 1px solid #dc3545;
-}
-
-:where(#input-aid-arrow) {
-  opacity: 0;
-  background: #f8f9fa;
-  border-top: 1px solid #ced4da;
-  border-left: 1px solid #ced4da;
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
-}
-
-:host(:focus-within) :where(#input-aid:has(slot:not(.slot-empty)) #input-aid-arrow) {
-  opacity: 1;
-}
-
-:where(#validation-content),
 :where(#input-aid-content) {
   display: block;
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  margin-top: 0.375rem;
-  padding: 0.625rem 0.75rem;
-  font-size: 0.875rem;
-  line-height: 1.4;
+  border: 1px solid #0d6efd;
 }
 
-:where(#validation-content) {
-  color: #dc3545;
-  background: #fff5f5;
-  border: 1px solid #dc3545;
+// Styles for Input Aid - Do not mix them with validation!
+:where(#input-aid:has(slot:not(.slot-empty))) {
+  display: grid;
 }
 
-:where(#input-aid-content) {
-  background: #f8f9fa;
-  border: 1px solid #ced4da;
+:host(:focus-within) :where(#input-aid:has(slot:not(.slot-empty))) {
+  grid-template-rows: 1fr;
+  padding-top: 0.375rem; // Space for the arrow
+}
+
+:host(:focus-within) :where(#input-aid:has(slot:not(.slot-empty))) :where(#input-aid-bubble) {
+  opacity: 1;
+  transform: translateY(0);
 }

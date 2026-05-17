@@ -2,7 +2,14 @@ import { html, nothing } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 import { AbstractNteInputPlugin } from '../lib/plugin';
-import type { InputOption, InputOptionsType, NteInputRenderContext, NteInputValue } from '../lib/types';
+import {
+  NTE_INPUT_CONTROL_ID,
+  NTE_INPUT_VALIDATION_ID,
+  type InputOption,
+  type InputOptionsType,
+  type NteInputRenderContext,
+  type NteInputValue,
+} from '../lib/types';
 import { normalizeValueArray, resolveInputOptions, resolveSelectedInputOptions } from './select-utils';
 
 import style from './default-select-radio.scss?inline';
@@ -27,17 +34,22 @@ export class DefaultSelectRadioPlugin extends AbstractNteInputPlugin {
   }
 
   override render(context: NteInputRenderContext) {
-    const { element, controlId, validationId } = context;
+    const { element } = context;
     const options = resolveInputOptions(element);
     const selectedValues = new Set(this.normalizeSelectedValues(this.host.value));
     const inputType = element.multiple ? 'checkbox' : 'radio';
-    const groupName = element.getAttribute('name') ?? controlId;
+    const groupName = element.getAttribute('name') ?? `${NTE_INPUT_CONTROL_ID}-group`;
     const role = element.multiple ? 'group' : 'radiogroup';
 
     return html`
-      <div id=${`${controlId}-group`} part="option-list" role=${role} aria-describedby=${validationId}>
+      <div
+        id=${`${NTE_INPUT_CONTROL_ID}-group`}
+        part="option-list"
+        role=${role}
+        aria-describedby=${NTE_INPUT_VALIDATION_ID}
+      >
         ${options.map((option, index) => {
-          const optionId = index === 0 ? controlId : `${controlId}-${index}`;
+          const optionId = index === 0 ? NTE_INPUT_CONTROL_ID : `${NTE_INPUT_CONTROL_ID}-${index}`;
 
           return html`
             <label part="option-label" for=${optionId}>
@@ -47,7 +59,7 @@ export class DefaultSelectRadioPlugin extends AbstractNteInputPlugin {
                 type=${inputType}
                 name=${groupName}
                 value=${option.value}
-                aria-describedby=${validationId}
+                aria-describedby=${NTE_INPUT_VALIDATION_ID}
                 ?checked=${selectedValues.has(option.value)}
                 ?disabled=${Boolean(option.disabled) || element.hasAttribute('disabled')}
                 ?required=${!element.multiple && element.hasAttribute('required')}

@@ -45,6 +45,10 @@ class MyPlugin extends AbstractNteInputPlugin {
 }
 ```
 
+`NteInputRenderContext` now only contains the host element and the normalized type.
+Inside the shared Shadow DOM, plugins should usually use the fixed ids `main-control` and `validation-content`.
+For special cases, `getControlId()` can be overridden. By default it returns the id of `getFormElement()`.
+
 The host element forwards these plugin APIs via:
 
 ```ts
@@ -75,14 +79,14 @@ class TextPlugin extends AbstractNteInputPlugin {
   static readonly types = ['text', 'email', 'password'];
 
   render(context: NteInputRenderContext) {
-    const { type, controlId, validationId } = context;
+    const { type } = context;
 
     return html`
       <input
-        id=${controlId}
+        id="main-control"
         type=${type}
         placeholder=${this.host.getAttribute('placeholder') ?? ''}
-        aria-describedby=${validationId}
+        aria-describedby="validation-content"
       />
     `;
   }
