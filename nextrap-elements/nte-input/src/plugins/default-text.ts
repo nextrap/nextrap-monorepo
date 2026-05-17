@@ -28,6 +28,7 @@ export class DefaultTextPlugin extends AbstractNteInputPlugin {
     return html`
       <input
         id=${controlId}
+        part="input"
         type=${type}
         name=${element.getAttribute('name') ?? ''}
         .value=${this.normalizeStringValue(this.host.value)}

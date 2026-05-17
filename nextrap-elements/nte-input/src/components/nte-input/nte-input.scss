@@ -1,113 +1,54 @@
 :host {
   display: block;
-
-  --nte-input-gap: 0.5rem;
-  --nte-input-padding-x: 0.75rem;
-  --nte-input-padding-y: 0.625rem;
-  --nte-input-control-gap: 0.5rem;
-  --nte-input-control-min-height: 2.75rem;
-  --nte-input-label-color: var(--nt-dark, #212529);
-  --nte-input-control-color: var(--nt-dark, #212529);
-  --nte-input-control-background: var(--nt-body, #fff);
-  --nte-input-border-color: var(--nt-gray-light, #ced4da);
-  --nte-input-border-color-focus: var(--nt-primary, #0d6efd);
-  --nte-input-border-color-invalid: var(--nt-danger, #dc3545);
-  --nte-input-border-radius: var(--nt-border-radius, 0.375rem);
-  --nte-input-message-color: var(--nt-danger, #dc3545);
-  --nte-input-message-min-height: 1.25rem;
-  --nte-input-validation-color: var(--nte-input-message-color);
-  --nte-input-validation-background: color-mix(
-    in srgb,
-    var(--nte-input-message-color) 8%,
-    var(--nte-input-control-background)
-  );
-  --nte-input-validation-border-color: color-mix(in srgb, var(--nte-input-message-color) 20%, transparent);
-  --nte-input-aid-color: var(--nte-input-control-color);
-  --nte-input-aid-background: color-mix(
-    in srgb,
-    var(--nte-input-border-color-focus) 8%,
-    var(--nte-input-control-background)
-  );
-  --nte-input-aid-border-color: color-mix(in srgb, var(--nte-input-border-color-focus) 20%, transparent);
-  --nte-input-aid-border-radius: var(--nte-input-border-radius);
-  --nte-input-aid-padding-x: 0.75rem;
-  --nte-input-aid-padding-y: 0.625rem;
-  --nte-input-aid-arrow-size: 0.75rem;
-  --nte-input-inner-padding-top: 0;
-  --nte-input-inner-padding-bottom: 0;
-  --nte-input-inner-min-height: auto;
-  --nte-input-textarea-min-height: 6rem;
-  --nte-input-textarea-max-height: 16rem;
 }
 
-:host([invalid]) {
-  --nte-input-border-color: var(--nte-input-border-color-invalid);
-}
-
-:host([valid]) {
-  --nte-input-border-color: var(--nt-success, #198754);
-}
-
-#wrapper {
+:where(#wrapper),
+:where(#field) {
   display: grid;
-  gap: var(--nte-input-gap);
+  gap: 0.5rem;
 }
 
-#field {
-  display: grid;
-  gap: var(--nte-input-gap);
-}
-
-#label {
+:where(#label) {
   margin: 0;
-  color: var(--nte-input-label-color);
   font-weight: 600;
 }
 
-#label[hidden] {
+:where(#label[hidden]) {
   display: none;
 }
 
-#control {
+:where(#control) {
   display: flex;
   align-items: center;
-  gap: var(--nte-input-control-gap);
-  min-height: var(--nte-input-control-min-height);
-  padding: var(--nte-input-padding-y) var(--nte-input-padding-x);
-  color: var(--nte-input-control-color);
-  background: var(--nte-input-control-background);
-  border: 1px solid var(--nte-input-border-color);
-  border-right-width: 5px;
-  border-radius: var(--nte-input-border-radius);
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #ced4da;
 }
 
-#control:focus-within {
-  border-color: var(--nte-input-border-color-focus);
-  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--nte-input-border-color-focus) 18%, transparent);
+:where(#control:focus-within) {
+  border-color: #0d6efd;
 }
 
-#validation,
-#input-aid {
+:where(#validation),
+:where(#input-aid) {
   display: none;
   overflow: clip;
 }
 
-#validation slot:not(.slot-empty),
-#input-aid slot:not(.slot-empty) {
+:where(#validation) slot:not(.slot-empty),
+:where(#input-aid) slot:not(.slot-empty) {
   display: block;
 }
 
-:host([validation-message]:not([validation-message=''])) #validation,
-#validation:has(slot:not(.slot-empty)),
-#input-aid:has(slot:not(.slot-empty)) {
+:host([validation-message]:not([validation-message=''])) :where(#validation),
+:where(#validation:has(slot:not(.slot-empty))),
+:where(#input-aid:has(slot:not(.slot-empty))) {
   display: block;
 }
 
-#validation-inner,
-#input-aid-inner {
+:where(#validation-inner),
+:where(#input-aid-inner) {
   display: grid;
   grid-template-rows: 0fr;
   opacity: 0;
@@ -118,76 +59,70 @@
     transform 0.2s ease;
 }
 
-:host([validation-message]:not([validation-message=''])) #validation-inner,
-#validation:has(slot:not(.slot-empty)) #validation-inner,
-:host(:focus-within) #input-aid:has(slot:not(.slot-empty)) #input-aid-inner {
+:host([validation-message]:not([validation-message=''])) :where(#validation-inner),
+:where(#validation:has(slot:not(.slot-empty)) #validation-inner),
+:host(:focus-within) :where(#input-aid:has(slot:not(.slot-empty)) #input-aid-inner) {
   grid-template-rows: 1fr;
   opacity: 1;
   transform: translateY(0);
 }
 
-#validation-bubble,
-#input-aid-bubble {
+:where(#validation-bubble),
+:where(#input-aid-bubble) {
   position: relative;
   min-height: 0;
   overflow: hidden;
 }
 
-#validation-bubble::before,
-#input-aid-bubble::before {
-  content: '';
+:where(#validation-arrow),
+:where(#input-aid-arrow) {
   position: absolute;
-  top: calc(var(--nte-input-aid-arrow-size) * 0.125);
-  left: calc(var(--nte-input-padding-x) + 0.25rem);
-  width: var(--nte-input-aid-arrow-size);
-  height: var(--nte-input-aid-arrow-size);
-  transform: translateY(-0.25rem) rotate(45deg);
+  top: 0.125rem;
+  left: 1rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  transform: rotate(45deg);
+}
+
+:where(#validation-arrow) {
+  background: #fff5f5;
+  border-top: 1px solid #dc3545;
+  border-left: 1px solid #dc3545;
+}
+
+:where(#input-aid-arrow) {
   opacity: 0;
+  background: #f8f9fa;
+  border-top: 1px solid #ced4da;
+  border-left: 1px solid #ced4da;
   transition:
     opacity 0.2s ease,
     transform 0.2s ease;
 }
 
-#validation-bubble::before {
-  background: var(--nte-input-validation-background);
-  border-top: 1px solid var(--nte-input-validation-border-color);
-  border-left: 1px solid var(--nte-input-validation-border-color);
-}
-
-#input-aid-bubble::before {
-  background: var(--nte-input-aid-background);
-  border-top: 1px solid var(--nte-input-aid-border-color);
-  border-left: 1px solid var(--nte-input-aid-border-color);
-}
-
-:host([validation-message]:not([validation-message=''])) #validation-bubble::before,
-#validation:has(slot:not(.slot-empty)) #validation-bubble::before,
-:host(:focus-within) #input-aid:has(slot:not(.slot-empty)) #input-aid-bubble::before {
+:host(:focus-within) :where(#input-aid:has(slot:not(.slot-empty)) #input-aid-arrow) {
   opacity: 1;
-  transform: translateY(0) rotate(45deg);
 }
 
-#validation-bubble > slot,
-#input-aid-bubble > slot {
+:where(#validation-bubble > slot),
+:where(#input-aid-bubble > slot) {
   display: block;
   width: 100%;
   max-width: 100%;
-  padding: var(--nte-input-aid-padding-y) var(--nte-input-aid-padding-x);
-  margin-top: calc(var(--nte-input-aid-arrow-size) * 0.5);
+  box-sizing: border-box;
+  margin-top: 0.375rem;
+  padding: 0.625rem 0.75rem;
   font-size: 0.875rem;
   line-height: 1.4;
-  border-radius: var(--nte-input-aid-border-radius);
-  box-shadow: 0 0.5rem 1rem color-mix(in srgb, var(--nt-dark, #212529) 10%, transparent);
 }
 
-#validation-bubble > slot {
-  color: var(--nte-input-validation-color);
-  background: var(--nte-input-validation-background);
-  border: 1px solid var(--nte-input-validation-border-color);
+:where(#validation-bubble > slot) {
+  color: #dc3545;
+  background: #fff5f5;
+  border: 1px solid #dc3545;
 }
 
-#input-aid-bubble > slot {
-  color: var(--nte-input-aid-color);
-  background: var(--nte-input-aid-background);
-  border: 1px solid var(--nte-input-aid-border-color);
+:where(#input-aid-bubble > slot) {
+  background: #f8f9fa;
+  border: 1px solid #ced4da;
 }

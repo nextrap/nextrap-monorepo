@@ -31,6 +31,7 @@ export class DefaultCheckboxPlugin extends AbstractNteInputPlugin {
       <label part="checkbox-label" for=${controlId}>
         <input
           id=${controlId}
+          part="checkbox-input"
           type="checkbox"
           aria-describedby=${validationId}
           name=${element.getAttribute('name') ?? ''}

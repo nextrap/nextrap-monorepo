@@ -23,6 +23,7 @@ export class DefaultTextareaPlugin extends AbstractNteInputPlugin {
     return html`
       <textarea
         id=${controlId}
+        part="textarea"
         rows=${element.getAttribute('rows') ?? '3'}
         name=${element.getAttribute('name') ?? ''}
         .value=${this.normalizeStringValue(this.host.value)}

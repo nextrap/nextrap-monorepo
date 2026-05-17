@@ -1,22 +1,244 @@
+@use 'sass:map';
+
 $themeBootstrapDefaults: (
-  background: var(--nt-white),
-  text: var(--nt-text),
-  border: var(--nt-gray-300),
-  shadow: 5px 5px 15px rgba(0, 0, 0, 0.1),
+  gap: 0.5rem,
+  control-gap: 0.5rem,
+  control-min-height: 2.75rem,
+  control-padding-x: 0.75rem,
+  control-padding-y: 0.625rem,
+  label-color: var(--nt-dark, #212529),
+  control-color: var(--nt-dark, #212529),
+  control-background: var(--nt-body, #fff),
+  border-color: var(--nt-gray-light, #ced4da),
+  border-color-focus: var(--nt-primary, #0d6efd),
+  border-color-invalid: var(--nt-danger, #dc3545),
+  border-color-valid: var(--nt-success, #198754),
+  border-radius: var(--nt-border-radius, 0.375rem),
+  validation-color: var(--nt-danger, #dc3545),
+  validation-background: color-mix(in srgb, var(--nt-danger, #dc3545) 8%, var(--nt-body, #fff)),
+  validation-border-color: color-mix(in srgb, var(--nt-danger, #dc3545) 20%, transparent),
+  aid-color: var(--nt-dark, #212529),
+  aid-background: color-mix(in srgb, var(--nt-primary, #0d6efd) 8%, var(--nt-body, #fff)),
+  aid-border-color: color-mix(in srgb, var(--nt-primary, #0d6efd) 20%, transparent),
+  aid-border-radius: var(--nt-border-radius, 0.375rem),
+  aid-padding-x: 0.75rem,
+  aid-padding-y: 0.625rem,
+  aid-arrow-size: 0.75rem,
+  bubble-shadow: 0 0.5rem 1rem color-mix(in srgb, var(--nt-dark, #212529) 10%, transparent),
+  textarea-min-height: 6rem,
+  textarea-max-height: 16rem,
+  option-gap: 0.625rem,
+  token-gap: 0.5rem,
+  token-padding-x: 0.625rem,
+  token-padding-y: 0.25rem,
+  token-background: color-mix(in srgb, var(--nt-primary, #0d6efd) 10%, var(--nt-body, #fff)),
+  token-radius: 999px,
+  token-input-min-width: 8rem,
 );
 
 /**
- * The default Bootstrap Theme for nte-input with border and rounded corners.
+ * Default Bootstrap-like theme for nte-input.
  */
-@mixin theme-bootstrap($theme) {
+@mixin theme-bootstrap($theme: ()) {
   $theme: map.merge($themeBootstrapDefaults, $theme);
+  $spacing-scale: var(--nte-input-scale-spacing, 1);
+  $label-scale: var(--nte-input-scale-label, 1);
+  $input-scale: var(--nte-input-scale-input, 1);
 
-  // Do not use css variables here. Css Variables can be set in theme configuration.
+  --nte-input-scale-spacing: 1;
+  --nte-input-scale-label: 1;
+  --nte-input-scale-input: 1;
 
-  &::part(input) {
-    background: map.get($theme, background);
-    color: map.get($theme, text);
-    border: 1px solid map.get($theme, border);
-    box-shadow: map.get($theme, shadow);
+  &::part(wrapper),
+  &::part(field) {
+    gap: calc(#{map.get($theme, gap)} * #{$spacing-scale});
+  }
+
+  &::part(label) {
+    margin: 0;
+    color: map.get($theme, label-color);
+    font-size: calc(1em * #{$label-scale});
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  &:not([type='checkbox'])::part(control) {
+    align-items: center;
+    gap: calc(#{map.get($theme, control-gap)} * #{$spacing-scale});
+    min-height: calc(#{map.get($theme, control-min-height)} * #{$spacing-scale});
+    padding: calc(#{map.get($theme, control-padding-y)} * #{$spacing-scale})
+      calc(#{map.get($theme, control-padding-x)} * #{$spacing-scale});
+    color: map.get($theme, control-color);
+    background: map.get($theme, control-background);
+    border: 1px solid map.get($theme, border-color);
+    border-right-width: 5px;
+    border-radius: map.get($theme, border-radius);
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  &[type='select-radio']::part(control),
+  &[type='token-input']::part(control) {
+    align-items: flex-start;
+  }
+
+  &:not([type='checkbox']):focus-within::part(control) {
+    border-color: map.get($theme, border-color-focus);
+    box-shadow: 0 0 0 0.2rem color-mix(in srgb, #{map.get($theme, border-color-focus)} 18%, transparent);
+  }
+
+  &[invalid]:not([type='checkbox'])::part(control) {
+    border-color: map.get($theme, border-color-invalid);
+  }
+
+  &[valid]:not([type='checkbox'])::part(control) {
+    border-color: map.get($theme, border-color-valid);
+  }
+
+  &::part(input),
+  &::part(select),
+  &::part(textarea),
+  &::part(token-input),
+  &[type='select-radio']::part(option-text),
+  &[type='checkbox']::part(checkbox-text),
+  &[type='token-input']::part(token),
+  &[type='token-input']::part(token-remove),
+  &::part(validation-content),
+  &::part(input-aid-content) {
+    color: inherit;
+    font: inherit;
+    font-size: calc(1em * #{$input-scale});
+  }
+
+  &::part(textarea) {
+    min-height: calc(#{map.get($theme, textarea-min-height)} * #{$input-scale});
+    max-height: calc(#{map.get($theme, textarea-max-height)} * #{$input-scale});
+  }
+
+  &::part(validation-arrow),
+  &::part(input-aid-arrow) {
+    position: absolute;
+    top: calc((#{map.get($theme, aid-arrow-size)} * 0.125) * #{$spacing-scale});
+    left: calc((#{map.get($theme, control-padding-x)} + 0.25rem) * #{$spacing-scale});
+    width: calc(#{map.get($theme, aid-arrow-size)} * #{$spacing-scale});
+    height: calc(#{map.get($theme, aid-arrow-size)} * #{$spacing-scale});
+    transform: rotate(45deg);
+  }
+
+  &::part(validation-arrow) {
+    background: map.get($theme, validation-background);
+    border-top: 1px solid map.get($theme, validation-border-color);
+    border-left: 1px solid map.get($theme, validation-border-color);
+  }
+
+  &::part(input-aid-arrow) {
+    opacity: 0;
+    background: map.get($theme, aid-background);
+    border-top: 1px solid map.get($theme, aid-border-color);
+    border-left: 1px solid map.get($theme, aid-border-color);
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  &:focus-within::part(input-aid-arrow) {
+    opacity: 1;
+  }
+
+  &::part(validation-content),
+  &::part(input-aid-content) {
+    padding: calc(#{map.get($theme, aid-padding-y)} * #{$spacing-scale})
+      calc(#{map.get($theme, aid-padding-x)} * #{$spacing-scale});
+    border-radius: map.get($theme, aid-border-radius);
+    box-shadow: map.get($theme, bubble-shadow);
+  }
+
+  &::part(validation-content) {
+    color: map.get($theme, validation-color);
+    background: map.get($theme, validation-background);
+    border: 1px solid map.get($theme, validation-border-color);
+  }
+
+  &::part(input-aid-content) {
+    color: map.get($theme, aid-color);
+    background: map.get($theme, aid-background);
+    border: 1px solid map.get($theme, aid-border-color);
+  }
+
+  &[type='select-radio']::part(option-list) {
+    display: grid;
+    gap: calc(#{map.get($theme, option-gap)} * #{$spacing-scale});
+    width: 100%;
+  }
+
+  &[type='select-radio']::part(option-label),
+  &[type='checkbox']::part(checkbox-label) {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(#{map.get($theme, option-gap)} * #{$spacing-scale});
+    cursor: pointer;
+  }
+
+  &[type='select-radio']::part(option-input),
+  &[type='checkbox']::part(checkbox-input) {
+    width: calc(1rem * #{$input-scale});
+    min-width: calc(1rem * #{$input-scale});
+    min-height: calc(1rem * #{$input-scale});
+    margin: 0;
+    flex: 0 0 auto;
+    accent-color: map.get($theme, border-color-focus);
+  }
+
+  &[type='select-radio']::part(option-text),
+  &[type='checkbox']::part(checkbox-text) {
+    line-height: 1.4;
+  }
+
+  &[type='checkbox'][invalid]::part(checkbox-text) {
+    color: map.get($theme, validation-color);
+  }
+
+  &[type='checkbox'][valid]::part(checkbox-text) {
+    color: map.get($theme, border-color-valid);
+  }
+
+  &[type='token-input']::part(token-list) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: calc(#{map.get($theme, token-gap)} * #{$spacing-scale});
+    width: 100%;
+  }
+
+  &[type='token-input']::part(token) {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(0.375rem * #{$spacing-scale});
+    max-width: 100%;
+    padding: calc(#{map.get($theme, token-padding-y)} * #{$spacing-scale})
+      calc(#{map.get($theme, token-padding-x)} * #{$spacing-scale});
+    background: map.get($theme, token-background);
+    border-radius: map.get($theme, token-radius);
+  }
+
+  &[type='token-input']::part(token-remove) {
+    width: auto;
+    min-width: auto;
+    min-height: auto;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+    line-height: 1;
+    background: transparent;
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+  }
+
+  &[type='token-input']::part(token-input) {
+    width: auto;
+    min-width: calc(#{map.get($theme, token-input-min-width)} * #{$input-scale});
+    flex: 1 1 calc(#{map.get($theme, token-input-min-width)} * #{$input-scale});
   }
 }

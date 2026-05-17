@@ -26,6 +26,7 @@ export class DefaultSelectPlugin extends AbstractNteInputPlugin {
     return html`
       <select
         id=${controlId}
+        part="select"
         name=${element.getAttribute('name') ?? ''}
         aria-describedby=${validationId}
         ?disabled=${element.hasAttribute('disabled')}

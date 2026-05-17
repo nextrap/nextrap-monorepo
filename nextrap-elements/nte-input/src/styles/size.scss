@@ -1,0 +1,30 @@
+@use 'sass:math';
+@use 'sass:meta';
+
+@mixin _validate-scale($value, $name) {
+  @if meta.type-of($value) != 'number' or not math.is-unitless($value) {
+    @error '#{$name} must be a unitless number.';
+  }
+
+  @if $value <= 0 {
+    @error '#{$name} must be greater than 0.';
+  }
+}
+
+@mixin size($spacing-scale, $label-scale: null, $input-scale: null) {
+  @if $label-scale == null {
+    $label-scale: $spacing-scale;
+  }
+
+  @if $input-scale == null {
+    $input-scale: $spacing-scale;
+  }
+
+  @include _validate-scale($spacing-scale, '$spacing-scale');
+  @include _validate-scale($label-scale, '$label-scale');
+  @include _validate-scale($input-scale, '$input-scale');
+
+  --nte-input-scale-spacing: #{$spacing-scale};
+  --nte-input-scale-label: #{$label-scale};
+  --nte-input-scale-input: #{$input-scale};
+}

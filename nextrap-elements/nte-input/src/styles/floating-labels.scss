@@ -1,2 +1,76 @@
-@mixin floating-labels() {
+@mixin floating-labels(
+  $minHeight: 3.75rem,
+  $labelScale: 0.82,
+  $restOffsetY: 50%,
+  $labelRestColor: var(--nt-dark-subtle, var(--nt-dark, #212529)),
+  $labelActiveColor: var(--nt-dark, #212529),
+  $labelBackground: var(--nt-body, #fff),
+  $labelRadius: 999px,
+  $labelShadow: none
+) {
+  $spacing-scale: var(--nte-input-scale-spacing, 1);
+  $innerMinHeight: $minHeight * 0.4;
+  $inlinePadding: $minHeight * 0.2;
+  $topPadding: $minHeight * 0.3333333333;
+  $bottomPadding: $minHeight * 0.12;
+  $labelPaddingX: $minHeight * 0.0666666667;
+  $labelPaddingY: $minHeight * 0.0333333333;
+  $activeTop: $minHeight * 0.08;
+
+  &::part(field) {
+    position: relative;
+    gap: 0;
+  }
+
+  &:not([type='checkbox'])::part(control) {
+    min-height: calc(#{$minHeight} * #{$spacing-scale});
+    padding-top: calc(#{$topPadding} * #{$spacing-scale});
+    padding-bottom: calc(#{$bottomPadding} * #{$spacing-scale});
+    align-items: flex-end;
+  }
+
+  &:not([type='checkbox'])::part(input),
+  &:not([type='checkbox'])::part(select),
+  &:not([type='checkbox'])::part(textarea),
+  &:not([type='checkbox'])::part(token-input) {
+    min-height: calc(#{$innerMinHeight} * #{$spacing-scale});
+  }
+
+  &:not([type='checkbox'])::part(token-list) {
+    min-height: calc(#{$innerMinHeight} * #{$spacing-scale});
+  }
+
+  &::part(label) {
+    position: absolute;
+    inset-block-start: $restOffsetY;
+    inset-inline-start: calc((#{$inlinePadding} - #{$labelPaddingX}) * #{$spacing-scale});
+    z-index: 1;
+    max-inline-size: calc(100% - ((#{$inlinePadding} * 2) - (#{$labelPaddingX} * 2)) * #{$spacing-scale});
+    padding: calc(#{$labelPaddingY} * #{$spacing-scale}) calc(#{$labelPaddingX} * #{$spacing-scale});
+    overflow: hidden;
+    color: $labelRestColor;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.2;
+    background: $labelBackground;
+    border-radius: $labelRadius;
+    box-shadow: $labelShadow;
+    transform: translateY(-50%);
+    transform-origin: left top;
+    transition:
+      inset-block-start 0.18s ease,
+      transform 0.18s ease,
+      color 0.18s ease,
+      opacity 0.18s ease;
+  }
+
+  &:focus-within::part(label),
+  &[has-value]::part(label),
+  &[placeholder]::part(label),
+  &[has-placeholder]::part(label),
+  &[hoverlabel-active]::part(label) {
+    inset-block-start: calc(#{$activeTop} * #{$spacing-scale});
+    color: $labelActiveColor;
+    transform: scale($labelScale);
+  }
 }

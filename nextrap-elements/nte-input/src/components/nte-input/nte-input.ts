@@ -145,17 +145,19 @@ export class NteInput extends nextrap_element({
         </div>
 
         <div id=${this.validationId} part="validation" aria-live="polite">
-          <div id="validation-inner">
+          <div id="validation-inner" part="validation-inner">
             <div id="validation-bubble" part="validation-bubble">
-              <slot name="validation">${this.validationMessage}</slot>
+              <span id="validation-arrow" part="validation-arrow" aria-hidden="true"></span>
+              <slot name="validation" part="validation-content">${this.validationMessage}</slot>
             </div>
           </div>
         </div>
 
         <div id="input-aid" part="input-aid">
-          <div id="input-aid-inner">
+          <div id="input-aid-inner" part="input-aid-inner">
             <div id="input-aid-bubble" part="input-aid-bubble">
-              <slot name="input-aid"></slot>
+              <span id="input-aid-arrow" part="input-aid-arrow" aria-hidden="true"></span>
+              <slot name="input-aid" part="input-aid-content"></slot>
             </div>
           </div>
         </div>

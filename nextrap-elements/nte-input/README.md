@@ -113,15 +113,21 @@ NteInput.registerPlugin(TextPlugin);
 ## Textarea auto grow
 
 The built-in `textarea` plugin grows with its content.
-The height is clamped between the configured CSS min and max height.
+The height is clamped between the configured theme min and max height.
 It also syncs the host `value` property with the internal `<textarea>`.
 
-Relevant CSS variables:
+Those values are configured through the `theme-bootstrap()` SCSS mixin map:
 
-```css
-nte-input {
-  --nte-input-textarea-min-height: 6rem;
-  --nte-input-textarea-max-height: 16rem;
+```scss
+@use '@nextrap/nte-input/src/styles/theme-bootstrap';
+
+nte-input.default {
+  @include theme-bootstrap.theme-bootstrap(
+    (
+      textarea-min-height: 6rem,
+      textarea-max-height: 16rem,
+    )
+  );
 }
 ```
 
@@ -185,34 +191,53 @@ Example:
 
 ## SCSS mixins
 
-The package ships a root `mixins.scss` file.
+The package exposes its styling mixins from `src/styles/*`.
+The bundled `src/styles/index.scss` applies the same defaults automatically for `nte-input.default`.
 
 ```scss
-@use '@nextrap/nte-input/mixins' as nte-input;
+@use '@nextrap/nte-input/src/styles/theme-bootstrap';
+@use '@nextrap/nte-input/src/styles/floating-labels';
+@use '@nextrap/nte-input/src/styles/select-radio-vertical';
+@use '@nextrap/nte-input/src/styles/size';
 
-nte-input.hoverlabel {
-  @include nte-input.hoverlabel();
+nte-input.default {
+  @include theme-bootstrap.theme-bootstrap();
 }
-```
 
-The `hoverlabel` mixin turns the normal label into a floating Bootstrap-like label.
-It keeps extra control height and input padding so the label has enough room across browsers.
-The required spacing is calculated from the `$minHeight` SCSS argument.
-The label floats automatically on focus, when a value exists, when a placeholder exists, or when the active plugin returns `true` from `isHoverlabelActive()`.
-
-The package also exposes a `select-radio-vertical` mixin for `type="select-radio"`.
-It is intended to be applied to a form or container selector and styles only descendant `nte-input[type="select-radio"]` elements.
-Inside each input, the radio / checkbox options are rendered next to each other with a minimum width of `350px`.
-Between columns a vertical separator is shown, and when the options wrap into a new row an additional horizontal separator becomes visible.
-The mixin uses SCSS arguments with default values instead of CSS custom properties.
-
-```scss
-@use '@nextrap/nte-input/mixins' as nte-input;
+nte-input.default.hoverlabel {
+  @include floating-labels.floating-labels();
+}
 
 .default.select-radio-vertical {
   nte-input[type='select-radio'] {
-    @include nte-input.select-radio-vertical();
+    @include select-radio-vertical.select-radio-vertical();
   }
+}
+```
+
+`theme-bootstrap()` styles the shared nte-input frame, helper bubbles, checkbox/select-radio layout and token presentation.
+It uses a small SCSS map API instead of component-specific CSS variables.
+
+`floating-labels()` turns the normal label into a floating Bootstrap-like label.
+It increases the control height / spacing from the `$minHeight` SCSS argument and floats the label automatically on focus, when a value exists, when a placeholder exists, or when the active plugin returns `true` from `isHoverlabelActive()`.
+
+`select-radio-vertical()` is intended for `type="select-radio"` and should usually be applied from a form or container selector.
+It styles only descendant `nte-input[type="select-radio"]` elements and lays out their options side by side inside the input.
+It uses SCSS arguments with defaults instead of component CSS variables.
+
+`size()` is a small helper mixin that sets the shared CSS scale variables used by `theme-bootstrap()` and `floating-labels()`.
+It accepts separate scales for spacing, label and input.
+The bundled `src/styles/index.scss` already defines example classes: `sm`, `md`, `lg`, `xl`, `xxl`.
+
+```scss
+@use '@nextrap/nte-input/src/styles/size';
+
+nte-input.sm {
+  @include size.size(0.875, 0.875, 0.875);
+}
+
+nte-input.xxl {
+  @include size.size(1.35, 1.15, 1.15);
 }
 ```
 

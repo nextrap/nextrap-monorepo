@@ -1,10 +1,6 @@
 textarea {
   width: 100%;
-  min-height: var(--nte-input-textarea-min-height);
-  max-height: var(--nte-input-textarea-max-height);
-  padding-top: var(--nte-input-inner-padding-top);
-  padding-bottom: var(--nte-input-inner-padding-bottom);
-  padding-inline: 0;
+  min-width: 0;
   color: inherit;
   font: inherit;
   background: transparent;

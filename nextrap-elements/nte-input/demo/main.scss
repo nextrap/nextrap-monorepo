@@ -1,4 +1,4 @@
-@use '../mixins' as nte-input;
+@use '../src/styles/floating-labels' as nte-input-floating-labels;
 
 body {
   margin: 0;
@@ -83,7 +83,7 @@ button:hover {
 
 nte-input.hoverlabel,
 nte-input.default.hoverlabel {
-  @include nte-input.hoverlabel;
+  @include nte-input-floating-labels.floating-labels();
 }
 
 .demo-select-radio-vertical-form {

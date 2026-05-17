@@ -1,14 +1,1 @@
-@use 'src/styles/index' as *;
-nte-input {
-  display: block;
-}
-
-nte-input.default {
-  @include nte-input-mixins.hoverlabel();
-}
-
-nte-input.default.vertical {
-  nte-input[type='select-radio'] {
-    @include nte-input-mixins.select-radio-vertical;
-  }
-}
+@use 'src/styles/index';
