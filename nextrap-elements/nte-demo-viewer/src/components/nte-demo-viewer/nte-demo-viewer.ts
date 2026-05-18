@@ -1,9 +1,11 @@
-import { html, LitElement, nothing, unsafeCSS } from 'lit';
+import { html, nothing, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
+import { nextrap_element } from '@nextrap/nte-core';
 import '@trunkjs/content-pane';
 import '@trunkjs/markdown-loader';
 
+import { sleep } from '@trunkjs/browser-utils';
 import styles from './nte-demo-viewer.scss?inline';
 
 /**
@@ -38,7 +40,7 @@ type ViewState = 'welcome' | 'demo' | 'readme';
  * @fires code-change - Fired when the code is edited
  */
 @customElement('nte-demo-viewer')
-export class NteDemoViewerElement extends LitElement {
+export class NteDemoViewerElement extends nextrap_element() {
   static override styles = unsafeCSS(styles);
 
   /** Path to the component's README.md file */
@@ -77,6 +79,10 @@ export class NteDemoViewerElement extends LitElement {
   private accessor _isValidating = false;
 
   override async connectedCallback() {
+    // Append the Loader Component for Scrolling and Global Loading State (if not already present)
+    document.body.appendChild(document.createElement('tj-loader'));
+    await sleep(100);
+
     super.connectedCallback();
     this._parseDemos();
     await this._validateDemos();
