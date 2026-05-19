@@ -17,13 +17,13 @@
   $labelPaddingY: $minHeight * 0.0333333333;
   $activeTop: $minHeight * 0.08;
 
-  &::part(field) {
-    position: relative;
-    gap: 0;
-  }
-
   &:not([type='checkbox'])::part(control) {
     min-height: calc(#{$minHeight} * #{$spacing-scale});
+  }
+
+  &:not([type='checkbox'])::part(control-inner) {
+    position: relative;
+    min-height: 100%;
     padding-top: calc(#{$topPadding} * #{$spacing-scale});
     padding-bottom: calc(#{$bottomPadding} * #{$spacing-scale});
     align-items: flex-end;

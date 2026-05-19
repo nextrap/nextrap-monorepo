@@ -130,22 +130,33 @@ export class NteInput extends nextrap_element({
 
   override render() {
     const plugin = this.#plugin;
+    const isHoverLabel = this.classList.contains('hoverlabel');
 
     const pluginHtml = plugin?.render(this.renderContext);
+    const labelTemplate = html`
+      <label
+        id="label"
+        part="label"
+        for=${NTE_INPUT_CONTROL_ID}
+        ?hidden=${!this.label || Boolean(plugin?.isLabelHidden())}
+      >
+        ${this.label}
+      </label>
+    `;
 
     return html`
       <div id="wrapper" part="wrapper">
         <div id="field" part="field">
-          <label
-            id="label"
-            part="label"
-            for=${NTE_INPUT_CONTROL_ID}
-            ?hidden=${!this.label || Boolean(plugin?.isLabelHidden())}
-          >
-            ${this.label}
-          </label>
+          ${isHoverLabel ? nothing : labelTemplate}
 
-          <div id="control" part="control">${pluginHtml ?? nothing}</div>
+          <div id="control-shell" part="control">
+            <slot id="start" name="start" part="start"></slot>
+            <div id="control" part="control-inner">
+              ${isHoverLabel ? labelTemplate : nothing}
+              <div id="control-input" part="control-input">${pluginHtml ?? nothing}</div>
+            </div>
+            <slot id="end" name="end" part="end"></slot>
+          </div>
         </div>
 
         <div id="validation" part="validation" aria-live="polite">

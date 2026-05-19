@@ -1,0 +1,16 @@
+# <%= name %>
+
+Kurzer Einstieg in die generierte Komponente.
+
+## Was ist enthalten?
+
+- eine Markdown-Übersicht als Einstieg
+- eine interaktive Basis-Demo mit dem neuen Demo-Viewer
+- gemeinsames Demo-Bootstrapping in `demo/main.ts`
+
+## Demo-Fahrplan
+
+1. **Überblick** – kurze Einordnung und Hinweise
+2. **Basis** – einfaches Rendern der Komponente
+
+Ersetze diese Inhalte nach dem Generieren durch package-spezifische Beispiele.

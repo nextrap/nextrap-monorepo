@@ -89,6 +89,12 @@ git push --follow-tags origin main
 
 After generating a new package, run `npm i` to link workspace dependencies.
 
+
+## Demos
+
+Use "@trunkjs/vite-demo-viewer" for visual demos of components. See the package for usage instructions. 
+
+
 ## Component Authoring (Lit)
 
 Components use [Lit](https://lit.dev/) with Shadow DOM. Standard pattern:
@@ -96,10 +102,13 @@ Components use [Lit](https://lit.dev/) with Shadow DOM. Standard pattern:
 ```ts
 import { LitElement, unsafeCSS } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import style from './nte-my-component.scss?inline'; // ?inline = CSS string, not injected
+import style from './nte-my-component.scss?inline';
+import { nextrap_element } from './nextrap-element'; // ?inline = CSS string, not injected
+
+
 
 @customElement('nte-my-component')
-export class NteMyComponent extends LitElement {
+export class NteMyComponent extends nextrap_element() {
     static override styles = [unsafeCSS(style)];
 }
 ```

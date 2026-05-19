@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= name %> Basis Demo</title>
+  </head>
+  <body>
+    <main>
+      <h1><%= name %></h1>
+      <p>Ein minimales Beispiel für die generierte Demo-Struktur.</p>
+
+      <section>
+        <h2>Standard</h2>
+        <<%= name %>></<%= name %>>
+      </section>
+    </main>
+
+    <script src="/demo/main.js" type="module"></script>
+  </body>
+</html>

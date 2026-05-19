@@ -1,18 +1,40 @@
-import '@nextrap/nte-demo-viewer';
+import { FormDataAccessor } from '@nextrap/nte-input';
 import '@nextrap/style-base';
 import '@nextrap/style-typography';
 import '@nextrap/style-utils';
 import '../index.ts';
-import { FormDataAccessor } from '../src/lib/form-data-accessor';
 import './main.scss';
 
 type DemoValue = boolean | string | string[];
 
 type DemoData = Record<string, DemoValue>;
 
-function setupFormDataDemo() {
-  const form = document.getElementById('formdata-demo-form');
-  const output = document.getElementById('formdata-json');
+export function renderDocumentDemo(
+  root: HTMLElement,
+  documentHtml: string,
+  onReady?: (container: HTMLElement) => void,
+) {
+  const parsed = new DOMParser().parseFromString(documentHtml, 'text/html');
+  const body = parsed.body;
+  const main = parsed.querySelector('main');
+  const wrapper = document.createElement('div');
+
+  wrapper.className = 'nte-input-demo';
+
+  if (body.className.trim()) {
+    wrapper.classList.add(...body.className.trim().split(/\s+/));
+  }
+
+  body.querySelectorAll('script').forEach((script) => script.remove());
+  wrapper.innerHTML = main ? main.outerHTML : body.innerHTML;
+  root.replaceChildren(wrapper);
+
+  onReady?.(wrapper);
+}
+
+export function setupFormDataDemo(root: ParentNode = document) {
+  const form = root.querySelector('#formdata-demo-form');
+  const output = root.querySelector('#formdata-json');
 
   if (!(form instanceof HTMLFormElement) || !(output instanceof HTMLTextAreaElement)) {
     return;
@@ -30,15 +52,15 @@ function setupFormDataDemo() {
   });
 }
 
-function setupFormDataAccessorDemo() {
-  const root = document.getElementById('form-data-demo');
-  const output = document.getElementById('form-data-json');
+export function setupFormDataAccessorDemo(root: ParentNode = document) {
+  const formRoot = root.querySelector('#form-data-demo');
+  const output = root.querySelector('#form-data-json');
 
-  if (!(root instanceof HTMLElement) || !(output instanceof HTMLTextAreaElement)) {
+  if (!(formRoot instanceof HTMLElement) || !(output instanceof HTMLTextAreaElement)) {
     return;
   }
 
-  const accessor = new FormDataAccessor(root);
+  const accessor = new FormDataAccessor(formRoot);
   let syncingFromJson = false;
 
   const syncOutput = () => {
@@ -69,11 +91,11 @@ function setupFormDataAccessorDemo() {
     }
   };
 
-  root.addEventListener('input', () => {
+  formRoot.addEventListener('input', () => {
     syncOutput();
   });
 
-  root.addEventListener('change', () => {
+  formRoot.addEventListener('change', () => {
     syncOutput();
   });
 
@@ -84,5 +106,18 @@ function setupFormDataAccessorDemo() {
   syncOutput();
 }
 
+export function setupValidationDemo(root: ParentNode = document) {
+  const form = root.querySelector('form[action="/demo/05-validation.html"]');
+
+  if (!(form instanceof HTMLFormElement)) {
+    return;
+  }
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+  });
+}
+
 setupFormDataDemo();
 setupFormDataAccessorDemo();
+setupValidationDemo();

@@ -3,30 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>nte-input Form Data Accessor Demo</title>
+    <title>nte-input FormData Submit Demo</title>
   </head>
   <body>
     <main>
       <h1>nte-input</h1>
-      <p>Direkte Arbeit mit <code>FormDataAccessor</code> über die <code>value</code>-API.</p>
+      <p>Formularauswertung per <code>FormData</code>.</p>
 
-      <section id="form-data-demo">
-        <h2>FormDataAccessor Beispiel</h2>
+      <section>
+        <h2>FormData Beispiel</h2>
         <p>
-          Die JSON-Ausgabe zeigt direkt <code>FormDataAccessor.data</code>. Änderungen an den Feldern aktualisieren das
-          JSON automatisch. Änderungen am JSON werden direkt zurück in die Inputs geschrieben – inklusive Arrays wie bei
-          <code>select-radio</code> und <code>token-input</code>.
+          Mit <code>Absenden</code> wird das Formular per <code>FormData</code> ausgewertet. Die Ausgabe erfolgt als
+          Array von Key-Value-Objekten – auch für Mehrfachwerte wie <code>select-radio</code> und
+          <code>token-input</code>.
         </p>
 
-        <div class="demo-form-grid">
-          <nte-input class="hoverlabel" label="Name" type="text" name="name" value="Anna Beispiel"></nte-input>
+        <form id="formdata-demo-form">
+          <nte-input class="hoverlabel" label="Name" type="text" name="name" value="Max Mustermann"></nte-input>
 
           <nte-input
             class="hoverlabel"
             label="Kommentar"
             type="textarea"
             name="message"
-            value="Wert direkt am Host lesen"
+            value="Hallo aus dem Demo"
           ></nte-input>
 
           <nte-input class="hoverlabel" label="Status" type="select" name="status" value="inprogress">
@@ -41,7 +41,7 @@
             type="select-radio"
             name="categories"
             multiple
-            value='["news","events"]'
+            value='["news"]'
             data-options='[{"value":"news","label":"News"},{"value":"events","label":"Events"}]'
           ></nte-input>
 
@@ -55,10 +55,14 @@
           ></nte-input>
 
           <nte-input label="AGB akzeptieren" type="checkbox" name="accepted" value="yes" checked></nte-input>
-        </div>
 
-        <label class="json-label" for="form-data-json">FormDataAccessor Ausgabe</label>
-        <textarea id="form-data-json" class="demo-json" spellcheck="false"></textarea>
+          <div class="demo-actions">
+            <button id="formdata-submit" type="submit">Absenden</button>
+          </div>
+        </form>
+
+        <label class="json-label" for="formdata-json">FormData Ausgabe</label>
+        <textarea id="formdata-json" class="demo-json" spellcheck="false" readonly></textarea>
       </section>
     </main>
 

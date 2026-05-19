@@ -2,6 +2,7 @@
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import * as path from 'path';
+import { tjDemoViewerPlugin } from '@trunkjs/vite-demo-viewer';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
@@ -27,6 +28,9 @@ export default defineConfig(() => ({
         }
       }
     },
+    tjDemoViewerPlugin({
+      include: ['demo/**/*.demo.ts'],
+    }),
     dts({
       entryRoot: 'src',
       aliasesExclude: [/@nextrap\/.*/],

@@ -119,11 +119,9 @@ $themeCarbon: map.merge(
   }
 
   &:not([type='checkbox'])::part(control) {
-    align-items: center;
+    align-items: stretch;
     gap: calc(#{map.get($theme, control-gap)} * #{$spacing-scale});
     min-height: calc(#{map.get($theme, control-min-height)} * #{$spacing-scale});
-    padding: calc(#{map.get($theme, control-padding-y)} * #{$spacing-scale})
-      calc(#{map.get($theme, control-padding-x)} * #{$spacing-scale});
     color: map.get($theme, control-color);
     background: map.get($theme, control-background);
     border-style: map.get($theme, control-border-style);
@@ -139,8 +137,14 @@ $themeCarbon: map.merge(
       border-width 0.2s ease;
   }
 
-  &[type='select-radio']::part(control),
-  &[type='token-input']::part(control) {
+  &:not([type='checkbox'])::part(control-inner) {
+    align-items: center;
+    padding: calc(#{map.get($theme, control-padding-y)} * #{$spacing-scale})
+      calc(#{map.get($theme, control-padding-x)} * #{$spacing-scale});
+  }
+
+  &[type='select-radio']::part(control-inner),
+  &[type='token-input']::part(control-inner) {
     align-items: flex-start;
   }
 
@@ -151,6 +155,10 @@ $themeCarbon: map.merge(
     border: 0;
     border-radius: 0;
     box-shadow: none;
+  }
+
+  &[type='checkbox']::part(control-inner) {
+    padding: 0;
   }
 
   &:not([type='checkbox']):focus-within::part(control) {
