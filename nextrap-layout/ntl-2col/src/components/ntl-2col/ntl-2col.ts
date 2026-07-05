@@ -31,7 +31,7 @@ export class Ntl2Col extends nextrap_layout({
             <slot></slot>
           </div>
           <div part="aside" id="aside">
-            <slot name="aside" data-query=":scope > .aside | :scope > p:has(img)"></slot>
+            <slot name="aside" data-query=":scope > .aside | :scope > p:has(img)" data-set-attribute-class="auto"></slot>
           </div>
         </div>
         <div part="bottom">

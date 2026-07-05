@@ -32,11 +32,11 @@ export class NtlHero extends nextrap_layout(features) {
   protected override render(): unknown {
     return html`
       <div part="root" id="root">
-        <div id="background">
+        <div id="background" part="background">
           <slot name="bg"></slot>
         </div>
 
-        <div id="wrapper">
+        <div id="wrapper" part="wrapper">
           <div id="top-title" part="top-title">
             <slot name="top-title"></slot>
           </div>

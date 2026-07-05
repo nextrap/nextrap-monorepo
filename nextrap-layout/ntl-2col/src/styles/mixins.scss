@@ -22,6 +22,7 @@
   $gap: var(--nt-gap),
   $background: var(--nt-light),
   $border: 1px solid var(--nt-dark),
+  $border-radius: var(--nt-border-radius),
   $objectFit: yes,
   $aspectRatio: none
 ) {
@@ -38,7 +39,8 @@
   }
 
   @if ($objectFit != none) {
-    p[slot='aside'] {
+    // Auto wird automatisch gesetzt, wenn der slot nicht direkt zugewiesen wurde
+    p[slot='aside'].auto {
       height: 100%;
       width: 100%;
       display: block;
@@ -51,10 +53,15 @@
     }
   }
 
+  &::part(container) {
+    background: var(--background);
+    border: var(--border);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+  }
   &::part(wrapper) {
     gap: var(--gap);
     background: var(--background);
-    border: var(--border);
   }
 
   &::part(main) {

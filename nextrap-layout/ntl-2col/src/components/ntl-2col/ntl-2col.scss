@@ -23,6 +23,9 @@
   flex-direction: column;
   gap: var(--gap);
   align-items: stretch;
+
+
+
   #main {
     order: 2;
   }
@@ -48,6 +51,7 @@
       order: 1;
       width: calc(100% - var(--aside-width));
     }
+
   }
 
   #aside {

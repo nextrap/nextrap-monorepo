@@ -1,18 +1,13 @@
 /* The ShadowDOM Styles */
 
 :host {
-  --border-color: var(--nt-primary);
+  --border: 1px solid var(--nt-primary);
   --background-color: unset;
-  --border-radius: var(--nt-border-radius);
-  --border: var(--nt-border-width) solid var(--border-color);
-  --x-padding: var(--nt-default-gap-x);
-  --y-padding: var(--nt-default-gap-y);
   --image-aspect-ratio: 16/9;
 }
 
 #wrapper {
   border: var(--border);
-  border-radius: var(--border-radius);
   background-color: var(--background-color);
   display: flex;
   flex-direction: column;
@@ -26,8 +21,6 @@
 
 #header {
   order: 2;
-  padding: var(--y-padding) var(--x-padding);
-  padding-bottom: 0;
   &:has(.slot-empty) {
     display: none;
   }
@@ -64,7 +57,6 @@
   z-index: 3;
   order: 50;
   flex-grow: 1;
-  padding: var(--y-padding) var(--x-padding);
 }
 
 #footer {

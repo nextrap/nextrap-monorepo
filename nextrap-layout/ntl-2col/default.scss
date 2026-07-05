@@ -1,6 +1,4 @@
-// global styles
-
-@use '../../mixins' as mixin;
+@use './index' as mixin;
 
 .default {
   @include mixin.default-style(var(--nt-text-gap), var(--nt-text-gap));
