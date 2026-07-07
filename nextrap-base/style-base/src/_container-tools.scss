@@ -23,7 +23,7 @@
     scroll-padding-top: var(--nt-scroll-padding-top);
   }
 
-  //--nt-container-width: 100%;
+  --nt-container-width: 100%;
   // Set the container size based on the media width like in Bootstrap
   @media (min-width: 576px) {
     --nt-container-width: 540px;

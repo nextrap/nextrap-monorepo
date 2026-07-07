@@ -24,14 +24,24 @@
   gap: var(--gap);
   align-items: stretch;
 
-
-
   #main {
     order: 2;
   }
 
   #aside {
     order: 1;
+  }
+}
+
+:host([mode='mobile'].mobile-reverse) {
+  #wrapper {
+    #main {
+      order: 1;
+    }
+
+    #aside {
+      order: 2;
+    }
   }
 }
 
