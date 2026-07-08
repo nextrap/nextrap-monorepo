@@ -3,9 +3,16 @@
 
 ntl-2col {
   margin-bottom: 40px; // Only for demo: This should be done by the parent element like content-section > *
-  @include ntl2col.default-style();
 
-  &.variant-feature1 {
+  &.style-default {
+    @include ntl2col.default-style();
+  }
+
+  &.style-testimonial {
+    @include ntl2col.default-style();
+  }
+
+  &.with-feature1 {
     @include ntl2col.with-background-and-divider();
   }
 

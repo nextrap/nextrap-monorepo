@@ -5,19 +5,21 @@ import {
   BreakPointMixin,
   BreakPointMixinInterface,
   EventBindingsMixin,
+  LoaderMixin,
   LoggerMixinInterface,
   LoggingMixin,
   SlotVisibilityInterface,
   SlotVisibilityMixin,
-  LoaderMixin
 } from '@trunkjs/browser-utils';
 import { LitElement } from 'lit';
+import { SetDefaultStyleMixin, SetDefaultStyleMixinInterface } from './SetDefaultStyleMixin';
 
 export interface NteFeatures {
   logging?: boolean;
   slotVisibility?: boolean;
   eventBinding?: boolean;
   breakpoints?: boolean;
+  setDefaultStyle?: boolean;
 }
 
 export const defaultNteFeatures: NteFeatures = {
@@ -25,6 +27,7 @@ export const defaultNteFeatures: NteFeatures = {
   slotVisibility: false,
   eventBinding: false,
   breakpoints: false,
+  setDefaultStyle: true,
 };
 
 export type Ctor<T = object> = abstract new (...args: any[]) => T;
@@ -32,7 +35,8 @@ export type Ctor<T = object> = abstract new (...args: any[]) => T;
 export type InternalNextrapElementType = typeof LitElement &
   Ctor<LoggerMixinInterface> &
   Ctor<SlotVisibilityInterface> &
-  Ctor<BreakPointMixinInterface>;
+  Ctor<BreakPointMixinInterface> &
+  Ctor<SetDefaultStyleMixinInterface>;
 
 export function nextrap_element(features: NteFeatures = {}) {
   const mergedFeatures = { ...defaultNteFeatures, ...features };
@@ -42,6 +46,10 @@ export function nextrap_element(features: NteFeatures = {}) {
 
   // Always add the loader
   constructor = LoaderMixin(constructor);
+
+  if (mergedFeatures.setDefaultStyle) {
+    constructor = SetDefaultStyleMixin(constructor);
+  }
 
   if (mergedFeatures.logging) {
     constructor = LoggingMixin(constructor);

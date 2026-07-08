@@ -7,7 +7,7 @@ Diese Demo zeigt `ntl-accordion` als eingebettetes Layout-Element. Das Accordion
 {: layout="1;.demo-card"}
 
 ### FAQ
-{: layout="ntl-accordion.default"}
+{: layout="ntl-accordion"}
 
 #### Was macht ntl-accordion?
 
@@ -15,7 +15,7 @@ Es gruppiert direkte `section`-Kinder beziehungsweise Markdown-Abschnitte als au
 
 #### Woher kommt das Styling?
 
-Das funktionale Shadow-DOM-CSS bleibt klein. Das visuelle Standard-Styling wird über `accordion.default-style()` im Light DOM gesetzt.
+Das funktionale Shadow-DOM-CSS bleibt klein. Das visuelle Standard-Styling wird über `.style-default` im Light DOM gesetzt.
 
 #### Darf außen Abstand gesetzt werden?
 
@@ -25,7 +25,7 @@ Ja. Außenabstände sollten vom Parent-Layout kommen, weil das Accordion typisch
 {: layout="1;.demo-card"}
 
 ### Produktdetails
-{: layout="ntl-accordion.default[initial-open-index='1'][exclusive='true']"}
+{: layout="ntl-accordion[initial-open-index='1'][exclusive='true']"}
 
 #### Überblick
 
@@ -43,7 +43,7 @@ Wenn ein anderes Item geöffnet wird, schließt sich dieses im exklusiven Modus.
 {: layout="1;.demo-card"}
 
 ### Marker links
-{: layout="ntl-accordion.default.marker-start[marker-position='start']"}
+{: layout="ntl-accordion.marker-start[marker-position='start']"}
 
 #### Versand
 
@@ -54,7 +54,7 @@ Der Marker wird links angezeigt. Das Attribut wird an die Items weitergereicht.
 Die Klasse `.marker-start` zeigt dieselbe Variante für rein CSS-basierte Theme-/Demo-Styles.
 
 ### Plus/Minus
-{: layout="ntl-accordion.default.marker-plus[marker-icon='plus']"}
+{: layout="ntl-accordion.marker-plus[marker-icon='plus']"}
 
 #### Geschlossenes Icon
 
@@ -68,11 +68,11 @@ Im geöffneten Zustand wird ein Minus angezeigt.
 {: layout="1;.demo-card.demo-compact"}
 
 ### Kompakte FAQ
-{: layout="ntl-accordion.default"}
+{: layout="ntl-accordion"}
 
 #### Erste Frage
 
-Der Parent `.demo-compact` bindet `default-style()` mit kleineren Padding-Werten ein.
+Der Parent `.demo-compact` überschreibt `.style-default` mit kleineren Padding-Werten.
 
 #### Zweite Frage
 

@@ -3,6 +3,8 @@
 ntl-card {
   margin-bottom: 40px; // Only for demo: spacing should be handled by the parent layout.
 
-  @include card.default-style();
-  @include card.with-modifier-classes;
+  &.style-default {
+    @include card.default-style();
+    @include card.with-modifier-classes;
+  }
 }

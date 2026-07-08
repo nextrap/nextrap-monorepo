@@ -3,7 +3,7 @@
 Diese Demo zeigt typische Varianten von `ntl-2col`: automatische Aside-Erkennung, manuelle Aside-Slots, Bildverhalten, alternierende Ausrichtung und Breakout-Layouts.
 
 ## Nur Hauptspalte ohne Aside
-{: layout="ntl-2col.testimonial.default" section-style="--cols: 8;"}
+{: layout="ntl-2col.style-testimonial" section-style="--cols: 8;"}
 
 Dieses Beispiel enthält kein Bild und keinen `aside`-Slot. `ntl-2col` rendert dadurch nur die Hauptspalte; die Aside-Spalte bleibt leer und wird ausgeblendet.
 
@@ -11,7 +11,7 @@ Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptates distinctio 
 
 
 ## Automatisch erkannte Bild-Aside
-{: layout="ntl-2col.testimonial.default" section-style="--cols: 8;"}
+{: layout="ntl-2col.style-testimonial" section-style="--cols: 8;"}
 
 Dieses Beispiel zeigt die automatische Aside-Erkennung: Das Bild wird anhand der Layout-Regel in die Aside-Spalte verschoben. Über `--cols: 8` bekommt die Hauptspalte acht von zwölf Spalten.
 
@@ -38,7 +38,7 @@ Dieser Text steht auf der Aside-Seite.
 
 
 ## Blauer Hintergrund mit Divider
-{: layout="ntl-2col.variant-feature1" section-style="--cols: 6;"}
+{: layout="ntl-2col.with-feature1" section-style="--cols: 6;"}
 
 Dieses Beispiel verwendet `.with-background-and-divider`. Der Abschnitt bekommt einen blauen Hintergrund; in der Desktopansicht sitzt eine vertikale Linie mittig im konfigurierbaren Gap zwischen Haupt- und Aside-Spalte.
 
@@ -49,7 +49,7 @@ Der Hauptinhalt steht links und teilt sich den verfügbaren Platz mit der Aside-
 
 
 ## Hintergrund und Main-Zentrierung
-{: layout="ntl-2col.default.bg-primary-subtle.with-main-justify-center" section-style="--cols: 7;"}
+{: layout="ntl-2col.bg-primary-subtle.with-main-justify-center" section-style="--cols: 7;"}
 
 Dieses Beispiel nutzt die Utility-Klasse `.bg-primary-subtle` und den Modifier `.with-main-justify-center`. Der Hintergrund kommt aus den Nextrap-Farbvariablen, der Hauptinhalt wird vertikal zentriert.
 
@@ -57,7 +57,7 @@ Dieses Beispiel nutzt die Utility-Klasse `.bg-primary-subtle` und den Modifier `
 
 
 ## Primary Background + Reverse Desktop
-{: layout="ntl-2col.default.bg-primary.reverse-desktop" section-style="--cols: 7;"}
+{: layout="ntl-2col.bg-primary.reverse-desktop" section-style="--cols: 7;"}
 
 Dieses Beispiel kombiniert `.bg-primary` mit `.reverse-desktop`. Auf Desktop werden Haupt- und Aside-Spalte umgedreht; mobil bleibt die normale Reihenfolge erhalten.
 
@@ -65,7 +65,7 @@ Dieses Beispiel kombiniert `.bg-primary` mit `.reverse-desktop`. Auf Desktop wer
 
 
 ## Reverse auf allen Breakpoints
-{: layout="ntl-2col.default.bg-light.reverse" section-style="--cols: 7;"}
+{: layout="ntl-2col.bg-light.reverse" section-style="--cols: 7;"}
 
 Dieses Beispiel verwendet `.reverse`. Die Reihenfolge wird sowohl mobil als auch auf Desktop umgedreht.
 
@@ -105,7 +105,7 @@ Dieses zweite Beispiel innerhalb derselben `.alternating`-Gruppe wechselt die Sp
 {: layout="1;"}
 
 ## Breakout rechts
-{: layout="ntl-2col.default.breakout-end"}
+{: layout="ntl-2col.breakout-end"}
 
 Dieses Beispiel verwendet `.breakout-end`. Die rechte Spalte kann dadurch optisch bis zum rechten Viewport-Rand ausbrechen, während die restliche Struktur im Container bleibt.
 
@@ -113,7 +113,7 @@ Dieses Beispiel verwendet `.breakout-end`. Die rechte Spalte kann dadurch optisc
 
 
 ## Breakout links
-{: layout="ntl-2col.default.breakout-start"}
+{: layout="ntl-2col.breakout-start"}
 
 Dieses Beispiel verwendet `.breakout-start`. Die linke Spalte kann dadurch optisch bis zum linken Viewport-Rand ausbrechen.
 
@@ -123,7 +123,7 @@ Dieses Beispiel verwendet `.breakout-start`. Die linke Spalte kann dadurch optis
 {: layout="1;"}
 
 ## Volle Breite
-{: layout="ntl-2col.default" section-style="--container-width: 100%; --cols: 7;"}
+{: layout="ntl-2col" section-style="--container-width: 100%; --cols: 7;"}
 
 Dieses Beispiel setzt die Container-Breite direkt auf `100%`. Der Abschnitt nutzt dadurch die volle verfügbare Breite; Border und Border-Radius kommen aus dem Demo-Style.
 
@@ -131,7 +131,7 @@ Dieses Beispiel setzt die Container-Breite direkt auf `100%`. Der Abschnitt nutz
 
 
 ## Top/Bottom im Wrapper-Rahmen
-{: layout="ntl-2col.default.with-top-bottom" section-style="--cols: 7;"}
+{: layout="ntl-2col.with-top-bottom" section-style="--cols: 7;"}
 
 Dieses Beispiel nutzt `top` und `bottom` innerhalb des Wrapper-Rahmens. Das Bild im `top`-Slot sitzt dadurch im gerahmten Bereich oberhalb von Haupt- und Aside-Spalte; der `bottom`-Slot bleibt ebenfalls innerhalb des Rahmens.
 
@@ -145,7 +145,7 @@ Der Hauptinhalt steht unterhalb des Top-Bereichs und bleibt neben der Aside-Spal
 
 
 ## Header/Footer + Breakout rechts
-{: layout="ntl-2col.default.breakout-end.with-header-footer" section-style="--cols: 7;"}
+{: layout="ntl-2col.breakout-end.with-header-footer" section-style="--cols: 7;"}
 
 Dieses Beispiel kombiniert Header, Footer und einen rechten Breakout. Header und Footer bleiben außerhalb des Wrapper-Rahmens auf der definierten Container-Breite, während die Aside-Spalte rechts bis zum Viewport-Rand erweitert wird.
 
@@ -159,7 +159,7 @@ Der Text bleibt im normalen Container. Nur das Bild erweitert die rechte Spalte 
 
 
 ## Header/Footer + Breakout links
-{: layout="ntl-2col.default.breakout-start.with-header-footer" section-style="--cols: 7;"}
+{: layout="ntl-2col.breakout-start.with-header-footer" section-style="--cols: 7;"}
 
 Dieses Beispiel kombiniert Header, Footer und einen linken Breakout. Header und Footer bleiben außerhalb des Wrapper-Rahmens im Container, während die linke Spalte bis zum linken Viewport-Rand erweitert wird.
 

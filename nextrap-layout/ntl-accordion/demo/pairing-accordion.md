@@ -5,8 +5,8 @@ Diese Pairing-Demo zeigt `ntl-accordion` innerhalb von `ntl-2col`: einmal in der
 
 ## Accordion in Main, Bild in Aside
 
-<ntl-2col class="default" style="--cols: 7;">
-  <ntl-accordion class="default" initial-open-index="0" exclusive="true">
+<ntl-2col style="--cols: 7;">
+  <ntl-accordion initial-open-index="0" exclusive="true">
     <section>
       <h3>Planung</h3>
       <p>Das Accordion liegt in der Main-Spalte. Das Bild daneben wird automatisch in die Aside-Spalte verschoben.</p>
@@ -26,13 +26,13 @@ Diese Pairing-Demo zeigt `ntl-accordion` innerhalb von `ntl-2col`: einmal in der
 
 ## Accordion in Aside, ohne Bild
 
-<ntl-2col class="default" style="--cols: 7;">
+<ntl-2col style="--cols: 7;">
   <div>
     <h3>Main-Inhalt</h3>
     <p>Die Main-Spalte enthält normalen Text. Das Accordion wird über die Klasse <code>aside</code> explizit in die Aside-Spalte gelegt.</p>
   </div>
 
-  <ntl-accordion class="default aside" initial-open-index="0">
+  <ntl-accordion class="aside" initial-open-index="0">
     <section>
       <h3>Seitliche Info</h3>
       <p>Dieses Accordion steht in der Aside-Spalte.</p>

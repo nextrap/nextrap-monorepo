@@ -1,11 +1,11 @@
 @use '../index' as accordion;
 @use '@nextrap/ntl-2col' as twoCol;
 
-ntl-accordion.default {
+ntl-accordion.style-default {
   @include accordion.default-style();
 }
 
-ntl-2col.default {
+ntl-2col.style-default {
   @include twoCol.default-style();
 }
 
@@ -16,7 +16,7 @@ ntl-2col.default {
   background: var(--nt-light-subtle);
 }
 
-.demo-compact ntl-accordion {
+.demo-compact ntl-accordion.style-default {
   @include accordion.default-style(
     $summary-padding: var(--nt-space-2),
     $content-padding: var(--nt-space-2),
