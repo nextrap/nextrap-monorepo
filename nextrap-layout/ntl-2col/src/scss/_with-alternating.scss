@@ -1,4 +1,4 @@
-@mixin alternating {
+@mixin with-alternating {
   &[mode='desktop']:nth-of-type(even) {
     &::part(main) {
       order: 2;

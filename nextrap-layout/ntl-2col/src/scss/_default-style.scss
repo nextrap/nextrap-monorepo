@@ -1,4 +1,4 @@
-@use 'image-auto-objectfit' as image-auto-objectfit;
+@use 'with-image-auto-objectfit' as image-auto-objectfit;
 
 @mixin default-style(
   $innerPadding: var(--nt-space-3),
@@ -6,7 +6,7 @@
   $background: transparent,
   $border: 1px solid var(--nt-dark),
   $border-radius: var(--nt-border-radius),
-  $objectFit: yes,
+  $objectFit: cover,
   $aspectRatio: none
 ) {
   --background: #{$background};
@@ -24,7 +24,7 @@
   @if ($objectFit != none) {
     // Object-Fit für Bilder, die automatisch in den Aside Bereich geladen werden
 
-    @include image-auto-objectfit.image-auto-objectfit();
+    @include image-auto-objectfit.with-image-auto-objectfit($objectFit);
   }
 
   &::part(wrapper) {

@@ -40,7 +40,7 @@ Dieser Text steht auf der Aside-Seite.
 ## Blauer Hintergrund mit Divider
 {: layout="ntl-2col.default.with-background-and-divider" section-style="--cols: 6;"}
 
-Dieses Beispiel verwendet `.with-background-and-divider`. Der Wrapper bekommt einen blauen Hintergrund; in der Desktopansicht trennt eine vertikale Linie Haupt- und Aside-Spalte.
+Dieses Beispiel verwendet `.with-background-and-divider`. Der Abschnitt bekommt einen blauen Hintergrund; in der Desktopansicht sitzt eine vertikale Linie mittig im konfigurierbaren Gap zwischen Haupt- und Aside-Spalte.
 
 ---
 {: layout=".aside"}

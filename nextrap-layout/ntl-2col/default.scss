@@ -5,9 +5,9 @@
 }
 
 .reverse {
-  @include mixin.reverse;
+  @include mixin.with-reverse;
 }
 
 .alternating {
-  @include mixin.alternating;
+  @include mixin.with-alternating;
 }

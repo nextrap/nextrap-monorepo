@@ -1,4 +1,4 @@
-@mixin reverse {
+@mixin with-reverse {
   &::part(wrapper) {
     flex-direction: row-reverse;
   }

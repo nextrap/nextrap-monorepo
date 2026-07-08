@@ -1,0 +1,25 @@
+@mixin with-background-and-divider($gap: 2rem, $background: var(--nt-primary), $divider-color: var(--nt-light)) {
+  --section-bg: #{$background};
+  --border: none;
+  --gap: #{$gap};
+
+  &[mode='desktop'] {
+    &::part(aside) {
+      position: relative;
+    }
+
+    &::part(aside)::after {
+      content: '';
+      position: absolute;
+      top: 25%;
+      bottom: 25%;
+      left: calc(var(--gap) / -2);
+      border-left: 1px solid #{$divider-color};
+    }
+
+    &.desktop-reverse::part(aside)::after {
+      right: calc(var(--gap) / -2);
+      left: auto;
+    }
+  }
+}
