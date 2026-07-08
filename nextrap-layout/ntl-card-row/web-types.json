@@ -6,19 +6,17 @@
             "elements": [
                 {
                     "name": "ntl-card-row",
-                    "description": "Add logic scope to the html elements below",
-                    "slots": [{ "name": "default", "description": "Content of button" }],
-                    "events": [{ "name": "click", "description": "Fired on click" }],
+                    "description": "Responsive row layout for ntl-card components.",
+                    "slots": [
+                        { "name": "default", "description": "Cards or sections rendered as cards." },
+                        { "name": "header", "description": "Optional row header." },
+                        { "name": "footer", "description": "Optional row footer." }
+                    ],
                     "attributes": [
                         {
-                            "name": "debug",
-                            "type": "boolean",
-                            "description": "Enable debug mode (output debug information to the console)"
-                        },
-                        {
-                            "name": "init",
+                            "name": "mode",
                             "type": "string",
-                            "description": "Initialize component scope by evaluating a JSON/JS expression (supports await fetch, DOM access)."
+                            "description": "Current responsive mode reflected by BreakPointMixin."
                         }
                     ]
                 }
@@ -27,18 +25,35 @@
         "css": {
             "classes": [
                 {
-                    "name": "variant1",
-                    "description": "Css Class variant1"
+                    "name": "default",
+                    "description": "Default card-row styling from default.scss."
+                },
+                {
+                    "name": "highlight",
+                    "description": "Raised card modifier for direct ntl-card children."
+                },
+                {
+                    "name": "with-borderless-cards",
+                    "description": "Demo/theme modifier: removes border and inner padding from all direct ntl-card children via with-borderless-cards()."
+                },
+                {
+                    "name": "with-item-separators",
+                    "description": "Demo/theme modifier: adds separator pseudo-elements between direct ntl-card children via with-item-separators()."
+                },
+                {
+                    "name": "footer-separators",
+                    "description": "Adds desktop separators between direct ntl-card children."
+                },
+                {
+                    "name": "style-footer",
+                    "description": "Legacy alias for footer-separators."
                 }
             ],
-            "scopes": [
-                {
-                    "name": "my-button",
-                    "description": "Button specific classes",
-                    "css": {
-                        "classes": [{ "name": "icon-left" }, { "name": "icon-right" }]
-                    }
-                }
+            "parts": [
+                { "name": "container", "description": "Outer row container." },
+                { "name": "header", "description": "Header area." },
+                { "name": "main", "description": "Card row flex container." },
+                { "name": "footer", "description": "Footer area." }
             ]
         }
     }

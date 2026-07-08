@@ -12,13 +12,14 @@ export default defineConfig(() => ({
   server: {
     port: 4000,
     host: '0.0.0.0',
+    allowedHosts: ['main'],
     hmr: true,
   },
   root: __dirname,
   cacheDir: `../../node_modules/.vite/${dirName}`,
   plugins: [
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md']),
+    nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss']),
     {
       name: 'watch-md-reload',
       handleHotUpdate({ file, server }) {

@@ -1,0 +1,13 @@
+@mixin with-raised-card(
+  $scale: 1.05,
+  $shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15),
+  $transition: (
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+  )
+) {
+  transform: scale($scale);
+  box-shadow: $shadow;
+  transition: $transition;
+  z-index: 1;
+}

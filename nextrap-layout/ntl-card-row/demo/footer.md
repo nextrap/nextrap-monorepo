@@ -1,10 +1,15 @@
-<div style="height: 90vh; width: 100%"></div>
+# Footer row
+{: layout="1;.container"}
+
+Die Footer-Variante nutzt `.footer-separators`. Im Desktop-Modus erhalten die Cards Trennlinien; mobil stehen sie ohne vertikale Separatoren untereinander.
+
+<div style="height: 40vh; width: 100%"></div>
 
 ---
-{: layout="2;ntl-card-row.style-footer" style="--default-cols: 3"}
+{: layout="ntl-card-row.footer-separators" section-style="--default-cols: 3"}
 
 ---
-{: layout="3;ntl-card" }
+{: layout="ntl-card" }
 
 Adresse 1<br>
 Name 1<br>

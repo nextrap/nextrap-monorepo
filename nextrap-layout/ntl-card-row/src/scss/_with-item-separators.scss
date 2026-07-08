@@ -1,0 +1,30 @@
+@mixin with-item-separators($separator-color: var(--nt-primary), $separator-width: 1px, $separator-inset: 0) {
+  --item-separator-color: #{$separator-color};
+  --item-separator-width: #{$separator-width};
+  --item-separator-inset: #{$separator-inset};
+
+  > ntl-card {
+    position: relative;
+  }
+
+  > ntl-card:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    background: var(--item-separator-color);
+    pointer-events: none;
+  }
+
+  &[mode='desktop'] > ntl-card:not(:last-child)::after {
+    top: var(--item-separator-inset);
+    right: calc(var(--gutter-x) / -2 - var(--item-separator-width) / 2);
+    bottom: var(--item-separator-inset);
+    width: var(--item-separator-width);
+  }
+
+  &[mode='mobile'] > ntl-card:not(:last-child)::after {
+    right: var(--item-separator-inset);
+    bottom: calc(var(--gutter-y) / -2 - var(--item-separator-width) / 2);
+    left: var(--item-separator-inset);
+    height: var(--item-separator-width);
+  }
+}

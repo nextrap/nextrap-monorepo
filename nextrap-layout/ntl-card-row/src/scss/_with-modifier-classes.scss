@@ -1,0 +1,13 @@
+@use 'with-footer-separators' as footer-separators;
+@use 'with-raised-card' as raised-card;
+
+@mixin with-modifier-classes {
+  &.footer-separators,
+  &.style-footer {
+    @include footer-separators.with-footer-separators();
+  }
+
+  > ntl-card.highlight {
+    @include raised-card.with-raised-card();
+  }
+}

@@ -1,9 +1,7 @@
 /* The ShadowDOM Styles */
 
 :host {
-  --container-bg: transparent;
-  --container-border: none;
-  --container-width: var(--nt-container-width) /* Refer to README.md for style guidelines */;
+  --container-width: var(--nt-container-width, 100%);
   --default-cols: var(--cols);
   --cols: 6;
   --gutter-x: var(--nt-gap);
@@ -11,24 +9,30 @@
   --breakpoint: xl;
 
   display: block;
+  box-sizing: border-box;
 }
 
 #container {
   margin: 0 auto;
   width: var(--container-width);
+  box-sizing: border-box;
+}
 
-  background: var(--container-bg);
-  border: var(--container-border);
+#header,
+#footer {
+  &:has(.slot-empty) {
+    display: none;
+  }
 }
 
 #main {
   display: flex;
   flex-wrap: wrap;
-
   justify-content: center;
+  gap: var(--gutter-y) var(--gutter-x);
 
-  gap: var(--gutter-y);
   ::slotted(*) {
+    box-sizing: border-box;
     width: calc(100% / 12 * var(--cols, 1) - var(--gutter-x));
   }
 }
@@ -37,8 +41,8 @@
   #main {
     margin-left: calc(var(--gutter-x) / -2);
     width: calc(100% + var(--gutter-x));
-
     flex-direction: row;
+
     ::slotted(*) {
       --cols: var(--default-cols);
     }
@@ -46,11 +50,17 @@
 }
 
 :host([mode='mobile']) {
+  #container {
+    width: 100%;
+  }
+
   #main {
     flex-direction: column;
+
     ::slotted(*) {
       --cols: 12 !important;
       --gutter-x: 0px; // Must be 0px - otherwise: error in Firefox
+      width: 100%;
     }
   }
 }

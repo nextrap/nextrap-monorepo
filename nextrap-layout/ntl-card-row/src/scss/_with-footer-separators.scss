@@ -1,0 +1,12 @@
+@mixin with-footer-separators($separator-color: var(--nt-primary), $card-border: none, $card-border-radius: 0) {
+  --separator-color: #{$separator-color};
+
+  > ntl-card {
+    --border: #{$card-border};
+    --border-radius: #{$card-border-radius};
+  }
+
+  &[mode='desktop'] > ntl-card:not(:last-child)::part(wrapper) {
+    border-right: 1px solid var(--separator-color);
+  }
+}

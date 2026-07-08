@@ -1,0 +1,42 @@
+@use 'with-modifier-classes' as modifier-classes;
+
+@mixin default-style(
+  $container-width: var(--nt-container-width, 100%),
+  $default-cols: 6,
+  $gap: var(--nt-gap),
+  $inner-padding: 0,
+  $container-background: transparent,
+  $container-border: none,
+  $container-border-radius: 0,
+  $modifierClasses: true
+) {
+  --container-width: #{$container-width};
+  --default-cols: #{$default-cols};
+  --gutter-x: #{$gap};
+  --gutter-y: #{$gap};
+  --row-inner-padding: #{$inner-padding};
+  --container-background: #{$container-background};
+  --container-border: #{$container-border};
+  --container-border-radius: #{$container-border-radius};
+
+  @if ($modifierClasses != false and $modifierClasses != none) {
+    @include modifier-classes.with-modifier-classes();
+  }
+
+  &::part(container) {
+    background: var(--container-background);
+    border: var(--container-border);
+    border-radius: var(--container-border-radius);
+    box-sizing: border-box;
+    padding: var(--row-inner-padding);
+  }
+
+  &[mode='mobile'] > ntl-card {
+    box-sizing: border-box;
+    padding: 0 var(--nt-default-gap-x, 0);
+  }
+
+  &[mode='desktop'] > ntl-card {
+    padding: 0;
+  }
+}

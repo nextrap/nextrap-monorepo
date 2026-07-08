@@ -1,0 +1,6 @@
+@mixin with-borderless-cards($card-border: none, $card-inner-padding: 0) {
+  > ntl-card {
+    --border: #{$card-border};
+    --inner-padding: #{$card-inner-padding};
+  }
+}

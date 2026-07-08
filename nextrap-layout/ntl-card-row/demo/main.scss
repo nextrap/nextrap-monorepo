@@ -1,0 +1,19 @@
+@use '../index' as cardRow;
+@use '@nextrap/ntl-card' as card;
+
+ntl-card-row {
+  margin-bottom: 40px; // Only for demo: spacing should be handled by the parent layout.
+  @include cardRow.default-style($default-cols: 3);
+
+  &.with-borderless-cards {
+    @include cardRow.with-borderless-cards();
+  }
+
+  &.with-item-separators {
+    @include cardRow.with-item-separators($separator-color: var(--nt-gray-400));
+  }
+}
+
+ntl-card {
+  @include card.default-style();
+}
