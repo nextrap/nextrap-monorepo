@@ -21,12 +21,17 @@ zwischen den packages geben. Diese müssen untereinander über @nextap/package-n
 - So wenig styling wie nötig: Die Webcomponents sollen später von außen gestyled werden. Daher soll im shadow dom
     nur die nötigsten styles enthalten sein. Es sollten immer parts definiert sein, damit diese von außen gestyled werden können.
 - Das default styling erfolgt in den mixins jedes packages, das nachher in den theme importiert wird.
-- Varianten sollen über semantische Klassen am Custom Element aktiviert werden, z. B. `ntl-2col.with-background-and-divider`.
+- Demo-/Theme-SCSS bindet den visuellen Default über `.style-default`, z. B. `ntl-2col.style-default { @include twoCol.default-style(); }`.
+- Beispiele sollen `.style-default` normalerweise nicht explizit setzen: `SetDefaultStyleMixin` fügt automatisch `style-default` hinzu, wenn am Custom Element keine Klasse mit Prefix `style-` vorhanden ist.
+- Selektoren ohne `style-*` Klasse, z. B. nur `ntl-demo { ... }`, dürfen keine visuellen Default-Styles enthalten; ein Element ohne `style-*` Klasse sollte ungestyled bleiben.
+- Pro Element darf immer nur eine `style-*` Klasse gesetzt sein.
+- Style-Varianten müssen mit `style-` beginnen, z. B. `style-testimonial`, und ihre vollständige visuelle Baseline selbst enthalten.
+- Feature-/Modifier-Varianten sollen über semantische `with-*` Klassen am Custom Element aktiviert werden, z. B. `ntl-2col.with-background-and-divider`.
 - Styling von Shadow-DOM-Inhalten in Demo-/Theme-SCSS soll bevorzugt über `::part(...)` erfolgen.
 - Bei Layout-Varianten immer mobile/desktop-Modi beachten. Desktop-only Styling über `[mode='desktop']` scopen.
 - SCSS-Feature-Mixins sollen keine konkreten Demo-/Modifier-Klassennamen enthalten. Das Mixin beschreibt nur das Feature; die Klasse oder der Zielselektor bindet das Mixin ein.
 - Jedes Mixin wird in einer eigenen SCSS-Datei unter src/scss/ definiert und in index.scss exportiert.
-- Der name für varianten-mixins startet mit `with-<feature>` und beschreibt das Feature, z. B. `with-background-and-divider`.
+- Der Name für Feature-/Modifier-Mixins startet mit `with-<feature>` und beschreibt das Feature, z. B. `with-background-and-divider`.
 
 ## Element pairings
 

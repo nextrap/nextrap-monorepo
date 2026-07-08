@@ -42,8 +42,7 @@ Der shadow dom css sollte lediglich für die funktion unbedingt nötige css und 
 Styling wird durch ein mixin in der mixin.scss vorgenommen (über parts). Im Shadow DOM können Globae css variablen
 aus @nextrap/style-base verwendet werden (--nt-*).
 
-Lege im SCSS eine klasse .default an, die das Styling Mixin mit Standardwerten included. Diese klasse sollte 
-für Beispiele genutzt werden. Später werden die Styles in einem noch zu entwickelnden Theme gestyled.
+Lege im SCSS eine Klasse `.style-default` an, die das Styling-Mixin mit Standardwerten included. Beispiele sollten diese Klasse normalerweise nicht explizit setzen: `SetDefaultStyleMixin` fügt automatisch `style-default` hinzu, wenn keine Klasse mit Prefix `style-` vorhanden ist. Selektoren ohne `style-*` Klasse, z. B. nur `ntl-demo { ... }`, dürfen keine visuellen Default-Styles enthalten; ein Element ohne `style-*` Klasse sollte ungestyled bleiben. Pro Element darf immer nur eine `style-*` Klasse gesetzt sein. Weitere Style-Varianten müssen ebenfalls mit `style-` beginnen, z. B. `.style-testimonial`, und ihre vollständige visuelle Baseline selbst enthalten. Feature-/Modifier-Klassen verwenden dagegen sprechende `with-*` Namen, z. B. `.with-background-and-divider`.
 
 ## Die .ai-usage-info.md Datei
 
