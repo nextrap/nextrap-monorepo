@@ -1,74 +1,43 @@
-/* ShadowDOM Styles for ntl-accordion-item */
-
 :host {
   display: block;
-  --border-color: var(--nt-border-color, #e5e7eb);
-  --background-color-heading: var(--nt-light-subtle);
-  --background-color-heading-hover: var(--nt-light);
-  --marker-size: 1.5rem;
-  --padding: var(--nt-text-gap, 1rem);
   interpolate-size: allow-keywords;
-
-  /* Active icon — defaults to chevron.
-   * --marker-icon-closed / --marker-icon-open can be set from outside
-   * (e.g. via section-style in markdown) to override with custom SVG URLs. */
-  --marker-icon-closed: var(--ntl-icon-chevron-down);
-  --marker-icon-open: var(--ntl-icon-chevron-up);
-
-  --active-marker-icon: var(--marker-icon-closed);
 }
-
-:host([open]) {
-  --active-marker-icon: var(--marker-icon-open);
-}
-
-/* Fallback for browsers without ::details-content support */
 
 #details {
   display: flex;
   overflow: hidden;
   flex-direction: column;
-  #content {
-    display: block;
-    padding: var(--padding);
-  }
-  &:not([open]) #content {
+}
+
+#summary {
+  order: 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+
+  &::-webkit-details-marker {
     display: none;
   }
-  #summary {
-    order: 0;
-    display: flex;
-    align-items: center;
-    line-height: 1.3;
-    padding: var(--padding);
-    list-style-position: outside;
-    gap: 0.75rem;
-    cursor: pointer;
-    user-select: none;
-    list-style: none;
-    background-color: var(--background-color-heading);
-    &::-webkit-details-marker {
-      display: none;
-    }
 
-    &::marker {
-      display: none;
-      content: '';
-    }
-    &:hover {
-      background-color: var(--background-color-heading-hover);
-    }
+  &::marker {
+    display: none;
+    content: '';
   }
 }
 
-/* Progressive enhancement: Smooth animation for browsers that support ::details-content */
+#details:not([open]) #content {
+  display: none;
+}
+
 @supports selector(::details-content) {
   details::details-content {
     block-size: 0;
     overflow: hidden;
     transition:
-      block-size 0.5s,
-      content-visibility 0.5s;
+      block-size var(--transition-duration, 0.35s),
+      content-visibility var(--transition-duration, 0.35s);
     transition-behavior: allow-discrete;
   }
 
@@ -76,7 +45,6 @@
     block-size: auto;
   }
 
-  /* When using ::details-content, let it handle visibility */
   details:not([open]) #content,
   details[open] #content {
     display: block;
@@ -85,17 +53,17 @@
 
 #title {
   flex: 1;
-  font-weight: 500;
+  min-width: 0;
 }
 
-/* Marker icon using CSS mask-image */
 #marker {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--marker-size);
-  height: var(--marker-size);
+  width: var(--marker-size, 1.25rem);
+  height: var(--marker-size, 1.25rem);
   flex-shrink: 0;
+  color: var(--marker-color, currentColor);
 
   &::before {
     content: '';
@@ -106,15 +74,34 @@
     mask-size: contain;
     mask-repeat: no-repeat;
     mask-position: center;
+    mask-image: var(--marker-icon-closed, none);
     -webkit-mask-size: contain;
     -webkit-mask-repeat: no-repeat;
     -webkit-mask-position: center;
-    mask-image: var(--active-marker-icon);
-    -webkit-mask-image: var(--active-marker-icon);
+    -webkit-mask-image: var(--marker-icon-closed, none);
   }
 }
 
+:host([open]) #marker::before {
+  mask-image: var(--marker-icon-open, var(--marker-icon-closed, none));
+  -webkit-mask-image: var(--marker-icon-open, var(--marker-icon-closed, none));
+}
+
+:host([marker-icon='plus']) #marker::before {
+  mask-image: var(--marker-icon-plus, var(--marker-icon-closed, none));
+  -webkit-mask-image: var(--marker-icon-plus, var(--marker-icon-closed, none));
+}
+
+:host([marker-icon='plus'][open]) #marker::before {
+  mask-image: var(--marker-icon-minus, var(--marker-icon-open, none));
+  -webkit-mask-image: var(--marker-icon-minus, var(--marker-icon-open, none));
+}
+
+:host([marker-position='start']) #marker {
+  order: -1;
+}
+
 #summary:focus-visible {
-  outline: 2px solid var(--nt-focus-ring-color, #3b82f6);
+  outline: var(--focus-outline, 2px solid currentColor);
   outline-offset: -2px;
 }

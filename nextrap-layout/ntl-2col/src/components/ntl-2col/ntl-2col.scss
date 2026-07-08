@@ -23,12 +23,45 @@
   --aside-width: 100%;
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
   gap: var(--gap);
   align-items: stretch;
 
   & > * {
     padding: var(--inner-padding);
   }
+}
+
+#header,
+#footer,
+#top,
+#bottom {
+  width: 100%;
+  box-sizing: border-box;
+
+  &:has(.slot-empty) {
+    display: none;
+  }
+}
+
+#top {
+  order: 0;
+  flex: 0 0 auto;
+}
+
+#main {
+  order: 1;
+  min-width: 0;
+}
+
+#aside {
+  order: 2;
+  min-width: 0;
+}
+
+#bottom {
+  order: 3;
+  flex: 0 0 auto;
 }
 
 :host([mode='mobile']) {
@@ -40,8 +73,12 @@
 }
 
 :host([mode='mobile'].mobile-reverse) {
-  #wrapper {
-    flex-direction: column-reverse;
+  #aside {
+    order: 1;
+  }
+
+  #main {
+    order: 2;
   }
 }
 
@@ -64,22 +101,20 @@
       }
     }
     #main {
-      order: 1;
       width: var(--main-width);
+      flex: 0 0 var(--main-width);
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
     }
     #aside {
-      order: 2;
-      flex: 1 1 calc(100% - var(--main-width));
+      flex: 1 1 0;
       box-sizing: border-box;
     }
   }
 
   #aside {
-    order: 2;
     width: auto;
     min-width: 0;
     flex: 1 1 0;

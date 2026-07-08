@@ -8,7 +8,7 @@
             "elements": [
                 {
                     "name": "ntl-2col",
-                    "description": "Responsive two-column layout with top, main, aside and bottom areas.",
+                    "description": "Responsive two-column layout with header/footer outside and top/bottom inside the wrapper.",
                     "attributes": [
                         {
                             "name": "mode",
@@ -23,8 +23,12 @@
                             "description": "Main column content. Direct p:has(img) children can be moved automatically to the aside slot."
                         },
                         {
+                            "name": "header",
+                            "description": "Content rendered above and outside the wrapper frame. Direct children with class .header are assigned automatically."
+                        },
+                        {
                             "name": "top",
-                            "description": "Content rendered above the two-column wrapper. Direct children with class .top are assigned automatically."
+                            "description": "Content rendered at the top inside the wrapper frame. Direct children with class .top are assigned automatically."
                         },
                         {
                             "name": "aside",
@@ -32,7 +36,11 @@
                         },
                         {
                             "name": "bottom",
-                            "description": "Content rendered below the two-column wrapper. Direct children with class .bottom are assigned automatically."
+                            "description": "Content rendered at the bottom inside the wrapper frame. Direct children with class .bottom are assigned automatically."
+                        },
+                        {
+                            "name": "footer",
+                            "description": "Content rendered below and outside the wrapper frame. Direct children with class .footer are assigned automatically."
                         }
                     ]
                 }
@@ -85,6 +93,10 @@
                     "description": "Apply the background-and-divider variant when the matching SCSS mixin is included."
                 },
                 {
+                    "name": "header",
+                    "description": "Light DOM helper class: direct children with this class are assigned to the header slot."
+                },
+                {
                     "name": "top",
                     "description": "Light DOM helper class: direct children with this class are assigned to the top slot."
                 },
@@ -95,6 +107,10 @@
                 {
                     "name": "bottom",
                     "description": "Light DOM helper class: direct children with this class are assigned to the bottom slot."
+                },
+                {
+                    "name": "footer",
+                    "description": "Light DOM helper class: direct children with this class are assigned to the footer slot."
                 },
                 {
                     "name": "auto",

@@ -1,0 +1,72 @@
+@use 'with-modifier-classes' as modifier-classes;
+
+@mixin default-style(
+  $item-gap: 0,
+  $border: 1px solid var(--nt-border-color, #e5e7eb),
+  $border-radius: var(--nt-border-radius),
+  $summary-padding: var(--nt-space-3),
+  $content-padding: var(--nt-space-3),
+  $summary-background: var(--nt-light-subtle),
+  $summary-background-hover: var(--nt-light),
+  $summary-color: inherit,
+  $content-background: transparent,
+  $marker-size: 1.25rem,
+  $marker-color: currentColor,
+  $focus-outline: 2px solid var(--nt-focus-ring-color, var(--nt-primary)),
+  $modifierClasses: true
+) {
+  --item-gap: #{$item-gap};
+  --border: #{$border};
+  --border-radius: #{$border-radius};
+  --summary-padding: #{$summary-padding};
+  --content-padding: #{$content-padding};
+  --summary-background: #{$summary-background};
+  --summary-background-hover: #{$summary-background-hover};
+  --summary-color: #{$summary-color};
+  --content-background: #{$content-background};
+  --marker-size: #{$marker-size};
+  --marker-color: #{$marker-color};
+  --focus-outline: #{$focus-outline};
+
+  --marker-icon-closed: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  --marker-icon-open: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='18 15 12 9 6 15'/%3E%3C/svg%3E");
+  --marker-icon-plus: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E");
+  --marker-icon-minus: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14'/%3E%3C/svg%3E");
+
+  @if ($modifierClasses != false and $modifierClasses != none) {
+    @include modifier-classes.with-modifier-classes();
+  }
+
+  &::part(accordion) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--item-gap);
+  }
+
+  ntl-accordion-item {
+    &::part(details) {
+      border: var(--border);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+    }
+
+    &::part(summary) {
+      padding: var(--summary-padding);
+      color: var(--summary-color);
+      background: var(--summary-background);
+    }
+
+    &::part(summary):hover {
+      background: var(--summary-background-hover);
+    }
+
+    &::part(content) {
+      padding: var(--content-padding);
+      background: var(--content-background);
+    }
+
+    > [slot='title'] {
+      margin: 0;
+    }
+  }
+}

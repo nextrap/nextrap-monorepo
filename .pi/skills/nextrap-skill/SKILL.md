@@ -28,6 +28,16 @@ zwischen den packages geben. Diese müssen untereinander über @nextap/package-n
 - Jedes Mixin wird in einer eigenen SCSS-Datei unter src/scss/ definiert und in index.scss exportiert.
 - Der name für varianten-mixins startet mit `with-<feature>` und beschreibt das Feature, z. B. `with-background-and-divider`.
 
+## Element pairings
+
+Viele Elemente lassen sich ineinander schachteln. Zuständig für die korrekte Darstellung ist dabei immer das
+innere element. D.h. Schachtelungs-Demos für ein ntl-accordion in einem ntl-2col sollten im ntl-accordion package liegen.
+
+Das Pairing wird durch ein paring-mixin mit dem namen `pairing-<outer>-in-<inner>` definiert im inneren Element definiert.
+(d.h. in unserem Beispiel im ntl-accordion package).
+
+Für jedes pairing wird eine eigene paring-xyz.md erstellt.
+
 ## Ai Usage Info
 
 - Update the .ai-usage-info.md file in the package you are working on. Keep it short.

@@ -1,0 +1,4 @@
+@mixin with-marker-plus {
+  --marker-icon-closed: var(--marker-icon-plus);
+  --marker-icon-open: var(--marker-icon-minus);
+}

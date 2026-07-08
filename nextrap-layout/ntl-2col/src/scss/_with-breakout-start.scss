@@ -6,8 +6,8 @@
     --container-margin-left: 0;
     --container-margin-right: auto;
 
-    &::part(top),
-    &::part(bottom) {
+    &::part(header),
+    &::part(footer) {
       width: var(--breakout-container-width);
       margin-left: auto;
       box-sizing: border-box;

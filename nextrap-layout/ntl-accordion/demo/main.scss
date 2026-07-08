@@ -1,0 +1,20 @@
+@use '../index' as accordion;
+
+ntl-accordion.default {
+  @include accordion.default-style();
+}
+
+.demo-card {
+  padding: var(--nt-space-4);
+  border: 1px solid var(--nt-border-color, #e5e7eb);
+  border-radius: var(--nt-border-radius);
+  background: var(--nt-light-subtle);
+}
+
+.demo-compact ntl-accordion {
+  @include accordion.default-style(
+    $summary-padding: var(--nt-space-2),
+    $content-padding: var(--nt-space-2),
+    $item-gap: 0.5rem
+  );
+}

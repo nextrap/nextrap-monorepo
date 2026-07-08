@@ -1,2 +1,5 @@
-@use 'src/styles/index' as *;
-@forward './src/styles/mixins-accordion-item';
+@forward 'src/scss/default-style';
+@forward 'src/scss/with-details-end';
+@forward 'src/scss/with-marker-plus';
+@forward 'src/scss/with-marker-start';
+@forward 'src/scss/with-modifier-classes';

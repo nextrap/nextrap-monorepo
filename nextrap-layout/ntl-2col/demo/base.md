@@ -130,29 +130,43 @@ Dieses Beispiel setzt die Container-Breite direkt auf `100%`. Der Abschnitt nutz
 ![alt](https://placehold.co/900x500?text=Full+Width)
 
 
+## Top/Bottom im Wrapper-Rahmen
+{: layout="ntl-2col.default.with-top-bottom" section-style="--cols: 7;"}
+
+Dieses Beispiel nutzt `top` und `bottom` innerhalb des Wrapper-Rahmens. Das Bild im `top`-Slot sitzt dadurch im gerahmten Bereich oberhalb von Haupt- und Aside-Spalte; der `bottom`-Slot bleibt ebenfalls innerhalb des Rahmens.
+
+<div class="top"><img src="https://placehold.co/1200x300?text=Top+im+Wrapper" alt="Top im Wrapper" /></div>
+
+Der Hauptinhalt steht unterhalb des Top-Bereichs und bleibt neben der Aside-Spalte.
+
+![alt](https://placehold.co/600x400?text=Aside)
+
+<div class="bottom">Bottom: liegt innerhalb des Wrapper-Rahmens unter Main und Aside.</div>
+
+
 ## Header/Footer + Breakout rechts
 {: layout="ntl-2col.default.breakout-end.with-header-footer" section-style="--cols: 7;"}
 
-Dieses Beispiel kombiniert Header, Footer und einen rechten Breakout. Header und Footer bleiben auf der definierten Container-Breite, während die Aside-Spalte rechts bis zum Viewport-Rand erweitert wird.
+Dieses Beispiel kombiniert Header, Footer und einen rechten Breakout. Header und Footer bleiben außerhalb des Wrapper-Rahmens auf der definierten Container-Breite, während die Aside-Spalte rechts bis zum Viewport-Rand erweitert wird.
 
-<div class="top">Header: bleibt auf der angegebenen Container-Breite.</div>
+<div class="header">Header: bleibt auf der angegebenen Container-Breite.</div>
 
 Der Text bleibt im normalen Container. Nur das Bild erweitert die rechte Spalte bis zum rechten Viewport-Rand.
 
 ![alt](https://placehold.co/900x500?text=Breakout+Right)
 
-<div class="bottom">Footer: bleibt ebenfalls auf der angegebenen Container-Breite.</div>
+<div class="footer">Footer: bleibt ebenfalls auf der angegebenen Container-Breite.</div>
 
 
 ## Header/Footer + Breakout links
 {: layout="ntl-2col.default.breakout-start.with-header-footer" section-style="--cols: 7;"}
 
-Dieses Beispiel kombiniert Header, Footer und einen linken Breakout. Header und Footer bleiben im Container, während die linke Spalte bis zum linken Viewport-Rand erweitert wird.
+Dieses Beispiel kombiniert Header, Footer und einen linken Breakout. Header und Footer bleiben außerhalb des Wrapper-Rahmens im Container, während die linke Spalte bis zum linken Viewport-Rand erweitert wird.
 
-<div class="top">Header: bleibt auf der angegebenen Container-Breite.</div>
+<div class="header">Header: bleibt auf der angegebenen Container-Breite.</div>
 
 Der Text bleibt im normalen Container. Nur das Bild erweitert die linke Spalte bis zum linken Viewport-Rand.
 
 ![alt](https://placehold.co/900x500?text=Breakout+Left)
 
-<div class="bottom">Footer: bleibt ebenfalls auf der angegebenen Container-Breite.</div>
+<div class="footer">Footer: bleibt ebenfalls auf der angegebenen Container-Breite.</div>

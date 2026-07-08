@@ -1,0 +1,17 @@
+@use 'with-details-end' as details-end;
+@use 'with-marker-plus' as marker-plus;
+@use 'with-marker-start' as marker-start;
+
+@mixin with-modifier-classes {
+  &.details-end {
+    @include details-end.with-details-end;
+  }
+
+  &.marker-plus {
+    @include marker-plus.with-marker-plus;
+  }
+
+  &.marker-start {
+    @include marker-start.with-marker-start;
+  }
+}

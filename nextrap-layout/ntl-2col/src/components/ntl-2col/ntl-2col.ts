@@ -23,19 +23,29 @@ export class Ntl2Col extends nextrap_layout({
   protected override render(): unknown {
     return html`
       <div part="container" id="container">
-        <div part="top">
-          <slot name="top" data-query=":scope > .top"></slot>
+        <div part="header" id="header">
+          <slot name="header" data-query=":scope > .header"></slot>
         </div>
         <div part="wrapper" id="wrapper">
+          <div part="top" id="top">
+            <slot name="top" data-query=":scope > .top"></slot>
+          </div>
           <div part="main" id="main">
             <slot></slot>
           </div>
           <div part="aside" id="aside">
-            <slot name="aside" data-query=":scope > .aside | :scope > p:has(img)" data-set-attribute-class="auto"></slot>
+            <slot
+              name="aside"
+              data-query=":scope > .aside | :scope > p:has(img)"
+              data-set-attribute-class="auto"
+            ></slot>
+          </div>
+          <div part="bottom" id="bottom">
+            <slot name="bottom" data-query=":scope > .bottom"></slot>
           </div>
         </div>
-        <div part="bottom">
-          <slot name="bottom" data-query=":scope > .bottom"></slot>
+        <div part="footer" id="footer">
+          <slot name="footer" data-query=":scope > .footer"></slot>
         </div>
       </div>
     `;

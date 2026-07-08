@@ -10,10 +10,27 @@ ntl-2col {
   }
 
   &.with-header-footer {
-    &::part(top),
+    &::part(header),
+    &::part(footer) {
+      padding: 0.75rem 1rem;
+      text-align: center;
+    }
+  }
+
+  &.with-top-bottom {
+    &::part(top) {
+      padding: 0;
+    }
+
     &::part(bottom) {
       padding: 0.75rem 1rem;
       text-align: center;
+    }
+
+    > .top img {
+      display: block;
+      width: 100%;
+      height: auto;
     }
   }
 }

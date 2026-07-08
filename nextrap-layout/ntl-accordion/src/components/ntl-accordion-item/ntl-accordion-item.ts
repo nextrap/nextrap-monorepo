@@ -1,14 +1,17 @@
-import { LoggingMixin } from '@trunkjs/browser-utils';
-import { html, LitElement, unsafeCSS } from 'lit';
+import { nextrap_layout } from '@nextrap/ntl-core';
+import { resetStyle } from '@nextrap/style-reset';
+import { html, PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { resetStyle } from '@nextrap/style-reset';
-import { SubLayoutApplyMixin } from '@trunkjs/content-pane';
 import style from './ntl-accordion-item.scss?inline';
 
 @customElement('ntl-accordion-item')
-export class NtlAccordionItemElement extends SubLayoutApplyMixin(LoggingMixin(LitElement)) {
-  static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
+export class NtlAccordionItemElement extends nextrap_layout({
+  subLayoutApply: true,
+  slotVisibility: false,
+  eventBinding: false,
+}) {
+  static override styles = [unsafeCSS(resetStyle), unsafeCSS(style)];
 
   @property({ type: Boolean, reflect: true })
   public accessor open = false;
@@ -21,22 +24,21 @@ export class NtlAccordionItemElement extends SubLayoutApplyMixin(LoggingMixin(Li
 
   private _detailsElement: HTMLDetailsElement | null = null;
 
-  override connectedCallback() {
-    super.connectedCallback();
+  override firstUpdated(changedProperties: PropertyValues) {
+    super.firstUpdated(changedProperties);
+    this._detailsElement = this.shadowRoot?.querySelector('details') ?? null;
+    this._syncDetailsOpen();
   }
 
-  override firstUpdated(__changedProperties: Map<string, unknown>) {
-    super.firstUpdated(__changedProperties);
-    this._detailsElement = this.shadowRoot?.querySelector('details') ?? null;
-
-    if (this._detailsElement) {
-      this._detailsElement.open = this.open;
+  override updated(changedProperties: PropertyValues) {
+    super.updated(changedProperties);
+    if (changedProperties.has('open')) {
+      this._syncDetailsOpen();
     }
   }
 
-  override updated(changedProperties: Map<string, unknown>) {
-    super.updated(changedProperties);
-    if (changedProperties.has('open') && this._detailsElement) {
+  private _syncDetailsOpen() {
+    if (this._detailsElement && this._detailsElement.open !== this.open) {
       this._detailsElement.open = this.open;
     }
   }
@@ -56,7 +58,7 @@ export class NtlAccordionItemElement extends SubLayoutApplyMixin(LoggingMixin(Li
 
   override render() {
     return html`
-      <details part="details" id="details" @toggle="${this._onToggle}">
+      <details id="details" part="details" @toggle=${this._onToggle}>
         <summary id="summary" part="summary">
           <span id="title" part="title">
             <slot

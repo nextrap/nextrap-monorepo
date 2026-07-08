@@ -1,0 +1,17 @@
+@use './index' as accordion;
+
+.default {
+  @include accordion.default-style();
+}
+
+.details-end {
+  @include accordion.with-details-end;
+}
+
+.marker-plus {
+  @include accordion.with-marker-plus;
+}
+
+.marker-start {
+  @include accordion.with-marker-start;
+}

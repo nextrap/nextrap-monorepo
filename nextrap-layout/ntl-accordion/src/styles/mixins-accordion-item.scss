@@ -1,9 +1,0 @@
-// Switches the order of content and summary (top and bottom)
-@mixin item-details-end {
-  &::part(summary) {
-    order: 1;
-  }
-  &::part(content) {
-    order: 0;
-  }
-}

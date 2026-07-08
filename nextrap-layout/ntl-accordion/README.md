@@ -1,150 +1,72 @@
 # ntl-accordion
 
-Ein flexibles Accordion-Layout für Nextrap. Wandelt Markdown-Überschriften (`###`) automatisch in klappbare Accordion-Items um.
+Accordion layout component for embedded FAQ/detail blocks. The component keeps Shadow DOM styles functional only; visual defaults are provided through exported SCSS mixins.
 
-## Installation
+## Import
 
-```typescript
+```ts
 import '@nextrap/ntl-accordion';
 ```
 
-## Grundlegende Verwendung
+```scss
+@use '@nextrap/ntl-accordion' as accordion;
+```
 
-In Kramdown-Markdown mit dem `layout`-Attribut:
+## Basic usage
 
 ```markdown
-## Mein Accordion
-{: layout="ntl-accordion"}
+## FAQ
+{: layout="ntl-accordion.default"}
 
-### Titel 1
+### Question 1
 
-Inhalt für Item 1
+Answer 1
 
-### Titel 2
+### Question 2
 
-Inhalt für Item 2
+Answer 2
 ```
 
-## ntl-accordion
+Accordions are intended to be used inside parent layouts/cards/content sections. Outer spacing should be handled by that parent.
 
-Container-Komponente für das Accordion-Layout.
+## Attributes
 
-| Attribut             | Typ                        | Beschreibung                                      | Default     |
-| -------------------- | -------------------------- | ------------------------------------------------- | ----------- |
-| `exclusive`          | boolean                    | Nur ein Item kann gleichzeitig geöffnet sein      | `false`     |
-| `initial-open-index` | number                     | Index des initial geöffneten Items (0-basiert)    | `undefined` |
-| `marker-position`    | `'start'` \| `'end'`      | Position des Markers (links oder rechts)          | `'end'`     |
-| `marker-icon`        | `'chevron'` \| `'plus'`   | Icon-Variante für den Marker                      | `'chevron'` |
+### `ntl-accordion`
 
-## ntl-accordion-item
+| Attribute | Type | Default | Description |
+| --- | --- | --- | --- |
+| `exclusive` | boolean | `true` | When an item opens, other open items are closed. |
+| `initial-open-index` | number | `0` | Item index opened on first render. Empty attribute means `0`; omit or set invalid to disable. |
+| `marker-position` | `start` \| `end` | item default | Propagated to child items unless they define their own value. |
+| `marker-icon` | `chevron` \| `plus` | CSS default | Propagated to child items unless they define their own value. |
 
-Einzelnes Accordion-Item (wird automatisch aus `###`-Überschriften generiert).
+### `ntl-accordion-item`
 
-| Attribut          | Typ                        | Beschreibung                              | Default     |
-| ----------------- | -------------------------- | ----------------------------------------- | ----------- |
-| `open`            | boolean                    | Ob das Item geöffnet ist                  | `false`     |
-| `marker-position` | `'start'` \| `'end'`      | Position des Markers (überschreibt Parent)| `'end'`     |
-| `marker-icon`     | `'chevron'` \| `'plus'`   | Icon-Variante (überschreibt Parent)       | `'chevron'` |
+| Attribute | Type | Default | Description |
+| --- | --- | --- | --- |
+| `open` | boolean | `false` | Reflects the native `<details>` state. |
+| `marker-position` | `start` \| `end` | `end` | Marker position for this item. |
+| `marker-icon` | `chevron` \| `plus` | `null` | Marker icon variant for this item. |
 
-## Beispiele
+## CSS parts
 
-### Exclusive Accordion
+- `ntl-accordion`: `accordion`
+- `ntl-accordion-item`: `details`, `summary`, `title`, `marker`, `content`
 
-Nur ein Item kann gleichzeitig geöffnet sein:
+## Mixins
 
-```markdown
-## Exclusive Accordion
-{: layout="ntl-accordion[exclusive='true']"}
-
-### Item 1
-Inhalt 1
-
-### Item 2
-Inhalt 2
+```scss
+@include accordion.default-style();
+@include accordion.with-details-end();
+@include accordion.with-marker-start();
+@include accordion.with-marker-plus();
+@include accordion.with-modifier-classes();
 ```
 
-### Initial geöffnetes Item
+`default-style()` includes the modifier classes by default:
 
-Das zweite Item (Index 1) ist initial geöffnet:
+- `.details-end`
+- `.marker-start`
+- `.marker-plus`
 
-```markdown
-## Accordion
-{: layout="ntl-accordion[initial-open-index='1']"}
-
-### Erstes Element
-Geschlossen
-
-### Zweites Element
-Initial geöffnet
-```
-
-### Marker links positioniert
-
-```markdown
-## Accordion
-{: layout="ntl-accordion[marker-position='start']"}
-
-### Item mit Marker links
-Der Chevron ist links positioniert
-```
-
-## CSS Custom Properties
-
-| Variable                       | Beschreibung                                    | Default                  |
-| ------------------------------ | ----------------------------------------------- | ------------------------ |
-| `--marker-icon-closed`         | Icon im geschlossenen Zustand (Data-URL)        | SVG Chevron Down         |
-| `--marker-icon-open`           | Icon im geöffneten Zustand (Data-URL)           | SVG Chevron Up           |
-| `--marker-size`                | Größe des Marker-Icons                          | `1.5rem`                 |
-| `--border-color`               | Farbe der Trennlinien                           | `#e5e7eb`                |
-| `--background-color-heading`   | Hintergrundfarbe der Überschrift                | `var(--nt-light-subtle)` |
-
-### Beispiel: Plus/Minus Icons in Markdown
-
-Über das `marker-icon` Attribut auf dem Accordion-Container:
-
-```markdown
-## Accordion mit Plus/Minus Icons
-{: layout="ntl-accordion[marker-icon='plus']"}
-
-### Item 1
-Inhalt 1
-
-### Item 2
-Inhalt 2
-```
-
-Einzelnes Item mit `section-marker-icon` überschreiben:
-
-```markdown
-### Plus/Minus Item
-{: section-marker-icon="plus"}
-```
-
-### Eigene Icons via CSS
-
-Eigene SVG-Icons können über CSS-Variablen auf dem `ntl-accordion-item` Element gesetzt werden:
-
-```css
-ntl-accordion-item.custom-icon {
-  --marker-icon-closed: url("data:image/svg+xml,...");
-  --marker-icon-open: url("data:image/svg+xml,...");
-}
-```
-
-### Styling mit ::part()
-
-Das Marker-Element kann von außen über `::part(marker)` gestylt werden:
-
-```css
-ntl-accordion-item::part(marker) {
-  color: blue;
-  width: 2rem;
-  height: 2rem;
-}
-```
-
-## Events
-
-| Event              | Detail          | Beschreibung                        |
-| ------------------ | --------------- | ----------------------------------- |
-| `accordion-toggle` | `{ open: boolean }` | Wird beim Öffnen/Schließen gefeuert |
+The package also provides `default.scss` with a `.default` class for demos/simple usage.

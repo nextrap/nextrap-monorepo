@@ -3,8 +3,14 @@
 
 @mixin with-modifier-classes {
   &.reverse {
-    &[mode='mobile']::part(wrapper) {
-      flex-direction: column-reverse;
+    &[mode='mobile'] {
+      &::part(aside) {
+        order: 1;
+      }
+
+      &::part(main) {
+        order: 2;
+      }
     }
 
     &[mode='desktop']::part(wrapper) {

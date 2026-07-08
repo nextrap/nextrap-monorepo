@@ -6,19 +6,49 @@
             "elements": [
                 {
                     "name": "ntl-accordion",
-                    "description": "Add logic scope to the html elements below",
-                    "slots": [{ "name": "default", "description": "Content of button" }],
-                    "events": [{ "name": "click", "description": "Fired on click" }],
+                    "description": "Accordion layout container for embedded FAQ/detail sections.",
+                    "slots": [{ "name": "default", "description": "Direct sections or ntl-accordion-item elements" }],
                     "attributes": [
                         {
-                            "name": "debug",
+                            "name": "exclusive",
                             "type": "boolean",
-                            "description": "Enable debug mode (output debug information to the console)"
+                            "description": "Close other items when one item opens."
                         },
                         {
-                            "name": "init",
-                            "type": "string",
-                            "description": "Initialize component scope by evaluating a JSON/JS expression (supports await fetch, DOM access)."
+                            "name": "initial-open-index",
+                            "type": "number",
+                            "description": "Zero-based index of the initially opened item."
+                        },
+                        {
+                            "name": "marker-position",
+                            "type": "start | end",
+                            "description": "Marker position propagated to child items."
+                        },
+                        {
+                            "name": "marker-icon",
+                            "type": "chevron | plus",
+                            "description": "Marker icon variant propagated to child items."
+                        }
+                    ]
+                },
+                {
+                    "name": "ntl-accordion-item",
+                    "description": "Single accordion item based on a native details element.",
+                    "slots": [
+                        { "name": "title", "description": "Item summary/title" },
+                        { "name": "default", "description": "Item content" }
+                    ],
+                    "attributes": [
+                        { "name": "open", "type": "boolean", "description": "Open state of the item." },
+                        {
+                            "name": "marker-position",
+                            "type": "start | end",
+                            "description": "Marker position for this item."
+                        },
+                        {
+                            "name": "marker-icon",
+                            "type": "chevron | plus",
+                            "description": "Marker icon variant for this item."
                         }
                     ]
                 }
@@ -26,19 +56,18 @@
         },
         "css": {
             "classes": [
-                {
-                    "name": "variant1",
-                    "description": "Css Class variant1"
-                }
+                { "name": "default", "description": "Default visual styling from default.scss." },
+                { "name": "details-end", "description": "Render summary after content." },
+                { "name": "marker-start", "description": "Render marker before title." },
+                { "name": "marker-plus", "description": "Use plus/minus marker icons." }
             ],
-            "scopes": [
-                {
-                    "name": "my-button",
-                    "description": "Button specific classes",
-                    "css": {
-                        "classes": [{ "name": "icon-left" }, { "name": "icon-right" }]
-                    }
-                }
+            "parts": [
+                { "name": "accordion" },
+                { "name": "details" },
+                { "name": "summary" },
+                { "name": "title" },
+                { "name": "marker" },
+                { "name": "content" }
             ]
         }
     }

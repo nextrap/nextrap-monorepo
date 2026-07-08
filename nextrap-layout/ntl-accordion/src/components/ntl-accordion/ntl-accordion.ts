@@ -1,20 +1,12 @@
-import { LoggingMixin } from '@trunkjs/browser-utils';
-import { SubLayoutApplyMixin } from '@trunkjs/content-pane';
-import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
-
+import { nextrap_layout } from '@nextrap/ntl-core';
 import { resetStyle } from '@nextrap/style-reset';
-import style from './ntl-accordion.scss?inline';
+import { html, PropertyValues, unsafeCSS } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 
 import '../ntl-accordion-item/ntl-accordion-item';
 import { NtlAccordionItemElement } from '../ntl-accordion-item/ntl-accordion-item';
+import style from './ntl-accordion.scss?inline';
 
-/**
- * Converter for initialOpenIndex that handles:
- * - Missing attribute: undefined
- * - Empty attribute (initial-open-index): 0
- * - Numeric value (initial-open-index="2"): 2
- */
 const initialOpenIndexConverter = {
   fromAttribute(value: string | null): number | undefined {
     if (value === null) {
@@ -32,8 +24,12 @@ const initialOpenIndexConverter = {
 };
 
 @customElement('ntl-accordion')
-export class NtlAccordionElement extends SubLayoutApplyMixin(LoggingMixin(LitElement)) {
-  static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
+export class NtlAccordionElement extends nextrap_layout({
+  subLayoutApply: true,
+  slotVisibility: false,
+  eventBinding: false,
+}) {
+  static override styles = [unsafeCSS(resetStyle), unsafeCSS(style)];
 
   @property({ type: Boolean, reflect: true })
   public accessor exclusive = true;
@@ -49,29 +45,29 @@ export class NtlAccordionElement extends SubLayoutApplyMixin(LoggingMixin(LitEle
 
   private _initialized = false;
 
-  override firstUpdated(__changedProperties: PropertyValues) {
-    super.firstUpdated(__changedProperties); // Important for SubLayoutApplyMixin
-    this.addEventListener('accordion-toggle', this._onItemToggle.bind(this) as EventListener);
-
-    // Listen for slotchange to initialize items
-    const slot = this.shadowRoot?.querySelector('slot:not([name])') as HTMLSlotElement | null;
-    slot?.addEventListener('slotchange', () => this._onSlotChange());
+  override connectedCallback() {
+    super.connectedCallback();
+    this.classList.add('ntl-accordion');
   }
 
-  private _onSlotChange() {
+  override firstUpdated(changedProperties: PropertyValues) {
+    super.firstUpdated(changedProperties);
+    this.addEventListener('accordion-toggle', this._onItemToggle as EventListener);
+    this._onSlotChange();
+  }
+
+  private _onSlotChange = () => {
     this._propagateProperties();
     this._applyInitialOpenIndex();
-  }
+  };
 
   private _propagateProperties() {
     const items = this._getAccordionItems();
 
     for (const item of items) {
-      // Propagate marker-position if set on accordion and not on item
       if (this.markerPosition && !item.hasAttribute('marker-position')) {
         item.markerPosition = this.markerPosition;
       }
-      // Propagate marker-icon if set on accordion and not on item
       if (this.markerIcon && !item.hasAttribute('marker-icon')) {
         item.markerIcon = this.markerIcon;
       }
@@ -79,10 +75,8 @@ export class NtlAccordionElement extends SubLayoutApplyMixin(LoggingMixin(LitEle
   }
 
   private _applyInitialOpenIndex() {
-    if (this._initialized) return;
+    if (this._initialized || this.initialOpenIndex === undefined) return;
     this._initialized = true;
-
-    if (this.initialOpenIndex === undefined) return;
 
     const items = this._getAccordionItems();
     if (this.initialOpenIndex >= 0 && this.initialOpenIndex < items.length) {
@@ -90,7 +84,7 @@ export class NtlAccordionElement extends SubLayoutApplyMixin(LoggingMixin(LitEle
     }
   }
 
-  private _onItemToggle(e: CustomEvent<{ open: boolean }>) {
+  private _onItemToggle = (e: CustomEvent<{ open: boolean }>) => {
     if (!this.exclusive || !e.detail.open) return;
 
     const target = e.target as NtlAccordionItemElement;
@@ -101,7 +95,7 @@ export class NtlAccordionElement extends SubLayoutApplyMixin(LoggingMixin(LitEle
         item.open = false;
       }
     }
-  }
+  };
 
   private _getAccordionItems(): NtlAccordionItemElement[] {
     const slot = this.shadowRoot?.querySelector('slot:not([name])') as HTMLSlotElement | null;
@@ -114,8 +108,12 @@ export class NtlAccordionElement extends SubLayoutApplyMixin(LoggingMixin(LitEle
 
   override render() {
     return html`
-      <div class="accordion" part="accordion">
-        <slot data-query=":scope > section" data-set-attribute-layout="ntl-accordion-item"></slot>
+      <div id="accordion" part="accordion">
+        <slot
+          data-query=":scope > section:not(.keep)"
+          data-set-attribute-layout="ntl-accordion-item"
+          @slotchange=${this._onSlotChange}
+        ></slot>
       </div>
     `;
   }
