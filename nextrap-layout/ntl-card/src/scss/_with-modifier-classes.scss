@@ -1,0 +1,12 @@
+@use 'with-image-fullsize' as image-fullsize;
+@use 'with-image-overlay' as image-overlay;
+
+@mixin with-modifier-classes {
+  &.img-fullsize {
+    @include image-fullsize.with-image-fullsize;
+  }
+
+  &.img-overlay {
+    @include image-overlay.with-image-overlay;
+  }
+}

@@ -1,0 +1,44 @@
+@use 'sass:string';
+@use 'with-modifier-classes' as modifier-classes;
+
+@mixin default-style(
+  $innerPadding: var(--nt-space-3),
+  $border: 1px solid var(--nt-primary),
+  $background-color: unset,
+  $border-radius: var(--nt-border-radius),
+  $image-aspect-ratio: string.unquote('16 / 9'),
+  $overlay-background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent),
+  $modifierClasses: true
+) {
+  --background-color: #{$background-color};
+  --border: #{$border};
+  --border-radius: #{$border-radius};
+  --image-aspect-ratio: var(--aspect-ratio, #{$image-aspect-ratio});
+  --inner-padding: #{$innerPadding};
+  --overlay-background: #{$overlay-background};
+
+  @if ($modifierClasses != false and $modifierClasses != none) {
+    @include modifier-classes.with-modifier-classes();
+  }
+
+  &::part(wrapper) {
+    border: var(--border);
+    border-radius: var(--border-radius);
+    background-color: var(--background-color);
+    overflow: hidden;
+  }
+
+  &::part(header),
+  &::part(content),
+  &::part(footer) {
+    padding: var(--inner-padding);
+  }
+
+  img[slot='image'],
+  p[slot='image'] img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}

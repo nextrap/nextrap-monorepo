@@ -1,0 +1,10 @@
+@mixin with-image-fullsize {
+  &::part(image) {
+    aspect-ratio: initial;
+  }
+
+  [slot='image'] {
+    width: 100%;
+    height: auto;
+  }
+}

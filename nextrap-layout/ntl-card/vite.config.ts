@@ -12,6 +12,7 @@ export default defineConfig(() => ({
   server: {
     port: 4000,
     host: '0.0.0.0',
+    allowedHosts: ['main'],
     hmr: true,
   },
   root: __dirname,

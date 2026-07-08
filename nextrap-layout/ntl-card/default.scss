@@ -1,16 +1,13 @@
-@use "./index" as mixins;
+@use './index' as mixin;
 
-ntl-card {
-  /* Put styles here */
+.default {
+  @include mixin.default-style(var(--nt-text-gap));
+}
 
-  @include mixins.default-style(var(--nt-text-gap), var(--nt-text-gap));
+.img-fullsize {
+  @include mixin.with-image-fullsize;
+}
 
-  &.img-fullsize {
-    @include mixins.img-fullsize;
-  }
-
-  // TODO: Update style to use grid for overlay, instead of absolute
-  &.img-overlay {
-    @include mixins.img-overlay;
-  }
+.img-overlay {
+  @include mixin.with-image-overlay;
 }

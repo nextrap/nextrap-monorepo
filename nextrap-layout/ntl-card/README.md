@@ -1,19 +1,41 @@
 # ntl-card
 
-Short description of the component.
+Card layout web component with optional header, image, content, footer and link handling.
 
-## Example
+## Usage
 
-| Attribute | Type   | Description          | Default |
-| --------- | ------ | -------------------- | ------- |
-| attr1     | string | Description of attr1 | 'value' |
+```ts
+import '@nextrap/ntl-card';
+```
 
-### Attr1
+```html
+<ntl-card class="default">
+  <h3 slot="header">Card title</h3>
+  <img slot="image" src="/image.jpg" alt="">
+  <p>Card content</p>
+  <p slot="footer">Footer</p>
+</ntl-card>
+```
 
-Description of attr1.
+## Styling
 
-### Attr2
+```scss
+@use '@nextrap/ntl-card' as card;
 
-Description of attr2.
+ntl-card {
+  @include card.default-style();
+}
+```
 
-## Example Usage
+`default-style()` sets border, background, border radius, inner padding and image aspect-ratio variables. It does not set a wrapper gap.
+
+Available mixins:
+
+```scss
+@include card.default-style();
+@include card.with-image-fullsize();
+@include card.with-image-overlay();
+@include card.with-modifier-classes();
+```
+
+Use `--aspect-ratio` or `--image-aspect-ratio` on `ntl-card` to control the image area ratio.
