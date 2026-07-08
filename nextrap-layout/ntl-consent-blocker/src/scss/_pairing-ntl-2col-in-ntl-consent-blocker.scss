@@ -1,0 +1,13 @@
+@use 'sass:string';
+
+@mixin pairing-ntl-2col-in-ntl-consent-blocker($top-aspect-ratio: string.unquote('21 / 9')) {
+  &[slot='aside'],
+  &[slot='top'] {
+    display: block;
+    width: 100%;
+  }
+
+  &[slot='top'] {
+    --aspect-ratio: #{$top-aspect-ratio};
+  }
+}

@@ -1,7 +1,12 @@
 @use '../index' as accordion;
+@use '@nextrap/ntl-2col' as twoCol;
 
 ntl-accordion.default {
   @include accordion.default-style();
+}
+
+ntl-2col.default {
+  @include twoCol.default-style();
 }
 
 .demo-card {

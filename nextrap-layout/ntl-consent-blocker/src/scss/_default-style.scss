@@ -1,0 +1,41 @@
+@mixin default-style(
+  $default-bg:
+    '<img loading="lazy" alt="Karte noch nicht geladen" src="https://cdn.leuffen.de/hyperpage-components/v1.0/google-maps/maps-preview.jpg">',
+  $default-pre-consent:
+    '<button class="btn btn-primary" data-action="consent">Daten von Google laden</button><p>Mit Klick auf Daten von Google laden, wird die Karte geladen und die Datenschutzerklärung von Google akzeptiert.</p>',
+  $border-radius: var(--nt-border-radius),
+  $overlay-background: rgba(255, 255, 255, 0.82),
+  $pre-consent-padding: var(--nt-space-3)
+) {
+  --default-bg: #{$default-bg};
+  --default-pre-consent: #{$default-pre-consent};
+  --border-radius: #{$border-radius};
+  --overlay-background: #{$overlay-background};
+  --pre-consent-padding: #{$pre-consent-padding};
+
+  &::part(wrapper) {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+  }
+
+  &::part(pre-consent) {
+    padding: var(--pre-consent-padding);
+    background: var(--overlay-background);
+  }
+
+  img[slot='background'],
+  p[slot='background'] {
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    object-fit: cover;
+  }
+
+  p[slot='background'] > img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}

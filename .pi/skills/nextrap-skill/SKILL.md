@@ -47,6 +47,7 @@ Für jedes pairing wird eine eigene paring-xyz.md erstellt.
 - Erfordert ein Prompt änderungen an mehr als 3 Dateien, frag den User, ob das so gewünscht ist. Gib einen kurzen Abriss, was Du ändern willst.
 - Versuche css styling zunächst mit purem CSS (Selektoren) zu machen. Frag nach, wenn du typescript code ändern musst.
 - Frag nach, wenn Du andere Packages ändern musst.
+- Benutze die `trunkjs/content-pane` notation `{: layout="..."}` in den Demo-Dateien, um die Layouts zu rendern. Frage nach, bevor du HTML in Markdown dateien anlegst.
 - 
 
 ## Dont`s

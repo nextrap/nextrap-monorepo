@@ -1,4 +1,5 @@
 import '@nextrap/nte-demo-viewer';
+import '@nextrap/ntl-2col';
 import '@nextrap/style-base';
 import '@nextrap/style-button';
 import '@nextrap/style-typography';

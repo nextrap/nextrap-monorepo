@@ -1,20 +1,14 @@
 import { nextrap_layout, NtlFeatures } from '@nextrap/ntl-core';
 import { resetStyle } from '@nextrap/style-reset';
-import { Listen } from '@trunkjs/browser-utils';
+import { Listen, waitForDomContentLoaded } from '@trunkjs/browser-utils';
 import { html, PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import style from './ntl-consent-blocker.scss?inline';
 
-// Styles for the light DOM
-
-// Styles for your component's shadow DOM
-
-// use nextrap_element for pure elements
-
 const features: NtlFeatures = {
   breakpoints: true, // Enables responsive design features
   subLayoutApply: true, // For NTL only: Enable <slot data-query= support for sub-layouts
-  slotVisibility: false, // quick fix for marking empty slots (unless CSS Standard supports :empty for slots)
+  slotVisibility: true, // Mark empty slots for functional Shadow DOM visibility handling
   eventBinding: true, // Switch event binding using @Listen decorators
 };
 
@@ -24,7 +18,13 @@ function stripQuotes(str: string) {
 
 @customElement('ntl-consent-blocker')
 export class NtlConsentBlockerElement extends nextrap_layout(features) {
-  static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
+  static override styles = [unsafeCSS(resetStyle), unsafeCSS(style)];
+
+  override async connectedCallback() {
+    await waitForDomContentLoaded();
+    super.connectedCallback();
+    this.classList.add('ntl-consent-blocker');
+  }
 
   #giveConsent() {
     const template = this.querySelector(':scope > template') as HTMLTemplateElement;
@@ -92,9 +92,11 @@ export class NtlConsentBlockerElement extends nextrap_layout(features) {
       }
 
       // Append to content if wrapper is a template, otherwise to the wrapper itself
-      wrapperElement instanceof HTMLTemplateElement
-        ? wrapperElement.content.appendChild(clone)
-        : wrapperElement.appendChild(clone);
+      if (wrapperElement instanceof HTMLTemplateElement) {
+        wrapperElement.content.appendChild(clone);
+      } else {
+        wrapperElement.appendChild(clone);
+      }
     });
   }
 
@@ -113,7 +115,7 @@ export class NtlConsentBlockerElement extends nextrap_layout(features) {
           <slot name="pre-consent"></slot>
         </div>
 
-        <div id="loading-text">Bitte warten...</div>
+        <div id="loading-text" part="loading-text">Bitte warten...</div>
       </div>
     `;
   }

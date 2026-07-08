@@ -1,24 +1,39 @@
 {
-    "name": "ntl-consent-blocker",
+    "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
+    "name": "@nextrap/ntl-consent-blocker",
     "version": "1.0.0",
+    "description": "Consent-gate layout component for external embeds.",
     "contributions": {
         "html": {
             "elements": [
                 {
                     "name": "ntl-consent-blocker",
-                    "description": "Add logic scope to the html elements below",
-                    "slots": [{ "name": "default", "description": "Content of button" }],
-                    "events": [{ "name": "click", "description": "Fired on click" }],
+                    "description": "Shows preview/pre-consent content and clones a direct template after consent.",
                     "attributes": [
                         {
-                            "name": "debug",
-                            "type": "boolean",
-                            "description": "Enable debug mode (output debug information to the console)"
+                            "name": "mode",
+                            "type": "string",
+                            "description": "Reflected breakpoint mode, usually managed by the component.",
+                            "values": [{ "name": "mobile" }, { "name": "desktop" }]
                         },
                         {
-                            "name": "init",
-                            "type": "string",
-                            "description": "Initialize component scope by evaluating a JSON/JS expression (supports await fetch, DOM access)."
+                            "name": "consentgiven",
+                            "type": "boolean",
+                            "description": "Reflected internal state after the consent action was triggered."
+                        }
+                    ],
+                    "slots": [
+                        {
+                            "name": "background",
+                            "description": "Preview/background layer. Direct .background children and direct p:has(img:not(.keep)) children are assigned automatically."
+                        },
+                        {
+                            "name": "pre-consent",
+                            "description": "Visible consent UI before approval. Use an element with data-action=\"consent\" to trigger loading."
+                        },
+                        {
+                            "name": "consented-content",
+                            "description": "Loaded content after consent. Normally filled from a direct template element."
                         }
                     ]
                 }
@@ -27,17 +42,66 @@
         "css": {
             "classes": [
                 {
-                    "name": "variant1",
-                    "description": "Css Class variant1"
+                    "name": "ntl-consent-blocker",
+                    "description": "Base class added automatically by the component."
+                },
+                {
+                    "name": "default",
+                    "description": "Semantic default styling hook used by the package default.scss."
+                },
+                {
+                    "name": "background",
+                    "description": "Light DOM helper class: direct children with this class are assigned to the background slot."
+                },
+                {
+                    "name": "aside",
+                    "description": "Pairing helper class for assigning the component to the ntl-2col aside slot."
+                },
+                {
+                    "name": "top",
+                    "description": "Pairing helper class for assigning the component to the ntl-2col top slot."
                 }
             ],
-            "scopes": [
+            "properties": [
                 {
-                    "name": "my-button",
-                    "description": "Button specific classes",
-                    "css": {
-                        "classes": [{ "name": "icon-left" }, { "name": "icon-right" }]
-                    }
+                    "name": "--breakpoint",
+                    "description": "Breakpoint where the internal aspect ratio switches. Default: lg.",
+                    "value": { "type": "string" }
+                },
+                {
+                    "name": "--aspect-ratio",
+                    "description": "Consent blocker aspect ratio. Default: 16 / 9; mobile default in Shadow DOM is 1 / 1.",
+                    "value": { "type": "string" }
+                },
+                {
+                    "name": "--default-template",
+                    "description": "HTML string used to create the direct template when no template is provided.",
+                    "value": { "type": "string" }
+                },
+                {
+                    "name": "--default-bg",
+                    "description": "HTML string used as default background content when no background slot content is provided.",
+                    "value": { "type": "string" }
+                },
+                {
+                    "name": "--default-pre-consent",
+                    "description": "HTML string used as default pre-consent content when no pre-consent slot content is provided.",
+                    "value": { "type": "string" }
+                },
+                {
+                    "name": "--border-radius",
+                    "description": "Wrapper border radius set by default-style(). Default: var(--nt-border-radius).",
+                    "value": { "type": "string" }
+                },
+                {
+                    "name": "--overlay-background",
+                    "description": "Background for the pre-consent part set by default-style().",
+                    "value": { "type": "color" }
+                },
+                {
+                    "name": "--pre-consent-padding",
+                    "description": "Padding for the pre-consent part set by default-style().",
+                    "value": { "type": "string" }
                 }
             ]
         }

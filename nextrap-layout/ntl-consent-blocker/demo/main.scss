@@ -1,0 +1,11 @@
+@use '../index' as consentBlocker;
+@use '@nextrap/ntl-2col' as twoCol;
+
+ntl-consent-blocker.default {
+  @include consentBlocker.default-style();
+  @include consentBlocker.pairing-ntl-2col-in-ntl-consent-blocker();
+}
+
+ntl-2col.default {
+  @include twoCol.default-style();
+}
