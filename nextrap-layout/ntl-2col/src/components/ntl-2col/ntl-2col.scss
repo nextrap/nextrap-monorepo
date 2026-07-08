@@ -1,14 +1,13 @@
 :host {
   --gap: var(--nt-gap);
   --container-width: var(--nt-container-width, 100%);
-  --container-bg: var(--nt-light);
   --inner-padding: var(--nt-space-3);
   --section-bg: transparent; // The main background
 
   --cols: 6;
   --breakpoint: md;
 
-  background: var(--container-bg);
+  background: var(--section-bg);
   display: block;
 }
 
@@ -66,8 +65,11 @@
     }
     #main {
       order: 1;
-      flex: 1 1 var(--main-width);
+      width: var(--main-width);
       box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
     }
     #aside {
       order: 2;

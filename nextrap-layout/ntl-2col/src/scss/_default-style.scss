@@ -3,7 +3,7 @@
 @mixin default-style(
   $innerPadding: var(--nt-space-3),
   $gap: var(--nt-gap),
-  $background: var(--nt-light),
+  $background: transparent,
   $border: 1px solid var(--nt-dark),
   $border-radius: var(--nt-border-radius),
   $objectFit: yes,

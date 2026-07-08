@@ -21,7 +21,9 @@ zwischen den packages geben. Diese müssen untereinander über @nextap/package-n
 - So wenig styling wie nötig: Die Webcomponents sollen später von außen gestyled werden. Daher soll im shadow dom
     nur die nötigsten styles enthalten sein. Es sollten immer parts definiert sein, damit diese von außen gestyled werden können.
 - Das default styling erfolgt in den mixins jedes packages, das nachher in den theme importiert wird.
-
+- Varianten sollen über semantische Klassen am Custom Element aktiviert werden, z. B. `ntl-2col.with-background-and-divider`.
+- Styling von Shadow-DOM-Inhalten in Demo-/Theme-SCSS soll bevorzugt über `::part(...)` erfolgen.
+- Bei Layout-Varianten immer mobile/desktop-Modi beachten. Desktop-only Styling über `[mode='desktop']` scopen.
 
 ## Ai Usage Info
 
