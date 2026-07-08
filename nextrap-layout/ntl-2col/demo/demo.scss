@@ -2,29 +2,27 @@
 @use '@nextrap/style-base/module' as base;
 
 @mixin with-background-and-divider {
-  &.with-background-and-divider {
-    --section-bg: var(--nt-primary);
-    --border: none;
-    --gap: 0;
+  --section-bg: var(--nt-primary);
+  --border: none;
+  --gap: 0;
 
-    &[mode='desktop'] {
-      &::part(aside) {
-        position: relative;
-      }
+  &[mode='desktop'] {
+    &::part(aside) {
+      position: relative;
+    }
 
-      &::part(aside)::after {
-        content: '';
-        position: absolute;
-        top: 25%;
-        bottom: 25%;
-        left: 0;
-        border-left: 1px solid var(--nt-light);
-      }
+    &::part(aside)::after {
+      content: '';
+      position: absolute;
+      top: 25%;
+      bottom: 25%;
+      left: 0;
+      border-left: 1px solid var(--nt-light);
+    }
 
-      &.desktop-reverse::part(aside)::after {
-        right: 0;
-        left: auto;
-      }
+    &.desktop-reverse::part(aside)::after {
+      right: 0;
+      left: auto;
     }
   }
 }
@@ -32,7 +30,10 @@
 ntl-2col {
   margin-bottom: 40px;
   @include ntl2col.default-style();
-  @include with-background-and-divider();
+
+  &.with-background-and-divider {
+    @include with-background-and-divider();
+  }
 
   &.breakout-end {
     @include ntl2col.breakout-end;

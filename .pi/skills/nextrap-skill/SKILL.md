@@ -24,6 +24,9 @@ zwischen den packages geben. Diese müssen untereinander über @nextap/package-n
 - Varianten sollen über semantische Klassen am Custom Element aktiviert werden, z. B. `ntl-2col.with-background-and-divider`.
 - Styling von Shadow-DOM-Inhalten in Demo-/Theme-SCSS soll bevorzugt über `::part(...)` erfolgen.
 - Bei Layout-Varianten immer mobile/desktop-Modi beachten. Desktop-only Styling über `[mode='desktop']` scopen.
+- SCSS-Feature-Mixins sollen keine konkreten Demo-/Modifier-Klassennamen enthalten. Das Mixin beschreibt nur das Feature; die Klasse oder der Zielselektor bindet das Mixin ein.
+- Jedes Mixin wird in einer eigenen SCSS-Datei unter src/scss/ definiert und in index.scss exportiert.
+- Der name für varianten-mixins startet mit `with-<feature>` und beschreibt das Feature, z. B. `with-background-and-divider`.
 
 ## Ai Usage Info
 
