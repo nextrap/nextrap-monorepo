@@ -16,6 +16,12 @@ export default defineConfig(() => ({
   },
   root: __dirname,
   cacheDir: `../../node_modules/.vite/${dirName}`,
+  css: {
+    devSourcemap: true,
+  },
+  esbuild: {
+    sourcemap: true,
+  },
   plugins: [
     nxViteTsPaths(),
     nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss', 'web-types.json']),

@@ -1,3 +1,5 @@
-@forward "./src/styles/mixins";
-
-// This file is only for mixins. See default.scss for the default theme.
+@forward 'src/scss/default-style';
+@forward 'src/scss/image-auto-objectfit';
+@forward 'src/scss/breakouts';
+@forward 'src/scss/alternating';
+@forward 'src/scss/reverse';

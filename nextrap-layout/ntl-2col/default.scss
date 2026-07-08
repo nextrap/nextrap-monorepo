@@ -8,19 +8,6 @@
   @include mixin.reverse;
 }
 
-.breakout-end {
-  @include mixin.breakout-end;
-}
-.breakout-start {
-  @include mixin.breakout-start;
-}
-
-.alternating ntl-2col {
-  &[mode='desktop'] {
-    &:nth-of-type(even) {
-      &::part(wrapper) {
-        flex-direction: row-reverse;
-      }
-    }
-  }
+.alternating {
+  @include mixin.alternating;
 }

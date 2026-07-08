@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  # This service will be available as: project_name_some_service
+  chromium:
+    image: ghcr.io/browserless/chromium
+    networks:
+      - kickstart-stack
+
+networks:
+  kickstart-stack:
+    external: true

@@ -1,0 +1,40 @@
+@use 'image-auto-objectfit' as image-auto-objectfit;
+
+@mixin default-style(
+  $innerPadding: var(--nt-space-3),
+  $gap: var(--nt-gap),
+  $background: var(--nt-light),
+  $border: 1px solid var(--nt-dark),
+  $border-radius: var(--nt-border-radius),
+  $objectFit: yes,
+  $aspectRatio: none
+) {
+  --background: #{$background};
+  --border: #{$border};
+  --border-radius: #{$border-radius};
+  --inner-padding: #{$innerPadding};
+  --gap: #{$gap};
+  @if ($aspectRatio != none) {
+    --aspectRatio: #{$aspectRatio};
+    &::part(aside) {
+      aspect-ratio: #{$aspectRatio};
+    }
+  }
+
+  @if ($objectFit != none) {
+    // Object-Fit für Bilder, die automatisch in den Aside Bereich geladen werden
+
+    @include image-auto-objectfit.image-auto-objectfit();
+  }
+
+  &::part(wrapper) {
+    background: var(--background);
+    border: var(--border);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+  }
+  &::part(wrapper) {
+    gap: var(--gap);
+    background: var(--background);
+  }
+}

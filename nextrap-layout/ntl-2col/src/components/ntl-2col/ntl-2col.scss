@@ -1,20 +1,23 @@
 :host {
   --gap: var(--nt-gap);
-
   --container-width: var(--nt-container-width, 100%);
-
   --container-bg: var(--nt-light);
+  --inner-padding: var(--nt-space-3);
+  --section-bg: transparent; // The main background
 
   --cols: 6;
   --breakpoint: md;
 
+  background: var(--container-bg);
   display: block;
 }
 
 #container {
-  margin: 0 auto;
-  width: var(--container-width);
-  background: var(--container-bg);
+  margin-left: var(--container-margin-left, auto);
+  margin-right: var(--container-margin-right, auto);
+  width: var(--container-render-width, var(--container-width));
+
+  box-sizing: border-box;
 }
 
 #wrapper {
@@ -24,49 +27,61 @@
   gap: var(--gap);
   align-items: stretch;
 
-  #main {
-    order: 2;
+  & > * {
+    padding: var(--inner-padding);
   }
+}
 
-  #aside {
-    order: 1;
+:host([mode='mobile']) {
+  #container {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
   }
 }
 
 :host([mode='mobile'].mobile-reverse) {
   #wrapper {
-    #main {
-      order: 1;
-    }
+    flex-direction: column-reverse;
+  }
+}
 
-    #aside {
-      order: 2;
-    }
+:host([mode='desktop'].desktop-reverse) {
+  #wrapper {
+    flex-direction: row-reverse;
   }
 }
 
 :host([mode='desktop']) {
   #wrapper {
-    position: relative;
     flex-direction: row;
-    --aside-width: calc(100% * (12 - var(--cols, 1)) / 12);
+    --main-width: calc(100% * var(--cols, 1) / 12);
     &:has(#aside > .slot-empty) {
       flex-direction: column;
 
       #main {
         width: 100%;
+        flex-basis: 100%;
       }
     }
     #main {
       order: 1;
-      width: calc(100% - var(--aside-width));
+      flex: 1 1 var(--main-width);
+      box-sizing: border-box;
     }
-
+    #aside {
+      order: 2;
+      flex: 1 1 calc(100% - var(--main-width));
+      box-sizing: border-box;
+    }
   }
 
   #aside {
     order: 2;
-    width: var(--aside-width);
+    width: auto;
+    min-width: 0;
+    flex: 1 1 0;
+    box-sizing: border-box;
 
     &:has(.slot-empty) {
       display: none;

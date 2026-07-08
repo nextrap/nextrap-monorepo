@@ -1,0 +1,28 @@
+@mixin image-auto-objectfit($objectFit: cover) {
+  &:has(> p[slot='aside'].auto)::part(aside) {
+    padding: 0; // remove padding for auto aside
+  }
+
+  p[slot='aside'].auto {
+    height: 100%;
+    width: 100%;
+    display: block;
+
+    & > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &[mode='mobile']:has(> p[slot='aside'].auto) {
+    // Always set the image top
+    &::part(main) {
+      order: 2;
+    }
+
+    &::part(aside) {
+      order: 1;
+    }
+  }
+}

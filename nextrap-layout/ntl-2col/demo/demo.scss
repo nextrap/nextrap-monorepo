@@ -1,3 +1,26 @@
+@use '@nextrap/ntl-2col' as ntl2col;
+
 ntl-2col {
   margin-bottom: 40px;
+  @include ntl2col.default-style();
+
+  &.breakout-end {
+    @include ntl2col.breakout-end;
+  }
+
+  &.breakout-start {
+    @include ntl2col.breakout-start;
+  }
+
+  &.with-header-footer {
+    &::part(top),
+    &::part(bottom) {
+      padding: 0.75rem 1rem;
+      text-align: center;
+    }
+  }
+}
+
+.alternating ntl-2col {
+  @include ntl2col.alternating();
 }

@@ -1,0 +1,4 @@
+[submodule ".pi/skills/infracamp-ai-skills"]
+	path = .pi/skills/infracamp-ai-skills
+	url = git@github.com:infracamp/infracamp-ai-skills.git
+	branch = main
