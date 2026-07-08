@@ -1,27 +1,26 @@
-@use '../../../style-base/variables' as *;
+$background-colors:
+  primary, primary-subtle, primary-emphasis, secondary, secondary-subtle, secondary-emphasis, tertiary, tertiary-subtle,
+  tertiary-emphasis, accent, accent-subtle, accent-emphasis, success, success-subtle, success-emphasis, info,
+  info-subtle, info-emphasis, warning, warning-subtle, warning-emphasis, danger, danger-subtle, danger-emphasis, light,
+  light-subtle, light-emphasis, dark, dark-subtle, dark-emphasis, 'white', 'black';
 
-// Create classes for bg colors and text colors
-@each $color,
-  $value
-    in (
-      'primary': 'primary',
-      'accent': accent,
-      'secondary': secondary,
-      'success': success,
-      'info': info,
-      'warning': warning,
-      'danger': danger,
-      'light': light,
-      'dark': dark,
-      'white': white,
-      'black': black
-    )
-{
+$base-colors: primary, accent, secondary, tertiary, success, info, warning, danger, light, dark, 'white', 'black';
+
+// Background utilities set only the background.
+@each $color in $background-colors {
   .bg-#{$color} {
-    background-color: var(--nt-#{$color}) !important;
-    --background-color: var(--nt-#{$color}) !important;
-    --text-color: var(--nt-text-on-#{$color}) !important;
+    background: var(--nt-#{$color}) !important;
   }
+}
+
+// Backwards compatible soft aliases.
+@each $color in primary, accent, secondary, tertiary, success, info, warning, danger, light, dark {
+  .bg-soft-#{$color} {
+    background: var(--nt-#{$color}-subtle) !important;
+  }
+}
+
+@each $color in $base-colors {
   .text-#{$color} {
     --text-color: var(--nt-#{$color}) !important;
     color: var(--nt-#{$color}) !important;
@@ -33,32 +32,10 @@
   }
 }
 
-@each $color,
-  $value
-    in (
-      'soft-primary': soft-primary,
-      'soft-accent': soft-accent,
-      'soft-secondary': soft-secondary,
-      'soft-success': soft-success,
-      'soft-info': soft-info,
-      'soft-warning': soft-warning,
-      'soft-danger': soft-danger,
-      'soft-light': soft-light,
-      'soft-dark': soft-dark
-    )
-{
-  .bg-#{$color} {
-    background-color: var(--background-color) !important;
-    --background-color: var(--nt-#{$color}) !important;
-    --text-color: var(--nt-text-on-#{$color}) !important;
-  }
-}
-
 // von 100 bis 900
 @for $i from 1 through 9 {
   .bg-gray-#{$i * 100} {
-    background-color: var(--nt-gray-#{$i * 100}) !important;
-    --background-color: var(--nt-gray-#{$i * 100}) !important;
+    background: var(--nt-gray-#{$i * 100}) !important;
   }
   .text-gray-#{$i} {
     --text-color: var(--nt-gray-#{$i * 100}) !important;
@@ -71,12 +48,10 @@
 }
 
 .bg-gray {
-  background-color: var(--nt-gray) !important;
-  --background-color: var(--nt-gray) !important;
+  background: var(--nt-gray) !important;
 }
 .bg-gray-dark {
-  background-color: var(--nt-gray-dark) !important;
-  --background-color: var(--nt-gray-dark) !important;
+  background: var(--nt-gray-dark) !important;
 }
 
 .text-auto {

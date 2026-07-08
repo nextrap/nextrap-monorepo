@@ -1,0 +1,32 @@
+@use 'with-breakout-end' as breakout-end;
+@use 'with-breakout-start' as breakout-start;
+
+@mixin with-modifier-classes {
+  &.reverse {
+    &[mode='mobile']::part(wrapper) {
+      flex-direction: column-reverse;
+    }
+
+    &[mode='desktop']::part(wrapper) {
+      flex-direction: row-reverse;
+    }
+  }
+
+  &.reverse-desktop {
+    &[mode='desktop']::part(wrapper) {
+      flex-direction: row-reverse;
+    }
+  }
+
+  &.breakout-start {
+    @include breakout-start.with-breakout-start;
+  }
+
+  &.breakout-end {
+    @include breakout-end.with-breakout-end;
+  }
+
+  &.with-main-justify-center::part(main) {
+    justify-content: center;
+  }
+}

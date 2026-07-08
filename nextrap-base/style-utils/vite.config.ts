@@ -16,7 +16,7 @@ export default defineConfig(() => ({
   cacheDir: '../../node_modules/.vite/nextrap-base/style-utils',
   plugins: [
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss']),
+    nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss', 'web-types.json']),
     {
       name: 'watch-md-reload',
       handleHotUpdate({ file, server }) {

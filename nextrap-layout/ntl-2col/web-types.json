@@ -1,66 +1,180 @@
 {
-    "name": "ntl-2col",
-    "version": "1.0.0",
+    "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
+    "name": "@nextrap/ntl-2col",
+    "version": "1.1.5",
+    "description": "Responsive two-column layout web component for Nextrap content sections.",
     "contributions": {
         "html": {
             "elements": [
                 {
                     "name": "ntl-2col",
-                    "description": "2Column Layout",
+                    "description": "Responsive two-column layout with top, main, aside and bottom areas.",
                     "attributes": [
                         {
-                            "name": "breakat",
+                            "name": "mode",
                             "type": "string",
-                            "description": "Breakpoint to switch to single column layout (default: md)"
+                            "description": "Reflected breakpoint mode, usually managed by the component.",
+                            "values": [{ "name": "mobile" }, { "name": "desktop" }]
+                        }
+                    ],
+                    "slots": [
+                        {
+                            "name": "",
+                            "description": "Main column content. Direct p:has(img) children can be moved automatically to the aside slot."
                         },
                         {
-                            "name": "cols",
-                            "type": "number",
-                            "description": "Number of columns for the main slot (default 6)"
+                            "name": "top",
+                            "description": "Content rendered above the two-column wrapper. Direct children with class .top are assigned automatically."
+                        },
+                        {
+                            "name": "aside",
+                            "description": "Aside column content. Direct children with class .aside and direct p:has(img) children are assigned automatically."
+                        },
+                        {
+                            "name": "bottom",
+                            "description": "Content rendered below the two-column wrapper. Direct children with class .bottom are assigned automatically."
                         }
                     ]
-                }
-            ],
-            "slots": [
-                {
-                    "name": "",
-                    "description": "Primary content (first column)"
-                },
-                {
-                    "name": "aside",
-                    "description": "Secondary content (second column)"
                 }
             ]
         },
         "css": {
             "classes": [
                 {
-                    "name": "alternate",
-                    "description": "Alternate the order of the columns (aside first)"
+                    "name": "ntl-2col",
+                    "description": "Base class added automatically by the component."
+                },
+                {
+                    "name": "default",
+                    "description": "Semantic default styling hook used by the package default.scss."
+                },
+                {
+                    "name": "reverse",
+                    "description": "Reverse the order of the columns in mobile and desktop mode."
+                },
+                {
+                    "name": "reverse-desktop",
+                    "description": "Reverse the order of the columns only in desktop mode."
                 },
                 {
                     "name": "mobile-reverse",
-                    "description": "Reverse the order of the columns (aside first)"
+                    "description": "Reverse the order of the columns in mobile mode."
                 },
                 {
                     "name": "desktop-reverse",
-                    "description": "Remove the gap between the columns"
+                    "description": "Reverse the order of the columns in desktop mode."
+                },
+                {
+                    "name": "alternating",
+                    "description": "Styling hook for alternating desktop column order, usually applied to a wrapper around multiple ntl-2col elements."
+                },
+                {
+                    "name": "breakout-start",
+                    "description": "Enable a desktop breakout layout towards the viewport start."
+                },
+                {
+                    "name": "breakout-end",
+                    "description": "Enable a desktop breakout layout towards the viewport end."
+                },
+                {
+                    "name": "with-main-justify-center",
+                    "description": "Vertically center the main column content."
+                },
+                {
+                    "name": "with-background-and-divider",
+                    "description": "Apply the background-and-divider variant when the matching SCSS mixin is included."
+                },
+                {
+                    "name": "top",
+                    "description": "Light DOM helper class: direct children with this class are assigned to the top slot."
+                },
+                {
+                    "name": "aside",
+                    "description": "Light DOM helper class: direct children with this class are assigned to the aside slot."
+                },
+                {
+                    "name": "bottom",
+                    "description": "Light DOM helper class: direct children with this class are assigned to the bottom slot."
+                },
+                {
+                    "name": "auto",
+                    "description": "Class set by the component on automatically assigned aside content such as direct p:has(img) children."
                 }
             ],
             "properties": [
                 {
-                    "name": "--container-width",
-                    "description": "Default with of the container (default: inherited from lightdom)",
-                    "value": { "type": "number" }
-                },
-                {
-                    "name": "--gap",
-                    "description": "Gap between the columns (default: from base styles)",
+                    "name": "--breakpoint",
+                    "description": "Breakpoint where the layout switches between mobile and desktop mode. Default: md.",
                     "value": { "type": "string" }
                 },
                 {
-                    "name": "--ntl-aside-padding",
-                    "description": "Padding of the aside column (default: 0)",
+                    "name": "--cols",
+                    "description": "Desktop main column width in a 12-column model. Default: 6.",
+                    "value": { "type": "number" }
+                },
+                {
+                    "name": "--container-width",
+                    "description": "Maximum/rendered container width. Default: var(--nt-container-width, 100%).",
+                    "value": { "type": "string" }
+                },
+                {
+                    "name": "--container-render-width",
+                    "description": "Internal/advanced rendered container width override, used by breakout variants.",
+                    "value": { "type": "string" }
+                },
+                {
+                    "name": "--container-margin-left",
+                    "description": "Internal/advanced container left margin override, used by breakout variants.",
+                    "value": { "type": "string" }
+                },
+                {
+                    "name": "--container-margin-right",
+                    "description": "Internal/advanced container right margin override, used by breakout variants.",
+                    "value": { "type": "string" }
+                },
+                {
+                    "name": "--gap",
+                    "description": "Gap between columns. Default: var(--nt-gap).",
+                    "value": { "type": "string" }
+                },
+                {
+                    "name": "--inner-padding",
+                    "description": "Padding applied to wrapper children. Default: var(--nt-space-3).",
+                    "value": { "type": "string" }
+                },
+                {
+                    "name": "--section-bg",
+                    "description": "Background of the host section. Default: transparent.",
+                    "value": { "type": "color" }
+                },
+                {
+                    "name": "--background",
+                    "description": "Default-style internal wrapper background variable. The wrapper is transparent by default via $wrapper-bg-color.",
+                    "value": { "type": "color" }
+                },
+                {
+                    "name": "--border",
+                    "description": "Wrapper border set by default-style(). Default: 1px solid var(--nt-dark).",
+                    "value": { "type": "string" }
+                },
+                {
+                    "name": "--border-radius",
+                    "description": "Wrapper border radius set by default-style(). Default: var(--nt-border-radius).",
+                    "value": { "type": "string" }
+                },
+                {
+                    "name": "--aspectRatio",
+                    "description": "Aside aspect ratio when default-style($aspectRatio: ...) is used.",
+                    "value": { "type": "string" }
+                },
+                {
+                    "name": "--breakout-container-width",
+                    "description": "Internal/advanced breakout container width, used by breakout variants.",
+                    "value": { "type": "string" }
+                },
+                {
+                    "name": "--breakout-space",
+                    "description": "Internal/advanced calculated breakout space, used by breakout variants.",
                     "value": { "type": "string" }
                 }
             ]

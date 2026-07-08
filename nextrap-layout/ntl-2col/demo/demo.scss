@@ -2,19 +2,11 @@
 @use '@nextrap/style-base/module' as base;
 
 ntl-2col {
-  margin-bottom: 40px;
+  margin-bottom: 40px; // Only for demo: This should be done by the parent element like content-section > *
   @include ntl2col.default-style();
 
-  &.with-background-and-divider {
+  &.variant-feature1 {
     @include ntl2col.with-background-and-divider();
-  }
-
-  &.breakout-end {
-    @include ntl2col.with-breakout-end;
-  }
-
-  &.breakout-start {
-    @include ntl2col.with-breakout-start;
   }
 
   &.with-header-footer {

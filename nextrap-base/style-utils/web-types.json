@@ -1,0 +1,1812 @@
+{
+    "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
+    "name": "@nextrap/style-utils",
+    "version": "1.0.10",
+    "description": "Nextrap utility CSS classes",
+    "contributions": {
+        "css": {
+            "classes": [
+                {
+                    "name": "m-0",
+                    "description": "Set margin to Nextrap spacing step 0"
+                },
+                {
+                    "name": "m-1",
+                    "description": "Set margin to Nextrap spacing step 1"
+                },
+                {
+                    "name": "m-2",
+                    "description": "Set margin to Nextrap spacing step 2"
+                },
+                {
+                    "name": "m-3",
+                    "description": "Set margin to Nextrap spacing step 3"
+                },
+                {
+                    "name": "m-4",
+                    "description": "Set margin to Nextrap spacing step 4"
+                },
+                {
+                    "name": "m-5",
+                    "description": "Set margin to Nextrap spacing step 5"
+                },
+                {
+                    "name": "mt-0",
+                    "description": "Set margin-top to Nextrap spacing step 0"
+                },
+                {
+                    "name": "mt-1",
+                    "description": "Set margin-top to Nextrap spacing step 1"
+                },
+                {
+                    "name": "mt-2",
+                    "description": "Set margin-top to Nextrap spacing step 2"
+                },
+                {
+                    "name": "mt-3",
+                    "description": "Set margin-top to Nextrap spacing step 3"
+                },
+                {
+                    "name": "mt-4",
+                    "description": "Set margin-top to Nextrap spacing step 4"
+                },
+                {
+                    "name": "mt-5",
+                    "description": "Set margin-top to Nextrap spacing step 5"
+                },
+                {
+                    "name": "me-0",
+                    "description": "Set margin-right to Nextrap spacing step 0"
+                },
+                {
+                    "name": "me-1",
+                    "description": "Set margin-right to Nextrap spacing step 1"
+                },
+                {
+                    "name": "me-2",
+                    "description": "Set margin-right to Nextrap spacing step 2"
+                },
+                {
+                    "name": "me-3",
+                    "description": "Set margin-right to Nextrap spacing step 3"
+                },
+                {
+                    "name": "me-4",
+                    "description": "Set margin-right to Nextrap spacing step 4"
+                },
+                {
+                    "name": "me-5",
+                    "description": "Set margin-right to Nextrap spacing step 5"
+                },
+                {
+                    "name": "mb-0",
+                    "description": "Set margin-bottom to Nextrap spacing step 0"
+                },
+                {
+                    "name": "mb-1",
+                    "description": "Set margin-bottom to Nextrap spacing step 1"
+                },
+                {
+                    "name": "mb-2",
+                    "description": "Set margin-bottom to Nextrap spacing step 2"
+                },
+                {
+                    "name": "mb-3",
+                    "description": "Set margin-bottom to Nextrap spacing step 3"
+                },
+                {
+                    "name": "mb-4",
+                    "description": "Set margin-bottom to Nextrap spacing step 4"
+                },
+                {
+                    "name": "mb-5",
+                    "description": "Set margin-bottom to Nextrap spacing step 5"
+                },
+                {
+                    "name": "ms-0",
+                    "description": "Set margin-left to Nextrap spacing step 0"
+                },
+                {
+                    "name": "ms-1",
+                    "description": "Set margin-left to Nextrap spacing step 1"
+                },
+                {
+                    "name": "ms-2",
+                    "description": "Set margin-left to Nextrap spacing step 2"
+                },
+                {
+                    "name": "ms-3",
+                    "description": "Set margin-left to Nextrap spacing step 3"
+                },
+                {
+                    "name": "ms-4",
+                    "description": "Set margin-left to Nextrap spacing step 4"
+                },
+                {
+                    "name": "ms-5",
+                    "description": "Set margin-left to Nextrap spacing step 5"
+                },
+                {
+                    "name": "mx-0",
+                    "description": "Set horizontal margin to Nextrap spacing step 0"
+                },
+                {
+                    "name": "mx-1",
+                    "description": "Set horizontal margin to Nextrap spacing step 1"
+                },
+                {
+                    "name": "mx-2",
+                    "description": "Set horizontal margin to Nextrap spacing step 2"
+                },
+                {
+                    "name": "mx-3",
+                    "description": "Set horizontal margin to Nextrap spacing step 3"
+                },
+                {
+                    "name": "mx-4",
+                    "description": "Set horizontal margin to Nextrap spacing step 4"
+                },
+                {
+                    "name": "mx-5",
+                    "description": "Set horizontal margin to Nextrap spacing step 5"
+                },
+                {
+                    "name": "my-0",
+                    "description": "Set vertical margin to Nextrap spacing step 0"
+                },
+                {
+                    "name": "my-1",
+                    "description": "Set vertical margin to Nextrap spacing step 1"
+                },
+                {
+                    "name": "my-2",
+                    "description": "Set vertical margin to Nextrap spacing step 2"
+                },
+                {
+                    "name": "my-3",
+                    "description": "Set vertical margin to Nextrap spacing step 3"
+                },
+                {
+                    "name": "my-4",
+                    "description": "Set vertical margin to Nextrap spacing step 4"
+                },
+                {
+                    "name": "my-5",
+                    "description": "Set vertical margin to Nextrap spacing step 5"
+                },
+                {
+                    "name": "p-0",
+                    "description": "Set padding to Nextrap spacing step 0"
+                },
+                {
+                    "name": "p-1",
+                    "description": "Set padding to Nextrap spacing step 1"
+                },
+                {
+                    "name": "p-2",
+                    "description": "Set padding to Nextrap spacing step 2"
+                },
+                {
+                    "name": "p-3",
+                    "description": "Set padding to Nextrap spacing step 3"
+                },
+                {
+                    "name": "p-4",
+                    "description": "Set padding to Nextrap spacing step 4"
+                },
+                {
+                    "name": "p-5",
+                    "description": "Set padding to Nextrap spacing step 5"
+                },
+                {
+                    "name": "pt-0",
+                    "description": "Set padding-top to Nextrap spacing step 0"
+                },
+                {
+                    "name": "pt-1",
+                    "description": "Set padding-top to Nextrap spacing step 1"
+                },
+                {
+                    "name": "pt-2",
+                    "description": "Set padding-top to Nextrap spacing step 2"
+                },
+                {
+                    "name": "pt-3",
+                    "description": "Set padding-top to Nextrap spacing step 3"
+                },
+                {
+                    "name": "pt-4",
+                    "description": "Set padding-top to Nextrap spacing step 4"
+                },
+                {
+                    "name": "pt-5",
+                    "description": "Set padding-top to Nextrap spacing step 5"
+                },
+                {
+                    "name": "pe-0",
+                    "description": "Set padding-right to Nextrap spacing step 0"
+                },
+                {
+                    "name": "pe-1",
+                    "description": "Set padding-right to Nextrap spacing step 1"
+                },
+                {
+                    "name": "pe-2",
+                    "description": "Set padding-right to Nextrap spacing step 2"
+                },
+                {
+                    "name": "pe-3",
+                    "description": "Set padding-right to Nextrap spacing step 3"
+                },
+                {
+                    "name": "pe-4",
+                    "description": "Set padding-right to Nextrap spacing step 4"
+                },
+                {
+                    "name": "pe-5",
+                    "description": "Set padding-right to Nextrap spacing step 5"
+                },
+                {
+                    "name": "pb-0",
+                    "description": "Set padding-bottom to Nextrap spacing step 0"
+                },
+                {
+                    "name": "pb-1",
+                    "description": "Set padding-bottom to Nextrap spacing step 1"
+                },
+                {
+                    "name": "pb-2",
+                    "description": "Set padding-bottom to Nextrap spacing step 2"
+                },
+                {
+                    "name": "pb-3",
+                    "description": "Set padding-bottom to Nextrap spacing step 3"
+                },
+                {
+                    "name": "pb-4",
+                    "description": "Set padding-bottom to Nextrap spacing step 4"
+                },
+                {
+                    "name": "pb-5",
+                    "description": "Set padding-bottom to Nextrap spacing step 5"
+                },
+                {
+                    "name": "ps-0",
+                    "description": "Set padding-left to Nextrap spacing step 0"
+                },
+                {
+                    "name": "ps-1",
+                    "description": "Set padding-left to Nextrap spacing step 1"
+                },
+                {
+                    "name": "ps-2",
+                    "description": "Set padding-left to Nextrap spacing step 2"
+                },
+                {
+                    "name": "ps-3",
+                    "description": "Set padding-left to Nextrap spacing step 3"
+                },
+                {
+                    "name": "ps-4",
+                    "description": "Set padding-left to Nextrap spacing step 4"
+                },
+                {
+                    "name": "ps-5",
+                    "description": "Set padding-left to Nextrap spacing step 5"
+                },
+                {
+                    "name": "px-0",
+                    "description": "Set horizontal padding to Nextrap spacing step 0"
+                },
+                {
+                    "name": "px-1",
+                    "description": "Set horizontal padding to Nextrap spacing step 1"
+                },
+                {
+                    "name": "px-2",
+                    "description": "Set horizontal padding to Nextrap spacing step 2"
+                },
+                {
+                    "name": "px-3",
+                    "description": "Set horizontal padding to Nextrap spacing step 3"
+                },
+                {
+                    "name": "px-4",
+                    "description": "Set horizontal padding to Nextrap spacing step 4"
+                },
+                {
+                    "name": "px-5",
+                    "description": "Set horizontal padding to Nextrap spacing step 5"
+                },
+                {
+                    "name": "py-0",
+                    "description": "Set vertical padding to Nextrap spacing step 0"
+                },
+                {
+                    "name": "py-1",
+                    "description": "Set vertical padding to Nextrap spacing step 1"
+                },
+                {
+                    "name": "py-2",
+                    "description": "Set vertical padding to Nextrap spacing step 2"
+                },
+                {
+                    "name": "py-3",
+                    "description": "Set vertical padding to Nextrap spacing step 3"
+                },
+                {
+                    "name": "py-4",
+                    "description": "Set vertical padding to Nextrap spacing step 4"
+                },
+                {
+                    "name": "py-5",
+                    "description": "Set vertical padding to Nextrap spacing step 5"
+                },
+                {
+                    "name": "mt-auto",
+                    "description": "Set margin-top to auto"
+                },
+                {
+                    "name": "me-auto",
+                    "description": "Set margin-right to auto"
+                },
+                {
+                    "name": "mb-auto",
+                    "description": "Set margin-bottom to auto"
+                },
+                {
+                    "name": "ms-auto",
+                    "description": "Set margin-left to auto"
+                },
+                {
+                    "name": "content-space-top-0",
+                    "description": "Set top content spacing step 0"
+                },
+                {
+                    "name": "content-space-bottom-0",
+                    "description": "Set bottom content spacing step 0"
+                },
+                {
+                    "name": "content-space-0",
+                    "description": "Set vertical content spacing step 0"
+                },
+                {
+                    "name": "content-space-top-1",
+                    "description": "Set top content spacing step 1"
+                },
+                {
+                    "name": "content-space-bottom-1",
+                    "description": "Set bottom content spacing step 1"
+                },
+                {
+                    "name": "content-space-1",
+                    "description": "Set vertical content spacing step 1"
+                },
+                {
+                    "name": "content-space-top-2",
+                    "description": "Set top content spacing step 2"
+                },
+                {
+                    "name": "content-space-bottom-2",
+                    "description": "Set bottom content spacing step 2"
+                },
+                {
+                    "name": "content-space-2",
+                    "description": "Set vertical content spacing step 2"
+                },
+                {
+                    "name": "content-space-top-3",
+                    "description": "Set top content spacing step 3"
+                },
+                {
+                    "name": "content-space-bottom-3",
+                    "description": "Set bottom content spacing step 3"
+                },
+                {
+                    "name": "content-space-3",
+                    "description": "Set vertical content spacing step 3"
+                },
+                {
+                    "name": "content-space-top-4",
+                    "description": "Set top content spacing step 4"
+                },
+                {
+                    "name": "content-space-bottom-4",
+                    "description": "Set bottom content spacing step 4"
+                },
+                {
+                    "name": "content-space-4",
+                    "description": "Set vertical content spacing step 4"
+                },
+                {
+                    "name": "content-space-top-5",
+                    "description": "Set top content spacing step 5"
+                },
+                {
+                    "name": "content-space-bottom-5",
+                    "description": "Set bottom content spacing step 5"
+                },
+                {
+                    "name": "content-space-5",
+                    "description": "Set vertical content spacing step 5"
+                },
+                {
+                    "name": "bg-primary",
+                    "description": "Set background to var(--nt-primary)"
+                },
+                {
+                    "name": "bg-primary-subtle",
+                    "description": "Set background to var(--nt-primary-subtle)"
+                },
+                {
+                    "name": "bg-primary-emphasis",
+                    "description": "Set background to var(--nt-primary-emphasis)"
+                },
+                {
+                    "name": "bg-secondary",
+                    "description": "Set background to var(--nt-secondary)"
+                },
+                {
+                    "name": "bg-secondary-subtle",
+                    "description": "Set background to var(--nt-secondary-subtle)"
+                },
+                {
+                    "name": "bg-secondary-emphasis",
+                    "description": "Set background to var(--nt-secondary-emphasis)"
+                },
+                {
+                    "name": "bg-tertiary",
+                    "description": "Set background to var(--nt-tertiary)"
+                },
+                {
+                    "name": "bg-tertiary-subtle",
+                    "description": "Set background to var(--nt-tertiary-subtle)"
+                },
+                {
+                    "name": "bg-tertiary-emphasis",
+                    "description": "Set background to var(--nt-tertiary-emphasis)"
+                },
+                {
+                    "name": "bg-accent",
+                    "description": "Set background to var(--nt-accent)"
+                },
+                {
+                    "name": "bg-accent-subtle",
+                    "description": "Set background to var(--nt-accent-subtle)"
+                },
+                {
+                    "name": "bg-accent-emphasis",
+                    "description": "Set background to var(--nt-accent-emphasis)"
+                },
+                {
+                    "name": "bg-success",
+                    "description": "Set background to var(--nt-success)"
+                },
+                {
+                    "name": "bg-success-subtle",
+                    "description": "Set background to var(--nt-success-subtle)"
+                },
+                {
+                    "name": "bg-success-emphasis",
+                    "description": "Set background to var(--nt-success-emphasis)"
+                },
+                {
+                    "name": "bg-info",
+                    "description": "Set background to var(--nt-info)"
+                },
+                {
+                    "name": "bg-info-subtle",
+                    "description": "Set background to var(--nt-info-subtle)"
+                },
+                {
+                    "name": "bg-info-emphasis",
+                    "description": "Set background to var(--nt-info-emphasis)"
+                },
+                {
+                    "name": "bg-warning",
+                    "description": "Set background to var(--nt-warning)"
+                },
+                {
+                    "name": "bg-warning-subtle",
+                    "description": "Set background to var(--nt-warning-subtle)"
+                },
+                {
+                    "name": "bg-warning-emphasis",
+                    "description": "Set background to var(--nt-warning-emphasis)"
+                },
+                {
+                    "name": "bg-danger",
+                    "description": "Set background to var(--nt-danger)"
+                },
+                {
+                    "name": "bg-danger-subtle",
+                    "description": "Set background to var(--nt-danger-subtle)"
+                },
+                {
+                    "name": "bg-danger-emphasis",
+                    "description": "Set background to var(--nt-danger-emphasis)"
+                },
+                {
+                    "name": "bg-light",
+                    "description": "Set background to var(--nt-light)"
+                },
+                {
+                    "name": "bg-light-subtle",
+                    "description": "Set background to var(--nt-light-subtle)"
+                },
+                {
+                    "name": "bg-light-emphasis",
+                    "description": "Set background to var(--nt-light-emphasis)"
+                },
+                {
+                    "name": "bg-dark",
+                    "description": "Set background to var(--nt-dark)"
+                },
+                {
+                    "name": "bg-dark-subtle",
+                    "description": "Set background to var(--nt-dark-subtle)"
+                },
+                {
+                    "name": "bg-dark-emphasis",
+                    "description": "Set background to var(--nt-dark-emphasis)"
+                },
+                {
+                    "name": "bg-white",
+                    "description": "Set background to var(--nt-white)"
+                },
+                {
+                    "name": "bg-black",
+                    "description": "Set background to var(--nt-black)"
+                },
+                {
+                    "name": "bg-soft-primary",
+                    "description": "Set background to var(--nt-primary-subtle)"
+                },
+                {
+                    "name": "bg-soft-accent",
+                    "description": "Set background to var(--nt-accent-subtle)"
+                },
+                {
+                    "name": "bg-soft-secondary",
+                    "description": "Set background to var(--nt-secondary-subtle)"
+                },
+                {
+                    "name": "bg-soft-tertiary",
+                    "description": "Set background to var(--nt-tertiary-subtle)"
+                },
+                {
+                    "name": "bg-soft-success",
+                    "description": "Set background to var(--nt-success-subtle)"
+                },
+                {
+                    "name": "bg-soft-info",
+                    "description": "Set background to var(--nt-info-subtle)"
+                },
+                {
+                    "name": "bg-soft-warning",
+                    "description": "Set background to var(--nt-warning-subtle)"
+                },
+                {
+                    "name": "bg-soft-danger",
+                    "description": "Set background to var(--nt-danger-subtle)"
+                },
+                {
+                    "name": "bg-soft-light",
+                    "description": "Set background to var(--nt-light-subtle)"
+                },
+                {
+                    "name": "bg-soft-dark",
+                    "description": "Set background to var(--nt-dark-subtle)"
+                },
+                {
+                    "name": "text-primary",
+                    "description": "Set text color to var(--nt-primary)"
+                },
+                {
+                    "name": "border-primary",
+                    "description": "Set border color to var(--nt-primary)"
+                },
+                {
+                    "name": "text-accent",
+                    "description": "Set text color to var(--nt-accent)"
+                },
+                {
+                    "name": "border-accent",
+                    "description": "Set border color to var(--nt-accent)"
+                },
+                {
+                    "name": "text-secondary",
+                    "description": "Set text color to var(--nt-secondary)"
+                },
+                {
+                    "name": "border-secondary",
+                    "description": "Set border color to var(--nt-secondary)"
+                },
+                {
+                    "name": "text-tertiary",
+                    "description": "Set text color to var(--nt-tertiary)"
+                },
+                {
+                    "name": "border-tertiary",
+                    "description": "Set border color to var(--nt-tertiary)"
+                },
+                {
+                    "name": "text-success",
+                    "description": "Set text color to var(--nt-success)"
+                },
+                {
+                    "name": "border-success",
+                    "description": "Set border color to var(--nt-success)"
+                },
+                {
+                    "name": "text-info",
+                    "description": "Set text color to var(--nt-info)"
+                },
+                {
+                    "name": "border-info",
+                    "description": "Set border color to var(--nt-info)"
+                },
+                {
+                    "name": "text-warning",
+                    "description": "Set text color to var(--nt-warning)"
+                },
+                {
+                    "name": "border-warning",
+                    "description": "Set border color to var(--nt-warning)"
+                },
+                {
+                    "name": "text-danger",
+                    "description": "Set text color to var(--nt-danger)"
+                },
+                {
+                    "name": "border-danger",
+                    "description": "Set border color to var(--nt-danger)"
+                },
+                {
+                    "name": "text-light",
+                    "description": "Set text color to var(--nt-light)"
+                },
+                {
+                    "name": "border-light",
+                    "description": "Set border color to var(--nt-light)"
+                },
+                {
+                    "name": "text-dark",
+                    "description": "Set text color to var(--nt-dark)"
+                },
+                {
+                    "name": "border-dark",
+                    "description": "Set border color to var(--nt-dark)"
+                },
+                {
+                    "name": "text-white",
+                    "description": "Set text color to var(--nt-white)"
+                },
+                {
+                    "name": "border-white",
+                    "description": "Set border color to var(--nt-white)"
+                },
+                {
+                    "name": "text-black",
+                    "description": "Set text color to var(--nt-black)"
+                },
+                {
+                    "name": "border-black",
+                    "description": "Set border color to var(--nt-black)"
+                },
+                {
+                    "name": "bg-gray-100",
+                    "description": "Set background to var(--nt-gray-100)"
+                },
+                {
+                    "name": "text-gray-1",
+                    "description": "Set text color to var(--nt-gray-100)"
+                },
+                {
+                    "name": "border-gray-1",
+                    "description": "Set border color to var(--nt-gray-100)"
+                },
+                {
+                    "name": "bg-gray-200",
+                    "description": "Set background to var(--nt-gray-200)"
+                },
+                {
+                    "name": "text-gray-2",
+                    "description": "Set text color to var(--nt-gray-200)"
+                },
+                {
+                    "name": "border-gray-2",
+                    "description": "Set border color to var(--nt-gray-200)"
+                },
+                {
+                    "name": "bg-gray-300",
+                    "description": "Set background to var(--nt-gray-300)"
+                },
+                {
+                    "name": "text-gray-3",
+                    "description": "Set text color to var(--nt-gray-300)"
+                },
+                {
+                    "name": "border-gray-3",
+                    "description": "Set border color to var(--nt-gray-300)"
+                },
+                {
+                    "name": "bg-gray-400",
+                    "description": "Set background to var(--nt-gray-400)"
+                },
+                {
+                    "name": "text-gray-4",
+                    "description": "Set text color to var(--nt-gray-400)"
+                },
+                {
+                    "name": "border-gray-4",
+                    "description": "Set border color to var(--nt-gray-400)"
+                },
+                {
+                    "name": "bg-gray-500",
+                    "description": "Set background to var(--nt-gray-500)"
+                },
+                {
+                    "name": "text-gray-5",
+                    "description": "Set text color to var(--nt-gray-500)"
+                },
+                {
+                    "name": "border-gray-5",
+                    "description": "Set border color to var(--nt-gray-500)"
+                },
+                {
+                    "name": "bg-gray-600",
+                    "description": "Set background to var(--nt-gray-600)"
+                },
+                {
+                    "name": "text-gray-6",
+                    "description": "Set text color to var(--nt-gray-600)"
+                },
+                {
+                    "name": "border-gray-6",
+                    "description": "Set border color to var(--nt-gray-600)"
+                },
+                {
+                    "name": "bg-gray-700",
+                    "description": "Set background to var(--nt-gray-700)"
+                },
+                {
+                    "name": "text-gray-7",
+                    "description": "Set text color to var(--nt-gray-700)"
+                },
+                {
+                    "name": "border-gray-7",
+                    "description": "Set border color to var(--nt-gray-700)"
+                },
+                {
+                    "name": "bg-gray-800",
+                    "description": "Set background to var(--nt-gray-800)"
+                },
+                {
+                    "name": "text-gray-8",
+                    "description": "Set text color to var(--nt-gray-800)"
+                },
+                {
+                    "name": "border-gray-8",
+                    "description": "Set border color to var(--nt-gray-800)"
+                },
+                {
+                    "name": "bg-gray-900",
+                    "description": "Set background to var(--nt-gray-900)"
+                },
+                {
+                    "name": "text-gray-9",
+                    "description": "Set text color to var(--nt-gray-900)"
+                },
+                {
+                    "name": "border-gray-9",
+                    "description": "Set border color to var(--nt-gray-900)"
+                },
+                {
+                    "name": "bg-gray",
+                    "description": "Set background to var(--nt-gray)"
+                },
+                {
+                    "name": "bg-gray-dark",
+                    "description": "Set background to var(--nt-gray-dark)"
+                },
+                {
+                    "name": "text-auto",
+                    "description": "Set text color from the current --text-color context variable"
+                },
+                {
+                    "name": "fs-1",
+                    "description": "Set font size to var(--nt-fs-1)"
+                },
+                {
+                    "name": "fs-2",
+                    "description": "Set font size to var(--nt-fs-2)"
+                },
+                {
+                    "name": "fs-3",
+                    "description": "Set font size to var(--nt-fs-3)"
+                },
+                {
+                    "name": "fs-4",
+                    "description": "Set font size to var(--nt-fs-4)"
+                },
+                {
+                    "name": "fs-5",
+                    "description": "Set font size to var(--nt-fs-5)"
+                },
+                {
+                    "name": "fs-6",
+                    "description": "Set font size to var(--nt-fs-6)"
+                },
+                {
+                    "name": "text-reset",
+                    "description": "Reset text color and decoration"
+                },
+                {
+                    "name": "fw-light",
+                    "description": "Set font weight to 300"
+                },
+                {
+                    "name": "fw-lighter",
+                    "description": "Set font weight to lighter"
+                },
+                {
+                    "name": "fw-normal",
+                    "description": "Set font weight to 400"
+                },
+                {
+                    "name": "fw-medium",
+                    "description": "Set font weight to 500"
+                },
+                {
+                    "name": "fw-semibold",
+                    "description": "Set font weight to 600"
+                },
+                {
+                    "name": "fw-bold",
+                    "description": "Set font weight to 700"
+                },
+                {
+                    "name": "fw-bolder",
+                    "description": "Set font weight to bolder"
+                },
+                {
+                    "name": "fst-italic",
+                    "description": "Set font style to italic"
+                },
+                {
+                    "name": "fst-normal",
+                    "description": "Set font style to normal"
+                },
+                {
+                    "name": "lh-1",
+                    "description": "Set line-height to 1"
+                },
+                {
+                    "name": "lh-sm",
+                    "description": "Set line-height to 1.25"
+                },
+                {
+                    "name": "lh-base",
+                    "description": "Set line-height to 1.5"
+                },
+                {
+                    "name": "lh-lg",
+                    "description": "Set line-height to 2"
+                },
+                {
+                    "name": "font-monospace",
+                    "description": "Use the monospace font family"
+                },
+                {
+                    "name": "row",
+                    "description": "Create a flex row with gutter support"
+                },
+                {
+                    "name": "row-cols-1",
+                    "description": "Set equal row child columns to 1 per row"
+                },
+                {
+                    "name": "row-cols-2",
+                    "description": "Set equal row child columns to 2 per row"
+                },
+                {
+                    "name": "row-cols-3",
+                    "description": "Set equal row child columns to 3 per row"
+                },
+                {
+                    "name": "row-cols-4",
+                    "description": "Set equal row child columns to 4 per row"
+                },
+                {
+                    "name": "row-cols-5",
+                    "description": "Set equal row child columns to 5 per row"
+                },
+                {
+                    "name": "row-cols-6",
+                    "description": "Set equal row child columns to 6 per row"
+                },
+                {
+                    "name": "col-auto",
+                    "description": "Size column to its content"
+                },
+                {
+                    "name": "col",
+                    "description": "Create an auto/equal flex column"
+                },
+                {
+                    "name": "col-1",
+                    "description": "Set column width to 1/12"
+                },
+                {
+                    "name": "offset-1",
+                    "description": "Offset column by 1/12"
+                },
+                {
+                    "name": "col-2",
+                    "description": "Set column width to 2/12"
+                },
+                {
+                    "name": "offset-2",
+                    "description": "Offset column by 2/12"
+                },
+                {
+                    "name": "col-3",
+                    "description": "Set column width to 3/12"
+                },
+                {
+                    "name": "offset-3",
+                    "description": "Offset column by 3/12"
+                },
+                {
+                    "name": "col-4",
+                    "description": "Set column width to 4/12"
+                },
+                {
+                    "name": "offset-4",
+                    "description": "Offset column by 4/12"
+                },
+                {
+                    "name": "col-5",
+                    "description": "Set column width to 5/12"
+                },
+                {
+                    "name": "offset-5",
+                    "description": "Offset column by 5/12"
+                },
+                {
+                    "name": "col-6",
+                    "description": "Set column width to 6/12"
+                },
+                {
+                    "name": "offset-6",
+                    "description": "Offset column by 6/12"
+                },
+                {
+                    "name": "col-7",
+                    "description": "Set column width to 7/12"
+                },
+                {
+                    "name": "offset-7",
+                    "description": "Offset column by 7/12"
+                },
+                {
+                    "name": "col-8",
+                    "description": "Set column width to 8/12"
+                },
+                {
+                    "name": "offset-8",
+                    "description": "Offset column by 8/12"
+                },
+                {
+                    "name": "col-9",
+                    "description": "Set column width to 9/12"
+                },
+                {
+                    "name": "offset-9",
+                    "description": "Offset column by 9/12"
+                },
+                {
+                    "name": "col-10",
+                    "description": "Set column width to 10/12"
+                },
+                {
+                    "name": "offset-10",
+                    "description": "Offset column by 10/12"
+                },
+                {
+                    "name": "col-11",
+                    "description": "Set column width to 11/12"
+                },
+                {
+                    "name": "offset-11",
+                    "description": "Offset column by 11/12"
+                },
+                {
+                    "name": "col-12",
+                    "description": "Set column width to 12/12"
+                },
+                {
+                    "name": "offset-12",
+                    "description": "Offset column by 12/12"
+                },
+                {
+                    "name": "g-0",
+                    "description": "Set horizontal and vertical gutters to spacing step 0"
+                },
+                {
+                    "name": "gx-0",
+                    "description": "Set horizontal gutters to spacing step 0"
+                },
+                {
+                    "name": "gy-0",
+                    "description": "Set vertical gutters to spacing step 0"
+                },
+                {
+                    "name": "g-1",
+                    "description": "Set horizontal and vertical gutters to spacing step 1"
+                },
+                {
+                    "name": "gx-1",
+                    "description": "Set horizontal gutters to spacing step 1"
+                },
+                {
+                    "name": "gy-1",
+                    "description": "Set vertical gutters to spacing step 1"
+                },
+                {
+                    "name": "g-2",
+                    "description": "Set horizontal and vertical gutters to spacing step 2"
+                },
+                {
+                    "name": "gx-2",
+                    "description": "Set horizontal gutters to spacing step 2"
+                },
+                {
+                    "name": "gy-2",
+                    "description": "Set vertical gutters to spacing step 2"
+                },
+                {
+                    "name": "g-3",
+                    "description": "Set horizontal and vertical gutters to spacing step 3"
+                },
+                {
+                    "name": "gx-3",
+                    "description": "Set horizontal gutters to spacing step 3"
+                },
+                {
+                    "name": "gy-3",
+                    "description": "Set vertical gutters to spacing step 3"
+                },
+                {
+                    "name": "g-4",
+                    "description": "Set horizontal and vertical gutters to spacing step 4"
+                },
+                {
+                    "name": "gx-4",
+                    "description": "Set horizontal gutters to spacing step 4"
+                },
+                {
+                    "name": "gy-4",
+                    "description": "Set vertical gutters to spacing step 4"
+                },
+                {
+                    "name": "g-5",
+                    "description": "Set horizontal and vertical gutters to spacing step 5"
+                },
+                {
+                    "name": "gx-5",
+                    "description": "Set horizontal gutters to spacing step 5"
+                },
+                {
+                    "name": "gy-5",
+                    "description": "Set vertical gutters to spacing step 5"
+                },
+                {
+                    "name": "g-6",
+                    "description": "Set horizontal and vertical gutters to spacing step 6"
+                },
+                {
+                    "name": "gx-6",
+                    "description": "Set horizontal gutters to spacing step 6"
+                },
+                {
+                    "name": "gy-6",
+                    "description": "Set vertical gutters to spacing step 6"
+                },
+                {
+                    "name": "border",
+                    "description": "Add a default border"
+                },
+                {
+                    "name": "border-top",
+                    "description": "Add a top border"
+                },
+                {
+                    "name": "border-end",
+                    "description": "Add an inline-end border"
+                },
+                {
+                    "name": "border-bottom",
+                    "description": "Add a bottom border"
+                },
+                {
+                    "name": "border-start",
+                    "description": "Add an inline-start border"
+                },
+                {
+                    "name": "border-0",
+                    "description": "Remove all borders"
+                },
+                {
+                    "name": "border-top-0",
+                    "description": "Remove the top border"
+                },
+                {
+                    "name": "border-end-0",
+                    "description": "Remove the inline-end border"
+                },
+                {
+                    "name": "border-bottom-0",
+                    "description": "Remove the bottom border"
+                },
+                {
+                    "name": "border-start-0",
+                    "description": "Remove the inline-start border"
+                },
+                {
+                    "name": "border-1",
+                    "description": "Set border width to 1px"
+                },
+                {
+                    "name": "border-2",
+                    "description": "Set border width to 2px"
+                },
+                {
+                    "name": "border-3",
+                    "description": "Set border width to 3px"
+                },
+                {
+                    "name": "border-4",
+                    "description": "Set border width to 4px"
+                },
+                {
+                    "name": "border-5",
+                    "description": "Set border width to 5px"
+                },
+                {
+                    "name": "border-opacity-10",
+                    "description": "Set border opacity to 10%"
+                },
+                {
+                    "name": "border-opacity-25",
+                    "description": "Set border opacity to 25%"
+                },
+                {
+                    "name": "border-opacity-50",
+                    "description": "Set border opacity to 50%"
+                },
+                {
+                    "name": "border-opacity-75",
+                    "description": "Set border opacity to 75%"
+                },
+                {
+                    "name": "border-opacity-100",
+                    "description": "Set border opacity to 100%"
+                },
+                {
+                    "name": "rounded",
+                    "description": "Apply rounded border radius"
+                },
+                {
+                    "name": "rounded-0",
+                    "description": "Apply rounded border radius step 0"
+                },
+                {
+                    "name": "rounded-1",
+                    "description": "Apply rounded border radius step 1"
+                },
+                {
+                    "name": "rounded-2",
+                    "description": "Apply rounded border radius step 2"
+                },
+                {
+                    "name": "rounded-3",
+                    "description": "Apply rounded border radius step 3"
+                },
+                {
+                    "name": "rounded-4",
+                    "description": "Apply rounded border radius step 4"
+                },
+                {
+                    "name": "rounded-5",
+                    "description": "Apply rounded border radius step 5"
+                },
+                {
+                    "name": "rounded-top",
+                    "description": "Apply rounded top border radius"
+                },
+                {
+                    "name": "rounded-top-0",
+                    "description": "Apply rounded top border radius step 0"
+                },
+                {
+                    "name": "rounded-top-1",
+                    "description": "Apply rounded top border radius step 1"
+                },
+                {
+                    "name": "rounded-top-2",
+                    "description": "Apply rounded top border radius step 2"
+                },
+                {
+                    "name": "rounded-top-3",
+                    "description": "Apply rounded top border radius step 3"
+                },
+                {
+                    "name": "rounded-top-4",
+                    "description": "Apply rounded top border radius step 4"
+                },
+                {
+                    "name": "rounded-top-5",
+                    "description": "Apply rounded top border radius step 5"
+                },
+                {
+                    "name": "rounded-end",
+                    "description": "Apply rounded end border radius"
+                },
+                {
+                    "name": "rounded-end-0",
+                    "description": "Apply rounded end border radius step 0"
+                },
+                {
+                    "name": "rounded-end-1",
+                    "description": "Apply rounded end border radius step 1"
+                },
+                {
+                    "name": "rounded-end-2",
+                    "description": "Apply rounded end border radius step 2"
+                },
+                {
+                    "name": "rounded-end-3",
+                    "description": "Apply rounded end border radius step 3"
+                },
+                {
+                    "name": "rounded-end-4",
+                    "description": "Apply rounded end border radius step 4"
+                },
+                {
+                    "name": "rounded-end-5",
+                    "description": "Apply rounded end border radius step 5"
+                },
+                {
+                    "name": "rounded-bottom",
+                    "description": "Apply rounded bottom border radius"
+                },
+                {
+                    "name": "rounded-bottom-0",
+                    "description": "Apply rounded bottom border radius step 0"
+                },
+                {
+                    "name": "rounded-bottom-1",
+                    "description": "Apply rounded bottom border radius step 1"
+                },
+                {
+                    "name": "rounded-bottom-2",
+                    "description": "Apply rounded bottom border radius step 2"
+                },
+                {
+                    "name": "rounded-bottom-3",
+                    "description": "Apply rounded bottom border radius step 3"
+                },
+                {
+                    "name": "rounded-bottom-4",
+                    "description": "Apply rounded bottom border radius step 4"
+                },
+                {
+                    "name": "rounded-bottom-5",
+                    "description": "Apply rounded bottom border radius step 5"
+                },
+                {
+                    "name": "rounded-start",
+                    "description": "Apply rounded start border radius"
+                },
+                {
+                    "name": "rounded-start-0",
+                    "description": "Apply rounded start border radius step 0"
+                },
+                {
+                    "name": "rounded-start-1",
+                    "description": "Apply rounded start border radius step 1"
+                },
+                {
+                    "name": "rounded-start-2",
+                    "description": "Apply rounded start border radius step 2"
+                },
+                {
+                    "name": "rounded-start-3",
+                    "description": "Apply rounded start border radius step 3"
+                },
+                {
+                    "name": "rounded-start-4",
+                    "description": "Apply rounded start border radius step 4"
+                },
+                {
+                    "name": "rounded-start-5",
+                    "description": "Apply rounded start border radius step 5"
+                },
+                {
+                    "name": "rounded-circle",
+                    "description": "Apply rounded circle border radius"
+                },
+                {
+                    "name": "rounded-circle-0",
+                    "description": "Apply rounded circle border radius step 0"
+                },
+                {
+                    "name": "rounded-circle-1",
+                    "description": "Apply rounded circle border radius step 1"
+                },
+                {
+                    "name": "rounded-circle-2",
+                    "description": "Apply rounded circle border radius step 2"
+                },
+                {
+                    "name": "rounded-circle-3",
+                    "description": "Apply rounded circle border radius step 3"
+                },
+                {
+                    "name": "rounded-circle-4",
+                    "description": "Apply rounded circle border radius step 4"
+                },
+                {
+                    "name": "rounded-circle-5",
+                    "description": "Apply rounded circle border radius step 5"
+                },
+                {
+                    "name": "rounded-pill",
+                    "description": "Apply rounded pill border radius"
+                },
+                {
+                    "name": "rounded-pill-0",
+                    "description": "Apply rounded pill border radius step 0"
+                },
+                {
+                    "name": "rounded-pill-1",
+                    "description": "Apply rounded pill border radius step 1"
+                },
+                {
+                    "name": "rounded-pill-2",
+                    "description": "Apply rounded pill border radius step 2"
+                },
+                {
+                    "name": "rounded-pill-3",
+                    "description": "Apply rounded pill border radius step 3"
+                },
+                {
+                    "name": "rounded-pill-4",
+                    "description": "Apply rounded pill border radius step 4"
+                },
+                {
+                    "name": "rounded-pill-5",
+                    "description": "Apply rounded pill border radius step 5"
+                },
+                {
+                    "name": "container",
+                    "description": "Set the element to the Nextrap container width and center it"
+                },
+                {
+                    "name": "container-fluid",
+                    "description": "Set the element to full width and center it"
+                },
+                {
+                    "name": "d-none",
+                    "description": "Set display to none"
+                },
+                {
+                    "name": "d-inline",
+                    "description": "Set display to inline"
+                },
+                {
+                    "name": "d-inline-block",
+                    "description": "Set display to inline-block"
+                },
+                {
+                    "name": "d-block",
+                    "description": "Set display to block"
+                },
+                {
+                    "name": "d-flex",
+                    "description": "Set display to flex"
+                },
+                {
+                    "name": "d-inline-flex",
+                    "description": "Set display to inline-flex"
+                },
+                {
+                    "name": "d-grid",
+                    "description": "Set display to grid"
+                },
+                {
+                    "name": "d-inline-grid",
+                    "description": "Set display to inline-grid"
+                },
+                {
+                    "name": "d-table",
+                    "description": "Set display to table"
+                },
+                {
+                    "name": "d-table-row",
+                    "description": "Set display to table-row"
+                },
+                {
+                    "name": "d-table-cell",
+                    "description": "Set display to table-cell"
+                },
+                {
+                    "name": "flex-column",
+                    "description": "Set flex direction to column"
+                },
+                {
+                    "name": "flex-row",
+                    "description": "Set flex direction to row"
+                },
+                {
+                    "name": "flex-column-reverse",
+                    "description": "Set flex direction to column-reverse"
+                },
+                {
+                    "name": "flex-row-reverse",
+                    "description": "Set flex direction to row-reverse"
+                },
+                {
+                    "name": "flex-wrap",
+                    "description": "Allow flex items to wrap"
+                },
+                {
+                    "name": "flex-nowrap",
+                    "description": "Prevent flex items from wrapping"
+                },
+                {
+                    "name": "flex-wrap-reverse",
+                    "description": "Wrap flex items in reverse order"
+                },
+                {
+                    "name": "justify-content-start",
+                    "description": "Justify flex content to the start"
+                },
+                {
+                    "name": "justify-content-end",
+                    "description": "Justify flex content to the end"
+                },
+                {
+                    "name": "justify-content-center",
+                    "description": "Center flex content"
+                },
+                {
+                    "name": "justify-content-between",
+                    "description": "Distribute flex content with space-between"
+                },
+                {
+                    "name": "justify-content-around",
+                    "description": "Distribute flex content with space-around"
+                },
+                {
+                    "name": "justify-content-evenly",
+                    "description": "Distribute flex content with space-evenly"
+                },
+                {
+                    "name": "align-items-start",
+                    "description": "Align flex items to the start"
+                },
+                {
+                    "name": "align-items-end",
+                    "description": "Align flex items to the end"
+                },
+                {
+                    "name": "align-items-center",
+                    "description": "Center flex items"
+                },
+                {
+                    "name": "align-items-baseline",
+                    "description": "Align flex items to baseline"
+                },
+                {
+                    "name": "align-items-stretch",
+                    "description": "Stretch flex items"
+                },
+                {
+                    "name": "align-content-start",
+                    "description": "Align flex lines to the start"
+                },
+                {
+                    "name": "align-content-end",
+                    "description": "Align flex lines to the end"
+                },
+                {
+                    "name": "align-content-center",
+                    "description": "Center flex lines"
+                },
+                {
+                    "name": "align-content-between",
+                    "description": "Distribute flex lines with space-between"
+                },
+                {
+                    "name": "align-content-around",
+                    "description": "Distribute flex lines with space-around"
+                },
+                {
+                    "name": "align-content-stretch",
+                    "description": "Stretch flex lines"
+                },
+                {
+                    "name": "align-self-auto",
+                    "description": "Use automatic self alignment"
+                },
+                {
+                    "name": "align-self-start",
+                    "description": "Align this flex item to the start"
+                },
+                {
+                    "name": "align-self-end",
+                    "description": "Align this flex item to the end"
+                },
+                {
+                    "name": "align-self-center",
+                    "description": "Center this flex item"
+                },
+                {
+                    "name": "align-self-baseline",
+                    "description": "Align this flex item to baseline"
+                },
+                {
+                    "name": "align-self-stretch",
+                    "description": "Stretch this flex item"
+                },
+                {
+                    "name": "flex-fill",
+                    "description": "Make a flex item fill available space"
+                },
+                {
+                    "name": "flex-grow-0",
+                    "description": "Disable flex grow"
+                },
+                {
+                    "name": "flex-grow-1",
+                    "description": "Enable flex grow"
+                },
+                {
+                    "name": "flex-shrink-0",
+                    "description": "Disable flex shrink"
+                },
+                {
+                    "name": "flex-shrink-1",
+                    "description": "Enable flex shrink"
+                },
+                {
+                    "name": "order-first",
+                    "description": "Place item first in flex order"
+                },
+                {
+                    "name": "order-last",
+                    "description": "Place item last in flex order"
+                },
+                {
+                    "name": "order-0",
+                    "description": "Set flex order to 0"
+                },
+                {
+                    "name": "order-1",
+                    "description": "Set flex order to 1"
+                },
+                {
+                    "name": "order-2",
+                    "description": "Set flex order to 2"
+                },
+                {
+                    "name": "order-3",
+                    "description": "Set flex order to 3"
+                },
+                {
+                    "name": "order-4",
+                    "description": "Set flex order to 4"
+                },
+                {
+                    "name": "order-5",
+                    "description": "Set flex order to 5"
+                },
+                {
+                    "name": "gap-0",
+                    "description": "Set gap to 0"
+                },
+                {
+                    "name": "gap-1",
+                    "description": "Set gap to spacing step 1"
+                },
+                {
+                    "name": "gap-x-1",
+                    "description": "Set column gap to spacing step 1"
+                },
+                {
+                    "name": "gap-y-1",
+                    "description": "Set row gap to spacing step 1"
+                },
+                {
+                    "name": "gap-2",
+                    "description": "Set gap to spacing step 2"
+                },
+                {
+                    "name": "gap-x-2",
+                    "description": "Set column gap to spacing step 2"
+                },
+                {
+                    "name": "gap-y-2",
+                    "description": "Set row gap to spacing step 2"
+                },
+                {
+                    "name": "gap-3",
+                    "description": "Set gap to spacing step 3"
+                },
+                {
+                    "name": "gap-x-3",
+                    "description": "Set column gap to spacing step 3"
+                },
+                {
+                    "name": "gap-y-3",
+                    "description": "Set row gap to spacing step 3"
+                },
+                {
+                    "name": "gap-4",
+                    "description": "Set gap to spacing step 4"
+                },
+                {
+                    "name": "gap-x-4",
+                    "description": "Set column gap to spacing step 4"
+                },
+                {
+                    "name": "gap-y-4",
+                    "description": "Set row gap to spacing step 4"
+                },
+                {
+                    "name": "gap-5",
+                    "description": "Set gap to spacing step 5"
+                },
+                {
+                    "name": "gap-x-5",
+                    "description": "Set column gap to spacing step 5"
+                },
+                {
+                    "name": "gap-y-5",
+                    "description": "Set row gap to spacing step 5"
+                },
+                {
+                    "name": "list-unstyled",
+                    "description": "Remove list styling and left padding from a ul"
+                },
+                {
+                    "name": "list-inline",
+                    "description": "Display list items inline inside a ul"
+                },
+                {
+                    "name": "list-checked",
+                    "description": "Display a checked-list marker on direct li children"
+                },
+                {
+                    "name": "list-item-removed",
+                    "description": "Use a removed/cross marker inside .list-checked"
+                },
+                {
+                    "name": "list-item-unavailable",
+                    "description": "Use an unavailable marker inside .list-checked"
+                },
+                {
+                    "name": "w-100",
+                    "description": "Set width to 100%"
+                },
+                {
+                    "name": "w-75",
+                    "description": "Set width to 75%"
+                },
+                {
+                    "name": "w-50",
+                    "description": "Set width to 50%"
+                },
+                {
+                    "name": "w-25",
+                    "description": "Set width to 25%"
+                },
+                {
+                    "name": "w-auto",
+                    "description": "Set width to auto"
+                },
+                {
+                    "name": "h-100",
+                    "description": "Set height to 100%"
+                },
+                {
+                    "name": "h-75",
+                    "description": "Set height to 75%"
+                },
+                {
+                    "name": "h-50",
+                    "description": "Set height to 50%"
+                },
+                {
+                    "name": "h-25",
+                    "description": "Set height to 25%"
+                },
+                {
+                    "name": "h-auto",
+                    "description": "Set height to auto"
+                },
+                {
+                    "name": "vw-100",
+                    "description": "Set height to 100vw"
+                },
+                {
+                    "name": "vh-100",
+                    "description": "Set height to 100vh"
+                },
+                {
+                    "name": "text-start",
+                    "description": "Align text to the start"
+                },
+                {
+                    "name": "text-end",
+                    "description": "Align text to the end"
+                },
+                {
+                    "name": "text-center",
+                    "description": "Center text"
+                },
+                {
+                    "name": "text-wrap",
+                    "description": "Allow text wrapping"
+                },
+                {
+                    "name": "text-nowrap",
+                    "description": "Prevent text wrapping"
+                },
+                {
+                    "name": "text-break",
+                    "description": "Allow long words to break"
+                },
+                {
+                    "name": "text-truncate",
+                    "description": "Truncate overflowing text with ellipsis"
+                },
+                {
+                    "name": "text-lowercase",
+                    "description": "Transform text to lowercase"
+                },
+                {
+                    "name": "text-uppercase",
+                    "description": "Transform text to uppercase"
+                },
+                {
+                    "name": "text-capitalize",
+                    "description": "Capitalize text"
+                },
+                {
+                    "name": "text-decoration-none",
+                    "description": "Remove text decoration"
+                },
+                {
+                    "name": "text-decoration-underline",
+                    "description": "Underline text"
+                },
+                {
+                    "name": "text-decoration-line-through",
+                    "description": "Strike through text"
+                },
+                {
+                    "name": "table",
+                    "description": "Apply base table styling"
+                },
+                {
+                    "name": "table-bordered",
+                    "description": "Apply bordered table styling"
+                }
+            ]
+        }
+    }
+}

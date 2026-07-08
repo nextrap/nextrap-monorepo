@@ -1,0 +1,5 @@
+@mixin with-wrapper-bg-color($background: transparent) {
+  &::part(wrapper) {
+    background: #{$background};
+  }
+}

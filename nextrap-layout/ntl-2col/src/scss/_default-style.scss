@@ -1,4 +1,6 @@
 @use 'with-image-auto-objectfit' as image-auto-objectfit;
+@use 'with-modifier-classes' as modifier-classes;
+@use 'with-wrapper-bg-color' as wrapper-bg;
 
 @mixin default-style(
   $innerPadding: var(--nt-space-3),
@@ -7,13 +9,18 @@
   $border: 1px solid var(--nt-dark),
   $border-radius: var(--nt-border-radius),
   $objectFit: cover,
-  $aspectRatio: none
+  $aspectRatio: none,
+  $modifierClasses: true,
+  $wrapper-bg-color: transparent
 ) {
   --background: #{$background};
   --border: #{$border};
   --border-radius: #{$border-radius};
   --inner-padding: #{$innerPadding};
   --gap: #{$gap};
+
+  @include wrapper-bg.with-wrapper-bg-color($wrapper-bg-color);
+
   @if ($aspectRatio != none) {
     --aspectRatio: #{$aspectRatio};
     &::part(aside) {
@@ -27,14 +34,14 @@
     @include image-auto-objectfit.with-image-auto-objectfit($objectFit);
   }
 
+  @if ($modifierClasses != false and $modifierClasses != none) {
+    @include modifier-classes.with-modifier-classes();
+  }
+
   &::part(wrapper) {
-    background: var(--background);
     border: var(--border);
     border-radius: var(--border-radius);
     overflow: hidden;
-  }
-  &::part(wrapper) {
     gap: var(--gap);
-    background: var(--background);
   }
 }

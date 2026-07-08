@@ -38,7 +38,7 @@ Dieser Text steht auf der Aside-Seite.
 
 
 ## Blauer Hintergrund mit Divider
-{: layout="ntl-2col.default.with-background-and-divider" section-style="--cols: 6;"}
+{: layout="ntl-2col.variant-feature1" section-style="--cols: 6;"}
 
 Dieses Beispiel verwendet `.with-background-and-divider`. Der Abschnitt bekommt einen blauen Hintergrund; in der Desktopansicht sitzt eine vertikale Linie mittig im konfigurierbaren Gap zwischen Haupt- und Aside-Spalte.
 
@@ -48,7 +48,28 @@ Dieses Beispiel verwendet `.with-background-and-divider`. Der Abschnitt bekommt 
 Der Hauptinhalt steht links und teilt sich den verfügbaren Platz mit der Aside-Spalte.
 
 
+## Hintergrund und Main-Zentrierung
+{: layout="ntl-2col.default.bg-primary-subtle.with-main-justify-center" section-style="--cols: 7;"}
 
+Dieses Beispiel nutzt die Utility-Klasse `.bg-primary-subtle` und den Modifier `.with-main-justify-center`. Der Hintergrund kommt aus den Nextrap-Farbvariablen, der Hauptinhalt wird vertikal zentriert.
+
+![alt](https://placehold.co/600x400?text=Primary+Subtle)
+
+
+## Primary Background + Reverse Desktop
+{: layout="ntl-2col.default.bg-primary.reverse-desktop" section-style="--cols: 7;"}
+
+Dieses Beispiel kombiniert `.bg-primary` mit `.reverse-desktop`. Auf Desktop werden Haupt- und Aside-Spalte umgedreht; mobil bleibt die normale Reihenfolge erhalten.
+
+![alt](https://placehold.co/600x400?text=Reverse+Desktop)
+
+
+## Reverse auf allen Breakpoints
+{: layout="ntl-2col.default.bg-light.reverse" section-style="--cols: 7;"}
+
+Dieses Beispiel verwendet `.reverse`. Die Reihenfolge wird sowohl mobil als auch auf Desktop umgedreht.
+
+![alt](https://placehold.co/600x400?text=Reverse)
 
 
 ## Automatisches Object-Fit für Bilder
