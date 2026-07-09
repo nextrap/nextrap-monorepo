@@ -1,3 +1,13 @@
+## 1.0.3 (2026-07-09)
+
+### 🩹 Fixes
+
+- use aliasesExclude to avoid internal relative paths ([6b8123e](https://github.com/nextrap/nextrap-monorepo/commit/6b8123e))
+
+### ❤️ Thank You
+
+- Enzo Volkmann @evolkmann
+
 ## 0.0.7 (2025-08-24)
 
 ### 🧱 Updated Dependencies
