@@ -1,0 +1,54 @@
+@mixin navbar-default-style(
+  $background: transparent,
+  $spacer-background: transparent,
+  $border-color: var(--nt-light),
+  $shadow-color: var(--nt-dark),
+  $shadow: 0 2px 4px rgb(from #{$shadow-color} r g b / 0.1)
+) {
+  --bg: #{$background};
+  --spacer-bg: #{$spacer-background};
+  --border-color: #{$border-color};
+  --shadow-color: #{$shadow-color};
+  --shadow: #{$shadow};
+
+  &.is-scrolled {
+    --bg: rgb(from var(--nt-white) r g b / 1);
+  }
+
+  &.autoborder.is-scrolled::part(navbar) {
+    border-bottom: 1px solid rgb(from var(--border-color) r g b / 0.1);
+  }
+
+  &.autoshadow::part(navbar) {
+    transition: box-shadow 0.5s ease-in-out;
+  }
+
+  &.autoshadow.is-scrolled::part(navbar) {
+    box-shadow: var(--shadow);
+  }
+
+  &.fixed::part(navbar) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    opacity: 1;
+    width: 100%;
+  }
+
+  &.autohide::part(navbar) {
+    transition: transform 0.3s ease-in-out;
+  }
+
+  &.autohide.is-below-threshold:not(.is-scrolling-up)::part(navbar) {
+    transform: translateY(-100%);
+  }
+
+  &.autohide.is-scrolling-up::part(navbar) {
+    transform: translateY(0);
+    position: fixed;
+    top: 0;
+    left: 0;
+    opacity: 1;
+    width: 100%;
+  }
+}

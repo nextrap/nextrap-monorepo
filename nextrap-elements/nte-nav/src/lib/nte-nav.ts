@@ -82,8 +82,8 @@ export class NteNav extends nextrap_element(features) {
   }
 
   override render() {
-    return html` <nav>
-      <div id="burger-wrapper" ?hidden=${!this._isTransferred}>
+    return html` <nav part="nav">
+      <div id="burger-wrapper" part="burger-wrapper" ?hidden=${!this._isTransferred}>
         <slot
           name="burger"
           open
@@ -93,21 +93,23 @@ export class NteNav extends nextrap_element(features) {
           @click=${() => this.getOffcanvas()?.open()}
         >
           <!-- fallback icon -->
-          ${this._isTransferred
-            ? html`<div id="burger-default" style="display:flex; align-items: center; justify-content: center;">
-                <div id="text" part="menutext"><slot name="menu-text"></slot></div>
-                <nte-burger
-                  part="burger"
-                  aria-label="Menu"
-                  role="button"
-                  aria-haspopup="menu"
-                  aria-controls="main-menu"
-                  data-group-name="${this.dataGroupName}"
-                  id="open-burger"
-                  onclick="this.open = true"
-                ></nte-burger>
-              </div>`
-            : ''}
+          ${
+            this._isTransferred
+              ? html`<div id="burger-default" part="burger-default">
+                  <div id="text" part="menutext"><slot name="menu-text"></slot></div>
+                  <nte-burger
+                    part="burger"
+                    aria-label="Menu"
+                    role="button"
+                    aria-haspopup="menu"
+                    aria-controls="main-menu"
+                    data-group-name="${this.dataGroupName}"
+                    id="open-burger"
+                    onclick="this.open = true"
+                  ></nte-burger>
+                </div>`
+              : ''
+          }
         </slot>
       </div>
 

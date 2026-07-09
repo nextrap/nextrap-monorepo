@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
   </head>
   <body>
-    <nte-navbar class="fixed autoborder autoshadow" scroll-threshold="500" style="--spacer-height: 125px">
-      <nte-navbar-line class="">
+    <nte-navbar class="style-default fixed autoborder autoshadow" scroll-threshold="500" style="--spacer-height: 125px">
+      <nte-navbar-line class="style-default">
         <!--a href="/" slot="brand">
           <img src="https://cdn.leuffen.de//leu-systemwebsite/v2/64/227-74_500/leuffen-gruen.svg" alt="Leuffen Logo" />
         </a-->
@@ -53,15 +53,7 @@
       </nte-navbar-line>
     </nte-navbar>
 
-    <div
-      style="
-        height: 1000px;
-        width: 100%;
-        background-image: url(https://cdn.leuffen.de//m-bock-k133//v2/2/32-15_f/Bock-Backg_1.webp);
-        background-size: cover;
-        background-position: center;
-      "
-    ></div>
+    <div class="demo-spacer"></div>
 
     <nte-offcanvas id="navSidebar" data-group-name="nav1">
       <nte-burger
@@ -98,7 +90,7 @@
 
     <hr />
 
-    <nte-nav breakpoint="xl" mode="sidebar" class="stretch">
+    <nte-nav breakpoint="xl" mode="sidebar" class="nav-horizontal pos-stretch">
       <ul>
         <li><a href="#" class="active">Home</a></li>
         <li><a href="#">Products</a></li>

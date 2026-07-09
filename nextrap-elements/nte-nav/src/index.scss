@@ -1,1 +1,5 @@
-@use './nav-global';
+@forward 'scss/default-style';
+@forward 'scss/with-horizontal';
+@forward 'scss/with-vertical';
+@forward 'scss/navbar-default-style';
+@forward 'scss/navbar-line-default-style';

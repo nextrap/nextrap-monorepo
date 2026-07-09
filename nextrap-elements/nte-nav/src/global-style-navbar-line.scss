@@ -1,42 +1,5 @@
-nte-navbar-line {
-  [slot='brand'] {
-    height: 100%;
+@use './index' as nav;
 
-    display: flex;
-    align-items: center;
-    img {
-      height: var(--brand-height);
-      max-height: 100%;
-      max-width: 100%;
-      width: auto;
-      object-fit: contain;
-    }
-    a,
-    div {
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-      text-decoration: none;
-      width: 100%;
-    }
-  }
-}
-
-nte-navbar-line.zoom-brand {
-  --brand-zoom-level: 1.7;
-  --brand-translate: 20px;
-
-  [slot='brand'] {
-    img {
-      transition: transform 0.2s ease-in-out;
-      transform: scale(var(--brand-zoom-level)) translateY(var(--brand-translate));
-    }
-  }
-  &.is-scrolled {
-    [slot='brand'] {
-      img {
-        transform: translateY(0) scale(1);
-      }
-    }
-  }
+nte-navbar-line.style-default {
+  @include nav.navbar-line-default-style();
 }

@@ -1,0 +1,31 @@
+@use '../index' as nav;
+
+nte-nav.style-default {
+  @include nav.default-style();
+}
+
+nte-navbar.style-default {
+  @include nav.navbar-default-style();
+}
+
+nte-navbar-line.style-default {
+  @include nav.navbar-line-default-style();
+}
+
+body {
+  margin: 0;
+}
+
+.demo-spacer {
+  height: 1000px;
+  width: 100%;
+  background-image: url('https://cdn.leuffen.de//m-bock-k133//v2/2/32-15_f/Bock-Backg_1.webp');
+  background-size: cover;
+  background-position: center;
+}
+
+.demo-section {
+  max-width: var(--nt-container-width, 1140px);
+  margin: var(--nt-space-5, 3rem) auto;
+  padding: 0 var(--nt-space-3, 1rem);
+}

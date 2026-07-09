@@ -1,0 +1,50 @@
+@mixin navbar-line-default-style(
+  $container-width: var(--nt-container-width, 100%),
+  $background: transparent,
+  $text-color: var(--nt-text),
+  $height: auto,
+  $brand-height: 80px
+) {
+  --container-width: #{$container-width};
+  --background: #{$background};
+  --text-color: #{$text-color};
+  --height: #{$height};
+  --brand-height: #{$brand-height};
+
+  [slot='brand'] {
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  [slot='brand'] img {
+    height: var(--brand-height);
+    max-height: 100%;
+    max-width: 100%;
+    width: auto;
+    object-fit: contain;
+  }
+
+  [slot='brand'] a,
+  [slot='brand'] div {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    text-decoration: none;
+    width: 100%;
+  }
+
+  &.zoom-brand {
+    --brand-zoom-level: 1.7;
+    --brand-translate: 20px;
+  }
+
+  &.zoom-brand [slot='brand'] img {
+    transition: transform 0.2s ease-in-out;
+    transform: scale(var(--brand-zoom-level)) translateY(var(--brand-translate));
+  }
+
+  &.zoom-brand.is-scrolled [slot='brand'] img {
+    transform: translateY(0) scale(1);
+  }
+}

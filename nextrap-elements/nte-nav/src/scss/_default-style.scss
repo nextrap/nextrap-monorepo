@@ -1,0 +1,65 @@
+@use 'with-horizontal' as horizontal;
+@use 'with-vertical' as vertical;
+
+@mixin default-style(
+  $text-color: var(--nt-text),
+  $hover-color: var(--nt-primary),
+  $hover-text-color: var(--nt-text-on-primary),
+  $submenu-bg: var(--nt-light),
+  $submenu-text-color: var(--nt-text),
+  $submenu-hover-color: var(--nt-primary),
+  $submenu-hover-text-color: var(--nt-text-on-primary),
+  $item-padding: 0.65em 1.1em,
+  $transition: 0.2s ease-in-out,
+  $justify-content: center,
+  $burger-padding: 15px,
+  $menu-text-gap: 10px,
+  $default-alpha: 0.7
+) {
+  --text-color: #{$text-color};
+  --hover-color: #{$hover-color};
+  --hover-text-color: #{$hover-text-color};
+  --submenu-bg: #{$submenu-bg};
+  --submenu-text-color: #{$submenu-text-color};
+  --submenu-hover-color: #{$submenu-hover-color};
+  --submenu-hover-text-color: #{$submenu-hover-text-color};
+  --item-padding: #{$item-padding};
+  --transition: #{$transition};
+  --justify-content: #{$justify-content};
+  --padding: 0;
+  --default-alpha: #{$default-alpha};
+
+  &::part(burger-wrapper) {
+    padding: #{$burger-padding};
+  }
+
+  &::part(burger-default) {
+    cursor: pointer;
+  }
+
+  &::part(menutext) {
+    padding-right: #{$menu-text-gap};
+    color: rgb(from var(--text-color) r g b / var(--default-alpha));
+    transition: color var(--transition);
+  }
+
+  &::part(burger) {
+    --color: rgb(from var(--text-color) r g b / var(--default-alpha));
+  }
+
+  &:hover::part(menutext) {
+    color: var(--text-color);
+  }
+
+  &:hover::part(burger) {
+    --color: var(--text-color);
+  }
+
+  &.nav-horizontal {
+    @include horizontal.with-horizontal();
+  }
+
+  &.nav-vertical {
+    @include vertical.with-vertical();
+  }
+}

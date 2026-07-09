@@ -1,18 +1,7 @@
-:host {
-  --container-width: var(--nt-container-width);
-  --text-color: var(--nt-text);
+@use '@nextrap/style-reset' as *;
 
-  --hover-color: var(--nt-primary);
-  --hover-text-color: var(--nt-text-on-primary);
-  --transition: 0.2s ease-in-out;
-  --submenu-bg: var(--nt-light);
-  --submenu-text-color: var(--nt-text);
-  --submenu-hover-text-color: var(--nt-primary);
-  --justify-content: center;
-  --sidemenu-bg: var(--nt-primary-subtle);
-  --justify-sidebar-burger: flex-end;
+:host {
   --height: auto;
-  --default-alpha: 0.7;
 
   height: var(--height);
   display: block;
@@ -26,29 +15,8 @@ nav {
   height: 100%;
 }
 
-#burger-wrapper {
-  padding: 15px;
-}
-
-#text {
-  padding-right: 10px;
-}
-
 #burger-default {
-  cursor: pointer;
-  slot::slotted(span) {
-    color: rgb(from var(--text-color) r g b / var(--default-alpha));
-    transition: color var(--transition);
-  }
-  nte-burger {
-    --color: rgb(from var(--text-color) r g b / var(--default-alpha));
-  }
-}
-#burger-default:hover {
-  slot::slotted(span) {
-    color: rgb(from var(--text-color) r g b / 1);
-  }
-  nte-burger {
-    --color: rgb(from var(--text-color) r g b / 1);
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
