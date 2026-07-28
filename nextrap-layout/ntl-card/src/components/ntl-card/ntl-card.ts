@@ -86,7 +86,7 @@ export class NtlCardElement extends nextrap_layout({
           <slot name="footer" data-query=":scope > .footer"></slot>
         </div>
         <div hidden>
-          <slot name="link" data-query=":scope > p:has(a[href]:empty)" @slotchange=${this.onLinkSlotChange}></slot>
+          <slot name="link" data-query=":scope > p:has(a[href]:empty) | :scope > p:has(a[href].link)" @slotchange=${this.onLinkSlotChange}></slot>
         </div>
       </div>
     `;

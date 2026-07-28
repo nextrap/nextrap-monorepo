@@ -23,6 +23,10 @@
     @include modifier-classes.with-modifier-classes();
   }
 
+  &::part(header) {
+      text-align: center;
+  }
+
   &::part(container) {
     background: var(--container-background);
     border: var(--container-border);

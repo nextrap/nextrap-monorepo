@@ -99,6 +99,7 @@
   // Spacing
   --nt-gap: #{map.get($theme, gap)};
   --nt-text-gap: #{map.get($theme, text-gap)};
+  --nt-section-gap: #{map.get($theme, section-gap)};
 
   // Border Radius
   --nt-border-radius: 0.25rem; // default border radius
