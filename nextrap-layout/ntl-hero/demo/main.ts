@@ -1,7 +1,7 @@
 import '@nextrap/nte-demo-viewer';
 import '@nextrap/nte-image';
-import '@nextrap/ntl-parallax-bg';
-import '@nextrap/ntl-slider';
+import '@nextrap/nte-parallax-bg';
+import '@nextrap/nte-slider';
 import '@nextrap/style-base';
 import '@nextrap/style-typography';
 import '@nextrap/style-utils';

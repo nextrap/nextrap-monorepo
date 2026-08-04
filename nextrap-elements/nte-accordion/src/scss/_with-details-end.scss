@@ -1,0 +1,11 @@
+@mixin with-details-end {
+  nte-accordion-item {
+    &::part(summary) {
+      order: 1;
+    }
+
+    &::part(content) {
+      order: 0;
+    }
+  }
+}

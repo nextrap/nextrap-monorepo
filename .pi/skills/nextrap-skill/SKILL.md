@@ -36,10 +36,10 @@ zwischen den packages geben. Diese müssen untereinander über @nextap/package-n
 ## Element pairings
 
 Viele Elemente lassen sich ineinander schachteln. Zuständig für die korrekte Darstellung ist dabei immer das
-innere element. D.h. Schachtelungs-Demos für ein ntl-accordion in einem ntl-2col sollten im ntl-accordion package liegen.
+innere element. D.h. Schachtelungs-Demos für ein nte-accordion in einem ntl-2col sollten im nte-accordion package liegen.
 
 Das Pairing wird durch ein paring-mixin mit dem namen `pairing-<outer>-in-<inner>` definiert im inneren Element definiert.
-(d.h. in unserem Beispiel im ntl-accordion package).
+(d.h. in unserem Beispiel im nte-accordion package).
 
 Für jedes pairing wird eine eigene paring-xyz.md erstellt.
 

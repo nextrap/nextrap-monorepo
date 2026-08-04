@@ -5,4 +5,4 @@ import '@nextrap/style-utils';
 import '../index.ts';
 import './main.scss';
 
-import '@nextrap/ntl-card';
+import '@nextrap/nte-card';

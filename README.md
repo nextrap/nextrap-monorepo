@@ -30,16 +30,16 @@ These packages are grouped into their respective directories ([`nextrap-base`](.
 | [`nte-element-highlighter`](nextrap-elements/nte-element-highlighter) | [@evolkmann](https://github.com/evolkmann)   |
 | [`nte-scroll-to-top`](nextrap-elements/nte-scroll-to-top)             | [@dermatthes](https://github.com/dermatthes) |
 | [`nte-dialog`](nextrap-elements/nte-dialog)                           | [@evolkmann](https://github.com/evolkmann)   |
-| [`ntl-infiniscroll`](nextrap-layout/ntl-infiniscroll)                 | [@dermatthes](https://github.com/dermatthes) |
+| [`nte-infiniscroll`](nextrap-elements/nte-infiniscroll)                 | [@dermatthes](https://github.com/dermatthes) |
 | [`ntl-2col`](nextrap-layout/ntl-2col)                                 | [@evolkmann](https://github.com/evolkmann)   |
 | [`nte-stepper`](nextrap-elements/nte-stepper)                         | [@marliedev](https://github.com/marliedev)   |
 | [`ntl-scrollspy`](nextrap-elements/ntl-scrollspy)                     | [@marliedev](https://github.com/marliedev)   |
 | [`nte-progress`](nextrap-elements/nte-progress)                       | [@marliedev](https://github.com/marliedev)   |
 | [`ntl-theme-switcher`](nextrap-layout/nte-theme-switcher)             | [@marliedev](https://github.com/marliedev)   |
 | [`nte-multiselect`](nextrap-elements/nte-multiselect)                 | [@marliedev](https://github.com/marliedev)   |
-| [`ntl-accordion`](nextrap-layout/ntl-accordion)                       | [@marliedev](https://github.com/marliedev)   |
+| [`nte-accordion`](nextrap-elements/nte-accordion)                       | [@marliedev](https://github.com/marliedev)   |
 | [`ntl-hero`](nextrap-layout/ntl-hero)                                 | [@marcelfrank-dev](https://github.com/marcelfrank-dev) |
-| [`ntl-parallax-bg`](nextrap-layout/ntl-parallax-bg)                   | [@marcelfrank-dev](https://github.com/marcelfrank-dev) |
+| [`nte-parallax-bg`](nextrap-elements/nte-parallax-bg)                   | [@marcelfrank-dev](https://github.com/marcelfrank-dev) |
 
 _) Do not include any style-_ packages (except 'style-reset') in the Shadow DOM of components!
 

@@ -1,121 +1,106 @@
-import { LoggingMixin } from '@trunkjs/browser-utils';
-import { html, LitElement, unsafeCSS } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-
-// Styles for the light DOM
+import { nextrap_element } from '@nextrap/nte-core';
 import { resetStyle } from '@nextrap/style-reset';
-
-// Styles for your component's shadow DOM
+import { SubLayoutApplyMixin } from '@trunkjs/content-pane';
+import { html, unsafeCSS } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
 import style from './nte-card.scss?inline';
 
 @customElement('nte-card')
-export class NteCardElement extends LoggingMixin(LitElement) {
+export class NteCardElement extends SubLayoutApplyMixin(
+  nextrap_element({
+    breakpoints: true,
+    eventBinding: true,
+    slotVisibility: true,
+  }),
+) {
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
-  /**
-   * When true, the card will stretch to available height and its body will expand
-   * to fill the remaining space (flex layout).
-   */
-  @property({ type: Boolean, reflect: true })
-  public accessor fill = false;
+  @state()
+  private accessor _count = 0;
 
-  @state() private accessor _hasHeader = false;
-  @state() private accessor _hasImage = false;
-  @state() private accessor _hasFooter = false;
-  @state() private accessor _role = '';
-  @state() private accessor _ariaLabel: string | null = null;
+  @property({ type: String, reflect: true })
+  public accessor name = 'nte-card';
 
-  #aHrefElmeent: HTMLAnchorElement | null = null;
+  private accessor _linkAnchor: HTMLAnchorElement | null = null;
+
+  private findAnchorWithHref(root: Element): HTMLAnchorElement | null {
+    if (root instanceof HTMLAnchorElement && root.hasAttribute('href')) {
+      return root;
+    }
+    const a = root.querySelector('a[href]');
+    return a instanceof HTMLAnchorElement ? a : null;
+  }
+
+  private updateClickableFromLinkSlot(slot?: HTMLSlotElement | null) {
+    const linkSlot = slot ?? (this.shadowRoot?.querySelector('slot[name="link"]') as HTMLSlotElement | null);
+    if (!linkSlot) {
+      this._linkAnchor = null;
+      this.classList.remove('clickable');
+      return;
+    }
+
+    const assigned = linkSlot.assignedElements({ flatten: true });
+    let anchor: HTMLAnchorElement | null = null;
+    for (const el of assigned) {
+      anchor = this.findAnchorWithHref(el);
+      if (anchor) break;
+    }
+
+    this._linkAnchor = anchor;
+    this.classList.toggle('clickable', !!this._linkAnchor);
+
+    // wichtig: wenn sich Link/href ändert, muss gerendert werden (outer <a href=...>)
+    this.requestUpdate();
+  }
+
+  override firstUpdated(_changedProperties: any) {
+    super.firstUpdated(_changedProperties);
+    // Initiale Ermittlung (falls kein slotchange feuert oder Content bereits da ist)
+    this.updateClickableFromLinkSlot();
+  }
+
+  private onLinkSlotChange = (e: Event) => {
+    this.updateClickableFromLinkSlot(e.target as HTMLSlotElement);
+  };
 
   override render() {
-    return html`
-      <div
-        class="card"
-        part="card"
-        role=${this._role}
-        @click=${() => this.#click()}
-        @keydown=${(e: KeyboardEvent) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            this.#click();
-          }
-        }}
-        aria-label=${this._ariaLabel}
-        tabindex=${this._role === 'button' ? '0' : '-1'}
-      >
-        <div class="card-header" part="header" ?hidden=${!this._hasHeader}>
-          <slot name="header" @slotchange=${this.#onHeaderSlot}></slot>
+    const wrapper = html`
+      <div part="wrapper" id="wrapper">
+        <div part="header" id="header">
+          <slot name="header" data-query=":scope > .header"></slot>
         </div>
-
-        <div class="card-img-top" part="image" ?hidden=${!this._hasImage}>
-          <slot name="image" @slotchange=${this.#onImageSlot}></slot>
+        <div part="image" id="image">
+          <slot
+            id="image-slot"
+            name="image"
+            data-query=":scope > .image | :scope > img:not(.keep) | :scope > p:has(img:not(.keep))"
+          ></slot>
+          <div part="gradient" id="gradient"></div>
         </div>
-
-        <div class="card-body" part="body">
+        <div part="content" id="content">
           <slot></slot>
         </div>
-
-        <div class="card-footer" part="footer" ?hidden=${!this._hasFooter}>
-          <slot name="footer" @slotchange=${this.#onFooterSlot}></slot>
+        <div part="footer" id="footer">
+          <slot name="footer" data-query=":scope > .footer"></slot>
         </div>
         <div hidden>
-          <slot name="link" @slotchange=${this.#onLinkSlot}></slot>
+          <slot
+            name="link"
+            data-query=":scope > p:has(a[href]:empty) | :scope > p:has(a[href].link)"
+            @slotchange=${this.onLinkSlotChange}
+          ></slot>
         </div>
       </div>
     `;
-  }
 
-  #click = () => {
-    this.#aHrefElmeent?.click();
-  };
+    const href = this._linkAnchor?.getAttribute('href') || undefined;
 
-  #onHeaderSlot = (e: Event) => {
-    const slot = e.target as HTMLSlotElement;
-    const assigned = slot.assignedNodes({ flatten: true }).filter((n) => this.#isRenderableNode(n));
-    this._hasHeader = assigned.length > 0;
-    // Optional: normalize header spacing if needed (handled by styles).
-  };
-
-  #onFooterSlot = (e: Event) => {
-    const slot = e.target as HTMLSlotElement;
-    const assigned = slot.assignedNodes({ flatten: true }).filter((n) => this.#isRenderableNode(n));
-    this._hasFooter = assigned.length > 0;
-  };
-
-  #onImageSlot = (e: Event) => {
-    const slot = e.target as HTMLSlotElement;
-    const assigned = slot.assignedElements({ flatten: true });
-    this._hasImage = assigned.length > 0;
-  };
-  #onLinkSlot = async (e: Event) => {
-    const slot = e.target as HTMLSlotElement;
-    const assigned = slot.assignedElements({ flatten: true });
-    if (assigned.length > 0) {
-      this._role = 'button';
-      const el = assigned[0];
-      if (el instanceof HTMLAnchorElement) {
-        this.#aHrefElmeent = el;
-        console.log('Found link element in slot:', el, el.getAttribute('aria-label'), el.textContent);
-        this._ariaLabel = el.getAttribute('aria-label') || el.textContent?.trim() || '';
-      } else {
-        this.warn(
-          "nte-card: The element assigned to the 'link' slot is not an anchor (<a>) element. Element found:",
-          el,
-        );
-        this.#aHrefElmeent = null;
-      }
+    // Wenn ein Link gesetzt ist, wrapper komplett als <a> klickbar machen.
+    // Das geslottete <a> selbst bleibt hidden im Slot, wir übernehmen nur das href.
+    if (href) {
+      return html`<a part="link" id="link" href=${href}>${wrapper}</a>`;
     }
-  };
-  #isRenderableNode(n: Node): boolean {
-    if (n.nodeType === Node.TEXT_NODE) {
-      return (n.textContent || '').trim().length > 0;
-    }
-    return n.nodeType === Node.ELEMENT_NODE;
-  }
-}
 
-declare global {
-  interface HTMLElementTagNameMap {
-    'nte-card': NteCardElement;
+    return wrapper;
   }
 }

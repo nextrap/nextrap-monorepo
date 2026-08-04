@@ -6,7 +6,7 @@
             "elements": [
                 {
                     "name": "ntl-card-row",
-                    "description": "Responsive row layout for ntl-card components.",
+                    "description": "Responsive row layout for nte-card components.",
                     "slots": [
                         { "name": "default", "description": "Cards or sections rendered as cards." },
                         { "name": "header", "description": "Optional row header." },
@@ -30,19 +30,19 @@
                 },
                 {
                     "name": "highlight",
-                    "description": "Raised card modifier for direct ntl-card children."
+                    "description": "Raised card modifier for direct nte-card children."
                 },
                 {
                     "name": "with-borderless-cards",
-                    "description": "Demo/theme modifier: removes border and inner padding from all direct ntl-card children via with-borderless-cards()."
+                    "description": "Demo/theme modifier: removes border and inner padding from all direct nte-card children via with-borderless-cards()."
                 },
                 {
                     "name": "with-item-separators",
-                    "description": "Demo/theme modifier: adds separator pseudo-elements between direct ntl-card children via with-item-separators()."
+                    "description": "Demo/theme modifier: adds separator pseudo-elements between direct nte-card children via with-item-separators()."
                 },
                 {
                     "name": "footer-separators",
-                    "description": "Adds desktop separators between direct ntl-card children."
+                    "description": "Adds desktop separators between direct nte-card children."
                 },
                 {
                     "name": "style-footer",

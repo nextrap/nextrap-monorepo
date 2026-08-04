@@ -3,7 +3,7 @@
 {: layout="1;ntl-hero"}
 
 ![Header](../assets/header-bg.svg)
-{: layout="2;ntl-parallax-bg" slot="bg"}
+{: layout="2;nte-parallax-bg" slot="bg"}
 
 # <span class="text-primary">EPRAXIS.DIGITAL</span> - Das Magazin für die Digitalisierung im Gesundheitswesen
 {: .h5 section-slot="top-title"}
@@ -12,7 +12,7 @@
 {: .h1 section-slot="title"}
 
 ---
-{: layout="2;ntl-slider"}
+{: layout="2;nte-slider"}
 
 ### Slide 1
 

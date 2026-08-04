@@ -55,7 +55,11 @@ export class NtlCardRowElement extends nextrap_layout({
         </div>
         <div part="main" id="main">
           <!-- set .style-parent to indicate that the child elements should inherit the style of the parent -->
-          <slot data-query=":scope > section" data-set-attribute-layout="ntl-card.style-parent" data-query-opt=""></slot>
+          <slot
+            data-query=":scope > section"
+            data-set-attribute-layout="nte-card.style-parent"
+            data-query-opt=""
+          ></slot>
         </div>
         <div id="footer" part="footer">
           <slot name="footer" data-query=":scope > footer"></slot>

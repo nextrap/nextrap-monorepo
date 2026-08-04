@@ -1,5 +1,5 @@
 @use '../index' as cardRow;
-@use '@nextrap/ntl-card' as card;
+@use '@nextrap/nte-card' as card;
 
 ntl-card-row {
   margin-bottom: 40px; // Only for demo: spacing should be handled by the parent layout.
@@ -17,6 +17,6 @@ ntl-card-row {
   }
 }
 
-ntl-card.style-default {
+nte-card.style-default {
   @include card.default-style();
 }

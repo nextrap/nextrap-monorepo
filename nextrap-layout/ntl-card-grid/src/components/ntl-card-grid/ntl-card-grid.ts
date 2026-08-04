@@ -16,7 +16,7 @@ export class NtlCardGridElement extends nextrap_layout({
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
   @property({ type: String, reflect: true })
-  public accessor childLayout = 'ntl-card.style-parent';
+  public accessor childLayout = 'nte-card.style-parent';
 
   @property({ type: String, reflect: true })
   public accessor name = 'ntl-card-grid';

@@ -1,102 +1,65 @@
 /* The ShadowDOM Styles */
 
 :host {
+  --border: 1px solid var(--nt-primary);
+  --background-color: unset;
+  --image-aspect-ratio: var(--aspect-ratio, 16 / 9);
+
   display: block;
-
-  /* Customizable variables (Bootstrap-ish defaults) */
-  --card-bg: var(--nt-body, #fff);
-  --card-color: var(--nt-dark, #212529);
-  --card-border-color: var(--nt-dark, #dee2e6);
-  --card-border-radius: var(--nt-border-radius);
-  --card-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-
-  --image-aspect-ratio: 1/1; /* default aspect ratio */
-
-  --card-spacer-x: 1rem;
-  --card-spacer-y: 1rem;
-
-  /* container width hint for consistency */
-  --container-width: var(--nt-container-width);
 }
 
-/* Full-height mode */
-:host([fill]) {
-  height: 100%;
-}
+#wrapper {
+  border: var(--border);
+  background-color: var(--background-color);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 
-.card {
-  position: relative;
-  display: block;
-  background-color: var(--card-bg);
-  color: var(--card-color);
-  border: 1px solid var(--card-border-color);
-  border-radius: var(--card-border-radius);
-  box-shadow: var(--card-box-shadow);
-  overflow: hidden; /* ensure rounded corners clip child content */
-  &[tabindex='0'] {
-    cursor: pointer;
+  > :has(.slot-empty) {
+    display: none;
   }
 }
 
-/* Make the card a flex column in fill-mode so body can stretch */
-:host([fill]) .card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+#header {
+  order: 2;
+  &:has(.slot-empty) {
+    display: none;
+  }
 }
 
-/* Sections */
-.card-header,
-.card-footer {
-  padding: var(--card-spacer-y) var(--card-spacer-x);
-  background-color: rgba(0, 0, 0, 0.03);
-}
+#image {
+  aspect-ratio: var(--image-aspect-ratio);
+  width: 100%;
+  height: auto;
+  display: block;
 
-.card-header {
-  border-bottom: 1px solid var(--card-border-color);
-}
-
-.card-footer {
-  border-top: 1px solid var(--card-border-color);
-}
-
-.card-body {
-  padding: var(--card-spacer-y) var(--card-spacer-x);
-}
-
-/* Let body expand only in fill mode */
-:host([fill]) .card-body {
-  flex: 1 1 auto;
-  min-height: 0; /* avoid overflowing flex children */
-}
-
-/* Image section (top) */
-.card-img-top {
-  slot {
+  slot::slotted(p) {
     display: contents;
   }
 
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: var(--image-aspect-ratio); /* default aspect ratio */
-
-  /* Ensure top corners stay rounded */
-  border-top-left-radius: var(--card-border-radius);
-  border-top-right-radius: var(--card-border-radius);
+  overflow: hidden;
+  order: 1;
+  z-index: 2;
+  isolation: isolate;
+  position: relative;
+  border-radius: var(--border-radius);
+  #gradient {
+    border-radius: inherit;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    //background: linear-gradient(to right, var(--nt-primary), var(--nt-primary-subtle));
+  }
 }
 
-/* Normalize slotted image items */
-.card-img-top slot::slotted(img) {
-  display: block;
-  width: 100%;
+#content {
+  z-index: 3;
+  order: 50;
+  flex-grow: 1;
 }
 
-.card-img-top slot::slotted(p) {
-  margin: 0; /* when image is wrapped in a paragraph */
-}
-
-/* hide wrappers when not used */
-[hidden] {
-  display: none !important;
+#footer {
+  order: 999;
 }

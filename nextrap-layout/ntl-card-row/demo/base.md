@@ -1,7 +1,7 @@
 # ntl-card-row component
 {: layout="1;.container"}
 
-Diese Demo zeigt `ntl-card-row` als responsives Card-Row-Layout. Direkte `section`-Elemente werden automatisch als `ntl-card` gerendert. Die Spaltenbreite wird im Desktop-Modus über ein 12-Spalten-Modell gesteuert; mobil werden die Cards untereinander dargestellt.
+Diese Demo zeigt `ntl-card-row` als responsives Card-Row-Layout. Direkte `section`-Elemente werden automatisch als `nte-card` gerendert. Die Spaltenbreite wird im Desktop-Modus über ein 12-Spalten-Modell gesteuert; mobil werden die Cards untereinander dargestellt.
 
 ## Drei Cards mit Header
 {: layout="ntl-card-row" section-style="--default-cols: 3;"}
@@ -10,22 +10,22 @@ Diese Demo zeigt `ntl-card-row` als responsives Card-Row-Layout. Direkte `sectio
 {: slot="header"}
 
 ### Col 1
-{: layout="ntl-card"}
+{: layout="nte-card"}
 
 Content 1
 
 ### Col 2
-{: layout="ntl-card.highlight" section-style="--cols: 6"}
+{: layout="nte-card.highlight" section-style="--cols: 6"}
 
 Diese Card nutzt die `.highlight` Modifier-Klasse. Einzelne Cards können über `--cols` breiter gesetzt werden.
 
 ### Col 3
-{: layout="ntl-card"}
+{: layout="nte-card"}
 
 Content 3
 
 ### Col 4
-{: layout="ntl-card"}
+{: layout="nte-card"}
 
 Content 4
 
@@ -47,7 +47,7 @@ Text
 ## Borderless Cards
 {: layout="ntl-card-row.with-borderless-cards" section-style="--default-cols: 4;"}
 
-Diese Variante entfernt Border und Innenabstand aller direkten `ntl-card`-Elemente innerhalb der Row.
+Diese Variante entfernt Border und Innenabstand aller direkten `nte-card`-Elemente innerhalb der Row.
 
 ### Feature 1
 

@@ -7,7 +7,7 @@
     @include footer-separators.with-footer-separators();
   }
 
-  > ntl-card.highlight {
+  > nte-card.highlight {
     @include raised-card.with-raised-card();
   }
 }

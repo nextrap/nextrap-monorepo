@@ -22,7 +22,7 @@ It is implemented with Lit and the Shadow DOM, and is designed to be reusable ac
 | Slot name   | Required | Description                                                                              | Typical content                      |
 | ----------- | -------- | ---------------------------------------------------------------------------------------- | ------------------------------------ |
 | `nav`       | no       | Navigation bar at the very top of the hero.                                              | Navigation component, logo + menu    |
-| `bg`        | no       | Background layer behind everything else. If omitted, the hero falls back to `--nt-body`. | `ntl-parallax-bg`, decorative images |
+| `bg`        | no       | Background layer behind everything else. If omitted, the hero falls back to `--nt-body`. | `nte-parallax-bg`, decorative images |
 | _(default)_ | no       | Main hero content, centered between nav and slider.                                      | Headings, copy, buttons, badges      |
 | `slider`    | no       | Slider/card content in the framed area at the bottom of the hero.                        | Carousel / slideshow components      |
 
@@ -66,7 +66,7 @@ It is implemented with Lit and the Shadow DOM, and is designed to be reusable ac
 
     <!-- Background layer (optional). If omitted, bg color comes from --ntl-hero-bg-color / --nt-body -->
     <div slot="bg">
-        <ntl-parallax-bg image="header-bg.svg"></ntl-parallax-bg>
+        <nte-parallax-bg image="header-bg.svg"></nte-parallax-bg>
     </div>
 
     <!-- Centered hero text -->
@@ -95,7 +95,7 @@ It is implemented with Lit and the Shadow DOM, and is designed to be reusable ac
 
 ```html
 <ntl-hero>
-    <ntl-parallax-bg slot="bg" image="hero-background.jpg"></ntl-parallax-bg>
+    <nte-parallax-bg slot="bg" image="hero-background.jpg"></nte-parallax-bg>
 
     <div>
         <h1>Your Headline Here</h1>

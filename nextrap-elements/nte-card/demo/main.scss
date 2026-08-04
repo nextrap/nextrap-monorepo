@@ -1,0 +1,10 @@
+@use '../index' as card;
+
+nte-card {
+  margin-bottom: 40px; // Only for demo: spacing should be handled by the parent layout.
+
+  &.style-default {
+    @include card.default-style();
+    @include card.with-modifier-classes;
+  }
+}

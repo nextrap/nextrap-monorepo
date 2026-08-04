@@ -24,7 +24,7 @@
   }
 
   &::part(header) {
-      text-align: center;
+    text-align: center;
   }
 
   &::part(container) {
@@ -35,12 +35,12 @@
     padding: var(--row-inner-padding);
   }
 
-  &[mode='mobile'] > ntl-card {
+  &[mode='mobile'] > nte-card {
     box-sizing: border-box;
     padding: 0 var(--nt-default-gap-x, 0);
   }
 
-  &[mode='desktop'] > ntl-card {
+  &[mode='desktop'] > nte-card {
     padding: 0;
   }
 }

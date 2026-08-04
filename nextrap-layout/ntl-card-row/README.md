@@ -1,6 +1,6 @@
 # ntl-card-row
 
-Responsive row layout for `ntl-card` components.
+Responsive row layout for `nte-card` components.
 
 ## Visual Demo
 
@@ -25,9 +25,9 @@ ntl-card-row {
 ```html
 <ntl-card-row class="default" style="--default-cols: 3">
   <h2 slot="header">Cards</h2>
-  <ntl-card>Card 1</ntl-card>
-  <ntl-card class="highlight" style="--cols: 6">Card 2</ntl-card>
-  <ntl-card>Card 3</ntl-card>
+  <nte-card>Card 1</nte-card>
+  <nte-card class="highlight" style="--cols: 6">Card 2</nte-card>
+  <nte-card>Card 3</nte-card>
 </ntl-card-row>
 ```
 

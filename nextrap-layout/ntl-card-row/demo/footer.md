@@ -9,7 +9,7 @@ Die Footer-Variante nutzt `.footer-separators`. Im Desktop-Modus erhalten die Ca
 {: layout="ntl-card-row.footer-separators" section-style="--default-cols: 3"}
 
 ---
-{: layout="ntl-card" }
+{: layout="nte-card" }
 
 Adresse 1<br>
 Name 1<br>
