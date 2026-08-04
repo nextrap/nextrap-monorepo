@@ -1,0 +1,29 @@
+@mixin default-style(
+  $width: 33%,
+  $min-width: 250px,
+  $max-width: 400px,
+  $z-index: 2000,
+  $backdrop: rgb(from var(--nt-dark) r g b / 0.5),
+  $background-color: var(--nt-primary-subtle),
+  $header-background: transparent,
+  $shadow-color: rgb(from var(--nt-dark) r g b / 0.5),
+  $header-padding: var(--nt-space),
+  $main-padding: 0,
+  $footer-padding: var(--nt-space),
+  $main-min-height: 200px,
+  $transition-duration: 0.2s
+) {
+  --width: #{$width};
+  --min-width: #{$min-width};
+  --max-width: #{$max-width};
+  --z-index: #{$z-index};
+  --backdrop: #{$backdrop};
+  --background-color: #{$background-color};
+  --header-background: #{$header-background};
+  --shadow-color: #{$shadow-color};
+  --header-padding: #{$header-padding};
+  --main-padding: #{$main-padding};
+  --footer-padding: #{$footer-padding};
+  --main-min-height: #{$main-min-height};
+  --transition-duration: #{$transition-duration};
+}

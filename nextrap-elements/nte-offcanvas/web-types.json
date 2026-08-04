@@ -1,0 +1,51 @@
+{
+    "name": "nte-offcanvas",
+    "version": "1.0.19",
+    "contributions": {
+        "html": {
+            "elements": [
+                {
+                    "name": "nte-offcanvas",
+                    "description": "Slide-in offcanvas panel with optional backdrop, header and footer slots.",
+                    "slots": [
+                        { "name": "default", "description": "Main offcanvas content" },
+                        { "name": "header", "description": "Header content" },
+                        { "name": "footer", "description": "Footer content" }
+                    ],
+                    "attributes": [
+                        {
+                            "name": "opened",
+                            "type": "boolean",
+                            "description": "Open the offcanvas panel"
+                        },
+                        {
+                            "name": "backdrop",
+                            "type": "boolean",
+                            "description": "Show the backdrop behind the panel"
+                        },
+                        {
+                            "name": "data-group-name",
+                            "type": "string",
+                            "description": "Group name for Nextrap open/close synchronization events"
+                        }
+                    ]
+                }
+            ]
+        },
+        "css": {
+            "classes": [
+                {
+                    "name": "style-default",
+                    "description": "Default offcanvas visual style"
+                }
+            ],
+            "parts": [
+                { "name": "backdrop", "description": "Backdrop layer" },
+                { "name": "offcanvas", "description": "Offcanvas panel" },
+                { "name": "header", "description": "Header area" },
+                { "name": "main", "description": "Main content area" },
+                { "name": "footer", "description": "Footer area" }
+            ]
+        }
+    }
+}

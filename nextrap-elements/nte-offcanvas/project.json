@@ -1,7 +1,7 @@
 {
     "name": "nte-offcanvas",
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
-    "sourceRoot": "{projectRoot}",
+    "sourceRoot": "{projectRoot}/src",
     "projectType": "library",
     "tags": [],
     "release": {

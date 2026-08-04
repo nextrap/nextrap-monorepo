@@ -1,0 +1,20 @@
+.nte-offcanvas-demo {
+  display: grid;
+  gap: var(--nt-space-3);
+  max-width: 48rem;
+}
+
+nte-offcanvas .demo-offcanvas-body {
+  display: grid;
+  gap: var(--nt-space-2);
+  padding: var(--nt-space);
+}
+
+nte-offcanvas .demo-offcanvas-actions,
+nte-offcanvas .demo-offcanvas-header {
+  display: flex;
+  gap: var(--nt-space-2);
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}

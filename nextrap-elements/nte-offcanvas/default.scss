@@ -1,0 +1,5 @@
+@use './index' as offcanvas;
+
+nte-offcanvas.style-default {
+  @include offcanvas.default-style();
+}
