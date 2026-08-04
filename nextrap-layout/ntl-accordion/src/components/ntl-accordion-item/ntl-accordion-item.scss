@@ -1,6 +1,5 @@
 :host {
   display: block;
-  interpolate-size: allow-keywords;
 }
 
 #details {
@@ -27,28 +26,10 @@
   }
 }
 
-#details:not([open]) #content {
-  display: none;
-}
-
-@supports selector(::details-content) {
-  details::details-content {
-    block-size: 0;
-    overflow: hidden;
-    transition:
-      block-size var(--transition-duration, 0.35s),
-      content-visibility var(--transition-duration, 0.35s);
-    transition-behavior: allow-discrete;
-  }
-
-  details[open]::details-content {
-    block-size: auto;
-  }
-
-  details:not([open]) #content,
-  details[open] #content {
-    display: block;
-  }
+#content-wrap {
+  height: 0;
+  overflow: hidden;
+  transition: height var(--transition-duration, 350ms) ease;
 }
 
 #title {
