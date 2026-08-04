@@ -1,3 +1,13 @@
+## 1.0.20 (2026-08-04)
+
+### 🩹 Fixes
+
+- use aliasesExclude to avoid internal relative paths ([6b8123e](https://github.com/nextrap/nextrap-monorepo/commit/6b8123e))
+
+### ❤️ Thank You
+
+- Enzo Volkmann @evolkmann
+
 ## 1.0.19 (2025-08-28)
 
 This was a version bump only for nte-offcanvas to align it with other projects, there were no code changes.
