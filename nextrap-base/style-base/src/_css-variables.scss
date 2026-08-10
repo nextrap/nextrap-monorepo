@@ -6,7 +6,8 @@
 // Register the css variables
 
 @mixin cssVariables($theme) {
-  $space-scale: map.get($theme, space-scale);
+  $spacing: map.get($theme, spacing);
+  $spacing-semantic: map.get($theme, spacing-semantic);
   $text-scales: map.get($theme, text-scales);
   $header-scales: map.get($theme, header-scales);
 
@@ -96,10 +97,22 @@
 
   --nt-header: #{map.get($theme, header)};
 
-  // Spacing
-  --nt-gap: #{map.get($theme, gap)};
-  --nt-text-gap: #{map.get($theme, text-gap)};
-  --nt-section-gap: #{map.get($theme, section-gap)};
+  // Spacing primitive tokens (use for exact spacing values in components/utilities)
+  @each $i, $val in $spacing {
+    --nt-space-#{$i}: #{$val};
+  }
+
+  // Spacing semantic tokens (use for semantic roles before mapping to component-local variables)
+  // Text rhythm (paragraph/list spacing)
+  --nt-spacing-text: #{map.get($spacing-semantic, text)};
+  // Small control spacing (button/input groups)
+  --nt-spacing-control: #{map.get($spacing-semantic, control)};
+  // Default component padding/inner spacing
+  --nt-spacing-component: #{map.get($spacing-semantic, component)};
+  // Layout gaps between sibling components
+  --nt-spacing-layout: #{map.get($spacing-semantic, layout)};
+  // Section-to-section spacing (intentionally fluid by default)
+  --nt-spacing-section: #{map.get($spacing-semantic, section)};
 
   // Border Radius
   --nt-border-radius: 0.25rem; // default border radius
@@ -107,20 +120,6 @@
   --nt-border-radius-xl: #{map.get($theme, border-radius-xl)}; // groß
 
   --nt-border-width: 1px;
-
-  // Use these for padding
-  --nt-default-gap-x: clamp(8px, 2vw, 24px);
-  --nt-default-gap-y: 24px;
-
-  --nt-space: #{map.get($theme, space)};
-  @each $i, $val in $space-scale {
-    --nt-space-#{$i}: calc(var(--nt-space) * #{$val});
-  }
-
-  --nt-content-space: #{map.get($theme, content-space)};
-  @each $i, $val in $space-scale {
-    --nt-content-space-#{$i}: calc(var(--nt-content-space) * #{$val});
-  }
 
   // =============== FONT SIZES =============== //
   @each $i, $val in $text-scales {

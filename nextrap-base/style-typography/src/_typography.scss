@@ -132,7 +132,7 @@ dd {
 
 /* Horizontal rule */
 hr {
-  margin: var(--nt-default-gap-x) 0;
+  margin: var(--nt-space-4) 0;
 }
 
 /* Code & Pre */
@@ -197,7 +197,7 @@ h3,
 h4,
 h5,
 h6 {
-  margin-bottom: var(--nt-text-gap);
+  margin-bottom: var(--nt-spacing-text);
 
   &:last-child {
     margin-bottom: 0;
@@ -205,5 +205,5 @@ h6 {
 }
 
 section {
-  margin-bottom: var(--nt-section-gap);
+  margin-bottom: var(--nt-spacing-section);
 }

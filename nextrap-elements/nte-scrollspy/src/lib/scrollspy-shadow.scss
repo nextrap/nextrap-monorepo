@@ -4,9 +4,9 @@
 :host {
   --min-width: 200px;
   --min-height: 300px;
-  --max-width: calc(100% - var(--nt-base-space) * 2);
-  --max-height: calc(100% - var(--nt-base-space) * 2);
-  --padding: var(--nt-base-space);
+  --max-width: calc(100% - var(--nt-space-4) * 2);
+  --max-height: calc(100% - var(--nt-space-4) * 2);
+  --padding: var(--nt-space-4);
 
   --scrollspy-menu-bg-color: var($white);
   --scrollspy-menu-border: 1px solid var($nt-light);

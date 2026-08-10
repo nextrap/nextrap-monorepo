@@ -2,7 +2,7 @@
 
 :host {
   --container-width: var(--nt-container-width) /* Refer to README.md for style guidelines */;
-  --gap: var(--nt-gap);
+  --gap: var(--nt-spacing-layout);
   --breakpoint: md, lg; // xs,sm,md,lg,xl,xxl
   --cols: 3;
   --cols-tablet: 2;

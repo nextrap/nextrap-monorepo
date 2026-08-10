@@ -7,9 +7,9 @@
   /* ====== Component CSS variables ====== */
   --prose-max-w: 75ch;
 
-  --prose-section-space-top: var(--nt-space-5);
-  --prose-section-space-bottom: var(--nt-space-4);
-  --prose-para-space: var(--nt-space-4);
+  --prose-section-space-top: var(--nt-spacing-section);
+  --prose-section-space-bottom: var(--nt-spacing-component);
+  --prose-para-space: var(--nt-spacing-text);
 
   --prose-link-decoration: underline;
 

@@ -37,7 +37,7 @@
       .spacing-demo {
         background: var(--nt-soft-primary);
         margin: 0.5rem 0;
-        padding: var(--nt-gap);
+        padding: var(--nt-spacing-layout);
         border-radius: var(--nt-border-radius);
       }
       .typography-demo {
@@ -56,14 +56,14 @@
       }
       .combined-demo {
         background: linear-gradient(135deg, var(--nt-soft-primary), var(--nt-soft-accent));
-        padding: var(--nt-gap);
+        padding: var(--nt-spacing-layout);
         margin: 2rem 0;
         border-radius: 0.5rem;
         color: var(--nt-text-on-soft-colors);
       }
       .responsive-demo {
         background: var(--nt-soft-success);
-        padding: var(--nt-gap);
+        padding: var(--nt-spacing-layout);
         margin: 1rem 0;
         border-radius: 0.25rem;
       }
@@ -269,8 +269,8 @@
       <p>CSS Custom Properties for consistent spacing:</p>
 
       <div class="variable-demo">
-        --nt-base-gap: 1rem<br />
-        --nt-base-space: 1rem<br />
+        --nt-space-4: 1rem<br />
+        --nt-spacing-layout: var(--nt-space-6)<br />
         --nt-border-radius: 0.25rem<br />
         --nt-border-width: 1px
       </div>
@@ -282,7 +282,7 @@
       </div>
       <div class="spacing-demo" style="margin: var(--nt-space-4)">Element with <code>--nt-space-4</code></div>
       <div class="spacing-demo" style="margin: var(--nt-space-5)">Element with <code>--nt-space-5</code></div>
-      <div class="spacing-demo" style="padding: var(--nt-gap)">Element with base gap padding</div>
+      <div class="spacing-demo" style="padding: var(--nt-spacing-layout)">Element with base gap padding</div>
       <div
         class="spacing-demo"
         style="border-radius: var(--nt-border-radius); border: var(--nt-border-width) solid var(--nt-primary)"
@@ -408,9 +408,9 @@
       <div
         style="
           background: var(--nt-soft-success);
-          padding: var(--nt-space);
+          padding: var(--nt-space-4);
           border-radius: var(--nt-border-radius);
-          margin: var(--nt-gap) 0;
+          margin: var(--nt-spacing-layout) 0;
         "
       >
         <h4 style="color: var(--nt-success)">Success Message Example</h4>
@@ -420,9 +420,9 @@
       <div
         style="
           background: var(--nt-soft-warning);
-          padding: var(--nt-space);
+          padding: var(--nt-space-4);
           border-radius: var(--nt-border-radius);
-          margin: var(--nt-gap) 0;
+          margin: var(--nt-spacing-layout) 0;
         "
       >
         <h4 style="color: var(--nt-warning)">Warning Message Example</h4>

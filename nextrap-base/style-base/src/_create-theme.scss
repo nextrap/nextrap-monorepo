@@ -36,14 +36,33 @@
   $textColor: map.get($override, text) or #222;
 
   // === SCALES (keep as maps) ===
-  $space-scale: map.get($override, space-scale) or
+  $spacing: map.deep-merge(
     (
-      '1': 0.25,
-      '2': 0.5,
-      '3': 1,
-      '4': 1.5,
-      '5': 3,
-    );
+      0: 0,
+      1: 0.25rem,
+      2: 0.5rem,
+      3: 0.75rem,
+      4: 1rem,
+      5: 1.5rem,
+      6: 2rem,
+      7: 3rem,
+      8: 4rem,
+      9: 6rem,
+      10: 8rem,
+    ),
+    map.get($override, spacing) or ()
+  );
+
+  $spacing-semantic: map.deep-merge(
+    (
+      text: var(--nt-space-4),
+      control: var(--nt-space-3),
+      component: var(--nt-space-5),
+      layout: var(--nt-space-6),
+      section: clamp(var(--nt-space-7), 5vw, var(--nt-space-9)),
+    ),
+    map.get($override, spacing-semantic) or ()
+  );
 
   $text-scales: map.get($override, text-scales) or
     (
@@ -145,15 +164,9 @@
     border-radius-lg: map.get($override, border-radius-lg) or 1rem,
     border-radius-sm: map.get($override, border-radius-sm) or 0.25rem,
 
-    // Spacing
-    gap: map.get($override, gap) or 1.25rem,
-    text-gap: map.get($override, text-gap) or 1rem,
-    section-gap: map.get($override, section-gap) or 2rem,
-    space: map.get($override, space) or 1rem,
-    content-space: map.get($override, content-space) or 10rem,
-
     // Scales
-    space-scale: $space-scale,
+    spacing: $spacing,
+    spacing-semantic: $spacing-semantic,
     text-scales: $text-scales,
     header-scales: $header-scales,
 

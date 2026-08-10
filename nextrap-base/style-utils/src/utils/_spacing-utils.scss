@@ -1,9 +1,4 @@
-// Base Variables
-$base-gap: var(--nt-base-gap);
-$base-space: var(--nt-base-space);
-$base-content-space: var(--nt-base-content-space);
-
-// Spacing Scale (0 to 5)
+// Spacing scale utilities (0 is explicit classes below, 1..5 map to primitive spacing tokens)
 @for $i from 1 through 5 {
   .m-#{$i} {
     margin: var(--nt-space-#{$i}) !important;
@@ -99,32 +94,8 @@ $base-content-space: var(--nt-base-content-space);
   margin-right: auto;
 }
 .mb-auto {
-  margin-left: auto;
+  margin-bottom: auto;
 }
 .ms-auto {
   margin-left: auto;
-}
-// Spacing Utilities
-
-.content-space-top-0 {
-  margin-top: 0 !important;
-}
-.content-space-bottom-0 {
-  margin-bottom: 0 !important;
-}
-.content-space-0 {
-  margin-block: 0 !important;
-}
-
-// Content Space Helpers
-@for $i from 0 through 5 {
-  .content-space-top-#{$i} {
-    margin-top: calc(var(--content-space-#{$i}) * #{$i}) !important;
-  }
-  .content-space-bottom-#{$i} {
-    margin-bottom: calc(var(--content-space-#{$i}) * #{$i}) !important;
-  }
-  .content-space-#{$i} {
-    margin-block: calc(var(--content-space-#{$i}) * #{$i}) !important;
-  }
 }
