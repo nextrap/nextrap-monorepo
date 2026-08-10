@@ -55,6 +55,9 @@ export class NteInput extends nextrap_element({
   @state()
   protected accessor _value: NteInputValue | undefined = undefined;
 
+  @state()
+  protected accessor _labelFor: string = NTE_INPUT_CONTROL_ID;
+
   #plugin?: NteInputPluginInterface;
   #pluginStyleElement?: HTMLStyleElement;
   #pluginConstructableStyleSheet?: CSSStyleSheet;
@@ -134,12 +137,7 @@ export class NteInput extends nextrap_element({
 
     const pluginHtml = plugin?.render(this.renderContext);
     const labelTemplate = html`
-      <label
-        id="label"
-        part="label"
-        for=${NTE_INPUT_CONTROL_ID}
-        ?hidden=${!this.label || Boolean(plugin?.isLabelHidden())}
-      >
+      <label id="label" part="label" for=${this._labelFor} ?hidden=${!this.label || Boolean(plugin?.isLabelHidden())}>
         ${this.label}
       </label>
     `;
@@ -222,6 +220,7 @@ export class NteInput extends nextrap_element({
     this.hasValue = plugin?.hasValue() ?? false;
     this.hasPlaceholder = plugin?.hasPlaceholder() ?? this.hasAttribute('placeholder');
     this.hoverlabelActive = plugin?.isHoverlabelActive() ?? false;
+    this._labelFor = plugin?.getLabelFor() ?? NTE_INPUT_CONTROL_ID;
     this.#syncFormValue();
   }
 
