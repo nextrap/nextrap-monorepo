@@ -16,5 +16,6 @@
         "@trunkjs/prolit-elements": "^1.0.0"
     },
     "type": "module",
-    "types": "./index.d.ts"
+    "types": "./index.d.ts",
+    "web-types": "./web-types.json"
 }
