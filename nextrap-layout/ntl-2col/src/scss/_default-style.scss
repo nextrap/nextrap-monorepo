@@ -4,7 +4,7 @@
 
 @mixin default-style(
   $innerPadding: var(--nt-space-3),
-  $gap: var(--nt-gap),
+  $gap: var(--nt-spacing-layout),
   $background: transparent,
   $border: 1px solid var(--nt-dark),
   $border-radius: var(--nt-border-radius),

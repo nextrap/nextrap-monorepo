@@ -2,7 +2,7 @@
 
 @mixin containerTools($theme) {
   // Responsive sizing (RCS)
-  // This is the root size all rem units are based on. (also space, content-space, etc.)
+  // This is the root size all rem units are based on (including spacing tokens).
   // RCS is
 
   @if map.get($theme, 'rcs') == true {

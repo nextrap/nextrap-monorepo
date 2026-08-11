@@ -150,7 +150,7 @@
                 },
                 {
                     "name": "--gap",
-                    "description": "Gap between columns. Default: var(--nt-gap).",
+                    "description": "Gap between columns. Default: var(--nt-spacing-layout).",
                     "value": { "type": "string" }
                 },
                 {

@@ -64,9 +64,9 @@ Use `::part(backdrop)`, `::part(offcanvas)`, `::part(header)`, `::part(main)` an
   $background-color: var(--nt-primary-subtle),
   $header-background: transparent,
   $shadow-color: rgb(from var(--nt-dark) r g b / 0.5),
-  $header-padding: var(--nt-space),
+  $header-padding: var(--nt-space-4),
   $main-padding: 0,
-  $footer-padding: var(--nt-space),
+  $footer-padding: var(--nt-space-4),
   $main-min-height: 200px,
   $transition-duration: 0.2s
 );

@@ -48,7 +48,7 @@ baseline for your styling:
 @use '@nextrap/style-reset';
 
 :host {
-    --spacing: var(--nt-base-gap, 4px);
+    --spacing: var(--nt-space-4, 4px);
 }
 
 #some-internal-element {

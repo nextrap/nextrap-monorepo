@@ -4,8 +4,8 @@
   --container-width: var(--nt-container-width, 100%);
   --default-cols: var(--cols);
   --cols: 6;
-  --gutter-x: var(--nt-gap);
-  --gutter-y: var(--nt-gap);
+  --gutter-x: var(--nt-spacing-layout);
+  --gutter-y: var(--nt-spacing-layout);
   --breakpoint: xl;
 
   display: block;

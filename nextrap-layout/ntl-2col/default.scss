@@ -1,7 +1,7 @@
 @use './index' as mixin;
 
 .default {
-  @include mixin.default-style(var(--nt-text-gap), var(--nt-text-gap));
+  @include mixin.default-style(var(--nt-spacing-text), var(--nt-spacing-text));
 }
 
 .reverse {
