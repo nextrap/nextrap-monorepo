@@ -1,21 +1,10 @@
-@use 'module' as nextrap-base;
+// @nextrap/style-base — public Theme API (no CSS output on @use)
+//
+// Usage:
+//   @use '@nextrap/style-base' as nt;
+//   :root { @include nt.theme((primary: #0057b8, neutral: #667085)); }
+//
+// For a ready-to-use default theme with document defaults:
+//   @use '@nextrap/style-base/default';
 
-/**
- * For themes use the module import (do not use the default import)
- */
-
-$primary: #007bff !default;
-$accent: #b83e8a !default;
-$secondary: #6c757d !default;
-$enableScrollOffset: false !default;
-
-$theme: (
-  'primary': $primary,
-  'secondary': $secondary,
-  'accent': $accent,
-  'enableScrollOffset': $enableScrollOffset,
-) !default;
-
-html {
-  @include nextrap-base.nextrap-theme($theme, ());
-}
+@forward 'module';

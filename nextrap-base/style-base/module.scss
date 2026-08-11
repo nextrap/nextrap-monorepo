@@ -1,3 +1,8 @@
+// @nextrap/style-base/module — internal API module
+//
+// @deprecated Prefer `@use '@nextrap/style-base' as nt` instead.
+//             This file is kept for backward compatibility and will be
+//             removed in a future breaking version.
 @use './src/create-theme' as *;
 @use './src/css-variables' as var;
 @use './src/container-tools' as ct;
