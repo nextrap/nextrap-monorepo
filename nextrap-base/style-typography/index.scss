@@ -1,2 +1,3 @@
-@use './src/typography' as *;
-@use './src/prose' as *;
+// Public Sass API only — importing this file emits no CSS.
+@forward './src/typography';
+@forward './src/all';
