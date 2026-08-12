@@ -1,79 +1,74 @@
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.h1,
-.h2,
-.h3,
-.h4,
-.h5,
-.h6 {
-  color: var(--nt-text);
-  line-height: var(--nt-line-height-header);
-  font-family: var(--nt-font-family-header);
-  font-weight: var(--nt-font-weight-header);
+// Typography mixin API — each mixin styles the current selector.
+//
+// Typography owns the rhythm and visual treatment of individual text elements.
+// It deliberately does NOT add spacing/padding to content wrappers, sections,
+// pages, or other layout containers. Layout spacing belongs to the consuming
+// layout/theme layer.
+
+@mixin heading() {
+  margin-top: 0;
+  margin-bottom: var(--nt-heading-margin-bottom, 0.5rem);
+  color: var(--nt-text, currentColor);
+  font-family: var(--nt-font-family-header, inherit);
+  font-weight: var(--nt-font-weight-header, 500);
+  line-height: var(--nt-line-height-header, 1.2);
 }
 
-h1,
-.h1 {
-  font-size: var(--nt-fs-h1);
-}
-h2,
-.h2 {
-  font-size: var(--nt-fs-h2);
-}
-h3,
-.h3 {
-  font-size: var(--nt-fs-h3);
-}
-h4,
-.h4 {
-  font-size: var(--nt-fs-h4);
-}
-h5,
-.h5 {
-  font-size: var(--nt-fs-h5);
-}
-h6,
-.h6 {
-  font-size: var(--nt-fs-h6);
+@mixin h1() {
+  @include heading();
+  font-size: var(--nt-fs-h1, calc(1.375rem + 1.5vw));
 }
 
-// We set the default font size and family for all text elements - so we can modify them easily for all
-// child elements.
-
-body {
-  color: var(--nt-text);
-  font-weight: var(--nt-font-weight-base);
-  //font-size: var(--nt-font-size-base);
+@mixin h2() {
+  @include heading();
+  font-size: var(--nt-fs-h2, calc(1.325rem + 0.9vw));
 }
 
-b,
-strong {
-  font-weight: var(--nt-font-weight-bold);
+@mixin h3() {
+  @include heading();
+  font-size: var(--nt-fs-h3, calc(1.3rem + 0.6vw));
 }
 
-html {
-  font-size: var(--nt-font-size-root);
-  line-height: var(--nt-line-height-base);
+@mixin h4() {
+  @include heading();
+  font-size: var(--nt-fs-h4, calc(1.275rem + 0.3vw));
 }
 
-p {
+@mixin h5() {
+  @include heading();
+  font-size: var(--nt-fs-h5, 1.25rem);
 }
 
-small {
-  font-size: var(--nt-font-size-small);
+@mixin h6() {
+  @include heading();
+  font-size: var(--nt-fs-h6, 1rem);
 }
 
-// Important: We use "body a" here to increase specificity and override reset styles
-body a {
-  color: var(--nt-link);
+@mixin p() {
+  margin-top: 0;
+  margin-bottom: var(--nt-paragraph-margin-bottom, 1rem);
+  color: var(--nt-text, currentColor);
+  font-family: var(--nt-font-family-base, inherit);
+  font-weight: var(--nt-font-weight-base, 400);
+  line-height: var(--nt-line-height-base, 1.5);
+}
 
-  position: relative;
+@mixin strong() {
+  font-weight: var(--nt-font-weight-bold, 700);
+}
+
+@mixin em() {
+  font-style: italic;
+}
+
+@mixin small() {
+  font-size: var(--nt-font-size-small, 0.875em);
+}
+
+@mixin link() {
+  color: var(--nt-link, currentColor);
   text-decoration: underline;
-  text-decoration-color: var(--nt-link);
+  text-decoration-color: currentColor;
   transition:
     color 0.15s ease-in-out,
     background-color 0.15s ease-in-out,
@@ -81,129 +76,116 @@ body a {
     box-shadow 0.15s ease-in-out;
 
   &:hover {
-    color: color-mix(in srgb, var(--nt-link), black 30%);
-    text-decoration: underline;
+    color: var(--nt-link-hover, var(--nt-link, currentColor));
   }
 
-  &:focus {
-    outline: 1px dashed var(--nt-link);
-    outline-offset: 2px;
-    text-decoration: underline;
+  &:focus-visible {
+    outline: var(--nt-focus-ring-width, 1px) dashed var(--nt-link, currentColor);
+    outline-offset: var(--nt-focus-ring-offset, 2px);
   }
 }
 
-/* Text emphasis */
-em {
-  font-style: italic;
-}
-small {
-  font-size: 0.875em;
-}
-mark {
-  background: rgb(from var(--nt-warning) r g b / var(--nt-alpha));
-  padding: 0 0.25em;
-  border-radius: 0.125rem;
+@mixin mark() {
+  padding: 0.1875em;
+  color: var(--nt-mark-color, var(--nt-text, currentColor));
+  background-color: var(--nt-mark-bg, var(--nt-warning-subtle, #fff3cd));
 }
 
-/* Links */
-
-/* Lists */
-ul,
-ol {
-  padding-left: var(--nt-space-4);
-}
-ul {
+@mixin ul() {
+  margin-top: 0;
+  margin-bottom: var(--nt-list-margin-bottom, 1rem);
+  padding-left: var(--nt-list-padding-left, 2rem);
   list-style: disc;
 }
-ol {
+
+@mixin ol() {
+  margin-top: 0;
+  margin-bottom: var(--nt-list-margin-bottom, 1rem);
+  padding-left: var(--nt-list-padding-left, 2rem);
   list-style: decimal;
 }
 
-/* Definition lists (nice for interviews too) */
-dl {
-}
-dt {
-  font-weight: 600;
-}
-dd {
-  margin-left: var(--nt-space-3);
-  color: var(--nt-dark-subtle);
+@mixin dl() {
+  margin-top: 0;
+  margin-bottom: var(--nt-list-margin-bottom, 1rem);
 }
 
-/* Horizontal rule */
-hr {
-  margin: var(--nt-space-4) 0;
+@mixin dt() {
+  font-weight: var(--nt-font-weight-bold, 700);
 }
 
-/* Code & Pre */
-code {
-  background: rgb(from var(--nt-dark) r g b / 0.06);
-  padding: 0.125em 0.375em;
-  border-radius: var(--nt-border-radius);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
-  font-size: 0.875em;
+@mixin dd() {
+  margin-bottom: var(--nt-definition-margin-bottom, 0.5rem);
+  margin-left: 0;
+  color: var(--nt-text-muted, var(--nt-dark-subtle, currentColor));
 }
-pre {
-  background: rgb(from var(--nt-dark) r g b / 0.06);
-  padding: var(--nt-space-4);
-  border-radius: var(--nt-border-radius);
+
+@mixin hr() {
+  margin: var(--nt-hr-margin-y, 1rem) 0;
+  color: inherit;
+  border: 0;
+  border-top: var(--nt-border-width, 1px) solid;
+  opacity: var(--nt-hr-opacity, 0.25);
+}
+
+@mixin code() {
+  padding: var(--nt-code-padding-y, 0.125em) var(--nt-code-padding-x, 0.375em);
+  color: var(--nt-code-color, inherit);
+  background: var(--nt-code-bg, rgb(from var(--nt-dark, #212529) r g b / 0.06));
+  border-radius: var(--nt-radius-sm, var(--nt-border-radius, 0.25rem));
+  font-family: var(--nt-font-family-monospace, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace);
+  font-size: var(--nt-code-font-size, 0.875em);
+}
+
+@mixin pre() {
+  display: block;
+  margin-top: 0;
+  margin-bottom: var(--nt-pre-margin-bottom, 1rem);
+  padding: var(--nt-pre-padding, var(--nt-space-4, 1rem));
   overflow: auto;
+  color: var(--nt-text, currentColor);
+  background: var(--nt-pre-bg, rgb(from var(--nt-dark, #212529) r g b / 0.06));
+  border-radius: var(--nt-radius, var(--nt-border-radius, 0.375rem));
+  font-family: var(--nt-font-family-monospace, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace);
+  font-size: var(--nt-code-font-size, 0.875em);
+
   code {
-    background: transparent;
     padding: 0;
+    color: inherit;
+    background: transparent;
+    border-radius: 0;
+    font-size: inherit;
   }
 }
 
-/* Blockquote */
-blockquote {
-  padding: var(--nt-space-3) var(--nt-space-4);
-  border-left: 0.25rem solid var(--nt-primary-emphasis);
-  color: var(--nt-dark-subtle);
-  font-size: 1.125em;
+@mixin blockquote() {
+  margin: 0 0 var(--nt-blockquote-margin-bottom, 1rem);
+  padding: var(--nt-blockquote-padding-y, 0.75rem) var(--nt-blockquote-padding-x, 1rem);
+  color: var(--nt-text-muted, var(--nt-dark-subtle, currentColor));
+  border-left: var(--nt-blockquote-border-width, 0.25rem) solid var(--nt-primary-emphasis, var(--nt-primary, currentColor));
+  font-size: var(--nt-blockquote-font-size, 1.125em);
 }
 
-/* Figures & images (flow text) */
-figure {
-  margin: 0;
+@mixin figure() {
+  margin: 0 0 var(--nt-figure-margin-bottom, 1rem);
 }
 
-figcaption,
-.figure-caption {
-  color: var(--nt-dark-subtle);
-  font-size: var(--nt-font-size-small);
-  margin-top: var(--nt-space-2);
+@mixin figure-caption() {
+  margin-top: var(--nt-figure-caption-margin-top, 0.5rem);
+  color: var(--nt-text-muted, var(--nt-dark-subtle, currentColor));
+  font-size: var(--nt-font-size-small, 0.875em);
   text-align: center;
 }
 
-/* Lead & muted */
-.lead {
-  font-size: calc(var(--nt-fs-2));
-  color: var(--nt-text);
-}
-.muted,
-.text-muted {
-  color: var(--nt-dark-subtle);
-}
-
-p,
-ul,
-ol,
-blockquote,
-code,
-pre,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin-bottom: var(--nt-spacing-text);
-
-  &:last-child {
-    margin-bottom: 0;
-  }
+@mixin lead() {
+  margin-top: 0;
+  margin-bottom: var(--nt-lead-margin-bottom, 1rem);
+  color: var(--nt-text, currentColor);
+  font-size: var(--nt-lead-font-size, 1.25rem);
+  font-weight: var(--nt-lead-font-weight, 300);
+  line-height: var(--nt-line-height-base, 1.5);
 }
 
-section {
-  margin-bottom: var(--nt-spacing-section);
+@mixin text-muted() {
+  color: var(--nt-text-muted, var(--nt-dark-subtle, currentColor)) !important;
 }
