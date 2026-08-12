@@ -44,4 +44,13 @@
     overflow: hidden;
     gap: var(--gap);
   }
+  &::part(main) {
+    padding: var(--inner-padding);
+  }
+  // Nur wenn .aside gesetzt is - dann automatisch padding einfügen
+  &:has(.aside:not(.p-0)) {
+    &::part(aside) {
+      padding: var(--inner-padding);
+    }
+  }
 }
