@@ -47,6 +47,17 @@ Für jedes pairing wird eine eigene paring-xyz.md erstellt.
 
 - Update the .ai-usage-info.md file in the package you are working on. Keep it short.
 
+## Style package architecture contract (`@nextrap/style-*`)
+
+- Repository rule reference: `docs/style-packages-architecture.md`
+- `index.scss` = Sass API (mixins/functions/forwarding), `default.scss` = explicit class/CSS materialization.
+- Public class names should map 1:1 to same-named mixins (without `.`), where meaningful.
+- Classes are generated from mixins (no separate duplicate implementation).
+- Base and modifier mixins must stay independently composable.
+- Mixins must style the current selector so they work in arbitrary theme scopes.
+- `@nextrap/style-base` (including `@nextrap/style-base/default`) is token-only and must remain visually side-effect free.
+- Cross-package style integration should prefer `--nt-*` custom properties over private sibling Sass internals.
+
 ## Do's
 
 - Erfordert ein Prompt änderungen an mehr als 3 Dateien, frag den User, ob das so gewünscht ist. Gib einen kurzen Abriss, was Du ändern willst.
@@ -60,5 +71,4 @@ Für jedes pairing wird eine eigene paring-xyz.md erstellt.
 - Ändere keine Dateien außerhalb der `nextrap-base/`, `nextrap-layout/` und `nextrap-elements/` Verzeichnisse außer es wird explizit im Prompt verlangt.
 - Füge keine Css Variablen in den shadow dom hinzu ohne vorher den User zu fragen.
 - Führe nie Git Befehle dirket aus ohne zu fragen.
-
 

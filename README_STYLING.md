@@ -10,6 +10,10 @@ For anything not specified here (e.g., reactive properties), refer to the [Lit d
 When developing web components, we differentiate _Light DOM_ (the host document) and _Shadow DOM_
 (the private document of the component).
 
+For architecture rules of `@nextrap/style-*` packages (`index.scss` API, `default.scss` output, class↔mixin contract, token-only `style-base`), see:
+
+- `docs/style-packages-architecture.md`
+
 The _Light-DOM-styles_ (e.g., global CSS variables) are available inside the component's Shadow DOM. On the contrary,
 the _Shadow-DOM-styles_ are _not_ available in the host document and therefore private to the component.
 

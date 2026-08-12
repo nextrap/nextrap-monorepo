@@ -3,6 +3,8 @@
 Defines the core css variables and container width. This package will not add any styles or classes to
 the document.
 
+`style-base` is token-only and must remain visually side-effect free.
+
 ## Usage
 
 Include the `style-base` package in your main document's stylesheet. The package provides both, scss sources
@@ -18,6 +20,10 @@ To work and modify themes of scss use the scss sources:
 ```
 
 This will set up the core design tokens and responsive container widths for your application.
+
+For architecture rules shared by all style packages (`index.scss` API vs `default.scss` output, class↔mixin parity, composition), see:
+
+- `docs/style-packages-architecture.md`
 
 ## Spacing model
 

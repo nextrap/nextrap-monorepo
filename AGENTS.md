@@ -153,7 +153,7 @@ All npm dependencies are defined **only** in the root `package.json` (single ver
 - `nextrap-base/nt-nx-generators/` – Nx generator for scaffolding new packages (see these how to create new packages and follow their patterns)
 - `nextrap-base/nt-nx-generators/src/generators/` – generator project templates that new projects should use as the primary reference/orientation
 - `nextrap-base/style-base/` – global CSS variables / theming foundation (These may not be used inside of nte or ntl components - only defined once per Project)
+- `docs/style-packages-architecture.md` – architecture contract for all `@nextrap/style-*` packages (`index.scss` API vs `default.scss` output, class↔mixin parity, token-only `style-base`)
 - `nextrap-base/style-reset/` – Shadow DOM baseline reset (safe for Shadow DOM)
 - `docs/nextrap-elements-concept.md` – dual-usage pattern explained
 - `README_STYLING.md` – full component styling guide
-
