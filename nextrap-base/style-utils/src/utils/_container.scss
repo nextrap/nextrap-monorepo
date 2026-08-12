@@ -1,11 +1,14 @@
+// Container utility mixins — each mixin styles the current selector.
+// Opinionated multi-property container patterns live in @nextrap/style-elements.
+// These atomic variants use only the CSS custom property variable.
+// Classes are generated in default.scss from these same mixins.
 
-
-.container {
+@mixin container() {
   width: var(--nt-container-width);
   margin: 0 auto;
 }
 
-.container-fluid {
+@mixin container-fluid() {
   width: 100%;
   margin: 0 auto;
 }

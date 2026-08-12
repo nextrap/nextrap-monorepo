@@ -1,12 +1,21 @@
-@use './src/utils/spacing-utils' as *;
-@use './src/utils/colors-utils' as *;
-@use './src/utils/font-utils' as *;
-@use './src/utils/row' as *;
-@use './src/utils/borders' as *;
-@use './src/utils/container' as *;
-@use './src/utils/display' as *;
-@use './src/utils/flex' as *;
-@use './src/utils/list-style' as *;
-@use './src/utils/dimensions' as *;
-@use './src/utils/text' as *;
-@use './src/utils/table' as *;
+// @nextrap/style-utils — Sass API (mixin-only, no CSS output on @use)
+//
+// Usage:
+//   @use '@nextrap/style-utils' as u;
+//   .component { @include u.d-flex(); @include u.gap-3(); @include u.mt-2(); }
+//
+// For ready-to-use default CSS utility classes:
+//   @use '@nextrap/style-utils/default';
+
+@forward './src/utils/spacing-utils';
+@forward './src/utils/colors-utils';
+@forward './src/utils/font-utils';
+@forward './src/utils/row';
+@forward './src/utils/borders';
+@forward './src/utils/container';
+@forward './src/utils/display';
+@forward './src/utils/flex';
+@forward './src/utils/list-style';
+@forward './src/utils/dimensions';
+@forward './src/utils/text';
+@forward './src/utils/table';

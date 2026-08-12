@@ -1,0 +1,22 @@
+{
+    "name": "@nextrap/style-elements",
+    "version": "1.0.0",
+    "description": "Nextrap reusable element styles: prose, table, list-group, container",
+    "files": [
+        "*.*",
+        "src"
+    ],
+    "main": "./index.js",
+    "repository": {
+        "directory": "nextrap-base/style-elements",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
+    "exports": {
+        ".": "./index.scss",
+        "./default": "./default.scss"
+    },
+    "dependencies": {},
+    "type": "module",
+    "types": "./index.d.ts"
+}

@@ -1,59 +1,96 @@
-$background-colors:
-  primary, primary-subtle, primary-emphasis, secondary, secondary-subtle, secondary-emphasis, tertiary, tertiary-subtle,
-  tertiary-emphasis, accent, accent-subtle, accent-emphasis, success, success-subtle, success-emphasis, info,
-  info-subtle, info-emphasis, warning, warning-subtle, warning-emphasis, danger, danger-subtle, danger-emphasis, light,
-  light-subtle, light-emphasis, dark, dark-subtle, dark-emphasis, 'white', 'black';
+// Color utility mixins — each mixin styles the current selector.
+// Classes are generated in default.scss from these same mixins.
 
-$base-colors: primary, accent, secondary, tertiary, success, info, warning, danger, light, dark, 'white', 'black';
+// Background mixins
+@mixin bg-primary() { background: var(--nt-primary) !important; }
+@mixin bg-primary-subtle() { background: var(--nt-primary-subtle) !important; }
+@mixin bg-primary-emphasis() { background: var(--nt-primary-emphasis) !important; }
+@mixin bg-secondary() { background: var(--nt-secondary) !important; }
+@mixin bg-secondary-subtle() { background: var(--nt-secondary-subtle) !important; }
+@mixin bg-secondary-emphasis() { background: var(--nt-secondary-emphasis) !important; }
+@mixin bg-tertiary() { background: var(--nt-tertiary) !important; }
+@mixin bg-tertiary-subtle() { background: var(--nt-tertiary-subtle) !important; }
+@mixin bg-tertiary-emphasis() { background: var(--nt-tertiary-emphasis) !important; }
+@mixin bg-accent() { background: var(--nt-accent) !important; }
+@mixin bg-accent-subtle() { background: var(--nt-accent-subtle) !important; }
+@mixin bg-accent-emphasis() { background: var(--nt-accent-emphasis) !important; }
+@mixin bg-success() { background: var(--nt-success) !important; }
+@mixin bg-success-subtle() { background: var(--nt-success-subtle) !important; }
+@mixin bg-success-emphasis() { background: var(--nt-success-emphasis) !important; }
+@mixin bg-info() { background: var(--nt-info) !important; }
+@mixin bg-info-subtle() { background: var(--nt-info-subtle) !important; }
+@mixin bg-info-emphasis() { background: var(--nt-info-emphasis) !important; }
+@mixin bg-warning() { background: var(--nt-warning) !important; }
+@mixin bg-warning-subtle() { background: var(--nt-warning-subtle) !important; }
+@mixin bg-warning-emphasis() { background: var(--nt-warning-emphasis) !important; }
+@mixin bg-danger() { background: var(--nt-danger) !important; }
+@mixin bg-danger-subtle() { background: var(--nt-danger-subtle) !important; }
+@mixin bg-danger-emphasis() { background: var(--nt-danger-emphasis) !important; }
+@mixin bg-light() { background: var(--nt-light) !important; }
+@mixin bg-light-subtle() { background: var(--nt-light-subtle) !important; }
+@mixin bg-light-emphasis() { background: var(--nt-light-emphasis) !important; }
+@mixin bg-dark() { background: var(--nt-dark) !important; }
+@mixin bg-dark-subtle() { background: var(--nt-dark-subtle) !important; }
+@mixin bg-dark-emphasis() { background: var(--nt-dark-emphasis) !important; }
+@mixin bg-white() { background: var(--nt-white) !important; }
+@mixin bg-black() { background: var(--nt-black) !important; }
 
-// Background utilities set only the background.
-@each $color in $background-colors {
-  .bg-#{$color} {
-    background: var(--nt-#{$color}) !important;
-  }
-}
+// Deprecated soft aliases (kept for backward compat)
+@mixin bg-soft-primary() { background: var(--nt-primary-subtle) !important; }
+@mixin bg-soft-accent() { background: var(--nt-accent-subtle) !important; }
+@mixin bg-soft-secondary() { background: var(--nt-secondary-subtle) !important; }
+@mixin bg-soft-tertiary() { background: var(--nt-tertiary-subtle) !important; }
+@mixin bg-soft-success() { background: var(--nt-success-subtle) !important; }
+@mixin bg-soft-info() { background: var(--nt-info-subtle) !important; }
+@mixin bg-soft-warning() { background: var(--nt-warning-subtle) !important; }
+@mixin bg-soft-danger() { background: var(--nt-danger-subtle) !important; }
+@mixin bg-soft-light() { background: var(--nt-light-subtle) !important; }
+@mixin bg-soft-dark() { background: var(--nt-dark-subtle) !important; }
 
-// Backwards compatible soft aliases.
-@each $color in primary, accent, secondary, tertiary, success, info, warning, danger, light, dark {
-  .bg-soft-#{$color} {
-    background: var(--nt-#{$color}-subtle) !important;
-  }
-}
+// Text color mixins
+@mixin text-primary() { --text-color: var(--nt-primary) !important; color: var(--nt-primary) !important; }
+@mixin text-secondary() { --text-color: var(--nt-secondary) !important; color: var(--nt-secondary) !important; }
+@mixin text-tertiary() { --text-color: var(--nt-tertiary) !important; color: var(--nt-tertiary) !important; }
+@mixin text-accent() { --text-color: var(--nt-accent) !important; color: var(--nt-accent) !important; }
+@mixin text-success() { --text-color: var(--nt-success) !important; color: var(--nt-success) !important; }
+@mixin text-info() { --text-color: var(--nt-info) !important; color: var(--nt-info) !important; }
+@mixin text-warning() { --text-color: var(--nt-warning) !important; color: var(--nt-warning) !important; }
+@mixin text-danger() { --text-color: var(--nt-danger) !important; color: var(--nt-danger) !important; }
+@mixin text-light() { --text-color: var(--nt-light) !important; color: var(--nt-light) !important; }
+@mixin text-dark() { --text-color: var(--nt-dark) !important; color: var(--nt-dark) !important; }
+@mixin text-white() { --text-color: var(--nt-white) !important; color: var(--nt-white) !important; }
+@mixin text-black() { --text-color: var(--nt-black) !important; color: var(--nt-black) !important; }
 
-@each $color in $base-colors {
-  .text-#{$color} {
-    --text-color: var(--nt-#{$color}) !important;
-    color: var(--nt-#{$color}) !important;
-  }
+// Border color mixins (semantic)
+@mixin border-color-primary() { --border-color: var(--nt-primary) !important; border-color: var(--nt-primary) !important; }
+@mixin border-color-secondary() { --border-color: var(--nt-secondary) !important; border-color: var(--nt-secondary) !important; }
+@mixin border-color-accent() { --border-color: var(--nt-accent) !important; border-color: var(--nt-accent) !important; }
+@mixin border-color-success() { --border-color: var(--nt-success) !important; border-color: var(--nt-success) !important; }
+@mixin border-color-info() { --border-color: var(--nt-info) !important; border-color: var(--nt-info) !important; }
+@mixin border-color-warning() { --border-color: var(--nt-warning) !important; border-color: var(--nt-warning) !important; }
+@mixin border-color-danger() { --border-color: var(--nt-danger) !important; border-color: var(--nt-danger) !important; }
+@mixin border-color-light() { --border-color: var(--nt-light) !important; border-color: var(--nt-light) !important; }
+@mixin border-color-dark() { --border-color: var(--nt-dark) !important; border-color: var(--nt-dark) !important; }
+@mixin border-color-white() { --border-color: var(--nt-white) !important; border-color: var(--nt-white) !important; }
+@mixin border-color-black() { --border-color: var(--nt-black) !important; border-color: var(--nt-black) !important; }
 
-  .border-#{$color} {
-    --border-color: var(--nt-#{$color}) !important;
-    border-color: var(--nt-#{$color}) !important;
-  }
-}
+// Gray scale mixins — bg-gray-100..900, text-gray-100..900
+@mixin bg-gray-100() { background: var(--nt-gray-100) !important; }
+@mixin bg-gray-200() { background: var(--nt-gray-200) !important; }
+@mixin bg-gray-300() { background: var(--nt-gray-300) !important; }
+@mixin bg-gray-400() { background: var(--nt-gray-400) !important; }
+@mixin bg-gray-500() { background: var(--nt-gray-500) !important; }
+@mixin bg-gray-600() { background: var(--nt-gray-600) !important; }
+@mixin bg-gray-700() { background: var(--nt-gray-700) !important; }
+@mixin bg-gray-800() { background: var(--nt-gray-800) !important; }
+@mixin bg-gray-900() { background: var(--nt-gray-900) !important; }
 
-// von 100 bis 900
-@for $i from 1 through 9 {
-  .bg-gray-#{$i * 100} {
-    background: var(--nt-gray-#{$i * 100}) !important;
-  }
-  .text-gray-#{$i} {
-    --text-color: var(--nt-gray-#{$i * 100}) !important;
-    color: var(--nt-gray-#{$i * 100}) !important;
-  }
-  .border-gray-#{$i} {
-    --border-color: var(--nt-gray-#{$i * 100}) !important;
-    border-color: var(--nt-gray-#{$i * 100}) !important;
-  }
-}
-
-.bg-gray {
-  background: var(--nt-gray) !important;
-}
-.bg-gray-dark {
-  background: var(--nt-gray-dark) !important;
-}
-
-.text-auto {
-  color: var(--text-color) !important;
-}
+@mixin text-gray-100() { color: var(--nt-gray-100) !important; }
+@mixin text-gray-200() { color: var(--nt-gray-200) !important; }
+@mixin text-gray-300() { color: var(--nt-gray-300) !important; }
+@mixin text-gray-400() { color: var(--nt-gray-400) !important; }
+@mixin text-gray-500() { color: var(--nt-gray-500) !important; }
+@mixin text-gray-600() { color: var(--nt-gray-600) !important; }
+@mixin text-gray-700() { color: var(--nt-gray-700) !important; }
+@mixin text-gray-800() { color: var(--nt-gray-800) !important; }
+@mixin text-gray-900() { color: var(--nt-gray-900) !important; }

@@ -1,11 +1,12 @@
-// add html to be more specific than themed defaults
+// List utility mixins — each mixin styles the current selector.
+// Classes are generated in default.scss from these same mixins.
 
-html ul.list-unstyled {
+@mixin list-unstyled() {
   list-style: none !important;
   padding-left: 0 !important;
 }
 
-html ul.list-inline {
+@mixin list-inline() {
   padding-left: 0 !important;
 
   > li {
@@ -17,7 +18,7 @@ html ul.list-inline {
   }
 }
 
-html ul.list-checked {
+@mixin list-checked() {
   list-style: none !important;
   padding-left: 0 !important;
 
@@ -40,18 +41,14 @@ html ul.list-checked {
       text-align: center;
     }
 
-    &.list-item-removed {
-      &::before {
-        content: '\2715';
-        background-color: var(--nt-danger);
-      }
+    &.list-item-removed::before {
+      content: '\2715';
+      background-color: var(--nt-danger);
     }
 
-    &.list-item-unavailable {
-      &::before {
-        content: '\2012';
-        background-color: var(--nt-dark);
-      }
+    &.list-item-unavailable::before {
+      content: '\2012';
+      background-color: var(--nt-dark);
     }
   }
 }

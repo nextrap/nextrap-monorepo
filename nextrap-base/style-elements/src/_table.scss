@@ -1,0 +1,55 @@
+// @nextrap/style-elements — table mixins
+// Generic reusable table styling. Prose-specific table adjustments live in _prose.scss.
+
+@mixin table() {
+  width: 100%;
+  border-collapse: collapse;
+  caption-side: bottom;
+
+  tbody,
+  td,
+  tfoot,
+  th,
+  thead,
+  tr {
+    border-color: inherit;
+    border-style: solid;
+    border-width: 0;
+  }
+
+  & > :not(caption) > * > * {
+    padding: var(--nt-space-2, 0.5rem) var(--nt-space-2, 0.5rem);
+    background-color: transparent;
+    border-bottom-width: var(--nt-border-width, 1px);
+    border-bottom-style: solid;
+    border-bottom-color: var(--nt-border-color, currentColor);
+  }
+}
+
+@mixin table-striped() {
+  tbody tr:nth-child(odd) {
+    background-color: var(--nt-table-stripe-bg, rgba(0, 0, 0, 0.05));
+  }
+}
+
+@mixin table-bordered() {
+  & > :not(caption) > * > * {
+    border-width: var(--nt-border-width, 1px);
+  }
+
+  & > :not(caption) > * {
+    border-width: var(--nt-border-width, 1px) 0;
+  }
+}
+
+@mixin table-hover() {
+  tbody tr:hover {
+    background-color: var(--nt-table-hover-bg, rgba(0, 0, 0, 0.075));
+  }
+}
+
+@mixin table-sm() {
+  & > :not(caption) > * > * {
+    padding: var(--nt-space-1, 0.25rem) var(--nt-space-1, 0.25rem);
+  }
+}

@@ -1,0 +1,186 @@
+// @nextrap/style-elements — prose mixin
+// Provides .prose-compatible styling as a composable mixin.
+
+@mixin prose() {
+  /* ====== Component CSS variables ====== */
+  --prose-max-w: 75ch;
+
+  --prose-section-space-top: var(--nt-spacing-section);
+  --prose-section-space-bottom: var(--nt-spacing-component);
+  --prose-para-space: var(--nt-spacing-text);
+
+  --prose-link-decoration: underline;
+
+  --prose-text: var(--nt-text);
+  --prose-muted: rgba(from var(--nt-text) r g b / 0.7);
+
+  --prose-table-border-color: var(--nt-text);
+
+  max-width: var(--prose-max-w);
+  color: var(--nt-text);
+
+  line-height: 1.65;
+  display: block;
+  margin: 0 auto;
+
+  /* Spacing rhythm */
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  ul,
+  ol,
+  blockquote,
+  section,
+  pre,
+  code,
+  article {
+    margin-bottom: var(--prose-para-space);
+  }
+
+  /* Headings */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    line-height: 1.2;
+    margin-top: var(--prose-section-space-top);
+
+    > small {
+      font-size: 0.6em;
+      color: var(--prose-muted);
+      margin-left: var(--nt-space-2);
+      font-weight: 400;
+    }
+  }
+
+  /* Images and media */
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--nt-border-radius);
+  }
+
+  .img-fluid {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .img-start {
+    float: left;
+    margin: 0 var(--nt-space-3) 0 0;
+    max-width: 33%;
+  }
+
+  .img-end {
+    float: right;
+    margin: 0 0 0 var(--nt-space-3);
+    max-width: 33%;
+  }
+
+  .img-inline {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0;
+  }
+
+  .img-caption {
+    img {
+      margin-bottom: 0;
+    }
+    font-size: 0.875em;
+    color: var(--prose-muted);
+    text-align: center;
+    margin-top: var(--nt-space-1);
+    margin-bottom: var(--prose-para-space);
+  }
+
+  p.img-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--nt-space-3);
+    justify-items: center;
+    align-items: center;
+
+    img,
+    video {
+      margin: 0;
+    }
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+  }
+
+  thead {
+    --border-bottom: 2px solid var(--prose-table-border-color);
+  }
+
+  tbody {
+    --border-bottom: 1px solid var(--prose-table-border-color);
+  }
+
+  tfoot {
+    --border-bottom: none;
+  }
+
+  th,
+  td {
+    text-align: left;
+    padding: var(--nt-space-2) var(--nt-space-3);
+    border-bottom: var(--border-bottom, none);
+  }
+
+  /* Boxes */
+  .box {
+    --box-border: var(--nt-text);
+    --box-background: transparent;
+    --box-text: var(--nt-text);
+    --box-radius: var(--nt-border-radius);
+    --box-header-color: var(--box-border);
+
+    border: 2px solid var(--box-border);
+    border-radius: var(--box-radius);
+    background: var(--box-background);
+    padding: var(--nt-space-4);
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      color: var(--box-header-color);
+    }
+
+    *:first-child {
+      margin-top: 0 !important;
+    }
+
+    *:last-child {
+      margin-bottom: 0 !important;
+    }
+
+    @each $variant in primary, secondary, accent, success, info, warning, danger, light, dark {
+      &-#{$variant} {
+        --box-border: var(--nt-#{$variant}-emphasis);
+        --box-background: var(--nt-#{$variant}-subtle);
+        --box-header-color: var(--nt-#{$variant}-emphasis);
+      }
+    }
+  }
+}
+
+// prose-xl modifier: full-width variant
+@mixin prose-xl() {
+  --prose-max-w: 100%;
+}

@@ -7,6 +7,10 @@
         "type": "git",
         "url": "https://github.com/nextrap/nextrap-monorepo"
     },
+    "exports": {
+        ".": "./index.scss",
+        "./default": "./default.scss"
+    },
     "devDependencies": {
         "@nextrap/style-base": "^1.1.11"
     },

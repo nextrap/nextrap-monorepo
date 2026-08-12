@@ -1,56 +1,28 @@
-// Bootstrap-like text utilities (non-responsive)
+// Text utility mixins — each mixin styles the current selector.
+// Classes are generated in default.scss from these same mixins.
 
-.text-start {
-  text-align: start !important;
-}
+@mixin text-start() { text-align: start !important; }
+@mixin text-end() { text-align: end !important; }
+@mixin text-center() { text-align: center !important; }
 
-.text-end {
-  text-align: end !important;
-}
+@mixin text-wrap() { white-space: normal !important; }
+@mixin text-nowrap() { white-space: nowrap !important; }
 
-.text-center {
-  text-align: center !important;
-}
-
-.text-wrap {
-  white-space: normal !important;
-}
-
-.text-nowrap {
-  white-space: nowrap !important;
-}
-
-.text-break {
+@mixin text-break() {
   overflow-wrap: break-word !important;
   word-wrap: break-word !important;
 }
 
-.text-truncate {
+@mixin text-truncate() {
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
 }
 
-.text-lowercase {
-  text-transform: lowercase !important;
-}
+@mixin text-lowercase() { text-transform: lowercase !important; }
+@mixin text-uppercase() { text-transform: uppercase !important; }
+@mixin text-capitalize() { text-transform: capitalize !important; }
 
-.text-uppercase {
-  text-transform: uppercase !important;
-}
-
-.text-capitalize {
-  text-transform: capitalize !important;
-}
-
-.text-decoration-none {
-  text-decoration: none !important;
-}
-
-.text-decoration-underline {
-  text-decoration: underline !important;
-}
-
-.text-decoration-line-through {
-  text-decoration: line-through !important;
-}
+@mixin text-decoration-none() { text-decoration: none !important; }
+@mixin text-decoration-underline() { text-decoration: underline !important; }
+@mixin text-decoration-line-through() { text-decoration: line-through !important; }
