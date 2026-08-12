@@ -6,6 +6,17 @@
         "src"
     ],
     "main": "./index.js",
+    "exports": {
+        ".": {
+            "sass": "./index.scss",
+            "types": "./index.d.ts",
+            "default": "./index.js"
+        },
+        "./default": {
+            "sass": "./default.scss",
+            "default": "./default.scss"
+        }
+    },
     "repository": {
         "directory": "nextrap-base/style-button",
         "type": "git",
