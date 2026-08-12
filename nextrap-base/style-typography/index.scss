@@ -1,3 +1,9 @@
-// Public Sass API only — importing this file emits no CSS.
+// @nextrap/style-typography — public Sass API only; importing emits no CSS.
+//
+// @use '@nextrap/style-typography' as type;
+// .theme { @include type.typography(); }
+//
+// For ready-to-use root-level typography use `@nextrap/style-typography/default`.
+
 @forward './src/typography';
 @forward './src/all';
