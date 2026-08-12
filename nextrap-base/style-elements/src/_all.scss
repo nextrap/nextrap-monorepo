@@ -2,15 +2,14 @@
 //
 // At root scope this produces the same classes as `default.scss`.
 // Inside a selector it makes the complete helper class API available only
-// below that selector, e.g. `.theme { @include all(); }`.
+// below that selector, e.g. `.theme { @include elements(); }`.
 
 @use './prose' as p;
 @use './table' as t;
 @use './list-group' as lg;
 @use './container' as c;
 
-@mixin all() {
-  // Prose
+@mixin elements() {
   .prose {
     @include p.prose();
 
@@ -19,42 +18,15 @@
     }
   }
 
-  // Table
-  .table {
-    @include t.table();
-  }
+  .table { @include t.table(); }
+  .table-striped { @include t.table-striped(); }
+  .table-bordered { @include t.table-bordered(); }
+  .table-hover { @include t.table-hover(); }
+  .table-sm { @include t.table-sm(); }
 
-  .table-striped {
-    @include t.table-striped();
-  }
+  .list-group { @include lg.list-group(); }
+  .list-group-flush { @include lg.list-group-flush(); }
 
-  .table-bordered {
-    @include t.table-bordered();
-  }
-
-  .table-hover {
-    @include t.table-hover();
-  }
-
-  .table-sm {
-    @include t.table-sm();
-  }
-
-  // List group
-  .list-group {
-    @include lg.list-group();
-  }
-
-  .list-group-flush {
-    @include lg.list-group-flush();
-  }
-
-  // Container
-  .container {
-    @include c.container();
-  }
-
-  .container-fluid {
-    @include c.container-fluid();
-  }
+  .container { @include c.container(); }
+  .container-fluid { @include c.container-fluid(); }
 }
