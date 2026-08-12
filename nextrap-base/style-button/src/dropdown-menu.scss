@@ -1,10 +1,11 @@
-.dropdown-menu {
+// Dropdown-menu mixin API — styles the current selector.
+
+@mixin dropdown-menu() {
   --hover-bg: var(--nt-primary);
   --hover-text: var(--nt-text-on-primary);
 
   opacity: 0;
   transition: opacity 0.3s ease;
-
   position: absolute;
   top: auto;
   left: auto;
@@ -16,7 +17,7 @@
   list-style: none;
   background-color: rgb(from var(--nt-bg) r g b / 0.9);
   border-radius: var(--nt-border-radius);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
 
   > li {
     padding: 0.25rem 1rem;
@@ -50,11 +51,5 @@
       cursor: not-allowed;
       pointer-events: none;
     }
-  }
-}
-
-@starting-style {
-  .dropdown-menu {
-    opacity: 0;
   }
 }

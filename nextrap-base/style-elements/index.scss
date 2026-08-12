@@ -1,0 +1,15 @@
+// @nextrap/style-elements — Sass API (mixin-only, no CSS output on @use)
+//
+// Usage:
+//   @use '@nextrap/style-elements' as e;
+//   .my-scope table { @include e.table(); @include e.table-striped(); }
+//   .my-theme { @include e.all(); } // all helper classes scoped to .my-theme
+//
+// For ready-to-use default CSS classes:
+//   @use '@nextrap/style-elements/default';
+
+@forward './src/prose';
+@forward './src/table';
+@forward './src/list-group';
+@forward './src/container';
+@forward './src/all';

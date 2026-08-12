@@ -1,0 +1,16 @@
+// @nextrap/style-elements — container mixins
+// Opinionated multi-property container/layout patterns.
+// Atomic flex/display/gap helpers belong in @nextrap/style-utils.
+
+@mixin container() {
+  width: var(--nt-container-width, 100%);
+  max-width: var(--nt-container-max-width, 1200px);
+  margin-inline: auto;
+  padding-inline: var(--nt-space-3, 0.75rem);
+}
+
+@mixin container-fluid() {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--nt-space-3, 0.75rem);
+}

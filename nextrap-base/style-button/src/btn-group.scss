@@ -1,6 +1,6 @@
-@use './btn' as *;
+// Button-group mixin API — styles the current selector.
 
-.btn-group {
+@mixin btn-group() {
   --border-radius: var(--nt-border-radius, 0.25rem);
 
   display: inline-flex;
@@ -9,24 +9,20 @@
 
   .btn {
     flex: 1 1 auto;
-    // Allow buttons to grow and shrink, but not exceed their content sizem
-    margin: 0; // Reset margin to avoid spacing issues
-    min-width: 100px; // Ensure buttons have a minimum width
+    margin: 0;
+    min-width: 100px;
     border-radius: 0;
   }
 
-  // Remove left border from all but the last button
   .btn:not(:last-child) {
-    border-right: 0; // Remove right border from all but the last button
+    border-right: 0;
   }
 
   .btn:first-child {
-    border-radius: var(--nt-border-radius, 0.25rem) 0 0
-      var(--nt-border-radius, 0.25rem); // Round left corners
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
   }
 
   .btn:last-child {
-    border-radius: 0 var(--nt-border-radius, 0.25rem)
-      var(--nt-border-radius, 0.25rem) 0; // Round right corners
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
   }
 }

@@ -1,0 +1,9 @@
+// @nextrap/style-elements/default — ready-to-use CSS class output
+//
+// The default entry point is intentionally only the root-level materialization
+// of the public `all()` mixin. This guarantees that default output and scoped
+// theme output always use exactly the same class registry.
+
+@use './index' as e;
+
+@include e.all();

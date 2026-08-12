@@ -1,0 +1,8 @@
+// @nextrap/style-utils/default — ready-to-use CSS utility class output
+//
+// Root-level materialization of the public `all()` mixin. The same registry can
+// be included inside a theme selector via `@include u.all()`.
+
+@use './index' as u;
+
+@include u.all();

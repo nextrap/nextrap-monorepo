@@ -1,3 +1,12 @@
-@use './src/btn' as *;
-@use './src/btn-group' as *;
-@use './src/dropdown-menu' as *;
+// @nextrap/style-button — Sass API only. Importing this entry point emits no CSS.
+//
+// @use '@nextrap/style-button' as b;
+// button { @include b.btn(); @include b.btn-primary(); }
+// .theme { @include b.all(); }
+//
+// For ready-to-use root-level classes use `@nextrap/style-button/default`.
+
+@forward './src/btn';
+@forward './src/btn-group';
+@forward './src/dropdown-menu';
+@forward './src/all';

@@ -1,34 +1,14 @@
-.d-none {
-  display: none !important;
-}
-.d-inline {
-  display: inline !important;
-}
-.d-inline-block {
-  display: inline-block !important;
-}
-.d-block {
-  display: block !important;
-}
-.d-flex {
-  display: flex !important;
-}
+// Display utility mixins — each mixin styles the current selector.
+// Classes are generated in default.scss from these same mixins.
 
-.d-inline-flex {
-  display: inline-flex !important;
-}
-.d-grid {
-  display: grid !important;
-}
-.d-inline-grid {
-  display: inline-grid !important;
-}
-.d-table {
-  display: table !important;
-}
-.d-table-row {
-  display: table-row !important;
-}
-.d-table-cell {
-  display: table-cell !important;
-}
+@mixin d-none() { display: none !important; }
+@mixin d-inline() { display: inline !important; }
+@mixin d-inline-block() { display: inline-block !important; }
+@mixin d-block() { display: block !important; }
+@mixin d-flex() { display: flex !important; }
+@mixin d-inline-flex() { display: inline-flex !important; }
+@mixin d-grid() { display: grid !important; }
+@mixin d-inline-grid() { display: inline-grid !important; }
+@mixin d-table() { display: table !important; }
+@mixin d-table-row() { display: table-row !important; }
+@mixin d-table-cell() { display: table-cell !important; }

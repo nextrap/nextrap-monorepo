@@ -1,1 +1,1 @@
-export * from '../index.scss';
+export * from '../default.scss';

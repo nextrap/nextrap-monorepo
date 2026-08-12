@@ -1,22 +1,20 @@
-// make Array of all BS colors
-$colors: ('primary', 'accent', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark');
+// Button mixin API — each public mixin styles the current selector.
+// Default CSS classes are materialized by `all()`.
 
-.btn {
-  // Component tokens mapped from semantic state tokens
-  --btn-txt: var(--nt-text-on-primary);
-  --btn-bg: var(--nt-primary);
-  --btn-bg-hover: var(--nt-primary-hover);
-  --btn-bg-active: var(--nt-primary-active);
+@mixin btn() {
+  --btn-txt: var(--nt-text-on-primary, #fff);
+  --btn-bg: var(--nt-primary, #0d6efd);
+  --btn-bg-hover: var(--nt-primary-hover, var(--btn-bg));
+  --btn-bg-active: var(--nt-primary-active, var(--btn-bg));
 
   display: inline-block;
-  padding: 0.5rem 1rem;
+  padding: var(--nt-btn-padding-y, 0.5rem) var(--nt-btn-padding-x, 1rem);
   background-color: var(--btn-bg);
   color: var(--btn-txt);
-  border-radius: var(--nt-radius, var(--nt-border-radius));
-  border: 1px solid var(--btn-bg);
+  border-radius: var(--nt-radius, var(--nt-border-radius, 0.375rem));
+  border: var(--nt-border-width, 1px) solid var(--btn-bg);
   text-decoration: none;
   text-align: center;
-
   cursor: pointer;
   transition:
     background-color 0.3s ease,
@@ -32,88 +30,115 @@ $colors: ('primary', 'accent', 'secondary', 'success', 'danger', 'warning', 'inf
     background-color: var(--btn-bg-active);
   }
 
-  &.btn-link {
-    background-color: transparent;
-    color: var(--nt-link);
-    border: none;
-
-    text-decoration: var(--nt-text-decoration-link);
-    &:hover {
-      background-color: transparent;
-      color: var(--nt-link-hover);
-    }
-    &:active {
-      color: var(--nt-link-active);
-    }
-  }
-
   &.disabled,
   &[disabled] {
-    background-color: rgba(from var(--btn-bg) r g b / 0.5);
-    color: rgb(from var(--nt-text) r g b / 0.5);
+    background-color: rgb(from var(--btn-bg) r g b / 0.5);
+    color: rgb(from var(--nt-text, currentColor) r g b / 0.5);
     cursor: not-allowed;
     pointer-events: none;
   }
 
-  &.btn-lg {
-    padding: 0.75rem 1.5rem;
-    font-size: 1.25rem;
-  }
-
-  &.btn-sm {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
-  }
-
-  // Dropdown button styles
-  &.dropdown-toggle {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding-right: 2rem; // Space for the dropdown icon
-    background-image: none; // Remove any background image
-    background-color: var(--btn-bg);
-    color: var(--btn-txt);
-
-    &::after {
-      content: '';
-      position: absolute;
-      right: 0.5rem;
-      top: 50%;
-      transform: translateY(-50%);
-      border-left: 0.25rem solid transparent;
-      border-right: 0.25rem solid transparent;
-      border-top: 0.25rem solid var(--btn-txt);
-    }
-  }
-
   &:active + .dropdown-menu,
   &:focus + .dropdown-menu {
-    display: block; // Show dropdown on active state
-    opacity: 1; // Make dropdown visible
-  }
-
-  // Loop through colors and create classes
-  @each $color in $colors {
-    &.btn-#{$color} {
-      --btn-bg: var(--nt-#{$color}) !important;
-      --btn-bg-hover: var(--nt-#{$color}-hover, var(--nt-#{$color})) !important;
-      --btn-bg-active: var(--nt-#{$color}-active, var(--nt-#{$color})) !important;
-      --btn-txt: var(--nt-text-on-#{$color}) !important;
-    }
-    &.btn-outline-#{$color} {
-      background-color: transparent;
-      --btn-txt: var(--nt-text);
-      border: 1px solid rgb(from var(--nt-#{$color}) r g b);
-
-      &:hover {
-        background-color: var(--nt-#{$color});
-        --btn-bg: var(--nt-#{$color});
-        --btn-bg-hover: var(--nt-#{$color}-hover, var(--nt-#{$color}));
-        --btn-bg-active: var(--nt-#{$color}-active, var(--nt-#{$color}));
-        --btn-txt: var(--nt-text-on-#{$color});
-      }
-    }
+    display: block;
+    opacity: 1;
   }
 }
+
+@mixin btn-link() {
+  --btn-bg: transparent;
+  --btn-bg-hover: transparent;
+  --btn-bg-active: transparent;
+  --btn-txt: var(--nt-link, currentColor);
+
+  background-color: transparent;
+  color: var(--nt-link, currentColor);
+  border-color: transparent;
+  text-decoration: var(--nt-text-decoration-link, underline);
+
+  &:hover {
+    background-color: transparent;
+    color: var(--nt-link-hover, var(--nt-link, currentColor));
+  }
+
+  &:active {
+    color: var(--nt-link-active, var(--nt-link, currentColor));
+  }
+}
+
+@mixin btn-lg() {
+  padding: var(--nt-btn-lg-padding-y, 0.75rem) var(--nt-btn-lg-padding-x, 1.5rem);
+  font-size: var(--nt-btn-lg-font-size, 1.25rem);
+}
+
+@mixin btn-sm() {
+  padding: var(--nt-btn-sm-padding-y, 0.25rem) var(--nt-btn-sm-padding-x, 0.5rem);
+  font-size: var(--nt-btn-sm-font-size, 0.75rem);
+}
+
+@mixin dropdown-toggle() {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: var(--nt-btn-dropdown-padding-right, 2rem);
+  background-image: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    border-left: 0.25rem solid transparent;
+    border-right: 0.25rem solid transparent;
+    border-top: 0.25rem solid var(--btn-txt);
+  }
+}
+
+@mixin _btn-variant($color) {
+  --btn-bg: var(--nt-#{$color}) !important;
+  --btn-bg-hover: var(--nt-#{$color}-hover, var(--nt-#{$color})) !important;
+  --btn-bg-active: var(--nt-#{$color}-active, var(--nt-#{$color})) !important;
+  --btn-txt: var(--nt-text-on-#{$color}, var(--nt-text-on-primary, #fff)) !important;
+  border-color: var(--nt-#{$color}) !important;
+}
+
+@mixin _btn-outline-variant($color) {
+  --btn-bg: transparent;
+  --btn-bg-hover: var(--nt-#{$color});
+  --btn-bg-active: var(--nt-#{$color}-active, var(--nt-#{$color}));
+  --btn-txt: var(--nt-#{$color});
+
+  background-color: transparent;
+  color: var(--btn-txt);
+  border-color: var(--nt-#{$color});
+
+  &:hover {
+    --btn-txt: var(--nt-text-on-#{$color}, var(--nt-text-on-primary, #fff));
+    background-color: var(--nt-#{$color});
+    color: var(--btn-txt);
+  }
+}
+
+@mixin btn-primary() { @include _btn-variant('primary'); }
+@mixin btn-accent() { @include _btn-variant('accent'); }
+@mixin btn-secondary() { @include _btn-variant('secondary'); }
+@mixin btn-tertiary() { @include _btn-variant('tertiary'); }
+@mixin btn-success() { @include _btn-variant('success'); }
+@mixin btn-danger() { @include _btn-variant('danger'); }
+@mixin btn-warning() { @include _btn-variant('warning'); }
+@mixin btn-info() { @include _btn-variant('info'); }
+@mixin btn-light() { @include _btn-variant('light'); }
+@mixin btn-dark() { @include _btn-variant('dark'); }
+
+@mixin btn-outline-primary() { @include _btn-outline-variant('primary'); }
+@mixin btn-outline-accent() { @include _btn-outline-variant('accent'); }
+@mixin btn-outline-secondary() { @include _btn-outline-variant('secondary'); }
+@mixin btn-outline-tertiary() { @include _btn-outline-variant('tertiary'); }
+@mixin btn-outline-success() { @include _btn-outline-variant('success'); }
+@mixin btn-outline-danger() { @include _btn-outline-variant('danger'); }
+@mixin btn-outline-warning() { @include _btn-outline-variant('warning'); }
+@mixin btn-outline-info() { @include _btn-outline-variant('info'); }
+@mixin btn-outline-light() { @include _btn-outline-variant('light'); }
+@mixin btn-outline-dark() { @include _btn-outline-variant('dark'); }
