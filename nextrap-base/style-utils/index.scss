@@ -3,7 +3,7 @@
 // Usage:
 //   @use '@nextrap/style-utils' as u;
 //   .component { @include u.d-flex(); @include u.gap-3(); @include u.mt-2(); }
-//   .my-theme { @include u.all(); } // all utility classes scoped to .my-theme
+//   .my-theme { @include u.utils(); } // complete utility class API scoped to .my-theme
 //
 // For ready-to-use default CSS utility classes:
 //   @use '@nextrap/style-utils/default';
