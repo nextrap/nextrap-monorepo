@@ -1,0 +1,47 @@
+// Materialize the complete style-button class API in the current Sass scope.
+// `default.scss` includes this at root; themes can include it under any scope.
+
+@use './btn' as b;
+@use './btn-group' as g;
+@use './dropdown-menu' as d;
+
+@mixin all() {
+  .btn {
+    @include b.btn();
+  }
+
+  .btn-link { @include b.btn-link(); }
+  .btn-lg { @include b.btn-lg(); }
+  .btn-sm { @include b.btn-sm(); }
+  .dropdown-toggle { @include b.dropdown-toggle(); }
+
+  .btn-primary { @include b.btn-primary(); }
+  .btn-accent { @include b.btn-accent(); }
+  .btn-secondary { @include b.btn-secondary(); }
+  .btn-tertiary { @include b.btn-tertiary(); }
+  .btn-success { @include b.btn-success(); }
+  .btn-danger { @include b.btn-danger(); }
+  .btn-warning { @include b.btn-warning(); }
+  .btn-info { @include b.btn-info(); }
+  .btn-light { @include b.btn-light(); }
+  .btn-dark { @include b.btn-dark(); }
+
+  .btn-outline-primary { @include b.btn-outline-primary(); }
+  .btn-outline-accent { @include b.btn-outline-accent(); }
+  .btn-outline-secondary { @include b.btn-outline-secondary(); }
+  .btn-outline-tertiary { @include b.btn-outline-tertiary(); }
+  .btn-outline-success { @include b.btn-outline-success(); }
+  .btn-outline-danger { @include b.btn-outline-danger(); }
+  .btn-outline-warning { @include b.btn-outline-warning(); }
+  .btn-outline-info { @include b.btn-outline-info(); }
+  .btn-outline-light { @include b.btn-outline-light(); }
+  .btn-outline-dark { @include b.btn-outline-dark(); }
+
+  .btn-group {
+    @include g.btn-group();
+  }
+
+  .dropdown-menu {
+    @include d.dropdown-menu();
+  }
+}
