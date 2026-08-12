@@ -1,0 +1,6 @@
+// @nextrap/style-button/default — ready-to-use root-level button classes.
+// The complete class registry is owned by the public `all()` mixin.
+
+@use './index' as b;
+
+@include b.all();
