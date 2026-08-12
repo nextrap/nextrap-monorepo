@@ -2,7 +2,7 @@
 //
 // @use '@nextrap/style-button' as b;
 // button { @include b.btn(); @include b.btn-primary(); }
-// .theme { @include b.all(); }
+// .theme { @include b.buttons(); }
 //
 // For ready-to-use root-level classes use `@nextrap/style-button/default`.
 
