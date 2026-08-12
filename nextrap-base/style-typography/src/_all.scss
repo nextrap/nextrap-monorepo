@@ -1,117 +1,34 @@
 @use './typography' as t;
 
 // Materialize the complete typography API in the current Sass scope.
-//
-// Unlike style-elements/style-utils, typography intentionally includes native
-// text-element selectors because its default purpose is to establish a coherent
-// document text rhythm. It never styles page/section/content layout containers.
-@mixin all() {
-  h1,
-  .h1 {
-    @include t.h1();
-  }
+// Typography intentionally includes native text-element selectors because its
+// default purpose is to establish a coherent document text rhythm. It never
+// styles page/section/content layout containers.
+@mixin typography() {
+  h1, .h1 { @include t.h1(); }
+  h2, .h2 { @include t.h2(); }
+  h3, .h3 { @include t.h3(); }
+  h4, .h4 { @include t.h4(); }
+  h5, .h5 { @include t.h5(); }
+  h6, .h6 { @include t.h6(); }
 
-  h2,
-  .h2 {
-    @include t.h2();
-  }
-
-  h3,
-  .h3 {
-    @include t.h3();
-  }
-
-  h4,
-  .h4 {
-    @include t.h4();
-  }
-
-  h5,
-  .h5 {
-    @include t.h5();
-  }
-
-  h6,
-  .h6 {
-    @include t.h6();
-  }
-
-  p {
-    @include t.p();
-  }
-
-  b,
-  strong {
-    @include t.strong();
-  }
-
-  em {
-    @include t.em();
-  }
-
-  small {
-    @include t.small();
-  }
-
-  a {
-    @include t.link();
-  }
-
-  mark {
-    @include t.mark();
-  }
-
-  ul {
-    @include t.ul();
-  }
-
-  ol {
-    @include t.ol();
-  }
-
-  dl {
-    @include t.dl();
-  }
-
-  dt {
-    @include t.dt();
-  }
-
-  dd {
-    @include t.dd();
-  }
-
-  hr {
-    @include t.hr();
-  }
-
-  code {
-    @include t.code();
-  }
-
-  pre {
-    @include t.pre();
-  }
-
-  blockquote {
-    @include t.blockquote();
-  }
-
-  figure {
-    @include t.figure();
-  }
-
-  figcaption,
-  .figure-caption {
-    @include t.figure-caption();
-  }
-
-  .lead {
-    @include t.lead();
-  }
-
-  .muted,
-  .text-muted {
-    @include t.text-muted();
-  }
+  p { @include t.p(); }
+  b, strong { @include t.strong(); }
+  em { @include t.em(); }
+  small { @include t.small(); }
+  a { @include t.link(); }
+  mark { @include t.mark(); }
+  ul { @include t.ul(); }
+  ol { @include t.ol(); }
+  dl { @include t.dl(); }
+  dt { @include t.dt(); }
+  dd { @include t.dd(); }
+  hr { @include t.hr(); }
+  code { @include t.code(); }
+  pre { @include t.pre(); }
+  blockquote { @include t.blockquote(); }
+  figure { @include t.figure(); }
+  figcaption, .figure-caption { @include t.figure-caption(); }
+  .lead { @include t.lead(); }
+  .muted, .text-muted { @include t.text-muted(); }
 }
