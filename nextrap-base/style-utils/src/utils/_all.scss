@@ -1,18 +1,18 @@
 // Materialize the complete style-utils class API in the current Sass scope.
 //
 // The class registry lives in `classes.scss`. `meta.load-css()` is deliberate:
-// when `all()` is included inside a selector Sass nests the complete registry
+// when `utils()` is included inside a selector Sass nests the complete registry
 // below that selector; at root it produces the normal default utility output.
 
 @use 'sass:meta';
 
-@mixin all() {
+@mixin utils() {
   @include meta.load-css('../../classes');
 
   // The legacy root registry intentionally uses `html ul.*` specificity for
   // these helpers. Nested below a theme that would become `.theme html ...`,
   // which cannot match. Only for scoped use, add selector-relative equivalents.
-  // At root (`& == null`) default output stays byte-for-byte equivalent here.
+  // At root (`& == null`) default output stays equivalent here.
   @if & {
     ul.list-unstyled {
       list-style: none !important;
