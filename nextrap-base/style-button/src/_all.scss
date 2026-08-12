@@ -5,11 +5,8 @@
 @use './btn-group' as g;
 @use './dropdown-menu' as d;
 
-@mixin all() {
-  .btn {
-    @include b.btn();
-  }
-
+@mixin buttons() {
+  .btn { @include b.btn(); }
   .btn-link { @include b.btn-link(); }
   .btn-lg { @include b.btn-lg(); }
   .btn-sm { @include b.btn-sm(); }
@@ -37,11 +34,6 @@
   .btn-outline-light { @include b.btn-outline-light(); }
   .btn-outline-dark { @include b.btn-outline-dark(); }
 
-  .btn-group {
-    @include g.btn-group();
-  }
-
-  .dropdown-menu {
-    @include d.dropdown-menu();
-  }
+  .btn-group { @include g.btn-group(); }
+  .dropdown-menu { @include d.dropdown-menu(); }
 }
