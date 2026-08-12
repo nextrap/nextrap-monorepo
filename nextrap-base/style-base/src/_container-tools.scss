@@ -23,25 +23,9 @@
     scroll-padding-top: var(--nt-scroll-padding-top);
   }
 
-  --nt-container-width: 100%;
-  // Set the container size based on the media width like in Bootstrap
-  @media (min-width: 576px) {
-    --nt-container-width: 540px;
-  }
-
-  @media (min-width: 768px) {
-    --nt-container-width: 720px;
-  }
-
-  @media (min-width: 992px) {
-    --nt-container-width: 960px;
-  }
-
-  @media (min-width: 1200px) {
-    --nt-container-width: 1140px;
-  }
-
-  @media (min-width: 1400px) {
-    --nt-container-width: 1320px;
-  }
+  // Legacy responsive container width (kept for compatibility; deprecated — use --nt-container-max and --nt-container-gutter with fluid sizing)
+  --nt-container-width: min(
+    calc(100% - 2 * var(--nt-container-gutter, 1rem)),
+    var(--nt-container-max, 1320px)
+  );
 }

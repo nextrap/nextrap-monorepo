@@ -1,0 +1,37 @@
+// @nextrap/style-base/default — ready-to-use Nextrap default theme + document defaults
+//
+// Import this file to instantly apply the Nextrap default theme and sensible
+// document defaults. No configuration required.
+//
+// Example:
+//   @use '@nextrap/style-base/default';
+//
+// To customize, use the API instead:
+//   @use '@nextrap/style-base' as nt;
+//   :root { @include nt.theme((primary: #0057b8, ...)); }
+
+@use './index' as nt;
+
+:root {
+    @include nt.theme((
+        primary: #007bff,
+        secondary: #6c757d,
+        accent: #b83e8a,
+        neutral: #7e7e7e,
+        font-family: sans-serif,
+        radius: .5rem,
+        schemes: (
+            light: auto,
+            dark: auto
+        )
+    ));
+}
+
+body {
+    margin: 0;
+    background: var(--nt-surface);
+    color: var(--nt-text);
+    font-family: var(--nt-font-family);
+    font-size: var(--nt-font-size);
+    line-height: var(--nt-line-height);
+}

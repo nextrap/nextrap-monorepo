@@ -26,10 +26,6 @@
   flex-wrap: wrap;
   gap: var(--gap);
   align-items: stretch;
-
-  & > * {
-    padding: var(--inner-padding);
-  }
 }
 
 #header,

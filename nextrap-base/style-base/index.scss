@@ -1,21 +1,116 @@
-@use 'module' as nextrap-base;
+// @nextrap/style-base — public Theme API (no CSS output on @use)
+//
+// Usage:
+//   @use '@nextrap/style-base' as nt;
+//   :root { @include nt.theme((primary: #0057b8, neutral: #667085)); }
+//
+// For a ready-to-use default theme with document defaults:
+//   @use '@nextrap/style-base/default';
 
-/**
- * For themes use the module import (do not use the default import)
- */
+@use './src/create-theme' as *;
+@use './src/css-variables' as var;
+@use './src/container-tools' as ct;
+@use 'sass:map';
 
-$primary: #007bff !default;
-$accent: #b83e8a !default;
-$secondary: #6c757d !default;
-$enableScrollOffset: false !default;
+// === BACKWARD-COMPATIBLE MIXIN ===
+@mixin nextrap-theme($override: (), $themeDefaults: ()) {
+  $override: map.deep-merge($themeDefaults, $override);
+  $theme: create-theme($override);
 
-$theme: (
-  'primary': $primary,
-  'secondary': $secondary,
-  'accent': $accent,
-  'enableScrollOffset': $enableScrollOffset,
-) !default;
-
-html {
-  @include nextrap-base.nextrap-theme($theme, ());
+  @include var.cssVariables($theme);
+  @include ct.containerTools($theme);
 }
+
+// === THEME API v1 ===
+// Single-mode theme (light or dark):
+//   @include nt.theme((primary: #0057b8, neutral: #667085));
+//   @include nt.theme((mode: dark, primary: #66aaff, neutral: #98a2b3));
+//
+// Multi-scheme theme (light + dark):
+//   @include nt.theme((primary: #0057b8, neutral: #667085, schemes: (light: auto, dark: auto)));
+//   @include nt.theme((primary: #0057b8, neutral: #667085, schemes: (light: auto, dark: (surface: #101214))));
+@mixin theme($input: ()) {
+  $schemes: map.get($input, schemes);
+
+  @if $schemes != null {
+    // Multi-scheme mode
+    $base: map.remove($input, schemes);
+
+    $light-spec: map.get($schemes, light);
+    $dark-spec: map.get($schemes, dark);
+
+    // Build light theme
+    $light-override: ();
+    @if $light-spec != auto and $light-spec != null {
+      $light-override: $light-spec;
+    }
+    $light-theme: create-theme(
+      map.deep-merge(
+        $base,
+        map.merge(
+          (
+            mode: light,
+          ),
+          $light-override
+        )
+      )
+    );
+
+    // Build dark theme
+    $dark-theme: create-dark-theme($base, ());
+    @if $dark-spec != auto and $dark-spec != null {
+      $dark-theme: create-dark-theme($base, $dark-spec);
+    }
+
+    // Light scheme: output at current scope (typically :root)
+    @include var.cssVariables($light-theme);
+    @include ct.containerTools($light-theme);
+
+    // Light scheme via attribute (use @at-root to avoid selector nesting)
+    @at-root [data-nt-scheme='light'] {
+      @include var.cssVariables($light-theme);
+      @include ct.containerTools($light-theme);
+    }
+
+    // Dark scheme via attribute
+    @at-root [data-nt-scheme='dark'] {
+      @include var.cssVariables($dark-theme);
+      @include ct.containerTools($dark-theme);
+    }
+  } @else {
+    // Single-mode theme
+    $theme: create-theme($input);
+    @include var.cssVariables($theme);
+    @include ct.containerTools($theme);
+  }
+}
+
+// === SCHEME SWITCHER ===
+// Adds media-query based scheme activation on top of a theme() call.
+//
+// system: auto-selects dark scheme via prefers-color-scheme
+//   @include nt.scheme-switcher($input, system);
+@mixin scheme-switcher($input: (), $mode: system) {
+  $schemes: map.get($input, schemes);
+  @if $schemes == null {
+    @warn 'scheme-switcher() requires a theme with `schemes` defined.';
+  } @else {
+    $base: map.remove($input, schemes);
+    $dark-spec: map.get($schemes, dark);
+    $dark-theme: create-dark-theme($base, ());
+
+    @if $dark-spec != auto and $dark-spec != null {
+      $dark-theme: create-dark-theme($base, $dark-spec);
+    }
+
+    @if $mode == system {
+      @media (prefers-color-scheme: dark) {
+        :root {
+          @include var.cssVariables($dark-theme);
+          @include ct.containerTools($dark-theme);
+        }
+      }
+    }
+  }
+}
+

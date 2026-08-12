@@ -37,7 +37,7 @@
 
   &[mode='mobile'] > nte-card {
     box-sizing: border-box;
-    padding: 0 var(--nt-space-4, 0);
+    // No Padding here
   }
 
   &[mode='desktop'] > nte-card {

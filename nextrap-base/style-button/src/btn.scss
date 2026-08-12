@@ -2,16 +2,17 @@
 $colors: ('primary', 'accent', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark');
 
 .btn {
-  // Configuration variables
-
-  // Variables modified by the color classes
+  // Component tokens mapped from semantic state tokens
   --btn-txt: var(--nt-text-on-primary);
   --btn-bg: var(--nt-primary);
+  --btn-bg-hover: var(--nt-primary-hover);
+  --btn-bg-active: var(--nt-primary-active);
+
   display: inline-block;
   padding: 0.5rem 1rem;
-  background-color: rgb(from var(--btn-bg) r g b / 0.9);
+  background-color: var(--btn-bg);
   color: var(--btn-txt);
-  border-radius: var(--nt-border-radius);
+  border-radius: var(--nt-radius, var(--nt-border-radius));
   border: 1px solid var(--btn-bg);
   text-decoration: none;
   text-align: center;
@@ -22,20 +23,27 @@ $colors: ('primary', 'accent', 'secondary', 'success', 'danger', 'warning', 'inf
     color 0.3s ease;
 
   &:hover {
-    background-color: rgb(from var(--btn-bg) r g b / 1);
-    color: rgb(from var(--btn-txt) r g b / 1);
+    background-color: var(--btn-bg-hover);
+    color: var(--btn-txt);
     text-decoration: none;
+  }
+
+  &:active {
+    background-color: var(--btn-bg-active);
   }
 
   &.btn-link {
     background-color: transparent;
-    color: rgb(from var(--nt-link) r g b / 0.8);
+    color: var(--nt-link);
     border: none;
 
     text-decoration: var(--nt-text-decoration-link);
     &:hover {
       background-color: transparent;
-      color: rgb(from var(--nt-link) r g b / 1);
+      color: var(--nt-link-hover);
+    }
+    &:active {
+      color: var(--nt-link-active);
     }
   }
 
@@ -65,7 +73,7 @@ $colors: ('primary', 'accent', 'secondary', 'success', 'danger', 'warning', 'inf
     justify-content: center;
     padding-right: 2rem; // Space for the dropdown icon
     background-image: none; // Remove any background image
-    background-color: rgb(from var(--btn-bg) r g b / 0.8);
+    background-color: var(--btn-bg);
     color: var(--btn-txt);
 
     &::after {
@@ -90,6 +98,8 @@ $colors: ('primary', 'accent', 'secondary', 'success', 'danger', 'warning', 'inf
   @each $color in $colors {
     &.btn-#{$color} {
       --btn-bg: var(--nt-#{$color}) !important;
+      --btn-bg-hover: var(--nt-#{$color}-hover, var(--nt-#{$color})) !important;
+      --btn-bg-active: var(--nt-#{$color}-active, var(--nt-#{$color})) !important;
       --btn-txt: var(--nt-text-on-#{$color}) !important;
     }
     &.btn-outline-#{$color} {
@@ -100,6 +110,8 @@ $colors: ('primary', 'accent', 'secondary', 'success', 'danger', 'warning', 'inf
       &:hover {
         background-color: var(--nt-#{$color});
         --btn-bg: var(--nt-#{$color});
+        --btn-bg-hover: var(--nt-#{$color}-hover, var(--nt-#{$color}));
+        --btn-bg-active: var(--nt-#{$color}-active, var(--nt-#{$color}));
         --btn-txt: var(--nt-text-on-#{$color});
       }
     }

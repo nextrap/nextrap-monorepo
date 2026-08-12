@@ -11,37 +11,54 @@
   $text-scales: map.get($theme, text-scales);
   $header-scales: map.get($theme, header-scales);
 
+  // === BRAND / STATE COLORS (Public Semantic API) ===
   --nt-primary: #{map.get($theme, primary)};
   --nt-primary-subtle: #{map.get($theme, primary-subtle)};
   --nt-primary-emphasis: #{map.get($theme, primary-emphasis)};
+  --nt-primary-hover: #{map.get($theme, primary-hover)};
+  --nt-primary-active: #{map.get($theme, primary-active)};
 
   --nt-secondary: #{map.get($theme, secondary)};
   --nt-secondary-subtle: #{map.get($theme, secondary-subtle)};
   --nt-secondary-emphasis: #{map.get($theme, secondary-emphasis)};
+  --nt-secondary-hover: #{map.get($theme, secondary-hover)};
+  --nt-secondary-active: #{map.get($theme, secondary-active)};
 
   --nt-tertiary: #{map.get($theme, tertiary)};
   --nt-tertiary-subtle: #{map.get($theme, tertiary-subtle)};
   --nt-tertiary-emphasis: #{map.get($theme, tertiary-emphasis)};
+  --nt-tertiary-hover: #{map.get($theme, tertiary-hover)};
+  --nt-tertiary-active: #{map.get($theme, tertiary-active)};
 
   --nt-accent: #{map.get($theme, accent)};
   --nt-accent-subtle: #{map.get($theme, accent-subtle)};
   --nt-accent-emphasis: #{map.get($theme, accent-emphasis)};
+  --nt-accent-hover: #{map.get($theme, accent-hover)};
+  --nt-accent-active: #{map.get($theme, accent-active)};
 
   --nt-success: #{map.get($theme, success)};
   --nt-success-subtle: #{map.get($theme, success-subtle)};
   --nt-success-emphasis: #{map.get($theme, success-emphasis)};
+  --nt-success-hover: #{map.get($theme, success-hover)};
+  --nt-success-active: #{map.get($theme, success-active)};
 
   --nt-info: #{map.get($theme, info)};
   --nt-info-subtle: #{map.get($theme, info-subtle)};
   --nt-info-emphasis: #{map.get($theme, info-emphasis)};
+  --nt-info-hover: #{map.get($theme, info-hover)};
+  --nt-info-active: #{map.get($theme, info-active)};
 
   --nt-warning: #{map.get($theme, warning)};
   --nt-warning-subtle: #{map.get($theme, warning-subtle)};
   --nt-warning-emphasis: #{map.get($theme, warning-emphasis)};
+  --nt-warning-hover: #{map.get($theme, warning-hover)};
+  --nt-warning-active: #{map.get($theme, warning-active)};
 
   --nt-danger: #{map.get($theme, danger)};
   --nt-danger-subtle: #{map.get($theme, danger-subtle)};
   --nt-danger-emphasis: #{map.get($theme, danger-emphasis)};
+  --nt-danger-hover: #{map.get($theme, danger-hover)};
+  --nt-danger-active: #{map.get($theme, danger-active)};
 
   --nt-gray: #{map.get($theme, gray)};
 
@@ -58,12 +75,23 @@
   --nt-white: #{map.get($theme, white)};
   --nt-black: #{map.get($theme, black)};
 
-  --nt-body: #{map.get($theme, body)};
-  --nt-body-secondary: #{map.get($theme, body-secondary)};
-  --nt-body-tertiary: #{map.get($theme, body-tertiary)};
+  // === SURFACES / CONTENT (Public Semantic API) ===
+  --nt-surface: #{map.get($theme, surface)};
+  --nt-surface-muted: #{map.get($theme, surface-muted)};
+  --nt-surface-raised: #{map.get($theme, surface-raised)};
+  --nt-text-muted: #{map.get($theme, text-muted)};
+  --nt-border: #{map.get($theme, border)};
+  --nt-focus: #{map.get($theme, focus)};
 
-  // Text colors
+  // Legacy body/background aliases (deprecated → use --nt-surface*)
+  --nt-body: #{map.get($theme, surface)};
+  --nt-body-secondary: #{map.get($theme, surface-muted)};
+  --nt-body-tertiary: #{map.get($theme, surface-raised)};
+  --nt-background: #{map.get($theme, surface)};
+
+  // === TEXT COLORS ===
   --nt-text: #{map.get($theme, text)};
+  --nt-header: #{map.get($theme, header)};
 
   --nt-text-on-primary: #{map.get($theme, text-on-primary)};
   --nt-text-on-secondary: #{map.get($theme, text-on-secondary)};
@@ -77,12 +105,21 @@
   --nt-text-on-dark: #{map.get($theme, text-on-dark)};
   --nt-text-on-white: #{map.get($theme, text-on-white)};
   --nt-text-on-black: #{map.get($theme, text-on-black)};
-  --nt-background: #{map.get($theme, white)};
 
+  // === LINKS ===
   --nt-link: #{map.get($theme, link)};
+  --nt-link-hover: #{map.get($theme, link-hover)};
+  --nt-link-active: #{map.get($theme, link-active)};
   --nt-link-on-dark: #{map.get($theme, link-on-dark)};
   --nt-text-decoration-link: #{map.get($theme, text-decoration-link)};
 
+  // === TYPOGRAPHY ===
+  // Public shorthand tokens (new API)
+  --nt-font-family: #{map.get($theme, font-family-base)};
+  --nt-font-size: #{map.get($theme, font-size-base)};
+  --nt-line-height: #{map.get($theme, line-height-base)};
+
+  // Legacy typography tokens (kept for compatibility)
   --nt-font-family-base: #{map.get($theme, font-family-base)};
   --nt-font-family-header: #{map.get($theme, font-family-header)};
   --nt-font-size-base: #{map.get($theme, font-size-base)};
@@ -95,33 +132,35 @@
   --nt-line-height-base: #{map.get($theme, line-height-base)};
   --nt-line-height-header: #{map.get($theme, line-height-header)};
 
-  --nt-header: #{map.get($theme, header)};
-
-  // Spacing primitive tokens (use for exact spacing values in components/utilities)
+  // === SPACING ===
+  // Primitive spacing tokens
   @each $i, $val in $spacing {
     --nt-space-#{$i}: #{$val};
   }
 
-  // Spacing semantic tokens (use for semantic roles before mapping to component-local variables)
-  // Text rhythm (paragraph/list spacing)
+  // Semantic spacing tokens
   --nt-spacing-text: #{map.get($spacing-semantic, text)};
-  // Small control spacing (button/input groups)
   --nt-spacing-control: #{map.get($spacing-semantic, control)};
-  // Default component padding/inner spacing
   --nt-spacing-component: #{map.get($spacing-semantic, component)};
-  // Layout gaps between sibling components
   --nt-spacing-layout: #{map.get($spacing-semantic, layout)};
-  // Section-to-section spacing (intentionally fluid by default)
   --nt-spacing-section: #{map.get($spacing-semantic, section)};
 
-  // Border Radius
-  --nt-border-radius: 0.25rem; // default border radius
-  --nt-border-radius-sm: #{map.get($theme, border-radius-sm)}; // normal
-  --nt-border-radius-xl: #{map.get($theme, border-radius-xl)}; // groß
+  // === SHAPE ===
+  // Public shorthand token (new API)
+  --nt-radius: #{map.get($theme, border-radius)};
+
+  // Legacy border-radius tokens (kept for compatibility)
+  --nt-border-radius: #{map.get($theme, border-radius)};
+  --nt-border-radius-sm: #{map.get($theme, border-radius-sm)};
+  --nt-border-radius-xl: #{map.get($theme, border-radius-lg)};
 
   --nt-border-width: 1px;
 
-  // =============== FONT SIZES =============== //
+  // === CONTAINER ===
+  --nt-container-max: #{map.get($theme, container-max)};
+  --nt-container-gutter: #{map.get($theme, container-gutter)};
+
+  // === FONT SCALES ===
   @each $i, $val in $text-scales {
     --nt-fs-#{$i}: calc(var(--nt-font-size-base) * #{$val});
   }
