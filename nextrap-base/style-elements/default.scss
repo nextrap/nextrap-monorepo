@@ -1,61 +1,9 @@
 // @nextrap/style-elements/default — ready-to-use CSS class output
 //
-// Materializes all standard CSS classes from the style-elements mixin API.
-// Import this to get the default element classes.
-//
-// Example:
-//   @use '@nextrap/style-elements/default';
-//
-// To use mixins on arbitrary selectors instead:
-//   @use '@nextrap/style-elements' as e;
-//   .my-scope table { @include e.table(); }
+// The default entry point is intentionally only the root-level materialization
+// of the public `all()` mixin. This guarantees that default output and scoped
+// theme output always use exactly the same class registry.
 
 @use './index' as e;
 
-// Prose
-.prose {
-  @include e.prose();
-
-  &.prose-xl {
-    @include e.prose-xl();
-  }
-}
-
-// Table
-.table {
-  @include e.table();
-}
-
-.table-striped {
-  @include e.table-striped();
-}
-
-.table-bordered {
-  @include e.table-bordered();
-}
-
-.table-hover {
-  @include e.table-hover();
-}
-
-.table-sm {
-  @include e.table-sm();
-}
-
-// List group
-.list-group {
-  @include e.list-group();
-}
-
-.list-group-flush {
-  @include e.list-group-flush();
-}
-
-// Container
-.container {
-  @include e.container();
-}
-
-.container-fluid {
-  @include e.container-fluid();
-}
+@include e.all();
