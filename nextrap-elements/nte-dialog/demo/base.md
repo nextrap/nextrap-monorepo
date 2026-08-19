@@ -4,23 +4,16 @@ The examples below are intended to work in Markdown/HTML content without applica
 
 ## Launcher / opener
 
-The launcher is rendered outside the native modal dialog. Clicking it opens the dialog. Headings, footer content and the remaining body content are assigned automatically.
-
 ```html
 <nte-dialog class="size-lg with-shadow">
   <button class="launcher btn btn-primary">Open details</button>
-
   <h2>Product details</h2>
-
   <p>This content is only visible while the dialog is open.</p>
-
-  <div class="footer">
-    <span>Additional footer content</span>
-  </div>
+  <div class="footer">Additional footer content</div>
 </nte-dialog>
 ```
 
-The explicit slot form is also supported:
+Explicit slots are also supported:
 
 ```html
 <nte-dialog>
@@ -31,9 +24,33 @@ The explicit slot form is also supported:
 </nte-dialog>
 ```
 
-## Anchor opener using the element id
+## Remote content
 
-A boolean `anchor` uses the element `id`. Opening `#modal:contact` opens the dialog. Closing the dialog removes the modal hash again.
+A dialog with `src` loads its fragment lazily when the dialog becomes visible. The include unwraps after loading, so remote headings and footers become normal direct dialog content.
+
+```html
+<nte-dialog src="/dialogs/privacy.html">
+  <button class="launcher">Privacy</button>
+</nte-dialog>
+```
+
+`/dialogs/privacy.html`:
+
+```html
+<h2>Privacy</h2>
+<p>This body was loaded only when the dialog opened.</p>
+<div class="footer">Remote footer</div>
+```
+
+The default loading text is inherited from `tj-include` and can be configured through CSS:
+
+```css
+nte-dialog {
+  --tj-include-loader-text: 'Loading dialog…';
+}
+```
+
+## Anchor opener using the element id
 
 ```html
 <a href="#modal:contact">Open contact dialog</a>
@@ -57,9 +74,14 @@ An explicit anchor string takes precedence over `id`.
 </nte-dialog>
 ```
 
-## Dismiss behavior
+Remote content and anchors can be combined:
 
-A dialog can prevent all user-initiated dismiss actions:
+```html
+<a href="#modal:privacy">Privacy</a>
+<nte-dialog anchor="privacy" src="/dialogs/privacy.html"></nte-dialog>
+```
+
+## Dismiss behavior
 
 ```html
 <nte-dialog no-dismiss>
@@ -68,8 +90,6 @@ A dialog can prevent all user-initiated dismiss actions:
   <p>This dialog must be closed programmatically.</p>
 </nte-dialog>
 ```
-
-Or configure the available dismiss mechanisms individually:
 
 ```html
 <nte-dialog hide-close-button no-escape backdrop-action="dismiss">
@@ -83,8 +103,6 @@ Or configure the available dismiss mechanisms individually:
 
 ## Styling presets and modifiers
 
-Style, size and feature classes are independent and composable:
-
 ```html
 <nte-dialog class="style-highlighted size-xl without-shadow">
   <button class="launcher">Open highlighted dialog</button>
@@ -92,8 +110,6 @@ Style, size and feature classes are independent and composable:
   <p>This uses the same visual API that is also available as Sass mixins.</p>
 </nte-dialog>
 ```
-
-Custom semantic classes can apply the Sass mixins instead of using the built-in classes directly:
 
 ```scss
 @use '@nextrap/nte-dialog' as dialog;
@@ -103,12 +119,4 @@ Custom semantic classes can apply the Sass mixins instead of using the built-in 
   @include dialog.size-lg();
   @include dialog.with-shadow();
 }
-```
-
-```html
-<nte-dialog class="product-dialog">
-  <button class="launcher">Open custom-styled dialog</button>
-  <h2>Custom styled</h2>
-  <p>The component markup stays semantic while the theme owns the visual composition.</p>
-</nte-dialog>
 ```
