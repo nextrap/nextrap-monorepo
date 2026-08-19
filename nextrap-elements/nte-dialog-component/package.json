@@ -1,0 +1,28 @@
+{
+  "name": "@nextrap/nte-dialog-component",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./index.js",
+  "module": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
+    }
+  },
+  "files": [
+    "*.js",
+    "*.d.ts",
+    "*.md"
+  ],
+  "dependencies": {
+    "@nextrap/nte-core": "workspace:*",
+    "@nextrap/nte-dialog": "workspace:*",
+    "lit": "^3.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
