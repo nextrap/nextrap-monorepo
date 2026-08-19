@@ -1,14 +1,31 @@
 import '@nextrap/nte-burger';
 import { nextrap_element } from '@nextrap/nte-core';
-import '@nextrap/style-base';
+import { resetStyle } from '@nextrap/style-reset';
 import { sleep } from '@trunkjs/browser-utils';
+import { SubLayoutApplyMixin } from '@trunkjs/content-pane';
 import { html, PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import style from './nte-dialog.scss?inline';
 
+export type NteDialogBackdropAction = 'ignore' | 'shake' | 'dismiss';
+export type NteDialogDismissReason = 'close-button' | 'escape' | 'backdrop';
+
+const anchorConverter = {
+  fromAttribute(value: string | null): boolean | string {
+    if (value === null) return false;
+    if (value === '') return true;
+    return value;
+  },
+  toAttribute(value: boolean | string): string | null {
+    if (value === false) return null;
+    if (value === true) return '';
+    return value;
+  },
+};
+
 @customElement('nte-dialog')
-export class NteDialog extends nextrap_element({ slotVisibility: true }) {
-  static override styles = [unsafeCSS(style)];
+export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibility: true })) {
+  static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
   @query('dialog')
   private accessor dialogEl: HTMLDialogElement | null = null;
@@ -16,35 +33,83 @@ export class NteDialog extends nextrap_element({ slotVisibility: true }) {
   @property({ type: String, reflect: true })
   accessor mode: 'closed' | 'open' = 'closed';
 
+  /**
+   * Enables URL hash integration. `anchor` uses the element id, while
+   * `anchor="name"` uses the explicit name and takes precedence over id.
+   */
+  @property({ attribute: 'anchor', reflect: true, converter: anchorConverter })
+  accessor anchor: boolean | string = false;
+
+  /** Prevent all user initiated dismiss actions (close button, ESC, backdrop). */
+  @property({ type: Boolean, attribute: 'no-dismiss', reflect: true })
+  accessor noDismiss = false;
+
+  @property({ type: Boolean, attribute: 'hide-close-button', reflect: true })
+  accessor hideCloseButton = false;
+
+  @property({ type: Boolean, attribute: 'no-escape', reflect: true })
+  accessor noEscape = false;
+
+  @property({ type: String, attribute: 'backdrop-action', reflect: true })
+  accessor backdropAction: NteDialogBackdropAction = 'shake';
+
   private _isClosing = false;
+  private _openedByAnchor = false;
 
-  override firstUpdated(_changedProperties: PropertyValues) {
-    super.firstUpdated(_changedProperties);
+  private readonly onHashChange = () => {
+    void this.syncWithAnchor();
+  };
 
-    if (this.mode === 'open') {
-      this.dialogEl?.showModal();
+  override connectedCallback(): void {
+    super.connectedCallback();
+    window.addEventListener('hashchange', this.onHashChange);
+    void this.updateComplete.then(() => this.syncWithAnchor());
+  }
+
+  override disconnectedCallback(): void {
+    window.removeEventListener('hashchange', this.onHashChange);
+    super.disconnectedCallback();
+  }
+
+  override updated(changedProperties: PropertyValues): void {
+    super.updated(changedProperties);
+    if (changedProperties.has('anchor') || changedProperties.has('id')) {
+      void this.syncWithAnchor();
     }
   }
 
   protected override render() {
+    const showCloseButton = !this.noDismiss && !this.hideCloseButton;
+
     return html`
+      <slot
+        name="launcher"
+        data-query=":scope > .launcher | :scope > [data-dialog-launcher]"
+        @click=${this.onLauncherClick}
+      ></slot>
+
       <dialog
-        ?open="${this.mode === 'open'}"
-        @cancel="${this.onDialogCancel}"
-        @close="${this.onDialogClose}"
-        @click="${this.onDialogClick}"
+        part="dialog"
+        @cancel=${this.onDialogCancel}
+        @close=${this.onDialogClose}
+        @click=${this.onDialogClick}
       >
         <div id="header" part="header">
-          <slot name="title"></slot>
-          <slot name="closeButton" @click="${this.close}">
-            <nte-burger open></nte-burger>
-          </slot>
+          <slot
+            name="title"
+            data-query=":scope > h1 | :scope > h2 | :scope > h3 | :scope > h4 | :scope > h5"
+          ></slot>
+          ${showCloseButton
+            ? html`<button part="close-button" id="close-button" type="button" @click=${this.onCloseButtonClick}>
+                <slot name="closeButton"><nte-burger open></nte-burger></slot>
+              </button>`
+            : null}
         </div>
         <div id="content" part="content">
           <slot></slot>
         </div>
         <div id="footer" part="footer">
-          <slot name="footer"></slot>
+          <slot name="footer" data-query=":scope > .footer | :scope > [data-dialog-footer]"></slot>
         </div>
       </dialog>
     `;
@@ -62,27 +127,6 @@ export class NteDialog extends nextrap_element({ slotVisibility: true }) {
     this.dialogEl?.showModal();
   }
 
-  /**
-   * ESC in einem <dialog> triggert ein `cancel`-Event und (wenn nicht verhindert)
-   * ein sofortiges Schließen. Wir verhindern das native Schließen und spielen
-   * stattdessen die Close-Animation ab.
-   */
-  private onDialogCancel(e: Event) {
-    e.preventDefault();
-
-    void this.close();
-  }
-
-  /**
-   * Wird aufgerufen, nachdem das Dialog wirklich geschlossen wurde.
-   * Hält den State am Custom Element synchron.
-   */
-  private onDialogClose() {
-    this.mode = 'closed';
-    this.dialogEl?.classList.remove('closing');
-    this.dispatchEvent(new CustomEvent('closed', { bubbles: true, composed: true }));
-  }
-
   async close() {
     if (this._isClosing) return;
     this._isClosing = true;
@@ -94,42 +138,130 @@ export class NteDialog extends nextrap_element({ slotVisibility: true }) {
       return;
     }
 
-    // Wenn es ohnehin nicht offen ist, nichts animieren.
     if (!el.open) {
       this.mode = 'closed';
       el.classList.remove('closing');
       this._isClosing = false;
       return;
     }
+
     el.classList.add('closing');
-    await sleep(200); // sollte zur CSS-Dauer von modalFadeOut/backdropFadeOut passen
-
+    await sleep(200);
     el.close();
-
-    // `onDialogClose` setzt mode/cleanup.
     this._isClosing = false;
   }
 
-  /**
-   * Klick auf den Backdrop (outside click) soll NICHT schließen, sondern das Fenster schütteln.
-   *
-   * Native <dialog> dispatcht den click auf das <dialog> Element. Wir erkennen einen Outside-Click,
-   * indem wir prüfen ob die Click-Position außerhalb des getBoundingClientRect liegt.
-   */
+  private get anchorName(): string | null {
+    if (typeof this.anchor === 'string' && this.anchor.length > 0) {
+      return this.anchor;
+    }
+    if (this.anchor === true) {
+      return this.id || null;
+    }
+    return null;
+  }
+
+  private get anchorHash(): string | null {
+    const name = this.anchorName;
+    return name ? `#modal:${name}` : null;
+  }
+
+  private async syncWithAnchor(): Promise<void> {
+    const hash = this.anchorHash;
+    if (!hash) return;
+
+    await this.updateComplete;
+    const matches = window.location.hash === hash;
+
+    if (matches && this.mode !== 'open') {
+      this._openedByAnchor = true;
+      this.showModal();
+      return;
+    }
+
+    if (!matches && this._openedByAnchor && this.mode === 'open') {
+      this._openedByAnchor = false;
+      await this.close();
+    }
+  }
+
+  private clearAnchorHash(): void {
+    const hash = this.anchorHash;
+    if (!hash || window.location.hash !== hash) return;
+
+    const url = `${window.location.pathname}${window.location.search}`;
+    window.history.replaceState(window.history.state, '', url);
+  }
+
+  private onLauncherClick() {
+    this.showModal();
+  }
+
+  private onCloseButtonClick() {
+    this.requestDismiss('close-button');
+  }
+
+  private onDialogCancel(e: Event) {
+    e.preventDefault();
+
+    if (this.noDismiss || this.noEscape) {
+      this.shake();
+      return;
+    }
+
+    this.requestDismiss('escape');
+  }
+
+  private onDialogClose() {
+    this.mode = 'closed';
+    this.dialogEl?.classList.remove('closing');
+
+    if (this._openedByAnchor || window.location.hash === this.anchorHash) {
+      this._openedByAnchor = false;
+      this.clearAnchorHash();
+    }
+
+    this.dispatchEvent(new CustomEvent('closed', { bubbles: true, composed: true }));
+  }
+
   private onDialogClick(e: MouseEvent) {
     const el = this.dialogEl;
-    if (!el) return;
-
-    // Nur relevant, wenn wirklich offen.
-    if (!el.open) return;
+    if (!el?.open) return;
 
     const rect = el.getBoundingClientRect();
     const clickedOutside =
       e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom;
 
-    if (clickedOutside) {
-      e.preventDefault();
+    if (!clickedOutside) return;
+
+    e.preventDefault();
+
+    if (this.noDismiss || this.backdropAction === 'shake') {
       this.shake();
+      return;
+    }
+
+    if (this.backdropAction === 'dismiss') {
+      this.requestDismiss('backdrop');
+    }
+  }
+
+  private requestDismiss(reason: NteDialogDismissReason) {
+    if (this.noDismiss) {
+      this.shake();
+      return;
+    }
+
+    const event = new CustomEvent<{ reason: NteDialogDismissReason }>('dismiss', {
+      detail: { reason },
+      bubbles: true,
+      composed: true,
+      cancelable: true,
+    });
+
+    const shouldClose = this.dispatchEvent(event);
+    if (shouldClose) {
+      void this.close();
     }
   }
 
@@ -137,12 +269,9 @@ export class NteDialog extends nextrap_element({ slotVisibility: true }) {
     const el = this.dialogEl;
     if (!el) return;
 
-    // Restart animation
     el.classList.remove('shake');
-    // force reflow
     void el.offsetWidth;
     el.classList.add('shake');
-
     window.setTimeout(() => el.classList.remove('shake'), 350);
   }
 }
