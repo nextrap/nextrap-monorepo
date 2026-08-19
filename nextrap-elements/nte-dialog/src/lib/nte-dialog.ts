@@ -1,7 +1,6 @@
 import '@nextrap/nte-burger';
 import { nextrap_element } from '@nextrap/nte-core';
 import { resetStyle } from '@nextrap/style-reset';
-import { sleep } from '@trunkjs/browser-utils';
 import { SubLayoutApplyMixin } from '@trunkjs/content-pane';
 import { html, PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
@@ -132,9 +131,52 @@ export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibil
     }
 
     el.classList.add('closing');
-    await sleep(200);
-    el.close();
+    await this.waitForCloseTransition(el);
+    if (el.open) el.close();
     this._isClosing = false;
+  }
+
+  private async waitForCloseTransition(el: HTMLDialogElement): Promise<void> {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const style = getComputedStyle(el);
+    const durations = style.transitionDuration.split(',').map((value) => this.cssTimeToMs(value.trim()));
+    const delays = style.transitionDelay.split(',').map((value) => this.cssTimeToMs(value.trim()));
+    const count = Math.max(durations.length, delays.length);
+    let maxTotal = 0;
+
+    for (let index = 0; index < count; index += 1) {
+      const duration = durations[index % durations.length] ?? 0;
+      const delay = delays[index % delays.length] ?? 0;
+      maxTotal = Math.max(maxTotal, duration + delay);
+    }
+
+    if (maxTotal <= 0) return;
+
+    await new Promise<void>((resolve) => {
+      let settled = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        el.removeEventListener('transitionend', onTransitionEnd);
+        el.removeEventListener('transitioncancel', finish);
+        window.clearTimeout(fallback);
+        resolve();
+      };
+      const onTransitionEnd = (event: TransitionEvent) => {
+        if (event.target === el && event.propertyName === 'opacity') finish();
+      };
+      const fallback = window.setTimeout(finish, maxTotal + 50);
+
+      el.addEventListener('transitionend', onTransitionEnd);
+      el.addEventListener('transitioncancel', finish);
+    });
+  }
+
+  private cssTimeToMs(value: string): number {
+    if (value.endsWith('ms')) return Number.parseFloat(value) || 0;
+    if (value.endsWith('s')) return (Number.parseFloat(value) || 0) * 1000;
+    return 0;
   }
 
   private get anchorName(): string | null {
