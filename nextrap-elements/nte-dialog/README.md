@@ -28,6 +28,34 @@ Automatic slot assignment:
 
 Explicit `slot="launcher"`, `slot="title"`, and `slot="footer"` assignments also work.
 
+## Remote content with `src`
+
+`src` loads an external HTML fragment through `tj-include`. Dialog remote content is always lazy: `NteDialog` creates an internal light-DOM `<tj-include lazy unwrap>` so the request starts only when the dialog content becomes visible. After loading, `unwrap` makes the fetched nodes direct light-DOM children of `NteDialog`, allowing the normal title/body/footer classification to apply.
+
+```html
+<nte-dialog src="/dialogs/privacy.html">
+  <button class="launcher">Privacy</button>
+</nte-dialog>
+```
+
+The remote fragment can use the same declarative conventions:
+
+```html
+<h2>Privacy</h2>
+<p>Remote dialog content.</p>
+<div class="footer">Remote footer</div>
+```
+
+The default include loader inherits `--tj-include-loader-text`, so it can be configured on the dialog:
+
+```css
+nte-dialog {
+  --tj-include-loader-text: 'Loading dialog…';
+}
+```
+
+`src` deliberately implies lazy loading; there is no separate `lazy` option on `NteDialog`.
+
 ## Anchor / hash opener
 
 `anchor` enables hash routing. A boolean anchor uses the element `id`:
@@ -57,19 +85,15 @@ A launcher on an anchor-enabled dialog uses the same hash route, so browser navi
 
 ## Direct DOM API
 
-A dialog already present in the DOM can be opened directly:
-
 ```ts
 import { NteDialog } from '@nextrap/nte-dialog';
 
 const dialog = document.getElementById('details') as NteDialog;
 dialog.showModal();
-
-// Later:
 await dialog.close();
 ```
 
-This is still direct element usage. If the caller needs typed input, `submit()` / `abort()`, Promise results and automatic mounting/cleanup, use `@nextrap/nte-dialog-component`.
+If the caller needs typed input, `submit()` / `abort()`, Promise results and automatic mounting/cleanup, use `@nextrap/nte-dialog-component`.
 
 ## Dismiss behavior
 
@@ -82,14 +106,7 @@ This is still direct element usage. If the caller needs typed input, `submit()` 
 
 ## Styling
 
-Visual configuration is CSS/Sass based. The package exports mixins whose names match the provided modifier classes:
-
-- `style-default()` / `.style-default`
-- `style-highlighted()` / `.style-highlighted`
-- `size-sm()`, `size-md()`, `size-lg()`, `size-xl()`, `size-fullscreen()`
-- `with-shadow()`, `without-shadow()`, `with-floating-header()`
-
-Custom semantic styles can reuse the same mixins:
+Visual configuration is CSS/Sass based. The package exports mixins whose names match the provided modifier classes: `style-default`, `style-highlighted`, `size-sm`, `size-md`, `size-lg`, `size-xl`, `size-fullscreen`, `with-shadow`, `without-shadow`, and `with-floating-header`.
 
 ```scss
 @use '@nextrap/nte-dialog' as dialog;
@@ -102,10 +119,6 @@ Custom semantic styles can reuse the same mixins:
 ```
 
 The visual internals are exposed as `dialog`, `header`, `content`, `footer`, and `close-button` parts.
-
-## Markdown examples
-
-[`demo/base.md`](./demo/base.md) contains Markdown/HTML-ready examples for launcher/opener dialogs, explicit slots, anchors, dismiss configuration and Sass styling.
 
 ## Building
 
