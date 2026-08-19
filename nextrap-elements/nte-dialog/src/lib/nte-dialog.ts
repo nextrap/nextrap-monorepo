@@ -33,14 +33,9 @@ export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibil
   @property({ type: String, reflect: true })
   accessor mode: 'closed' | 'open' = 'closed';
 
-  /**
-   * Enables URL hash integration. `anchor` uses the element id, while
-   * `anchor="name"` uses the explicit name and takes precedence over id.
-   */
   @property({ attribute: 'anchor', reflect: true, converter: anchorConverter })
   accessor anchor: boolean | string = false;
 
-  /** Prevent all user initiated dismiss actions (close button, ESC, backdrop). */
   @property({ type: Boolean, attribute: 'no-dismiss', reflect: true })
   accessor noDismiss = false;
 
@@ -56,9 +51,7 @@ export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibil
   private _isClosing = false;
   private _openedByAnchor = false;
 
-  private readonly onHashChange = () => {
-    void this.syncWithAnchor();
-  };
+  private readonly onHashChange = () => void this.syncWithAnchor();
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -88,12 +81,7 @@ export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibil
         @click=${this.onLauncherClick}
       ></slot>
 
-      <dialog
-        part="dialog"
-        @cancel=${this.onDialogCancel}
-        @close=${this.onDialogClose}
-        @click=${this.onDialogClick}
-      >
+      <dialog part="dialog" @cancel=${this.onDialogCancel} @close=${this.onDialogClose} @click=${this.onDialogClick}>
         <div id="header" part="header">
           <slot
             name="title"
@@ -105,9 +93,7 @@ export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibil
               </button>`
             : null}
         </div>
-        <div id="content" part="content">
-          <slot></slot>
-        </div>
+        <div id="content" part="content"><slot></slot></div>
         <div id="footer" part="footer">
           <slot name="footer" data-query=":scope > .footer | :scope > [data-dialog-footer]"></slot>
         </div>
@@ -152,12 +138,8 @@ export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibil
   }
 
   private get anchorName(): string | null {
-    if (typeof this.anchor === 'string' && this.anchor.length > 0) {
-      return this.anchor;
-    }
-    if (this.anchor === true) {
-      return this.id || null;
-    }
+    if (typeof this.anchor === 'string' && this.anchor.length > 0) return this.anchor;
+    if (this.anchor === true) return this.id || null;
     return null;
   }
 
@@ -188,12 +170,19 @@ export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibil
   private clearAnchorHash(): void {
     const hash = this.anchorHash;
     if (!hash || window.location.hash !== hash) return;
-
-    const url = `${window.location.pathname}${window.location.search}`;
-    window.history.replaceState(window.history.state, '', url);
+    window.history.replaceState(window.history.state, '', `${window.location.pathname}${window.location.search}`);
   }
 
   private onLauncherClick() {
+    const hash = this.anchorHash;
+    if (hash) {
+      if (window.location.hash === hash) {
+        void this.syncWithAnchor();
+      } else {
+        window.location.hash = hash;
+      }
+      return;
+    }
     this.showModal();
   }
 
@@ -203,24 +192,20 @@ export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibil
 
   private onDialogCancel(e: Event) {
     e.preventDefault();
-
     if (this.noDismiss || this.noEscape) {
       this.shake();
       return;
     }
-
     this.requestDismiss('escape');
   }
 
   private onDialogClose() {
     this.mode = 'closed';
     this.dialogEl?.classList.remove('closing');
-
     if (this._openedByAnchor || window.location.hash === this.anchorHash) {
       this._openedByAnchor = false;
       this.clearAnchorHash();
     }
-
     this.dispatchEvent(new CustomEvent('closed', { bubbles: true, composed: true }));
   }
 
@@ -231,19 +216,14 @@ export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibil
     const rect = el.getBoundingClientRect();
     const clickedOutside =
       e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom;
-
     if (!clickedOutside) return;
 
     e.preventDefault();
-
     if (this.noDismiss || this.backdropAction === 'shake') {
       this.shake();
       return;
     }
-
-    if (this.backdropAction === 'dismiss') {
-      this.requestDismiss('backdrop');
-    }
+    if (this.backdropAction === 'dismiss') this.requestDismiss('backdrop');
   }
 
   private requestDismiss(reason: NteDialogDismissReason) {
@@ -259,16 +239,12 @@ export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibil
       cancelable: true,
     });
 
-    const shouldClose = this.dispatchEvent(event);
-    if (shouldClose) {
-      void this.close();
-    }
+    if (this.dispatchEvent(event)) void this.close();
   }
 
   private shake() {
     const el = this.dialogEl;
     if (!el) return;
-
     el.classList.remove('shake');
     void el.offsetWidth;
     el.classList.add('shake');
