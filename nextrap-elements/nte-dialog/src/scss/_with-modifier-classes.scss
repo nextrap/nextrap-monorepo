@@ -1,0 +1,18 @@
+@use 'style';
+@use 'size';
+@use 'modifier';
+
+@mixin with-modifier-classes() {
+  .style-default { @include style.style-default(); }
+  .style-highlighted { @include style.style-highlighted(); }
+
+  .size-sm { @include size.size-sm(); }
+  .size-md { @include size.size-md(); }
+  .size-lg { @include size.size-lg(); }
+  .size-xl { @include size.size-xl(); }
+  .size-fullscreen { @include size.size-fullscreen(); }
+
+  .with-shadow { @include modifier.with-shadow(); }
+  .without-shadow { @include modifier.without-shadow(); }
+  .with-floating-header { @include modifier.with-floating-header(); }
+}
