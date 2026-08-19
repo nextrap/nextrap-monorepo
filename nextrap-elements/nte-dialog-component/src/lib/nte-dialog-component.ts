@@ -30,6 +30,11 @@ type SubmitArgs<TResult> = [TResult] extends [void] ? [] : [data: TResult];
 /**
  * Base class for application/SPAs that create dialogs programmatically.
  * Rendering and browser-level dialog behavior remain owned by @nextrap/nte-dialog.
+ *
+ * NteDialogComponent deliberately renders into its own light DOM. This keeps the
+ * generated title, body and footer nodes in light DOM as direct children of the
+ * nested NteDialog, so they use NteDialog's normal slot projection and remain
+ * available to application CSS and DOM integrations.
  */
 export abstract class NteDialogComponent<TInput = void, TResult = void> extends nextrap_element() {
   protected input!: TInput;
@@ -41,6 +46,10 @@ export abstract class NteDialogComponent<TInput = void, TResult = void> extends 
   private resultResolver: ((result: NteDialogComponentResult<TResult>) => void) | null = null;
   private resultPromise: Promise<NteDialogComponentResult<TResult>> | null = null;
   private settled = false;
+
+  protected override createRenderRoot() {
+    return this;
+  }
 
   static async show<TInput, TResult, TDialog extends NteDialogComponent<TInput, TResult>>(
     this: DialogComponentConstructor<TInput, TResult, TDialog>,
@@ -101,7 +110,6 @@ export abstract class NteDialogComponent<TInput = void, TResult = void> extends 
     return html`
       <nte-dialog
         class=${dialogClass}
-        exportparts="dialog,header,content,footer,close-button"
         ?no-dismiss=${dismiss === false}
         ?hide-close-button=${dismiss !== false && dismiss.closeButton === false}
         ?no-escape=${dismiss !== false && dismiss.escape === false}
