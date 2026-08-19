@@ -2,10 +2,18 @@
 
 `NteDialog` is the reusable dialog UI primitive. `NteModalComponent<TInput, TResult>` adds the programmatic application lifecycle on top.
 
-## Inline dialog
+See [`demo/base.md`](./demo/base.md) for copyable Markdown/HTML examples and [`src/examples`](./src/examples) for TypeScript examples.
+
+## Opening patterns
+
+There are three independent ways to open a dialog.
+
+### 1. Inline launcher / opener
+
+The launcher lives in the `NteDialog` light DOM but is rendered through a slot outside the native `<dialog>`. It therefore remains visible while the dialog itself is closed.
 
 ```html
-<nte-dialog id="details" anchor class="size-lg with-shadow">
+<nte-dialog class="size-lg with-shadow">
   <button class="launcher">Open details</button>
   <h2>Details</h2>
   <p>Dialog content.</p>
@@ -15,35 +23,60 @@
 
 Automatic slot assignment:
 
-- `.launcher` / `[data-dialog-launcher]` -> launcher (rendered outside the native dialog)
+- `.launcher` / `[data-dialog-launcher]` -> launcher
 - `h1` ... `h5` -> title
 - `.footer` / `[data-dialog-footer]` -> footer
 - all remaining nodes -> default content slot
 
-The dialog can always be opened directly with `dialog.showModal()`.
+Explicit `slot="launcher"`, `slot="title"`, and `slot="footer"` assignments also work.
 
-### Anchor routing
+### 2. Anchor / hash opener
 
-`anchor` enables hash routing. A boolean anchor uses the element `id`; a string anchor uses that value and takes precedence over `id`.
+`anchor` enables hash routing. A boolean anchor uses the element `id`:
 
 ```html
-<nte-dialog id="details" anchor>...</nte-dialog>
-<!-- #modal:details -->
+<a href="#modal:details">Open details</a>
 
-<nte-dialog id="internal-id" anchor="public-details">...</nte-dialog>
-<!-- #modal:public-details -->
+<nte-dialog id="details" anchor>
+  <h2>Details</h2>
+  <p>Dialog content.</p>
+</nte-dialog>
+```
+
+An explicit anchor string uses that value and takes precedence over `id`:
+
+```html
+<a href="#modal:public-details">Open details</a>
+
+<nte-dialog id="internal-id" anchor="public-details">
+  <h2>Details</h2>
+</nte-dialog>
 ```
 
 Opening the hash opens the dialog. Navigating away from the hash closes an anchor-opened dialog. Closing the dialog removes its active modal hash.
 
-### Dismiss behavior
+### 3. Existing element from TypeScript
+
+A dialog already present in the DOM can always be opened directly:
+
+```ts
+const dialog = document.getElementById('details') as NteDialog;
+dialog.showModal();
+
+// Later:
+await dialog.close();
+```
+
+See [`src/examples/direct-dialog.ts`](./src/examples/direct-dialog.ts).
+
+## Dismiss behavior
 
 ```html
 <nte-dialog no-dismiss>...</nte-dialog>
 <nte-dialog hide-close-button no-escape backdrop-action="dismiss">...</nte-dialog>
 ```
 
-`backdrop-action` accepts `ignore`, `shake` (default), or `dismiss`.
+`backdrop-action` accepts `ignore`, `shake` (default), or `dismiss`. `no-dismiss` disables all user-initiated dismiss actions. The `dismiss` event is cancelable and includes the reason (`close-button`, `escape`, or `backdrop`).
 
 ## Styling
 
@@ -66,9 +99,14 @@ Custom styles can reuse the same mixins:
 }
 ```
 
-## Programmatic modal components
+The visual internals are exposed as `dialog`, `header`, `content`, `footer`, and `close-button` parts. `NteModalComponent` re-exports those parts through its nested `nte-dialog`.
+
+## Programmatic application modal
+
+Use `NteModalComponent<TInput, TResult>` when the caller should create a temporary modal, pass typed input, await typed output and have the element cleaned up automatically.
 
 ```ts
+@customElement('user-edit-dialog')
 class UserEditDialog extends NteModalComponent<{ userId: string }, User> {
   protected override modalOptions = {
     dialogClass: ['size-lg', 'with-shadow'],
@@ -80,25 +118,43 @@ class UserEditDialog extends NteModalComponent<{ userId: string }, User> {
   };
 
   protected override renderTitle() {
-    return 'Edit user';
+    return html`Edit user`;
   }
 
   protected override renderModal() {
     return html`...`;
   }
 
-  private save(user: User) {
-    this.submit(user);
+  protected override renderFooter() {
+    return html`
+      <button @click=${() => this.abort()}>Cancel</button>
+      <button @click=${() => this.submit(user)}>Save</button>
+    `;
   }
 }
 
 const result = await UserEditDialog.show({ userId: '123' });
+
 if (result.submitted) {
   console.log(result.data);
 }
 ```
 
-`abort()` resolves with `{ submitted: false }`; `submit(data)` resolves with `{ submitted: true, data }`. The static `show()` method mounts the component in `document.body`, opens it, waits for the result, and removes it afterwards.
+`abort()` resolves with `{ submitted: false }`; `submit(data)` resolves with `{ submitted: true, data }`. `show(input)` creates the component, assigns its input, mounts it in `document.body`, opens the nested dialog, waits for completion, closes it and removes the component.
+
+A complete example is available in [`src/examples/user-edit-dialog.ts`](./src/examples/user-edit-dialog.ts).
+
+## Markdown examples
+
+[`demo/base.md`](./demo/base.md) contains Markdown/HTML-ready examples for:
+
+- launcher/opener dialogs
+- explicit slots
+- boolean `anchor` using `id`
+- named `anchor` overriding `id`
+- dismiss configuration
+- built-in style/size modifiers
+- custom Sass composition
 
 ## Building
 
