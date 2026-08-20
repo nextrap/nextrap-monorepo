@@ -2,6 +2,31 @@
 
 The examples below are intended to work in Markdown/HTML content without application code.
 
+## Markdown layout example
+
+This preserves the Markdown-oriented usage from the former `ntl-dialog` demo, adapted to `nte-dialog` and the current API.
+
+```md
+### Dialog Window
+{: layout="nte-dialog" section-id="dialog" }
+
+<iframe
+  src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+  title="YouTube video player"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen>
+</iframe>
+```
+
+The dialog can be opened from ordinary Markdown-generated HTML through its DOM API:
+
+```md
+[Open Dialog](javascript:void;){: .btn .btn-primary onclick="document.getElementById('dialog').showModal()"}
+```
+
+For content pages where inline JavaScript should be avoided, prefer the launcher or anchor examples below.
+
 ## Launcher / opener
 
 ```html
