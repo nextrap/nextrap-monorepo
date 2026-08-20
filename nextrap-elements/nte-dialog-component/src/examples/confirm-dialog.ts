@@ -3,7 +3,7 @@ import { customElement } from 'lit/decorators.js';
 import { NteDialogComponent } from '../lib/nte-dialog-component';
 
 @customElement('confirm-dialog-example')
-export class ConfirmDialogExample extends NteDialogComponent {
+export class ConfirmDialogExample extends NteDialogComponent<void, void> {
   protected override renderTitle() {
     return 'Confirm action';
   }

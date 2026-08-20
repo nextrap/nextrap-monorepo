@@ -1,12 +1,10 @@
+import { nextrap_element } from '@nextrap/nte-core';
 import '@nextrap/nte-dialog';
 import { NteDialog, NteDialogBackdropAction } from '@nextrap/nte-dialog';
-import { nextrap_element } from '@nextrap/nte-core';
 import { html, nothing, TemplateResult } from 'lit';
 import { query } from 'lit/decorators.js';
 
-export type NteDialogComponentResult<TResult = void> =
-  | { submitted: true; data: TResult }
-  | { submitted: false };
+export type NteDialogComponentResult<TResult = void> = { submitted: true; data: TResult } | { submitted: false };
 
 export interface NteDialogComponentDismissOptions {
   closeButton?: boolean;
@@ -24,7 +22,7 @@ type DialogComponentConstructor<TInput, TResult, TDialog extends NteDialogCompon
   new (): TDialog;
 };
 
-type OpenArgs<TInput> = [TInput] extends [void] ? [] : [input: TInput];
+type OpenArgs<TInput> = [TInput] extends [void] ? [] : [input?: TInput];
 type SubmitArgs<TResult> = [TResult] extends [void] ? [] : [data: TResult];
 
 /**
@@ -43,8 +41,8 @@ export abstract class NteDialogComponent<TInput = void, TResult = void> extends 
   @query('nte-dialog')
   private accessor dialog: NteDialog | null = null;
 
-  private resultResolver: ((result: NteDialogComponentResult<TResult>) => void) | null = null;
-  private resultPromise: Promise<NteDialogComponentResult<TResult>> | null = null;
+  private resultResolver: ((result: NteDialogComponentResult<any>) => void) | null = null;
+  private resultPromise: Promise<NteDialogComponentResult<any>> | null = null;
   private settled = false;
 
   protected override createRenderRoot() {
@@ -77,7 +75,7 @@ export abstract class NteDialogComponent<TInput = void, TResult = void> extends 
     this.requestUpdate();
     await this.updateComplete;
     this.dialog?.showModal();
-    return this.resultPromise;
+    return this.resultPromise as Promise<NteDialogComponentResult<TResult>>;
   }
 
   protected submit(...args: SubmitArgs<TResult>): void {
@@ -100,10 +98,10 @@ export abstract class NteDialogComponent<TInput = void, TResult = void> extends 
 
   protected override render() {
     const options = this.dialogOptions;
-    const dismiss = options.dismiss === false ? false : options.dismiss ?? {};
+    const dismiss = options.dismiss === false ? false : (options.dismiss ?? {});
     const dialogClass = Array.isArray(options.dialogClass)
       ? options.dialogClass.join(' ')
-      : options.dialogClass ?? '';
+      : (options.dialogClass ?? '');
     const title = this.renderTitle();
     const footer = this.renderFooter();
 
@@ -113,12 +111,11 @@ export abstract class NteDialogComponent<TInput = void, TResult = void> extends 
         ?no-dismiss=${dismiss === false}
         ?hide-close-button=${dismiss !== false && dismiss.closeButton === false}
         ?no-escape=${dismiss !== false && dismiss.escape === false}
-        backdrop-action=${dismiss === false ? 'shake' : dismiss.backdrop ?? 'shake'}
+        backdrop-action=${dismiss === false ? 'shake' : (dismiss.backdrop ?? 'shake')}
         @dismiss=${this.onDismiss}
         @closed=${this.onClosed}
       >
-        ${title === null ? nothing : html`<div slot="title">${title}</div>`}
-        ${this.renderDialog()}
+        ${title === null ? nothing : html`<div slot="title">${title}</div>`} ${this.renderDialog()}
         ${footer === null ? nothing : html`<div slot="footer">${footer}</div>`}
       </nte-dialog>
     `;

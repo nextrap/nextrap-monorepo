@@ -1,3 +1,4 @@
+import { NteDialog } from '@nextrap/nte-dialog';
 import { html } from 'lit';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { NteDialogComponent } from './nte-dialog-component';
@@ -24,6 +25,7 @@ customElements.define('nte-test-dialog', TestDialog);
 
 describe('nte-dialog-component', () => {
   beforeEach(() => {
+    vi.restoreAllMocks();
     document.body.innerHTML = '';
   });
 
@@ -31,11 +33,11 @@ describe('nte-dialog-component', () => {
     const el = document.createElement('nte-test-dialog') as TestDialog;
     document.body.append(el);
 
+    vi.spyOn(NteDialog.prototype, 'showModal').mockImplementation(() => undefined);
+    vi.spyOn(NteDialog.prototype, 'close').mockResolvedValue(undefined);
+
     const open = el.open({ id: '42' });
     await el.updateComplete;
-    const dialog = el.querySelector('nte-dialog') as any;
-    vi.spyOn(dialog, 'showModal').mockImplementation(() => undefined);
-    vi.spyOn(dialog, 'close').mockResolvedValue(undefined);
 
     expect(el.shadowRoot).toBeNull();
     expect(el.querySelector('[slot="title"]')?.textContent).toContain('Edit');
@@ -49,11 +51,11 @@ describe('nte-dialog-component', () => {
     const el = document.createElement('nte-test-dialog') as TestDialog;
     document.body.append(el);
 
+    vi.spyOn(NteDialog.prototype, 'showModal').mockImplementation(() => undefined);
+    vi.spyOn(NteDialog.prototype, 'close').mockResolvedValue(undefined);
+
     const open = el.open({ id: '42' });
     await el.updateComplete;
-    const dialog = el.querySelector('nte-dialog') as any;
-    vi.spyOn(dialog, 'showModal').mockImplementation(() => undefined);
-    vi.spyOn(dialog, 'close').mockResolvedValue(undefined);
 
     el.abortDialog();
     await expect(open).resolves.toEqual({ submitted: false });
