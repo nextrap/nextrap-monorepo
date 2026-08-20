@@ -22,7 +22,17 @@ type DialogComponentConstructor<TInput, TResult, TDialog extends NteDialogCompon
   new (): TDialog;
 };
 
-type OpenArgs<TInput> = [TInput] extends [void] ? [] : [input?: TInput];
+/**
+ * Keep input strict on purpose:
+ * - `TInput = void` means the dialog takes no argument and `show()` / `open()` take none.
+ * - any other `TInput` means that exact input is required.
+ *
+ * Making the non-void tuple optional would allow e.g.
+ * `NteDialogComponent<{ userId: string }, User>.show()` without a userId and would
+ * defeat the central compile-time contract of the component abstraction.
+ */
+type OpenArgs<TInput> = [TInput] extends [void] ? [] : [input: TInput];
+
 type SubmitArgs<TResult> = [TResult] extends [void] ? [] : [data: TResult];
 
 /**
@@ -33,6 +43,15 @@ type SubmitArgs<TResult> = [TResult] extends [void] ? [] : [data: TResult];
  * generated title, body and footer nodes in light DOM as direct children of the
  * nested NteDialog, so they use NteDialog's normal slot projection and remain
  * available to application CSS and DOM integrations.
+ *
+ * Both generic parameters are part of the public type contract:
+ * - TInput determines what callers must pass to show()/open().
+ * - TResult determines both what submit() accepts and what the resolved Promise
+ *   exposes when `submitted === true`.
+ *
+ * Do not replace TResult with `any` in internal promise/resolver state. Doing so
+ * disconnects submit(), the resolver and the public Promise at exactly the point
+ * where the abstraction is supposed to guarantee end-to-end type safety.
  */
 export abstract class NteDialogComponent<TInput = void, TResult = void> extends nextrap_element() {
   protected input!: TInput;
@@ -41,8 +60,8 @@ export abstract class NteDialogComponent<TInput = void, TResult = void> extends 
   @query('nte-dialog')
   private accessor dialog: NteDialog | null = null;
 
-  private resultResolver: ((result: NteDialogComponentResult<any>) => void) | null = null;
-  private resultPromise: Promise<NteDialogComponentResult<any>> | null = null;
+  private resultResolver: ((result: NteDialogComponentResult<TResult>) => void) | null = null;
+  private resultPromise: Promise<NteDialogComponentResult<TResult>> | null = null;
   private settled = false;
 
   protected override createRenderRoot() {
@@ -75,7 +94,7 @@ export abstract class NteDialogComponent<TInput = void, TResult = void> extends 
     this.requestUpdate();
     await this.updateComplete;
     this.dialog?.showModal();
-    return this.resultPromise as Promise<NteDialogComponentResult<TResult>>;
+    return this.resultPromise;
   }
 
   protected submit(...args: SubmitArgs<TResult>): void {
