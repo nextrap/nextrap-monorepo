@@ -1,6 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import './nte-dialog';
 import { NteDialog } from './nte-dialog';
+
+const originalShowModal = Object.getOwnPropertyDescriptor(HTMLDialogElement.prototype, 'showModal');
 
 describe('nte-dialog', () => {
   beforeEach(() => {
@@ -8,12 +10,26 @@ describe('nte-dialog', () => {
     window.history.replaceState(null, '', '/');
   });
 
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+
+    if (originalShowModal) {
+      Object.defineProperty(HTMLDialogElement.prototype, 'showModal', originalShowModal);
+    } else {
+      delete (HTMLDialogElement.prototype as Partial<HTMLDialogElement>).showModal;
+    }
+  });
+
   it('opens from its launcher', async () => {
-    const showModal = vi
-      .spyOn(HTMLDialogElement.prototype, 'showModal')
-      .mockImplementation(function (this: HTMLDialogElement) {
-        this.setAttribute('open', '');
-      });
+    const showModal = vi.fn(function (this: HTMLDialogElement) {
+      this.setAttribute('open', '');
+    });
+    Object.defineProperty(HTMLDialogElement.prototype, 'showModal', {
+      configurable: true,
+      writable: true,
+      value: showModal,
+    });
 
     const el = document.createElement('nte-dialog') as NteDialog;
     el.innerHTML = '<button class="launcher">Open</button><p>Content</p>';
@@ -27,31 +43,17 @@ describe('nte-dialog', () => {
   });
 
   it('creates a lazy unwrapped include for src', async () => {
-    const originalIntersectionObserver = globalThis.IntersectionObserver;
-    globalThis.IntersectionObserver = class IntersectionObserver {
-      readonly root = null;
-      readonly rootMargin = '0px';
-      readonly thresholds = [0];
-      disconnect() {}
-      observe() {}
-      takeRecords(): IntersectionObserverEntry[] {
-        return [];
-      }
-      unobserve() {}
-    } as typeof IntersectionObserver;
+    const fetchMock = vi.fn().mockResolvedValue(new Response('<p>Remote content</p>', { status: 200 }));
+    vi.stubGlobal('fetch', fetchMock);
 
-    try {
-      const el = document.createElement('nte-dialog') as NteDialog;
-      el.src = '/dialog.html';
-      document.body.append(el);
-      await el.updateComplete;
+    const el = document.createElement('nte-dialog') as NteDialog;
+    el.src = '/dialog.html';
+    document.body.append(el);
+    await el.updateComplete;
 
-      const include = el.querySelector('tj-include');
-      expect(include?.getAttribute('src')).toBe('/dialog.html');
-      expect(include?.hasAttribute('lazy')).toBe(true);
-      expect(include?.hasAttribute('unwrap')).toBe(true);
-    } finally {
-      globalThis.IntersectionObserver = originalIntersectionObserver;
-    }
+    const include = el.querySelector('tj-include');
+    expect(include?.getAttribute('src')).toBe('/dialog.html');
+    expect(include?.hasAttribute('lazy')).toBe(true);
+    expect(include?.hasAttribute('unwrap')).toBe(true);
   });
 });
