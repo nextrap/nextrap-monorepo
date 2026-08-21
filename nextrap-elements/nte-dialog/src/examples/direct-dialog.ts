@@ -1,4 +1,4 @@
-import type { NteDialog } from '../lib/nte-dialog';
+import type { NteDialog } from '../components/nte-dialog/nte-dialog';
 
 /**
  * Example for a dialog that already exists in the document.
