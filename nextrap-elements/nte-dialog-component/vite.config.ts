@@ -5,8 +5,8 @@ import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
-const projectName = 'nte-dialog';
-const dirName = 'nextrap-elements/nte-dialog';
+const projectName = 'nte-dialog-component';
+const dirName = 'nextrap-elements/nte-dialog-component';
 
 export default defineConfig(() => ({
   server: {
@@ -19,7 +19,7 @@ export default defineConfig(() => ({
   cacheDir: `../../node_modules/.vite/${dirName}`,
   plugins: [
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss']),
+    nxCopyAssetsPlugin(['*.md']),
     {
       name: 'watch-md-reload',
       handleHotUpdate({ file, server }) {

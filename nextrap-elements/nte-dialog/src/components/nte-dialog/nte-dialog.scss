@@ -1,0 +1,98 @@
+/* Functional Shadow DOM styles only. Visual variants are provided by public Sass mixins/classes. */
+:host { display: contents; }
+slot[name='launcher'].slot-empty { display: none; }
+dialog {
+  width: var(--nte-dialog-width, min(90vw, 500px));
+  height: var(--nte-dialog-height, auto);
+  max-width: var(--nte-dialog-max-width, 90vw);
+  max-height: var(--nte-dialog-max-height, calc(100vh - 3.5rem));
+  margin: auto;
+  padding: 0;
+  border: var(--nte-dialog-border, 0);
+  border-radius: var(--nte-dialog-border-radius, 0.5rem);
+  background: var(--nte-dialog-background, #fff);
+  color: var(--nte-dialog-color, #212529);
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--nte-dialog-box-shadow, 0 0.5rem 1rem rgba(0, 0, 0, 0.15), 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075));
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-24px) scale(0.98);
+  transition:
+    opacity var(--nte-dialog-transition-duration, 0.25s) var(--nte-dialog-transition-easing, ease),
+    transform var(--nte-dialog-transition-duration, 0.25s) var(--nte-dialog-transition-easing, ease);
+}
+dialog:open { opacity: 1; transform: translateY(0) scale(1); }
+@starting-style { dialog:open { opacity: 0; transform: translateY(-24px) scale(0.98); } }
+dialog.closing { opacity: 0; transform: translateY(-24px) scale(0.98); }
+dialog.shake { animation: dialogShake 0.35s ease; }
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0);
+  backdrop-filter: blur(0);
+  transition:
+    background var(--nte-dialog-transition-duration, 0.25s) var(--nte-dialog-transition-easing, ease),
+    backdrop-filter var(--nte-dialog-transition-duration, 0.25s) var(--nte-dialog-transition-easing, ease);
+}
+dialog:open::backdrop { background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(1px); }
+@starting-style { dialog:open::backdrop { background: rgba(0, 0, 0, 0); backdrop-filter: blur(0); } }
+dialog.closing::backdrop { background: rgba(0, 0, 0, 0); backdrop-filter: blur(0); }
+#header, #footer {
+  display: flex;
+  align-items: center;
+  padding: var(--nte-dialog-section-padding, 1rem);
+  background: var(--nte-dialog-section-background, var(--nte-dialog-background, #fff));
+}
+#header:has(slot[name='title'].slot-empty) { display: none; }
+#header:has(#close-button):has(slot[name='title'].slot-empty) { display: flex; justify-content: flex-end; }
+#footer:has(slot[name='footer'].slot-empty) { display: none; }
+#header {
+  justify-content: space-between;
+  border-bottom: var(--nte-dialog-header-border, 1px solid #dee2e6);
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+#content { overflow: auto; flex-grow: 1; }
+#footer { justify-content: flex-end; gap: 0.5rem; border-top: var(--nte-dialog-footer-border, 1px solid #dee2e6); }
+#close-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  padding: 0.25rem;
+  border-radius: 0.375rem;
+  opacity: 0.65;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+#close-button:hover { opacity: 1; background: rgba(0, 0, 0, 0.05); }
+:host(.with-floating-header) dialog { position: relative; }
+:host(.with-floating-header) #header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+  transition: background 0.25s ease, backdrop-filter 0.25s ease;
+}
+:host(.with-floating-header) dialog:hover #header {
+  background: var(--nte-dialog-floating-header-background, rgba(255, 255, 255, 0.8));
+  backdrop-filter: blur(4px);
+}
+@media (prefers-reduced-motion: reduce) { dialog, dialog::backdrop { transition-duration: 0s; } }
+@media (max-width: 576px) {
+  dialog {
+    width: var(--nte-dialog-mobile-width, calc(100vw - 1rem));
+    max-height: var(--nte-dialog-mobile-max-height, calc(100vh - 1rem));
+  }
+}
+@keyframes dialogShake {
+  0%, 100% { transform: translateY(0) translateX(0) scale(1); }
+  15% { transform: translateY(0) translateX(-10px) scale(1); }
+  30% { transform: translateY(0) translateX(10px) scale(1); }
+  45% { transform: translateY(0) translateX(-8px) scale(1); }
+  60% { transform: translateY(0) translateX(8px) scale(1); }
+  75% { transform: translateY(0) translateX(-4px) scale(1); }
+}
