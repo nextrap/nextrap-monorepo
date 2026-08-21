@@ -18,40 +18,24 @@ export interface NteDialogComponentOptions {
   dismiss?: false | NteDialogComponentDismissOptions;
 }
 
-type DialogComponentConstructor<TInput, TResult, TDialog extends NteDialogComponent<TInput, TResult>> = {
-  new (): TDialog;
-};
-
 /**
  * Keep input strict on purpose:
  * - `TInput = void` means the dialog takes no argument and `show()` / `open()` take none.
  * - any other `TInput` means that exact input is required.
- *
- * Making the non-void tuple optional would allow e.g.
- * `NteDialogComponent<{ userId: string }, User>.show()` without a userId and would
- * defeat the central compile-time contract of the component abstraction.
  */
 type OpenArgs<TInput> = [TInput] extends [void] ? [] : [input: TInput];
-
 type SubmitArgs<TResult> = [TResult] extends [void] ? [] : [data: TResult];
 
 /**
- * Base class for application/SPAs that create dialogs programmatically.
- * Rendering and browser-level dialog behavior remain owned by @nextrap/nte-dialog.
+ * Base class for typed programmatic dialogs.
  *
- * NteDialogComponent deliberately renders into its own light DOM. This keeps the
- * generated title, body and footer nodes in light DOM as direct children of the
- * nested NteDialog, so they use NteDialog's normal slot projection and remain
- * available to application CSS and DOM integrations.
- *
- * Both generic parameters are part of the public type contract:
- * - TInput determines what callers must pass to show()/open().
- * - TResult determines both what submit() accepts and what the resolved Promise
- *   exposes when `submitted === true`.
- *
- * Do not replace TResult with `any` in internal promise/resolver state. Doing so
- * disconnects submit(), the resolver and the public Promise at exactly the point
- * where the abstraction is supposed to guarantee end-to-end type safety.
+ * The static show() method intentionally derives its argument and result types from
+ * the concrete subclass instance instead of independently inferring TInput/TResult
+ * against NteDialogComponent<TInput, TResult>. The class contains TResult-typed
+ * private resolver state, which makes different TResult instantiations invariant.
+ * Independent generic inference therefore widens TResult to unknown and breaks the
+ * constructor `this` type. Deriving from InstanceType<TDialog> preserves the exact
+ * subclass contract end-to-end without optional input or `any` resolver state.
  */
 export abstract class NteDialogComponent<TInput = void, TResult = void> extends nextrap_element() {
   protected input!: TInput;
@@ -68,15 +52,22 @@ export abstract class NteDialogComponent<TInput = void, TResult = void> extends 
     return this;
   }
 
-  static async show<TInput, TResult, TDialog extends NteDialogComponent<TInput, TResult>>(
-    this: DialogComponentConstructor<TInput, TResult, TDialog>,
-    ...args: OpenArgs<TInput>
-  ): Promise<NteDialogComponentResult<TResult>> {
-    const modal = new this();
+  static async show<TDialog extends abstract new () => NteDialogComponent<never, never>>(
+    this: TDialog,
+    ...args: InstanceType<TDialog> extends NteDialogComponent<infer TInput, infer _TResult> ? OpenArgs<TInput> : never
+  ): Promise<
+    InstanceType<TDialog> extends NteDialogComponent<infer _TInput, infer TResult>
+      ? NteDialogComponentResult<TResult>
+      : never
+  > {
+    // The constructor constraint is used only to obtain the concrete subclass.
+    // Its generic parameters must not participate in inference; the conditional
+    // types above extract the actual TInput/TResult from InstanceType<TDialog>.
+    const modal = new this() as InstanceType<TDialog>;
     document.body.append(modal);
 
     try {
-      return await modal.open(...args);
+      return (await modal.open(...args)) as Awaited<ReturnType<InstanceType<TDialog>['open']>>;
     } finally {
       modal.remove();
     }
@@ -118,9 +109,7 @@ export abstract class NteDialogComponent<TInput = void, TResult = void> extends 
   protected override render() {
     const options = this.dialogOptions;
     const dismiss = options.dismiss === false ? false : (options.dismiss ?? {});
-    const dialogClass = Array.isArray(options.dialogClass)
-      ? options.dialogClass.join(' ')
-      : (options.dialogClass ?? '');
+    const dialogClass = Array.isArray(options.dialogClass) ? options.dialogClass.join(' ') : (options.dialogClass ?? '');
     const title = this.renderTitle();
     const footer = this.renderFooter();
 
