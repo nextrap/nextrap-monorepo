@@ -18,10 +18,26 @@ export interface NteDialogComponentOptions {
   dismiss?: false | NteDialogComponentDismissOptions;
 }
 
+const dialogTypes: unique symbol = Symbol('nte-dialog-component-types');
+
+type DialogTypeMarker<TInput, TResult> = {
+  readonly [dialogTypes]: {
+    input: TInput;
+    result: TResult;
+  };
+};
+
+type DialogComponentConstructor<TInput, TResult> = new () =>
+  NteDialogComponent<TInput, TResult> & DialogTypeMarker<TInput, TResult>;
+
 /**
  * Keep input strict on purpose:
  * - `TInput = void` means the dialog takes no argument and `show()` / `open()` take none.
  * - any other `TInput` means that exact input is required.
+ *
+ * Making the non-void tuple optional would allow e.g.
+ * `NteDialogComponent<{ userId: string }, User>.show()` without a userId and would
+ * defeat the central compile-time contract of the component abstraction.
  */
 type OpenArgs<TInput> = [TInput] extends [void] ? [] : [input: TInput];
 type SubmitArgs<TResult> = [TResult] extends [void] ? [] : [data: TResult];
@@ -29,15 +45,32 @@ type SubmitArgs<TResult> = [TResult] extends [void] ? [] : [data: TResult];
 /**
  * Base class for typed programmatic dialogs.
  *
- * The static show() method intentionally derives its argument and result types from
- * the concrete subclass instance instead of independently inferring TInput/TResult
- * against NteDialogComponent<TInput, TResult>. The class contains TResult-typed
- * private resolver state, which makes different TResult instantiations invariant.
- * Independent generic inference therefore widens TResult to unknown and breaks the
- * constructor `this` type. Deriving from InstanceType<TDialog> preserves the exact
- * subclass contract end-to-end without optional input or `any` resolver state.
+ * TInput and TResult form one end-to-end public type contract:
+ *
+ *   TInput  -> show()/open() -> this.input
+ *   TResult -> submit()      -> resolver -> returned Promise
+ *
+ * The private resolver makes different TResult instantiations intentionally
+ * invariant. Therefore static show() must not try to recover the generic types by
+ * widening the component to `unknown`, and the resolver must not be changed to
+ * `any` merely to make constructor inference pass.
+ *
+ * Instead, the class carries a non-exported, type-only unique-symbol marker. It has
+ * no runtime value on instances (`declare` emits no field), but gives TypeScript a
+ * covariant place from which static show() can infer the concrete subclass's exact
+ * TInput and TResult. This keeps both valid forms correctly typed:
+ *
+ *   ConfirmDialog extends NteDialogComponent<void, void>       -> ConfirmDialog.show()
+ *   UserDialog extends NteDialogComponent<UserInput, User>     -> UserDialog.show(input)
+ *
+ * and still rejects missing input for non-void dialogs at compile time.
  */
 export abstract class NteDialogComponent<TInput = void, TResult = void> extends nextrap_element() {
+  declare readonly [dialogTypes]: {
+    input: TInput;
+    result: TResult;
+  };
+
   protected input!: TInput;
   protected dialogOptions: NteDialogComponentOptions = {};
 
@@ -52,22 +85,15 @@ export abstract class NteDialogComponent<TInput = void, TResult = void> extends 
     return this;
   }
 
-  static async show<TDialog extends abstract new () => NteDialogComponent<never, never>>(
-    this: TDialog,
-    ...args: InstanceType<TDialog> extends NteDialogComponent<infer TInput, infer _TResult> ? OpenArgs<TInput> : never
-  ): Promise<
-    InstanceType<TDialog> extends NteDialogComponent<infer _TInput, infer TResult>
-      ? NteDialogComponentResult<TResult>
-      : never
-  > {
-    // The constructor constraint is used only to obtain the concrete subclass.
-    // Its generic parameters must not participate in inference; the conditional
-    // types above extract the actual TInput/TResult from InstanceType<TDialog>.
-    const modal = new this() as InstanceType<TDialog>;
+  static async show<TInput, TResult>(
+    this: DialogComponentConstructor<TInput, TResult>,
+    ...args: OpenArgs<TInput>
+  ): Promise<NteDialogComponentResult<TResult>> {
+    const modal = new this();
     document.body.append(modal);
 
     try {
-      return (await modal.open(...args)) as Awaited<ReturnType<InstanceType<TDialog>['open']>>;
+      return await modal.open(...args);
     } finally {
       modal.remove();
     }
