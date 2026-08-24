@@ -42,6 +42,12 @@
   }
 }
 
+@mixin table-borderless() {
+  & > :not(caption) > * > * {
+    border-bottom-width: 0;
+  }
+}
+
 @mixin table-hover() {
   tbody tr:hover {
     background-color: var(--nt-table-hover-bg, rgba(0, 0, 0, 0.075));
@@ -52,4 +58,11 @@
   & > :not(caption) > * > * {
     padding: var(--nt-space-1, 0.25rem) var(--nt-space-1, 0.25rem);
   }
+}
+
+// Apply to a wrapper around a table, matching Bootstrap's responsive-table
+// ownership model without forcing overflow behavior onto every table.
+@mixin table-responsive() {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
