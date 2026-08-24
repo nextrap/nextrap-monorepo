@@ -6,7 +6,9 @@
 
 @use './prose' as p;
 @use './table' as t;
+@use './list' as l;
 @use './list-group' as lg;
+@use './image' as i;
 @use './container' as c;
 
 @mixin elements() {
@@ -21,11 +23,24 @@
   .table { @include t.table(); }
   .table-striped { @include t.table-striped(); }
   .table-bordered { @include t.table-bordered(); }
+  .table-borderless { @include t.table-borderless(); }
   .table-hover { @include t.table-hover(); }
   .table-sm { @include t.table-sm(); }
+  .table-responsive { @include t.table-responsive(); }
+
+  // `.list` is the semantic ownership class. Theme defaults can therefore
+  // target ul/ol:not(.list) while utility classes remain composable.
+  .list { @include l.list(); }
+  .list-unstyled { @include l.list-unstyled(); }
+  .list-inline { @include l.list-inline(); }
+  .list-inline-item { @include l.list-inline-item(); }
 
   .list-group { @include lg.list-group(); }
   .list-group-flush { @include lg.list-group-flush(); }
+
+  .img-fluid { @include i.img-fluid(); }
+  .img-thumbnail { @include i.img-thumbnail(); }
+  .figure-img { @include i.figure-img(); }
 
   .container { @include c.container(); }
   .container-fluid { @include c.container-fluid(); }

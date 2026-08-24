@@ -1,0 +1,20 @@
+// @nextrap/style-elements — image and figure class mixins
+
+@mixin img-fluid() {
+  max-width: 100%;
+  height: auto;
+}
+
+@mixin img-thumbnail() {
+  max-width: 100%;
+  height: auto;
+  padding: var(--nt-space-1, .25rem);
+  background-color: var(--nt-surface, transparent);
+  border: var(--nt-border-width, 1px) solid var(--nt-border, currentColor);
+  border-radius: var(--nt-border-radius, .375rem);
+}
+
+@mixin figure-img() {
+  margin-bottom: var(--nt-space-2, .5rem);
+  line-height: 1;
+}
