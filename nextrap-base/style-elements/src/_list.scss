@@ -23,7 +23,7 @@
   }
 }
 
-// Caret marker list, matching the pattern previously implemented directly in
+// Diamond marker list, matching the pattern previously implemented directly in
 // the Osman theme. Intended to be composed with the semantic `.list` base.
 @mixin list-caret() {
   list-style: none;
@@ -34,7 +34,7 @@
     padding-inline-start: 1.25em;
 
     &::before {
-      content: "›";
+      content: "◆";
       position: absolute;
       inset-inline-start: 0;
       color: var(--nt-primary);
