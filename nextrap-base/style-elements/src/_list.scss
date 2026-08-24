@@ -22,3 +22,23 @@
     margin-inline-end: var(--nt-space-2, .5rem);
   }
 }
+
+// Caret marker list, matching the pattern previously implemented directly in
+// the Osman theme. Intended to be composed with the semantic `.list` base.
+@mixin list-caret() {
+  list-style: none;
+  padding-inline-start: 0;
+
+  > li {
+    position: relative;
+    padding-inline-start: 1.25em;
+
+    &::before {
+      content: "›";
+      position: absolute;
+      inset-inline-start: 0;
+      color: var(--nt-primary);
+      font-weight: var(--nt-font-weight-bold, 600);
+    }
+  }
+}
