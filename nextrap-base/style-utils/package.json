@@ -16,5 +16,8 @@
     },
     "type": "module",
     "types": "./index.d.ts",
-    "web-types": "./web-types.json"
+    "web-types": [
+        "./web-types.json",
+        "./web-types.surfaces.json"
+    ]
 }
