@@ -1,0 +1,22 @@
+@mixin size-sm() {
+  --nte-dialog-width: min(90vw, 400px);
+}
+
+@mixin size-md() {
+  --nte-dialog-width: min(90vw, 500px);
+}
+
+@mixin size-lg() {
+  --nte-dialog-width: min(90vw, 700px);
+}
+
+@mixin size-xl() {
+  --nte-dialog-width: min(90vw, 900px);
+}
+
+@mixin size-fullscreen() {
+  --nte-dialog-width: calc(100vw - 2rem);
+  --nte-dialog-height: calc(100vh - 2rem);
+  --nte-dialog-max-width: none;
+  --nte-dialog-max-height: none;
+}

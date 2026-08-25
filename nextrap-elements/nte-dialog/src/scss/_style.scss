@@ -1,0 +1,14 @@
+@mixin style-default() {
+  --nte-dialog-background: #fff;
+  --nte-dialog-color: #212529;
+  --nte-dialog-border: 0;
+  --nte-dialog-border-radius: 0.5rem;
+  --nte-dialog-section-background: var(--nte-dialog-background);
+  --nte-dialog-header-border: 1px solid #dee2e6;
+  --nte-dialog-footer-border: 1px solid #dee2e6;
+}
+
+@mixin style-highlighted() {
+  @include style-default();
+  --nte-dialog-border: 2px solid var(--nte-dialog-highlight-color, currentColor);
+}

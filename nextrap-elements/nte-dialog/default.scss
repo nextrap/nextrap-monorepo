@@ -1,0 +1,3 @@
+@use './index' as dialog;
+
+@include dialog.with-modifier-classes();
