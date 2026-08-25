@@ -2,6 +2,8 @@
 // Classes are generated in default.scss from these same mixins.
 
 // Background mixins
+// `bg-*` intentionally changes only the background. Use `surface-*` when a
+// complete background/foreground pair is wanted.
 @mixin bg-primary() { background: var(--nt-primary) !important; }
 @mixin bg-primary-subtle() { background: var(--nt-primary-subtle) !important; }
 @mixin bg-primary-emphasis() { background: var(--nt-primary-emphasis) !important; }
@@ -34,6 +36,31 @@
 @mixin bg-dark-emphasis() { background: var(--nt-dark-emphasis) !important; }
 @mixin bg-white() { background: var(--nt-white) !important; }
 @mixin bg-black() { background: var(--nt-black) !important; }
+
+// Semantic surface mixins
+// A surface is a complete readable color pair: it sets both the background and
+// the matching contrast foreground from style-base. Prefer these for sections,
+// heroes, callouts, cards or controls where the background defines text color.
+@mixin surface-primary() { background: var(--nt-primary) !important; color: var(--nt-text-on-primary) !important; }
+@mixin surface-secondary() { background: var(--nt-secondary) !important; color: var(--nt-text-on-secondary) !important; }
+@mixin surface-tertiary() { background: var(--nt-tertiary) !important; color: var(--nt-text-on-tertiary) !important; }
+@mixin surface-accent() { background: var(--nt-accent) !important; color: var(--nt-text-on-accent) !important; }
+@mixin surface-success() { background: var(--nt-success) !important; color: var(--nt-text-on-success) !important; }
+@mixin surface-info() { background: var(--nt-info) !important; color: var(--nt-text-on-info) !important; }
+@mixin surface-warning() { background: var(--nt-warning) !important; color: var(--nt-text-on-warning) !important; }
+@mixin surface-danger() { background: var(--nt-danger) !important; color: var(--nt-text-on-danger) !important; }
+@mixin surface-light() { background: var(--nt-light) !important; color: var(--nt-text-on-light) !important; }
+@mixin surface-dark() { background: var(--nt-dark) !important; color: var(--nt-text-on-dark) !important; }
+@mixin surface-white() { background: var(--nt-white) !important; color: var(--nt-text-on-white) !important; }
+@mixin surface-black() { background: var(--nt-black) !important; color: var(--nt-text-on-black) !important; }
+
+// Scheme utilities
+// Unlike surface-* these do not choose a concrete background. They change the
+// light/dark evaluation context for this element and its descendants. Use them
+// for locally inverted sections whose scheme-aware tokens/components should all
+// render in a forced mode. Nested elements may switch the scheme again.
+@mixin scheme-light() { color-scheme: light !important; }
+@mixin scheme-dark() { color-scheme: dark !important; }
 
 // Deprecated soft aliases (kept for backward compat)
 @mixin bg-soft-primary() { background: var(--nt-primary-subtle) !important; }
