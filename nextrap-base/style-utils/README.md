@@ -96,6 +96,17 @@ Sass usage:
 }
 ```
 
+## IDE metadata / Web Types
+
+The package ships JetBrains Web Types metadata for its public CSS class API. `package.json` references both manifests:
+
+- `web-types.json` contains the established utility catalog.
+- `web-types.surfaces.json` contains the semantic `surface-*` and `scheme-*` additions.
+
+JetBrains supports a string or an array of Web Types paths in the package `web-types` field, so both manifests are discovered as one package API. The Vite build copies `web-types*.json` into `dist/nextrap-base/style-utils`; do not narrow that copy pattern back to a single file or IDE completion will be incomplete in the published package.
+
+When adding or renaming a public utility, update the corresponding Web Types manifest together with the Sass class/mixin API and this documentation.
+
 ## Default and scoped output
 
 For ready-to-use classes:
