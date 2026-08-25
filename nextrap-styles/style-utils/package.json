@@ -1,6 +1,6 @@
 {
     "name": "@nextrap/style-utils",
-    "version": "1.0.10",
+    "version": "2.0.0",
     "main": "./index.js",
     "repository": {
         "directory": "nextrap-base/style-utils",
@@ -12,7 +12,7 @@
         "./default": "./default.scss"
     },
     "devDependencies": {
-        "@nextrap/style-base": "^1.1.11"
+        "@nextrap/style-base": "^2.0.0"
     },
     "type": "module",
     "types": "./index.d.ts",
