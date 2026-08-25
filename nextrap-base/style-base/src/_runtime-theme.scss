@@ -109,7 +109,7 @@
   --nt-surface: light-dark(color-mix(in oklch, var(--nt-neutral) 2%, white), color-mix(in oklch, var(--nt-neutral) 12%, black)); // Default page/component background surface.
   --nt-surface-muted: light-dark(color-mix(in oklch, var(--nt-neutral) 8%, white), color-mix(in oklch, var(--nt-neutral) 18%, black)); // Secondary/recessed surface for grouped areas and subtle panels.
   --nt-surface-raised: light-dark(color-mix(in oklch, var(--nt-neutral) 0%, white), color-mix(in oklch, var(--nt-neutral) 25%, black)); // Raised/elevated surface for cards, popovers and dialogs.
-  --nt-text: light-dark(color-mix(in oklch, var(--nt-neutral) 15%, black), color-mix(in oklch, var(--nt-neutral) 10%, white)); // Default readable foreground text.
+  --nt-text: light-dark(color-mix(in oklch, var(--nt-neutral) 15%, black), color-mix(in oklch, var(--nt-neutral) 3%, white)); // Default readable foreground text; near-white in dark mode for stronger contrast.
   --nt-text-muted: light-dark(color-mix(in oklch, var(--nt-neutral) 55%, black), color-mix(in oklch, var(--nt-neutral) 40%, white)); // Secondary text, descriptions, metadata and helper copy.
   --nt-border: light-dark(color-mix(in oklch, var(--nt-neutral) 28%, white), color-mix(in oklch, var(--nt-neutral) 45%, black)); // Default component/divider border color.
   --nt-header: var(--nt-text); // Heading foreground; separate alias allows theme-specific heading color.
