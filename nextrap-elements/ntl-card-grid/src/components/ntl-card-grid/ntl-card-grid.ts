@@ -1,15 +1,11 @@
+import { nextrap_element } from '@nextrap/nt-core';
+import { resetStyle } from '@nextrap/style-reset';
 import { html, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-
-// Styles for the light DOM
-import { resetStyle } from '@nextrap/style-reset';
-
-// Styles for your component's shadow DOM
-import { nextrap_layout } from '@nextrap/ntl-core';
 import style from './ntl-card-grid.scss?inline';
 
 @customElement('ntl-card-grid')
-export class NtlCardGridElement extends nextrap_layout({
+export class NtlCardGridElement extends nextrap_element({
   breakpoints: true,
   subLayoutApply: true,
 }) {
@@ -24,23 +20,12 @@ export class NtlCardGridElement extends nextrap_layout({
   override render() {
     return html`
       <div part="wrapper" id="wrapper">
-        <div part="header" id="header">
-          <slot
-            name="header"
-            data-query=":scope > .header | :scope > h1:not(.keep),:scope > h2:not(.keep),:scope > h3:not(.keep),:scope > h4:not(.keep),:scope > h5:not(.keep),:scope > h6:not(.keep)"
-          ></slot>
-        </div>
+        <div part="header" id="header"><slot name="header" data-query=":scope > .header | :scope > h1:not(.keep),:scope > h2:not(.keep),:scope > h3:not(.keep),:scope > h4:not(.keep),:scope > h5:not(.keep),:scope > h6:not(.keep)"></slot></div>
         <div part="content-wrapper" id="content-wrapper">
-          <div part="main" id="main">
-            <slot data-query=":scope > section:not(.aside)" data-set-attribute-layout="${this.childLayout}"></slot>
-          </div>
-          <div part="aside" id="aside">
-            <slot name="aside" data-query=":scope > .aside"></slot>
-          </div>
+          <div part="main" id="main"><slot data-query=":scope > section:not(.aside)" data-set-attribute-layout="${this.childLayout}"></slot></div>
+          <div part="aside" id="aside"><slot name="aside" data-query=":scope > .aside"></slot></div>
         </div>
-        <div part="footer" id="footer">
-          <slot name="footer" data-query=":scope > .footer"></slot>
-        </div>
+        <div part="footer" id="footer"><slot name="footer" data-query=":scope > .footer"></slot></div>
       </div>
     `;
   }
