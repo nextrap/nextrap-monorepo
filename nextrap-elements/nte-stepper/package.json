@@ -1,6 +1,6 @@
 {
     "name": "@nextrap/nte-stepper",
-    "version": "0.0.1",
+    "version": "2.0.0",
     "main": "./index.js",
     "repository": {
         "directory": "nextrap-elements/nte-stepper",

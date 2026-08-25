@@ -1,6 +1,6 @@
 {
   "name": "@nextrap/nte-dialog-component",
-  "version": "0.0.1",
+  "version": "2.0.0",
   "type": "module",
   "main": "./index.js",
   "module": "./index.js",
@@ -18,8 +18,8 @@
     "*.md"
   ],
   "dependencies": {
-    "@nextrap/nte-core": "^1.0.0",
-    "@nextrap/nte-dialog": "^0.0.2",
+    "@nextrap/nt-core": "^2.0.0",
+    "@nextrap/nte-dialog": "^2.0.0",
     "lit": "^3.0.0"
   },
   "publishConfig": {

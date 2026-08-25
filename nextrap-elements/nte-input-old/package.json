@@ -1,6 +1,6 @@
 {
     "name": "@nextrap/nte-input-old",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "main": "./index.js",
     "repository": {
         "directory": "nextrap-elements/nte-input-old",
