@@ -1,0 +1,47 @@
+// Shared interaction-state intensity contract.
+//
+// Components must use these runtime tokens for hover/active feedback instead of
+// inventing local percentages. Theme packages may override the percentages once
+// to tune interaction strength across buttons, accordions, navigation, tabs,
+// clickable cards and every other interactive component.
+
+@mixin interaction-tokens() {
+  --nt-interaction-hover: 10%; // Standard hover shift for all interactive elements.
+  --nt-interaction-active: 15%; // Stronger pressed/active shift for direct manipulation feedback.
+  --nt-interaction-emphasis: 20%; // Strong emphasis shift used by semantic emphasis variants.
+
+  // Semantic state colors consume the shared interaction intensities. In light
+  // mode hover/active colors move toward black; in dark mode they move toward
+  // white, so the interaction remains visible in either scheme.
+  --nt-primary-hover: color-mix(in oklch, var(--nt-primary), light-dark(black, white) var(--nt-interaction-hover));
+  --nt-primary-active: color-mix(in oklch, var(--nt-primary), light-dark(black, white) var(--nt-interaction-active));
+  --nt-primary-emphasis: color-mix(in oklch, var(--nt-primary), light-dark(black, white) var(--nt-interaction-emphasis));
+
+  --nt-secondary-hover: color-mix(in oklch, var(--nt-secondary), light-dark(black, white) var(--nt-interaction-hover));
+  --nt-secondary-active: color-mix(in oklch, var(--nt-secondary), light-dark(black, white) var(--nt-interaction-active));
+  --nt-secondary-emphasis: color-mix(in oklch, var(--nt-secondary), light-dark(black, white) var(--nt-interaction-emphasis));
+
+  --nt-tertiary-hover: color-mix(in oklch, var(--nt-tertiary), light-dark(black, white) var(--nt-interaction-hover));
+  --nt-tertiary-active: color-mix(in oklch, var(--nt-tertiary), light-dark(black, white) var(--nt-interaction-active));
+  --nt-tertiary-emphasis: color-mix(in oklch, var(--nt-tertiary), light-dark(black, white) var(--nt-interaction-emphasis));
+
+  --nt-accent-hover: color-mix(in oklch, var(--nt-accent), light-dark(black, white) var(--nt-interaction-hover));
+  --nt-accent-active: color-mix(in oklch, var(--nt-accent), light-dark(black, white) var(--nt-interaction-active));
+  --nt-accent-emphasis: color-mix(in oklch, var(--nt-accent), light-dark(black, white) var(--nt-interaction-emphasis));
+
+  --nt-success-hover: color-mix(in oklch, var(--nt-success), light-dark(black, white) var(--nt-interaction-hover));
+  --nt-success-active: color-mix(in oklch, var(--nt-success), light-dark(black, white) var(--nt-interaction-active));
+  --nt-success-emphasis: color-mix(in oklch, var(--nt-success), light-dark(black, white) var(--nt-interaction-emphasis));
+
+  --nt-info-hover: color-mix(in oklch, var(--nt-info), light-dark(black, white) var(--nt-interaction-hover));
+  --nt-info-active: color-mix(in oklch, var(--nt-info), light-dark(black, white) var(--nt-interaction-active));
+  --nt-info-emphasis: color-mix(in oklch, var(--nt-info), light-dark(black, white) var(--nt-interaction-emphasis));
+
+  --nt-warning-hover: color-mix(in oklch, var(--nt-warning), light-dark(black, white) var(--nt-interaction-hover));
+  --nt-warning-active: color-mix(in oklch, var(--nt-warning), light-dark(black, white) var(--nt-interaction-active));
+  --nt-warning-emphasis: color-mix(in oklch, var(--nt-warning), light-dark(black, white) var(--nt-interaction-emphasis));
+
+  --nt-danger-hover: color-mix(in oklch, var(--nt-danger), light-dark(black, white) var(--nt-interaction-hover));
+  --nt-danger-active: color-mix(in oklch, var(--nt-danger), light-dark(black, white) var(--nt-interaction-active));
+  --nt-danger-emphasis: color-mix(in oklch, var(--nt-danger), light-dark(black, white) var(--nt-interaction-emphasis));
+}
