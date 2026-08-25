@@ -1,98 +1,201 @@
 // Runtime CSS theme engine.
 //
-// Emits a small set of input tokens and derives the mechanical design tokens
-// in CSS. This keeps themes runtime-overridable while Sass remains responsible
-// for structure, mixin composition and code generation.
-//
-// Usage:
-//   :where(.theme-example) {
-//     @include runtime-theme();
-//     --nt-primary: #0057b8;
-//     --nt-neutral: #667085;
-//     --nt-radius: .5rem;
-//   }
-//
-// Scheme selection can be automatic or explicit:
-//   :root { color-scheme: light dark; }
-//   [data-nt-scheme='light'] { color-scheme: light; }
-//   [data-nt-scheme='dark'] { color-scheme: dark; }
+// Emits theme input tokens and derives the mechanical design tokens in CSS.
+// Theme authors should normally override input tokens; components should
+// consume semantic/derived tokens so themes remain runtime-overridable.
 
 @mixin runtime-theme() {
   color-scheme: light dark;
 
-  // === INPUT TOKENS ===
-  // Theme authors are expected to override these, rather than the derived
-  // variables below. Values here intentionally match the classic defaults.
-  --nt-primary: #007bff;
-  --nt-accent: #ff8400;
-  --nt-neutral: #7e7e7e;
-  --nt-secondary: #6c757d;
-  --nt-tertiary: #17a2b8;
-  --nt-success: #28a745;
-  --nt-info: #17a2b8;
-  --nt-warning: #ffc107;
-  --nt-danger: #dc3545;
-  --nt-white: #fff;
-  --nt-black: #000;
+  // === COLOR INPUT TOKENS ===
+  --nt-primary: #007bff; // Main brand/action color: primary buttons, selected states, key actions.
+  --nt-accent: #ff8400; // Complementary brand color: highlights, accents and secondary emphasis.
+  --nt-neutral: #7e7e7e; // Neutral seed used to derive surfaces, text, borders and gray scale.
+  --nt-secondary: #6c757d; // Secondary action/state color where primary emphasis is too strong.
+  --nt-tertiary: #17a2b8; // Optional third semantic/brand color for differentiated UI groups.
+  --nt-success: #28a745; // Positive/success states, confirmations and completed outcomes.
+  --nt-info: #17a2b8; // Informational states, notices and neutral callouts.
+  --nt-warning: #ffc107; // Cautionary states that need attention but are not errors.
+  --nt-danger: #dc3545; // Destructive actions, validation errors and critical states.
+  --nt-light: #f8f9fa; // Explicit light utility color and light-surface compatibility token.
+  --nt-dark: #212529; // Explicit dark utility color and dark-surface compatibility token.
+  --nt-white: #fff; // Absolute white for contrast fallbacks and explicit white usage.
+  --nt-black: #000; // Absolute black for contrast fallbacks and explicit black usage.
 
-  --nt-radius: .5rem;
-  --nt-font-family: sans-serif;
-  --nt-font-family-header: var(--nt-font-family);
-  --nt-font-size: 1rem;
-  --nt-line-height: 1.5;
-  --nt-container-max: 1320px;
+  // === TYPOGRAPHY / SHAPE / CONTAINER INPUT TOKENS ===
+  --nt-radius: .5rem; // Base corner radius; components derive small/large radii from this value.
+  --nt-font-family: sans-serif; // Default body/control font family.
+  --nt-font-family-header: var(--nt-font-family); // Heading/display font family; defaults to body family.
+  --nt-font-size: 1rem; // Base text size used as reference for the runtime text scale.
+  --nt-font-size-header: 2rem; // Maximum heading size (h1); h2-h6 interpolate down to base size.
+  --nt-font-size-small: .875rem; // Small/supporting text such as captions, metadata and helper text.
+  --nt-font-weight-base: 400; // Default body/control font weight.
+  --nt-font-weight-header: 500; // Default heading font weight.
+  --nt-font-weight-bold: 600; // Strong emphasis/bold text weight.
+  --nt-line-height: 1.4; // Default body/control line height and text rhythm baseline.
+  --nt-line-height-header: 1.2; // Compact line height for headings/display text.
+  --nt-container-max: 1320px; // Maximum width of centered page/content containers.
 
-  // === DERIVED BRAND STATES ===
-  // OKLCH interpolation produces perceptually smoother state colors than
-  // compile-time HSL lightness adjustments.
-  --nt-primary-hover: color-mix(in oklch, var(--nt-primary), light-dark(black 10%, white 10%));
-  --nt-primary-active: color-mix(in oklch, var(--nt-primary), light-dark(black 15%, white 15%));
-  --nt-primary-subtle: color-mix(in oklch, var(--nt-primary), light-dark(white 85%, black 72%));
-  --nt-primary-emphasis: color-mix(in oklch, var(--nt-primary), light-dark(black 20%, white 20%));
+  // === PRIMITIVE SPACING SCALE ===
+  // Use primitives when an exact scale step is part of a component contract.
+  // Prefer semantic spacing tokens below for intent-driven application code.
+  --nt-space-0: 0; // No spacing/reset value.
+  --nt-space-1: .25rem; // Micro spacing: icon nudges, very tight inline gaps.
+  --nt-space-2: .5rem; // Tight spacing: icon/text gaps, compact control internals.
+  --nt-space-3: .75rem; // Small spacing: default control gaps/padding reference.
+  --nt-space-4: 1rem; // Base spacing: normal text rhythm and common gaps.
+  --nt-space-5: 1.5rem; // Medium spacing: component padding and container gutter reference.
+  --nt-space-6: 2rem; // Large spacing: layout gaps between sibling components/regions.
+  --nt-space-7: 3rem; // Extra-large spacing: compact section separation.
+  --nt-space-8: 4rem; // Major layout/section separation.
+  --nt-space-9: 6rem; // Large page-section separation.
+  --nt-space-10: 8rem; // Maximum standard spacing for hero/major page regions.
 
-  --nt-accent-hover: color-mix(in oklch, var(--nt-accent), light-dark(black 10%, white 10%));
-  --nt-accent-active: color-mix(in oklch, var(--nt-accent), light-dark(black 15%, white 15%));
-  --nt-secondary-hover: color-mix(in oklch, var(--nt-secondary), light-dark(black 10%, white 10%));
-  --nt-secondary-active: color-mix(in oklch, var(--nt-secondary), light-dark(black 15%, white 15%));
+  // === SEMANTIC SPACING ===
+  --nt-spacing-text: var(--nt-space-4); // Vertical text rhythm: paragraphs, lists, prose blocks and stacked labels.
+  --nt-spacing-control: var(--nt-space-3); // Controls: button/input internal padding reference and gaps between tightly related controls.
+  --nt-spacing-component: var(--nt-space-5); // Component interior: card/dialog/panel padding and gaps between a component's internal regions.
+  --nt-spacing-layout: var(--nt-space-6); // Layout composition: gaps between sibling components, columns, cards and content regions.
+  --nt-spacing-section: clamp(var(--nt-space-7), 5vw, var(--nt-space-9)); // Page composition: vertical separation between major sections; intentionally fluid.
+  --nt-container-gutter: var(--nt-space-5); // Horizontal page/container inset from the viewport edge.
+
+  // === DERIVED BRAND / STATE COLORS ===
+  --nt-primary-hover: color-mix(in oklch, var(--nt-primary), light-dark(black 10%, white 10%)); // Hover feedback for primary actions.
+  --nt-primary-active: color-mix(in oklch, var(--nt-primary), light-dark(black 15%, white 15%)); // Pressed/active feedback for primary actions.
+  --nt-primary-subtle: color-mix(in oklch, var(--nt-primary), light-dark(white 85%, black 72%)); // Low-emphasis primary background/tint.
+  --nt-primary-emphasis: color-mix(in oklch, var(--nt-primary), light-dark(black 20%, white 20%)); // High-emphasis primary border/text/detail.
+
+  --nt-secondary-hover: color-mix(in oklch, var(--nt-secondary), light-dark(black 10%, white 10%)); // Hover feedback for secondary actions.
+  --nt-secondary-active: color-mix(in oklch, var(--nt-secondary), light-dark(black 15%, white 15%)); // Pressed feedback for secondary actions.
+  --nt-secondary-subtle: color-mix(in oklch, var(--nt-secondary), light-dark(white 85%, black 72%)); // Low-emphasis secondary background/tint.
+  --nt-secondary-emphasis: color-mix(in oklch, var(--nt-secondary), light-dark(black 20%, white 20%)); // High-emphasis secondary detail.
+
+  --nt-tertiary-hover: color-mix(in oklch, var(--nt-tertiary), light-dark(black 10%, white 10%)); // Hover feedback for tertiary actions.
+  --nt-tertiary-active: color-mix(in oklch, var(--nt-tertiary), light-dark(black 15%, white 15%)); // Pressed feedback for tertiary actions.
+  --nt-tertiary-subtle: color-mix(in oklch, var(--nt-tertiary), light-dark(white 85%, black 72%)); // Low-emphasis tertiary background/tint.
+  --nt-tertiary-emphasis: color-mix(in oklch, var(--nt-tertiary), light-dark(black 20%, white 20%)); // High-emphasis tertiary detail.
+
+  --nt-accent-hover: color-mix(in oklch, var(--nt-accent), light-dark(black 10%, white 10%)); // Hover feedback for accent-colored interactions.
+  --nt-accent-active: color-mix(in oklch, var(--nt-accent), light-dark(black 15%, white 15%)); // Pressed feedback for accent-colored interactions.
+  --nt-accent-subtle: color-mix(in oklch, var(--nt-accent), light-dark(white 85%, black 72%)); // Low-emphasis accent background/tint.
+  --nt-accent-emphasis: color-mix(in oklch, var(--nt-accent), light-dark(black 20%, white 20%)); // High-emphasis accent detail.
+
+  --nt-success-hover: color-mix(in oklch, var(--nt-success), light-dark(black 10%, white 10%)); // Hover feedback on success actions.
+  --nt-success-active: color-mix(in oklch, var(--nt-success), light-dark(black 15%, white 15%)); // Pressed feedback on success actions.
+  --nt-success-subtle: color-mix(in oklch, var(--nt-success), light-dark(white 85%, black 72%)); // Success notice/badge background tint.
+  --nt-success-emphasis: color-mix(in oklch, var(--nt-success), light-dark(black 20%, white 20%)); // Strong success border/text/detail.
+
+  --nt-info-hover: color-mix(in oklch, var(--nt-info), light-dark(black 10%, white 10%)); // Hover feedback on informational actions.
+  --nt-info-active: color-mix(in oklch, var(--nt-info), light-dark(black 15%, white 15%)); // Pressed feedback on informational actions.
+  --nt-info-subtle: color-mix(in oklch, var(--nt-info), light-dark(white 85%, black 72%)); // Informational notice/badge background tint.
+  --nt-info-emphasis: color-mix(in oklch, var(--nt-info), light-dark(black 20%, white 20%)); // Strong informational border/text/detail.
+
+  --nt-warning-hover: color-mix(in oklch, var(--nt-warning), light-dark(black 10%, white 10%)); // Hover feedback on warning actions.
+  --nt-warning-active: color-mix(in oklch, var(--nt-warning), light-dark(black 15%, white 15%)); // Pressed feedback on warning actions.
+  --nt-warning-subtle: color-mix(in oklch, var(--nt-warning), light-dark(white 85%, black 72%)); // Warning notice/badge background tint.
+  --nt-warning-emphasis: color-mix(in oklch, var(--nt-warning), light-dark(black 20%, white 20%)); // Strong warning border/text/detail.
+
+  --nt-danger-hover: color-mix(in oklch, var(--nt-danger), light-dark(black 10%, white 10%)); // Hover feedback on destructive actions.
+  --nt-danger-active: color-mix(in oklch, var(--nt-danger), light-dark(black 15%, white 15%)); // Pressed feedback on destructive actions.
+  --nt-danger-subtle: color-mix(in oklch, var(--nt-danger), light-dark(white 85%, black 72%)); // Error/destructive notice background tint.
+  --nt-danger-emphasis: color-mix(in oklch, var(--nt-danger), light-dark(black 20%, white 20%)); // Strong error/destructive border/text/detail.
+
+  --nt-light-subtle: color-mix(in oklch, var(--nt-light), white 25%); // Lighter utility surface derived from light.
+  --nt-light-emphasis: color-mix(in oklch, var(--nt-light), black 35%); // Contrasting utility detail derived from light.
+  --nt-dark-subtle: color-mix(in oklch, var(--nt-dark), white 40%); // Softer dark utility surface/detail.
+  --nt-dark-emphasis: color-mix(in oklch, var(--nt-dark), black 20%); // Stronger dark utility detail.
 
   // === SURFACES / CONTENT ===
-  // Neutral is the single hue/chroma input for the default surface family.
-  --nt-surface: color-mix(in oklch, var(--nt-neutral), light-dark(white 98%, black 88%));
-  --nt-surface-muted: color-mix(in oklch, var(--nt-neutral), light-dark(white 92%, black 82%));
-  --nt-surface-raised: color-mix(in oklch, var(--nt-neutral), light-dark(white 100%, black 75%));
-  --nt-text: color-mix(in oklch, var(--nt-neutral), light-dark(black 85%, white 90%));
-  --nt-text-muted: color-mix(in oklch, var(--nt-neutral), light-dark(black 45%, white 60%));
-  --nt-border: color-mix(in oklch, var(--nt-neutral), light-dark(white 72%, black 55%));
-  --nt-header: var(--nt-text);
-  --nt-focus: var(--nt-primary);
-  --nt-link: var(--nt-primary);
-  --nt-link-hover: var(--nt-primary-hover);
-  --nt-link-active: var(--nt-primary-active);
+  --nt-surface: color-mix(in oklch, var(--nt-neutral), light-dark(white 98%, black 88%)); // Default page/component background surface.
+  --nt-surface-muted: color-mix(in oklch, var(--nt-neutral), light-dark(white 92%, black 82%)); // Secondary/recessed surface for grouped areas and subtle panels.
+  --nt-surface-raised: color-mix(in oklch, var(--nt-neutral), light-dark(white 100%, black 75%)); // Raised/elevated surface for cards, popovers and dialogs.
+  --nt-text: color-mix(in oklch, var(--nt-neutral), light-dark(black 85%, white 90%)); // Default readable foreground text.
+  --nt-text-muted: color-mix(in oklch, var(--nt-neutral), light-dark(black 45%, white 60%)); // Secondary text, descriptions, metadata and helper copy.
+  --nt-border: color-mix(in oklch, var(--nt-neutral), light-dark(white 72%, black 55%)); // Default component/divider border color.
+  --nt-header: var(--nt-text); // Heading foreground; separate alias allows theme-specific heading color.
+  --nt-focus: var(--nt-primary); // Keyboard/focus-visible rings and accessibility focus indicators.
+  --nt-link: var(--nt-primary); // Default inline/navigation link color.
+  --nt-link-hover: var(--nt-primary-hover); // Link hover feedback.
+  --nt-link-active: var(--nt-primary-active); // Link pressed/active feedback.
 
-  // Conservative fallbacks; modern browsers can derive contrast dynamically.
-  --nt-text-on-primary: var(--nt-white);
-  --nt-text-on-accent: var(--nt-black);
+  // === CONTRAST TEXT ===
+  --nt-text-on-primary: var(--nt-white); // Foreground content placed on primary backgrounds.
+  --nt-text-on-secondary: var(--nt-white); // Foreground content placed on secondary backgrounds.
+  --nt-text-on-tertiary: var(--nt-white); // Foreground content placed on tertiary backgrounds.
+  --nt-text-on-accent: var(--nt-black); // Foreground content placed on accent backgrounds.
+  --nt-text-on-success: var(--nt-white); // Foreground content placed on success backgrounds.
+  --nt-text-on-info: var(--nt-white); // Foreground content placed on info backgrounds.
+  --nt-text-on-warning: var(--nt-black); // Foreground content placed on warning backgrounds.
+  --nt-text-on-danger: var(--nt-white); // Foreground content placed on danger backgrounds.
+  --nt-text-on-light: var(--nt-black); // Foreground content placed on explicit light backgrounds.
+  --nt-text-on-dark: var(--nt-white); // Foreground content placed on explicit dark backgrounds.
+  --nt-text-on-white: var(--nt-black); // Foreground content placed on absolute white.
+  --nt-text-on-black: var(--nt-white); // Foreground content placed on absolute black.
+
   @supports (color: contrast-color(red)) {
     --nt-text-on-primary: contrast-color(var(--nt-primary));
+    --nt-text-on-secondary: contrast-color(var(--nt-secondary));
+    --nt-text-on-tertiary: contrast-color(var(--nt-tertiary));
     --nt-text-on-accent: contrast-color(var(--nt-accent));
+    --nt-text-on-success: contrast-color(var(--nt-success));
+    --nt-text-on-info: contrast-color(var(--nt-info));
+    --nt-text-on-warning: contrast-color(var(--nt-warning));
+    --nt-text-on-danger: contrast-color(var(--nt-danger));
+    --nt-text-on-light: contrast-color(var(--nt-light));
+    --nt-text-on-dark: contrast-color(var(--nt-dark));
+    --nt-text-on-white: contrast-color(var(--nt-white));
+    --nt-text-on-black: contrast-color(var(--nt-black));
   }
 
-  // === SHAPE ===
-  --nt-border-radius: var(--nt-radius);
-  --nt-border-radius-sm: calc(var(--nt-radius) * .5);
-  --nt-border-radius-xl: calc(var(--nt-radius) * 2);
-  --nt-border-width: 1px;
+  // === GRAY SCALE ===
+  // Runtime neutral ramp for borders, disabled states, surfaces and neutral UI.
+  --nt-gray: var(--nt-neutral); // Compatibility alias for the neutral seed.
+  --nt-gray-100: color-mix(in oklch, var(--nt-neutral), white 96%); // Lightest neutral surface/detail.
+  --nt-gray-200: color-mix(in oklch, var(--nt-neutral), white 86%); // Very light neutral surface/border.
+  --nt-gray-300: color-mix(in oklch, var(--nt-neutral), white 74%); // Light neutral border/divider.
+  --nt-gray-400: color-mix(in oklch, var(--nt-neutral), white 58%); // Mid-light neutral UI detail.
+  --nt-gray-500: color-mix(in oklch, var(--nt-neutral), white 38%); // Medium neutral icons/disabled detail.
+  --nt-gray-600: var(--nt-neutral); // Neutral seed/reference step.
+  --nt-gray-700: color-mix(in oklch, var(--nt-neutral), black 30%); // Dark neutral text/detail.
+  --nt-gray-800: color-mix(in oklch, var(--nt-neutral), black 48%); // Very dark neutral text/surface.
+  --nt-gray-900: color-mix(in oklch, var(--nt-neutral), black 66%); // Darkest neutral surface/text detail.
+  --nt-gray-dark: var(--nt-gray-800); // Legacy dark-gray compatibility alias.
 
-  // === TYPOGRAPHY COMPATIBILITY ALIASES ===
-  --nt-font-family-base: var(--nt-font-family);
-  --nt-font-size-base: var(--nt-font-size);
-  --nt-line-height-base: var(--nt-line-height);
+  // === TYPOGRAPHY SCALE ===
+  --nt-font-family-base: var(--nt-font-family); // Legacy alias for the default font family.
+  --nt-font-size-base: var(--nt-font-size); // Legacy alias and scale reference for base font size.
+  --nt-line-height-base: var(--nt-line-height); // Legacy alias for base line height.
+  --nt-fs-1: calc(var(--nt-font-size-base) * 1.2); // Largest body/display-adjacent text step.
+  --nt-fs-2: calc(var(--nt-font-size-base) * 1.1); // Large body/lead text step.
+  --nt-fs-3: var(--nt-font-size-base); // Normal body text step.
+  --nt-fs-4: calc(var(--nt-font-size-base) * .9); // Compact/supporting text step.
+  --nt-fs-5: calc(var(--nt-font-size-base) * .85); // Small metadata/helper text step.
+  --nt-fs-6: calc(var(--nt-font-size-base) * .75); // Smallest standard text step.
+  --nt-fs-h1: var(--nt-font-size-header); // Largest page/title heading.
+  --nt-fs-h2: calc(var(--nt-font-size-base) + (var(--nt-font-size-header) - var(--nt-font-size-base)) * .8); // Major section heading.
+  --nt-fs-h3: calc(var(--nt-font-size-base) + (var(--nt-font-size-header) - var(--nt-font-size-base)) * .6); // Subsection heading.
+  --nt-fs-h4: calc(var(--nt-font-size-base) + (var(--nt-font-size-header) - var(--nt-font-size-base)) * .4); // Component/region heading.
+  --nt-fs-h5: calc(var(--nt-font-size-base) + (var(--nt-font-size-header) - var(--nt-font-size-base)) * .2); // Small heading/label-like title.
+  --nt-fs-h6: var(--nt-font-size-base); // Smallest heading step.
+
+  // === SHAPE ===
+  --nt-border-radius: var(--nt-radius); // Legacy/default component radius alias.
+  --nt-border-radius-sm: calc(var(--nt-radius) * .5); // Small controls, tags, badges and compact elements.
+  --nt-border-radius-xl: calc(var(--nt-radius) * 2); // Large cards, panels, dialogs and prominent surfaces.
+  --nt-border-width: 1px; // Standard component/divider border thickness.
+
+  // === CONTAINER / LEGACY COMPATIBILITY ===
+  --nt-font-size-root: 1rem; // Root sizing compatibility token; consumers may override responsively.
+  --nt-container-width: min(calc(100% - 2 * var(--nt-container-gutter)), var(--nt-container-max)); // Legacy computed responsive container width.
+  --nt-scroll-padding-top: calc(.33 * 100vh); // Default anchor/scroll offset token for fixed-header integrations.
+  --nt-link-on-dark: var(--nt-white); // Legacy link foreground intended for dark backgrounds.
+  --nt-text-decoration-link: underline; // Default link decoration compatibility token.
 
   // === LEGACY SURFACE ALIASES ===
-  --nt-body: var(--nt-surface);
-  --nt-body-secondary: var(--nt-surface-muted);
-  --nt-body-tertiary: var(--nt-surface-raised);
-  --nt-background: var(--nt-surface);
+  --nt-body: var(--nt-surface); // Deprecated alias for --nt-surface.
+  --nt-body-secondary: var(--nt-surface-muted); // Deprecated alias for --nt-surface-muted.
+  --nt-body-tertiary: var(--nt-surface-raised); // Deprecated alias for --nt-surface-raised.
+  --nt-background: var(--nt-surface); // Deprecated alias for --nt-surface.
 }
 
 @mixin runtime-scheme-selectors() {

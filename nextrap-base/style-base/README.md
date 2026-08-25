@@ -1,71 +1,186 @@
-# style-base
+# @nextrap/style-base
 
-Defines the core CSS variables and container width. This package will not add visual component styles or classes to the document.
+Global Nextrap design tokens implemented entirely with CSS custom properties.
 
-`style-base` is token-only and must remain visually side-effect free.
+`style-base` is token-only: it emits no reset, native-element styling, utility classes or component styles. Include it once at document/theme level, never inside component shadow DOM.
 
-## Runtime-first theming
+## The theming model
 
-For new themes prefer the runtime API. Sass emits the token relationships once; the actual theme inputs remain CSS custom properties and can be changed without recompiling Sass.
+There is one theme engine and one public mixin: `runtime-theme()`.
+
+It emits the complete default Nextrap token graph into the current selector **and** the global selectors required to force light or dark mode. A theme is created by calling the mixin and then overriding only the CSS input variables that differ from the defaults. Derived colors, interaction states, surfaces, spacing aliases, typography scales and contrast colors are calculated from those variables by CSS.
+
+There is no Sass theme map, compile-time theme creation step or separate scheme mixin.
+
+## Use the default theme
+
+For the standard Nextrap theme, import `default.scss` once:
 
 ```scss
-@use '@nextrap/style-base' as nt;
-
-:where(.theme-example) {
-  @include nt.runtime-theme();
-
-  --nt-primary: #0057b8;
-  --nt-accent: #d79b35;
-  --nt-neutral: #667085;
-  --nt-radius: .5rem;
-  --nt-font-family: Inter, sans-serif;
-  --nt-container-max: 1280px;
-}
-
-@include nt.runtime-scheme-selectors();
+@use '@nextrap/style-base/default';
 ```
 
-The runtime engine derives mechanical values such as hover/active colors, surfaces, text/border colors and radius variants with CSS (`color-mix()`, `light-dark()` and `calc()`). `color-scheme: light dark` follows the operating-system preference; `[data-nt-scheme='light']` and `[data-nt-scheme='dark']` force a scheme.
+This emits `runtime-theme()` on `:root`. Nothing else is required.
 
-Override a derived token only when the automatic result is a deliberate design exception:
-
-```css
-.theme-example {
-  --nt-surface: light-dark(#fbfcfd, #101418);
-  --nt-primary: light-dark(#0057b8, #65b7ff);
-}
-```
-
-Keep component-specific customization out of the global token set. Prefer component mixins for known variants and `::part()` for precise component styling.
-
-## Compile-time API
-
-The existing `theme()` and `nextrap-theme()` mixins remain supported for compatibility and for cases that intentionally require Sass-time theme generation.
+## Build a custom theme
 
 ```scss
 @use '@nextrap/style-base' as nt;
 
 :root {
-  @include nt.theme((primary: #0057b8, neutral: #667085));
+  @include nt.runtime-theme();
+
+  --nt-primary: light-dark(#0057b8, #65b7ff);
+  --nt-accent: light-dark(#d79b35, #f0b95c);
+  --nt-neutral: #667085;
+  --nt-radius: .5rem;
+  --nt-font-family: Inter, sans-serif;
+  --nt-container-max: 1280px;
 }
 ```
 
-For architecture rules shared by all style packages (`index.scss` API vs `default.scss` output, class↔mixin parity, composition), see `docs/style-packages-architecture.md`.
+The order is intentional: emit `runtime-theme()` first, then override inputs. The later declarations become the theme values while all derived variables continue to reference them.
+
+A theme should normally override input tokens, not copy the generated token graph. Typical inputs are brand/state colors, typography, `--nt-radius`, container values and—when intentionally customized—the primitive spacing scale.
+
+Override a derived token only for a deliberate design exception:
+
+```scss
+:root {
+  @include nt.runtime-theme();
+
+  --nt-primary: light-dark(#0057b8, #65b7ff);
+  --nt-neutral: #667085;
+  --nt-surface: light-dark(#fbfcfd, #101418);
+}
+```
+
+## Light and dark switching
+
+Light/dark switching is built into `runtime-theme()`.
+
+With no `data-nt-scheme` attribute, the browser follows the operating-system preference because the theme declares:
+
+```css
+color-scheme: light dark;
+```
+
+To force a mode, set the attribute on the document element:
+
+```html
+<html data-nt-scheme="light">
+```
+
+or:
+
+```html
+<html data-nt-scheme="dark">
+```
+
+To return to the OS preference, remove the attribute.
+
+For example:
+
+```js
+// Force dark.
+document.documentElement.dataset.ntScheme = 'dark';
+
+// Force light.
+document.documentElement.dataset.ntScheme = 'light';
+
+// Follow the operating system again.
+delete document.documentElement.dataset.ntScheme;
+```
+
+A theme can provide different input values for the two schemes with `light-dark()`:
+
+```css
+--nt-primary: light-dark(#0057b8, #65b7ff);
+--nt-accent: light-dark(#d79b35, #f0b95c);
+```
+
+The derived tokens use the active `color-scheme` automatically. Light and dark are therefore **two schemes of the same theme**, not separate theme definitions.
+
+## Build a scoped theme
+
+Themes do not have to live on `:root`:
+
+```scss
+@use '@nextrap/style-base' as nt;
+
+:where(.theme-customer) {
+  @include nt.runtime-theme();
+
+  --nt-primary: light-dark(#6d28d9, #a78bfa);
+  --nt-accent: light-dark(#db2777, #f472b6);
+  --nt-neutral: #71717a;
+}
+```
+
+Descendant components inherit the resulting `--nt-*` values. `data-nt-scheme="light|dark"` may be placed on the document or an ancestor of a scoped theme to control its active scheme.
+
+## External theme repositories
+
+An external theme package should own only its overrides and use `style-base` as the token engine:
+
+```scss
+@use '@nextrap/style-base' as nt;
+
+:root {
+  @include nt.runtime-theme();
+
+  --nt-primary: light-dark(#0057b8, #65b7ff);
+  --nt-accent: light-dark(#ffb000, #ffd166);
+  --nt-neutral: #667085;
+  --nt-radius: .375rem;
+  --nt-font-family: 'Example Sans', sans-serif;
+}
+```
+
+Do not duplicate Nextrap's derived variables in the external repository unless the design explicitly needs an exception. This keeps new derived tokens and fixes in `style-base` available automatically.
 
 ## Spacing model
 
-Spacing is exposed in three layers:
+Spacing has two layers:
 
-1. Primitive scale tokens: `--nt-space-0` ... `--nt-space-10`
-2. Semantic spacing aliases: `--nt-spacing-text`, `--nt-spacing-control`, `--nt-spacing-component`, `--nt-spacing-layout`, `--nt-spacing-section`
-3. Component-local variables mapped from semantic/primitive tokens where a component genuinely needs a public runtime input
+1. `--nt-space-0` through `--nt-space-10` are primitive scale steps.
+2. Semantic aliases express intent: `--nt-spacing-text`, `--nt-spacing-control`, `--nt-spacing-component`, `--nt-spacing-layout`, `--nt-spacing-section`.
 
-Use primitive tokens for exact sizing and semantic tokens for role-based spacing decisions.
+Prefer semantic spacing in application/component code. The structural progression is **text → control → component → layout → section**.
 
-## Responsibility split
+```css
+.article-copy > * + * { margin-block-start: var(--nt-spacing-text); }
+.toolbar { gap: var(--nt-spacing-control); }
+.card { padding: var(--nt-spacing-component); }
+.card-grid { gap: var(--nt-spacing-layout); }
+.page-section + .page-section { margin-block-start: var(--nt-spacing-section); }
+```
 
-- CSS custom properties: runtime values and mechanically derived values.
-- Sass: selectors, mixin composition, loops/code generation and conditional bundle structure.
-- Component `::part()`: precise, discoverable customization without growing component variable APIs.
+## Component contract
 
-**Important**: This package must not be included in the shadow DOM of components. Add it to the main document's style only once.
+Components consume global tokens through `var(--nt-*)` and must not depend on private Sass theme state or recreate global theme calculations.
+
+```css
+.btn {
+  --btn-bg: var(--nt-primary);
+  --btn-bg-hover: var(--nt-primary-hover);
+  --btn-text: var(--nt-text-on-primary);
+
+  background: var(--btn-bg);
+  color: var(--btn-text);
+}
+
+.btn:hover {
+  background: var(--btn-bg-hover);
+}
+```
+
+## API summary
+
+`@nextrap/style-base` exports one theming mixin:
+
+- `runtime-theme()` — emits the complete runtime token graph and automatic/manual light-dark scheme support.
+
+`@nextrap/style-base/default` remains the ready-to-use standard theme and emits `runtime-theme()` on `:root`.
+
+For the complete CSS-variable contract and guidance for every token, see `.ai-usage-info.md`.

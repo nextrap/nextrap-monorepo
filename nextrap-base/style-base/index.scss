@@ -1,103 +1,29 @@
-// @nextrap/style-base — public Theme API (no CSS output on @use)
+// @nextrap/style-base — runtime CSS theme API
 //
-// Usage:
+// This package has one theming model: CSS custom properties.
+// `runtime-theme()` emits the complete token graph and the global light/dark
+// switching selectors. Theme values remain runtime-overridable and do not
+// require Sass recompilation.
+//
+// Custom theme:
 //   @use '@nextrap/style-base' as nt;
-//   :root { @include nt.theme((primary: #0057b8, neutral: #667085)); }
 //
-// Runtime-first usage:
 //   :root {
 //     @include nt.runtime-theme();
 //     --nt-primary: #0057b8;
 //     --nt-neutral: #667085;
+//     --nt-radius: .5rem;
 //   }
 //
-// For a ready-to-use default theme with document defaults:
+// Ready-to-use defaults:
 //   @use '@nextrap/style-base/default';
 
-@use './src/create-theme' as *;
-@use './src/css-variables' as var;
-@use './src/container-tools' as ct;
 @use './src/runtime-theme' as runtime;
-@use 'sass:map';
 
-// Runtime-first API. Sass emits relationships; CSS custom properties hold the
-// actual theme inputs and can therefore be changed without recompilation.
+// Emits the complete Nextrap runtime token graph into the current selector and
+// emits the global [data-nt-scheme='light'|'dark'] selectors once at root level.
+// Override input CSS custom properties after this mixin to define a theme.
 @mixin runtime-theme() {
   @include runtime.runtime-theme();
-}
-
-@mixin runtime-scheme-selectors() {
   @include runtime.runtime-scheme-selectors();
-}
-
-// === BACKWARD-COMPATIBLE MIXIN ===
-@mixin nextrap-theme($override: (), $themeDefaults: ()) {
-  $override: map.deep-merge($themeDefaults, $override);
-  $theme: create-theme($override);
-
-  @include var.cssVariables($theme);
-  @include ct.containerTools($theme);
-}
-
-// === THEME API v1 ===
-@mixin theme($input: ()) {
-  $schemes: map.get($input, schemes);
-
-  @if $schemes != null {
-    $base: map.remove($input, schemes);
-    $light-spec: map.get($schemes, light);
-    $dark-spec: map.get($schemes, dark);
-
-    $light-override: ();
-    @if $light-spec != auto and $light-spec != null {
-      $light-override: $light-spec;
-    }
-    $light-theme: create-theme(map.deep-merge($base, map.merge((mode: light), $light-override)));
-
-    $dark-theme: create-dark-theme($base, ());
-    @if $dark-spec != auto and $dark-spec != null {
-      $dark-theme: create-dark-theme($base, $dark-spec);
-    }
-
-    @include var.cssVariables($light-theme);
-    @include ct.containerTools($light-theme);
-
-    @at-root [data-nt-scheme='light'] {
-      @include var.cssVariables($light-theme);
-      @include ct.containerTools($light-theme);
-    }
-
-    @at-root [data-nt-scheme='dark'] {
-      @include var.cssVariables($dark-theme);
-      @include ct.containerTools($dark-theme);
-    }
-  } @else {
-    $theme: create-theme($input);
-    @include var.cssVariables($theme);
-    @include ct.containerTools($theme);
-  }
-}
-
-@mixin scheme-switcher($input: (), $mode: system) {
-  $schemes: map.get($input, schemes);
-  @if $schemes == null {
-    @warn 'scheme-switcher() requires a theme with `schemes` defined.';
-  } @else {
-    $base: map.remove($input, schemes);
-    $dark-spec: map.get($schemes, dark);
-    $dark-theme: create-dark-theme($base, ());
-
-    @if $dark-spec != auto and $dark-spec != null {
-      $dark-theme: create-dark-theme($base, $dark-spec);
-    }
-
-    @if $mode == system {
-      @media (prefers-color-scheme: dark) {
-        :root {
-          @include var.cssVariables($dark-theme);
-          @include ct.containerTools($dark-theme);
-        }
-      }
-    }
-  }
 }
