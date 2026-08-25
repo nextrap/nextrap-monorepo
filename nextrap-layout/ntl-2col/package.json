@@ -3,12 +3,12 @@
     "version": "1.1.5",
     "main": "./index.js",
     "repository": {
-        "directory": "nextrap-elements/ntl-2col",
+        "directory": "nextrap-layout/ntl-2col",
         "type": "git",
         "url": "https://github.com/nextrap/nextrap-monorepo"
     },
     "dependencies": {
-        "@nextrap/nt-core": "^1.0.0"
+        "@nextrap/ntl-core": "^1.0.0"
     },
     "type": "module",
     "types": "./index.d.ts",
