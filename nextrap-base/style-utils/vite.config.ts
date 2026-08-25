@@ -16,7 +16,11 @@ export default defineConfig(() => ({
   cacheDir: '../../node_modules/.vite/nextrap-base/style-utils',
   plugins: [
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss', 'web-types.json']),
+    // Keep package documentation, Sass entry points and every Web Types
+    // manifest in dist. package.json references the Web Types files from the
+    // package root, so dropping them during build would silently break IDE
+    // completion for published packages.
+    nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss', 'web-types*.json']),
     {
       name: 'watch-md-reload',
       handleHotUpdate({ file, server }) {
