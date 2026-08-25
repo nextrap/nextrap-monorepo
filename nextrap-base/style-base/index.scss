@@ -1,8 +1,9 @@
 // @nextrap/style-base — runtime CSS theme API
 //
 // This package has one theming model: CSS custom properties.
-// Sass only emits the default token graph and scheme selectors. Theme values
-// remain runtime-overridable and do not require Sass recompilation.
+// `runtime-theme()` emits the complete token graph and the global light/dark
+// switching selectors. Theme values remain runtime-overridable and do not
+// require Sass recompilation.
 //
 // Custom theme:
 //   @use '@nextrap/style-base' as nt;
@@ -19,15 +20,10 @@
 
 @use './src/runtime-theme' as runtime;
 
-// Emits the complete Nextrap runtime token graph into the current selector.
+// Emits the complete Nextrap runtime token graph into the current selector and
+// emits the global [data-nt-scheme='light'|'dark'] selectors once at root level.
 // Override input CSS custom properties after this mixin to define a theme.
 @mixin runtime-theme() {
   @include runtime.runtime-theme();
-}
-
-// Emits explicit light/dark scheme selectors. The runtime theme itself follows
-// the OS preference through `color-scheme: light dark`; these selectors allow
-// applications to force a scheme using `data-nt-scheme`.
-@mixin runtime-scheme-selectors() {
   @include runtime.runtime-scheme-selectors();
 }
