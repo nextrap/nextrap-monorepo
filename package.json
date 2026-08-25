@@ -48,8 +48,8 @@
     "private": true,
     "workspaces": [
         "nextrap-base/*",
+        "nextrap-styles/*",
         "nextrap-elements/*",
-        "nextrap-layout/*",
         "workspaces/trunkjs-monorepo/packages/*"
     ],
     "nx": {
