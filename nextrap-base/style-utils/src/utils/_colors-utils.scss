@@ -38,21 +38,29 @@
 @mixin bg-black() { background: var(--nt-black) !important; }
 
 // Semantic surface mixins
-// A surface is a complete readable color pair: it sets both the background and
-// the matching contrast foreground from style-base. Prefer these for sections,
-// heroes, callouts, cards or controls where the background defines text color.
-@mixin surface-primary() { background: var(--nt-primary) !important; color: var(--nt-text-on-primary) !important; }
-@mixin surface-secondary() { background: var(--nt-secondary) !important; color: var(--nt-text-on-secondary) !important; }
-@mixin surface-tertiary() { background: var(--nt-tertiary) !important; color: var(--nt-text-on-tertiary) !important; }
-@mixin surface-accent() { background: var(--nt-accent) !important; color: var(--nt-text-on-accent) !important; }
-@mixin surface-success() { background: var(--nt-success) !important; color: var(--nt-text-on-success) !important; }
-@mixin surface-info() { background: var(--nt-info) !important; color: var(--nt-text-on-info) !important; }
-@mixin surface-warning() { background: var(--nt-warning) !important; color: var(--nt-text-on-warning) !important; }
-@mixin surface-danger() { background: var(--nt-danger) !important; color: var(--nt-text-on-danger) !important; }
-@mixin surface-light() { background: var(--nt-light) !important; color: var(--nt-text-on-light) !important; }
-@mixin surface-dark() { background: var(--nt-dark) !important; color: var(--nt-text-on-dark) !important; }
-@mixin surface-white() { background: var(--nt-white) !important; color: var(--nt-text-on-white) !important; }
-@mixin surface-black() { background: var(--nt-black) !important; color: var(--nt-text-on-black) !important; }
+// A surface is a complete readable color pair. Besides background/color it
+// exposes a small inherited typography context. Typography packages consume
+// these local variables without needing to know which semantic surface is active.
+@mixin _surface($background, $foreground) {
+  --nt-surface-text: #{$foreground};
+  --nt-surface-text-muted: color-mix(in oklch, #{$foreground} 72%, #{$background});
+  --nt-surface-link: #{$foreground};
+  background: #{$background} !important;
+  color: var(--nt-surface-text) !important;
+}
+
+@mixin surface-primary() { @include _surface(var(--nt-primary), var(--nt-text-on-primary)); }
+@mixin surface-secondary() { @include _surface(var(--nt-secondary), var(--nt-text-on-secondary)); }
+@mixin surface-tertiary() { @include _surface(var(--nt-tertiary), var(--nt-text-on-tertiary)); }
+@mixin surface-accent() { @include _surface(var(--nt-accent), var(--nt-text-on-accent)); }
+@mixin surface-success() { @include _surface(var(--nt-success), var(--nt-text-on-success)); }
+@mixin surface-info() { @include _surface(var(--nt-info), var(--nt-text-on-info)); }
+@mixin surface-warning() { @include _surface(var(--nt-warning), var(--nt-text-on-warning)); }
+@mixin surface-danger() { @include _surface(var(--nt-danger), var(--nt-text-on-danger)); }
+@mixin surface-light() { @include _surface(var(--nt-light), var(--nt-text-on-light)); }
+@mixin surface-dark() { @include _surface(var(--nt-dark), var(--nt-text-on-dark)); }
+@mixin surface-white() { @include _surface(var(--nt-white), var(--nt-text-on-white)); }
+@mixin surface-black() { @include _surface(var(--nt-black), var(--nt-text-on-black)); }
 
 // Scheme utilities
 // Unlike surface-* these do not choose a concrete background. They change the
