@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
+  "name": "@nextrap/style-utils",
+  "version": "1.0.10",
+  "description": "Nextrap semantic surface and local color-scheme utility classes.",
+  "contributions": {
+    "css": {
+      "classes": [
+        { "name": "surface-primary", "description": "Set background to --nt-primary and foreground to --nt-text-on-primary. Use for readable primary-colored sections, heroes, callouts, cards or controls." },
+        { "name": "surface-secondary", "description": "Set background to --nt-secondary and foreground to --nt-text-on-secondary. Use for readable secondary semantic surfaces." },
+        { "name": "surface-tertiary", "description": "Set background to --nt-tertiary and foreground to --nt-text-on-tertiary. Use for readable tertiary semantic surfaces." },
+        { "name": "surface-accent", "description": "Set background to --nt-accent and foreground to --nt-text-on-accent. Use for readable accent/highlight surfaces." },
+        { "name": "surface-success", "description": "Set background to --nt-success and foreground to --nt-text-on-success. Use for readable positive/status surfaces." },
+        { "name": "surface-info", "description": "Set background to --nt-info and foreground to --nt-text-on-info. Use for readable informational surfaces." },
+        { "name": "surface-warning", "description": "Set background to --nt-warning and foreground to --nt-text-on-warning. Use for readable warning surfaces." },
+        { "name": "surface-danger", "description": "Set background to --nt-danger and foreground to --nt-text-on-danger. Use for readable destructive/error surfaces." },
+        { "name": "surface-light", "description": "Set an explicit light background and its matching contrast foreground. Use when a section should stay visually light regardless of the surrounding page." },
+        { "name": "surface-dark", "description": "Set an explicit dark background and its matching contrast foreground. Use for inverted dark sections without changing the whole descendant color-scheme." },
+        { "name": "surface-white", "description": "Set an explicit white background and matching contrast foreground." },
+        { "name": "surface-black", "description": "Set an explicit black background and matching contrast foreground." },
+        { "name": "scheme-light", "description": "Force color-scheme: light on this element and its descendant subtree. Use when all scheme-aware tokens/components inside a local section should evaluate in light mode." },
+        { "name": "scheme-dark", "description": "Force color-scheme: dark on this element and its descendant subtree. Use for locally inverted sections whose light-dark() tokens and native controls should all evaluate in dark mode." }
+      ]
+    }
+  }
+}
