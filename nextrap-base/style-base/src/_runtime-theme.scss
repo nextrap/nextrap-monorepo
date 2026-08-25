@@ -42,6 +42,32 @@
   --nt-line-height: 1.5;
   --nt-container-max: 1320px;
 
+  // === SPACING ===
+  // Primitive scale. Keep this in sync with the public token contract and the
+  // legacy Sass theme defaults. Every higher-level spacing token is expressed
+  // through this scale so an external theme can replace individual steps at
+  // runtime without recompiling Nextrap.
+  --nt-space-0: 0;
+  --nt-space-1: .25rem;
+  --nt-space-2: .5rem;
+  --nt-space-3: .75rem;
+  --nt-space-4: 1rem;
+  --nt-space-5: 1.5rem;
+  --nt-space-6: 2rem;
+  --nt-space-7: 3rem;
+  --nt-space-8: 4rem;
+  --nt-space-9: 6rem;
+  --nt-space-10: 8rem;
+
+  // Semantic spacing defaults. Consumers should prefer these over primitive
+  // steps where the intent is semantic rather than scale-specific.
+  --nt-spacing-text: var(--nt-space-4);
+  --nt-spacing-control: var(--nt-space-3);
+  --nt-spacing-component: var(--nt-space-5);
+  --nt-spacing-layout: var(--nt-space-6);
+  --nt-spacing-section: clamp(var(--nt-space-7), 5vw, var(--nt-space-9));
+  --nt-container-gutter: var(--nt-space-5);
+
   // === DERIVED BRAND STATES ===
   // OKLCH interpolation produces perceptually smoother state colors than
   // compile-time HSL lightness adjustments.
