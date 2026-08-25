@@ -1,17 +1,19 @@
 // @nextrap/style-base/default — ready-to-use Nextrap default tokens
 //
-// Import this file to instantly apply the runtime-first Nextrap token graph.
-// No configuration required. External themes can override the input custom
-// properties afterwards without recompiling Sass.
+// Import this file to apply the complete runtime Nextrap token graph on :root.
+// Light/dark switching is included automatically:
+//   - no data-nt-scheme attribute: follow the OS preference
+//   - data-nt-scheme="light": force light
+//   - data-nt-scheme="dark": force dark
 //
 // Example:
 //   @use '@nextrap/style-base/default';
 //
-// For a scoped/custom runtime theme:
+// For a custom runtime theme:
 //   @use '@nextrap/style-base' as nt;
 //   :root {
 //     @include nt.runtime-theme();
-//     --nt-primary: #0057b8;
+//     --nt-primary: light-dark(#0057b8, #65b7ff);
 //     --nt-neutral: #667085;
 //   }
 
@@ -20,5 +22,3 @@
 :root {
   @include nt.runtime-theme();
 }
-
-@include nt.runtime-scheme-selectors();
