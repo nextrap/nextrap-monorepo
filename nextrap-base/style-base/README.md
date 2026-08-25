@@ -43,63 +43,73 @@ The order is intentional: emit `runtime-theme()` first, then override inputs. Th
 
 A theme should normally override input tokens, not copy the generated token graph. Typical inputs are brand/state colors, typography, `--nt-radius`, container values and—when intentionally customized—the primitive spacing scale.
 
-Override a derived token only for a deliberate design exception:
-
-```scss
-:root {
-  @include nt.runtime-theme();
-
-  --nt-primary: light-dark(#0057b8, #65b7ff);
-  --nt-neutral: #667085;
-  --nt-surface: light-dark(#fbfcfd, #101418);
-}
-```
+Override a derived token only for a deliberate design exception.
 
 ## Light and dark switching
 
-Light/dark switching is built into `runtime-theme()`.
+Light/dark switching is built into `runtime-theme()`. With no `data-nt-scheme` attribute, the browser follows the operating-system preference. To force a mode, set `data-nt-scheme="light"` or `data-nt-scheme="dark"` on the document element. Remove the attribute to return to the OS preference.
 
-With no `data-nt-scheme` attribute, the browser follows the operating-system preference because the theme declares:
-
-```css
-color-scheme: light dark;
-```
-
-To force a mode, set the attribute on the document element:
-
-```html
-<html data-nt-scheme="light">
-```
-
-or:
-
-```html
-<html data-nt-scheme="dark">
-```
-
-To return to the OS preference, remove the attribute.
-
-For example:
-
-```js
-// Force dark.
-document.documentElement.dataset.ntScheme = 'dark';
-
-// Force light.
-document.documentElement.dataset.ntScheme = 'light';
-
-// Follow the operating system again.
-delete document.documentElement.dataset.ntScheme;
-```
-
-A theme can provide different input values for the two schemes with `light-dark()`:
+Theme inputs can provide scheme-specific values with `light-dark()`:
 
 ```css
 --nt-primary: light-dark(#0057b8, #65b7ff);
 --nt-accent: light-dark(#d79b35, #f0b95c);
 ```
 
-The derived tokens use the active `color-scheme` automatically. Light and dark are therefore **two schemes of the same theme**, not separate theme definitions.
+Light and dark are two schemes of the same theme, not separate theme definitions.
+
+## Shared interaction-state contract
+
+Interaction intensity is a global design decision, not a component-local constant. `style-base` therefore owns the percentages used to change interactive colors:
+
+```css
+--nt-interaction-hover: 10%;
+--nt-interaction-active: 15%;
+--nt-interaction-emphasis: 20%;
+```
+
+All semantic `-hover`, `-active` and `-emphasis` colors are derived from these values. A theme may override the percentages once to make interaction feedback globally stronger or softer.
+
+**Every interactive Nextrap element must reuse this contract.** Buttons, accordions, tabs, navigation items, clickable cards, menus, list actions and future components must not introduce arbitrary local hover/active percentages when the standard interaction behavior is intended.
+
+For semantic colors, consume the generated state token directly:
+
+```css
+.button {
+  background: var(--nt-primary);
+  color: var(--nt-text-on-primary);
+}
+
+.button:hover {
+  background: var(--nt-primary-hover);
+}
+
+.button:active {
+  background: var(--nt-primary-active);
+}
+```
+
+For a component with a custom/local background that has no semantic `-hover` token, use the same global intensity token:
+
+```css
+.clickable-card:hover {
+  background: color-mix(
+    in oklch,
+    var(--card-background),
+    light-dark(black, white) var(--nt-interaction-hover)
+  );
+}
+
+.clickable-card:active {
+  background: color-mix(
+    in oklch,
+    var(--card-background),
+    light-dark(black, white) var(--nt-interaction-active)
+  );
+}
+```
+
+This rule keeps hover and pressed feedback visually consistent across packages. A component-specific percentage is allowed only for a documented design exception where the global interaction strength is intentionally inappropriate.
 
 ## Build a scoped theme
 
@@ -110,76 +120,33 @@ Themes do not have to live on `:root`:
 
 :where(.theme-customer) {
   @include nt.runtime-theme();
-
   --nt-primary: light-dark(#6d28d9, #a78bfa);
   --nt-accent: light-dark(#db2777, #f472b6);
   --nt-neutral: #71717a;
 }
 ```
 
-Descendant components inherit the resulting `--nt-*` values. `data-nt-scheme="light|dark"` may be placed on the document or an ancestor of a scoped theme to control its active scheme.
+Descendant components inherit the resulting `--nt-*` values.
 
 ## External theme repositories
 
-An external theme package should own only its overrides and use `style-base` as the token engine:
-
-```scss
-@use '@nextrap/style-base' as nt;
-
-:root {
-  @include nt.runtime-theme();
-
-  --nt-primary: light-dark(#0057b8, #65b7ff);
-  --nt-accent: light-dark(#ffb000, #ffd166);
-  --nt-neutral: #667085;
-  --nt-radius: .375rem;
-  --nt-font-family: 'Example Sans', sans-serif;
-}
-```
-
-Do not duplicate Nextrap's derived variables in the external repository unless the design explicitly needs an exception. This keeps new derived tokens and fixes in `style-base` available automatically.
+An external theme package should own only its overrides and use `style-base` as the token engine. Do not duplicate Nextrap's derived variables unless the design explicitly needs an exception. This keeps new derived tokens and fixes in `style-base` available automatically.
 
 ## Spacing model
 
-Spacing has two layers:
-
-1. `--nt-space-0` through `--nt-space-10` are primitive scale steps.
-2. Semantic aliases express intent: `--nt-spacing-text`, `--nt-spacing-control`, `--nt-spacing-component`, `--nt-spacing-layout`, `--nt-spacing-section`.
+Spacing has two layers: `--nt-space-0` through `--nt-space-10` are primitive scale steps, while semantic aliases express intent: `--nt-spacing-text`, `--nt-spacing-control`, `--nt-spacing-component`, `--nt-spacing-layout`, `--nt-spacing-section`.
 
 Prefer semantic spacing in application/component code. The structural progression is **text → control → component → layout → section**.
 
-```css
-.article-copy > * + * { margin-block-start: var(--nt-spacing-text); }
-.toolbar { gap: var(--nt-spacing-control); }
-.card { padding: var(--nt-spacing-component); }
-.card-grid { gap: var(--nt-spacing-layout); }
-.page-section + .page-section { margin-block-start: var(--nt-spacing-section); }
-```
-
 ## Component contract
 
-Components consume global tokens through `var(--nt-*)` and must not depend on private Sass theme state or recreate global theme calculations.
-
-```css
-.btn {
-  --btn-bg: var(--nt-primary);
-  --btn-bg-hover: var(--nt-primary-hover);
-  --btn-text: var(--nt-text-on-primary);
-
-  background: var(--btn-bg);
-  color: var(--btn-text);
-}
-
-.btn:hover {
-  background: var(--btn-bg-hover);
-}
-```
+Components consume global tokens through `var(--nt-*)` and must not depend on private Sass theme state or recreate global theme calculations. In particular, components must reuse `--nt-interaction-hover`, `--nt-interaction-active` and the generated semantic state colors for interaction feedback rather than hard-coding their own percentages.
 
 ## API summary
 
 `@nextrap/style-base` exports one theming mixin:
 
-- `runtime-theme()` — emits the complete runtime token graph and automatic/manual light-dark scheme support.
+- `runtime-theme()` — emits the complete runtime token graph, shared interaction-state contract and automatic/manual light-dark scheme support.
 
 `@nextrap/style-base/default` remains the ready-to-use standard theme and emits `runtime-theme()` on `:root`.
 
