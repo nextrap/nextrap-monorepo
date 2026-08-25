@@ -1,0 +1,106 @@
+// Runtime CSS theme engine.
+//
+// Emits a small set of input tokens and derives the mechanical design tokens
+// in CSS. This keeps themes runtime-overridable while Sass remains responsible
+// for structure, mixin composition and code generation.
+//
+// Usage:
+//   :where(.theme-example) {
+//     @include runtime-theme();
+//     --nt-primary: #0057b8;
+//     --nt-neutral: #667085;
+//     --nt-radius: .5rem;
+//   }
+//
+// Scheme selection can be automatic or explicit:
+//   :root { color-scheme: light dark; }
+//   [data-nt-scheme='light'] { color-scheme: light; }
+//   [data-nt-scheme='dark'] { color-scheme: dark; }
+
+@mixin runtime-theme() {
+  color-scheme: light dark;
+
+  // === INPUT TOKENS ===
+  // Theme authors are expected to override these, rather than the derived
+  // variables below. Values here intentionally match the classic defaults.
+  --nt-primary: #007bff;
+  --nt-accent: #ff8400;
+  --nt-neutral: #7e7e7e;
+  --nt-secondary: #6c757d;
+  --nt-tertiary: #17a2b8;
+  --nt-success: #28a745;
+  --nt-info: #17a2b8;
+  --nt-warning: #ffc107;
+  --nt-danger: #dc3545;
+  --nt-white: #fff;
+  --nt-black: #000;
+
+  --nt-radius: .5rem;
+  --nt-font-family: sans-serif;
+  --nt-font-family-header: var(--nt-font-family);
+  --nt-font-size: 1rem;
+  --nt-line-height: 1.5;
+  --nt-container-max: 1320px;
+
+  // === DERIVED BRAND STATES ===
+  // OKLCH interpolation produces perceptually smoother state colors than
+  // compile-time HSL lightness adjustments.
+  --nt-primary-hover: color-mix(in oklch, var(--nt-primary), light-dark(black 10%, white 10%));
+  --nt-primary-active: color-mix(in oklch, var(--nt-primary), light-dark(black 15%, white 15%));
+  --nt-primary-subtle: color-mix(in oklch, var(--nt-primary), light-dark(white 85%, black 72%));
+  --nt-primary-emphasis: color-mix(in oklch, var(--nt-primary), light-dark(black 20%, white 20%));
+
+  --nt-accent-hover: color-mix(in oklch, var(--nt-accent), light-dark(black 10%, white 10%));
+  --nt-accent-active: color-mix(in oklch, var(--nt-accent), light-dark(black 15%, white 15%));
+  --nt-secondary-hover: color-mix(in oklch, var(--nt-secondary), light-dark(black 10%, white 10%));
+  --nt-secondary-active: color-mix(in oklch, var(--nt-secondary), light-dark(black 15%, white 15%));
+
+  // === SURFACES / CONTENT ===
+  // Neutral is the single hue/chroma input for the default surface family.
+  --nt-surface: color-mix(in oklch, var(--nt-neutral), light-dark(white 98%, black 88%));
+  --nt-surface-muted: color-mix(in oklch, var(--nt-neutral), light-dark(white 92%, black 82%));
+  --nt-surface-raised: color-mix(in oklch, var(--nt-neutral), light-dark(white 100%, black 75%));
+  --nt-text: color-mix(in oklch, var(--nt-neutral), light-dark(black 85%, white 90%));
+  --nt-text-muted: color-mix(in oklch, var(--nt-neutral), light-dark(black 45%, white 60%));
+  --nt-border: color-mix(in oklch, var(--nt-neutral), light-dark(white 72%, black 55%));
+  --nt-header: var(--nt-text);
+  --nt-focus: var(--nt-primary);
+  --nt-link: var(--nt-primary);
+  --nt-link-hover: var(--nt-primary-hover);
+  --nt-link-active: var(--nt-primary-active);
+
+  // Conservative fallbacks; modern browsers can derive contrast dynamically.
+  --nt-text-on-primary: var(--nt-white);
+  --nt-text-on-accent: var(--nt-black);
+  @supports (color: contrast-color(red)) {
+    --nt-text-on-primary: contrast-color(var(--nt-primary));
+    --nt-text-on-accent: contrast-color(var(--nt-accent));
+  }
+
+  // === SHAPE ===
+  --nt-border-radius: var(--nt-radius);
+  --nt-border-radius-sm: calc(var(--nt-radius) * .5);
+  --nt-border-radius-xl: calc(var(--nt-radius) * 2);
+  --nt-border-width: 1px;
+
+  // === TYPOGRAPHY COMPATIBILITY ALIASES ===
+  --nt-font-family-base: var(--nt-font-family);
+  --nt-font-size-base: var(--nt-font-size);
+  --nt-line-height-base: var(--nt-line-height);
+
+  // === LEGACY SURFACE ALIASES ===
+  --nt-body: var(--nt-surface);
+  --nt-body-secondary: var(--nt-surface-muted);
+  --nt-body-tertiary: var(--nt-surface-raised);
+  --nt-background: var(--nt-surface);
+}
+
+@mixin runtime-scheme-selectors() {
+  @at-root [data-nt-scheme='light'] {
+    color-scheme: light;
+  }
+
+  @at-root [data-nt-scheme='dark'] {
+    color-scheme: dark;
+  }
+}
