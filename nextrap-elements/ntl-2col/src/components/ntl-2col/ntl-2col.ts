@@ -1,13 +1,12 @@
-import { nextrap_layout } from '@nextrap/ntl-core';
+import { nextrap_element } from '@nextrap/nt-core';
 import { html, unsafeCSS } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import style from './ntl-2col.scss?inline';
 
-// Styles for the light DOM
 import { resetStyle } from '@nextrap/style-reset';
 
 @customElement('ntl-2col')
-export class Ntl2Col extends nextrap_layout({
+export class Ntl2Col extends nextrap_element({
   breakpoints: true,
   subLayoutApply: true,
   slotVisibility: true,
@@ -23,30 +22,16 @@ export class Ntl2Col extends nextrap_layout({
   protected override render(): unknown {
     return html`
       <div part="container" id="container">
-        <div part="header" id="header">
-          <slot name="header" data-query=":scope > .header"></slot>
-        </div>
+        <div part="header" id="header"><slot name="header" data-query=":scope > .header"></slot></div>
         <div part="wrapper" id="wrapper">
-          <div part="top" id="top">
-            <slot name="top" data-query=":scope > .top"></slot>
-          </div>
-          <div part="main" id="main">
-            <slot></slot>
-          </div>
+          <div part="top" id="top"><slot name="top" data-query=":scope > .top"></slot></div>
+          <div part="main" id="main"><slot></slot></div>
           <div part="aside" id="aside">
-            <slot
-              name="aside"
-              data-query=":scope > .aside | :scope > p:has(img)"
-              data-set-attribute-class="auto"
-            ></slot>
+            <slot name="aside" data-query=":scope > .aside | :scope > p:has(img)" data-set-attribute-class="auto"></slot>
           </div>
-          <div part="bottom" id="bottom">
-            <slot name="bottom" data-query=":scope > .bottom"></slot>
-          </div>
+          <div part="bottom" id="bottom"><slot name="bottom" data-query=":scope > .bottom"></slot></div>
         </div>
-        <div part="footer" id="footer">
-          <slot name="footer" data-query=":scope > .footer"></slot>
-        </div>
+        <div part="footer" id="footer"><slot name="footer" data-query=":scope > .footer"></slot></div>
       </div>
     `;
   }
