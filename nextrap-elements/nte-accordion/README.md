@@ -69,4 +69,6 @@ Accordions are intended to be used inside parent layouts/cards/content sections.
 - `.marker-start`
 - `.marker-plus`
 
+The default mixin consumes the shared `@nextrap/style-base` runtime contract for semantic surfaces, spacing, focus, hover/active intensity and transition timing. In particular, hover and active states derive from the configured summary background using `--nt-interaction-hover` and `--nt-interaction-active`; transitions use `--nt-transition-duration` and `--nt-transition-easing`. Override the mixin arguments only for a deliberate component/theme exception rather than defining independent interaction percentages or timings.
+
 The package also provides `default.scss` with a `.default` class for demos/simple usage.
