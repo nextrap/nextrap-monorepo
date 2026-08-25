@@ -1,13 +1,16 @@
 // Materialize the complete style-utils class API in the current Sass scope.
 //
-// The class registry lives in `classes.scss`. `meta.load-css()` is deliberate:
-// when `utils()` is included inside a selector Sass nests the complete registry
-// below that selector; at root it produces the normal default utility output.
+// The legacy class registry lives in `classes.scss`. `meta.load-css()` is
+// deliberate: when `utils()` is included inside a selector Sass nests the
+// complete registry below that selector; at root it produces normal utility
+// output. New semantic surface/scheme classes are materialized from their own
+// registry so they work both globally and inside scoped themes.
 
 @use 'sass:meta';
 
 @mixin utils() {
   @include meta.load-css('../../classes');
+  @include meta.load-css('surface-classes');
 
   // The legacy root registry intentionally uses `html ul.*` specificity for
   // these helpers. Nested below a theme that would become `.theme html ...`,
