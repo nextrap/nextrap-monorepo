@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
+  "name": "@nextrap/style-utils",
+  "version": "1.0.10",
+  "description": "Nextrap semantic surface and local color-scheme utility classes.",
+  "contributions": {
+    "css": {
+      "classes": [
+        { "name": "surface-primary", "description": "Readable primary surface: --nt-primary background with --nt-text-on-primary foreground." },
+        { "name": "surface-secondary", "description": "Readable secondary surface: --nt-secondary background with --nt-text-on-secondary foreground." },
+        { "name": "surface-tertiary", "description": "Readable tertiary surface: --nt-tertiary background with --nt-text-on-tertiary foreground." },
+        { "name": "surface-accent", "description": "Readable accent surface: --nt-accent background with --nt-text-on-accent foreground." },
+        { "name": "surface-success", "description": "Readable success surface: --nt-success background with --nt-text-on-success foreground." },
+        { "name": "surface-info", "description": "Readable info surface: --nt-info background with --nt-text-on-info foreground." },
+        { "name": "surface-warning", "description": "Readable warning surface: --nt-warning background with --nt-text-on-warning foreground." },
+        { "name": "surface-danger", "description": "Readable danger surface: --nt-danger background with --nt-text-on-danger foreground." },
+        { "name": "surface-light", "description": "Explicit light surface with its matching --nt-text-on-light foreground." },
+        { "name": "surface-dark", "description": "Explicit dark surface with its matching --nt-text-on-dark foreground." },
+        { "name": "surface-white", "description": "Explicit white surface with its matching --nt-text-on-white foreground." },
+        { "name": "surface-black", "description": "Explicit black surface with its matching --nt-text-on-black foreground." },
+        { "name": "scheme-light", "description": "Force color-scheme: light for this element and descendant subtree so scheme-aware tokens/components evaluate in light mode." },
+        { "name": "scheme-dark", "description": "Force color-scheme: dark for this element and descendant subtree so scheme-aware tokens/components evaluate in dark mode." }
+      ]
+    }
+  }
+}
