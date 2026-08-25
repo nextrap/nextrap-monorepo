@@ -1,4 +1,4 @@
-import { nextrap_layout } from '@nextrap/ntl-core';
+import { nextrap_element } from '@nextrap/nt-core';
 import { html, unsafeCSS } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import style from './ntl-2col.scss?inline';
@@ -7,7 +7,7 @@ import style from './ntl-2col.scss?inline';
 import { resetStyle } from '@nextrap/style-reset';
 
 @customElement('ntl-2col')
-export class Ntl2Col extends nextrap_layout({
+export class Ntl2Col extends nextrap_element({
   breakpoints: true,
   subLayoutApply: true,
   slotVisibility: true,
