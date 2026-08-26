@@ -11,13 +11,16 @@
 
   --prose-link-decoration: underline;
 
-  --prose-text: var(--nt-text);
-  --prose-muted: rgba(from var(--nt-text) r g b / 0.7);
+  --prose-text: var(--nt-surface-text, var(--nt-text, currentColor));
+  --prose-muted: var(
+    --nt-surface-text-muted,
+    var(--nt-text-muted, color-mix(in oklch, var(--prose-text) 70%, transparent))
+  );
 
-  --prose-table-border-color: var(--nt-text);
+  --prose-table-border-color: color-mix(in oklch, var(--prose-text) 35%, transparent);
 
   max-width: var(--prose-max-w);
-  color: var(--nt-text);
+  color: var(--prose-text);
 
   line-height: 1.65;
   display: block;
@@ -142,15 +145,19 @@
 
   /* Boxes */
   .box {
-    --box-border: var(--nt-text);
+    --box-border: var(--prose-text);
     --box-background: transparent;
-    --box-text: var(--nt-text);
+    --box-text: var(--prose-text);
     --box-radius: var(--nt-border-radius);
     --box-header-color: var(--box-border);
+    --nt-surface-text: var(--box-text);
+    --nt-surface-text-muted: color-mix(in oklch, var(--box-text) 72%, var(--box-background));
+    --nt-surface-link: var(--box-text);
 
     border: 2px solid var(--box-border);
     border-radius: var(--box-radius);
     background: var(--box-background);
+    color: var(--box-text);
     padding: var(--nt-space-4);
 
     h1,
@@ -174,6 +181,7 @@
       &-#{$variant} {
         --box-border: var(--nt-#{$variant}-emphasis);
         --box-background: var(--nt-#{$variant}-subtle);
+        --box-text: var(--nt-#{$variant}-emphasis);
         --box-header-color: var(--nt-#{$variant}-emphasis);
       }
     }
