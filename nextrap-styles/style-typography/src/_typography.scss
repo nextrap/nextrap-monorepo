@@ -95,7 +95,6 @@
 @mixin ul() {
   margin-top: 0;
   margin-bottom: var(--nt-list-margin-bottom, 1rem);
-  padding-left: var(--nt-list-padding-left, 2rem);
   list-style: disc;
 }
 

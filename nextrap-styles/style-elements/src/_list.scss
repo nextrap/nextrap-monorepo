@@ -23,9 +23,11 @@
   }
 }
 
-// Diamond marker list, matching the pattern previously implemented directly in
-// the Osman theme. Intended to be composed with the semantic `.list` base.
-@mixin list-caret() {
+// Diamond marker list. Intended to be composed with the semantic `.list` base.
+// Keep the marker geometric and sized/positioned relative to `1lh` so it stays
+// vertically centered on the first text line. Do not switch this back to a
+// font glyph unless the first-line alignment is preserved across fonts.
+@mixin list-diamond() {
   list-style: none;
   padding-inline-start: 0;
 
@@ -34,11 +36,14 @@
     padding-inline-start: 1.25em;
 
     &::before {
-      content: "◆";
+      content: "";
       position: absolute;
       inset-inline-start: 0;
-      color: var(--nt-primary);
-      font-weight: var(--nt-font-weight-bold, 600);
+      inset-block-start: calc((1lh - 0.4em) / 2);
+      inline-size: 0.4em;
+      block-size: 0.4em;
+      background: var(--nt-primary);
+      transform: rotate(45deg);
     }
   }
 }

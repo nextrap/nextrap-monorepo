@@ -34,7 +34,7 @@
   .list-unstyled { @include l.list-unstyled(); }
   .list-inline { @include l.list-inline(); }
   .list-inline-item { @include l.list-inline-item(); }
-  .list-caret { @include l.list-caret(); }
+  .list-diamond { @include l.list-diamond(); }
 
   .list-group { @include lg.list-group(); }
   .list-group-flush { @include lg.list-group-flush(); }
