@@ -42,3 +42,55 @@
     }
   }
 }
+
+@mixin _list-status() {
+  list-style: none;
+  padding-inline-start: 0;
+
+  > li {
+    display: flex;
+    align-items: center;
+    gap: var(--nt-space-2, .5rem);
+
+    &::before {
+      content: var(--list-status-indicator-content, '\2212');
+      flex: 0 0 1em;
+      inline-size: 1em;
+      block-size: 1em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      font-size: var(--list-status-indicator-size, 1em);
+      font-weight: var(--nt-font-weight-bold, 600);
+    }
+  }
+}
+
+@mixin list-status-plain() {
+  @include _list-status();
+
+  > li::before {
+    color: var(--list-status-indicator-color, var(--nt-secondary, #6c757d));
+  }
+}
+
+@mixin list-status-circle() {
+  @include _list-status();
+
+  > li::before {
+    border-radius: 50%;
+    background-color: var(--list-status-indicator-color, var(--nt-secondary, #6c757d));
+    color: var(--nt-white, #fff);
+  }
+}
+
+@mixin list-item-tick() {
+  --list-status-indicator-content: '\2713';
+  --list-status-indicator-color: var(--nt-success, #198754);
+}
+
+@mixin list-item-cross() {
+  --list-status-indicator-content: '\2715';
+  --list-status-indicator-color: var(--nt-danger, #dc3545);
+}
