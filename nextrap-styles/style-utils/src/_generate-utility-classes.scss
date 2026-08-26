@@ -1,17 +1,9 @@
-// @nextrap/style-utils/default — ready-to-use CSS utility class output
-//
-// Materializes all standard utility CSS classes from the style-utils mixin API.
-// Import this to get the default atomic utility classes.
-//
-// Example:
-//   @use '@nextrap/style-utils/default';
-//
-// To use mixins on arbitrary selectors instead:
-//   @use '@nextrap/style-utils' as u;
-//   .component { @include u.d-flex(); @include u.gap-3(); }
+// Central utility class generator. Defining this mixin emits no CSS. Include it
+// at the root for global classes or inside a theme selector for scoped classes.
 
-@use 'sass:math';
-@use './index' as u;
+@use './mixins' as u;
+
+@mixin generate-utility-classes() {
 
 // ============================================================
 // Display
@@ -399,18 +391,14 @@
 // ============================================================
 .row {
   @include u.row();
-
-  > * {
-    @include u.row-children();
-  }
 }
 
-@for $i from 1 through 6 {
-  .row-cols-#{$i} > * {
-    flex: 0 0 auto !important;
-    width: math.percentage(math.div(1, $i)) !important;
-  }
-}
+.row-cols-1 { @include u.row-cols-1(); }
+.row-cols-2 { @include u.row-cols-2(); }
+.row-cols-3 { @include u.row-cols-3(); }
+.row-cols-4 { @include u.row-cols-4(); }
+.row-cols-5 { @include u.row-cols-5(); }
+.row-cols-6 { @include u.row-cols-6(); }
 
 .col-auto { @include u.col-auto(); }
 .col { @include u.col(); }
@@ -427,20 +415,40 @@
 .col-11 { @include u.col-11(); }
 .col-12 { @include u.col-12(); }
 
-@for $i from 1 through 12 {
-  .offset-#{$i} {
-    margin-left: math.percentage(math.div($i, 12)) !important;
-  }
-}
+.offset-1 { @include u.offset-1(); }
+.offset-2 { @include u.offset-2(); }
+.offset-3 { @include u.offset-3(); }
+.offset-4 { @include u.offset-4(); }
+.offset-5 { @include u.offset-5(); }
+.offset-6 { @include u.offset-6(); }
+.offset-7 { @include u.offset-7(); }
+.offset-8 { @include u.offset-8(); }
+.offset-9 { @include u.offset-9(); }
+.offset-10 { @include u.offset-10(); }
+.offset-11 { @include u.offset-11(); }
+.offset-12 { @include u.offset-12(); }
 
-@for $i from 0 through 6 {
-  .g-#{$i} {
-    --gutters-x: var(--nt-space-#{$i}) !important;
-    --gutters-y: var(--nt-space-#{$i}) !important;
-  }
-  .gx-#{$i} { --gutters-x: var(--nt-space-#{$i}) !important; }
-  .gy-#{$i} { --gutters-y: var(--nt-space-#{$i}) !important; }
-}
+.g-0 { @include u.g-0(); }
+.gx-0 { @include u.gx-0(); }
+.gy-0 { @include u.gy-0(); }
+.g-1 { @include u.g-1(); }
+.gx-1 { @include u.gx-1(); }
+.gy-1 { @include u.gy-1(); }
+.g-2 { @include u.g-2(); }
+.gx-2 { @include u.gx-2(); }
+.gy-2 { @include u.gy-2(); }
+.g-3 { @include u.g-3(); }
+.gx-3 { @include u.gx-3(); }
+.gy-3 { @include u.gy-3(); }
+.g-4 { @include u.g-4(); }
+.gx-4 { @include u.gx-4(); }
+.gy-4 { @include u.gy-4(); }
+.g-5 { @include u.g-5(); }
+.gx-5 { @include u.gx-5(); }
+.gy-5 { @include u.gy-5(); }
+.g-6 { @include u.g-6(); }
+.gx-6 { @include u.gx-6(); }
+.gy-6 { @include u.gy-6(); }
 
 // ============================================================
 // List styles
@@ -454,3 +462,27 @@ html ul.list-checked { @include u.list-checked(); }
 // ============================================================
 .table { @include u.table(); }
 .table-bordered { @include u.table-bordered(); }
+
+// ============================================================
+// Semantic surfaces
+// ============================================================
+.surface-primary { @include u.surface-primary(); }
+.surface-secondary { @include u.surface-secondary(); }
+.surface-tertiary { @include u.surface-tertiary(); }
+.surface-accent { @include u.surface-accent(); }
+.surface-success { @include u.surface-success(); }
+.surface-info { @include u.surface-info(); }
+.surface-warning { @include u.surface-warning(); }
+.surface-danger { @include u.surface-danger(); }
+.surface-light { @include u.surface-light(); }
+.surface-dark { @include u.surface-dark(); }
+.surface-white { @include u.surface-white(); }
+.surface-black { @include u.surface-black(); }
+
+// ============================================================
+// Color scheme
+// ============================================================
+.scheme-light { @include u.scheme-light(); }
+.scheme-dark { @include u.scheme-dark(); }
+.scheme-auto { @include u.scheme-auto(); }
+}

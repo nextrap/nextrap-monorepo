@@ -1,0 +1,103 @@
+// Row/column utility mixins — each mixin styles the current selector.
+// Classes are generated in default.scss from these same mixins.
+@use 'sass:math';
+
+@mixin row() {
+  --gutters-x: 0;
+  --gutters-y: 0;
+
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  margin-top: calc(-1 * var(--gutters-y)) !important;
+  margin-right: calc(-0.5 * var(--gutters-x)) !important;
+  margin-left: calc(-0.5 * var(--gutters-x)) !important;
+
+  > * {
+    @include row-children();
+  }
+}
+
+@mixin row-children() {
+  box-sizing: border-box;
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 100%;
+  padding-right: calc(var(--gutters-x) * 0.5) !important;
+  padding-left: calc(var(--gutters-x) * 0.5) !important;
+  margin-top: var(--gutters-y) !important;
+}
+
+@mixin col() { flex: 1 0 0 !important; width: 0 !important; }
+@mixin col-auto() { flex: 0 0 auto !important; width: auto !important; }
+@mixin col-1() { flex: 0 0 auto !important; width: math.percentage(math.div(1, 12)) !important; }
+@mixin col-2() { flex: 0 0 auto !important; width: math.percentage(math.div(2, 12)) !important; }
+@mixin col-3() { flex: 0 0 auto !important; width: math.percentage(math.div(3, 12)) !important; }
+@mixin col-4() { flex: 0 0 auto !important; width: math.percentage(math.div(4, 12)) !important; }
+@mixin col-5() { flex: 0 0 auto !important; width: math.percentage(math.div(5, 12)) !important; }
+@mixin col-6() { flex: 0 0 auto !important; width: math.percentage(math.div(6, 12)) !important; }
+@mixin col-7() { flex: 0 0 auto !important; width: math.percentage(math.div(7, 12)) !important; }
+@mixin col-8() { flex: 0 0 auto !important; width: math.percentage(math.div(8, 12)) !important; }
+@mixin col-9() { flex: 0 0 auto !important; width: math.percentage(math.div(9, 12)) !important; }
+@mixin col-10() { flex: 0 0 auto !important; width: math.percentage(math.div(10, 12)) !important; }
+@mixin col-11() { flex: 0 0 auto !important; width: math.percentage(math.div(11, 12)) !important; }
+@mixin col-12() { flex: 0 0 auto !important; width: math.percentage(math.div(12, 12)) !important; }
+
+@mixin _row-cols($count) {
+  > * {
+    flex: 0 0 auto !important;
+    width: math.percentage(math.div(1, $count)) !important;
+  }
+}
+
+@mixin row-cols-1() { @include _row-cols(1); }
+@mixin row-cols-2() { @include _row-cols(2); }
+@mixin row-cols-3() { @include _row-cols(3); }
+@mixin row-cols-4() { @include _row-cols(4); }
+@mixin row-cols-5() { @include _row-cols(5); }
+@mixin row-cols-6() { @include _row-cols(6); }
+
+@mixin offset-1() { margin-left: math.percentage(math.div(1, 12)) !important; }
+@mixin offset-2() { margin-left: math.percentage(math.div(2, 12)) !important; }
+@mixin offset-3() { margin-left: math.percentage(math.div(3, 12)) !important; }
+@mixin offset-4() { margin-left: math.percentage(math.div(4, 12)) !important; }
+@mixin offset-5() { margin-left: math.percentage(math.div(5, 12)) !important; }
+@mixin offset-6() { margin-left: math.percentage(math.div(6, 12)) !important; }
+@mixin offset-7() { margin-left: math.percentage(math.div(7, 12)) !important; }
+@mixin offset-8() { margin-left: math.percentage(math.div(8, 12)) !important; }
+@mixin offset-9() { margin-left: math.percentage(math.div(9, 12)) !important; }
+@mixin offset-10() { margin-left: math.percentage(math.div(10, 12)) !important; }
+@mixin offset-11() { margin-left: math.percentage(math.div(11, 12)) !important; }
+@mixin offset-12() { margin-left: math.percentage(math.div(12, 12)) !important; }
+
+@mixin _gutter($x, $y) {
+  --gutters-x: var(--nt-space-#{$x}) !important;
+  --gutters-y: var(--nt-space-#{$y}) !important;
+}
+
+@mixin _gutter-x($size) { --gutters-x: var(--nt-space-#{$size}) !important; }
+@mixin _gutter-y($size) { --gutters-y: var(--nt-space-#{$size}) !important; }
+
+@mixin g-0() { @include _gutter(0, 0); }
+@mixin g-1() { @include _gutter(1, 1); }
+@mixin g-2() { @include _gutter(2, 2); }
+@mixin g-3() { @include _gutter(3, 3); }
+@mixin g-4() { @include _gutter(4, 4); }
+@mixin g-5() { @include _gutter(5, 5); }
+@mixin g-6() { @include _gutter(6, 6); }
+
+@mixin gx-0() { @include _gutter-x(0); }
+@mixin gx-1() { @include _gutter-x(1); }
+@mixin gx-2() { @include _gutter-x(2); }
+@mixin gx-3() { @include _gutter-x(3); }
+@mixin gx-4() { @include _gutter-x(4); }
+@mixin gx-5() { @include _gutter-x(5); }
+@mixin gx-6() { @include _gutter-x(6); }
+
+@mixin gy-0() { @include _gutter-y(0); }
+@mixin gy-1() { @include _gutter-y(1); }
+@mixin gy-2() { @include _gutter-y(2); }
+@mixin gy-3() { @include _gutter-y(3); }
+@mixin gy-4() { @include _gutter-y(4); }
+@mixin gy-5() { @include _gutter-y(5); }
+@mixin gy-6() { @include _gutter-y(6); }

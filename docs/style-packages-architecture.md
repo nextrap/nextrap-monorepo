@@ -37,6 +37,21 @@ Every style package separates Sass API from CSS output:
 @use '@nextrap/style-elements/default';     // Materializes default CSS classes
 ```
 
+`@nextrap/style-utils` additionally exports the mixin-only
+`generate-utility-classes()` API. It allows a theme to materialize the same
+complete class set in its own scope without making `index.scss` emit CSS:
+
+```scss
+@use '@nextrap/style-utils' as u;
+
+.theme-corporate {
+  @include u.generate-utility-classes();
+}
+```
+
+Only the central generator mixin may own utility class selectors. Individual
+utility files contain declarations and relative child selectors only.
+
 Package `exports` in `package.json` must consistently expose both entry points:
 
 ```json
