@@ -1,5 +1,5 @@
 /**
- * Shared utility functions for file operations.
+ * Shared base for all Nextrap web components.
  */
 import {
   BreakPointMixin,
@@ -11,6 +11,7 @@ import {
   SlotVisibilityInterface,
   SlotVisibilityMixin,
 } from '@trunkjs/browser-utils';
+import { SubLayoutApplyMixin } from '@trunkjs/content-pane';
 import { LitElement } from 'lit';
 import { SetDefaultStyleMixin, SetDefaultStyleMixinInterface } from './SetDefaultStyleMixin';
 
@@ -20,6 +21,7 @@ export interface NteFeatures {
   eventBinding?: boolean;
   breakpoints?: boolean;
   setDefaultStyle?: boolean;
+  subLayoutApply?: boolean;
 }
 
 export const defaultNteFeatures: NteFeatures = {
@@ -28,6 +30,7 @@ export const defaultNteFeatures: NteFeatures = {
   eventBinding: false,
   breakpoints: false,
   setDefaultStyle: true,
+  subLayoutApply: false,
 };
 
 export type Ctor<T = object> = abstract new (...args: any[]) => T;
@@ -40,17 +43,13 @@ export type InternalNextrapElementType = typeof LitElement &
 
 export function nextrap_element(features: NteFeatures = {}) {
   const mergedFeatures = { ...defaultNteFeatures, ...features };
-
-  // Runtime-Konstruktion bleibt identisch; die Typen werden über ComposeNtlMixins abgebildet.
   let constructor = LitElement;
 
-  // Always add the loader
   constructor = LoaderMixin(constructor);
 
   if (mergedFeatures.setDefaultStyle) {
     constructor = SetDefaultStyleMixin(constructor);
   }
-
   if (mergedFeatures.logging) {
     constructor = LoggingMixin(constructor);
   }
@@ -62,6 +61,9 @@ export function nextrap_element(features: NteFeatures = {}) {
   }
   if (mergedFeatures.eventBinding) {
     constructor = EventBindingsMixin(constructor);
+  }
+  if (mergedFeatures.subLayoutApply) {
+    constructor = SubLayoutApplyMixin(constructor);
   }
 
   return constructor as InternalNextrapElementType;

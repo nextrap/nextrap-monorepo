@@ -4,23 +4,25 @@
   --container-width: var(--nt-container-width) /* Refer to README.md for style guidelines */;
   --gap: var(--nt-spacing-layout);
   --breakpoint: md, lg; // xs,sm,md,lg,xl,xxl
-  --cols: 3;
-  --cols-tablet: 2;
-  --cols-mobile: 1;
+  --columns: attr(columns type(<integer>), var(--cols, 3));
+  --columns-tablet: attr(columns-tablet type(<integer>), var(--cols-tablet, 2));
+  --columns-mobile: attr(columns-mobile type(<integer>), var(--cols-mobile, 1));
+  --min-width: attr(min-width type(<length-percentage>), 0px);
+  --max-width: attr(max-width type(<length-percentage>), unset);
 }
 
-:host([mode='tablet']) {
+:host([mode='tablet']:not([min-width])) {
   #main {
-    grid-template-columns: repeat(var(--cols-tablet), minmax(0, 1fr));
+    grid-template-columns: repeat(var(--columns-tablet), minmax(0, 1fr));
   }
   #content-wrapper {
     flex-direction: column;
   }
 }
 
-:host([mode='mobile']) {
+:host([mode='mobile']:not([min-width])) {
   #main {
-    grid-template-columns: repeat(var(--cols-mobile), minmax(0, 1fr));
+    grid-template-columns: repeat(var(--columns-mobile), minmax(0, 1fr));
   }
   #content-wrapper {
     flex-direction: column;
@@ -46,10 +48,17 @@
 #main {
   display: grid;
   gap: var(--gap);
-  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
 
   & > ::slotted(*) {
     width: 100%;
+    max-width: var(--max-width);
     height: 100%;
+  }
+}
+
+:host([min-width]) {
+  #main {
+    grid-template-columns: repeat(auto-fit, minmax(min(var(--min-width), 100%), 1fr));
   }
 }

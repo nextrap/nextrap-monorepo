@@ -2,8 +2,9 @@
 
 :host {
   --container-width: var(--nt-container-width, 100%);
-  --default-cols: var(--cols);
-  --cols: 6;
+  --cols: attr(cols type(<integer>), var(--default-cols, 6));
+  --min-width: attr(min-width type(<length-percentage>), 0px);
+  --max-width: attr(max-width type(<length-percentage>), unset);
   --gutter-x: var(--nt-spacing-layout);
   --gutter-y: var(--nt-spacing-layout);
   --breakpoint: xl;
@@ -32,8 +33,12 @@
   gap: var(--gutter-y) var(--gutter-x);
 
   ::slotted(*) {
+    --item-cols: attr(cols type(<integer>), var(--cols, 1));
+    --item-max-width: attr(max-width type(<length-percentage>), var(--max-width));
+
     box-sizing: border-box;
-    width: calc(100% / 12 * var(--cols, 1) - var(--gutter-x));
+    width: calc(100% / 12 * var(--item-cols) - var(--gutter-x));
+    max-width: var(--item-max-width);
   }
 }
 
@@ -42,9 +47,14 @@
     margin-left: calc(var(--gutter-x) / -2);
     width: calc(100% + var(--gutter-x));
     flex-direction: row;
+  }
+}
 
+:host([min-width]) {
+  #main {
     ::slotted(*) {
-      --cols: var(--default-cols);
+      flex: 1 1 min(var(--min-width), 100%);
+      width: auto;
     }
   }
 }
@@ -58,8 +68,8 @@
     flex-direction: column;
 
     ::slotted(*) {
-      --cols: 12 !important;
       --gutter-x: 0px; // Must be 0px - otherwise: error in Firefox
+      flex-basis: auto;
       width: 100%;
     }
   }

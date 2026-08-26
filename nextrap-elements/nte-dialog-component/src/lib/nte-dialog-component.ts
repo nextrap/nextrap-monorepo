@@ -1,4 +1,4 @@
-import { nextrap_element } from '@nextrap/nte-core';
+import { nextrap_element } from '@nextrap/nt-core';
 import '@nextrap/nte-dialog';
 import { NteDialog, NteDialogBackdropAction } from '@nextrap/nte-dialog';
 import { html, nothing, TemplateResult } from 'lit';

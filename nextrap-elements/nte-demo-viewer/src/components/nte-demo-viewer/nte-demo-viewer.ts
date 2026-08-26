@@ -1,7 +1,7 @@
 import { html, nothing, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
-import { nextrap_element } from '@nextrap/nte-core';
+import { nextrap_element } from '@nextrap/nt-core';
 import '@trunkjs/content-pane';
 import '@trunkjs/markdown-loader';
 

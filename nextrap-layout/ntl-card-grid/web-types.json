@@ -6,19 +6,33 @@
             "elements": [
                 {
                     "name": "ntl-card-grid",
-                    "description": "Add logic scope to the html elements below",
-                    "slots": [{ "name": "default", "description": "Content of button" }],
-                    "events": [{ "name": "click", "description": "Fired on click" }],
+                    "description": "Responsive CSS Grid layout for cards.",
+                    "slots": [{ "name": "default", "description": "Cards rendered in the grid." }],
                     "attributes": [
                         {
-                            "name": "debug",
-                            "type": "boolean",
-                            "description": "Enable debug mode (output debug information to the console)"
+                            "name": "columns",
+                            "type": "number",
+                            "description": "Number of equal-width grid columns. Defaults to 3."
                         },
                         {
-                            "name": "init",
+                            "name": "columns-tablet",
+                            "type": "number",
+                            "description": "Number of grid columns in tablet mode. Defaults to 2."
+                        },
+                        {
+                            "name": "columns-mobile",
+                            "type": "number",
+                            "description": "Number of grid columns in mobile mode. Defaults to 1."
+                        },
+                        {
+                            "name": "min-width",
                             "type": "string",
-                            "description": "Initialize component scope by evaluating a JSON/JS expression (supports await fetch, DOM access)."
+                            "description": "Minimum card width. Enables intrinsic auto-fit grid wrapping when set."
+                        },
+                        {
+                            "name": "max-width",
+                            "type": "string",
+                            "description": "Maximum card width. Defaults to unset."
                         }
                     ]
                 }
@@ -29,15 +43,6 @@
                 {
                     "name": "variant1",
                     "description": "Css Class variant1"
-                }
-            ],
-            "scopes": [
-                {
-                    "name": "my-button",
-                    "description": "Button specific classes",
-                    "css": {
-                        "classes": [{ "name": "icon-left" }, { "name": "icon-right" }]
-                    }
                 }
             ]
         }

@@ -1,9 +1,9 @@
 import { EVENT_NAME_GROUP_OPEN_CLOSE, triggerGroupOpenCloseEvent } from '@nextrap/nt-framework';
+import { nextrap_element } from '@nextrap/nt-core';
 import { unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import style from './hamburger.scss?inline';
 
-import { nextrap_element } from '@nextrap/nte-core';
 import { Listen } from '@trunkjs/browser-utils';
 import { html } from 'lit/static-html.js';
 
@@ -40,17 +40,16 @@ export class NteBurger extends nextrap_element({
   @Listen(EVENT_NAME_GROUP_OPEN_CLOSE, { target: 'document' })
   protected listenEvents(event: Event) {
     if (!(event instanceof CustomEvent)) {
-      return; // Ignore non-CustomEvents
+      return;
     }
     if (event.detail.groupName !== this.dataGroupName) {
-      return; // Ignore events from other groups
+      return;
     }
     this.open = event.detail.open;
   }
 
   override firstUpdated(_changedProperties: Map<string | number | symbol, unknown>): void {
     super.firstUpdated(_changedProperties);
-    // Copy all aria- attributes to the button element for accessibility
     const button = this.renderRoot.querySelector('#button');
     if (button) {
       Array.from(this.attributes).forEach((attr) => {
@@ -63,8 +62,6 @@ export class NteBurger extends nextrap_element({
 
   override update(changedProperties: Map<string | number | symbol, unknown>): void {
     super.update(changedProperties);
-
-    // If DataGroupName is set, we dispatch custom events to syncronize all states
     if (changedProperties.has('open') && this.dataGroupName !== '') {
       triggerGroupOpenCloseEvent(this.open, this.dataGroupName);
     }

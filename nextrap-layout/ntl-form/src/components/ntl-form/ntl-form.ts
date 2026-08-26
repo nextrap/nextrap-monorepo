@@ -1,4 +1,4 @@
-import { nextrap_layout, NtlFeatures } from '@nextrap/ntl-core';
+import { nextrap_element, NteFeatures } from '@nextrap/nt-core';
 import { create_element, Listen } from '@trunkjs/browser-utils';
 import { html, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
@@ -10,19 +10,17 @@ import { resetStyle } from '@nextrap/style-reset';
 import { PropertyValues } from '@lit/reactive-element';
 import style from './ntl-form.scss?inline';
 
-// use nextrap_element for pure elements
-
-const features: NtlFeatures = {
-  breakpoints: true, // Enables responsive design features
-  subLayoutApply: true, // For NTL only: Enable <slot data-query= support for sub-layouts
-  slotVisibility: false, // quick fix for marking empty slots (unless CSS Standard supports :empty for slots)
-  eventBinding: true, // Switch event binding using @Listen decorators
+const features: NteFeatures = {
+  breakpoints: true,
+  subLayoutApply: true,
+  slotVisibility: false,
+  eventBinding: true,
 };
 
 let ids = 1;
 
 @customElement('ntl-form')
-export class NtlFormElement extends nextrap_layout(features) {
+export class NtlFormElement extends nextrap_element(features) {
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
   @property({ type: String, reflect: true })
@@ -30,22 +28,16 @@ export class NtlFormElement extends nextrap_layout(features) {
 
   #formElement: HTMLFormElement | null = null;
 
-  // Example of listening to window scroll events
   @Listen('click', { target: 'host', options: { passive: true } })
   private onClick(e: Event) {
     const target = e.target as HTMLElement;
     const element = target.closest('button') ?? target.closest('input[type="submit"]') ?? target.closest('input[type="button"]') ?? null;
-    if (!element) return; // not a Button click
+    if (!element) return;
 
     const type = (element.getAttribute('type') || '').toLowerCase() ?? null;
     const dataAction = element.getAttribute('data-action') ?? null;
 
-
-
-
-
-
-    console.log('Submit button clicked', element);
+    console.log('Submit button clicked', element, type, dataAction);
   }
 
   override firstUpdated(_changedProperties: PropertyValues) {

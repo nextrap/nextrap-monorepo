@@ -1,6 +1,6 @@
 {
     "name": "@nextrap/nte-progress",
-    "version": "0.0.1",
+    "version": "2.0.0",
     "main": "./index.js",
     "repository": {
         "directory": "nextrap-elements/nte-progress",

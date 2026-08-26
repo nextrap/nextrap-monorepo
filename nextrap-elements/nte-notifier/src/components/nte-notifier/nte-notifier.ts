@@ -1,4 +1,4 @@
-import { nextrap_element, type NteFeatures } from '@nextrap/nte-core';
+import { nextrap_element, type NteFeatures } from '@nextrap/nt-core';
 import '@nextrap/nte-spinner';
 import '@nextrap/style-base';
 import { resetStyle } from '@nextrap/style-reset';

@@ -1,6 +1,6 @@
 {
     "name": "@nextrap/nte-theme-switcher",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "main": "./index.js",
     "repository": {
         "directory": "nextrap-elements/nte-theme-switcher",
@@ -11,7 +11,7 @@
         "lit": "^3.3.1"
     },
     "devDependencies": {
-        "@nextrap/style-base": "^1.0.0"
+        "@nextrap/style-base": "^2.0.0"
     },
     "type": "module",
     "types": "./index.d.ts",
