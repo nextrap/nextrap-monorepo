@@ -28,7 +28,7 @@ describe('styleTypography', () => {
         @use 'index' as type;
 
         .theme-test {
-          @include type.typography();
+          @include type.style-typography();
         }
       `,
       { loadPaths: [packageRoot] },

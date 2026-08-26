@@ -3,7 +3,7 @@
 // Usage:
 //   @use '@nextrap/style-elements' as e;
 //   .my-scope table { @include e.table(); @include e.table-striped(); }
-//   .my-theme { @include e.elements(); } // complete class API scoped to .my-theme
+//   .my-theme { @include e.style-elements(); }
 //
 // For ready-to-use default CSS classes:
 //   @use '@nextrap/style-elements/default';
@@ -13,4 +13,4 @@
 @forward './src/list';
 @forward './src/list-group';
 @forward './src/container';
-@forward './src/all';
+@forward './src/style-elements' show style-elements;

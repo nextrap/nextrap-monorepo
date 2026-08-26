@@ -4,7 +4,7 @@
 // Typography intentionally includes native text-element selectors because its
 // default purpose is to establish a coherent document text rhythm. It never
 // styles page/section/content layout containers.
-@mixin typography() {
+@mixin style-typography() {
   h1, .h1 { @include t.h1(); }
   h2, .h2 { @include t.h2(); }
   h3, .h3 { @include t.h3(); }
