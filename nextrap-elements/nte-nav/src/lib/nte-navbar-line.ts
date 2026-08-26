@@ -1,4 +1,3 @@
-import { SlotTool } from '@nextrap/nt-framework';
 import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import style from './nte-navbar-line.scss?inline';
@@ -31,16 +30,27 @@ class NteNavbarLine extends LitElement {
     window.addEventListener('scroll', () => this.updateScrollState(), { passive: true });
   }
 
-  override async firstUpdated(_changedProperties: PropertyValues) {
-    SlotTool.observeEmptySlots(this);
+  override firstUpdated(_changedProperties: PropertyValues) {
+    const brandSlot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="brand"]');
+    if (brandSlot) {
+      this.updateBrandSlotState(brandSlot);
+    }
     this.updateScrollState();
   }
+
+  private updateBrandSlotState(slot: HTMLSlotElement) {
+    slot.toggleAttribute('empty', slot.assignedElements({ flatten: true }).length === 0);
+  }
+
   override render() {
     return html`
       <div id="main" part="main">
         <div id="container" part="container">
           <div id="brand" part="brand">
-            <slot name="brand"></slot>
+            <slot
+              name="brand"
+              @slotchange=${(event: Event) => this.updateBrandSlotState(event.currentTarget as HTMLSlotElement)}
+            ></slot>
           </div>
           <div id="nav" part="nav">
             <slot></slot>
