@@ -3,13 +3,15 @@
 // Usage:
 //   @use '@nextrap/style-utils' as u;
 //   .component { @include u.d-flex(); @include u.gap-3(); @include u.mt-2(); }
-//   .my-theme { @include u.utils(); } // complete utility class API scoped to .my-theme
+//   .my-theme { @include u.classes(); } // complete utility class API scoped to .my-theme
 //
 // For ready-to-use default CSS utility classes:
 //   @use '@nextrap/style-utils/default';
 
 @forward './src/utils/spacing-utils';
 @forward './src/utils/colors-utils';
+@forward './src/utils/surface';
+@forward './src/utils/scheme';
 @forward './src/utils/font-utils';
 @forward './src/utils/row';
 @forward './src/utils/borders';
@@ -20,4 +22,4 @@
 @forward './src/utils/dimensions';
 @forward './src/utils/text';
 @forward './src/utils/table';
-@forward './src/utils/all';
+@forward './src/utils/classes';
