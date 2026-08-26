@@ -1,19 +1,35 @@
 # ntl-card-grid
 
-Short description of the component.
+Responsive CSS Grid layout for cards.
 
-## Example
+## Usage
 
-| Attribute | Type   | Description          | Default |
-| --------- | ------ | -------------------- | ------- |
-| attr1     | string | Description of attr1 | 'value' |
+Use `columns` for an explicit number of equal-width grid columns. It defaults to `3`. The legacy `--cols`, `--cols-tablet`, and `--cols-mobile` custom properties remain available as fallbacks.
 
-### Attr1
+```html
+<ntl-card-grid columns="3" columns-tablet="2" columns-mobile="1">
+  <nte-card>Card 1</nte-card>
+  <nte-card>Card 2</nte-card>
+  <nte-card>Card 3</nte-card>
+</ntl-card-grid>
+```
 
-Description of attr1.
+For intrinsic wrapping, set `min-width`. The grid then uses `auto-fit` and `minmax()` so items wrap when the minimum width can no longer be maintained and the remaining items stretch across the available width.
 
-### Attr2
+```html
+<ntl-card-grid min-width="18rem">
+  <nte-card>Card 1</nte-card>
+  <nte-card>Card 2</nte-card>
+  <nte-card>Card 3</nte-card>
+</ntl-card-grid>
+```
 
-Description of attr2.
+`max-width` optionally caps the width of each card and defaults to `unset`.
 
-## Example Usage
+```html
+<ntl-card-grid min-width="18rem" max-width="32rem">
+  ...
+</ntl-card-grid>
+```
+
+All sizing attributes are resolved CSS-only via typed `attr()`.
