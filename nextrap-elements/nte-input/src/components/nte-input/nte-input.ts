@@ -8,7 +8,7 @@ import {
   state,
   unsafeCSS,
   waitForDomContentLoaded,
-} from '@nextrap/nte-core';
+} from '@nextrap/nt-core';
 import '@nextrap/style-base';
 import { resetStyle } from '@nextrap/style-reset';
 

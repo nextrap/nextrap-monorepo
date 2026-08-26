@@ -1,5 +1,5 @@
 import { Listen} from "@trunkjs/browser-utils";
-import { nextrap_layout, NtlFeatures } from '@nextrap/ntl-core';
+import { nextrap_layout, NtlFeatures } from '@nextrap/nt-core';
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, state, property } from 'lit/decorators.js';
 

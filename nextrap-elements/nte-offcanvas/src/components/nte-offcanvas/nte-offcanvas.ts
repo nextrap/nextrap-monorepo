@@ -1,5 +1,5 @@
 import { triggerGroupOpenCloseEvent } from '@nextrap/nt-framework';
-import { nextrap_element } from '@nextrap/nte-core';
+import { nextrap_element } from '@nextrap/nt-core';
 import '@nextrap/style-base';
 import { resetStyle } from '@nextrap/style-reset';
 import { Listen, sleep } from '@trunkjs/browser-utils';

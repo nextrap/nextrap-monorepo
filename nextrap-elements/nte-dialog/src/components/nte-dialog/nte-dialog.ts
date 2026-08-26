@@ -1,5 +1,5 @@
 import '@nextrap/nte-burger';
-import { nextrap_element } from '@nextrap/nte-core';
+import { nextrap_element } from '@nextrap/nt-core';
 import { resetStyle } from '@nextrap/style-reset';
 import { SubLayoutApplyMixin } from '@trunkjs/content-pane';
 import '@trunkjs/prolit-elements';
