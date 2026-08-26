@@ -1,7 +1,5 @@
-// @nextrap/style-elements/default — ready-to-use CSS class output
-// The default entry point is only the root-level materialization of the public
-// package-specific `elements()` aggregate mixin.
+// @nextrap/style-elements/default — ready-to-use CSS class output.
 
 @use './index' as e;
 
-@include e.elements();
+@include e.style-elements();

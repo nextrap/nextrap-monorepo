@@ -2,11 +2,11 @@
 //
 // @use '@nextrap/style-button' as b;
 // button { @include b.btn(); @include b.btn-primary(); }
-// .theme { @include b.buttons(); }
+// .theme { @include b.style-button(); }
 //
 // For ready-to-use root-level classes use `@nextrap/style-button/default`.
 
 @forward './src/btn';
 @forward './src/btn-group';
 @forward './src/dropdown-menu';
-@forward './src/all';
+@forward './src/style-button' show style-button;

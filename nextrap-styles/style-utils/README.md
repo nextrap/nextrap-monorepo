@@ -13,7 +13,7 @@ The can be used in combination with [TrunkJS Responsive](https://github.com/trun
 ## Sass entry points
 
 `@nextrap/style-utils` is a mixin-only Sass API and does not emit CSS. It
-exports every individual utility mixin plus `generate-utility-classes()`:
+exports every individual utility mixin plus `style-utils()` from `_style-utils.scss`:
 
 ```scss
 @use '@nextrap/style-utils' as u;
@@ -24,7 +24,7 @@ exports every individual utility mixin plus `generate-utility-classes()`:
 }
 
 .theme-corporate {
-  @include u.generate-utility-classes();
+  @include u.style-utils();
 }
 ```
 

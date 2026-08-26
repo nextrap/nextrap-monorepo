@@ -32,7 +32,7 @@ describe('styleUtils', () => {
         @use 'index' as u;
 
         .theme-test {
-          @include u.generate-utility-classes();
+          @include u.style-utils();
         }
       `,
       { loadPaths: [packageRoot] },

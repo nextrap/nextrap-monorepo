@@ -10,7 +10,7 @@ The main entry point exports mixins without emitting CSS:
 @use '@nextrap/style-typography' as type;
 
 .article-theme {
-  @include type.typography();
+  @include type.style-typography();
 }
 ```
 

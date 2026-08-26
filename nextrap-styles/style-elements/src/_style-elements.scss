@@ -1,8 +1,6 @@
 // Materialize the complete style-elements class API in the current Sass scope.
-//
-// At root scope this produces the same classes as `default.scss`.
-// Inside a selector it makes the complete helper class API available only
-// below that selector, e.g. `.theme { @include elements(); }`.
+// The filename intentionally matches the public aggregate mixin so source-map
+// references remain unambiguous in browser developer tools.
 
 @use './prose' as p;
 @use './table' as t;
@@ -11,7 +9,7 @@
 @use './image' as i;
 @use './container' as c;
 
-@mixin elements() {
+@mixin style-elements() {
   .prose {
     @include p.prose();
 
@@ -28,8 +26,6 @@
   .table-sm { @include t.table-sm(); }
   .table-responsive { @include t.table-responsive(); }
 
-  // `.list` is the semantic ownership class. Theme defaults can therefore
-  // target ul/ol:not(.list) while utility classes remain composable.
   .list { @include l.list(); }
   .list-unstyled { @include l.list-unstyled(); }
   .list-inline { @include l.list-inline(); }

@@ -5,7 +5,7 @@
 @use './btn-group' as g;
 @use './dropdown-menu' as d;
 
-@mixin buttons() {
+@mixin style-button() {
   .btn { @include b.btn(); }
   .btn-link { @include b.btn-link(); }
   .btn-lg { @include b.btn-lg(); }

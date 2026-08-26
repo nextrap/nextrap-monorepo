@@ -1,9 +1,9 @@
 // @nextrap/style-typography — public Sass API only; importing emits no CSS.
 //
 // @use '@nextrap/style-typography' as type;
-// .theme { @include type.typography(); }
+// .theme { @include type.style-typography(); }
 //
 // For ready-to-use root-level typography use `@nextrap/style-typography/default`.
 
 @forward './src/typography';
-@forward './src/all';
+@forward './src/style-typography' show style-typography;

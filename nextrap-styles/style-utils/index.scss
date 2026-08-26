@@ -4,9 +4,9 @@
 //
 //   @use '@nextrap/style-utils' as u;
 //   .component { @include u.d-flex(); @include u.gap-3(); }
-//   .my-theme { @include u.generate-utility-classes(); }
+//   .my-theme { @include u.style-utils(); }
 //
 // Use @nextrap/style-utils/default to emit all classes globally.
 
 @forward './src/mixins';
-@forward './src/generate-utility-classes' show generate-utility-classes;
+@forward './src/style-utils' show style-utils;
