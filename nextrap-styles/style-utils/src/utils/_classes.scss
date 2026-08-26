@@ -1,0 +1,31 @@
+// Materialize the complete style-utils class API in the current Sass scope.
+
+@use 'sass:meta';
+@use './surface';
+@use './scheme';
+
+@mixin classes() {
+  @include meta.load-css('../../classes');
+
+  .surface-primary { @include surface.surface-primary(); }
+  .surface-secondary { @include surface.surface-secondary(); }
+  .surface-tertiary { @include surface.surface-tertiary(); }
+  .surface-accent { @include surface.surface-accent(); }
+  .surface-success { @include surface.surface-success(); }
+  .surface-info { @include surface.surface-info(); }
+  .surface-warning { @include surface.surface-warning(); }
+  .surface-danger { @include surface.surface-danger(); }
+  .surface-light { @include surface.surface-light(); }
+  .surface-dark { @include surface.surface-dark(); }
+  .surface-white { @include surface.surface-white(); }
+  .surface-black { @include surface.surface-black(); }
+
+  .scheme-light { @include scheme.scheme-light(); }
+  .scheme-dark { @include scheme.scheme-dark(); }
+  .scheme-auto { @include scheme.scheme-auto(); }
+}
+
+// Backward-compatible alias. Prefer classes() for new code.
+@mixin utils() {
+  @include classes();
+}
