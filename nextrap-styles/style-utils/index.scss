@@ -1,23 +1,12 @@
-// @nextrap/style-utils — Sass API (mixin-only, no CSS output on @use)
+// @nextrap/style-utils — mixin-only Sass API. Using this entry point never
+// emits CSS. Besides the individual utility mixins it exposes the class
+// generator mixin for scoped theme output:
 //
-// Usage:
 //   @use '@nextrap/style-utils' as u;
-//   .component { @include u.d-flex(); @include u.gap-3(); @include u.mt-2(); }
-//   .my-theme { @include u.utils(); } // complete utility class API scoped to .my-theme
+//   .component { @include u.d-flex(); @include u.gap-3(); }
+//   .my-theme { @include u.generate-utility-classes(); }
 //
-// For ready-to-use default CSS utility classes:
-//   @use '@nextrap/style-utils/default';
+// Use @nextrap/style-utils/default to emit all classes globally.
 
-@forward './src/utils/spacing-utils';
-@forward './src/utils/colors-utils';
-@forward './src/utils/font-utils';
-@forward './src/utils/row';
-@forward './src/utils/borders';
-@forward './src/utils/container';
-@forward './src/utils/display';
-@forward './src/utils/flex';
-@forward './src/utils/list-style';
-@forward './src/utils/dimensions';
-@forward './src/utils/text';
-@forward './src/utils/table';
-@forward './src/utils/all';
+@forward './src/mixins';
+@forward './src/generate-utility-classes' show generate-utility-classes;

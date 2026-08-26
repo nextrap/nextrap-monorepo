@@ -1,0 +1,24 @@
+// Text color utility mixins — each mixin styles the current selector.
+
+@mixin text-primary() { --text-color: var(--nt-primary) !important; color: var(--nt-primary) !important; }
+@mixin text-secondary() { --text-color: var(--nt-secondary) !important; color: var(--nt-secondary) !important; }
+@mixin text-tertiary() { --text-color: var(--nt-tertiary) !important; color: var(--nt-tertiary) !important; }
+@mixin text-accent() { --text-color: var(--nt-accent) !important; color: var(--nt-accent) !important; }
+@mixin text-success() { --text-color: var(--nt-success) !important; color: var(--nt-success) !important; }
+@mixin text-info() { --text-color: var(--nt-info) !important; color: var(--nt-info) !important; }
+@mixin text-warning() { --text-color: var(--nt-warning) !important; color: var(--nt-warning) !important; }
+@mixin text-danger() { --text-color: var(--nt-danger) !important; color: var(--nt-danger) !important; }
+@mixin text-light() { --text-color: var(--nt-light) !important; color: var(--nt-light) !important; }
+@mixin text-dark() { --text-color: var(--nt-dark) !important; color: var(--nt-dark) !important; }
+@mixin text-white() { --text-color: var(--nt-white) !important; color: var(--nt-white) !important; }
+@mixin text-black() { --text-color: var(--nt-black) !important; color: var(--nt-black) !important; }
+
+@mixin text-gray-100() { color: var(--nt-gray-100) !important; }
+@mixin text-gray-200() { color: var(--nt-gray-200) !important; }
+@mixin text-gray-300() { color: var(--nt-gray-300) !important; }
+@mixin text-gray-400() { color: var(--nt-gray-400) !important; }
+@mixin text-gray-500() { color: var(--nt-gray-500) !important; }
+@mixin text-gray-600() { color: var(--nt-gray-600) !important; }
+@mixin text-gray-700() { color: var(--nt-gray-700) !important; }
+@mixin text-gray-800() { color: var(--nt-gray-800) !important; }
+@mixin text-gray-900() { color: var(--nt-gray-900) !important; }

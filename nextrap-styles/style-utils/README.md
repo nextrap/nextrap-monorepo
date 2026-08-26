@@ -10,6 +10,32 @@ The can be used in combination with [TrunkJS Responsive](https://github.com/trun
 
 - [Utility Classes](https://getbootstrap.com/docs/5.3/utilities/)
 
+## Sass entry points
+
+`@nextrap/style-utils` is a mixin-only Sass API and does not emit CSS. It
+exports every individual utility mixin plus `generate-utility-classes()`:
+
+```scss
+@use '@nextrap/style-utils' as u;
+
+.card {
+  @include u.d-flex();
+  @include u.gap-3();
+}
+
+.theme-corporate {
+  @include u.generate-utility-classes();
+}
+```
+
+The scoped include above generates selectors such as
+`.theme-corporate .d-flex`. To generate the complete class set globally, use
+the default entry point instead:
+
+```scss
+@use '@nextrap/style-utils/default';
+```
+
 
 
 ## Contents

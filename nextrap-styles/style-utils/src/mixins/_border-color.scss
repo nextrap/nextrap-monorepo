@@ -1,0 +1,13 @@
+// Border color utility mixins — each mixin styles the current selector.
+
+@mixin border-color-primary() { --border-color: var(--nt-primary) !important; border-color: var(--nt-primary) !important; }
+@mixin border-color-secondary() { --border-color: var(--nt-secondary) !important; border-color: var(--nt-secondary) !important; }
+@mixin border-color-accent() { --border-color: var(--nt-accent) !important; border-color: var(--nt-accent) !important; }
+@mixin border-color-success() { --border-color: var(--nt-success) !important; border-color: var(--nt-success) !important; }
+@mixin border-color-info() { --border-color: var(--nt-info) !important; border-color: var(--nt-info) !important; }
+@mixin border-color-warning() { --border-color: var(--nt-warning) !important; border-color: var(--nt-warning) !important; }
+@mixin border-color-danger() { --border-color: var(--nt-danger) !important; border-color: var(--nt-danger) !important; }
+@mixin border-color-light() { --border-color: var(--nt-light) !important; border-color: var(--nt-light) !important; }
+@mixin border-color-dark() { --border-color: var(--nt-dark) !important; border-color: var(--nt-dark) !important; }
+@mixin border-color-white() { --border-color: var(--nt-white) !important; border-color: var(--nt-white) !important; }
+@mixin border-color-black() { --border-color: var(--nt-black) !important; border-color: var(--nt-black) !important; }

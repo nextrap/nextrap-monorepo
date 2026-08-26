@@ -1,0 +1,5 @@
+// Color-scheme utilities select how scheme-aware token values are evaluated.
+
+@mixin scheme-light() { color-scheme: light !important; }
+@mixin scheme-dark() { color-scheme: dark !important; }
+@mixin scheme-auto() { color-scheme: light dark !important; }

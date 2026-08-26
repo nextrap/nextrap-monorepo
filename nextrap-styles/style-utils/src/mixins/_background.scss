@@ -1,0 +1,56 @@
+// Background utility mixins — each mixin styles the current selector.
+
+@mixin bg-primary() { background: var(--nt-primary) !important; }
+@mixin bg-primary-subtle() { background: var(--nt-primary-subtle) !important; }
+@mixin bg-primary-emphasis() { background: var(--nt-primary-emphasis) !important; }
+@mixin bg-secondary() { background: var(--nt-secondary) !important; }
+@mixin bg-secondary-subtle() { background: var(--nt-secondary-subtle) !important; }
+@mixin bg-secondary-emphasis() { background: var(--nt-secondary-emphasis) !important; }
+@mixin bg-tertiary() { background: var(--nt-tertiary) !important; }
+@mixin bg-tertiary-subtle() { background: var(--nt-tertiary-subtle) !important; }
+@mixin bg-tertiary-emphasis() { background: var(--nt-tertiary-emphasis) !important; }
+@mixin bg-accent() { background: var(--nt-accent) !important; }
+@mixin bg-accent-subtle() { background: var(--nt-accent-subtle) !important; }
+@mixin bg-accent-emphasis() { background: var(--nt-accent-emphasis) !important; }
+@mixin bg-success() { background: var(--nt-success) !important; }
+@mixin bg-success-subtle() { background: var(--nt-success-subtle) !important; }
+@mixin bg-success-emphasis() { background: var(--nt-success-emphasis) !important; }
+@mixin bg-info() { background: var(--nt-info) !important; }
+@mixin bg-info-subtle() { background: var(--nt-info-subtle) !important; }
+@mixin bg-info-emphasis() { background: var(--nt-info-emphasis) !important; }
+@mixin bg-warning() { background: var(--nt-warning) !important; }
+@mixin bg-warning-subtle() { background: var(--nt-warning-subtle) !important; }
+@mixin bg-warning-emphasis() { background: var(--nt-warning-emphasis) !important; }
+@mixin bg-danger() { background: var(--nt-danger) !important; }
+@mixin bg-danger-subtle() { background: var(--nt-danger-subtle) !important; }
+@mixin bg-danger-emphasis() { background: var(--nt-danger-emphasis) !important; }
+@mixin bg-light() { background: var(--nt-light) !important; }
+@mixin bg-light-subtle() { background: var(--nt-light-subtle) !important; }
+@mixin bg-light-emphasis() { background: var(--nt-light-emphasis) !important; }
+@mixin bg-dark() { background: var(--nt-dark) !important; }
+@mixin bg-dark-subtle() { background: var(--nt-dark-subtle) !important; }
+@mixin bg-dark-emphasis() { background: var(--nt-dark-emphasis) !important; }
+@mixin bg-white() { background: var(--nt-white) !important; }
+@mixin bg-black() { background: var(--nt-black) !important; }
+
+// Deprecated soft aliases kept for backward compatibility.
+@mixin bg-soft-primary() { background: var(--nt-primary-subtle) !important; }
+@mixin bg-soft-accent() { background: var(--nt-accent-subtle) !important; }
+@mixin bg-soft-secondary() { background: var(--nt-secondary-subtle) !important; }
+@mixin bg-soft-tertiary() { background: var(--nt-tertiary-subtle) !important; }
+@mixin bg-soft-success() { background: var(--nt-success-subtle) !important; }
+@mixin bg-soft-info() { background: var(--nt-info-subtle) !important; }
+@mixin bg-soft-warning() { background: var(--nt-warning-subtle) !important; }
+@mixin bg-soft-danger() { background: var(--nt-danger-subtle) !important; }
+@mixin bg-soft-light() { background: var(--nt-light-subtle) !important; }
+@mixin bg-soft-dark() { background: var(--nt-dark-subtle) !important; }
+
+@mixin bg-gray-100() { background: var(--nt-gray-100) !important; }
+@mixin bg-gray-200() { background: var(--nt-gray-200) !important; }
+@mixin bg-gray-300() { background: var(--nt-gray-300) !important; }
+@mixin bg-gray-400() { background: var(--nt-gray-400) !important; }
+@mixin bg-gray-500() { background: var(--nt-gray-500) !important; }
+@mixin bg-gray-600() { background: var(--nt-gray-600) !important; }
+@mixin bg-gray-700() { background: var(--nt-gray-700) !important; }
+@mixin bg-gray-800() { background: var(--nt-gray-800) !important; }
+@mixin bg-gray-900() { background: var(--nt-gray-900) !important; }

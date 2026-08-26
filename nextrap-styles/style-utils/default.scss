@@ -1,6 +1,5 @@
-// @nextrap/style-utils/default — ready-to-use CSS utility class output
-// Root-level materialization of the public package-specific `utils()` mixin.
+// @nextrap/style-utils/default — materializes all utility classes globally.
 
 @use './index' as u;
 
-@include u.utils();
+@include u.generate-utility-classes();
