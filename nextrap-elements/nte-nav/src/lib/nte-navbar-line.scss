@@ -55,7 +55,7 @@
   display: flex;
 
   #brand {
-    &:has(slot[empty]) {
+    &:has(slot.slot-empty) {
       display: none;
     }
     min-width: 0; // Prevents overflow
