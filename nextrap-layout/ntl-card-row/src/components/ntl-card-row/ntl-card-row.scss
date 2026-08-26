@@ -1,10 +1,11 @@
 /* The ShadowDOM Styles */
 
 :host {
+  // TODO: Use typed attr() for cols/min-width/max-width once casting is supported by Firefox and Safari.
   --container-width: var(--nt-container-width, 100%);
-  --cols: attr(cols type(<integer>), var(--default-cols, 6));
-  --min-width: attr(min-width type(<length-percentage>), 0px);
-  --max-width: attr(max-width type(<length-percentage>), unset);
+  --cols: var(--default-cols, 6);
+  --min-width: 0px;
+  --max-width: unset;
   --gutter-x: var(--nt-spacing-layout);
   --gutter-y: var(--nt-spacing-layout);
   --breakpoint: xl;
@@ -33,8 +34,8 @@
   gap: var(--gutter-y) var(--gutter-x);
 
   ::slotted(*) {
-    --item-cols: attr(cols type(<integer>), var(--cols, 1));
-    --item-max-width: attr(max-width type(<length-percentage>), var(--max-width));
+    --item-cols: var(--cols, 1);
+    --item-max-width: var(--max-width);
 
     box-sizing: border-box;
     width: calc(100% / 12 * var(--item-cols) - var(--gutter-x));
@@ -50,7 +51,7 @@
   }
 }
 
-:host([min-width]) {
+:host(.with-min-width) {
   #main {
     ::slotted(*) {
       flex: 1 1 min(var(--min-width), 100%);
