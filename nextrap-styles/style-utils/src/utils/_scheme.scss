@@ -1,0 +1,7 @@
+// Color-scheme utility mixins.
+// A theme defines token values; a scheme selects how scheme-aware values such
+// as light-dark() are evaluated. Apply globally or to a local subtree.
+
+@mixin scheme-light() { color-scheme: light !important; }
+@mixin scheme-dark() { color-scheme: dark !important; }
+@mixin scheme-auto() { color-scheme: light dark !important; }
