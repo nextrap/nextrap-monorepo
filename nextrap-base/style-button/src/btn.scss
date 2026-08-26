@@ -8,6 +8,8 @@
   --btn-bg-active: var(--nt-primary-active, var(--btn-bg));
 
   display: inline-block;
+  appearance: none;
+  -webkit-appearance: none;
   padding: var(--nt-btn-padding-y, 0.5rem) var(--nt-btn-padding-x, 1rem);
   background-color: var(--btn-bg);
   color: var(--btn-txt);

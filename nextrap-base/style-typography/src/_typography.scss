@@ -54,6 +54,7 @@
 }
 
 @mixin strong() {
+  color: inherit;
   font-weight: var(--nt-font-weight-bold, 700);
 }
 
