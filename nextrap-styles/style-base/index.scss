@@ -1,18 +1,22 @@
 // @nextrap/style-base — runtime CSS theme API
 //
 // This package has one theming model: CSS custom properties.
-// `runtime-theme()` emits the complete token graph and the global light/dark
-// switching selectors. Theme values remain runtime-overridable and do not
-// require Sass recompilation.
+// `runtime-theme-scoped()` emits only the runtime token graph into the current
+// selector. Global light/dark switching selectors are emitted separately via
+// `runtime-scheme-selectors()`.
 //
 // Custom theme:
 //   @use '@nextrap/style-base' as nt;
 //
 //   :root {
-//     @include nt.runtime-theme();
+//     @include nt.runtime-theme-scoped();
 //     --nt-primary: #0057b8;
 //     --nt-neutral: #667085;
 //     --nt-radius: .5rem;
+//   }
+//
+//   :root {
+//     @include nt.runtime-scheme-selectors();
 //   }
 //
 // Ready-to-use defaults:
@@ -20,10 +24,18 @@
 
 @use './src/runtime-theme' as runtime;
 
-// Emits the complete Nextrap runtime token graph into the current selector and
-// emits the global [data-nt-scheme='light'|'dark'] selectors once at root level.
+// Emits the complete Nextrap runtime token graph into the current selector.
 // Override input CSS custom properties after this mixin to define a theme.
-@mixin runtime-theme() {
+@mixin runtime-theme-scoped() {
   @include runtime.runtime-theme();
+}
+
+// Backward-compatible alias. Kept scoped-safe on purpose.
+@mixin runtime-theme() {
+  @include runtime-theme-scoped();
+}
+
+// Emits the global [data-nt-scheme='light'|'dark'] selectors.
+@mixin runtime-scheme-selectors() {
   @include runtime.runtime-scheme-selectors();
 }

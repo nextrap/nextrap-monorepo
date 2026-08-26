@@ -220,6 +220,8 @@ It must **not** set padding/margins on `section`, page wrappers, content contain
 
 Allowed: CSS custom properties (`--nt-*`). Not allowed: resets, `body` rules, native typography, component styles, or other visual host-page changes.
 
+Important runtime rule: `@nextrap/style-base` must **not** be imported by shipped `nte-*` or `ntl-*` component runtime code (`.ts` / `.js`). The project/theme/app owns `style-base` and includes it exactly once at app/theme level. Only demos or explicit dev-only demo setups may import `@nextrap/style-base` directly.
+
 ### Cross-package interoperability via `--nt-*` tokens
 
 Style packages communicate through `--nt-*` CSS custom properties, not private Sass imports from sibling packages:

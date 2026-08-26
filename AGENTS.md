@@ -113,7 +113,7 @@ export class NteMyComponent extends nextrap_element() {
 ```
 
 - Import `@nextrap/style-reset` inside component `.scss` for baseline styles.
-- Import `@nextrap/style-base` in the `.ts` file to inject global CSS variables into the Light DOM.
+- Do **not** import `@nextrap/style-base` in shipped component `.ts`/`.js` runtime code. `style-base` belongs to the consuming app/theme and must be included exactly once there. Direct `@nextrap/style-base` imports are allowed only in demos or explicit dev-only demo setups.
 - **Never import `style-*` packages (except `style-reset`) inside the Shadow DOM.**
 
 ## Styling Conventions
