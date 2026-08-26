@@ -16,7 +16,8 @@ describe('styleElements', () => {
 
     expect(result.css).toContain('.prose');
     expect(result.css).toContain('.prose.prose-xl');
-    expect(result.css).toContain('var(--nt-surface-text');
+    expect(result.css).toContain('var(--nt-text');
+    expect(result.css).not.toContain('--nt-surface-');
   });
 
   it('materializes prose inside the caller scope', () => {

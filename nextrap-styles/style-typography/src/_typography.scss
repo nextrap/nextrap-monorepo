@@ -7,11 +7,8 @@
 
 @mixin heading() {
   margin-top: 0;
-  margin-bottom: var(
-    --typography-heading-margin-bottom,
-    var(--nt-heading-margin-bottom, calc(var(--nt-spacing-text, 1rem) * 0.5))
-  );
-  color: var(--nt-surface-text, var(--nt-header, var(--nt-text, currentColor)));
+  margin-bottom: var(--typography-heading-margin-bottom, calc(var(--nt-spacing-text, 1rem) * 0.5));
+  color: var(--nt-header, var(--nt-text, currentColor));
   font-family: var(--nt-font-family-header, inherit);
   font-weight: var(--nt-font-weight-header, 500);
   line-height: var(--nt-line-height-header, 1.2);
@@ -49,11 +46,8 @@
 
 @mixin p() {
   margin-top: 0;
-  margin-bottom: var(
-    --typography-paragraph-margin-bottom,
-    var(--nt-paragraph-margin-bottom, var(--nt-spacing-text, 1rem))
-  );
-  color: var(--nt-surface-text, var(--nt-text, currentColor));
+  margin-bottom: var(--typography-paragraph-margin-bottom, var(--nt-spacing-text, 1rem));
+  color: var(--nt-text, currentColor);
   font-family: var(--nt-font-family-base, inherit);
   font-weight: var(--nt-font-weight-base, 400);
   line-height: var(--nt-line-height-base, 1.5);
@@ -73,7 +67,7 @@
 }
 
 @mixin link() {
-  color: var(--nt-surface-link, var(--nt-link, currentColor));
+  color: var(--nt-link, currentColor);
   text-decoration: underline;
   text-decoration-color: currentColor;
   transition:
@@ -83,7 +77,7 @@
     box-shadow 0.15s ease-in-out;
 
   &:hover {
-    color: var(--nt-surface-link-hover, var(--nt-link-hover, var(--nt-surface-link, var(--nt-link, currentColor))));
+    color: var(--nt-link-hover, var(--nt-link, currentColor));
   }
 
   &:focus-visible {
@@ -93,27 +87,27 @@
 }
 
 @mixin mark() {
-  padding: 0.1875em;
-  color: var(--nt-mark-color, var(--nt-text, currentColor));
-  background-color: var(--nt-mark-bg, var(--nt-warning-subtle, #fff3cd));
+  padding: var(--typography-mark-padding, 0.1875em);
+  color: var(--typography-mark-color, var(--nt-warning-emphasis, var(--nt-text, currentColor)));
+  background-color: var(--typography-mark-bg, var(--nt-warning-subtle, #fff3cd));
 }
 
 @mixin ul() {
   margin-top: 0;
-  margin-bottom: var(--typography-list-margin-bottom, var(--nt-list-margin-bottom, var(--nt-spacing-text, 1rem)));
+  margin-bottom: var(--typography-list-margin-bottom, var(--nt-spacing-text, 1rem));
   list-style: disc;
 }
 
 @mixin ol() {
   margin-top: 0;
-  margin-bottom: var(--typography-list-margin-bottom, var(--nt-list-margin-bottom, var(--nt-spacing-text, 1rem)));
-  padding-left: var(--nt-list-padding-left, 2rem);
+  margin-bottom: var(--typography-list-margin-bottom, var(--nt-spacing-text, 1rem));
+  padding-left: var(--typography-list-padding-left, var(--nt-space-6, 2rem));
   list-style: decimal;
 }
 
 @mixin dl() {
   margin-top: 0;
-  margin-bottom: var(--typography-list-margin-bottom, var(--nt-list-margin-bottom, var(--nt-spacing-text, 1rem)));
+  margin-bottom: var(--typography-list-margin-bottom, var(--nt-spacing-text, 1rem));
 }
 
 @mixin dt() {
@@ -121,29 +115,26 @@
 }
 
 @mixin dd() {
-  margin-bottom: var(
-    --typography-definition-margin-bottom,
-    var(--nt-definition-margin-bottom, calc(var(--nt-spacing-text, 1rem) * 0.5))
-  );
+  margin-bottom: var(--typography-definition-margin-bottom, calc(var(--nt-spacing-text, 1rem) * 0.5));
   margin-left: 0;
-  color: var(--nt-surface-text-muted, var(--nt-text-muted, currentColor));
+  color: var(--nt-text-muted, currentColor);
 }
 
 @mixin hr() {
-  margin: var(--typography-hr-margin-y, var(--nt-hr-margin-y, var(--nt-spacing-text, 1rem))) 0;
+  margin: var(--typography-hr-margin-y, var(--nt-spacing-text, 1rem)) 0;
   color: inherit;
   border: 0;
   border-top: var(--nt-border-width, 1px) solid;
-  opacity: var(--nt-hr-opacity, 0.25);
+  opacity: var(--typography-hr-opacity, 0.25);
 }
 
 @mixin code() {
-  padding: var(--nt-code-padding-y, 0.125em) var(--nt-code-padding-x, 0.375em);
-  color: var(--nt-code-color, var(--nt-surface-text, inherit));
-  background: var(--nt-code-bg, color-mix(in oklch, currentColor 8%, transparent));
+  padding: var(--typography-code-padding-y, 0.125em) var(--typography-code-padding-x, 0.375em);
+  color: var(--typography-code-color, var(--nt-text, inherit));
+  background: var(--typography-code-bg, color-mix(in oklch, currentColor 8%, transparent));
   border-radius: var(--nt-border-radius-sm, var(--nt-border-radius, 0.25rem));
   font-family: var(
-    --nt-font-family-monospace,
+    --typography-font-family-monospace,
     ui-monospace,
     SFMono-Regular,
     Menlo,
@@ -152,20 +143,20 @@
     'Liberation Mono',
     monospace
   );
-  font-size: var(--nt-code-font-size, 0.875em);
+  font-size: var(--typography-code-font-size, 0.875em);
 }
 
 @mixin pre() {
   display: block;
   margin-top: 0;
-  margin-bottom: var(--typography-pre-margin-bottom, var(--nt-pre-margin-bottom, var(--nt-spacing-text, 1rem)));
-  padding: var(--nt-pre-padding, var(--nt-space-4, 1rem));
+  margin-bottom: var(--typography-pre-margin-bottom, var(--nt-spacing-text, 1rem));
+  padding: var(--typography-pre-padding, var(--nt-space-4, 1rem));
   overflow: auto;
-  color: var(--nt-surface-text, var(--nt-text, currentColor));
-  background: var(--nt-pre-bg, color-mix(in oklch, currentColor 8%, transparent));
+  color: var(--nt-text, currentColor);
+  background: var(--typography-pre-bg, color-mix(in oklch, currentColor 8%, transparent));
   border-radius: var(--nt-border-radius, 0.375rem);
   font-family: var(
-    --nt-font-family-monospace,
+    --typography-font-family-monospace,
     ui-monospace,
     SFMono-Regular,
     Menlo,
@@ -174,7 +165,7 @@
     'Liberation Mono',
     monospace
   );
-  font-size: var(--nt-code-font-size, 0.875em);
+  font-size: var(--typography-code-font-size, 0.875em);
 
   code {
     padding: 0;
@@ -186,35 +177,34 @@
 }
 
 @mixin blockquote() {
-  margin: 0 0
-    var(--typography-blockquote-margin-bottom, var(--nt-blockquote-margin-bottom, var(--nt-spacing-text, 1rem)));
-  padding: var(--nt-blockquote-padding-y, 0.75rem) var(--nt-blockquote-padding-x, 1rem);
-  color: var(--nt-surface-text-muted, var(--nt-text-muted, currentColor));
-  border-left: var(--nt-blockquote-border-width, 0.25rem) solid
+  margin: 0 0 var(--typography-blockquote-margin-bottom, var(--nt-spacing-text, 1rem));
+  padding: var(--typography-blockquote-padding-y, 0.75rem) var(--typography-blockquote-padding-x, 1rem);
+  color: var(--nt-text-muted, currentColor);
+  border-left: var(--typography-blockquote-border-width, 0.25rem) solid
     var(--nt-primary-emphasis, var(--nt-primary, currentColor));
-  font-size: var(--nt-blockquote-font-size, 1.125em);
+  font-size: var(--typography-blockquote-font-size, 1.125em);
 }
 
 @mixin figure() {
-  margin: 0 0 var(--typography-figure-margin-bottom, var(--nt-figure-margin-bottom, var(--nt-spacing-text, 1rem)));
+  margin: 0 0 var(--typography-figure-margin-bottom, var(--nt-spacing-text, 1rem));
 }
 
 @mixin figure-caption() {
-  margin-top: var(--nt-figure-caption-margin-top, 0.5rem);
-  color: var(--nt-surface-text-muted, var(--nt-text-muted, currentColor));
+  margin-top: var(--typography-figure-caption-margin-top, var(--nt-space-2, 0.5rem));
+  color: var(--nt-text-muted, currentColor);
   font-size: var(--nt-font-size-small, 0.875em);
   text-align: center;
 }
 
 @mixin lead() {
   margin-top: 0;
-  margin-bottom: var(--typography-lead-margin-bottom, var(--nt-lead-margin-bottom, var(--nt-spacing-text, 1rem)));
-  color: var(--nt-surface-text, var(--nt-text, currentColor));
-  font-size: var(--nt-lead-font-size, 1.25rem);
-  font-weight: var(--nt-lead-font-weight, 300);
+  margin-bottom: var(--typography-lead-margin-bottom, var(--nt-spacing-text, 1rem));
+  color: var(--nt-text, currentColor);
+  font-size: var(--typography-lead-font-size, var(--nt-fs-1, 1.25rem));
+  font-weight: var(--typography-lead-font-weight, 300);
   line-height: var(--nt-line-height-base, 1.5);
 }
 
 @mixin text-muted() {
-  color: var(--nt-surface-text-muted, var(--nt-text-muted, currentColor)) !important;
+  color: var(--nt-text-muted, currentColor) !important;
 }

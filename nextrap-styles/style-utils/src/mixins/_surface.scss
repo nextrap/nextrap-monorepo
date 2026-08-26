@@ -1,11 +1,13 @@
 // Semantic surface mixins keep a readable background/foreground pair together.
 
 @mixin _surface($background, $foreground) {
-  --nt-surface-text: #{$foreground};
-  --nt-surface-text-muted: color-mix(in oklch, #{$foreground} 72%, #{$background});
-  --nt-surface-link: #{$foreground};
+  --nt-text: #{$foreground};
+  --nt-text-muted: color-mix(in oklch, #{$foreground} 72%, #{$background});
+  --nt-header: #{$foreground};
+  --nt-link: #{$foreground};
+  --nt-link-hover: #{$foreground};
   background: #{$background} !important;
-  color: var(--nt-surface-text) !important;
+  color: var(--nt-text) !important;
 }
 
 @mixin surface-primary() { @include _surface(var(--nt-primary), var(--nt-text-on-primary)); }

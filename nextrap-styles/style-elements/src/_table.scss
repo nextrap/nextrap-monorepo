@@ -22,13 +22,13 @@
     background-color: transparent;
     border-bottom-width: var(--nt-border-width, 1px);
     border-bottom-style: solid;
-    border-bottom-color: var(--nt-border-color, currentColor);
+    border-bottom-color: var(--nt-border, currentColor);
   }
 }
 
 @mixin table-striped() {
   tbody tr:nth-child(odd) {
-    background-color: var(--nt-table-stripe-bg, rgba(0, 0, 0, 0.05));
+    background-color: var(--table-stripe-bg, color-mix(in oklch, var(--nt-text, currentColor) 5%, transparent));
   }
 }
 
@@ -50,7 +50,7 @@
 
 @mixin table-hover() {
   tbody tr:hover {
-    background-color: var(--nt-table-hover-bg, rgba(0, 0, 0, 0.075));
+    background-color: var(--table-hover-bg, color-mix(in oklch, var(--nt-text, currentColor) 7.5%, transparent));
   }
 }
 

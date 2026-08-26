@@ -4,7 +4,7 @@
 
 @mixin container() {
   width: var(--nt-container-width, 100%);
-  max-width: var(--nt-container-max-width, 1200px);
+  max-width: var(--nt-container-max, 1200px);
   margin-inline: auto;
   padding-inline: var(--nt-space-3, 0.75rem);
 }
