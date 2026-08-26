@@ -60,39 +60,10 @@ The sizing attributes are resolved CSS-only via typed `attr()`.
 
 ## Migrations
 
-### `--default-cols` / `--cols` to `cols`
-
-Previously, the row default was configured through `--default-cols`, while an individual card used `--cols` to override its width:
-
-```markdown
-## Cards
-{: layout="ntl-card-row" style="--default-cols: 4"}
-
-### Card 1
-{: layout="nte-card"}
-
-### Card 2
-{: layout="nte-card" style="--cols: 6"}
-
-### Card 3
-{: layout="nte-card"}
-```
-
-Use the `cols` attribute on both the row and an individual card instead:
-
-```markdown
-## Cards
-{: layout="ntl-card-row" cols="4"}
-
-### Card 1
-{: layout="nte-card"}
-
-### Card 2
-{: layout="nte-card" cols="6"}
-
-### Card 3
-{: layout="nte-card"}
-```
+| Old | New |
+| --- | --- |
+| `--default-cols: 4` | `cols="4"` |
+| `--cols: 6` on a card | `cols="6"` on a card |
 
 The meaning remains Bootstrap-like: `cols="4"` occupies 4 of 12 columns. The row value is the default for its cards; a card's own `cols` value overrides it.
 
