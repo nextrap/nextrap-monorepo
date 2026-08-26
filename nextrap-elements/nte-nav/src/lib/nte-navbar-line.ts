@@ -1,9 +1,10 @@
-import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
+import { nextrap_element } from '@nextrap/nt-core';
+import { html, PropertyValues, unsafeCSS } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import style from './nte-navbar-line.scss?inline';
 
 @customElement('nte-navbar-line')
-class NteNavbarLine extends LitElement {
+class NteNavbarLine extends nextrap_element({ slotVisibility: true }) {
   static get is() {
     return 'nte-navbar-line';
   }
@@ -31,15 +32,8 @@ class NteNavbarLine extends LitElement {
   }
 
   override firstUpdated(_changedProperties: PropertyValues) {
-    const brandSlot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="brand"]');
-    if (brandSlot) {
-      this.updateBrandSlotState(brandSlot);
-    }
+    super.firstUpdated(_changedProperties);
     this.updateScrollState();
-  }
-
-  private updateBrandSlotState(slot: HTMLSlotElement) {
-    slot.toggleAttribute('empty', slot.assignedElements({ flatten: true }).length === 0);
   }
 
   override render() {
@@ -47,10 +41,7 @@ class NteNavbarLine extends LitElement {
       <div id="main" part="main">
         <div id="container" part="container">
           <div id="brand" part="brand">
-            <slot
-              name="brand"
-              @slotchange=${(event: Event) => this.updateBrandSlotState(event.currentTarget as HTMLSlotElement)}
-            ></slot>
+            <slot name="brand"></slot>
           </div>
           <div id="nav" part="nav">
             <slot></slot>
