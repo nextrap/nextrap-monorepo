@@ -8,15 +8,15 @@
         "url": "https://github.com/nextrap/nextrap-monorepo"
     },
     "dependencies": {
-        "@nextrap/nt-framework": "^1.1.1",
-        "@nextrap/nte-burger": "^1.1.7",
-        "@nextrap/nte-core": "^1.0.2",
-        "@nextrap/nte-offcanvas": "^1.0.16",
+        "@nextrap/nt-framework": "^2.0.0",
+        "@nextrap/nte-burger": "^2.0.0",
+        "@nextrap/nt-core": "^2.0.0",
+        "@nextrap/nte-offcanvas": "^2.0.0",
         "@trunkjs/browser-utils": "^1.0.12"
     },
     "devDependencies": {
-        "@nextrap/style-base": "^1.1.11",
-        "@nextrap/style-reset": "^1.0.0"
+        "@nextrap/style-base": "^2.0.0",
+        "@nextrap/style-reset": "^2.0.0"
     },
     "type": "module",
     "types": "./index.d.ts"

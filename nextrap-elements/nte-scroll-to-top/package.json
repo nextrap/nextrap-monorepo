@@ -1,6 +1,6 @@
 {
     "name": "@nextrap/nte-scroll-to-top",
-    "version": "0.1.2-0",
+    "version": "2.0.0",
     "main": "./index.js",
     "repository": {
         "directory": "nextrap-elements/nte-scroll-to-top",

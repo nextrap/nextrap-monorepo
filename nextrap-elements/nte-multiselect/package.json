@@ -1,6 +1,6 @@
 {
     "name": "@nextrap/nte-multiselect",
-    "version": "0.0.1",
+    "version": "2.0.0",
     "main": "./src/index.ts",
     "repository": {
         "directory": "nextrap-elements/nte-multiselect",
@@ -11,7 +11,7 @@
         "lit": "^3.0.0"
     },
     "peerDependencies": {
-        "@nextrap/style-reset": "*"
+        "@nextrap/style-reset": "^2.0.0"
     },
     "type": "module",
     "exports": {

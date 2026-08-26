@@ -1,6 +1,6 @@
 {
     "name": "@nextrap/nte-spinner",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "main": "./index.js",
     "repository": {
         "directory": "nextrap-elements/nte-spinner",
@@ -9,8 +9,8 @@
     },
     "dependencies": {},
     "devDependencies": {
-        "@nextrap/nte-demo-viewer": "^1.0.0",
-        "@nextrap/style-base": "^1.0.0"
+        "@nextrap/nte-demo-viewer": "^2.0.0",
+        "@nextrap/style-base": "^2.0.0"
     },
     "type": "module",
     "types": "./index.d.ts",

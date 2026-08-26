@@ -1,3 +1,4 @@
+import { nextrap_element } from '@nextrap/nt-core';
 import { html, unsafeCSS } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
@@ -5,11 +6,10 @@ import { customElement } from 'lit/decorators.js';
 import { resetStyle } from '@nextrap/style-reset';
 
 // Styles for your component's shadow DOM
-import { nextrap_layout } from '@nextrap/ntl-core';
 import style from './ntl-card-row.scss?inline';
 
 @customElement('ntl-card-row')
-export class NtlCardRowElement extends nextrap_layout({
+export class NtlCardRowElement extends nextrap_element({
   breakpoints: true,
   subLayoutApply: true,
 }) {

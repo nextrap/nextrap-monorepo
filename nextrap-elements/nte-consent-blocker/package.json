@@ -1,6 +1,6 @@
 {
     "name": "@nextrap/nte-consent-blocker",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "main": "./index.js",
     "repository": {
         "directory": "nextrap-elements/nte-consent-blocker",
@@ -8,14 +8,14 @@
         "url": "https://github.com/nextrap/nextrap-monorepo"
     },
     "dependencies": {
-        "@nextrap/nte-core": "^1.0.0",
-        "@nextrap/nte-demo-viewer": "^1.0.0",
-        "@nextrap/ntl-2col": "^1.1.5",
-        "@nextrap/style-base": "^1.0.0",
-        "@nextrap/style-button": "^1.0.0",
-        "@nextrap/style-reset": "^1.0.0",
-        "@nextrap/style-typography": "^1.0.0",
-        "@nextrap/style-utils": "^1.0.0",
+        "@nextrap/nt-core": "^2.0.0",
+        "@nextrap/nte-demo-viewer": "^2.0.0",
+        "@nextrap/ntl-2col": "^2.0.0",
+        "@nextrap/style-base": "^2.0.0",
+        "@nextrap/style-button": "^2.0.0",
+        "@nextrap/style-reset": "^2.0.0",
+        "@nextrap/style-typography": "^2.0.0",
+        "@nextrap/style-utils": "^2.0.0",
         "@trunkjs/browser-utils": "^1.0.12",
         "@trunkjs/content-pane": "^1.0.12",
         "lit": "^3.3.1",
