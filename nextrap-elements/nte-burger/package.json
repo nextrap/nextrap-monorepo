@@ -8,6 +8,7 @@
         "url": "https://github.com/nextrap/nextrap-monorepo"
     },
     "dependencies": {
+        "@nextrap/nt-core": "^2.0.0",
         "@nextrap/nt-framework": "^2.0.0",
         "@trunkjs/browser-utils": "^1.0.12"
     },
