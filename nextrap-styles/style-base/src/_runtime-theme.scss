@@ -206,15 +206,15 @@
 @mixin runtime-scheme-selectors() {
   // Scheme belongs to the document/inheritance tree, not to an individual theme
   // scope. This lets scoped themes inherit an explicit user selection reliably.
-  @at-root :root {
-    color-scheme: light dark;
-  }
 
-  @at-root [data-nt-scheme='light'] {
+  color-scheme: light dark;
+
+
+  &[data-nt-scheme='light'] {
     color-scheme: light;
   }
 
-  @at-root [data-nt-scheme='dark'] {
+  &[data-nt-scheme='dark'] {
     color-scheme: dark;
   }
 }
