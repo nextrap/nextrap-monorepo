@@ -1,69 +1,32 @@
 // Materialize the complete style-utils class API in the current Sass scope.
 //
-// The class registry lives in `classes.scss`. `meta.load-css()` is deliberate:
-// when `utils()` is included inside a selector Sass nests the complete registry
-// below that selector; at root it produces the normal default utility output.
+// The established utility registry lives in `classes.scss`. Semantic surfaces
+// and local scheme helpers are emitted directly here so they are guaranteed to
+// exist both in `@nextrap/style-utils/default` and in scoped `utils()` output.
 
 @use 'sass:meta';
+@use './colors-utils' as colors;
 
 @mixin utils() {
   @include meta.load-css('../../classes');
 
-  // The legacy root registry intentionally uses `html ul.*` specificity for
-  // these helpers. Nested below a theme that would become `.theme html ...`,
-  // which cannot match. Only for scoped use, add selector-relative equivalents.
-  // At root (`& == null`) default output stays equivalent here.
-  @if & {
-    ul.list-unstyled {
-      list-style: none !important;
-      padding-left: 0 !important;
-    }
+  // Semantic readable surfaces: background + matching foreground.
+  .surface-primary { @include colors.surface-primary(); }
+  .surface-secondary { @include colors.surface-secondary(); }
+  .surface-tertiary { @include colors.surface-tertiary(); }
+  .surface-accent { @include colors.surface-accent(); }
+  .surface-success { @include colors.surface-success(); }
+  .surface-info { @include colors.surface-info(); }
+  .surface-warning { @include colors.surface-warning(); }
+  .surface-danger { @include colors.surface-danger(); }
+  .surface-light { @include colors.surface-light(); }
+  .surface-dark { @include colors.surface-dark(); }
+  .surface-white { @include colors.surface-white(); }
+  .surface-black { @include colors.surface-black(); }
 
-    ul.list-inline {
-      padding-left: 0 !important;
-
-      > li {
-        display: inline-block !important;
-
-        &:not(:last-child) {
-          margin-right: var(--nt-space-3) !important;
-        }
-      }
-    }
-
-    ul.list-checked {
-      list-style: none !important;
-      padding-left: 0 !important;
-
-      > li {
-        vertical-align: center;
-        display: flex;
-        align-items: center;
-
-        &::before {
-          width: 1.2em;
-          height: 1.2em;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          content: '\2713';
-          border-radius: 50%;
-          margin-right: var(--nt-space-2);
-          background-color: var(--nt-success);
-          color: var(--nt-white);
-          text-align: center;
-        }
-
-        &.list-item-removed::before {
-          content: '\2715';
-          background-color: var(--nt-danger);
-        }
-
-        &.list-item-unavailable::before {
-          content: '\2012';
-          background-color: var(--nt-dark);
-        }
-      }
-    }
-  }
+  // Color-scheme switches. Apply to html/body for the whole page or to any
+  // section to force the light/dark evaluation context for that subtree.
+  .scheme-light { @include colors.scheme-light(); }
+  .scheme-dark { @include colors.scheme-dark(); }
+  .scheme-auto { @include colors.scheme-auto(); }
 }
