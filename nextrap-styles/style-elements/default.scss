@@ -1,7 +1,44 @@
-// @nextrap/style-elements/default — ready-to-use CSS class output
-// The default entry point is only the root-level materialization of the public
-// package-specific `elements()` aggregate mixin.
+// @nextrap/style-elements/default — ready-to-use CSS class output.
 
-@use './index' as e;
+@use './src/prose' as p;
+@use './src/table' as t;
+@use './src/list' as l;
+@use './src/list-group' as lg;
+@use './src/image' as i;
+@use './src/container' as c;
 
-@include e.elements();
+.prose {
+  @include p.prose();
+
+  &.prose-xl {
+    @include p.prose-xl();
+  }
+}
+
+.table { @include t.table(); }
+.table-striped { @include t.table-striped(); }
+.table-bordered { @include t.table-bordered(); }
+.table-borderless { @include t.table-borderless(); }
+.table-hover { @include t.table-hover(); }
+.table-sm { @include t.table-sm(); }
+.table-responsive { @include t.table-responsive(); }
+
+.list { @include l.list(); }
+.list-unstyled { @include l.list-unstyled(); }
+.list-inline { @include l.list-inline(); }
+.list-inline-item { @include l.list-inline-item(); }
+.list-diamond { @include l.list-diamond(); }
+.list-status-plain { @include l.list-status-plain(); }
+.list-status-circle { @include l.list-status-circle(); }
+.list-item-tick { @include l.list-item-tick(); }
+.list-item-cross { @include l.list-item-cross(); }
+
+.list-group { @include lg.list-group(); }
+.list-group-flush { @include lg.list-group-flush(); }
+
+.img-fluid { @include i.img-fluid(); }
+.img-thumbnail { @include i.img-thumbnail(); }
+.figure-img { @include i.figure-img(); }
+
+.container { @include c.container(); }
+.container-fluid { @include c.container-fluid(); }

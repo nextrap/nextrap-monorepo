@@ -20,13 +20,13 @@ describe('styleElements', () => {
     expect(result.css).not.toContain('--nt-surface-');
   });
 
-  it('materializes prose inside the caller scope', () => {
+  it('composes individual element mixins inside the caller scope', () => {
     const result = compileString(
       `
         @use 'index' as e;
 
-        .theme-test {
-          @include e.elements();
+        .theme-test .prose {
+          @include e.prose();
         }
       `,
       { loadPaths: [packageRoot] },
