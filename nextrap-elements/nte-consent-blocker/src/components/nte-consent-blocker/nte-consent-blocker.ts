@@ -1,4 +1,4 @@
-import { nextrap_element, NteFeatures } from '@nextrap/nte-core';
+import { nextrap_element, NteFeatures } from '@nextrap/nt-core';
 import { resetStyle } from '@nextrap/style-reset';
 import { Listen, waitForDomContentLoaded } from '@trunkjs/browser-utils';
 import { SubLayoutApplyMixin } from '@trunkjs/content-pane';
@@ -7,9 +7,9 @@ import { customElement, property } from 'lit/decorators.js';
 import style from './nte-consent-blocker.scss?inline';
 
 const features: NteFeatures = {
-  breakpoints: true, // Enables responsive design features
-  slotVisibility: true, // Mark empty slots for functional Shadow DOM visibility handling
-  eventBinding: true, // Switch event binding using @Listen decorators
+  breakpoints: true,
+  slotVisibility: true,
+  eventBinding: true,
 };
 
 function stripQuotes(str: string) {
@@ -44,7 +44,6 @@ export class NteConsentBlockerElement extends SubLayoutApplyMixin(nextrap_elemen
     this.consentGiven = true;
   }
 
-  // Example of listening to window click events
   @Listen('click', { target: 'host' })
   private onClick(e: Event) {
     if (e.target instanceof HTMLButtonElement && e.target.closest('[data-action="consent"]')) {
@@ -68,16 +67,12 @@ export class NteConsentBlockerElement extends SubLayoutApplyMixin(nextrap_elemen
 
     if (this.querySelector(':scope > [slot="background"]') === null) {
       const defaultBg = getComputedStyle(this).getPropertyValue('--default-bg');
-      if (defaultBg) {
-        this.#copyElementFromString(defaultBg, 'background');
-      }
+      if (defaultBg) this.#copyElementFromString(defaultBg, 'background');
     }
 
     if (this.querySelector(':scope > [slot="pre-consent"]') === null) {
       const defaultPreConsent = getComputedStyle(this).getPropertyValue('--default-pre-consent');
-      if (defaultPreConsent) {
-        this.#copyElementFromString(defaultPreConsent, 'pre-consent');
-      }
+      if (defaultPreConsent) this.#copyElementFromString(defaultPreConsent, 'pre-consent');
     }
   }
 
@@ -86,12 +81,7 @@ export class NteConsentBlockerElement extends SubLayoutApplyMixin(nextrap_elemen
     template.innerHTML = stripQuotes(htmlString);
     Array.from(template.content.children).forEach((element) => {
       const clone = element.cloneNode(true);
-
-      if (slotName && clone instanceof HTMLElement) {
-        clone.setAttribute('slot', slotName);
-      }
-
-      // Append to content if wrapper is a template, otherwise to the wrapper itself
+      if (slotName && clone instanceof HTMLElement) clone.setAttribute('slot', slotName);
       if (wrapperElement instanceof HTMLTemplateElement) {
         wrapperElement.content.appendChild(clone);
       } else {
@@ -106,15 +96,8 @@ export class NteConsentBlockerElement extends SubLayoutApplyMixin(nextrap_elemen
         <div id="background" part="background">
           <slot name="background" data-query=":scope > .background | :scope > p:has(img:not(.keep))"></slot>
         </div>
-
-        <div id="consented-content" part="consented-content">
-          <slot name="consented-content"></slot>
-        </div>
-
-        <div id="pre-consent" part="pre-consent">
-          <slot name="pre-consent"></slot>
-        </div>
-
+        <div id="consented-content" part="consented-content"><slot name="consented-content"></slot></div>
+        <div id="pre-consent" part="pre-consent"><slot name="pre-consent"></slot></div>
         <div id="loading-text" part="loading-text">Bitte warten...</div>
       </div>
     `;
