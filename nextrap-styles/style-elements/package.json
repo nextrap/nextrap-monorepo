@@ -17,6 +17,10 @@
         "./default": "./default.scss"
     },
     "dependencies": {},
+    "devDependencies": {
+        "@nextrap/style-base": "^2.0.0",
+        "@nextrap/style-typography": "^2.0.0"
+    },
     "type": "module",
     "types": "./index.d.ts"
 }

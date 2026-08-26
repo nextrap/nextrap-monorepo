@@ -16,6 +16,14 @@ export default defineConfig(() => ({
   plugins: [
     nxViteTsPaths(),
     nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss']),
+    {
+      name: 'watch-md-reload',
+      handleHotUpdate({ file, server }) {
+        if (file.endsWith('.md')) {
+          server.ws.send({ type: 'full-reload' });
+        }
+      },
+    },
     dts({
       entryRoot: 'src',
       aliasesExclude: [/@nextrap\/.*/],
