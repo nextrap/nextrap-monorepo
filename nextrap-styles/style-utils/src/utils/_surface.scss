@@ -1,0 +1,22 @@
+// Semantic surface utility mixins — complete readable background/foreground pairs.
+
+@mixin _surface($background, $foreground) {
+  --nt-surface-text: #{$foreground};
+  --nt-surface-text-muted: color-mix(in oklch, #{$foreground} 72%, #{$background});
+  --nt-surface-link: #{$foreground};
+  background: #{$background} !important;
+  color: var(--nt-surface-text) !important;
+}
+
+@mixin surface-primary() { @include _surface(var(--nt-primary), var(--nt-text-on-primary)); }
+@mixin surface-secondary() { @include _surface(var(--nt-secondary), var(--nt-text-on-secondary)); }
+@mixin surface-tertiary() { @include _surface(var(--nt-tertiary), var(--nt-text-on-tertiary)); }
+@mixin surface-accent() { @include _surface(var(--nt-accent), var(--nt-text-on-accent)); }
+@mixin surface-success() { @include _surface(var(--nt-success), var(--nt-text-on-success)); }
+@mixin surface-info() { @include _surface(var(--nt-info), var(--nt-text-on-info)); }
+@mixin surface-warning() { @include _surface(var(--nt-warning), var(--nt-text-on-warning)); }
+@mixin surface-danger() { @include _surface(var(--nt-danger), var(--nt-text-on-danger)); }
+@mixin surface-light() { @include _surface(var(--nt-light), var(--nt-text-on-light)); }
+@mixin surface-dark() { @include _surface(var(--nt-dark), var(--nt-text-on-dark)); }
+@mixin surface-white() { @include _surface(var(--nt-white), var(--nt-text-on-white)); }
+@mixin surface-black() { @include _surface(var(--nt-black), var(--nt-text-on-black)); }
