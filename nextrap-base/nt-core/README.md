@@ -1,6 +1,6 @@
 # Nextrap Core
 
-`@nextrap/nt-core` is the shared base package for Nextrap 2.x web components. It replaces the former `@nextrap/nt-core` and the layout-specific `@nextrap/nt-core` factory.
+`@nextrap/nt-core` is the shared base package for all Nextrap 2.x web components. Element and layout components now use the same core factory and feature model.
 
 ## Define an element
 
@@ -22,7 +22,7 @@ Features are enabled through the options passed to `nextrap_element()`:
 - `eventBinding` — event bindings used by `@Listen` decorators.
 - `breakpoints` — responsive breakpoint behavior.
 - `setDefaultStyle` — default-style support; enabled by default.
-- `subLayoutApply` — nested layout application previously provided by `@nextrap/nt-core`.
+- `subLayoutApply` — nested layout application for components that transform slotted layout content.
 
 ## Layout elements
 
@@ -36,7 +36,7 @@ export class CustomLayout extends nextrap_element({
 }) {}
 ```
 
-There is no separate `nextrap_layout()` factory in Nextrap 2.x.
+Nextrap 2.x has one component factory: `nextrap_element()`.
 
 ## Re-exports
 
