@@ -19,7 +19,6 @@
     "paths": {
       "@nextrap/element-navbar": ["nextrap-elements/nxa-element-navbar/src/index.ts"],
       "@nextrap/nt-core": ["nextrap-base/nt-core/index.ts"],
-      "@nextrap/nte-core": ["nextrap-base/nt-core/index.ts"],
       "@nextrap/nt-framework": ["nextrap-base/nt-framework/src/index.ts"],
       "@nextrap/nt-meta": ["nextrap-base/nt-meta/src/index.ts"],
       "@nextrap/nt-nx-generators": ["nextrap-base/nt-nx-generators/src/index.ts"],
@@ -47,9 +46,9 @@
       "@nextrap/nte-step": ["nextrap-elements/nte-step/src/index.ts"],
       "@nextrap/nte-stepper": ["nextrap-elements/nte-stepper/src/index.ts"],
       "@nextrap/nte-theme-switcher": ["nextrap-elements/nte-theme-switcher/index.ts"],
-      "@nextrap/ntl-2col": ["nextrap-elements/ntl-2col/src/index.ts"],
-      "@nextrap/ntl-card-row": ["nextrap-elements/ntl-card-row/src/index.ts"],
-      "@nextrap/ntl-footer": ["nextrap-elements/ntl-footer/src/index.ts"],
+      "@nextrap/ntl-2col": ["nextrap-layout/ntl-2col/src/index.ts"],
+      "@nextrap/ntl-card-row": ["nextrap-layout/ntl-card-row/src/index.ts"],
+      "@nextrap/ntl-footer": ["nextrap-layout/ntl-footer/src/index.ts"],
       "@nextrap/style-base": ["nextrap-styles/style-base/index.ts"],
       "@nextrap/style-button": ["nextrap-styles/style-button/src/index.ts"],
       "@nextrap/style-elements": ["nextrap-styles/style-elements/src/index.ts"],
@@ -65,9 +64,9 @@
       "@nte-slider": ["nextrap-elements/nte-slider/src/index.ts"],
       "@nte-theme-switcher": ["nextrap-elements/nte-theme-switcher/src/index.ts"],
       "@nte-tree-node": ["nextrap-elements/nte-tree-node/src/index.ts"],
-      "@ntl-card-grid": ["nextrap-elements/ntl-card-grid/src/index.ts"],
-      "@ntl-form": ["nextrap-elements/ntl-form/src/index.ts"],
-      "@ntl-hero": ["nextrap-elements/ntl-hero/src/index.ts"]
+      "@ntl-card-grid": ["nextrap-layout/ntl-card-grid/src/index.ts"],
+      "@ntl-form": ["nextrap-layout/ntl-form/src/index.ts"],
+      "@ntl-hero": ["nextrap-layout/ntl-hero/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
