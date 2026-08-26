@@ -1,18 +1,16 @@
-import { nextrap_element } from '@nextrap/nte-core';
+import { nextrap_element } from '@nextrap/nt-core';
 import { resetStyle } from '@nextrap/style-reset';
-import { SubLayoutApplyMixin } from '@trunkjs/content-pane';
 import { html, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import style from './nte-card.scss?inline';
 
 @customElement('nte-card')
-export class NteCardElement extends SubLayoutApplyMixin(
-  nextrap_element({
-    breakpoints: true,
-    eventBinding: true,
-    slotVisibility: true,
-  }),
-) {
+export class NteCardElement extends nextrap_element({
+  breakpoints: true,
+  eventBinding: true,
+  slotVisibility: true,
+  subLayoutApply: true,
+}) {
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
   @state()
@@ -24,9 +22,7 @@ export class NteCardElement extends SubLayoutApplyMixin(
   private accessor _linkAnchor: HTMLAnchorElement | null = null;
 
   private findAnchorWithHref(root: Element): HTMLAnchorElement | null {
-    if (root instanceof HTMLAnchorElement && root.hasAttribute('href')) {
-      return root;
-    }
+    if (root instanceof HTMLAnchorElement && root.hasAttribute('href')) return root;
     const a = root.querySelector('a[href]');
     return a instanceof HTMLAnchorElement ? a : null;
   }
@@ -48,14 +44,11 @@ export class NteCardElement extends SubLayoutApplyMixin(
 
     this._linkAnchor = anchor;
     this.classList.toggle('clickable', !!this._linkAnchor);
-
-    // wichtig: wenn sich Link/href ändert, muss gerendert werden (outer <a href=...>)
     this.requestUpdate();
   }
 
   override firstUpdated(_changedProperties: any) {
     super.firstUpdated(_changedProperties);
-    // Initiale Ermittlung (falls kein slotchange feuert oder Content bereits da ist)
     this.updateClickableFromLinkSlot();
   }
 
@@ -66,9 +59,7 @@ export class NteCardElement extends SubLayoutApplyMixin(
   override render() {
     const wrapper = html`
       <div part="wrapper" id="wrapper">
-        <div part="header" id="header">
-          <slot name="header" data-query=":scope > .header"></slot>
-        </div>
+        <div part="header" id="header"><slot name="header" data-query=":scope > .header"></slot></div>
         <div part="image" id="image">
           <slot
             id="image-slot"
@@ -77,12 +68,8 @@ export class NteCardElement extends SubLayoutApplyMixin(
           ></slot>
           <div part="gradient" id="gradient"></div>
         </div>
-        <div part="content" id="content">
-          <slot></slot>
-        </div>
-        <div part="footer" id="footer">
-          <slot name="footer" data-query=":scope > .footer"></slot>
-        </div>
+        <div part="content" id="content"><slot></slot></div>
+        <div part="footer" id="footer"><slot name="footer" data-query=":scope > .footer"></slot></div>
         <div hidden>
           <slot
             name="link"
@@ -94,13 +81,7 @@ export class NteCardElement extends SubLayoutApplyMixin(
     `;
 
     const href = this._linkAnchor?.getAttribute('href') || undefined;
-
-    // Wenn ein Link gesetzt ist, wrapper komplett als <a> klickbar machen.
-    // Das geslottete <a> selbst bleibt hidden im Slot, wir übernehmen nur das href.
-    if (href) {
-      return html`<a part="link" id="link" href=${href}>${wrapper}</a>`;
-    }
-
+    if (href) return html`<a part="link" id="link" href=${href}>${wrapper}</a>`;
     return wrapper;
   }
 }
