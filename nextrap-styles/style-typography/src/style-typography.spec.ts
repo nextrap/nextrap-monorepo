@@ -17,7 +17,8 @@ describe('styleTypography', () => {
     expect(result.css).toContain('h1, .h1');
     expect(result.css).toContain('var(--nt-header');
     expect(result.css).toContain('var(--nt-spacing-text');
-    expect(result.css).toContain('var(--nt-surface-text');
+    expect(result.css).toContain('var(--nt-text');
+    expect(result.css).not.toContain('--nt-surface-');
     expect(result.css).not.toMatch(/(?:^|[},]\s*)(?:section|article)(?:\s|,|\{)/m);
   });
 

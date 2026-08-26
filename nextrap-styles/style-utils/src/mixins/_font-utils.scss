@@ -28,5 +28,16 @@
 @mixin lh-lg() { line-height: 2 !important; }
 
 @mixin font-monospace() {
-  font-family: var(--nt-font-monospace, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New'), monospace !important;
+  font-family:
+    var(
+      --font-monospace-family,
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Monaco,
+      Consolas,
+      'Liberation Mono',
+      'Courier New'
+    ),
+    monospace !important;
 }

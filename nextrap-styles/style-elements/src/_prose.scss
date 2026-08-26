@@ -11,11 +11,8 @@
 
   --prose-link-decoration: underline;
 
-  --prose-text: var(--nt-surface-text, var(--nt-text, currentColor));
-  --prose-muted: var(
-    --nt-surface-text-muted,
-    var(--nt-text-muted, color-mix(in oklch, var(--prose-text) 70%, transparent))
-  );
+  --prose-text: var(--nt-text, currentColor);
+  --prose-muted: var(--nt-text-muted, color-mix(in oklch, var(--prose-text) 70%, transparent));
 
   --prose-table-border-color: color-mix(in oklch, var(--prose-text) 35%, transparent);
 
@@ -145,14 +142,16 @@
 
   /* Boxes */
   .box {
-    --box-border: var(--prose-text);
+    --box-border: currentColor;
     --box-background: transparent;
-    --box-text: var(--prose-text);
+    --box-text: currentColor;
     --box-radius: var(--nt-border-radius);
     --box-header-color: var(--box-border);
-    --nt-surface-text: var(--box-text);
-    --nt-surface-text-muted: color-mix(in oklch, var(--box-text) 72%, var(--box-background));
-    --nt-surface-link: var(--box-text);
+    --nt-text: var(--box-text);
+    --nt-text-muted: color-mix(in oklch, var(--box-text) 72%, var(--box-background));
+    --nt-header: var(--box-header-color);
+    --nt-link: var(--box-text);
+    --nt-link-hover: var(--box-text);
 
     border: 2px solid var(--box-border);
     border-radius: var(--box-radius);

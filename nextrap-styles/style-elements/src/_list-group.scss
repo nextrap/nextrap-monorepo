@@ -14,7 +14,7 @@
     color: var(--nt-text, inherit);
     text-decoration: none;
     background-color: var(--nt-surface, transparent);
-    border: var(--nt-border-width, 1px) solid var(--nt-border-color, rgba(0, 0, 0, 0.125));
+    border: var(--nt-border-width, 1px) solid var(--nt-border, rgba(0, 0, 0, 0.125));
 
     & + * {
       border-top-width: 0;

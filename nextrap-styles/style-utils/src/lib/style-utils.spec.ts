@@ -21,6 +21,8 @@ describe('styleUtils', () => {
 
     expect(result.css).toContain('.d-flex');
     expect(result.css).toContain('.surface-primary');
+    expect(result.css).toContain('--nt-text: var(--nt-text-on-primary)');
+    expect(result.css).not.toContain('--nt-surface-text');
     expect(result.css).toContain('.scheme-dark');
   });
 
