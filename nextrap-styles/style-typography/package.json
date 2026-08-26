@@ -12,6 +12,9 @@
     "url": "https://github.com/nextrap/nextrap-monorepo"
   },
   "dependencies": {},
+  "devDependencies": {
+    "@nextrap/style-base": "^2.0.0"
+  },
   "type": "module",
   "types": "./index.d.ts"
 }

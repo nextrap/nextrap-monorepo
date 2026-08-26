@@ -1,6 +1,6 @@
 # Header 1
 
-This is a sample of pose -styleing. This text is a paragraph to demonstrate the typography styles.
+This is a sample of prose styling. This text is a paragraph to demonstrate the rich-content styles.
 This is the `.lead` of the document.
 {: .lead}
 

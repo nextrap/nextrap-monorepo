@@ -35,6 +35,10 @@
   .list-inline { @include l.list-inline(); }
   .list-inline-item { @include l.list-inline-item(); }
   .list-diamond { @include l.list-diamond(); }
+  .list-status-plain { @include l.list-status-plain(); }
+  .list-status-circle { @include l.list-status-circle(); }
+  .list-item-tick { @include l.list-item-tick(); }
+  .list-item-cross { @include l.list-item-cross(); }
 
   .list-group { @include lg.list-group(); }
   .list-group-flush { @include lg.list-group-flush(); }
