@@ -1,17 +1,18 @@
 /* The ShadowDOM Styles */
 
 :host {
+  // TODO: Use typed attr() for columns/min-width/max-width once casting is supported by Firefox and Safari.
   --container-width: var(--nt-container-width) /* Refer to README.md for style guidelines */;
   --gap: var(--nt-spacing-layout);
   --breakpoint: md, lg; // xs,sm,md,lg,xl,xxl
-  --columns: attr(columns type(<integer>), var(--cols, 3));
-  --columns-tablet: attr(columns-tablet type(<integer>), var(--cols-tablet, 2));
-  --columns-mobile: attr(columns-mobile type(<integer>), var(--cols-mobile, 1));
-  --min-width: attr(min-width type(<length-percentage>), 0px);
-  --max-width: attr(max-width type(<length-percentage>), unset);
+  --columns: var(--cols, 3);
+  --columns-tablet: var(--cols-tablet, 2);
+  --columns-mobile: var(--cols-mobile, 1);
+  --min-width: 0px;
+  --max-width: unset;
 }
 
-:host([mode='tablet']:not([min-width])) {
+:host([mode='tablet']:not(.with-min-width)) {
   #main {
     grid-template-columns: repeat(var(--columns-tablet), minmax(0, 1fr));
   }
@@ -20,7 +21,7 @@
   }
 }
 
-:host([mode='mobile']:not([min-width])) {
+:host([mode='mobile']:not(.with-min-width)) {
   #main {
     grid-template-columns: repeat(var(--columns-mobile), minmax(0, 1fr));
   }
@@ -57,7 +58,7 @@
   }
 }
 
-:host([min-width]) {
+:host(.with-min-width) {
   #main {
     grid-template-columns: repeat(auto-fit, minmax(min(var(--min-width), 100%), 1fr));
   }
