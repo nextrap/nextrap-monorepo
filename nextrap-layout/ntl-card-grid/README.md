@@ -50,39 +50,11 @@ All sizing attributes are resolved CSS-only via typed `attr()`.
 
 ## Migrations
 
-### `--cols*` to `columns*`
-
-Previously, the number of grid tracks was configured with the `--cols`, `--cols-tablet`, and `--cols-mobile` CSS custom properties:
-
-```markdown
-## Cards
-{: layout="ntl-card-grid" style="--cols: 3; --cols-tablet: 2; --cols-mobile: 1"}
-
-### Card 1
-{: layout="nte-card"}
-
-### Card 2
-{: layout="nte-card"}
-
-### Card 3
-{: layout="nte-card"}
-```
-
-Use the corresponding `columns`, `columns-tablet`, and `columns-mobile` attributes instead:
-
-```markdown
-## Cards
-{: layout="ntl-card-grid" columns="3" columns-tablet="2" columns-mobile="1"}
-
-### Card 1
-{: layout="nte-card"}
-
-### Card 2
-{: layout="nte-card"}
-
-### Card 3
-{: layout="nte-card"}
-```
+| Old | New |
+| --- | --- |
+| `--cols: 3` | `columns="3"` |
+| `--cols-tablet: 2` | `columns-tablet="2"` |
+| `--cols-mobile: 1` | `columns-mobile="1"` |
 
 `columns` intentionally means the number of CSS Grid tracks. This distinguishes it from the Bootstrap-like `cols` API of `ntl-card-row`, where a value represents a share of the 12-column layout.
 
