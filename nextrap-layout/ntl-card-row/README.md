@@ -45,4 +45,32 @@ For intrinsic wrapping, set `min-width`. Cards then wrap when their minimum widt
 
 The sizing attributes are resolved CSS-only via typed `attr()`.
 
+## Migrations
+
+### `--default-cols` / `--cols` to `cols`
+
+Previously, the row default was configured through `--default-cols`, while an individual card used `--cols` to override its width:
+
+```html
+<ntl-card-row style="--default-cols: 4">
+  <nte-card>Card 1</nte-card>
+  <nte-card style="--cols: 6">Card 2</nte-card>
+  <nte-card>Card 3</nte-card>
+</ntl-card-row>
+```
+
+Use the `cols` attribute on both the row and an individual card instead:
+
+```html
+<ntl-card-row cols="4">
+  <nte-card>Card 1</nte-card>
+  <nte-card cols="6">Card 2</nte-card>
+  <nte-card>Card 3</nte-card>
+</ntl-card-row>
+```
+
+The meaning remains Bootstrap-like: `cols="4"` occupies 4 of 12 columns. The row value is the default for its cards; a card's own `cols` value overrides it.
+
+The legacy `--default-cols` custom property remains available as a fallback during migration.
+
 See `.ai-usage-info.md` and `demo/base.md` for implementation hints and examples.
