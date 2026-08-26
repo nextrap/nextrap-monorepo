@@ -4,124 +4,95 @@
 // It deliberately does NOT add spacing/padding to content wrappers, sections,
 // pages, or other layout containers. Layout spacing belongs to the consuming
 // layout/theme layer.
+//
+// Normal text intentionally inherits its color from the surrounding context.
+// This lets style-utils surface-* helpers provide readable foreground colors
+// without typography overriding them with the global --nt-text token.
 
 @mixin heading() {
   margin-top: 0;
-  margin-bottom: var(--nt-heading-margin-bottom, 0.5rem);
-  color: var(--nt-text, currentColor);
+  margin-bottom: var(--nt-heading-margin-bottom, var(--nt-space-2, 0.5rem));
+  color: inherit;
   font-family: var(--nt-font-family-header, inherit);
   font-weight: var(--nt-font-weight-header, 500);
   line-height: var(--nt-line-height-header, 1.2);
 }
 
-@mixin h1() {
-  @include heading();
-  font-size: var(--nt-fs-h1, calc(1.375rem + 1.5vw));
-}
-
-@mixin h2() {
-  @include heading();
-  font-size: var(--nt-fs-h2, calc(1.325rem + 0.9vw));
-}
-
-@mixin h3() {
-  @include heading();
-  font-size: var(--nt-fs-h3, calc(1.3rem + 0.6vw));
-}
-
-@mixin h4() {
-  @include heading();
-  font-size: var(--nt-fs-h4, calc(1.275rem + 0.3vw));
-}
-
-@mixin h5() {
-  @include heading();
-  font-size: var(--nt-fs-h5, 1.25rem);
-}
-
-@mixin h6() {
-  @include heading();
-  font-size: var(--nt-fs-h6, 1rem);
-}
+@mixin h1() { @include heading(); font-size: var(--nt-fs-h1, calc(1.375rem + 1.5vw)); }
+@mixin h2() { @include heading(); font-size: var(--nt-fs-h2, calc(1.325rem + 0.9vw)); }
+@mixin h3() { @include heading(); font-size: var(--nt-fs-h3, calc(1.3rem + 0.6vw)); }
+@mixin h4() { @include heading(); font-size: var(--nt-fs-h4, calc(1.275rem + 0.3vw)); }
+@mixin h5() { @include heading(); font-size: var(--nt-fs-h5, 1.25rem); }
+@mixin h6() { @include heading(); font-size: var(--nt-fs-h6, 1rem); }
 
 @mixin p() {
   margin-top: 0;
-  margin-bottom: var(--nt-paragraph-margin-bottom, 1rem);
-  color: var(--nt-text, currentColor);
+  margin-bottom: var(--nt-paragraph-margin-bottom, var(--nt-space-4, 1rem));
+  color: inherit;
   font-family: var(--nt-font-family-base, inherit);
   font-weight: var(--nt-font-weight-base, 400);
   line-height: var(--nt-line-height-base, 1.5);
 }
 
-@mixin strong() {
-  font-weight: var(--nt-font-weight-bold, 700);
-}
-
-@mixin em() {
-  font-style: italic;
-}
-
-@mixin small() {
-  font-size: var(--nt-font-size-small, 0.875em);
-}
+@mixin strong() { font-weight: var(--nt-font-weight-bold, 700); }
+@mixin em() { font-style: italic; }
+@mixin small() { font-size: var(--nt-font-size-small, 0.875em); }
 
 @mixin link() {
-  color: var(--nt-link, currentColor);
+  color: var(--nt-surface-link, var(--nt-link, currentColor));
   text-decoration: underline;
   text-decoration-color: currentColor;
   transition:
-    color 0.15s ease-in-out,
-    background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out,
-    box-shadow 0.15s ease-in-out;
+    color var(--nt-transition-duration, 0.15s) var(--nt-transition-easing, ease-in-out),
+    background-color var(--nt-transition-duration, 0.15s) var(--nt-transition-easing, ease-in-out),
+    border-color var(--nt-transition-duration, 0.15s) var(--nt-transition-easing, ease-in-out),
+    box-shadow var(--nt-transition-duration, 0.15s) var(--nt-transition-easing, ease-in-out);
 
   &:hover {
-    color: var(--nt-link-hover, var(--nt-link, currentColor));
+    color: var(--nt-surface-link-hover, var(--nt-link-hover, var(--nt-surface-link, var(--nt-link, currentColor))));
   }
 
   &:focus-visible {
-    outline: var(--nt-focus-ring-width, 1px) dashed var(--nt-link, currentColor);
+    outline: var(--nt-focus-ring-width, 1px) dashed var(--nt-surface-link, var(--nt-link, currentColor));
     outline-offset: var(--nt-focus-ring-offset, 2px);
   }
 }
 
 @mixin mark() {
-  padding: 0.1875em;
+  padding: var(--nt-mark-padding, var(--nt-space-1, 0.1875em));
   color: var(--nt-mark-color, var(--nt-text, currentColor));
   background-color: var(--nt-mark-bg, var(--nt-warning-subtle, #fff3cd));
 }
 
 @mixin ul() {
   margin-top: 0;
-  margin-bottom: var(--nt-list-margin-bottom, 1rem);
-  padding-left: var(--nt-list-padding-left, 2rem);
+  margin-bottom: var(--nt-list-margin-bottom, var(--nt-space-4, 1rem));
+  padding-left: var(--nt-list-padding-left, var(--nt-space-6, 2rem));
   list-style: disc;
 }
 
 @mixin ol() {
   margin-top: 0;
-  margin-bottom: var(--nt-list-margin-bottom, 1rem);
-  padding-left: var(--nt-list-padding-left, 2rem);
+  margin-bottom: var(--nt-list-margin-bottom, var(--nt-space-4, 1rem));
+  padding-left: var(--nt-list-padding-left, var(--nt-space-6, 2rem));
   list-style: decimal;
 }
 
 @mixin dl() {
   margin-top: 0;
-  margin-bottom: var(--nt-list-margin-bottom, 1rem);
+  margin-bottom: var(--nt-list-margin-bottom, var(--nt-space-4, 1rem));
 }
 
-@mixin dt() {
-  font-weight: var(--nt-font-weight-bold, 700);
-}
+@mixin dt() { font-weight: var(--nt-font-weight-bold, 700); }
 
 @mixin dd() {
-  margin-bottom: var(--nt-definition-margin-bottom, 0.5rem);
+  margin-bottom: var(--nt-definition-margin-bottom, var(--nt-space-2, 0.5rem));
   margin-left: 0;
-  color: var(--nt-text-muted, var(--nt-dark-subtle, currentColor));
+  color: var(--nt-surface-text-muted, var(--nt-text-muted, currentColor));
 }
 
 @mixin hr() {
-  margin: var(--nt-hr-margin-y, 1rem) 0;
+  margin: var(--nt-hr-margin-y, var(--nt-space-4, 1rem)) 0;
   color: inherit;
   border: 0;
   border-top: var(--nt-border-width, 1px) solid;
@@ -140,10 +111,10 @@
 @mixin pre() {
   display: block;
   margin-top: 0;
-  margin-bottom: var(--nt-pre-margin-bottom, 1rem);
+  margin-bottom: var(--nt-pre-margin-bottom, var(--nt-space-4, 1rem));
   padding: var(--nt-pre-padding, var(--nt-space-4, 1rem));
   overflow: auto;
-  color: var(--nt-text, currentColor);
+  color: inherit;
   background: var(--nt-pre-bg, rgb(from var(--nt-dark, #212529) r g b / 0.06));
   border-radius: var(--nt-radius, var(--nt-border-radius, 0.375rem));
   font-family: var(--nt-font-family-monospace, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace);
@@ -159,33 +130,33 @@
 }
 
 @mixin blockquote() {
-  margin: 0 0 var(--nt-blockquote-margin-bottom, 1rem);
-  padding: var(--nt-blockquote-padding-y, 0.75rem) var(--nt-blockquote-padding-x, 1rem);
-  color: var(--nt-text-muted, var(--nt-dark-subtle, currentColor));
+  margin: 0 0 var(--nt-blockquote-margin-bottom, var(--nt-space-4, 1rem));
+  padding: var(--nt-blockquote-padding-y, var(--nt-space-3, 0.75rem)) var(--nt-blockquote-padding-x, var(--nt-space-4, 1rem));
+  color: var(--nt-surface-text-muted, var(--nt-text-muted, currentColor));
   border-left: var(--nt-blockquote-border-width, 0.25rem) solid var(--nt-primary-emphasis, var(--nt-primary, currentColor));
   font-size: var(--nt-blockquote-font-size, 1.125em);
 }
 
 @mixin figure() {
-  margin: 0 0 var(--nt-figure-margin-bottom, 1rem);
+  margin: 0 0 var(--nt-figure-margin-bottom, var(--nt-space-4, 1rem));
 }
 
 @mixin figure-caption() {
-  margin-top: var(--nt-figure-caption-margin-top, 0.5rem);
-  color: var(--nt-text-muted, var(--nt-dark-subtle, currentColor));
+  margin-top: var(--nt-figure-caption-margin-top, var(--nt-space-2, 0.5rem));
+  color: var(--nt-surface-text-muted, var(--nt-text-muted, currentColor));
   font-size: var(--nt-font-size-small, 0.875em);
   text-align: center;
 }
 
 @mixin lead() {
   margin-top: 0;
-  margin-bottom: var(--nt-lead-margin-bottom, 1rem);
-  color: var(--nt-text, currentColor);
+  margin-bottom: var(--nt-lead-margin-bottom, var(--nt-space-4, 1rem));
+  color: inherit;
   font-size: var(--nt-lead-font-size, 1.25rem);
   font-weight: var(--nt-lead-font-weight, 300);
   line-height: var(--nt-line-height-base, 1.5);
 }
 
 @mixin text-muted() {
-  color: var(--nt-text-muted, var(--nt-dark-subtle, currentColor)) !important;
+  color: var(--nt-surface-text-muted, var(--nt-text-muted, currentColor)) !important;
 }

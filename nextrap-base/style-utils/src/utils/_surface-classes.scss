@@ -1,0 +1,21 @@
+// Semantic surface and local color-scheme utility classes.
+// Kept separate from the legacy class registry so they can be materialized both
+// at root and inside a scoped `utils()` include.
+
+@use 'colors-utils' as c;
+
+.surface-primary { @include c.surface-primary(); }
+.surface-secondary { @include c.surface-secondary(); }
+.surface-tertiary { @include c.surface-tertiary(); }
+.surface-accent { @include c.surface-accent(); }
+.surface-success { @include c.surface-success(); }
+.surface-info { @include c.surface-info(); }
+.surface-warning { @include c.surface-warning(); }
+.surface-danger { @include c.surface-danger(); }
+.surface-light { @include c.surface-light(); }
+.surface-dark { @include c.surface-dark(); }
+.surface-white { @include c.surface-white(); }
+.surface-black { @include c.surface-black(); }
+
+.scheme-light { @include c.scheme-light(); }
+.scheme-dark { @include c.scheme-dark(); }

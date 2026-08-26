@@ -1,9 +1,9 @@
 // @nextrap/style-base — runtime CSS theme API
 //
 // This package has one theming model: CSS custom properties.
-// `runtime-theme()` emits the complete token graph and the global light/dark
-// switching selectors. Theme values remain runtime-overridable and do not
-// require Sass recompilation.
+// `runtime-theme()` emits the complete token graph, shared interaction-state
+// intensities and global light/dark switching selectors. Theme values remain
+// runtime-overridable and do not require Sass recompilation.
 //
 // Custom theme:
 //   @use '@nextrap/style-base' as nt;
@@ -19,11 +19,15 @@
 //   @use '@nextrap/style-base/default';
 
 @use './src/runtime-theme' as runtime;
+@use './src/interaction-tokens' as interaction;
 
-// Emits the complete Nextrap runtime token graph into the current selector and
-// emits the global [data-nt-scheme='light'|'dark'] selectors once at root level.
-// Override input CSS custom properties after this mixin to define a theme.
+// Emits the complete Nextrap runtime token graph into the current selector.
+// Interaction state percentages are centralized as --nt-interaction-* tokens;
+// components must consume the resulting semantic -hover/-active variants (or
+// the shared percentages for custom interactive surfaces) instead of defining
+// their own local hover/active percentages.
 @mixin runtime-theme() {
   @include runtime.runtime-theme();
+  @include interaction.interaction-tokens();
   @include runtime.runtime-scheme-selectors();
 }
