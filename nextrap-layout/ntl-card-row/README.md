@@ -26,25 +26,25 @@ Content-Pane example:
 
 ```markdown
 ## Cards
-{: layout="ntl-card-row" cols="4"}
+{: layout="ntl-card-row" style="--default-cols: 4"}
 
 ### Card 1
 {: layout="nte-card"}
 
 ### Card 2
-{: layout="nte-card" cols="6"}
+{: layout="nte-card" style="--cols: 6"}
 
 ### Card 3
 {: layout="nte-card"}
 ```
 
-`cols` accepts an integer and defaults to `6` (or the legacy `--default-cols` CSS custom property). A `cols` attribute on a child overrides the row value for that item.
+The row follows Bootstrap's 12-column model. `--default-cols` defines the default card width and defaults to `6`; an individual card can override it with `--cols`.
 
-For intrinsic wrapping, set `min-width`. Cards then wrap when their minimum width can no longer be maintained and grow to fill the available row. `max-width` optionally caps their growth and defaults to `unset`.
+For intrinsic wrapping, set `--min-width` and add `with-min-width`. Cards then wrap when their minimum width can no longer be maintained and grow to fill the available row. `--max-width` optionally caps their growth and defaults to `unset`.
 
 ```markdown
 ## Cards
-{: layout="ntl-card-row" min-width="18rem" max-width="32rem"}
+{: layout="ntl-card-row" class="with-min-width" style="--min-width: 18rem; --max-width: 32rem"}
 
 ### Card 1
 {: layout="nte-card"}
@@ -56,17 +56,15 @@ For intrinsic wrapping, set `min-width`. Cards then wrap when their minimum widt
 {: layout="nte-card"}
 ```
 
-The sizing attributes are resolved CSS-only via typed `attr()`.
+> Typed `attr()` casting can replace the CSS custom-property configuration once it is supported by Firefox and Safari.
 
 ## Migrations
 
 | Old | New |
 | --- | --- |
-| `--default-cols: 4` | `cols="4"` |
-| `--cols: 6` on a card | `cols="6"` on a card |
-
-The meaning remains Bootstrap-like: `cols="4"` occupies 4 of 12 columns. The row value is the default for its cards; a card's own `cols` value overrides it.
-
-The legacy `--default-cols` custom property remains available as a fallback during migration.
+| `cols="4"` | `style="--default-cols: 4"` |
+| `cols="6"` on a card | `style="--cols: 6"` on a card |
+| `min-width="18rem"` | `class="with-min-width" style="--min-width: 18rem"` |
+| `max-width="32rem"` | `style="--max-width: 32rem"` |
 
 See `.ai-usage-info.md` and `demo/base.md` for implementation hints and examples.
