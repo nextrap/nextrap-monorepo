@@ -1,0 +1,29 @@
+// Optional progressive enhancement for btn-glow(). It starts the time-based
+// glow once when the button enters view, without JavaScript.
+
+@mixin btn-glow-on-view() {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports
+      (timeline-trigger: --nt-btn-glow-on-view view()) and
+      (animation-trigger: --nt-btn-glow-on-view play-once) {
+
+      timeline-trigger: --nt-btn-glow-on-view view();
+      trigger-scope: --nt-btn-glow-on-view;
+
+      &::before {
+        animation: nt-btn-glow-on-view var(--btn-glow-duration, 800ms) var(--btn-glow-easing, ease-out);
+        animation-trigger: --nt-btn-glow-on-view play-once;
+      }
+
+      @keyframes nt-btn-glow-on-view {
+        from {
+          transform: rotate(18deg) translateX(-120%);
+        }
+
+        to {
+          transform: rotate(18deg) translateX(430%);
+        }
+      }
+    }
+  }
+}

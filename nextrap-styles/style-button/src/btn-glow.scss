@@ -1,0 +1,32 @@
+// Generic button glow effect. The class and mixin provide hover/focus behavior;
+// viewport triggering is composed separately through btn-glow-on-view().
+
+@mixin btn-glow() {
+  --btn-glow-color: rgb(255 255 255 / 0.35);
+  --btn-glow-color: color-mix(in srgb, currentColor 35%, transparent);
+  --btn-glow-duration: 800ms;
+  --btn-glow-easing: ease-out;
+  --btn-glow-width: 32%;
+
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -120%;
+    left: calc(0% - var(--btn-glow-width));
+    width: var(--btn-glow-width);
+    height: 340%;
+    transform: rotate(18deg) translateX(-120%);
+    background: linear-gradient(90deg, transparent, var(--btn-glow-color), transparent);
+    pointer-events: none;
+    transition: none;
+  }
+
+  &:hover::before,
+  &:focus-visible::before {
+    transform: rotate(18deg) translateX(430%);
+    transition: transform var(--btn-glow-duration) var(--btn-glow-easing);
+  }
+}
