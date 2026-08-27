@@ -85,8 +85,20 @@
                     "description": "Enable a desktop breakout layout towards the viewport end."
                 },
                 {
-                    "name": "with-main-justify-center",
-                    "description": "Vertically center the main column content."
+                    "name": "with-justify-top",
+                    "description": "Align the content of both columns to the top in desktop mode."
+                },
+                {
+                    "name": "with-justify-center",
+                    "description": "Explicitly center the content of both columns in desktop mode; default-style() already centers it."
+                },
+                {
+                    "name": "with-justify-bottom",
+                    "description": "Align the content of both columns to the bottom in desktop mode."
+                },
+                {
+                    "name": "with-main-sticky-top",
+                    "description": "Keep a shorter main column sticky at the top in desktop mode."
                 },
                 {
                     "name": "with-background-and-divider",
@@ -151,6 +163,11 @@
                 {
                     "name": "--gap",
                     "description": "Gap between columns. Default: var(--nt-spacing-layout).",
+                    "value": { "type": "string" }
+                },
+                {
+                    "name": "--main-sticky-top",
+                    "description": "Viewport offset for with-main-sticky-top. Default: var(--nt-spacing-layout).",
                     "value": { "type": "string" }
                 },
                 {

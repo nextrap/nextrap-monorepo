@@ -1,6 +1,6 @@
 # ntl-2col component
 
-Diese Demo zeigt typische Varianten von `ntl-2col`: automatische Aside-Erkennung, manuelle Aside-Slots, Bildverhalten, alternierende Ausrichtung und Breakout-Layouts.
+Diese Demo zeigt typische Varianten von `ntl-2col`: automatische Aside-Erkennung, manuelle Aside-Slots, Bildverhalten, vertikale Spaltenausrichtung, Sticky-Content, alternierende Ausrichtung und Breakout-Layouts.
 
 ## Nur Hauptspalte ohne Aside
 {: layout="ntl-2col.style-testimonial" section-style="--cols: 8;"}
@@ -48,12 +48,43 @@ Dieses Beispiel verwendet `.with-background-and-divider`. Der Abschnitt bekommt 
 Der Hauptinhalt steht links und teilt sich den verfügbaren Platz mit der Aside-Spalte.
 
 
-## Hintergrund und Main-Zentrierung
-{: layout="ntl-2col.bg-primary-subtle.with-main-justify-center" section-style="--cols: 7;"}
+## Default: Spalteninhalte vertikal zentriert
+{: layout="ntl-2col.bg-primary-subtle" section-style="--cols: 7;"}
 
-Dieses Beispiel nutzt die Utility-Klasse `.bg-primary-subtle` und den Modifier `.with-main-justify-center`. Der Hintergrund kommt aus den Nextrap-Farbvariablen, der Hauptinhalt wird vertikal zentriert.
+`default-style()` zentriert die Inhalte von `main` und `aside` auf Desktop. Bei ungleichen Spaltenhöhen sitzt damit der kürzere Inhalt mittig. Bei ähnlich hohen Spalten ist das der Normalfall und es bleibt ohne Modifier.
 
-![alt](https://placehold.co/600x400?text=Primary+Subtle)
+![alt](https://placehold.co/600x400?text=Default+Centered)
+
+
+## Spalteninhalte oben ausrichten
+{: layout="ntl-2col.with-justify-top" section-style="--cols: 7;"}
+
+`.with-justify-top` setzt die Inhalte beider Spalten an den oberen Rand. Das eignet sich besonders, wenn eine Spalte deutlich länger ist und beide Inhalte gemeinsam beginnen sollen.
+
+![alt](https://placehold.co/600x400?text=Main+Top)
+
+
+## Spalteninhalte unten ausrichten
+{: layout="ntl-2col.with-justify-bottom" section-style="--cols: 7;"}
+
+`.with-justify-bottom` setzt die Inhalte beider Spalten an den unteren Rand. Nutze diese Variante bewusst für eine Komposition mit gemeinsamer Unterkante.
+
+![alt](https://placehold.co/600x400?text=Main+Bottom)
+
+
+## Sticky Main bei langer Aside-Spalte
+{: layout="ntl-2col.with-main-sticky-top.bg-light" section-style="--cols: 5; --main-sticky-top: var(--nt-spacing-layout);"}
+
+Dieser kurze Main-Content bleibt auf Desktop am oberen Viewport-Rand sichtbar, solange die längere Aside-Spalte durchlaufen wird. Das ist bei einer langen Aside-Spalte die bewegte Alternative zu `.with-justify-top`; mobil verhält sich das Layout normal.
+
+---
+{: layout=".aside" style="min-height: 140vh;"}
+
+### Langer Aside-Content
+
+Dieser Bereich ist absichtlich höher als der Viewport und macht das Sticky-Verhalten beim Scrollen sichtbar.
+
+Weitere Inhalte können hier als normale Absätze, Listen oder andere Kramdown-Elemente folgen.
 
 
 ## Primary Background + Reverse Desktop

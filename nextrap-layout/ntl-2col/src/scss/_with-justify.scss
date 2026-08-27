@@ -1,0 +1,10 @@
+@mixin with-justify($justify: center) {
+  &[mode='desktop'] {
+    &::part(main),
+    &::part(aside) {
+      display: flex;
+      flex-direction: column;
+      justify-content: $justify;
+    }
+  }
+}
