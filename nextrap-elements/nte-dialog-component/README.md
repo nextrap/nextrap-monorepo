@@ -112,4 +112,4 @@ Call `submit(data)` for successful completion and `abort()` for cancellation. Fo
 
 Derived classes override `renderDialog()` and optionally `renderTitle()` and `renderFooter()`. Do not override the base `render()` unless you intentionally replace the dialog wrapper lifecycle.
 
-`dialogOptions` controls wrapper behavior and classes. Visual appearance remains CSS/Sass-driven through the classes and mixins exported by `@nextrap/nte-dialog`.
+`dialogOptions` controls wrapper behavior and classes. For `dismiss.backdrop`, use `shake` (default) to keep the dialog open or `cancel` to run the normal abort/cancel flow. Visual appearance remains CSS/Sass-driven through the classes and mixins exported by `@nextrap/nte-dialog`.

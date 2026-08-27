@@ -1,3 +1,7 @@
 @use './index' as dialog;
 
+nte-dialog {
+  @include dialog.style-default();
+}
+
 @include dialog.with-modifier-classes();

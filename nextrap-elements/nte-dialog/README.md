@@ -83,6 +83,8 @@ Opening the hash opens the dialog. Navigating away from the matching hash closes
 
 A launcher on an anchor-enabled dialog uses the same hash route, so browser navigation and dialog state stay synchronized.
 
+When opened with `showModal()`, background scrolling is locked by default until the dialog closes.
+
 ## Direct DOM API
 
 ```ts
@@ -102,7 +104,13 @@ If the caller needs typed input, `submit()` / `abort()`, Promise results and aut
 <nte-dialog hide-close-button no-escape backdrop-action="dismiss">...</nte-dialog>
 ```
 
-`backdrop-action` accepts `ignore`, `shake` (default), or `dismiss`. `no-dismiss` disables all user-initiated dismiss actions. The `dismiss` event is cancelable and includes the reason (`close-button`, `escape`, or `backdrop`).
+`backdrop-action` accepts `ignore`, `shake` (default), `cancel`, or `dismiss`.
+
+- `shake` keeps the dialog open and plays the shake animation.
+- `cancel` fires the normal cancel/dismiss flow for the backdrop.
+- `dismiss` remains supported as an alias.
+
+`no-dismiss` disables all user-initiated dismiss actions. The `dismiss` event is cancelable and includes the reason (`close-button`, `escape`, or `backdrop`).
 
 ## Styling
 

@@ -7,7 +7,7 @@ import { html, PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import style from './nte-dialog.scss?inline';
 
-export type NteDialogBackdropAction = 'ignore' | 'shake' | 'dismiss';
+export type NteDialogBackdropAction = 'ignore' | 'shake' | 'cancel' | 'dismiss';
 export type NteDialogDismissReason = 'close-button' | 'escape' | 'backdrop';
 
 const anchorConverter = {
@@ -26,6 +26,10 @@ const anchorConverter = {
 @customElement('nte-dialog')
 export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibility: true })) {
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
+
+  private static modalScrollLockCount = 0;
+  private static previousBodyOverflow = '';
+  private static previousDocumentOverflow = '';
 
   @query('dialog')
   private accessor dialogEl: HTMLDialogElement | null = null;
@@ -55,6 +59,7 @@ export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibil
   private _isClosing = false;
   private _openedByAnchor = false;
   private _srcInclude: HTMLElement | null = null;
+  private _scrollLockActive = false;
 
   private readonly onHashChange = () => void this.syncWithAnchor();
 
@@ -67,6 +72,7 @@ export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibil
 
   override disconnectedCallback(): void {
     window.removeEventListener('hashchange', this.onHashChange);
+    this.unlockBackgroundScroll();
     super.disconnectedCallback();
   }
 
@@ -117,9 +123,14 @@ export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibil
   }
 
   showModal() {
-    this.dialogEl?.classList.remove('closing');
+    const dialogEl = this.dialogEl;
+    if (!dialogEl) return;
+    if (dialogEl.open) return;
+
+    dialogEl.classList.remove('closing');
     this.mode = 'open';
-    this.dialogEl?.showModal();
+    dialogEl.showModal();
+    this.lockBackgroundScroll();
   }
 
   async close() {
@@ -129,6 +140,7 @@ export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibil
     const el = this.dialogEl;
     if (!el) {
       this.mode = 'closed';
+      this.unlockBackgroundScroll();
       this._isClosing = false;
       return;
     }
@@ -273,6 +285,7 @@ export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibil
   private onDialogClose() {
     this.mode = 'closed';
     this.dialogEl?.classList.remove('closing');
+    this.unlockBackgroundScroll();
     if (this._openedByAnchor || window.location.hash === this.anchorHash) {
       this._openedByAnchor = false;
       this.clearAnchorHash();
@@ -294,7 +307,9 @@ export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibil
       this.shake();
       return;
     }
-    if (this.backdropAction === 'dismiss') this.requestDismiss('backdrop');
+    if (this.backdropAction === 'cancel' || this.backdropAction === 'dismiss') {
+      this.requestDismiss('backdrop');
+    }
   }
 
   private requestDismiss(reason: NteDialogDismissReason) {
@@ -320,5 +335,34 @@ export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibil
     void el.offsetWidth;
     el.classList.add('shake');
     window.setTimeout(() => el.classList.remove('shake'), 350);
+  }
+
+  private lockBackgroundScroll() {
+    if (this._scrollLockActive) return;
+
+    const { body, documentElement } = document;
+    if (NteDialog.modalScrollLockCount === 0) {
+      NteDialog.previousBodyOverflow = body.style.overflow;
+      NteDialog.previousDocumentOverflow = documentElement.style.overflow;
+      body.style.overflow = 'hidden';
+      documentElement.style.overflow = 'hidden';
+    }
+
+    NteDialog.modalScrollLockCount += 1;
+    this._scrollLockActive = true;
+  }
+
+  private unlockBackgroundScroll() {
+    if (!this._scrollLockActive) return;
+
+    const { body, documentElement } = document;
+    NteDialog.modalScrollLockCount = Math.max(0, NteDialog.modalScrollLockCount - 1);
+
+    if (NteDialog.modalScrollLockCount === 0) {
+      body.style.overflow = NteDialog.previousBodyOverflow;
+      documentElement.style.overflow = NteDialog.previousDocumentOverflow;
+    }
+
+    this._scrollLockActive = false;
   }
 }

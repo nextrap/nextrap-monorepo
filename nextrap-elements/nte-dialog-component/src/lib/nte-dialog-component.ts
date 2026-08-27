@@ -5,11 +5,12 @@ import { html, nothing, TemplateResult } from 'lit';
 import { query } from 'lit/decorators.js';
 
 export type NteDialogComponentResult<TResult = void> = { submitted: true; data: TResult } | { submitted: false };
+export type NteDialogComponentBackdropAction = Extract<NteDialogBackdropAction, 'shake' | 'cancel'>;
 
 export interface NteDialogComponentDismissOptions {
   closeButton?: boolean;
   escape?: boolean;
-  backdrop?: NteDialogBackdropAction;
+  backdrop?: NteDialogComponentBackdropAction;
 }
 
 export interface NteDialogComponentOptions {

@@ -1,11 +1,15 @@
 @mixin style-default() {
-  --nte-dialog-background: #fff;
-  --nte-dialog-color: #212529;
+  --nte-dialog-background: var(--nt-surface-raised, #fff);
+  --nte-dialog-color: var(--nt-text, #212529);
   --nte-dialog-border: 0;
-  --nte-dialog-border-radius: 0.5rem;
+  --nte-dialog-border-radius: var(--nt-border-radius, 0.5rem);
   --nte-dialog-section-background: var(--nte-dialog-background);
-  --nte-dialog-header-border: 1px solid #dee2e6;
-  --nte-dialog-footer-border: 1px solid #dee2e6;
+  --nte-dialog-header-border: 1px solid var(--nt-border, #dee2e6);
+  --nte-dialog-footer-border: 1px solid var(--nt-border, #dee2e6);
+  --nte-dialog-backdrop-background: rgba(0, 0, 0, 0.5);
+  --nte-dialog-backdrop-background-closed: rgba(0, 0, 0, 0);
+  --nte-dialog-backdrop-blur: 6px;
+  --nte-dialog-backdrop-blur-closed: 0;
 }
 
 @mixin style-highlighted() {
