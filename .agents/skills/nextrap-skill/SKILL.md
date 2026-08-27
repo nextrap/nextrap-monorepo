@@ -48,22 +48,54 @@ Für jedes pairing wird eine eigene paring-xyz.md erstellt.
 
 - Update the .ai-usage-info.md file in the package you are working on. Keep it short.
 
-## Komponenten-Skills
+## Package-lokale Usage- und Theming-Skills
 
-Jedes neue Component-Package unter `nextrap-elements/` oder `nextrap-layout/` erhält eigene Skills unter `.agents/skills/`:
+Jedes veröffentlichte Nextrap-Package erhält zwei eigene Skills unter `.agents/skills/`. `ntl-2col` und `ntl-card-row` sind die Referenzimplementierungen:
 
 ```text
-<package>/.agents/skills/<component>-theming/SKILL.md
-<package>/.agents/skills/<component>-usage/SKILL.md
+<package>/.agents/skills/<package-name>-theming/SKILL.md
+<package>/.agents/skills/<package-name>-usage/SKILL.md
 ```
 
-- Der Name beginnt immer mit dem vollständigen Package-/Custom-Element-Namen, z. B. `ntl-2col-theming` und `ntl-2col-usage`.
-- Der Theme-Skill beschreibt Theme-Entwicklung: Parts, CSS-Variablen, responsive Regeln, vorhandene SCSS-Mixins und Grenzen des Shadow-DOM-Stylings.
-- Der Usage-Skill beschreibt die Verwendung: Import, Markup, Slots beziehungsweise Content-Zuordnung, relevante Attribute und CSS-Variablen sowie kurze Beispiele.
-- Halte beide Skills komponentenspezifisch. Globale Nextrap-Regeln bleiben in diesem Skill und werden nicht in jedem Package wiederholt.
-- Die Component-Skills werden mit dem Package nach `dist` kopiert und im npm-Package veröffentlicht.
+- Verwende den vollständigen Package- beziehungsweise Custom-Element-Namen, z. B. `ntl-2col-theming` und `ntl-2col-usage`.
+- Verlinke im Usage-Skill auf den Theming-Skill und im Theming-Skill auf den Usage-Skill.
+- Halte beide Skills strikt package-spezifisch. Globale Nextrap-Regeln werden nicht dupliziert.
+- Kopiere `.agents` beim Build nach `dist` und veröffentliche die Skills im npm-Package.
+- Der Package-Generator legt beide Skills für neue Packages an. Fehlende Skills bestehender Packages werden in eigenen Package-Migrationen ergänzt, nicht nebenbei bei fachfremden Änderungen.
+- Die Package-Skills ersetzen langfristig die jeweilige `.ai-usage-info.md`; bis zur vollständigen Migration bleiben beide Formate bestehen.
 
-Diese Skills sollen die jeweilige `.ai-usage-info.md` langfristig ersetzen. Während des Testlaufs bleiben beide Formate bestehen. Aktuell sind nur `ntl-2col` und `ntl-card-row` migriert; die übrigen bestehenden Packages werden später in einem separaten Job angelegt. Erweitere sie nicht nebenbei bei fachfremden Änderungen. Der Package-Generator legt Theme- und Usage-Skill für neue Packages bereits an.
+### Usage-Skill
+
+Der Usage-Skill ist der verbindliche Einstieg für die Verwendung des Packages in Websites und Apps. Seine Frontmatter-Description muss Markup-, API- und Auswahlfragen triggern, aber keine Theme-Generierung.
+
+Er dokumentiert kompakt und konkret:
+
+- wofür das Package gedacht ist, in welchen Kontexten es verwendet wird und wann eine andere Komponente geeigneter ist;
+- Import und öffentliche API;
+- Markup, Slots beziehungsweise Content-Zuordnung, Attribute, Properties, Events, Klassen und relevante CSS-Variablen;
+- gültige Kombinationen, Pairings und wichtige Einschränkungen;
+- mindestens ein typisches, direkt übernehmbares Beispiel.
+
+Für `ntl-*`-Packages müssen alle Markup-Beispiele als Markdown/Kramdown im `trunkjs/content-pane`-Format mit `{: layout="..."}` angegeben werden. Direktes HTML ist dort kein Ersatz. Auch bei `nte-*`- und `style-*`-Packages werden Markdown-/Kramdown-Beispiele bevorzugt, sobald sich der reale Website-Anwendungsfall damit ausdrücken lässt, zum Beispiel Links mit Klassen oder Content-Sections mit Attributlisten. HTML ist nur sinnvoll, wenn Kramdown die öffentliche API oder den App-Kontext nicht korrekt abbilden kann.
+
+Usage-Beispiele verlassen sich auf den automatischen Default-Style und setzen `.style-default` nicht ohne konkreten Grund. Theme-SCSS und neue visuelle Varianten gehören nicht in den Usage-Skill.
+
+### Theming-Skill
+
+Der Theming-Skill darf nur verwendet werden, wenn ein Theme erzeugt oder geändert wird, das dieses Package stylt. Seine Frontmatter-Description muss diesen Trigger eng formulieren. Für allgemeine Verwendung, Markup oder Content-Zuordnung ist ausschließlich der Usage-Skill zuständig.
+
+Der Theming-Skill dokumentiert die öffentliche Styling-Oberfläche und die package-spezifischen Grenzen:
+
+- vorhandene SCSS-Mixins und deren vorgesehene Komposition;
+- Parts, öffentliche CSS-Variablen und `--nt-*` Tokens;
+- erlaubte Theme-Selektoren, Style- und Modifier-Klassen;
+- responsive Modes, Slot-Verträge und mobile Lesereihenfolge, soweit sie das Styling beeinflussen;
+- Eigenschaften, die das Theme bewusst nicht überschreiben darf;
+- ein kurzes SCSS-Beispiel für die normale Theme-Integration.
+
+Bei Web Components wird die vollständige visuelle Baseline an genau eine `style-*` Klasse gebunden; kombinierbare Features verwenden vorhandene `with-*` Modifier. Nutze zuerst vorhandene Mixins, Parts, Tokens und CSS-Variablen. Erzeuge keine neue `style-*` Variante für eine einzelne Position, Farbe, Breite, einen Abstand oder eine andere Instanzkonfiguration. Greife nicht in Shadow-DOM-Interna ein, wenn ein Part oder eine öffentliche Variable existiert.
+
+Bei `style-*`-Packages beschreibt der Theming-Skill zusätzlich die Trennung von Sass-API und CSS-Ausgabe, die Class-Mixin-Parität sowie die unabhängige Komposition von Basis- und Modifier-Mixins. Der Skill soll konkrete Theme-Entscheidungen ermöglichen, aber weder den globalen Style-Package-Contract wiederholen noch Usage-Markup duplizieren.
 
 ## Style package architecture contract (`@nextrap/style-*`)
 
