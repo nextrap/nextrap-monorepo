@@ -1,0 +1,27 @@
+@use '@nextrap/style-reset';
+
+:host {
+  --nte-nav-flow: row;
+  --nte-nav-align: stretch;
+  --nte-nav-justify: flex-start;
+  --nte-nav-gap: 0;
+
+  display: block;
+}
+
+#nav {
+  display: block;
+}
+
+#list {
+  display: flex;
+  flex-flow: var(--nte-nav-flow) nowrap;
+  align-items: var(--nte-nav-align);
+  justify-content: var(--nte-nav-justify);
+  gap: var(--nte-nav-gap);
+  min-inline-size: 0;
+}
+
+#list > slot {
+  display: contents;
+}

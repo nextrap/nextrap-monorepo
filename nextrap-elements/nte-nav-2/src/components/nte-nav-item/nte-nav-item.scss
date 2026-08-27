@@ -1,0 +1,109 @@
+@use '@nextrap/style-reset';
+
+:host {
+  --nte-nav-item-order: 0;
+  --nte-nav-item-gap: 0.5rem;
+  --nte-nav-submenu-gap: 0.25rem;
+  --nte-nav-submenu-min-inline-size: 12rem;
+  --nte-nav-submenu-max-block-size: min(70vh, 32rem);
+  --nte-nav-submenu-position-area: block-end span-inline-end;
+  --nte-nav-nested-submenu-position-area: inline-end span-block-end;
+  --nte-nav-submenu-enter-transform: translateY(-0.35rem);
+  --nte-nav-transition-duration: 160ms;
+
+  display: block;
+  position: relative;
+  order: var(--nte-nav-item-order);
+  min-inline-size: 0;
+}
+
+#item,
+#link,
+#text,
+#disclosure,
+#toggle {
+  display: flex;
+  align-items: center;
+}
+
+#item {
+  min-block-size: 100%;
+}
+
+#link,
+#text,
+#disclosure {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  gap: var(--nte-nav-item-gap);
+}
+
+#toggle {
+  flex: 0 0 auto;
+  justify-content: center;
+}
+
+#icon[hidden] {
+  display: none;
+}
+
+#icon,
+#indicator {
+  flex: 0 0 auto;
+}
+
+#indicator {
+  inline-size: 1em;
+  block-size: 1em;
+  transition: transform var(--nte-nav-transition-duration) ease;
+}
+
+#item:has(#submenu:popover-open) #indicator {
+  transform: rotate(180deg);
+}
+
+#submenu {
+  min-inline-size: var(--nte-nav-submenu-min-inline-size);
+  max-block-size: var(--nte-nav-submenu-max-block-size);
+  margin: var(--nte-nav-submenu-gap) 0 0;
+  padding: 0;
+  overflow: auto;
+  position-area: var(--nte-nav-submenu-position-area);
+  position-try-fallbacks: flip-block, flip-inline;
+  opacity: 0;
+  transform: var(--nte-nav-submenu-enter-transform);
+  transition:
+    opacity var(--nte-nav-transition-duration) ease,
+    transform var(--nte-nav-transition-duration) ease,
+    display var(--nte-nav-transition-duration) allow-discrete,
+    overlay var(--nte-nav-transition-duration) allow-discrete;
+}
+
+#submenu:popover-open {
+  opacity: 1;
+  transform: none;
+}
+
+@starting-style {
+  #submenu:popover-open {
+    opacity: 0;
+    transform: var(--nte-nav-submenu-enter-transform);
+  }
+}
+
+#submenu > slot {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+#submenu > slot::slotted(nte-nav-item) {
+  --nte-nav-submenu-position-area: var(--nte-nav-nested-submenu-position-area);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #indicator,
+  #submenu {
+    transition-duration: 0.01ms;
+  }
+}

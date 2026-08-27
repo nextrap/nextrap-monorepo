@@ -1,0 +1,96 @@
+@mixin default-style(
+  $background: var(--nt-body, #fff),
+  $color: var(--nt-text, #212529),
+  $hover-background: color-mix(in srgb, var(--nt-primary, #0d6efd) 10%, transparent),
+  $hover-color: var(--nt-primary, #0d6efd),
+  $current-background: var(--nt-primary, #0d6efd),
+  $current-color: var(--nt-text-on-primary, #fff),
+  $submenu-background: var(--nt-body, #fff),
+  $submenu-border: 1px solid color-mix(in srgb, var(--nt-text, #212529) 14%, transparent),
+  $submenu-radius: calc(var(--nt-border-radius, 0.375rem) * 2),
+  $submenu-shadow: 0 1rem 2.5rem color-mix(in srgb, var(--nt-dark, #212529) 18%, transparent),
+  $focus-color: var(--nt-primary, #0d6efd)
+) {
+  --nte-nav-item-gap: 0.5rem;
+  --nte-nav-submenu-gap: 0.35rem;
+  --nte-nav-transition-duration: 160ms;
+
+  &::part(nav) {
+    color: #{$color};
+    background: #{$background};
+  }
+
+  & nte-nav-item::part(item) {
+    min-block-size: 100%;
+  }
+
+  & nte-nav-item::part(link),
+  & nte-nav-item::part(text),
+  & nte-nav-item::part(disclosure),
+  & nte-nav-item::part(toggle) {
+    box-sizing: border-box;
+    color: inherit;
+    font: inherit;
+  }
+
+  & nte-nav-item::part(link),
+  & nte-nav-item::part(text),
+  & nte-nav-item::part(disclosure) {
+    padding: var(--nte-nav-item-padding-block, 0.7rem) var(--nte-nav-item-padding-inline, 1rem);
+    font-size: var(--nte-nav-item-font-size, 1rem);
+    line-height: 1.25;
+    text-decoration: none;
+  }
+
+  & nte-nav-item::part(disclosure),
+  & nte-nav-item::part(toggle) {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  & nte-nav-item::part(toggle) {
+    align-self: stretch;
+    min-inline-size: var(--nte-nav-toggle-size, 2.5rem);
+    padding: 0.5rem;
+  }
+
+  & nte-nav-item::part(link):hover,
+  & nte-nav-item::part(disclosure):hover,
+  & nte-nav-item::part(toggle):hover {
+    color: #{$hover-color};
+    background: #{$hover-background};
+  }
+
+  & nte-nav-item::part(link):focus-visible,
+  & nte-nav-item::part(disclosure):focus-visible,
+  & nte-nav-item::part(toggle):focus-visible {
+    position: relative;
+    z-index: 1;
+    outline: 2px solid #{$focus-color};
+    outline-offset: -2px;
+  }
+
+  & nte-nav-item[current='page']::part(link),
+  & nte-nav-item[current='true']::part(link) {
+    color: #{$current-color};
+    background: #{$current-background};
+  }
+
+  & nte-nav-item::part(icon) {
+    display: inline-grid;
+    inline-size: var(--nte-nav-icon-size, 1.1em);
+    block-size: var(--nte-nav-icon-size, 1.1em);
+    place-items: center;
+  }
+
+  & nte-nav-item::part(submenu) {
+    padding: var(--nte-nav-submenu-padding, 0.35rem);
+    color: #{$color};
+    background: #{$submenu-background};
+    border: #{$submenu-border};
+    border-radius: #{$submenu-radius};
+    box-shadow: #{$submenu-shadow};
+  }
+}
