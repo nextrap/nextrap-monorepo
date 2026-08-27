@@ -2,7 +2,7 @@
 
 @mixin default-style(
   $container-width: var(--nt-container-width, 100%),
-  $default-cols: 6,
+  $cols: null,
   $gap: var(--nt-spacing-layout),
   $inner-padding: 0,
   $container-background: transparent,
@@ -11,13 +11,16 @@
   $modifierClasses: true
 ) {
   --container-width: #{$container-width};
-  --default-cols: #{$default-cols};
   --gutter-x: #{$gap};
   --gutter-y: #{$gap};
   --row-inner-padding: #{$inner-padding};
   --container-background: #{$container-background};
   --container-border: #{$container-border};
   --container-border-radius: #{$container-border-radius};
+
+  @if ($cols != null and $cols != none) {
+    --cols: #{$cols};
+  }
 
   @if ($modifierClasses != false and $modifierClasses != none) {
     @include modifier-classes.with-modifier-classes();

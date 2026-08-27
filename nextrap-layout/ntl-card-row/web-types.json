@@ -17,21 +17,6 @@
                             "name": "mode",
                             "type": "string",
                             "description": "Current responsive mode reflected by BreakPointMixin."
-                        },
-                        {
-                            "name": "cols",
-                            "type": "number",
-                            "description": "Default card width in the Bootstrap-like 12-column system. Defaults to 6."
-                        },
-                        {
-                            "name": "min-width",
-                            "type": "string",
-                            "description": "Minimum card width. Enables intrinsic flex wrapping when set."
-                        },
-                        {
-                            "name": "max-width",
-                            "type": "string",
-                            "description": "Maximum card width. Defaults to unset."
                         }
                     ]
                 }
@@ -40,7 +25,7 @@
         "css": {
             "classes": [
                 {
-                    "name": "default",
+                    "name": "style-default",
                     "description": "Default card-row styling from default.scss."
                 },
                 {

@@ -6,7 +6,7 @@ Die Footer-Variante nutzt `.footer-separators`. Im Desktop-Modus erhalten die Ca
 <div style="height: 40vh; width: 100%"></div>
 
 ---
-{: layout="ntl-card-row.footer-separators" section-style="--default-cols: 3"}
+{: layout="ntl-card-row.footer-separators" section-style="--cols: 3;"}
 
 ---
 {: layout="nte-card" }

@@ -5,7 +5,7 @@ ntl-card-row {
   margin-bottom: 40px; // Only for demo: spacing should be handled by the parent layout.
 
   &.style-default {
-    @include cardRow.default-style($default-cols: 3);
+    @include cardRow.default-style();
   }
 
   &.with-borderless-cards {
