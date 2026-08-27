@@ -85,16 +85,16 @@
                     "description": "Enable a desktop breakout layout towards the viewport end."
                 },
                 {
-                    "name": "with-main-justify-start",
-                    "description": "Align the main column content to the top."
+                    "name": "with-justify-top",
+                    "description": "Align the content of both columns to the top in desktop mode."
                 },
                 {
-                    "name": "with-main-justify-center",
-                    "description": "Explicitly center the main column content; default-style() already centers it."
+                    "name": "with-justify-center",
+                    "description": "Explicitly center the content of both columns in desktop mode; default-style() already centers it."
                 },
                 {
-                    "name": "with-main-justify-end",
-                    "description": "Align the main column content to the bottom."
+                    "name": "with-justify-bottom",
+                    "description": "Align the content of both columns to the bottom in desktop mode."
                 },
                 {
                     "name": "with-main-sticky-top",

@@ -1,5 +1,0 @@
-@mixin with-main-justify($justify: center) {
-  &::part(main) {
-    justify-content: $justify;
-  }
-}
