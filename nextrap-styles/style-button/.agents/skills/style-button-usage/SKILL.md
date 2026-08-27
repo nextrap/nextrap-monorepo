@@ -1,6 +1,6 @@
 ---
 name: style-button-usage
-description: "@nextrap/style-button Klassen und Sass-Mixins für Standard-, Lead- und Glow-Buttons korrekt verwenden."
+description: "@nextrap/style-button Klassen und Sass-Mixins für Standard-, Größen-, Lead- und Glow-Buttons korrekt verwenden."
 ---
 
 # Style Button Usage
@@ -22,6 +22,18 @@ Sass-Mixins ohne globale CSS-Ausgabe:
 ```
 
 Der Button übernimmt seine Roundness automatisch aus `--nt-border-radius`; Themes steuern sie zentral über die `style-base` Eingabe `--nt-radius`.
+
+## Größen
+
+Die Größenmodifier `.btn-sm`, `.btn-lg`, `.btn-xl` und `.btn-xxl` werden immer zusätzlich zu `.btn` gesetzt. Ohne Größenmodifier gilt die Standardgröße.
+
+```markdown
+[Kompakte Aktion](/aktion-kompakt){: .btn .btn-secondary .btn-sm }
+
+[Große Aktion](/aktion-gross){: .btn .btn-primary .btn-xl }
+
+[Zentrale Hauptaktion](/hauptaktion){: .btn .btn-primary .btn-xxl }
+```
 
 ## Lead und Glow
 
