@@ -1,0 +1,13 @@
+@mixin with-main-sticky-top($top: var(--main-sticky-top, var(--nt-spacing-layout))) {
+  &[mode='desktop'] {
+    &::part(wrapper) {
+      overflow: clip;
+    }
+
+    &::part(main) {
+      position: sticky;
+      top: $top;
+      align-self: flex-start;
+    }
+  }
+}

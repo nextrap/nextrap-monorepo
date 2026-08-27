@@ -3,6 +3,8 @@
     "version": "0.0.0",
     "license": "MIT",
     "scripts": {
+        "demo": "vite --host 0.0.0.0",
+        "demo:build": "vite build",
         "prepare": "husky"
     },
     "dependencies": {
@@ -48,9 +50,9 @@
     "private": true,
     "workspaces": [
         "nextrap-base/*",
-        "nextrap-styles/*",
         "nextrap-elements/*",
         "nextrap-layout/*",
+        "nextrap-styles/*",
         "workspaces/trunkjs-monorepo/packages/*"
     ],
     "nx": {

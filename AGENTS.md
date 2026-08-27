@@ -91,7 +91,9 @@ After generating a new package, run `npm i` to link workspace dependencies.
 
 ## Demos
 
-Use "@trunkjs/vite-demo-viewer" for visual demos of components. See the package for usage instructions. 
+Use "@trunkjs/vite-demo-viewer" for visual demos of components. See the package for usage instructions.
+
+Package entrypoints must live in the package root: `index.ts` always belongs next to `package.json`, not below `src/`. The library build should use this root `index.ts` as entrypoint; `src/` contains implementation files only.
 
 
 ## Component Authoring (Lit)
