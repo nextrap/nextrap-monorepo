@@ -38,8 +38,10 @@ Die Größenmodifier `.btn-sm`, `.btn-lg`, `.btn-xl` und `.btn-xxl` werden immer
 ## Lead und Glow
 
 - `.btn-lead` ergänzt einen Pfeil rechts.
-- `.btn-glow` löst den Glow bei Hover und `:focus-visible` aus.
-- `.btn-glow-on-view` ergänzt genau eine Viewport-Auslösung und wird immer mit `.btn-glow` kombiniert.
+- Der erste sichtbare Hauptbutton mit `.btn-primary` im Viewport soll in der Regel auch `.btn-lead` tragen.
+- `.btn-glow` löst den Glow bei Hover und `:focus-visible` aus und eignet sich besonders für Buttons, die einen Abschluss markieren oder in eine klare nächste Hauptaktion weiterführen.
+- `.btn-glow-on-view` ergänzt eine automatische Viewport-Auslösung und wird immer mit `.btn-glow` kombiniert.
+- Die automatische Glow-Auslösung beim Laden bzw. erneuten Eintritt in den Viewport soll sparsam eingesetzt werden: normalerweise nur auf dem ersten Haupt-Lead-Button der Seite und gegebenenfalls noch einmal auf dem abschließenden Lead-Button am Seitenende.
 
 ```markdown
 [Termin vereinbaren](/termin){: .btn .btn-primary .btn-lead .btn-glow .btn-glow-on-view }
@@ -47,7 +49,7 @@ Die Größenmodifier `.btn-sm`, `.btn-lg`, `.btn-xl` und `.btn-xxl` werden immer
 [Mehr erfahren](/mehr){: .btn .btn-outline-primary .btn-lead .btn-glow }
 ```
 
-Damit animiert nur der Primary-Button beim Eintritt in den Viewport; beide Buttons glühen bei Hover und Tastaturfokus. Die Viewport-Auslösung ist Pure CSS und ein Progressive Enhancement. Füge keinen JavaScript-Observer hinzu.
+Damit animiert der erste Haupt-Lead-Button beim Eintritt in den Viewport und erneut, wenn er später wieder in den Viewport kommt; technisch wird das typischerweise über ein Trigger-Verhalten wie `replay reset` erreicht. Beide Buttons glühen bei Hover und Tastaturfokus. Ein weiterer `btn-glow-on-view` ist nur für einen klaren Abschluss-CTA am Seitenende sinnvoll. Die Viewport-Auslösung ist Pure CSS und ein Progressive Enhancement. Füge keinen JavaScript-Observer hinzu.
 
 Verwende Lead und Glow auf `<a>` oder `<button>`, nicht auf `<input>`, da Pseudoelemente benötigt werden. Kombiniere `.btn-lead` nicht mit `.dropdown-toggle`.
 

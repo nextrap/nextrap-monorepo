@@ -25,9 +25,11 @@ Nutze diesen Skill für Theme-SCSS und visuelle Button-Varianten. Für Markup un
 |---|---|
 | `btn-lead()` | Dekorativer Pfeil rechts; nutzt `::after` |
 | `btn-glow()` | Allgemeiner Glow bei Hover und `:focus-visible`; nutzt `::before` |
-| `btn-glow-on-view()` | Einmaliger Pure-CSS-Viewport-Trigger für `btn-glow()` |
+| `btn-glow-on-view()` | Pure-CSS-Viewport-Trigger für `btn-glow()` mit Re-Trigger bei erneutem Eintritt |
 
-`btn-glow-on-view()` wird zusätzlich zu `btn-glow()` eingebunden. Es verwendet `view()`, `timeline-trigger`, `trigger-scope` und `animation-trigger: play-once`. Halte es als Progressive Enhancement ohne JavaScript; nicht unterstützende Browser behalten den Hover-/Focus-Glow.
+`btn-glow-on-view()` wird zusätzlich zu `btn-glow()` eingebunden. Es verwendet `view()`, `timeline-trigger`, `trigger-scope` und `animation-trigger`, typischerweise mit `replay reset`, damit der Effekt beim erneuten Eintritt in den Viewport wieder starten kann. Halte es als Progressive Enhancement ohne JavaScript; nicht unterstützende Browser behalten den Hover-/Focus-Glow.
+
+Setze Lead und Glow in Themes bewusst ein: Der erste sichtbare Hauptbutton mit Primary-Variante soll in der Regel auch `btn-lead()` erhalten. `btn-glow()` eignet sich besonders für Abschluss-CTAs oder Buttons, die klar in die nächste Hauptaktion weiterführen. `btn-glow-on-view()` soll sparsam bleiben und normalerweise nur auf dem ersten Haupt-Lead-Button sowie gegebenenfalls noch einmal auf einem abschließenden Lead-Button am Seitenende verwendet werden.
 
 Passe Farben und Timing über `--btn-glow-color`, `--btn-glow-duration`, `--btn-glow-easing` und `--btn-glow-width` an. Der Default von `--btn-glow-color` folgt `currentColor` und funktioniert dadurch mit Filled- und Outline-Varianten.
 

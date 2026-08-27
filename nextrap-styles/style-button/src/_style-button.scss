@@ -40,8 +40,8 @@
   .btn-outline-light { @include b.btn-outline-light(); }
   .btn-outline-dark { @include b.btn-outline-dark(); }
 
-  .btn-glow { @include glow.btn-glow(); }
   .btn-glow-on-view { @include glow-view.btn-glow-on-view(); }
+  .btn-glow { @include glow.btn-glow(); }
 
   .btn-group { @include g.btn-group(); }
   .dropdown-menu { @include d.dropdown-menu(); }

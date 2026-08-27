@@ -1,5 +1,6 @@
-// Generic button glow effect. The class and mixin provide hover/focus behavior;
-// viewport triggering is composed separately through btn-glow-on-view().
+// Generic button glow effect. The class and mixin provide a one-shot glow on
+// mouse/focus entry; viewport triggering is composed separately through
+// btn-glow-on-view().
 
 @mixin btn-glow() {
   --btn-glow-color: rgb(255 255 255 / 0.35);
@@ -7,6 +8,9 @@
   --btn-glow-duration: 800ms;
   --btn-glow-easing: ease-out;
   --btn-glow-width: 32%;
+  --btn-glow-angle: -18deg;
+  --btn-glow-start: -175%;
+  --btn-glow-end: 360%;
 
   position: relative;
   overflow: hidden;
@@ -14,19 +18,29 @@
   &::before {
     content: '';
     position: absolute;
-    top: -120%;
-    left: calc(0% - var(--btn-glow-width));
+    top: -35%;
+    bottom: -35%;
+    left: 0;
     width: var(--btn-glow-width);
-    height: 340%;
-    transform: rotate(18deg) translateX(-120%);
-    background: linear-gradient(90deg, transparent, var(--btn-glow-color), transparent);
+    transform: translateX(var(--btn-glow-start)) skewX(var(--btn-glow-angle));
+    transform-origin: center;
+    background: linear-gradient(90deg, transparent 0%, var(--btn-glow-color) 50%, transparent 100%);
     pointer-events: none;
-    transition: none;
+    will-change: transform;
   }
 
   &:hover::before,
   &:focus-visible::before {
-    transform: rotate(18deg) translateX(430%);
-    transition: transform var(--btn-glow-duration) var(--btn-glow-easing);
+    animation: nt-btn-glow-hover var(--btn-glow-duration) var(--btn-glow-easing);
+  }
+
+  @keyframes nt-btn-glow-hover {
+    from {
+      transform: translateX(var(--btn-glow-start)) skewX(var(--btn-glow-angle));
+    }
+
+    to {
+      transform: translateX(var(--btn-glow-end)) skewX(var(--btn-glow-angle));
+    }
   }
 }

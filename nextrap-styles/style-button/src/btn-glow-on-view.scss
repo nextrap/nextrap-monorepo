@@ -1,27 +1,28 @@
 // Optional progressive enhancement for btn-glow(). It starts the time-based
-// glow once when the button enters view, without JavaScript.
+// glow when the button enters view and retriggers on later re-entry, without JavaScript.
 
 @mixin btn-glow-on-view() {
   @media (prefers-reduced-motion: no-preference) {
     @supports
       (timeline-trigger: --nt-btn-glow-on-view view()) and
-      (animation-trigger: --nt-btn-glow-on-view play-once) {
+      (animation-trigger: --nt-btn-glow-on-view replay reset) {
 
       timeline-trigger: --nt-btn-glow-on-view view();
       trigger-scope: --nt-btn-glow-on-view;
 
       &::before {
         animation: nt-btn-glow-on-view var(--btn-glow-duration, 800ms) var(--btn-glow-easing, ease-out);
-        animation-trigger: --nt-btn-glow-on-view play-once;
+        animation-delay: var(--btn-glow-on-view-delay, 2s);
+        animation-trigger: --nt-btn-glow-on-view replay reset;
       }
 
       @keyframes nt-btn-glow-on-view {
         from {
-          transform: rotate(18deg) translateX(-120%);
+          transform: translateX(var(--btn-glow-start, -175%)) skewX(var(--btn-glow-angle, -18deg));
         }
 
         to {
-          transform: rotate(18deg) translateX(430%);
+          transform: translateX(var(--btn-glow-end, 360%)) skewX(var(--btn-glow-angle, -18deg));
         }
       }
     }
