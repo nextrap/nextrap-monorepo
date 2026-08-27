@@ -62,6 +62,8 @@ Der Hauptinhalt bleibt in `main`.
 
 Weitere direkte Children mit `.aside` können dieselbe Seitenspalte ergänzen. Lege dafür keine positionsspezifische `style-*`-Variante an.
 
+`default-style()` zentriert `main` vertikal, wenn `aside` höher ist. Verwende `.with-main-justify-start` beziehungsweise `.with-main-justify-end` für eine bewusst obere oder untere Ausrichtung. `.with-main-sticky-top` hält einen kürzeren Main-Content nur im Desktop-Modus im Viewport; den Abstand zur Viewport-Kante setzt `--main-sticky-top`.
+
 Nutze immer die `trunkjs/content-pane`-Notation `{: layout="..."}`. Die Default-Style-Klasse wird automatisch ergänzt, wenn keine `style-*` Klasse gesetzt ist.
 
 ## Relevante Konfiguration
@@ -70,8 +72,11 @@ Nutze immer die `trunkjs/content-pane`-Notation `{: layout="..."}`. Die Default-
 - `--breakpoint`: Umschaltpunkt, standardmäßig `md`
 - `--container-width`: Containerbreite
 - `--gap`: Abstand zwischen den Spalten
+- `--main-sticky-top`: Viewport-Abstand für `.with-main-sticky-top`, standardmäßig `var(--nt-spacing-layout)`
 - `.surface-*`: Section-Fläche mit passenden semantischen Textfarben
 - `.bg-*`: reiner Section-Background
+- `.with-main-justify-start` / `.with-main-justify-center` / `.with-main-justify-end`: Main-Content oben, mittig oder unten ausrichten
+- `.with-main-sticky-top`: kürzeren Main-Content auf Desktop sticky oben halten
 - `.reverse`: tauscht `main` und `aside`
 - `.reverse-desktop`: tauscht sie nur im Desktop-Modus
 - `.breakout-start` / `.breakout-end`: aktiviert Desktop-Breakouts

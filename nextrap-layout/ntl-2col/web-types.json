@@ -1,199 +1,255 @@
 {
-    "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
-    "name": "@nextrap/ntl-2col",
-    "version": "1.1.5",
-    "description": "Responsive two-column layout web component for Nextrap content sections.",
-    "contributions": {
-        "html": {
-            "elements": [
+  "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
+  "name": "@nextrap/ntl-2col",
+  "version": "1.1.5",
+  "description": "Responsive two-column layout web component for Nextrap content sections.",
+  "contributions": {
+    "html": {
+      "elements": [
+        {
+          "name": "ntl-2col",
+          "description": "Responsive two-column layout with header/footer outside and top/bottom inside the wrapper.",
+          "attributes": [
+            {
+              "name": "mode",
+              "type": "string",
+              "description": "Reflected breakpoint mode, usually managed by the component.",
+              "values": [
                 {
-                    "name": "ntl-2col",
-                    "description": "Responsive two-column layout with header/footer outside and top/bottom inside the wrapper.",
-                    "attributes": [
-                        {
-                            "name": "mode",
-                            "type": "string",
-                            "description": "Reflected breakpoint mode, usually managed by the component.",
-                            "values": [{ "name": "mobile" }, { "name": "desktop" }]
-                        }
-                    ],
-                    "slots": [
-                        {
-                            "name": "",
-                            "description": "Main column content. Direct p:has(img) children can be moved automatically to the aside slot."
-                        },
-                        {
-                            "name": "header",
-                            "description": "Content rendered above and outside the wrapper frame. Direct children with class .header are assigned automatically."
-                        },
-                        {
-                            "name": "top",
-                            "description": "Content rendered at the top inside the wrapper frame. Direct children with class .top are assigned automatically."
-                        },
-                        {
-                            "name": "aside",
-                            "description": "Aside column content. Direct children with class .aside and direct p:has(img) children are assigned automatically."
-                        },
-                        {
-                            "name": "bottom",
-                            "description": "Content rendered at the bottom inside the wrapper frame. Direct children with class .bottom are assigned automatically."
-                        },
-                        {
-                            "name": "footer",
-                            "description": "Content rendered below and outside the wrapper frame. Direct children with class .footer are assigned automatically."
-                        }
-                    ]
+                  "name": "mobile"
+                },
+                {
+                  "name": "desktop"
                 }
-            ]
-        },
-        "css": {
-            "classes": [
-                {
-                    "name": "ntl-2col",
-                    "description": "Base class added automatically by the component."
-                },
-                {
-                    "name": "default",
-                    "description": "Semantic default styling hook used by the package default.scss."
-                },
-                {
-                    "name": "reverse",
-                    "description": "Reverse the order of the columns in mobile and desktop mode."
-                },
-                {
-                    "name": "reverse-desktop",
-                    "description": "Reverse the order of the columns only in desktop mode."
-                },
-                {
-                    "name": "mobile-reverse",
-                    "description": "Reverse the order of the columns in mobile mode."
-                },
-                {
-                    "name": "desktop-reverse",
-                    "description": "Reverse the order of the columns in desktop mode."
-                },
-                {
-                    "name": "alternating",
-                    "description": "Styling hook for alternating desktop column order, usually applied to a wrapper around multiple ntl-2col elements."
-                },
-                {
-                    "name": "breakout-start",
-                    "description": "Enable a desktop breakout layout towards the viewport start."
-                },
-                {
-                    "name": "breakout-end",
-                    "description": "Enable a desktop breakout layout towards the viewport end."
-                },
-                {
-                    "name": "with-main-justify-center",
-                    "description": "Vertically center the main column content."
-                },
-                {
-                    "name": "with-background-and-divider",
-                    "description": "Apply the background-and-divider variant when the matching SCSS mixin is included."
-                },
-                {
-                    "name": "header",
-                    "description": "Light DOM helper class: direct children with this class are assigned to the header slot."
-                },
-                {
-                    "name": "top",
-                    "description": "Light DOM helper class: direct children with this class are assigned to the top slot."
-                },
-                {
-                    "name": "aside",
-                    "description": "Light DOM helper class: direct children with this class are assigned to the aside slot."
-                },
-                {
-                    "name": "bottom",
-                    "description": "Light DOM helper class: direct children with this class are assigned to the bottom slot."
-                },
-                {
-                    "name": "footer",
-                    "description": "Light DOM helper class: direct children with this class are assigned to the footer slot."
-                },
-                {
-                    "name": "auto",
-                    "description": "Class set by the component on automatically assigned aside content such as direct p:has(img) children."
-                }
-            ],
-            "properties": [
-                {
-                    "name": "--breakpoint",
-                    "description": "Breakpoint where the layout switches between mobile and desktop mode. Default: md.",
-                    "value": { "type": "string" }
-                },
-                {
-                    "name": "--cols",
-                    "description": "Desktop main column width in a 12-column model. Default: 6.",
-                    "value": { "type": "number" }
-                },
-                {
-                    "name": "--container-width",
-                    "description": "Maximum/rendered container width. Default: var(--nt-container-width, 100%).",
-                    "value": { "type": "string" }
-                },
-                {
-                    "name": "--container-render-width",
-                    "description": "Internal/advanced rendered container width override, used by breakout variants.",
-                    "value": { "type": "string" }
-                },
-                {
-                    "name": "--container-margin-left",
-                    "description": "Internal/advanced container left margin override, used by breakout variants.",
-                    "value": { "type": "string" }
-                },
-                {
-                    "name": "--container-margin-right",
-                    "description": "Internal/advanced container right margin override, used by breakout variants.",
-                    "value": { "type": "string" }
-                },
-                {
-                    "name": "--gap",
-                    "description": "Gap between columns. Default: var(--nt-spacing-layout).",
-                    "value": { "type": "string" }
-                },
-                {
-                    "name": "--inner-padding",
-                    "description": "Padding applied to wrapper children. Default: var(--nt-space-3).",
-                    "value": { "type": "string" }
-                },
-                {
-                    "name": "--section-bg",
-                    "description": "Background of the host section. Default: transparent.",
-                    "value": { "type": "color" }
-                },
-                {
-                    "name": "--background",
-                    "description": "Default-style internal wrapper background variable. The wrapper is transparent by default via $wrapper-bg-color.",
-                    "value": { "type": "color" }
-                },
-                {
-                    "name": "--border",
-                    "description": "Wrapper border set by default-style(). Default: 1px solid var(--nt-dark).",
-                    "value": { "type": "string" }
-                },
-                {
-                    "name": "--border-radius",
-                    "description": "Wrapper border radius set by default-style(). Default: var(--nt-border-radius).",
-                    "value": { "type": "string" }
-                },
-                {
-                    "name": "--aspectRatio",
-                    "description": "Aside aspect ratio when default-style($aspectRatio: ...) is used.",
-                    "value": { "type": "string" }
-                },
-                {
-                    "name": "--breakout-container-width",
-                    "description": "Internal/advanced breakout container width, used by breakout variants.",
-                    "value": { "type": "string" }
-                },
-                {
-                    "name": "--breakout-space",
-                    "description": "Internal/advanced calculated breakout space, used by breakout variants.",
-                    "value": { "type": "string" }
-                }
-            ]
+              ]
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Main column content. Direct p:has(img) children can be moved automatically to the aside slot."
+            },
+            {
+              "name": "header",
+              "description": "Content rendered above and outside the wrapper frame. Direct children with class .header are assigned automatically."
+            },
+            {
+              "name": "top",
+              "description": "Content rendered at the top inside the wrapper frame. Direct children with class .top are assigned automatically."
+            },
+            {
+              "name": "aside",
+              "description": "Aside column content. Direct children with class .aside and direct p:has(img) children are assigned automatically."
+            },
+            {
+              "name": "bottom",
+              "description": "Content rendered at the bottom inside the wrapper frame. Direct children with class .bottom are assigned automatically."
+            },
+            {
+              "name": "footer",
+              "description": "Content rendered below and outside the wrapper frame. Direct children with class .footer are assigned automatically."
+            }
+          ]
         }
+      ]
+    },
+    "css": {
+      "classes": [
+        {
+          "name": "ntl-2col",
+          "description": "Base class added automatically by the component."
+        },
+        {
+          "name": "default",
+          "description": "Semantic default styling hook used by the package default.scss."
+        },
+        {
+          "name": "reverse",
+          "description": "Reverse the order of the columns in mobile and desktop mode."
+        },
+        {
+          "name": "reverse-desktop",
+          "description": "Reverse the order of the columns only in desktop mode."
+        },
+        {
+          "name": "mobile-reverse",
+          "description": "Reverse the order of the columns in mobile mode."
+        },
+        {
+          "name": "desktop-reverse",
+          "description": "Reverse the order of the columns in desktop mode."
+        },
+        {
+          "name": "alternating",
+          "description": "Styling hook for alternating desktop column order, usually applied to a wrapper around multiple ntl-2col elements."
+        },
+        {
+          "name": "breakout-start",
+          "description": "Enable a desktop breakout layout towards the viewport start."
+        },
+        {
+          "name": "breakout-end",
+          "description": "Enable a desktop breakout layout towards the viewport end."
+        },
+        {
+          "name": "with-main-justify-start",
+          "description": "Align the main column content to the top."
+        },
+        {
+          "name": "with-main-justify-center",
+          "description": "Explicitly center the main column content; default-style() already centers it."
+        },
+        {
+          "name": "with-main-justify-end",
+          "description": "Align the main column content to the bottom."
+        },
+        {
+          "name": "with-main-sticky-top",
+          "description": "Keep a shorter main column sticky at the top in desktop mode."
+        },
+        {
+          "name": "with-background-and-divider",
+          "description": "Apply the background-and-divider variant when the matching SCSS mixin is included."
+        },
+        {
+          "name": "header",
+          "description": "Light DOM helper class: direct children with this class are assigned to the header slot."
+        },
+        {
+          "name": "top",
+          "description": "Light DOM helper class: direct children with this class are assigned to the top slot."
+        },
+        {
+          "name": "aside",
+          "description": "Light DOM helper class: direct children with this class are assigned to the aside slot."
+        },
+        {
+          "name": "bottom",
+          "description": "Light DOM helper class: direct children with this class are assigned to the bottom slot."
+        },
+        {
+          "name": "footer",
+          "description": "Light DOM helper class: direct children with this class are assigned to the footer slot."
+        },
+        {
+          "name": "auto",
+          "description": "Class set by the component on automatically assigned aside content such as direct p:has(img) children."
+        }
+      ],
+      "properties": [
+        {
+          "name": "--breakpoint",
+          "description": "Breakpoint where the layout switches between mobile and desktop mode. Default: md.",
+          "value": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "--cols",
+          "description": "Desktop main column width in a 12-column model. Default: 6.",
+          "value": {
+            "type": "number"
+          }
+        },
+        {
+          "name": "--container-width",
+          "description": "Maximum/rendered container width. Default: var(--nt-container-width, 100%).",
+          "value": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "--container-render-width",
+          "description": "Internal/advanced rendered container width override, used by breakout variants.",
+          "value": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "--container-margin-left",
+          "description": "Internal/advanced container left margin override, used by breakout variants.",
+          "value": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "--container-margin-right",
+          "description": "Internal/advanced container right margin override, used by breakout variants.",
+          "value": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "--gap",
+          "description": "Gap between columns. Default: var(--nt-spacing-layout).",
+          "value": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "--main-sticky-top",
+          "description": "Viewport offset for with-main-sticky-top. Default: var(--nt-spacing-layout).",
+          "value": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "--inner-padding",
+          "description": "Padding applied to wrapper children. Default: var(--nt-space-3).",
+          "value": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "--section-bg",
+          "description": "Background of the host section. Default: transparent.",
+          "value": {
+            "type": "color"
+          }
+        },
+        {
+          "name": "--background",
+          "description": "Default-style internal wrapper background variable. The wrapper is transparent by default via $wrapper-bg-color.",
+          "value": {
+            "type": "color"
+          }
+        },
+        {
+          "name": "--border",
+          "description": "Wrapper border set by default-style(). Default: 1px solid var(--nt-dark).",
+          "value": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "--border-radius",
+          "description": "Wrapper border radius set by default-style(). Default: var(--nt-border-radius).",
+          "value": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "--aspectRatio",
+          "description": "Aside aspect ratio when default-style($aspectRatio: ...) is used.",
+          "value": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "--breakout-container-width",
+          "description": "Internal/advanced breakout container width, used by breakout variants.",
+          "value": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "--breakout-space",
+          "description": "Internal/advanced calculated breakout space, used by breakout variants.",
+          "value": {
+            "type": "string"
+          }
+        }
+      ]
     }
+  }
 }

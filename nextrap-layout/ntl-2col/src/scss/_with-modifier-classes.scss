@@ -1,5 +1,7 @@
 @use 'with-breakout-end' as breakout-end;
 @use 'with-breakout-start' as breakout-start;
+@use 'with-main-justify' as main-justify;
+@use 'with-main-sticky-top' as main-sticky-top;
 
 @mixin with-modifier-classes {
   &.reverse {
@@ -32,7 +34,19 @@
     @include breakout-end.with-breakout-end;
   }
 
-  &.with-main-justify-center::part(main) {
-    justify-content: center;
+  &.with-main-justify-start {
+    @include main-justify.with-main-justify(flex-start);
+  }
+
+  &.with-main-justify-center {
+    @include main-justify.with-main-justify(center);
+  }
+
+  &.with-main-justify-end {
+    @include main-justify.with-main-justify(flex-end);
+  }
+
+  &.with-main-sticky-top {
+    @include main-sticky-top.with-main-sticky-top();
   }
 }

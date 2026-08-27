@@ -40,7 +40,8 @@ Erstelle keine zusätzliche `style-*`-Variante nur für konfigurierbare Eigensch
 | Abstand zu anderen Layouts | Theme-Content-Flow mit `--nt-spacing-section` |
 | Section-Fläche | `.surface-*` für Fläche und passende Textfarben; `.bg-*` für reinen Background |
 | Reverse oder Breakout | vorhandene Modifier wie `.reverse`, `.reverse-desktop`, `.breakout-start`, `.breakout-end` |
-| Vertikale Ausrichtung | vorhandene Modifier wie `.with-main-justify-center` |
+| Vertikale Ausrichtung | `.with-main-justify-start`, `.with-main-justify-center` oder `.with-main-justify-end`; `default-style()` zentriert `main` |
+| Sticky Main | `.with-main-sticky-top`; Offset über `--main-sticky-top` |
 | Wrapper-Background | `default-style($wrapper-bg-color: ...)` oder `with-wrapper-bg-color()` |
 | Border oder Radius | `default-style()`, eine dokumentierte Variable oder ein kombinierbarer `with-*`-Modifier |
 
@@ -61,6 +62,8 @@ Wichtige Variablen: `--breakpoint`, `--cols`, `--container-width`, `--gap` und `
 | `with-alternating()` | Aufeinanderfolgende Layouts alternieren |
 | `with-breakout-start()` / `with-breakout-end()` | Spalte zum Viewport-Rand erweitern |
 | `with-image-auto-objectfit()` | Automatische Aside-Bilder einpassen |
+| `with-main-justify($justify)` | Main-Content vertikal ausrichten; Default ist `center` |
+| `with-main-sticky-top($top)` | Kurzen Main-Content auf Desktop im Viewport halten |
 | `with-background-and-divider()` | Hintergrund und Spaltentrenner |
 | `with-wrapper-bg-color()` | Wrapper-Hintergrund setzen |
 | `with-modifier-classes()` | Vorbereitete Modifier-Klassen registrieren |

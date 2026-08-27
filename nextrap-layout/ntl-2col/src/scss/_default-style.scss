@@ -1,4 +1,5 @@
 @use 'with-image-auto-objectfit' as image-auto-objectfit;
+@use 'with-main-justify' as main-justify;
 @use 'with-modifier-classes' as modifier-classes;
 @use 'with-wrapper-bg-color' as wrapper-bg;
 
@@ -11,7 +12,8 @@
   $objectFit: cover,
   $aspectRatio: none,
   $modifierClasses: true,
-  $wrapper-bg-color: transparent
+  $wrapper-bg-color: transparent,
+  $mainJustify: center
 ) {
   --background: #{$background};
   --border: #{$border};
@@ -20,6 +22,10 @@
   --gap: #{$gap};
 
   @include wrapper-bg.with-wrapper-bg-color($wrapper-bg-color);
+
+  @if ($mainJustify != none) {
+    @include main-justify.with-main-justify($mainJustify);
+  }
 
   @if ($aspectRatio != none) {
     --aspectRatio: #{$aspectRatio};
