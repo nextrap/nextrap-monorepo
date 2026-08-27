@@ -1,0 +1,32 @@
+// Generic glow effect. The class and mixin provide hover/focus behavior;
+// viewport triggering is composed separately through glow-on-view().
+
+@mixin glow() {
+  --glow-color: rgb(255 255 255 / 0.35);
+  --glow-color: color-mix(in srgb, currentColor 35%, transparent);
+  --glow-duration: 800ms;
+  --glow-easing: ease-out;
+  --glow-width: 32%;
+
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -120%;
+    left: calc(var(--glow-width) * -1);
+    width: var(--glow-width);
+    height: 340%;
+    transform: rotate(18deg) translateX(-120%);
+    background: linear-gradient(90deg, transparent, var(--glow-color), transparent);
+    pointer-events: none;
+    transition: none;
+  }
+
+  &:hover::before,
+  &:focus-visible::before {
+    transform: rotate(18deg) translateX(430%);
+    transition: transform var(--glow-duration) var(--glow-easing);
+  }
+}

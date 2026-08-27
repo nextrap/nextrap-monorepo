@@ -4,12 +4,16 @@
 @use './btn' as b;
 @use './btn-group' as g;
 @use './dropdown-menu' as d;
+@use './btn-lead' as lead;
+@use './glow' as glow;
+@use './glow-on-view' as glow-view;
 
 @mixin style-button() {
   .btn { @include b.btn(); }
   .btn-link { @include b.btn-link(); }
   .btn-lg { @include b.btn-lg(); }
   .btn-sm { @include b.btn-sm(); }
+  .btn-lead { @include lead.btn-lead(); }
   .dropdown-toggle { @include b.dropdown-toggle(); }
 
   .btn-primary { @include b.btn-primary(); }
@@ -33,6 +37,9 @@
   .btn-outline-info { @include b.btn-outline-info(); }
   .btn-outline-light { @include b.btn-outline-light(); }
   .btn-outline-dark { @include b.btn-outline-dark(); }
+
+  .glow { @include glow.glow(); }
+  .glow-on-view { @include glow-view.glow-on-view(); }
 
   .btn-group { @include g.btn-group(); }
   .dropdown-menu { @include d.dropdown-menu(); }

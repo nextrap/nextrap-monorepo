@@ -1,0 +1,24 @@
+// Lead button modifier with a decorative trailing arrow.
+
+@mixin btn-lead() {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--btn-lead-gap, 0.625em);
+
+  &::after {
+    content: '';
+    flex: 0 0 auto;
+    width: var(--btn-lead-arrow-width, 0.9em);
+    height: var(--btn-lead-arrow-height, 0.65em);
+    background: currentColor;
+    clip-path: polygon(0 42%, 65% 42%, 65% 0, 100% 50%, 65% 100%, 65% 58%, 0 58%);
+    transform: translateX(0);
+    transition: transform var(--btn-lead-duration, 200ms) ease;
+  }
+
+  &:hover::after,
+  &:focus-visible::after {
+    transform: translateX(var(--btn-lead-offset, 0.2em));
+  }
+}

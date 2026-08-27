@@ -3,7 +3,8 @@
     "version": "2.0.0",
     "files": [
         "*.*",
-        "src"
+        "src",
+        ".agents"
     ],
     "main": "./index.js",
     "exports": {
