@@ -16,9 +16,9 @@ Die nextrap elemente werden als einzelne packages auf npmjs veröffentlicht. Es 
 ## Basic rules
 
 - Befolge die Regeln des basic-coding Skills.
-- Wenn du Styles für ein konkretes `ntl-*`- oder `nte-*`-Package entwickelst oder änderst, lies zuerst dessen lokalen `*-theming`-Skill unter `.agent/skills/<component>-theming/SKILL.md` oder `.agents/skills/<component>-theming/SKILL.md` und nutze ihn als verbindlichen Komponenten-Contract.
-- Falls mehrere Komponenten betroffen sind, lies den lokalen `*-theming`-Skill jeder betroffenen Komponente.
-- Gibt es keinen lokalen `*-theming`-Skill, gilt dieses Skill-Dokument zusammen mit den allgemeinen Theme-Regeln als Fallback-Contract.
+- Wenn du Theme-Styles für ein konkretes `ntl-*`- oder `nte-*`-Package entwickelst oder änderst, lies zuerst dessen lokalen `.agents/skills/<component>-theming/SKILL.md` und nutze ihn als verbindlichen Komponenten-Contract.
+- Wenn du Markup oder Component-API eines Packages verwendest, lies dessen lokalen `.agents/skills/<component>-usage/SKILL.md`.
+- Falls mehrere Komponenten betroffen sind, lies die jeweils relevanten lokalen Skills. Gibt es noch keinen lokalen Skill, gelten dieses Dokument und die bestehende `.ai-usage-info.md` als Fallback.
 - Lies so wenig wie möglich andere Packages ein.
 - So wenig styling wie nötig: Die Webcomponents sollen später von außen gestyled werden. Daher soll im shadow dom nur die nötigsten styles enthalten sein. Es sollten immer parts definiert sein, damit diese von außen gestyled werden können.
 - Das default styling erfolgt in den mixins jedes packages, das nachher in den theme importiert wird.
@@ -47,6 +47,23 @@ Für jedes pairing wird eine eigene paring-xyz.md erstellt.
 ## Ai Usage Info
 
 - Update the .ai-usage-info.md file in the package you are working on. Keep it short.
+
+## Komponenten-Skills
+
+Jedes neue Component-Package unter `nextrap-elements/` oder `nextrap-layout/` erhält eigene Skills unter `.agents/skills/`:
+
+```text
+<package>/.agents/skills/<component>-theming/SKILL.md
+<package>/.agents/skills/<component>-usage/SKILL.md
+```
+
+- Der Name beginnt immer mit dem vollständigen Package-/Custom-Element-Namen, z. B. `ntl-2col-theming` und `ntl-2col-usage`.
+- Der Theme-Skill beschreibt Theme-Entwicklung: Parts, CSS-Variablen, responsive Regeln, vorhandene SCSS-Mixins und Grenzen des Shadow-DOM-Stylings.
+- Der Usage-Skill beschreibt die Verwendung: Import, Markup, Slots beziehungsweise Content-Zuordnung, relevante Attribute und CSS-Variablen sowie kurze Beispiele.
+- Halte beide Skills komponentenspezifisch. Globale Nextrap-Regeln bleiben in diesem Skill und werden nicht in jedem Package wiederholt.
+- Die Component-Skills werden mit dem Package nach `dist` kopiert und im npm-Package veröffentlicht.
+
+Diese Skills sollen die jeweilige `.ai-usage-info.md` langfristig ersetzen. Während des Testlaufs bleiben beide Formate bestehen. Aktuell sind nur `ntl-2col` und `ntl-card-row` migriert; die übrigen bestehenden Packages werden später in einem separaten Job angelegt. Erweitere sie nicht nebenbei bei fachfremden Änderungen. Der Package-Generator legt Theme- und Usage-Skill für neue Packages bereits an.
 
 ## Style package architecture contract (`@nextrap/style-*`)
 

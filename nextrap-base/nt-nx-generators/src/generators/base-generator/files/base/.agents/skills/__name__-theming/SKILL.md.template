@@ -1,0 +1,20 @@
+---
+name: <%= name %>-theming
+description: Theme- und Component-Style-Klassen für @nextrap/<%= name %> entwickeln; beschreibt Parts, CSS-Variablen, responsive Regeln und vorhandene SCSS-Mixins.
+---
+
+# <%= className %> Theming
+
+Nutze diesen Skill für Theme-SCSS und visuelle Varianten. Für Markup und Component-API nutze `<%= name %>-usage`.
+
+## Theme-API
+
+Dokumentiere hier komponentenspezifisch:
+
+- verfügbare `part`-Namen
+- öffentliche CSS-Variablen
+- responsive Zustände und Layout-Grenzen
+- vorhandene SCSS-Mixins
+- zulässige `style-*`- und `with-*`-Varianten
+
+Halte Shadow-DOM-CSS funktional. Die visuelle Baseline gehört in `default-style()` und wird an eine `style-*` Klasse gebunden.

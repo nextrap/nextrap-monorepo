@@ -1,0 +1,25 @@
+---
+name: <%= name %>-usage
+description: "@nextrap/<%= name %> korrekt importieren und mit seiner Component-API in HTML oder trunkjs/content-pane Markdown verwenden."
+---
+
+# <%= className %> Usage
+
+Nutze diesen Skill für Markup, Content-Zuordnung und Component-API. Für Theme-SCSS nutze `<%= name %>-theming`.
+
+## Import
+
+```ts
+import '@nextrap/<%= name %>';
+```
+
+## Verwendung
+
+Dokumentiere hier komponentenspezifisch:
+
+- ein kurzes HTML- oder `trunkjs/content-pane`-Beispiel
+- Slots beziehungsweise automatische Content-Zuordnung
+- relevante Attribute, Properties und CSS-Variablen
+- responsive oder programmatische Besonderheiten
+
+Beispiele verwenden keine explizite Default-Style-Klasse. Sie wird automatisch ergänzt, wenn keine `style-*` Klasse gesetzt ist.

@@ -19,7 +19,7 @@ export default defineConfig(() => ({
   cacheDir: `../../node_modules/.vite/${dirName}`,
   plugins: [
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss']),
+    nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss', '.agents/**/*']),
     {
       name: 'watch-md-reload',
       handleHotUpdate({ file, server }) {
