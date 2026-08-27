@@ -30,12 +30,14 @@ Entwickler sagen teilweise `header` oder `footer`, meinen aber `top` oder `botto
 - Feature-Klassen beginnen mit `with-*`; jede Style-Variante beginnt mit `style-*` und enthält ihre vollständige Baseline.
 - Ändere Slot-Anordnung und Reihenfolge mit CSS, nicht mit TypeScript oder DOM-Umbauten.
 - Scope Desktop-Regeln auf `[mode='desktop']` und stelle im Mobile-Modus die richtige Lesereihenfolge sicher.
+- Definiere am `ntl-2col` keinen wiederkehrenden Abstand zu benachbarten Layouts und verlange dafür im Markup keine `py-*`, `my-*` oder `mt-*` Utilities. Dieser Content-Rhythmus gehört mit `--nt-spacing-section` in das umgebende Theme beziehungsweise den Content Container; die Komponente steuert nur interne Parts, Slots, Gaps und bewusst variant-spezifisches Padding.
 
 Erstelle keine zusätzliche `style-*`-Variante nur für konfigurierbare Eigenschaften:
 
 | Eigenschaft | Verwende stattdessen |
 |---|---|
 | Spaltenbreite | `--cols` pro Instanz, in Content Pane über `section-style` |
+| Abstand zu anderen Layouts | Theme-Content-Flow mit `--nt-spacing-section` |
 | Section-Fläche | `.surface-*` für Fläche und passende Textfarben; `.bg-*` für reinen Background |
 | Reverse oder Breakout | vorhandene Modifier wie `.reverse`, `.reverse-desktop`, `.breakout-start`, `.breakout-end` |
 | Vertikale Ausrichtung | vorhandene Modifier wie `.with-main-justify-center` |
