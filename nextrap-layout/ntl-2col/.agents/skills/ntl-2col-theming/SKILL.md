@@ -1,27 +1,34 @@
 ---
 name: ntl-2col-theming
-description: Nutze diesen Skill beim Anlegen oder Ändern von Theme- und Component-Style-Klassen für @nextrap/ntl-2col; er erklärt Slot-Aufteilung, responsive Reihenfolge und vorhandene Mixins.
+description: Theme- und Component-Style-Klassen für @nextrap/ntl-2col entwickeln; beschreibt Parts, responsive Slot-Aufteilung und vorhandene SCSS-Mixins.
 ---
 
 # NTL 2Col Theming
 
-Lies zuerst `nextrap-layout/ntl-2col/.ai-usage-info.md`. Nutze [references/examples.md](references/examples.md), wenn Kramdown oder eine besondere Slot-Anordnung benötigt wird.
+Nutze diesen Skill für Theme-SCSS und neue visuelle Varianten. Für Markup und Content-Zuordnung nutze `ntl-2col-usage`.
 
-## Theme-Klassen
+## Theme-Regeln
 
 - Binde die vollständige Baseline an genau eine `style-*` Klasse, normalerweise mit `default-style()`.
 - Nutze vorhandene Mixins, bevor du eigenes `::part(...)`-Styling ergänzt.
+- Feature-Klassen beginnen mit `with-*`; jede Style-Variante beginnt mit `style-*` und enthält ihre vollständige Baseline.
 - Ändere Slot-Anordnung und Reihenfolge mit CSS, nicht mit TypeScript oder DOM-Umbauten.
+- Scope Desktop-Regeln auf `[mode='desktop']` und stelle im Mobile-Modus die richtige Lesereihenfolge sicher.
 
-## Layout-Regeln
+## Layout-Grenzen
 
 - `header`, `wrapper` und `footer` bleiben immer über die volle Containerbreite.
 - Nur `top`, `main`, `aside` und `bottom` innerhalb des `wrapper` dürfen umgeordnet werden.
 - Verwende standardmäßig `main` für Hauptinhalt und `aside` für die zweite Spalte.
 - Soll eine Überschrift seitlich stehen, nutze bevorzugt `aside`; `top` als Spalte ist eine Ausnahme.
-- Nutze Flexbox-`order`, scope Desktop-Regeln auf `[mode='desktop']` und stelle mobil die richtige Lesereihenfolge wieder her.
 
 Entwickler sagen teilweise `header` oder `footer`, meinen aber `top` oder `bottom`. Wenn Position oder Ebene nicht eindeutig ist, frage: „Meinst du `header`/`footer` außerhalb oder `top`/`bottom` innerhalb des Wrappers?“
+
+## Parts und Variablen
+
+Verfügbare Parts: `container`, `header`, `top`, `wrapper`, `main`, `aside`, `bottom`, `footer`.
+
+Wichtige Variablen: `--breakpoint`, `--cols`, `--container-width`, `--gap` und `--inner-padding`.
 
 ## Vorhandene Mixins
 

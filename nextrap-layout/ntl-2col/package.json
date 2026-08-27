@@ -1,6 +1,11 @@
 {
     "name": "@nextrap/ntl-2col",
     "version": "2.0.0",
+    "files": [
+        "*.*",
+        "src",
+        ".agents"
+    ],
     "main": "./index.js",
     "repository": {
         "directory": "nextrap-layout/ntl-2col",

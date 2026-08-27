@@ -1,6 +1,11 @@
 {
     "name": "@nextrap/ntl-card-row",
     "version": "2.0.0",
+    "files": [
+        "*.*",
+        "src",
+        ".agents"
+    ],
     "main": "./index.js",
     "repository": {
         "directory": "nextrap-layout/ntl-card-row",

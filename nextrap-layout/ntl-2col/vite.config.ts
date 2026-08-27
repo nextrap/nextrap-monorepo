@@ -5,8 +5,8 @@ import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
-const projectName = 'ntl-core';
-const dirName = `nextrap-layout/ntl-core`;
+const projectName = 'ntl-2col';
+const dirName = `nextrap-layout/ntl-2col`;
 
 export default defineConfig(() => ({
   server: {
@@ -24,7 +24,7 @@ export default defineConfig(() => ({
   },
   plugins: [
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss', 'web-types.json']),
+    nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss', 'web-types.json', '.agents/**/*']),
     {
       name: 'watch-md-reload',
       handleHotUpdate({ file, server }) {

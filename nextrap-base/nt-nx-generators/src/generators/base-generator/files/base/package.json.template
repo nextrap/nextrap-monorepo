@@ -1,6 +1,11 @@
 {
     "name": "@nextrap/<%= name %>",
     "version": "1.0.0",
+    "files": [
+        "*.*",
+        "src",
+        ".agents"
+    ],
     "main": "./index.js",
     "repository": {
         "directory": "<%= path %>",
