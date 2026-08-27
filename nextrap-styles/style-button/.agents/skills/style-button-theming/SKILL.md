@@ -1,6 +1,6 @@
 ---
 name: style-button-theming
-description: Theme-SCSS mit @nextrap/style-button entwickeln und vorhandene Button-, Lead- und Glow-Mixins korrekt kombinieren.
+description: Theme-SCSS mit @nextrap/style-button entwickeln und vorhandene Größen-, Lead- und Glow-Mixins korrekt kombinieren.
 ---
 
 # Style Button Theming
@@ -14,6 +14,10 @@ Nutze diesen Skill für Theme-SCSS und visuelle Button-Varianten. Für Markup un
 - Basis- und Modifier-Mixins bleiben unabhängig. Ein Modifier schließt die Basis nicht implizit ein.
 - Kombiniere vorhandene Mixins, statt Varianten wie `btn-glow-primary` oder `btn-glow-secondary` anzulegen.
 - Der Standardradius kommt aus `--nt-border-radius`, das `style-base` aus der Theme-Eingabe `--nt-radius` ableitet. Lege im Button keinen festen Theme-Radius fest.
+
+## Größen
+
+`btn-sm()`, `btn-lg()`, `btn-xl()` und `btn-xxl()` sind unabhängige Modifier-Mixins und schließen `btn()` nicht ein. Passe die Größen zentral über `--nt-btn-<size>-padding-y`, `--nt-btn-<size>-padding-x` und `--nt-btn-<size>-font-size` an, statt weitere Größenklassen anzulegen.
 
 ## Lead und Glow
 
