@@ -36,6 +36,15 @@ Die nextrap elemente werden als einzelne packages auf npmjs veröffentlicht. Es 
 - Layout-Beispiele in Dokumentation und Demos immer im `trunkjs/content-pane` Markdown-Format mit `{: layout="..."}` schreiben, nicht als direktes HTML.
 - `Migrations` immer kurz als Tabelle mit den Spalten `Old` und `New` dokumentieren; keine vollständigen Vorher-/Nachher-Beispiele duplizieren.
 
+## Proposals
+
+Das Verzeichnis `.agents/proposals/` sammelt kurze, reviewbare Entwürfe vor der eigentlichen Umsetzung.
+
+- Browser-Support-Blocker und absehbare Plattform-Verbesserungen werden jeweils in einer eigenen Datei dokumentiert. Halte Ziel, aktuellen Blocker, offene Punkte und Prüfkriterium knapp fest. Markiere mit `→`, welche Packages oder Komponenten dadurch später vereinfacht werden können.
+- Wenn eine neue Komponente entwickelt werden soll, schlage standardmäßig zuerst ein Proposal unter `.agents/proposals/<component-name>.md` vor. Der User entscheidet, ob dieser Zwischenschritt gewünscht ist.
+- Ein Component-Proposal fasst mindestens Zweck, Scope und Non-Goals, öffentliche API, Slots/Attribute/Properties/Events, Styling- und Responsive-Verhalten, Abhängigkeiten, offene Fragen und Akzeptanzkriterien zusammen.
+- Wenn der User das Proposal wählt, beginne die Implementierung erst nach dessen Review beziehungsweise ausdrücklicher Freigabe. Verlangt der User ausdrücklich die direkte Umsetzung, ist kein Proposal erforderlich.
+
 ## Element pairings
 
 Viele Elemente lassen sich ineinander schachteln. Zuständig für die korrekte Darstellung ist dabei immer das innere element. D.h. Schachtelungs-Demos für ein nte-accordion in einem ntl-2col sollten im nte-accordion package liegen.
