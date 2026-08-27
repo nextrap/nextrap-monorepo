@@ -17,11 +17,6 @@
                             "name": "mode",
                             "type": "string",
                             "description": "Current responsive mode reflected by BreakPointMixin."
-                        },
-                        {
-                            "name": "cols",
-                            "type": "number",
-                            "description": "Default desktop card width from 1 through 12. A card-level cols attribute overrides it; omitted means full available width."
                         }
                     ]
                 }

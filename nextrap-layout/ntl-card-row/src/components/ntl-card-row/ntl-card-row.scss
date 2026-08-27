@@ -2,7 +2,6 @@
 
 :host {
   --container-width: var(--nt-container-width, 100%);
-  --row-cols: var(--card-row-cols, 12);
   --min-width: unset;
   --max-width: unset;
   --gutter-x: var(--nt-spacing-layout);
@@ -33,7 +32,7 @@
   gap: var(--gutter-y) var(--gutter-x);
 
   ::slotted(*) {
-    --item-cols: var(--row-cols);
+    --item-cols: var(--cols, 12);
 
     box-sizing: border-box;
     flex: 0 0 calc(100% / 12 * var(--item-cols) - var(--gutter-x));
@@ -44,9 +43,10 @@
   }
 }
 
+// Firefox cannot cast attr() values to numbers yet. Map the finite range without attr().
 @for $cols from 1 through 12 {
   :host([cols='#{$cols}']) {
-    --row-cols: #{$cols};
+    --cols: #{$cols};
   }
 
   #main ::slotted([cols='#{$cols}']) {

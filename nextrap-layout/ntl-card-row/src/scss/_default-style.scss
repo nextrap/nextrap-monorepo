@@ -19,7 +19,7 @@
   --container-border-radius: #{$container-border-radius};
 
   @if ($cols != null and $cols != none) {
-    --card-row-cols: #{$cols};
+    --cols: #{$cols};
   }
 
   @if ($modifierClasses != false and $modifierClasses != none) {

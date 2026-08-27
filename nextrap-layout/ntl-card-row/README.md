@@ -26,19 +26,19 @@ Content-Pane example:
 
 ```markdown
 ## Cards
-{: layout="ntl-card-row" cols="4"}
+{: layout="ntl-card-row" section-style="--cols: 4;"}
 
 ### Card 1
 {: layout="nte-card"}
 
 ### Card 2
-{: layout="nte-card" cols="6"}
+{: layout="nte-card" section-style="--cols: 6;"}
 
 ### Card 3
 {: layout="nte-card"}
 ```
 
-The row follows Bootstrap's 12-column model. `cols="4"` makes every card four columns wide; an individual card can override the row with its own `cols` attribute. Fixed columns neither grow nor shrink, and overflowing card content is clipped. Without `cols`, a card uses the full available row width.
+The row follows Bootstrap's 12-column model. `--cols: 4` makes every card four columns wide; an individual card can override the inherited row value with its own `--cols`. Fixed columns neither grow nor shrink, and overflowing card content is clipped. Without `--cols`, a card uses the full available row width.
 
 `--min-width` and `--max-width` optionally constrain cards and both default to `unset`.
 
@@ -60,8 +60,7 @@ The row follows Bootstrap's 12-column model. `cols="4"` makes every card four co
 
 | Old | New |
 | --- | --- |
-| `style="--default-cols: 4"` | `cols="4"` |
-| `style="--cols: 6"` on a card | `cols="6"` on a card |
+| `--default-cols: 4` | `--cols: 4` on the row |
 | `class="with-min-width"` | Remove; set `--min-width` directly if needed |
 
 See `.ai-usage-info.md` and `demo/base.md` for implementation hints and examples.

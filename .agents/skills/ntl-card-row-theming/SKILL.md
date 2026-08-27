@@ -10,9 +10,10 @@ Lies zuerst `nextrap-layout/ntl-card-row/.ai-usage-info.md`.
 ## Theme-Klassen
 
 - Binde die vollständige visuelle Baseline an genau eine `style-*` Klasse, normalerweise mit `default-style()`.
-- Theme-Styles dürfen `cols`, feste Breiten, `flex` und das 12-Spalten-Layout nicht überschreiben.
-- `default-style($cols: n)` darf ausnahmsweise einen Theme-Fallback setzen. Nutze normalerweise `cols="n"` am `ntl-card-row`, damit die Verwendung flexibel bleibt.
-- Ein `cols`-Attribut an einer Card überschreibt den Row-Wert. Ohne `cols` nutzt jede Card die volle verfügbare Zeile.
+- Theme-Styles dürfen `--cols`, feste Breiten, `flex` und das 12-Spalten-Layout nicht überschreiben.
+- Nutze ausschließlich die CSS-Variable `--cols`; eine Attribut-API gehört vorerst wegen fehlender browserübergreifender Unterstützung nicht zur Komponente.
+- `default-style($cols: n)` darf ausnahmsweise einen Theme-Fallback setzen. Setze normalerweise `--cols` im Usage-Markup, damit die Verwendung flexibel bleibt.
+- Ein `--cols`-Wert an einer Card überschreibt den geerbten Row-Wert. Ohne `--cols` nutzt jede Card die volle verfügbare Zeile.
 - Desktop verwendet feste Spalten von 1 bis 12; mobil stehen Cards immer untereinander in voller Breite.
 - Nutze für visuelle Anpassungen die Parts `container`, `header`, `main` und `footer` sowie die vorhandenen Mixins.
 
