@@ -12,27 +12,27 @@ Nutze diesen Skill für Theme-SCSS und visuelle Button-Varianten. Für Markup un
 - `index.scss` ist eine Sass-API ohne CSS-Ausgabe; fertige Klassen kommen aus `default.scss` beziehungsweise `style-button()`.
 - Öffentliche Klassen werden ausschließlich aus dem gleichnamigen Mixin erzeugt.
 - Basis- und Modifier-Mixins bleiben unabhängig. Ein Modifier schließt die Basis nicht implizit ein.
-- Kombiniere vorhandene Mixins, statt Varianten wie `glow-primary` oder `glow-secondary` anzulegen.
+- Kombiniere vorhandene Mixins, statt Varianten wie `btn-glow-primary` oder `btn-glow-secondary` anzulegen.
 
 ## Lead und Glow
 
 | Mixin | Zweck |
 |---|---|
 | `btn-lead()` | Dekorativer Pfeil rechts; nutzt `::after` |
-| `glow()` | Allgemeiner Glow bei Hover und `:focus-visible`; nutzt `::before` |
-| `glow-on-view()` | Einmaliger Pure-CSS-Viewport-Trigger für `glow()` |
+| `btn-glow()` | Allgemeiner Glow bei Hover und `:focus-visible`; nutzt `::before` |
+| `btn-glow-on-view()` | Einmaliger Pure-CSS-Viewport-Trigger für `btn-glow()` |
 
-`glow-on-view()` wird zusätzlich zu `glow()` eingebunden. Es verwendet `view()`, `timeline-trigger`, `trigger-scope` und `animation-trigger: play-once`. Halte es als Progressive Enhancement ohne JavaScript; nicht unterstützende Browser behalten den Hover-/Focus-Glow.
+`btn-glow-on-view()` wird zusätzlich zu `btn-glow()` eingebunden. Es verwendet `view()`, `timeline-trigger`, `trigger-scope` und `animation-trigger: play-once`. Halte es als Progressive Enhancement ohne JavaScript; nicht unterstützende Browser behalten den Hover-/Focus-Glow.
 
-Passe Farben und Timing über `--glow-color`, `--glow-duration`, `--glow-easing` und `--glow-width` an. Der Default von `--glow-color` folgt `currentColor` und funktioniert dadurch mit Filled- und Outline-Varianten.
+Passe Farben und Timing über `--btn-glow-color`, `--btn-glow-duration`, `--btn-glow-easing` und `--btn-glow-width` an. Der Default von `--btn-glow-color` folgt `currentColor` und funktioniert dadurch mit Filled- und Outline-Varianten.
 
 ```scss
 .theme-primary-action {
   @include button.btn();
   @include button.btn-primary();
   @include button.btn-lead();
-  @include button.glow();
-  @include button.glow-on-view();
+  @include button.btn-btn-glow();
+  @include button.btn-btn-glow-on-view();
 }
 ```
 

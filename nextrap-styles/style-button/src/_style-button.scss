@@ -5,8 +5,8 @@
 @use './btn-group' as g;
 @use './dropdown-menu' as d;
 @use './btn-lead' as lead;
-@use './glow' as glow;
-@use './glow-on-view' as glow-view;
+@use './btn-glow' as glow;
+@use './btn-glow-on-view' as glow-view;
 
 @mixin style-button() {
   .btn { @include b.btn(); }
@@ -38,8 +38,8 @@
   .btn-outline-light { @include b.btn-outline-light(); }
   .btn-outline-dark { @include b.btn-outline-dark(); }
 
-  .glow { @include glow.glow(); }
-  .glow-on-view { @include glow-view.glow-on-view(); }
+  .btn-glow { @include glow.btn-glow(); }
+  .btn-glow-on-view { @include glow-view.btn-glow-on-view(); }
 
   .btn-group { @include g.btn-group(); }
   .dropdown-menu { @include d.dropdown-menu(); }

@@ -24,15 +24,15 @@ Sass-Mixins ohne globale CSS-Ausgabe:
 ## Lead und Glow
 
 - `.btn-lead` ergänzt einen Pfeil rechts.
-- `.glow` löst den Glow bei Hover und `:focus-visible` aus.
-- `.glow-on-view` ergänzt genau eine Viewport-Auslösung und wird immer mit `.glow` kombiniert.
+- `.btn-glow` löst den Glow bei Hover und `:focus-visible` aus.
+- `.btn-glow-on-view` ergänzt genau eine Viewport-Auslösung und wird immer mit `.btn-glow` kombiniert.
 
 ```html
-<a class="btn btn-primary btn-lead glow glow-on-view" href="/termin">
+<a class="btn btn-primary btn-lead btn-glow btn-glow-on-view" href="/termin">
   Termin vereinbaren
 </a>
 
-<a class="btn btn-outline-primary btn-lead glow" href="/mehr">
+<a class="btn btn-outline-primary btn-lead btn-glow" href="/mehr">
   Mehr erfahren
 </a>
 ```
@@ -41,4 +41,4 @@ Damit animiert nur der Primary-Button beim Eintritt in den Viewport; beide Butto
 
 Verwende Lead und Glow auf `<a>` oder `<button>`, nicht auf `<input>`, da Pseudoelemente benötigt werden. Kombiniere `.btn-lead` nicht mit `.dropdown-toggle`.
 
-Passe den Effekt bei Bedarf über `--glow-color`, `--glow-duration`, `--glow-easing`, `--glow-width`, `--btn-lead-gap` und `--btn-lead-offset` an.
+Passe den Effekt bei Bedarf über `--btn-glow-color`, `--btn-glow-duration`, `--btn-glow-easing`, `--btn-glow-width`, `--btn-lead-gap` und `--btn-lead-offset` an.
