@@ -1,7 +1,7 @@
 @use './index' as mixin;
 
-.default {
-  @include mixin.default-style($default-cols: 3);
+.style-default {
+  @include mixin.default-style();
 }
 
 .footer-separators,

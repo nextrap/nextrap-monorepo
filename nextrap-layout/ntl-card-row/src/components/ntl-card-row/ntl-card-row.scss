@@ -1,10 +1,9 @@
 /* The ShadowDOM Styles */
 
 :host {
-  // TODO: Use typed attr() for cols/min-width/max-width once casting is supported by Firefox and Safari.
   --container-width: var(--nt-container-width, 100%);
-  --cols: var(--default-cols, 6);
-  --min-width: 0px;
+  --row-cols: var(--card-row-cols, 12);
+  --min-width: unset;
   --max-width: unset;
   --gutter-x: var(--nt-spacing-layout);
   --gutter-y: var(--nt-spacing-layout);
@@ -34,12 +33,24 @@
   gap: var(--gutter-y) var(--gutter-x);
 
   ::slotted(*) {
-    --item-cols: var(--cols, 1);
-    --item-max-width: var(--max-width);
+    --item-cols: var(--row-cols);
 
     box-sizing: border-box;
+    flex: 0 0 calc(100% / 12 * var(--item-cols) - var(--gutter-x));
     width: calc(100% / 12 * var(--item-cols) - var(--gutter-x));
-    max-width: var(--item-max-width);
+    min-width: var(--min-width);
+    max-width: var(--max-width);
+    overflow: hidden;
+  }
+}
+
+@for $cols from 1 through 12 {
+  :host([cols='#{$cols}']) {
+    --row-cols: #{$cols};
+  }
+
+  #main ::slotted([cols='#{$cols}']) {
+    --item-cols: #{$cols};
   }
 }
 
@@ -48,15 +59,6 @@
     margin-left: calc(var(--gutter-x) / -2);
     width: calc(100% + var(--gutter-x));
     flex-direction: row;
-  }
-}
-
-:host(.with-min-width) {
-  #main {
-    ::slotted(*) {
-      flex: 1 1 min(var(--min-width), 100%);
-      width: auto;
-    }
   }
 }
 
@@ -70,7 +72,7 @@
 
     ::slotted(*) {
       --gutter-x: 0px; // Must be 0px - otherwise: error in Firefox
-      flex-basis: auto;
+      flex: 0 0 100%;
       width: 100%;
     }
   }
