@@ -29,14 +29,10 @@ Der Button übernimmt seine Roundness automatisch aus `--nt-border-radius`; Them
 - `.btn-glow` löst den Glow bei Hover und `:focus-visible` aus.
 - `.btn-glow-on-view` ergänzt genau eine Viewport-Auslösung und wird immer mit `.btn-glow` kombiniert.
 
-```html
-<a class="btn btn-primary btn-lead btn-glow btn-glow-on-view" href="/termin">
-  Termin vereinbaren
-</a>
+```markdown
+[Termin vereinbaren](/termin){: .btn .btn-primary .btn-lead .btn-glow .btn-glow-on-view }
 
-<a class="btn btn-outline-primary btn-lead btn-glow" href="/mehr">
-  Mehr erfahren
-</a>
+[Mehr erfahren](/mehr){: .btn .btn-outline-primary .btn-lead .btn-glow }
 ```
 
 Damit animiert nur der Primary-Button beim Eintritt in den Viewport; beide Buttons glühen bei Hover und Tastaturfokus. Die Viewport-Auslösung ist Pure CSS und ein Progressive Enhancement. Füge keinen JavaScript-Observer hinzu.
