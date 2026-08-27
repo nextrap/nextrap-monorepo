@@ -16,14 +16,16 @@
 
   &[mode='desktop'] > nte-card:not(:last-child)::after {
     top: var(--item-separator-inset);
-    right: calc(var(--gutter-x) / -2 - var(--item-separator-width) / 2);
+    right: calc(var(--gutter-x, 0px) / -2 - var(--item-separator-width) / 2);
+    right: calc(var(--gutter-x, 0) * -0.5px - var(--item-separator-width) / 2);
     bottom: var(--item-separator-inset);
     width: var(--item-separator-width);
   }
 
   &[mode='mobile'] > nte-card:not(:last-child)::after {
     right: var(--item-separator-inset);
-    bottom: calc(var(--gutter-y) / -2 - var(--item-separator-width) / 2);
+    bottom: calc(var(--gutter-y, 0px) / -2 - var(--item-separator-width) / 2);
+    bottom: calc(var(--gutter-y, 0) * -0.5px - var(--item-separator-width) / 2);
     left: var(--item-separator-inset);
     height: var(--item-separator-width);
   }

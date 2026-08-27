@@ -14,7 +14,7 @@ Der Hauptinhalt bleibt in `main`.
 ```
 
 ```scss
-@use '@nextrap/ntl-2col' as twoCol;
+@use '../../../../../../../../node_modules/@nextrap/ntl-2col/index' as twoCol;
 
 ntl-2col.style-focus {
   @include twoCol.default-style();

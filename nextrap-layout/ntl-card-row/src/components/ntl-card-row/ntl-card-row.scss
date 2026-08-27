@@ -29,14 +29,15 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: var(--gutter-y) var(--gutter-x);
+  gap: var(--gutter-y, 0px) var(--gutter-x, 0px);
+  gap: calc(var(--gutter-y, 0) * 1px) calc(var(--gutter-x, 0) * 1px);
 
   ::slotted(*) {
-    --item-cols: var(--cols, 12);
-
     box-sizing: border-box;
-    flex: 0 0 calc(100% / 12 * var(--item-cols) - var(--gutter-x));
-    width: calc(100% / 12 * var(--item-cols) - var(--gutter-x));
+    flex: 0 1 calc(100% / 12 * var(--cols, 12) - var(--gutter-x, 0px));
+    flex: 0 1 calc(100% / 12 * var(--cols, 12) - var(--gutter-x, 0) * 1px);
+    width: calc(100% / 12 * var(--cols, 12) - var(--gutter-x, 0px));
+    width: calc(100% / 12 * var(--cols, 12) - var(--gutter-x, 0) * 1px);
     min-width: var(--min-width);
     max-width: var(--max-width);
     overflow: hidden;
@@ -50,14 +51,16 @@
   }
 
   #main ::slotted([cols='#{$cols}']) {
-    --item-cols: #{$cols};
+    --cols: #{$cols};
   }
 }
 
 :host([mode='desktop']) {
   #main {
-    margin-left: calc(var(--gutter-x) / -2);
-    width: calc(100% + var(--gutter-x));
+    margin-left: calc(var(--gutter-x, 0px) / -2);
+    margin-left: calc(var(--gutter-x, 0) * -0.5px);
+    width: calc(100% + var(--gutter-x, 0px));
+    width: calc(100% + var(--gutter-x, 0) * 1px);
     flex-direction: row;
   }
 }
