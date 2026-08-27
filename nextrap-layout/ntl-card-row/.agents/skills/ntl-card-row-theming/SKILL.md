@@ -14,6 +14,7 @@ Nutze diesen Skill für Theme-SCSS und visuelle Varianten. Für Markup und Card-
 - Nutze ausschließlich die CSS-Variable `--cols`; eine Attribut-API gehört wegen fehlender browserübergreifender Unterstützung nicht zur Komponente.
 - `default-style($cols: n)` darf ausnahmsweise einen Theme-Fallback setzen. Bevorzuge `--cols` im Usage-Markup.
 - Nutze für visuelle Anpassungen die Parts `container`, `header`, `main` und `footer` sowie vorhandene Mixins.
+- Setze `--gutter-x` und `--gutter-y` immer als echte Längenwerte mit Einheit, z. B. `0px`, `16px` oder `24px`, niemals als einheitsloses `0`.
 - Desktop-spezifische Regeln werden auf `[mode='desktop']` gescoped.
 
 ## Vorhandene Mixins

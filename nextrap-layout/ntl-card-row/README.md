@@ -42,6 +42,8 @@ The row follows Bootstrap's 12-column model. `--cols: 4` makes every card four c
 
 `--min-width` and `--max-width` optionally constrain cards and both default to `unset`.
 
+When setting `--gutter-x` or `--gutter-y`, always use real length values with units such as `0px`, `16px` or `24px`. Never use unitless `0`, because gutter values are used in `calc()` expressions.
+
 ```markdown
 ## Cards
 {: layout="ntl-card-row" section-style="--min-width: 18rem; --max-width: 32rem"}

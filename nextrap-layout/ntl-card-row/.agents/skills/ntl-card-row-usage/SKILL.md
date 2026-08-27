@@ -55,5 +55,5 @@ Nutze immer die `trunkjs/content-pane`-Notation `{: layout="..."}`. Die Default-
 - Eine Card-Breite wächst oder schrumpft nicht; überbreiter Inhalt wird abgeschnitten.
 - Im Mobile-Modus stehen Cards immer untereinander in voller Breite.
 - `--min-width` und `--max-width` sind standardmäßig `unset`.
-- `--gutter-x` und `--gutter-y` benötigen Längeneinheiten, beispielsweise `0px` oder `16px`.
+- `--gutter-x` und `--gutter-y` benötigen immer Längeneinheiten und dürfen nie als einheitsloses `0` gesetzt werden; verwende `0px`, `16px` oder andere echte Längenwerte.
 - Verwende keine `cols`-Attribut-API.
