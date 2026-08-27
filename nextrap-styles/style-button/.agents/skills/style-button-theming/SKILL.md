@@ -31,8 +31,8 @@ Passe Farben und Timing über `--btn-glow-color`, `--btn-glow-duration`, `--btn-
   @include button.btn();
   @include button.btn-primary();
   @include button.btn-lead();
-  @include button.btn-btn-glow();
-  @include button.btn-btn-glow-on-view();
+  @include button.btn-glow();
+  @include button.btn-glow-on-view();
 }
 ```
 
