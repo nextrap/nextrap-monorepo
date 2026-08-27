@@ -9,6 +9,7 @@ const demoInclude = [
 ];
 
 export default defineConfig(() => ({
+  base: './',
   root: __dirname,
   publicDir: false,
   appType: 'custom',
