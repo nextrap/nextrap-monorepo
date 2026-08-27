@@ -1,0 +1,17 @@
+@mixin vertical($gap: 0.2rem) {
+  --nte-nav-flow: column;
+  --nte-nav-align: stretch;
+  --nte-nav-justify: flex-start;
+  --nte-nav-gap: #{$gap};
+  --nte-nav-submenu-position-area: block-end span-inline-end;
+  --nte-nav-nested-submenu-position-area: block-end span-inline-end;
+  --nte-nav-submenu-enter-transform: translateY(-0.35rem);
+
+  inline-size: 100%;
+
+  &::part(list),
+  & > nte-nav-item,
+  & > nte-nav-item::part(item) {
+    inline-size: 100%;
+  }
+}

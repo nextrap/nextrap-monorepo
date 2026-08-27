@@ -1,0 +1,7 @@
+@use 'default-style' as style;
+@use 'sizes' as size;
+
+@mixin main-navigation() {
+  @include style.default-style();
+  @include size.size-large();
+}

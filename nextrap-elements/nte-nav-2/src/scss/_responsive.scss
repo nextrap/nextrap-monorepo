@@ -1,0 +1,10 @@
+@use 'horizontal' as orientation-horizontal;
+@use 'vertical' as orientation-vertical;
+
+@mixin responsive($breakpoint: 48rem, $horizontal-justify: flex-start) {
+  @include orientation-vertical.vertical();
+
+  @media (min-width: $breakpoint) {
+    @include orientation-horizontal.horizontal($horizontal-justify);
+  }
+}
