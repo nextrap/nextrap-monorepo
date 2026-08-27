@@ -38,10 +38,10 @@ Die nextrap elemente werden als einzelne packages auf npmjs veröffentlicht. Es 
 
 ## Proposals
 
-Das Verzeichnis `proposals/` sammelt kurze, reviewbare Entwürfe vor der eigentlichen Umsetzung.
+Das Verzeichnis `.agents/proposals/` sammelt kurze, reviewbare Entwürfe vor der eigentlichen Umsetzung.
 
 - Browser-Support-Blocker und absehbare Plattform-Verbesserungen werden jeweils in einer eigenen Datei dokumentiert. Halte Ziel, aktuellen Blocker, offene Punkte und Prüfkriterium knapp fest. Markiere mit `→`, welche Packages oder Komponenten dadurch später vereinfacht werden können.
-- Wenn eine neue Komponente entwickelt werden soll, schlage standardmäßig zuerst ein Proposal unter `proposals/<component-name>.md` vor. Der User entscheidet, ob dieser Zwischenschritt gewünscht ist.
+- Wenn eine neue Komponente entwickelt werden soll, schlage standardmäßig zuerst ein Proposal unter `.agents/proposals/<component-name>.md` vor. Der User entscheidet, ob dieser Zwischenschritt gewünscht ist.
 - Ein Component-Proposal fasst mindestens Zweck, Scope und Non-Goals, öffentliche API, Slots/Attribute/Properties/Events, Styling- und Responsive-Verhalten, Abhängigkeiten, offene Fragen und Akzeptanzkriterien zusammen.
 - Wenn der User das Proposal wählt, beginne die Implementierung erst nach dessen Review beziehungsweise ausdrücklicher Freigabe. Verlangt der User ausdrücklich die direkte Umsetzung, ist kein Proposal erforderlich.
 
