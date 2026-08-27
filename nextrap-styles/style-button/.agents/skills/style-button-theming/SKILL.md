@@ -13,6 +13,7 @@ Nutze diesen Skill für Theme-SCSS und visuelle Button-Varianten. Für Markup un
 - Öffentliche Klassen werden ausschließlich aus dem gleichnamigen Mixin erzeugt.
 - Basis- und Modifier-Mixins bleiben unabhängig. Ein Modifier schließt die Basis nicht implizit ein.
 - Kombiniere vorhandene Mixins, statt Varianten wie `btn-glow-primary` oder `btn-glow-secondary` anzulegen.
+- Der Standardradius kommt aus `--nt-border-radius`, das `style-base` aus der Theme-Eingabe `--nt-radius` ableitet. Lege im Button keinen festen Theme-Radius fest.
 
 ## Lead und Glow
 

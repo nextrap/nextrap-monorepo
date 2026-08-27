@@ -21,6 +21,8 @@ Sass-Mixins ohne globale CSS-Ausgabe:
 @use '@nextrap/style-button' as button;
 ```
 
+Der Button übernimmt seine Roundness automatisch aus `--nt-border-radius`; Themes steuern sie zentral über die `style-base` Eingabe `--nt-radius`.
+
 ## Lead und Glow
 
 - `.btn-lead` ergänzt einen Pfeil rechts.
