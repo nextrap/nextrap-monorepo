@@ -1,661 +1,363 @@
-# Proposal: NTE Consent Modal
+# Proposal: NTE Consent (HTML-first)
 
 - Status: Proposed
-- Package: `@nextrap/nte-consent-modal`
-- Element: `<nte-consent-modal>`
-- Runtime base: `nextrap_element`
-- UI foundation: `@nextrap/nte-dialog`
-- Audience: Nextrap maintainers and application integrators
+- Package: `@nextrap/nte-consent`
+- Element: `<nte-consent>`
+- Scope: declarative consent UI and deterministic resource gating
 
 ## Decision summary
 
-Add a purpose-oriented consent component that separates four responsibilities:
+Replace the controller-, adapter-, and TypeScript-config-heavy design with an HTML-first custom element.
 
-1. `<nte-consent-modal>` renders the accessible first layer and preference view.
-2. `NteConsentController` owns the canonical consent state and decisions.
-3. A versioned store persists the local decision; an optional receipt sink records evidence independently.
-4. Explicit provider adapters translate purpose decisions into project callbacks, tag-manager events, or provider-native consent signals.
+The page declares optional services directly in markup. Gated JavaScript uses a non-JavaScript `type`; arbitrary embeds use `<template>`. `<nte-consent>` discovers those declarations, renders the consent UI, persists a small versioned decision record, and activates allowed resources by creating fresh DOM nodes.
 
-The element extends `nextrap_element` and composes `nte-dialog`; it does not subclass the dialog. The package also exposes a head-safe bootstrap entry that can establish restrictive defaults before analytics or advertising code starts. This timing boundary is essential: a modal connected after document parsing cannot retroactively prevent earlier provider activity.
+No TypeScript configuration is required for normal use. A JavaScript API remains an optional escape hatch for SPAs and advanced provider integrations.
 
-The proposed MVP is a consent-management building block, not a certified CMP. It deliberately does not generate IAB TCF or GPP strings, discover scripts, geolocate users, or make legal decisions for an application.
+This component is a lightweight consent building block, not a certified CMP, tag scanner, legal policy engine, or IAB TCF/GPP implementation.
 
-## Problem
+## Why simplify
 
-Nextrap applications need a consistent way to:
+The previous proposal split the feature across a controller, bootstrap entry, stores, receipt sinks, typed policy configuration, and provider adapters. That architecture is flexible but makes a common static/CMS integration unnecessarily difficult.
 
-- ask for advertising, analytics, personalization, and other optional purposes;
-- offer equally understandable accept, reject, and configure paths;
-- persist a versioned choice and ask again when the policy materially changes;
-- expose the current state reliably to application plugins and third-party providers;
-- apply restrictive defaults before optional providers initialize;
-- update consent during an SPA session and across tabs;
-- let users revisit or withdraw a choice;
-- support provider-native mechanisms such as Google Consent Mode without coupling the UI to one vendor.
+The common case should be visible in the HTML:
 
-A dialog alone solves only presentation. A useful component also needs a state contract, early initialization, persistence, downstream synchronization, and explicit failure behavior.
+1. Which service is present?
+2. Why does it need consent?
+3. Which scripts or embeds belong to it?
+4. What may run after consent?
 
-## Research findings
+The DOM becomes the service registry and activation plan. The element owns only discovery, choice UI, persistence, and deterministic activation.
 
-### Open-source projects
+## Market patterns
 
-| Project | Useful pattern | Lesson for Nextrap |
+| Product/project | Configuration pattern | Lesson for NTE |
 | --- | --- | --- |
-| [vanilla-cookieconsent](https://github.com/orestbida/cookieconsent) | Categories, services, lifecycle events, and policy revision management | Use categories/purposes as the stable decision surface and treat policy revision as first-class state. |
-| [Klaro](https://github.com/kiprotect/klaro) | Services declare purposes and callbacks | Keep provider integration declarative, but execute it through typed adapters rather than UI callbacks. |
-| [tarteaucitron.js](https://github.com/AmauriC/tarteaucitron.js) | Large catalog of service-specific integrations | A reusable adapter contract scales better than hard-coding vendor behavior in the component. |
-| [Orejime](https://github.com/boscop-fr/orejime) | Purpose-oriented consent and accessibility-conscious UI | Present human purposes first and disclose the services that depend on them. |
-| [c15t](https://github.com/c15t/c15t) | Headless/reactive consent state and SPA-oriented architecture | Separate state from rendering and provide subscription APIs that immediately emit the current snapshot. |
+| CookieConsent / Cookiebot | `type="text/plain"` plus a consent/category data attribute | Blocking scripts declaratively in HTML is an established pattern. |
+| Klaro | `type="text/plain"`, `data-name`, `data-type`, and `data-src`; service metadata still lives in JavaScript config | Keep the script annotation pattern, but allow service metadata in HTML too. |
+| tarteaucitron.js | JavaScript service registry with `js` and `fallback` callbacks | Powerful, but too callback-heavy for the default NTE API. |
+| OneTrust/Usercentrics and hosted CMPs | Dashboard configuration, scanner, hosted policy, SDK, and audit services | These solve a larger operational/compliance problem than this package should claim to solve. |
+| Google Consent Mode | Early provider-specific `default` and later `update` signals | Treat this as an optional integration mode, not as the core consent model. |
 
-The recommendation is to adopt these architectural patterns, not one of these runtimes as a dependency. Nextrap needs a small web-component API, its own theming contract, and deterministic integration with existing packages.
-
-### Commercial CMPs
-
-| Product | Useful pattern | Lesson for Nextrap |
-| --- | --- | --- |
-| [OneTrust](https://developer.onetrust.com/onetrust/docs/javascript-events-guide) | Immediate state events plus separate consent-receipt workflows | Downstream updates must not wait for remote evidence logging. |
-| [Usercentrics](https://docs.usercentrics.com/cmp_browser_sdk/) | Headless browser SDK and service-level metadata | Keep the controller usable without the modal and model services separately from purposes. |
-| [Cookiebot](https://support.cookiebot.com/hc/en-us/articles/360009074960-Automatic-cookie-blocking) | Early bootstrap and multiple integration modes | Timing is part of the API; explicit integration remains the predictable default. |
-| [consentmanager](https://www.consentmanager.net/en/help/developer-reference/automatic-blocking-of-codes-and-cookies/) | Automatic, semi-automatic, and manual integration options | Core behavior should be explicit and testable; convenience automation can be a separate concern. |
-| [Didomi](https://developers.didomi.io/cmp/web-sdk/third-parties) | Separation of provider loading, native signals, tag managers, and protocols | Model these as adapter modes rather than pretending all providers behave alike. |
-| [Sourcepoint](https://docs.sourcepoint.com/hc/en-us/articles/42043114660755-Overview-Manage-3rd-party-tags-web) | Explicit tag gating and protocol-specific integration | Avoid a generic promise that arbitrary third-party code can be managed safely without configuration. |
-
-The common architecture is a headless state engine plus policy, UI, storage, evidence, and provider layers. Scanning, geolocation, cross-domain synchronization, and regulatory protocol operation are generally services around that core, not modal responsibilities.
+The proposed syntax intentionally resembles CookieConsent and Klaro so existing integrations are easy to migrate.
 
 ## Goals
 
-- Provide an accessible consent modal and persistent preference entry point.
-- Run on `nextrap_element` and reuse the existing dialog/window behavior through composition.
-- Expose a stable, typed, provider-neutral consent model.
-- Make the effective state available before and after the component connects.
-- Default optional purposes to a non-permissive state.
-- Support first choice, later changes, withdrawal, expiry, and policy revisions.
-- Support static pages, SSR, CMS output, SPAs, and tag-manager-based projects.
-- Provide deterministic plugin/provider integration with observable errors.
-- Keep protocol-specific and vendor-specific code tree-shakeable.
+- Configure services and gated resources in HTML.
+- Render one consent choice per declared service, optionally grouped by purpose.
+- Prevent marked scripts, iframes, images, or other embeds from loading before consent.
+- Persist a versioned choice in local storage by default.
+- Support session storage and memory storage as explicit alternatives.
+- Reapply stored choices before activating declared resources.
+- Expose small DOM events and methods for SPAs and exceptional provider behavior.
+- Keep the implementation provider-neutral and dependency-light.
 
 ## Non-goals
 
-- Legal advice or automatic selection of a lawful basis.
-- Region detection or IP geolocation.
-- A vendor database or automatic classification of arbitrary scripts/cookies.
-- Generation or interpretation of IAB TCF or GPP strings.
-- Claiming Google CMP certification or other regulatory/vendor certification.
-- A consent-receipt backend, admin UI, policy authoring UI, or audit dashboard.
-- Anonymous cross-domain consent synchronization.
-- Reversing data already transmitted before withdrawal.
-- A general banner, toast, paywall, or subscription wall.
+- Legal advice, reviewed policy wording, or automatic lawful-basis decisions.
+- Cookie/script scanning or automatic provider classification.
+- Deleting arbitrary third-party cookies after withdrawal.
+- Undoing JavaScript side effects or data already transmitted.
+- IAB TCF/GPP strings, CMP certification, geolocation, consent receipts, or an audit backend.
+- Loading arbitrary URLs from a TypeScript/JSON configuration object.
+- Guaranteeing Google Consent Mode Advanced behavior without an explicit integration.
 
-## Product principles
+## Recommended declarative API
 
-### Purpose decisions, service disclosure
+### One script per service
 
-Users decide at the purpose level. Services/providers are disclosed beneath each purpose so that an application can explain who receives data and why. In the MVP, services are not individually toggleable; that would make semantics, dependencies, and proof of consent significantly more complex.
+For a service that needs one external script, the complete declaration can live on the script tag:
 
-Typical purposes are application-defined:
-
-| Example purpose | Default | Example services |
-| --- | --- | --- |
-| `essential` | Required | Session security, consent storage |
-| `functionality` | Optional | Embedded media, preference features |
-| `analytics` | Optional | Matomo, Google Analytics |
-| `advertising` | Optional | Google Ads, Microsoft Advertising |
-| `personalization` | Optional | Content or ad personalization |
-
-The component does not ship legal wording or assume that these examples are correct for every site.
-
-### Fail closed, represent unknown accurately
-
-`unknown` and `denied` are distinct states. Both prevent optional activation, but they mean different things for UI, evidence, and provider protocols. Missing, corrupt, expired, or stale records resolve to `unknown`, never to an implicit grant.
-
-### One canonical writer
-
-The controller is the canonical application consent state. For each downstream provider or protocol, exactly one adapter must write consent signals. Mixing a tag-manager template, inline provider commands, and an NTE adapter for the same provider creates ordering bugs and contradictory state.
-
-### Consent state is not a provider signal
-
-A provider-native signal communicates the application decision to that provider; it does not establish that provider code may be loaded. Each integration must declare whether it:
-
-- gates provider startup (`hard-gate`);
-- initializes a provider in a restricted mode and updates its native signal (`native-signal`); or
-- delegates to a separately operated protocol/CMP (`external-protocol`).
-
-## Proposed package architecture
-
-```mermaid
-flowchart TD
-    B["Early bootstrap"] --> C["NteConsentController"]
-    U["nte-consent-modal"] <--> C
-    C <--> S["Decision store"]
-    C --> R["Receipt sink"]
-    C --> A["Provider adapters"]
-    A --> P["Plugins, tag managers, providers"]
+```html
+<nte-consent policy-version="2026-08">
+  <script
+    type="text/plain"
+    data-consent-service="plausible"
+    data-consent-purpose="analytics"
+    data-consent-label="Plausible Analytics"
+    data-consent-description="Hilft uns, die Nutzung der Website zu verstehen."
+    data-consent-privacy="https://plausible.io/privacy"
+    data-src="https://plausible.example/js/script.js"
+    defer>
+  </script>
+</nte-consent>
 ```
 
-### Package exports
+`type="text/plain"` makes the original script a data block. The browser does not execute it and ignores its `src`. `data-src` also makes the blocked URL explicit and avoids eager fetching by tools that inspect `src`.
 
-```json
-{
-  "exports": {
-    ".": "./dist/index.js",
-    "./bootstrap": "./dist/bootstrap.js",
-    "./adapters": "./dist/adapters/index.js",
-    "./adapters/google-consent-mode": "./dist/adapters/google-consent-mode.js"
-  }
-}
+### Several resources for one service
+
+Real providers often need an external loader plus inline initialization. Repeating the stable service ID groups all tags into one user choice. Metadata only has to appear on the first declaration.
+
+```html
+<nte-consent policy-version="2026-08">
+  <script
+    type="text/plain"
+    data-consent-service="google-analytics"
+    data-consent-purpose="analytics"
+    data-consent-label="Google Analytics"
+    data-consent-description="Reichweitenmessung und Nutzungsstatistik."
+    data-consent-privacy="https://policies.google.com/privacy"
+    data-src="https://www.googletagmanager.com/gtag/js?id=G-XXXX"
+    data-async>
+  </script>
+
+  <script type="text/plain" data-consent-service="google-analytics">
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-XXXX');
+  </script>
+</nte-consent>
 ```
 
-- The root registers/exports the element, controller, types, default store, and generic callback adapter.
-- `./bootstrap` has no Lit or custom-element registration side effects. A host bundles or inlines it before measurement/advertising startup.
-- Provider adapters are separate entry points so an application does not ship vendors it does not use.
-- A second core package should be considered only when a second independent consumer proves the extraction useful.
+Tags for the same service activate in DOM order. External classic scripts are sequential by default so an inline initializer cannot overtake its loader. `data-async` opts a tag into asynchronous loading.
 
-### Runtime dependencies
+### Arbitrary HTML and embeds
 
-- `@nextrap/nte-element`
-- `@nextrap/nte-dialog`
-- the same Lit/runtime primitives already accepted by NTE packages
+`<template>` is the preferred inert container for iframes, videos, maps, images, widgets, and mixed markup:
 
-No commercial CMP, provider SDK, geolocation service, or policy engine becomes a runtime dependency.
+```html
+<nte-consent policy-version="2026-08">
+  <template
+    data-consent-service="youtube"
+    data-consent-purpose="media"
+    data-consent-label="YouTube"
+    data-consent-description="Lädt Videos vom Anbieter YouTube."
+    data-consent-privacy="https://policies.google.com/privacy">
+    <iframe
+      src="https://www.youtube-nocookie.com/embed/VIDEO_ID"
+      title="Video"
+      loading="lazy"
+      allowfullscreen>
+    </iframe>
+  </template>
+</nte-consent>
+```
+
+The template content is cloned only after consent. This is safer and more general than inventing `data-src` aliases for every possible HTML element.
+
+### Optional explicit service wrapper
+
+For verbose metadata or many resources, a declarative wrapper avoids repeating attributes:
+
+```html
+<nte-consent policy-version="2026-08">
+  <nte-consent-service
+    name="matomo"
+    purpose="analytics"
+    label="Matomo"
+    description="Lokale Reichweitenmessung."
+    privacy-url="/datenschutz#matomo">
+    <script type="text/plain" data-src="/matomo.js"></script>
+    <script type="text/plain">
+      window._paq = window._paq || [];
+    </script>
+  </nte-consent-service>
+</nte-consent>
+```
+
+The direct `data-consent-service` form is the minimal API. `<nte-consent-service>` is only syntax sugar for multi-resource services; both forms produce the same internal declaration.
 
 ## Public element API
 
-The element extends the repository-standard `nextrap_element` base (with slot visibility support) and renders an inner `<nte-dialog>`. Composition keeps the consent state independent of window presentation and avoids inheriting private dialog structure.
+### `<nte-consent>` attributes
 
-### Attributes and properties
+| Attribute | Default | Meaning |
+| --- | --- | --- |
+| `policy-version` | required | Invalidates older decisions after a material policy/service change. |
+| `storage` | `local` | `local`, `session`, or `memory`. |
+| `storage-key` | `nte-consent` | First-party storage key. |
+| `prompt` | `auto` | `auto` opens when no valid decision exists; `manual` waits for `show()`. |
+| `selection` | `services` | `services` renders one choice per provider; a later `purposes` mode may aggregate choices. |
+| `lang` | document language | Selects component-owned control labels. |
 
-| Attribute | Property | Type | Default | Meaning |
-| --- | --- | --- | --- | --- |
-| `prompt` | `prompt` | `'auto' \| 'manual'` | `'auto'` | Automatically open when a valid choice is required, or wait for the host. |
-| `initial-view` | `initialView` | `'summary' \| 'preferences'` | `'summary'` | First view shown when opened. |
-| `anchor` | `anchor` | dialog anchor value | dialog default | Delegates placement to `nte-dialog`. |
-| `require-decision` | `requireDecision` | `boolean` | `false` | Prevent dismissing the initial prompt without a decision; never converts dismissal into consent. |
-| `locale` | `locale` | `string` | document language | Selects host-provided messages and is stored as decision context. |
-| — | `config` | `NteConsentConfig` | required | Purposes, services, policy revision, expiry, messages, and policy context. |
-| — | `controller` | `NteConsentController` | package default | Allows a head-created or application-owned controller to be attached. |
-| — | `messages` | `NteConsentMessages` | built-in English fallback | UI labels; applications must provide reviewed policy text. |
-| — | `open` | `boolean` (read-only) | `false` | Reflects presentation state, not consent state. |
+Scripts without a consent declaration execute normally and are outside the component's responsibility. Required code should therefore remain ordinary HTML, not use a fake `necessary` consent category.
 
-Complex configuration is a property rather than JSON embedded in an attribute. CMS/static integrations may assign the property from their small initialization script or use a project wrapper with a preconfigured controller.
+### Service declaration attributes
+
+| Attribute | Required | Meaning |
+| --- | --- | --- |
+| `data-consent-service` / `name` | yes | Stable service ID and grouping key. |
+| `data-consent-purpose` / `purpose` | recommended | Human grouping such as `analytics`, `media`, or `marketing`. |
+| `data-consent-label` / `label` | yes on first declaration | Display name. |
+| `data-consent-description` / `description` | recommended | Short reason shown in preferences. |
+| `data-consent-privacy` / `privacy-url` | recommended | Provider or site privacy information. |
+| `data-src` | external scripts only | Source copied to a fresh executable script after consent. |
+| `data-type` | no | Restored executable type, especially `module`; default is classic JavaScript. |
+| `data-async` | no | Allow asynchronous activation instead of ordered activation. |
+| `data-reload-on-withdraw` | no | Explain/request a reload when generic cleanup is impossible. |
+
+Duplicate service declarations must agree on user-facing metadata. Conflicts emit an error and the service remains blocked.
 
 ### Methods
 
 ```ts
-interface NteConsentModalElement extends HTMLElement {
-  showSummary(): void;
+interface NteConsentElement extends HTMLElement {
+  show(): void;
   showPreferences(): void;
-  close(reason?: 'dismiss' | 'saved' | 'external'): void;
+  hide(): void;
+  getDecision(): NteConsentDecision;
+  setDecision(services: Record<string, boolean>): Promise<void>;
+  reset(): Promise<void>;
 }
 ```
 
-Decision methods live on the controller, not on the view element.
+The methods are optional integration hooks, not required configuration.
+
+### Events
+
+All events bubble and are composed.
+
+| Event | Detail | Meaning |
+| --- | --- | --- |
+| `consent-ready` | `{ decision }` | Storage was read and declarations were resolved. |
+| `consent-change` | `{ previous, current, changedServices }` | A decision was committed. |
+| `consent-service-activated` | `{ service, elements }` | All currently allowed resources for one service activated. |
+| `consent-error` | `{ phase, service?, error }` | Discovery, storage, or activation failed. |
+
+A newly added matching script/template is discovered through a `MutationObserver`. If the service is already allowed, it activates once; otherwise it remains inert. This supports CMS fragments and SPA route changes without a separate controller.
 
 ### Slots
 
 | Slot | Purpose |
 | --- | --- |
-| `launcher` | Persistent control that reopens preferences after an initial choice. |
-| `title` | Optional heading override. |
-| `intro` | Optional first-layer explanatory content. |
-| `privacy-link` | Link to the application's privacy/cookie information. |
-| `footer` | Optional policy/company content after the owned actions. |
+| `title` | Site-specific heading. |
+| `intro` | Consent explanation. |
+| `privacy-link` | Link to site privacy/cookie information. |
+| `launcher` | Persistent control for reopening preferences. |
+| `footer` | Additional site-owned information. |
 
-Accept, reject, configure, and save controls remain component-owned. This preserves event semantics, accessibility, and action ordering; labels are customizable through `messages`.
+Accept all, reject optional, configure, and save controls remain component-owned for consistent accessibility and event behavior.
 
-### Events
+## Activation algorithm
 
-All events bubble and are composed. They are notifications, not the primary state API; `subscribe(..., { emitCurrent: true })` prevents listeners from missing early state.
+The original blocked script is never made executable in place. Changing the `type` of an already parsed node is not a reliable execution contract.
 
-| Event | Detail | When |
-| --- | --- | --- |
-| `consent-ready` | `{ snapshot }` | Store and policy resolution completed. |
-| `consent-first-choice` | `{ previous, current }` | First explicit decision is committed. |
-| `consent-change` | `{ previous, current, changedPurposes }` | Any committed decision changes. |
-| `consent-policy-stale` | `{ record, config }` | Stored policy revision/fingerprint no longer matches. |
-| `consent-receipt` | `{ decisionId, status }` | Optional evidence write succeeds or fails. |
-| `consent-error` | `{ phase, error, recoverable }` | Store, policy, adapter, or receipt operation fails. |
-| `opened` | `{ view }` | Modal opens. |
-| `closed` | `{ reason }` | Modal closes without implying a choice. |
+For each allowed declaration, the element:
 
-### CSS parts
+1. creates a fresh `<script>` element;
+2. copies safe executable attributes such as nonce, integrity, crossorigin, referrerpolicy, nomodule, and the restored script type;
+3. maps `data-src` to `src`;
+4. copies inline source text when no external source exists;
+5. inserts the new element beside the inert declaration;
+6. marks the declaration as activated so it cannot run twice;
+7. waits for ordered external scripts before activating following tags for the same service.
 
-The element exports stable parts for external Sass/theming:
+For `<template>`, it clones `template.content` into a generated container beside the template. Generated DOM is recorded so removable embeds can be detached on withdrawal.
 
-- `dialog`, `dialog-header`, `dialog-content`, `dialog-footer`, `dialog-close-button` (aliased from the inner dialog);
-- `summary`, `preferences`, `purpose-list`, `purpose`, `purpose-control`, `service-list`;
-- `actions`, `reject-button`, `configure-button`, `accept-button`, `save-button`, `launcher`.
+Inline scripts remain subject to the page's Content Security Policy. A page that disallows inline scripts must use external scripts, a valid nonce/hash strategy, or its own event listener. The component does not bypass CSP or Trusted Types.
 
-Shadow CSS contains only functional layout and accessibility rules. The package supplies a `.style-default` Sass layer consistent with the repository. This proposal introduces no component-specific CSS custom properties; any additions require a separate theming review.
+## Persistence
 
-## Controller and data contracts
+Default record in `localStorage`:
 
-### Configuration
-
-```ts
-type ConsentValue = 'unknown' | 'required' | 'granted' | 'denied' | 'not-applicable';
-
-interface NteConsentPurpose {
-  id: string;
-  title: string;
-  description: string;
-  required?: boolean;
-}
-
-interface NteConsentService {
-  id: string;
-  title: string;
-  description?: string;
-  purposes: string[];
-  privacyUrl?: string;
-  retention?: string;
-  dataRecipients?: string[];
-}
-
-interface NteConsentConfig {
-  policyId: string;
-  policyRevision: string;
-  purposes: NteConsentPurpose[];
-  services?: NteConsentService[];
-  expiresAfterDays?: number;
-  locale?: string;
-  jurisdiction?: string;
-  messages?: Partial<NteConsentMessages>;
+```json
+{
+  "schema": 1,
+  "policyVersion": "2026-08",
+  "services": {
+    "plausible": true,
+    "youtube": false
+  },
+  "decidedAt": "2026-08-28T12:00:00.000Z"
 }
 ```
 
-IDs are stable machine identifiers. Changing wording alone may retain the revision; changing purposes, service mappings, or material disclosure should advance it. The controller also derives a deterministic policy fingerprint so accidental config drift can be detected.
-
-### Persisted decision
-
-```ts
-interface NteConsentRecord {
-  schemaVersion: 1;
-  decisionId: string;
-  policyId: string;
-  policyRevision: string;
-  policyFingerprint: string;
-  choices: Record<string, ConsentValue>;
-  decidedAt: string;
-  expiresAt?: string;
-  source: 'first-layer' | 'preferences' | 'api' | 'migration';
-  locale?: string;
-  jurisdiction?: string;
-}
-```
-
-No provider identifiers, page history, fingerprinting data, or free-form personal data are stored in the default record.
-
-### Controller
-
-```ts
-interface NteConsentController {
-  initialize(): Promise<NteConsentSnapshot>;
-  snapshot(): NteConsentSnapshot;
-  getChoice(purposeId: string): ConsentValue;
-  isServiceAllowed(serviceId: string): boolean;
-  acceptAll(source?: NteConsentSource): Promise<NteConsentSnapshot>;
-  rejectAll(source?: NteConsentSource): Promise<NteConsentSnapshot>;
-  save(choices: Record<string, boolean>, source?: NteConsentSource): Promise<NteConsentSnapshot>;
-  withdrawAll(source?: NteConsentSource): Promise<NteConsentSnapshot>;
-  registerAdapter(adapter: NteConsentAdapter): () => void;
-  subscribe(listener: ConsentListener, options?: { emitCurrent?: boolean }): () => void;
-  whenAllowed(serviceId: string, options?: { signal?: AbortSignal }): Promise<void>;
-}
-```
-
-`whenAllowed` resolves only for the current session and must reject/abort when the supplied signal is aborted. It is a convenience for lazy loading, not a substitute for responding to later withdrawal.
-
-### Runtime phases
-
-```ts
-type ConsentPhase =
-  | 'initializing'
-  | 'prompt-required'
-  | 'ready'
-  | 'saving'
-  | 'error';
-```
-
-Required purposes always resolve to `required`. Optional purposes become `granted` only from a valid stored record or an explicit current action.
-
-## Storage and evidence
-
-```ts
-interface NteConsentStore {
-  load(): NteConsentRecord | null | Promise<NteConsentRecord | null>;
-  save(record: NteConsentRecord): void | Promise<void>;
-  clear(): void | Promise<void>;
-  subscribe?(listener: () => void): () => void;
-}
-
-interface NteConsentReceiptSink {
-  write(receipt: NteConsentReceipt): Promise<void>;
-}
-```
-
-Recommended default: a compact first-party cookie store because it is readable during head bootstrap and SSR. It should default to host-only, `Path=/`, `SameSite=Lax`, and `Secure` on HTTPS; domain widening is opt-in. A local-storage adapter is also useful for client-only applications. Neither storage mechanism attempts cross-site sharing.
-
-The local commit and provider update are not blocked on a remote receipt. Receipt failure emits `consent-receipt`/`consent-error` and can be retried by the host. This avoids leaving the UI and active providers in an indeterminate state because an audit endpoint is unavailable.
-
-The default controller coordinates concurrent tabs through the store subscription (`storage` event for local storage or an optional `BroadcastChannel` notification for cookies). A received decision is validated against the same policy before it is applied.
-
-## Provider and plugin integration
-
-### Adapter contract
-
-```ts
-type ConsentAdapterMode = 'hard-gate' | 'native-signal' | 'external-protocol';
-
-interface NteConsentAdapter {
-  readonly id: string;
-  readonly mode: ConsentAdapterMode;
-  prepare(context: NteConsentAdapterContext): void;
-  apply(
-    current: NteConsentSnapshot,
-    previous?: NteConsentSnapshot
-  ): void | NteConsentApplyResult | Promise<void | NteConsentApplyResult>;
-  dispose?(): void | Promise<void>;
-}
-
-interface NteConsentApplyResult {
-  reloadRequired?: boolean;
-  reason?: string;
-}
-```
-
-- `prepare` is synchronous, idempotent, and establishes the adapter's restrictive initial state before provider startup.
-- `apply` is idempotent and receives both snapshots so it can handle grant and withdrawal.
-- Adapter failures do not change the stored user decision. They are recorded in controller status and surfaced through `consent-error`.
-- If a provider cannot be fully stopped after withdrawal, the result marks `reloadRequired`; the UI can explain this and the host can offer a reload.
+- `local` persists across browser restarts and is the recommended default for client-only sites.
+- `session` is isolated to a tab/session and intentionally asks again in a new tab or browser session.
+- `memory` is useful when storage is unavailable or deliberately disabled; it does not survive navigation.
+- All storage access is guarded because browsers can deny access and throw.
+- Missing, corrupt, or mismatched records mean no optional consent and reopen the prompt.
+- A `storage` event applies valid decisions from another tab.
 
-### Generic project plugin
+This client-writable record is preference state, not tamper-proof legal evidence. Applications that require server-side proof or SSR access need a separate backend/cookie integration; that is outside the MVP.
 
-The root package includes a callback adapter for first-party features:
+## Withdrawal behavior
 
-```ts
-controller.registerAdapter(callbackAdapter({
-  id: 'project-analytics',
-  mode: 'hard-gate',
-  services: ['project-analytics'],
-  onGrant: () => analytics.start(),
-  onWithdraw: () => analytics.stop()
-}));
-```
+Generic script execution cannot be undone. Removing a `<script>` element does not reverse its global listeners, timers, network requests, or cookies. The component therefore makes an honest distinction:
 
-Callbacks run only after the controller validates a committed state. The adapter remembers activation to avoid duplicate initialization during SPA navigation.
+- templates/iframes and generated markup are removed immediately where possible;
+- not-yet-activated scripts remain blocked;
+- the persisted grant is revoked immediately;
+- already activated scripts emit `consent-change` so provider-specific code may stop itself;
+- services marked `data-reload-on-withdraw` ask for a page reload, after which the script stays blocked;
+- the component never promises to delete arbitrary provider cookies.
 
-### Tag manager
+Provider-specific cleanup can later be added as small optional integrations. It must not become mandatory TypeScript configuration for the base element.
 
-A generic data-layer adapter pushes namespaced snapshots:
+## Google Consent Mode
 
-```js
-window.dataLayer.push({
-  event: 'nte_consent_update',
-  nteConsent: {
-    revision: '2026-08',
-    purposes: { analytics: 'denied', advertising: 'granted' }
-  }
-});
-```
+The HTML-first gate corresponds naturally to Google Consent Mode Basic: Google tags are not loaded until consent is granted.
 
-Tags use explicit trigger conditions per purpose. The host must not also configure another writer for the same provider consent commands.
+Advanced mode is different: Google code loads with restrictive defaults and may still send cookieless requests. If supported later, it should be an explicit optional element/entry point that:
 
-### Google Consent Mode v2
+- establishes `default: denied` before Google tags initialize;
+- maps NTE service decisions to Google's consent signals;
+- sends `update` on the same page after a choice;
+- clearly documents that denied Advanced Mode is not the same as no network request.
 
-[Google Consent Mode](https://developers.google.com/tag-platform/security/concepts/consent-mode) uses provider-specific signals rather than the application's purpose names. The adapter maps explicitly:
+It should not complicate the base script-gating API.
 
-| Google signal | Typical NTE purpose mapping |
-| --- | --- |
-| `analytics_storage` | `analytics` |
-| `ad_storage` | `advertising` |
-| `ad_user_data` | `advertising` |
-| `ad_personalization` | `advertising` and, if configured separately, `personalization` |
-| `functionality_storage` | `functionality` |
-| `personalization_storage` | `personalization` |
-| `security_storage` | configured required/security purpose |
+## Styling, responsive behavior, and accessibility
 
-The adapter sends a restrictive `default` before Google configuration/events and an `update` on the same page when a decision becomes available, matching Google's [implementation guide](https://developers.google.com/tag-platform/security/guides/consent). Mapping is application configuration, not hard-coded legal logic.
+- Compose the existing public `nte-dialog` API rather than subclassing it.
+- Use native labeled checkboxes for services and fixed text for required functionality.
+- Show equally understandable reject, configure, and accept actions.
+- Closing, Escape, scrolling, or navigation never grants consent.
+- On narrow viewports, use a full-width/bottom-sheet presentation; on larger viewports, use a constrained dialog.
+- Export CSS parts for dialog, service list, service item, purpose heading, actions, and launcher.
+- Keep only functional layout in Shadow DOM; visual defaults belong in the package Sass mixin.
+- Site-specific legal text remains slotted HTML; the package owns only generic control labels.
 
-Two documented modes are supported:
+## Dependencies
 
-| Mode | Before optional grant | Trade-off |
-| --- | --- | --- |
-| Basic | Google tags are not loaded/fired | Strongest deterministic gating; no pre-consent measurement. |
-| Advanced | Tags initialize with denied defaults and may send cookieless pings | More measurement/modeling, but denied does not mean no network request. |
+- `@nextrap/nt-core` / repository-standard `nextrap_element`
+- `@nextrap/nte-dialog`
+- existing Lit runtime used by NTE packages
 
-Advanced mode must be explicitly selected. Options such as URL passthrough or ads-data redaction are also explicit, reviewable configuration and never silently enabled.
+No provider SDK, CMP, scanner, geolocation service, or adapter framework is a runtime dependency.
 
-For Google publisher products in the EEA, UK, or Switzerland, Google requires a [certified CMP](https://support.google.com/admanager/answer/13554116?hl=en) integrated with the IAB TCF. This component by itself does not satisfy that program. An application in that scope must delegate the external protocol to an appropriate CMP rather than generating strings locally.
+## Implementation slices
 
-### Other providers
-
-The MVP should ship the generic callback/data-layer adapters and Google Consent Mode adapter. Microsoft UET, Matomo, and other providers can be documented recipes or later isolated adapters after their revocation behavior and test harnesses are reviewed. For example, Matomo exposes separate [tracking- and cookie-consent APIs](https://developer.matomo.org/guides/tracking-consent); an adapter must choose the correct one rather than treating them as interchangeable.
-
-## Early bootstrap and integration modes
-
-### Recommended sequence
-
-```mermaid
-sequenceDiagram
-    participant H as Head bootstrap
-    participant C as Controller
-    participant A as Adapters
-    participant U as Modal
-    H->>C: Create with config and store
-    C->>A: prepare(restrictive defaults)
-    C->>C: Validate stored record
-    C->>A: apply(effective snapshot)
-    U->>C: Attach and subscribe current
-    U->>C: Commit user choice
-    C->>A: apply(updated snapshot)
-    C-->>U: Notify committed state
-```
-
-The host bundles or inlines `@nextrap/nte-consent-modal/bootstrap` before any optional provider/tag-manager bootstrap. It then assigns the same controller to the element:
-
-```ts
-// Built into an early head asset or an application-owned inline bundle.
-import { bootstrapConsent } from '@nextrap/nte-consent-modal/bootstrap';
-
-const consent = bootstrapConsent(config, { store, adapters });
-window.appConsent = consent;
-```
-
-```ts
-// Later, after custom elements are registered.
-document.querySelector('nte-consent-modal').controller = window.appConsent;
-```
-
-The package does not require the global; it is shown only as a simple hand-off. Framework applications should inject the controller through their own module/container.
-
-### Integration options
-
-| Host type | Recommended integration |
-| --- | --- |
-| Static/CMS | Small early bundle creates controller; markup includes element and launcher. |
-| SSR | Server reads/verifies the first-party decision record, injects an initial snapshot, and still lets the client validate it. |
-| SPA | Application singleton controller; one modal near the app shell; adapters survive route changes. |
-| Tag manager | Restrictive defaults before the container; namespaced data-layer updates; explicit tag triggers. |
-| Existing external CMP | Use `external-protocol` adapter as a read/sync boundary only if ownership and source of truth are explicitly defined. |
-
-## Policy context, GPC, and regulatory protocols
-
-The core accepts an optional policy resolver that can use server-supplied context (for example jurisdiction or site policy) to determine whether prompting is required and which purposes apply. It does not call a geolocation service.
-
-[Global Privacy Control](https://www.w3.org/TR/gpc/) is a positive opt-out signal (`Sec-GPC: 1` or `navigator.globalPrivacyControl === true`), not a general consent grant. An optional resolver can force relevant sale/sharing or cross-context advertising purposes to denied and keep them disabled in the UI. Absence of GPC never becomes consent. Server handling is needed when relevant processing happens before client JavaScript.
-
-IAB TCF and GPP are external protocol integrations. The TCF has registered-CMP, vendor-list, UI, and version obligations; GPP contains jurisdiction-specific sections. The MVP neither synthesizes these strings nor exposes protocol APIs that could be mistaken for compliant implementations.
-
-## UX behavior
-
-### First layer
-
-- Clear purpose summary and link to detailed information.
-- Visible `Reject optional`, `Configure`, and `Accept all` actions with equivalent visual prominence where the application policy requires this baseline.
-- No optional purpose preselected.
-- Closing, scrolling, navigating, or pressing Escape never means consent.
-- If `require-decision` is enabled, the inner dialog is non-dismissible until an explicit choice; required functionality still must remain usable according to the host's policy.
-
-### Preferences
-
-- One control per optional purpose.
-- Required purposes are explained and visibly fixed, not disguised as enabled optional toggles.
-- Services, recipients, privacy links, and retention text are disclosed under their mapped purposes.
-- `Save selection`, `Reject optional`, and `Accept all` remain available.
-- Returning from preferences to summary retains the draft but does not apply it until committed.
-
-### Revisit and withdrawal
-
-- A persistent `launcher` slot or host control reopens the preferences.
-- Withdrawal is applied to adapters before UI success is announced.
-- If cleanup cannot be guaranteed, the UI reports that reload is required.
-- A new policy revision invalidates the old optional grants and opens the prompt according to `prompt` behavior.
-
-The design follows the GDPR requirement that withdrawal be as easy as giving consent ([Article 7](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX%3A02016R0679-20160504)) and avoids manipulative choice presentation highlighted by regulators such as the [CNIL](https://www.cnil.fr/en/dark-patterns-cookie-banners-cnil-issues-formal-notice-website-publishers). Applications remain responsible for reviewed wording and jurisdiction-specific behavior.
-
-## Accessibility
-
-- Use the inner native `<dialog>` lifecycle for modal focus, Escape behavior, and focus restoration.
-- Give each view a stable accessible name and description.
-- Render purpose choices as native checkboxes/switches with labels and descriptions; required purposes are announced as required and read-only.
-- Keep DOM order and visual action order consistent.
-- Move focus to the preferences heading when changing views.
-- Announce save failures and reload requirements through a polite live region.
-- Preserve keyboard access at narrow and zoomed layouts.
-- Test with automated accessibility checks plus keyboard and screen-reader smoke tests.
-
-The current dialog API needs a public accessible-name/description forwarding contract for its internal native dialog. Before implementing the modal, maintainers should approve a small generic dialog enhancement (for example label/description properties or an internal `aria-labelledby`/`aria-describedby` contract). The consent package must not reach into another component's shadow root.
-
-## Responsive and visual behavior
-
-- Desktop/tablet: centered dialog with constrained readable width and scrollable content region.
-- Narrow viewport: edge-to-edge/full-height sheet while retaining native modal semantics.
-- Actions wrap or stack without changing semantic order.
-- Purpose/service disclosure uses progressive expansion, but action controls never disappear behind an unlabeled accordion.
-- Host projects theme with exported parts and the Sass layer; functional component CSS remains minimal.
-
-## Failure and privacy behavior
-
-| Failure | Required behavior |
-| --- | --- |
-| Store unavailable/corrupt | Resolve optional purposes to `unknown`, prepare restrictive providers, show prompt, emit recoverable error. |
-| Policy resolver unavailable | Use configured conservative policy; do not infer a permissive jurisdiction. |
-| Adapter `prepare` fails | Do not start the affected provider; report adapter and phase. |
-| Adapter update fails | Keep the user's recorded decision, expose degraded sync, and allow retry/reload. |
-| Receipt endpoint fails | Keep local decision/provider state; queue or delegate retry to host. |
-| Unknown purpose/service ID | Reject config in development and fail closed in production. |
-| Duplicate adapter writer | Warn/fail registration for the same declared provider/protocol key. |
-
-Logs must not include the full record by default. Errors identify component, phase, adapter/store ID, and decision ID only when explicitly enabled for diagnostics.
-
-## Security considerations
-
-- Validate stored data against schema, policy ID, revision, fingerprint, timestamps, and configured purpose IDs.
-- Treat all slotted content and provider metadata as host-owned DOM/text; do not render untrusted HTML strings.
-- Do not dynamically execute script text from configuration.
-- Keep adapter loading explicit so a malicious config cannot import arbitrary URLs.
-- Document cookie integrity limits: a client-writable cookie is state, not tamper-proof evidence. Servers making sensitive decisions need their own signed/session-bound representation.
-
-## Proposed implementation slices
-
-1. Approve this proposal and resolve the open API/storage/accessibility decisions.
-2. Add the generic accessible-name contract to `nte-dialog` as a separately reviewed prerequisite.
-3. Add `@nextrap/nte-consent-modal` with types, config validation, controller, cookie/local-storage stores, and tests.
-4. Add the element, functional shadow styles, `.style-default` Sass layer, responsive behavior, and accessibility tests.
-5. Add head bootstrap, generic callback/data-layer adapters, and an example static/SPA integration.
-6. Add and test Google Consent Mode Basic/Advanced adapter as a separate entry point.
-7. Add usage and theming skill documentation required by the repository workflow.
-
-Each slice should remain reviewable; runtime implementation starts only after proposal approval.
-
-## Testing strategy
-
-### Unit
-
-- schema/config validation and deterministic policy fingerprint;
-- expired, corrupt, missing, matching, and stale records;
-- all transitions among unknown/granted/denied/required states;
-- idempotent adapter prepare/apply and duplicate-writer detection;
-- revision changes, withdrawal, and receipt failure;
-- cookie and local-storage serialization, multi-tab notifications, and migrations.
-
-### Component
-
-- auto/manual prompting and summary/preferences navigation;
-- focus entry, restoration, Escape/dismiss policy, and keyboard-only completion;
-- no decision on close;
-- event bubbling/composition and exact event ordering;
-- narrow viewport, zoom, long translations, and service disclosure;
-- axe-equivalent automated checks plus manual screen-reader smoke tests.
-
-### Integration
-
-- restrictive bootstrap runs before test provider startup;
-- Basic mode creates no provider request before grant in a controlled browser test;
-- Advanced mode sends denied defaults before provider config and updates on choice;
-- SPA navigation does not duplicate provider initialization;
-- withdrawal stops/updates providers and reports reload where required;
-- SSR hydration and cross-tab changes converge on one validated snapshot.
+1. Implement declarative discovery, service validation, local/session/memory persistence, and fresh-node script/template activation.
+2. Add the dialog UI, slots, events, parts, responsive behavior, and usage/theming skills.
+3. Add demos for one external script, ordered multi-script providers, a YouTube template, saved decisions, withdrawal, and SPA-inserted declarations.
+4. Consider Google Consent Mode as an isolated follow-up only after the base API is proven.
 
 ## Acceptance criteria
 
-- `<nte-consent-modal>` is implemented on `nextrap_element` and composes `nte-dialog` through public APIs only.
-- Optional purposes are never granted by default, by dismissal, or by invalid/stale storage.
-- Reject, configure, and accept paths are keyboard accessible and do not rely on color alone.
-- A permanent preferences entry can be provided through the launcher contract.
-- The head bootstrap can set restrictive adapter defaults before provider initialization.
-- Controller subscriptions can immediately emit current state and remain stable across SPA navigation.
-- Store records are schema- and policy-versioned, expire predictably, and synchronize supported tabs.
-- Provider adapters are explicit, idempotent, tree-shakeable, and process withdrawal.
-- Google Basic and Advanced semantics are distinguished in API, docs, and tests.
-- TCF/GPP strings, geolocation, scanning, and certification claims are absent from the MVP.
-- Storage, adapter, and receipt failures fail closed and surface observable errors.
-- Public methods, attributes/properties, slots, events, CSS parts, and integration recipes are documented.
-- The package contains usage/theming guidance required by the repository conventions.
+- A static HTML page can configure a complete consent flow without TypeScript or a JavaScript config object.
+- A marked external or inline script makes no request and executes no code before consent.
+- A service with multiple scripts activates exactly once and in deterministic DOM order.
+- Template-contained embeds do not load before consent and are removable after withdrawal.
+- Missing, invalid, stale, or unavailable storage fails closed.
+- A policy version change invalidates old optional grants.
+- Duplicate/conflicting declarations fail closed and emit an observable error.
+- Dynamically inserted declarations work without duplicating already activated services.
+- The UI is keyboard accessible and exposes stable parts/slots.
+- Withdrawal documentation does not claim that arbitrary JavaScript or cookies can be undone.
+- Google Advanced Mode, TCF/GPP, scanning, certification, and server-side evidence remain outside the MVP.
 
-## Open questions for review
+## Open questions
 
-1. Should the first-party cookie store be the default, or should all applications choose a store explicitly?
-2. Is `require-decision` an acceptable generic API, or should dismissibility be determined only by the host policy resolver?
-3. Should purpose/service configuration support only JavaScript properties in v1, or also a validated declarative JSON child for CMS-heavy projects?
-4. Which accessible-name/description API should be added to `nte-dialog`?
-5. Should the data-layer adapter be included in the root entry or remain an optional subpath export?
-6. Is Google Consent Mode part of the initial package release or a follow-up after the provider-neutral core is proven?
-7. Which receipt fields, if any, should be standardized before a real evidence backend exists?
+1. Should `<nte-consent-service>` ship in v1, or is the direct script/template annotation sufficient initially?
+2. Should the UI always expose individual services, or optionally group decisions at purpose level?
+3. Is `localStorage` the right default, or should storage be explicitly selected?
+4. Should withdrawal always offer a reload after any script activation, or only when `data-reload-on-withdraw` is present?
+5. Should `policy-version` be mandatory, or may the component derive a fingerprint from declarations as a convenience?
+6. Should Google Consent Mode Basic remain a documentation recipe or receive an isolated optional helper?
 
-## Rejected alternatives
+## Recommendation
 
-### Put all logic in the custom element
+Adopt the direct annotated script/template API as the MVP. Keep `<nte-consent-service>` as small declarative sugar if the implementation remains trivial. Default to per-service choices and local storage, require an explicit policy version, activate in DOM order, and handle withdrawal honestly through removable embeds, events, and optional reload.
 
-Rejected because component connection is too late for early provider defaults, UI remounting would risk state loss, and non-visual consumers need the same state.
-
-### Subclass the dialog/window
-
-Rejected because consent state is not window behavior. Composition preserves replaceable presentation and the dialog's encapsulation.
-
-### Make service toggles the primary model
-
-Rejected for v1 because users should decide understandable purposes and because per-service dependencies produce contradictory combinations. Services remain visible disclosures and adapter targets.
-
-### Automatically enable every provider after an accept-all event
-
-Rejected because providers differ in startup, restricted modes, revocation, and protocol ownership. Explicit adapters are testable and auditable.
-
-### Implement TCF/GPP locally in the MVP
-
-Rejected because these are evolving external protocols with registration, vendor-list, jurisdiction, UI, and operational obligations. They belong behind an explicit external-protocol boundary.
-
-### Persist only booleans
-
-Rejected because booleans cannot distinguish no decision, required processing, non-applicability, expiry, policy revision, or evidence context.
+This gives Nextrap the simplicity requested for static HTML and CMS use while leaving a narrow DOM API for advanced applications.
 
 ## References
 
-- [Google: Consent Mode overview](https://developers.google.com/tag-platform/security/concepts/consent-mode)
-- [Google: Set up consent mode](https://developers.google.com/tag-platform/security/guides/consent)
-- [Google: CMP requirements for publishers](https://support.google.com/admanager/answer/13554116?hl=en)
-- [IAB Europe: Transparency & Consent Framework](https://iabeurope.eu/transparency-consent-framework/)
-- [W3C: Global Privacy Control](https://www.w3.org/TR/gpc/)
-- [GDPR Article 7](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX%3A02016R0679-20160504)
-- [CNIL: dark patterns in cookie banners](https://www.cnil.fr/en/dark-patterns-cookie-banners-cnil-issues-formal-notice-website-publishers)
-- Open-source and commercial product references linked in the research tables above.
+- [CookieConsent: manage scripts](https://cookieconsent.orestbida.com/advanced/manage-scripts.html)
+- [Cookiebot: manual cookie blocking](https://support.cookiebot.com/hc/en-us/articles/4405978132242-Manual-cookie-blocking)
+- [Klaro: getting started](https://klaro.org/docs/getting-started)
+- [tarteaucitron.js service model](https://github.com/AmauriC/tarteaucitron.js/)
+- [HTML Standard: scripting and data blocks](https://html.spec.whatwg.org/multipage/scripting.html)
+- [Google: set up consent mode](https://developers.google.com/tag-platform/security/guides/consent)
