@@ -12,6 +12,8 @@
   --nte-nav-submenu-inset-inline-start: 0;
   --nte-nav-nested-submenu-inset-block-start: 0;
   --nte-nav-nested-submenu-inset-inline-start: 100%;
+  --nte-nav-submenu-position-area: block-end span-inline-end;
+  --nte-nav-nested-submenu-position-area: inline-end span-block-end;
   --nte-nav-submenu-enter-transform: translateY(-0.35rem);
   --nte-nav-nested-submenu-enter-transform: translateX(-0.35rem);
   --nte-nav-transition-duration: 160ms;
@@ -69,6 +71,7 @@
 
 #disclosure,
 #toggle {
+  anchor-name: --nte-nav-submenu-anchor;
   list-style: none;
 }
 
@@ -78,7 +81,8 @@
 }
 
 #icon:has(> slot.slot-empty) {
-  display: none;
+  // Outer ::part(icon) theme rules otherwise win over normal Shadow-DOM declarations.
+  display: none !important;
 }
 
 #icon,
@@ -131,6 +135,48 @@
   pointer-events: auto;
 }
 
+#submenu[popover] {
+  inline-size: max-content;
+  max-inline-size: calc(100vw - 2rem);
+  margin: var(--nte-nav-submenu-gap) 0 0;
+  overflow: hidden;
+  position: fixed;
+  position-anchor: --nte-nav-submenu-anchor;
+  position-area: var(--nte-nav-submenu-position-area);
+  position-try-fallbacks: flip-block, flip-inline;
+  inset: auto;
+  transition:
+    opacity var(--nte-nav-transition-duration) ease,
+    transform var(--nte-nav-transition-duration) ease,
+    display var(--nte-nav-transition-duration) allow-discrete,
+    overlay var(--nte-nav-transition-duration) allow-discrete;
+}
+
+@supports (inline-size: anchor-size(inline)) {
+  #submenu[popover] {
+    inline-size: max(anchor-size(inline), var(--nte-nav-submenu-min-inline-size));
+  }
+}
+
+#submenu[popover]:not(:popover-open) {
+  display: none;
+}
+
+#submenu[popover]:popover-open {
+  display: grid;
+  opacity: 1;
+  transform: none;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+@starting-style {
+  #submenu[popover]:popover-open {
+    opacity: 0;
+    transform: var(--nte-nav-submenu-enter-transform);
+  }
+}
+
 #submenu-inner {
   min-block-size: 0;
   overflow: auto;
@@ -145,6 +191,7 @@
 #submenu slot::slotted(nte-nav-item) {
   --nte-nav-submenu-inset-block-start: var(--nte-nav-nested-submenu-inset-block-start);
   --nte-nav-submenu-inset-inline-start: var(--nte-nav-nested-submenu-inset-inline-start);
+  --nte-nav-submenu-position-area: var(--nte-nav-nested-submenu-position-area);
   --nte-nav-submenu-enter-transform: var(--nte-nav-nested-submenu-enter-transform);
 }
 
