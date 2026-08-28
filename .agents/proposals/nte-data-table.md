@@ -148,7 +148,7 @@ Der Default-Renderer verwendet einen einzigen Tabellenbaum innerhalb eines Scrol
 - `grid`: roving Tabindex und zellweise Tastaturnavigation;
 - `auto` als Default: `grid`, sobald `activation` nicht `none`, eine Selection nicht `none` oder Editing aktiviert ist; sonst `table`.
 
-`readonly` deaktiviert nur Änderungen. Es schaltet Navigation, Selection oder Sortierung nicht ab.
+`readonly` sperrt ausschließlich Daten-Edits und das spätere Row Reordering. Query, Navigation, Selection, Resize, Pinning und Column Reordering bleiben verfügbar. Ein vollständig gesperrter Zustand wäre eine separate `disabled`-Semantik und gehört nicht zum MVP.
 
 ### Höhenvertrag
 
@@ -201,17 +201,19 @@ Die Komponente baut kein Suchfeld und keine Menüs ein. Ein Suchfeld im Slot ruf
 
 - `configure({ rows, getRowId, columns })` übernimmt eine neue Array-Kopie.
 - Der Direct-Array-Controller verarbeitet Accessor-, Sort- und Search-Hooks intern; dafür wird kein öffentlicher Array-Connector mit UI-Callbacks eingeführt.
-- Caller-Zeilen werden nie direkt mutiert.
+- Der Controller hält einen vollständigen kanonischen `sourceRows`-Bestand und berechnet daraus die gefilterte/sortierte View.
+- Caller-Zeilen werden nie direkt mutiert; die Container sind readonly, Row-Objekte gelten immutable-by-contract und werden nicht tief geklont oder eingefroren.
 - Bei einer Feldänderung erzeugt die Tabelle eine flache Kopie der betroffenen Zeile und ein neues Array.
-- Bei berechneten Accessors ist Editing nur mit `setValue(row, value)` möglich; auch dieser Hook muss eine Ersatzzeile liefern.
-- `getRows()` liefert die aktuelle read-only Sicht; `setRows()` ersetzt sie.
-- Nach lokaler Mutation wird `nte-data-table-rows-change` mit dem neuen Array ausgelöst.
+- Bei berechneten Accessors ist Array-Editing nur mit `setValue(row, value)` möglich; auch dieser Hook muss eine Ersatzzeile liefern.
+- `getRows()` liefert den vollständigen kanonischen Bestand, `getVisibleRows()` die Query-View und `setRows()` ersetzt `sourceRows`.
+- Nach lokaler Mutation wird `nte-data-table-rows-change` mit dem vollständigen neuen Bestand ausgelöst; herausgefilterte Rows gehen nie verloren.
 
 **Connector-Modus**
 
 - Der Connector ist die autoritative Datenquelle.
 - Query-Änderungen lösen einen abbrechbaren Read aus; verspätete Antworten werden verworfen.
 - Editing ist nur verfügbar, wenn `updateCells()` implementiert und in der Komponente aktiviert ist.
+- Ein Feld verwendet standardmäßig seinen Feldnamen als `mutationKey`; ein berechneter Accessor benötigt im Connector-Modus einen expliziten `mutationKey`. Der Mutation-Key ist vom Sort-/Search-`queryKey` getrennt.
 - Liefert eine Mutation aktualisierte Zeilen, werden diese eingepatcht. Andernfalls wird der aktuelle Bereich neu geladen.
 - Row Reordering folgt erst in Phase 2 über eine typisierte `moveRows()`-Connector-Erweiterung und ist bei aktiver Datensortierung standardmäßig deaktiviert.
 
@@ -221,13 +223,13 @@ Die beiden Modi sind in der Konfiguration gegenseitig exklusiv.
 
 Der öffentliche Sort-State enthält nur `columnId` und `direction`. Der Connector erhält einen aufgelösten `queryKey`; dieser entsteht aus `column.queryKey`, sonst einem String-`field`, sonst der Spalten-ID. Filter werden nicht als untypisiertes Feld in das MVP geschoben. Eine typisierte, diskriminierte Filter-API folgt in Phase 2.
 
-Der Array-Connector berücksichtigt `sortValue`, `compare` und `searchText`, damit Datum, Zahl, `null`, Objekt und eigene Zelltypen nicht über zufällige String-Konvertierung sortiert oder gesucht werden.
+Der Direct-Array-Pfad berücksichtigt `sortValue`, `compare` und `searchText`. Ohne Override gilt: stabile Sortierung, `null`/`undefined` unabhängig von der Richtung zuletzt, Zahlen numerisch, Text über `Intl.Collator(locale, { numeric: false, sensitivity: "base" })`, numerische Strings als Text und case-insensitive NFKC-Substring-Suche. `locale` ist explizit konfigurierbar und standardmäßig `"en"`; leere Suche wird zu Connector-`null`.
 
 ### Interner State
 
 Der State ist intern verwaltet, aber vollständig les- und setzbar:
 
-- `getState()` liefert einen unveränderlichen Snapshot;
+- `getState()` liefert readonly Container; Row-Objekte bleiben immutable-by-contract und werden aus Performancegründen nicht tief gefroren;
 - gezielte Methoden ändern Query, Selection und Layout;
 - Events melden jede akzeptierte Änderung;
 - ein wirklich kontrollierter Framework-Adapter kann später auf diesen Verträgen aufbauen.
@@ -238,11 +240,21 @@ Es gibt im MVP keine Behauptung, dass jede Property automatisch ein „controlle
 
 `NteDataTableLayoutStore` lädt, speichert und löscht versionierte Layout-Snapshots. Mitgeliefert wird `NteLocalStorageDataTableLayoutStore`.
 
-- Der Local-Storage-Store ist die Standardimplementierung, sobald Persistenz mit `persistence-key` oder `persistLayout` explizit aktiviert wird.
-- Ohne stabilen Key wird nichts dauerhaft gespeichert.
-- `layoutStore: null` oder `persistLayout: false` deaktiviert Persistenz ausdrücklich.
+Aktivierungsregeln:
+
+| Konfiguration | Ergebnis |
+| --- | --- |
+| `layoutStore: null` oder `persistLayout: false` | immer aus |
+| nichtleerer `persistenceKey` | an |
+| `persistLayout: true` und stabile Host-`id` | an, Host-ID als Key |
+| `persistLayout: true` ohne effektiven Key | aus plus recoverable Konfigurations-Event |
+| eigener Store ohne Key/Opt-in | aus |
+
+`effectiveKey = (persistenceKey ?? "").trim() || host.id.trim()`. Der eigene Store allein aktiviert keine Persistenz. Der Local-Storage-Keyspace lautet `nte-data-table:<effectiveKey>`.
+
+- Der Local-Storage-Store ist die Standardimplementierung, sobald Persistenz aktiviert ist und kein eigener Store gesetzt wurde.
 - Der Default-`schemaKey` ist deterministisch aus Store-Version und sortierten Spalten-IDs abgeleitet; Apps können für kontrollierte Migrationen einen eigenen Key setzen.
-- Gespeichert werden zunächst Breite, Reihenfolge und Pin-Zone, später optional Sichtbarkeit.
+- Gespeichert werden in Phase 1 Breite, Reihenfolge und Pin-Zone.
 - Zeilendaten, Suche, Auswahl und Edit-Inhalte gehören nicht in diesen Store.
 - Unbekannte alte Spalten werden ignoriert; neue Spalten erhalten Defaults.
 - Beschädigte Payloads, Quota-, Privacy- und Security-Fehler sind nicht fatal und werden als typisierte Fehler-Events gemeldet.
@@ -262,7 +274,7 @@ Aktivierung: Doppelklick, `Enter` oder `F2`. Commit: `Enter` oder Blur. Abbruch:
 
 Ein expliziter Spaltenhook überschreibt die jeweilige Funktion des registrierten Cell Types. Nicht überschriebene Funktionen bleiben vom Cell Type erhalten. Strings aus Renderern werden als Text behandelt; Lit-Templates und Nodes werden regulär gemountet, nicht per `innerHTML`.
 
-Remote-Editing ist im interaktiven MVP pessimistisch: Nach Validation bleibt der bisher bestätigte Row-Wert autoritativ, während der Editor einen Saving-State zeigt. Erst eine erfolgreiche Connector-Antwort patcht beziehungsweise lädt die Row und löst das Commit-Event aus. Bei Fehler bleibt der Draft korrigierbar. Optimistic Update, Rollback und Revisionskonflikte folgen erst in Phase 2.
+Remote-Editing ist im interaktiven MVP pessimistisch: Nach Validation bleibt der bisher bestätigte Row-Wert autoritativ, während der Editor einen Saving-State zeigt. Erst eine erfolgreiche Connector-Antwort patcht beziehungsweise lädt die Row und löst das Commit-Event aus; die Event-Row ist optional, falls die Row nach Reload nicht mehr in der Query-View liegt. Bei Fehler bleibt der Draft korrigierbar. Optimistic Update, Rollback und Revisionskonflikte folgen erst in Phase 2.
 
 ## Selection, Sortierung und Reordering
 
