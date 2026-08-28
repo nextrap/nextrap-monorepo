@@ -43,6 +43,10 @@ Defaults:
 | `width` / `minWidth` / `maxWidth` | `160` / `80` / `600` CSS px |
 | `resizable` | `true` |
 | `sortable`, `searchable`, `editable`, `reorderable` | `false` |
+| `selectable` | `true`, sobald Column Selection aktiv ist; sonst ohne Wirkung |
+| Query | `{ search: "", sort: [] }` |
+| `locale` | `"en"` |
+| Connector-Editing | pessimistisch |
 | `cellType` | `"text"` |
 | `pinned` | ungepinnt |
 | Layout-Persistenz | nur mit explizitem Key/Opt-in |
@@ -105,11 +109,15 @@ export type NteDataTableEditorFactory<
   context: NteDataTableCellContext<Row, Value>
 ) => NteDataTableMountedEditor<Value>;
 
-interface NteDataTableColumnBase<Row extends object, Value = unknown> {
+export interface NteDataTableColumnBase<
+  Row extends object,
+  Value = unknown
+> {
   id: NteDataTableColumnId;
   label: string;
   ariaLabel?: string;
   queryKey?: string;
+  mutationKey?: string;
 
   width?: number;
   minWidth?: number;
@@ -161,36 +169,49 @@ interface NteDataTableColumnBase<Row extends object, Value = unknown> {
   ) => string;
 }
 
-export type NteDataTableColumn<
-  Row extends object,
-  Value = unknown
-> =
-  | (NteDataTableColumnBase<Row, Value> & {
-      field: keyof Row;
+export type NteDataTableFieldColumn<Row extends object> = {
+  [Key in Extract<keyof Row, string>]-?:
+    NteDataTableColumnBase<Row, Row[Key]> & {
+      field: Key;
       value?: never;
       setValue?: (
         row: Readonly<Row>,
-        value: Value
+        value: Row[Key]
       ) => Row | Promise<Row>;
-    })
-  | (NteDataTableColumnBase<Row, Value> & {
-      field?: never;
-      value: (row: Readonly<Row>) => Value;
-      setValue?: (
-        row: Readonly<Row>,
-        value: Value
-      ) => Row | Promise<Row>;
-    });
+    };
+}[Extract<keyof Row, string>];
+
+export type NteDataTableComputedColumn<
+  Row extends object,
+  Value = unknown
+> = NteDataTableColumnBase<Row, Value> & {
+  field?: never;
+  value: (row: Readonly<Row>) => Value;
+  setValue?: (
+    row: Readonly<Row>,
+    value: Value
+  ) => Row | Promise<Row>;
+};
+
+export type NteDataTableColumn<
+  Row extends object,
+  ComputedValue = unknown
+> =
+  | NteDataTableFieldColumn<Row>
+  | NteDataTableComputedColumn<Row, ComputedValue>;
 ```
 
 Regeln:
 
-- Ein berechneter Accessor ist nur editierbar, wenn `setValue()` eine Ersatzzeile liefert.
+- Im Array-Modus ist ein berechneter Accessor nur editierbar, wenn `setValue()` eine Ersatzzeile liefert.
+- Im Connector-Modus benötigt ein berechneter Accessor stattdessen einen expliziten `mutationKey` und der Connector `updateCells()`.
 - Bei einem `field` ohne `setValue()` erzeugt der Array-Modus selbst eine flache Ersatzzeile.
 - Explizite Column-Hooks überschreiben nur die gleichnamige Funktion des Cell Types.
 - Nicht überschriebene Renderer-, Editor-, Parse-, Validate-, Sort- und Search-Hooks kommen weiterhin aus dem Cell Type.
 - Renderer-Strings sind Text, niemals HTML.
 - `queryKey` wird als `column.queryKey`, dann String-`field`, dann `column.id` aufgelöst.
+- `mutationKey` ist davon unabhängig: Feldname als Default; bei berechneten Connector-Spalten explizit erforderlich.
+- Aktiviert die Tabelle Column Selection, ist `selectable` effektiv `true`; einzelne Spalten können mit `false` ausgeschlossen werden.
 - Breiten werden auf ganze, endliche CSS-Pixel und den Min-/Max-Bereich normalisiert.
 
 ## Konfiguration und Daten-Ownership
@@ -205,7 +226,6 @@ export interface NteDataTableEditingConfig {
   enabled?: boolean;
   activation?: "double-click";
   commit?: "blur-or-enter";
-  optimistic?: boolean;
 }
 
 export interface NteDataTableSortingConfig {
@@ -219,6 +239,7 @@ interface NteDataTableBaseConfig<Row extends object> {
   activation?: NteDataTableActivationMode;
   layoutMode?: NteDataTableLayoutMode;
   readOnly?: boolean;
+  locale?: string;
 
   selection?: NteDataTableSelectionConfig;
   editing?: NteDataTableEditingConfig;
@@ -246,9 +267,18 @@ export type NteDataTableConfig<Row extends object> =
     });
 ```
 
-`configure()` kopiert das Array, aber nicht vorsorglich jedes Objekt tief. Erst eine Änderung ersetzt die betroffene Zeile und das Array. Der Caller behält seine ursprünglichen Objekte unverändert. In Connector-Modus sind die geladenen Rows Snapshots der autoritativen Quelle.
+`configure()` kopiert das Array, aber nicht vorsorglich jedes Objekt tief. Der Array-Modus hält den vollständigen kanonischen `sourceRows`-Bestand getrennt von der gefilterten/sortierten View. Erst eine Änderung ersetzt die betroffene Zeile und das Array. Container sind readonly; Row-Objekte gelten immutable-by-contract und werden nicht tief geklont oder eingefroren. In Connector-Modus sind die geladenen Rows Snapshots der autoritativen Quelle.
 
-Persistenz wird aktiviert, wenn `persistLayout: true` oder ein `persistenceKey` gesetzt ist. `persistLayout: false` und `layoutStore: null` haben Vorrang. Für implizites Opt-in muss der Host eine stabile `id` haben; andernfalls wird nicht geschrieben.
+Persistenz folgt exakt dieser Priorität:
+
+| Bedingung | Ergebnis |
+| --- | --- |
+| `layoutStore: null` oder `persistLayout: false` | aus |
+| sonst nichtleerer `persistenceKey` | an |
+| sonst `persistLayout: true` plus nichtleere Host-`id` | an |
+| sonst | aus |
+
+`effectiveKey = (persistenceKey ?? "").trim() || host.id.trim()`. `persistLayout: true` ohne effektiven Key erzeugt ein recoverable Konfigurations-Event, aber keinen Load/Write. Ein eigener Store allein aktiviert Persistenz nicht.
 
 ## Öffentlicher State
 
@@ -266,12 +296,15 @@ export interface NteDataTableQueryState {
 export interface NteDataTableSelectionState {
   rowIds: readonly NteDataTableRowId[];
   columnIds: readonly NteDataTableColumnId[];
+  rowAnchorId?: NteDataTableRowId;
+  columnAnchorId?: NteDataTableColumnId;
+}
+
+export interface NteDataTableFocusState {
   activeCell?: {
     rowId: NteDataTableRowId;
     columnId: NteDataTableColumnId;
   };
-  rowAnchorId?: NteDataTableRowId;
-  columnAnchorId?: NteDataTableColumnId;
 }
 
 export interface NteDataTableLayoutState {
@@ -294,6 +327,7 @@ export interface NteDataTableEditState {
 export interface NteDataTableState<Row extends object> {
   query: Readonly<NteDataTableQueryState>;
   selection: Readonly<NteDataTableSelectionState>;
+  focus: Readonly<NteDataTableFocusState>;
   layout: Readonly<NteDataTableLayoutState>;
   edit?: Readonly<NteDataTableEditState>;
   data: Readonly<{
@@ -307,7 +341,7 @@ export interface NteDataTableState<Row extends object> {
 }
 ```
 
-`getState()` gibt einen unveränderlichen Snapshot zurück. `totalRowCount: null` bedeutet unbekannt und wird im Grid als `aria-rowcount="-1"` ausgegeben.
+`getState()` gibt readonly Container zurück; Row-Objekte bleiben immutable-by-contract. `state.data.rows` ist die aktuelle Query-View beziehungsweise die geladene Connector-View, nicht der kanonische Array-Bestand. Reine Fokusnavigation löst kein Selection-Change-Event aus. `totalRowCount: null` bedeutet unbekannt und wird im Grid als `aria-rowcount="-1"` ausgegeben.
 
 ## Connector-Vertrag
 
@@ -336,16 +370,14 @@ export interface NteDataTableReadResult<Row extends object> {
   rows: readonly Row[];
   start: number;
   totalRowCount: number | null;
-  revision?: string;
 }
 
 export interface NteDataTableCellMutation {
   rowId: NteDataTableRowId;
   columnId: NteDataTableColumnId;
-  queryKey: string;
+  mutationKey: string;
   previousValue: unknown;
   value: unknown;
-  baseRevision?: string;
 }
 
 export interface NteDataTableConnectorCapabilities {
@@ -369,9 +401,7 @@ export interface NteDataTableConnector<Row extends object> {
     context: { signal: AbortSignal }
   ): Promise<{
     updatedRows?: readonly Row[];
-    revision?: string;
   }>;
-
 }
 ```
 
@@ -382,6 +412,7 @@ MVP-Regeln:
 - Die Komponentenoption bestimmt, ob eine Funktion sichtbar/bedienbar ist; Capabilities bestimmen, ob die Datenquelle sie ausführen kann. Beides muss passen.
 - Das Vorhandensein von `updateCells()` ist die Phase-1B-Mutation-Capability.
 - `updateCells()` mit `updatedRows` patcht anhand stabiler Row-ID. Ohne `updatedRows` lädt die Tabelle den aktuellen Bereich neu.
+- `mutationKey` ist nie automatisch der `queryKey`; sortierbare Ausdrücke und schreibbare Felder dürfen verschieden sein.
 - Phase 1 liest den vollständigen Datensatz und lässt `range` weg. Phase 3 verwendet Offset/Size; Cursor-Pagination ist nicht Teil dieses Vertrags.
 - Filter und Live-Subscription sind bewusst nicht untypisiert im MVP. Phase 2 ergänzt eigenständige, typisierte Erweiterungsverträge.
 - Eine Antwort einer älteren `requestId` darf den aktuellen State nicht überschreiben.
@@ -390,7 +421,17 @@ MVP-Regeln:
 
 Der direkte `rows`-Modus läuft im Controller der Tabelle. Dadurch bleiben Accessor-, Cell-Type-, Sort- und Search-Hooks in der UI-/State-Schicht und werden nicht in einen Connector geleakt. Es gibt in Phase 1 keinen öffentlichen `NteArrayDataTableConnector`.
 
-Der interne Array-Pfad kopiert die Eingabesequenz, sortiert stabil, behandelt `null`/`undefined` deterministisch, mutiert Caller-Zeilen nicht und verwendet Ersatzzeilen für Updates. Dieselbe interne Engine wird durch Contract Tests mit künstlicher Latenz und Abort-Szenarien geprüft.
+Der interne Array-Pfad kopiert die Eingabesequenz, mutiert Caller-Zeilen nicht und verwendet Ersatzzeilen für Updates. Ohne Column-/Cell-Type-Override gelten folgende Contract-Test-Regeln:
+
+- leere Suche wird als Connector-`search: null` beziehungsweise lokal als ungefilterte View behandelt;
+- Suche ist NFKC-normalisierte, case-insensitive Substring-Suche über `searchText`;
+- Textsortierung verwendet `Intl.Collator(locale, { numeric: false, sensitivity: "base" })`;
+- `locale` ist standardmäßig `"en"` und konfigurierbar;
+- Zahlen bleiben numerisch, numerische Strings bleiben Text;
+- `null` und `undefined` stehen in beiden Sortierrichtungen zuletzt;
+- gleiche Vergleichswerte behalten ihre Source-Reihenfolge.
+
+Dieselbe interne Engine wird durch Contract Tests mit künstlicher Latenz und Abort-Szenarien geprüft.
 
 ## LayoutStore-Vertrag
 
@@ -440,7 +481,7 @@ export class NteLocalStorageDataTableLayoutStore
 }
 ```
 
-Default-Keyspace: `nte-data-table:<persistenceKey>`. Der Default-`schemaKey` ist eine versionspräfigierte, deterministische Codierung der sortierten Column-IDs. Der Store speichert ausschließlich JSON-fähigen Layout-State. Writes werden serialisiert; ein älterer Save darf keinen neueren Snapshot überschreiben.
+Default-Keyspace: `nte-data-table:<effectiveKey>`. Der Default-`schemaKey` ist eine versionspräfigierte, deterministische Codierung der sortierten Column-IDs. Der Store speichert ausschließlich JSON-fähigen Layout-State. Writes werden serialisiert; ein älterer Save darf keinen neueren Snapshot überschreiben.
 
 Der Extensions-Skill enthält Contract Tests für Roundtrip, fehlende/entfernte Spalten, korrupte Payloads, parallele Saves, Schemawechsel und Storage-Fehler.
 
@@ -479,6 +520,7 @@ export class NteDataTable<
 
   getState(): Readonly<NteDataTableState<Row>>;
   getRows(): readonly Row[];
+  getVisibleRows(): readonly Row[];
   setRows(rows: readonly Row[]): Promise<void>;
 
   reload(): Promise<void>;
@@ -533,11 +575,14 @@ Semantik:
 
 - Async-Query-Methoden lösen erst auf, wenn der aktuelle Read abgeschlossen oder wegen einer neueren Query verworfen ist; echte Fehler werden nach dem Fehler-Event abgelehnt.
 - Layout-Methoden lösen nach State-Änderung und gegebenenfalls abgeschlossenem Store-Write auf.
-- `setRows()` ist nur im Array-Modus erlaubt und löst sonst mit `NteDataTableUsageError` ab.
-- `getRows()` liefert im Connector-Modus nur die aktuell geladene Sicht.
+- `setRows()` ist nur im Array-Modus erlaubt, ersetzt den vollständigen `sourceRows`-Bestand und löst sonst mit `NteDataTableUsageError` ab.
+- `getRows()` liefert im Array-Modus den vollständigen kanonischen Bestand, im Connector-Modus die aktuell geladene Sicht.
+- `getVisibleRows()` liefert in beiden Modi die aktuelle Query-/Connector-View.
 - `commitEdit()` liefert `false`, wenn ein Cancel-Event oder Validation den Commit verhindert.
 - `scrollToRow()` findet in Phase 1 nur geladene Rows und liefert sonst `false`; ein Locate-Adapter folgt frühestens in Phase 3.
-- Unbekannte IDs und ungültige Konfigurationen werfen typisierte Usage Errors.
+- Programmatic Calls normalisieren Konflikte nicht still: mehrere Sorts im Single-Modus, Search/Sort gegen fehlende Connector-Capability, mehrere IDs im Single-Selection-Modus und Resize/Move auf nicht freigegebenen Spalten werfen einen typisierten Usage- beziehungsweise Capability-Error.
+- Column IDs müssen existieren. Edit und Activation benötigen eine geladene Row. Row Selection darf im Connector-Modus auch ungeladene stabile IDs halten; `scrollToRow()` liefert für ungeladene Rows wie beschrieben `false`.
+- Nicht verfügbare Pointer-/Keyboard-Gesten werden gar nicht angeboten.
 
 Der Row-Typ ist an die Elementinstanz gebunden, beispielsweise `NteDataTable<Issue>`; Methoden sind nicht unabhängig generisch. Das rohe Tag-Name-Mapping verwendet einen sicheren unbekannten Record-Typ, während Anwendungen ihre bekannte Row-Form beim Query beziehungsweise bei einer typisierten Factory angeben.
 
@@ -550,7 +595,7 @@ Primitive Attribute werden vor `configure()` als Defaults gelesen; explizite Con
 | `interaction-mode` | `interactionMode` | `auto`, `table`, `grid` | Semantik und Tastaturmodell |
 | — | `activation` | `none`, `cell`, `row`, `both` | explizite Aktivierungs-Events und Auto-Grid-Auslöser |
 | `layout-mode` | `layoutMode` | `scroll`, `fit` | Breitenverteilung |
-| `readonly` | `readOnly` | boolean | Editing und Mutationen sperren |
+| `readonly` | `readOnly` | boolean | Daten-Edits sperren; Query, Selection und Column-Layout bleiben aktiv |
 | `persistence-key` | `persistenceKey` | string | stabiler Store-Key |
 | `persist-layout` | `persistLayout` | boolean | Layout-Speicherung aktivieren |
 | `aria-label` | — | string | Fallback-Name für inneren semantischen Baum |
@@ -567,7 +612,7 @@ Alle Events sind `bubbles: true` und `composed: true`. Jedes Detail enthält `so
 | `nte-data-table-load-start` | Request gestartet; `{ query, requestId }` |
 | `nte-data-table-load` | aktuelle Antwort übernommen; `{ query, requestId, rowCount, totalRowCount }` |
 | `nte-data-table-error` | typisierter Fehler; `{ kind, error, recoverable }` |
-| `nte-data-table-rows-change` | lokaler Array-Edit oder `setRows`; `{ rows, changes }` |
+| `nte-data-table-rows-change` | lokaler Array-Edit oder `setRows`; `{ rows, changes }`, wobei `rows` der vollständige kanonische Bestand ist |
 | `nte-data-table-selection-change` | Row-/Column-Auswahl übernommen; `{ selection }` |
 | `nte-data-table-active-cell-change` | aktive Zelle geändert; `{ activeCell }` |
 | `nte-data-table-cell-activate` | Zelle per Pointer/Keyboard aktiviert; `{ rowId, columnId }` |
@@ -575,7 +620,7 @@ Alle Events sind `bubbles: true` und `composed: true`. Jedes Detail enthält `so
 | `nte-data-table-layout-change` | Resize, Move, Pin, Restore oder Reset; `{ layout, reason }` |
 | `nte-data-table-edit-start` | Editor geöffnet; `{ rowId, columnId, value }` |
 | `nte-data-table-before-edit-commit` | vor Mutation, `cancelable: true`; `{ mutation }` |
-| `nte-data-table-edit-commit` | Mutation bestätigt; `{ mutation, row }` |
+| `nte-data-table-edit-commit` | Mutation bestätigt; `{ mutation, row? }`, da die Row nach Reload außerhalb der Query liegen kann |
 | `nte-data-table-edit-error` | Validation-/Mutation-Fehler; `{ kind, mutation, error }` |
 
 Fehler-`kind` ist mindestens:
@@ -726,6 +771,6 @@ class IssuesConnector
 }
 ```
 
-Remote-Commits sind in Phase 1B pessimistisch: Nach `nte-data-table-before-edit-commit` und erfolgreicher Validation wechselt der Editor auf `saving`, der bestätigte Row-State bleibt unverändert. Erst `updatedRows` oder der anschließende Reload aktualisiert die Row und löst `nte-data-table-edit-commit` aus. Bei Fehler folgt `nte-data-table-edit-error`, der Editor behält den Draft. Der direkte Array-Modus ersetzt die Row sofort nach Validation und emittiert zuerst `nte-data-table-rows-change`, dann `nte-data-table-edit-commit`.
+Remote-Commits sind in Phase 1B pessimistisch: Nach `nte-data-table-before-edit-commit` und erfolgreicher Validation wechselt der Editor auf `saving`, der bestätigte Row-State bleibt unverändert. Die Mutation verwendet `mutationKey`, nicht `queryKey`. Erst `updatedRows` oder der anschließende Reload aktualisiert die Row und löst `nte-data-table-edit-commit` aus. Bei Fehler folgt `nte-data-table-edit-error`, der Editor behält den Draft. Der direkte Array-Modus ersetzt die Row sofort nach Validation und emittiert zuerst `nte-data-table-rows-change`, dann `nte-data-table-edit-commit`.
 
 Das Extensions-Skill-Dokument erklärt zusätzlich Race Handling, Auth außerhalb des Connectors, LayoutStore-Migrationen, Cell-Type-Registrierung und die erforderlichen Contract Tests.
