@@ -52,6 +52,7 @@
             "@nextrap/ntl-footer": ["nextrap-layout/ntl-footer/src/index.ts"],
             "@nextrap/style-base": ["nextrap-styles/style-base/index.ts"],
             "@nextrap/style-button": ["nextrap-styles/style-button/src/index.ts"],
+            "@nextrap/style-switch": ["nextrap-styles/style-switch/index.ts"],
             "@nextrap/style-elements": ["nextrap-styles/style-elements/src/index.ts"],
             "@nextrap/style-reset": ["nextrap-styles/style-reset/index.ts"],
             "@nextrap/style-typography": ["nextrap-styles/style-typography/src/index.ts"],

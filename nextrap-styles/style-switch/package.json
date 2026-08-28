@@ -1,0 +1,31 @@
+{
+  "name": "@nextrap/style-switch",
+  "version": "0.1.0",
+  "description": "Accessible, composable CSS switch styles for Nextrap",
+  "files": [
+    "*.*",
+    "src",
+    ".agents"
+  ],
+  "main": "./index.js",
+  "exports": {
+    ".": {
+      "sass": "./index.scss",
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./default": {
+      "sass": "./default.scss",
+      "default": "./default.scss"
+    }
+  },
+  "repository": {
+    "directory": "nextrap-styles/style-switch",
+    "type": "git",
+    "url": "https://github.com/nextrap/nextrap-monorepo"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "type": "module",
+  "types": "./index.d.ts"
+}
