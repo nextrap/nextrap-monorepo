@@ -1,0 +1,87 @@
+@use '@nextrap/style-button' as button;
+
+:host {
+  display: contents;
+}
+
+nte-dialog {
+  --nte-dialog-width: min(90vw, 42rem);
+}
+
+#body {
+  padding: var(--nt-space-4, 1rem);
+}
+
+#intro {
+  margin: 0;
+  color: var(--nt-text, currentColor);
+}
+
+#services {
+  display: grid;
+  gap: var(--nt-space-3, 0.75rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.service {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--nt-space-3, 0.75rem);
+  align-items: start;
+  padding: var(--nt-space-3, 0.75rem);
+  border: var(--nt-border-width, 1px) solid var(--nt-border-color, #dee2e6);
+  border-radius: var(--nt-border-radius, 0.375rem);
+}
+
+.service input {
+  margin-top: 0.25em;
+}
+
+.service-copy {
+  display: grid;
+  gap: var(--nt-space-1, 0.25rem);
+}
+
+.service-purpose,
+.service-description {
+  color: var(--nt-text-muted, #6c757d);
+  font-size: 0.875em;
+}
+
+.service-privacy {
+  color: var(--nt-link, currentColor);
+}
+
+#footer-content {
+  display: grid;
+  width: 100%;
+  gap: var(--nt-space-3, 0.75rem);
+}
+
+#actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--nt-space-2, 0.5rem);
+}
+
+button {
+  @include button.btn();
+}
+
+#accept-all {
+  @include button.btn-primary();
+}
+
+.secondary-action {
+  @include button.btn-outline-secondary();
+}
+
+@media (max-width: 576px) {
+  #actions,
+  #actions button {
+    width: 100%;
+  }
+}

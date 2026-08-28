@@ -1,0 +1,42 @@
+{
+    "name": "@nextrap/nte-privacy-consent",
+    "version": "1.0.0",
+    "contributions": {
+        "html": {
+            "elements": [
+                {
+                    "name": "nte-privacy-consent",
+                    "description": "HTML-first privacy consent dialog for gated scripts and embeds.",
+                    "attributes": [
+                        {
+                            "name": "policy-version",
+                            "type": "string",
+                            "description": "Version used to invalidate older decisions."
+                        },
+                        { "name": "storage", "type": "local|session|memory", "default": "local" },
+                        { "name": "storage-key", "type": "string", "default": "nte-privacy-consent" },
+                        { "name": "prompt", "type": "auto|manual", "default": "auto" },
+                        {
+                            "name": "show-reject-all",
+                            "type": "boolean",
+                            "description": "Shows direct rejection in the initial view."
+                        }
+                    ],
+                    "slots": [
+                        { "name": "title", "description": "Dialog title." },
+                        { "name": "intro", "description": "Introductory consent explanation." },
+                        { "name": "privacy-link", "description": "Site privacy-policy link." },
+                        { "name": "launcher", "description": "Persistent control that reopens preferences." },
+                        { "name": "footer", "description": "Additional footer content." }
+                    ],
+                    "events": [
+                        { "name": "consent-ready", "description": "Declarations and stored decision are ready." },
+                        { "name": "consent-change", "description": "A new decision was committed." },
+                        { "name": "consent-service-activated", "description": "A service's resources were activated." },
+                        { "name": "consent-error", "description": "Discovery, storage or activation failed." }
+                    ]
+                }
+            ]
+        }
+    }
+}
