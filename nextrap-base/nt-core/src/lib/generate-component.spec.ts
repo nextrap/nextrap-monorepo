@@ -13,6 +13,7 @@ describe('generate_component', () => {
     const Counter = generate_component(
       {
         tagName,
+        slots: ['actions'],
         styles: css`
           :host {
             display: block;
@@ -64,10 +65,9 @@ describe('generate_component', () => {
 
     const action = document.createElement('button');
     action.textContent = 'Reset';
-    const counter = new Counter(
-      { prefix: 'Total', count: 2, $slots: ['Default content'] },
-      { name: 'actions', content: action },
-    );
+    const defaultContent = document.createElement('p');
+    defaultContent.textContent = 'Default content';
+    const counter = new Counter({ prefix: 'Total', count: 2, $slots: defaultContent }, { actions: action });
     const inferredCount: number = counter.count;
     const inferredPrefix: string = counter.prefix;
     expect(inferredCount).toBe(2);
@@ -126,5 +126,70 @@ describe('generate_component', () => {
 
     expect(parsed.values).toEqual(['one', 'two']);
     expect(parsed.shadowRoot?.textContent).toBe('one|two');
+  });
+
+  it('appends individual elements, arrays, object slot maps, and Map slot entries', () => {
+    const tagName = `nte-generated-${Math.random().toString(36).slice(2)}` as `${string}-${string}`;
+    const Slotted = generate_component(
+      { tagName, slots: ['header', 'actions'] },
+      {
+        $template() {
+          return html`<slot name="header"></slot><slot></slot><slot name="actions"></slot>`;
+        },
+      },
+    );
+
+    const direct = document.createElement('main');
+    const first = document.createElement('p');
+    const second = document.createElement('p');
+    const header = document.createElement('h2');
+    const mappedHeader = document.createElement('h3');
+    const firstAction = document.createElement('button');
+    const secondAction = document.createElement('button');
+    const map = new Map<'header' | 'actions', HTMLElement>([['header', mappedHeader]]);
+
+    const slotted = new Slotted(
+      { $slots: direct },
+      [first, second],
+      { header, actions: [firstAction, secondAction] },
+      map,
+    );
+
+    const inferredSlotNames: readonly ('header' | 'actions')[] = Slotted.slotNames;
+    expect(inferredSlotNames).toEqual(['header', 'actions']);
+    expect(Array.from(slotted.children)).toEqual([
+      direct,
+      first,
+      second,
+      header,
+      firstAction,
+      secondAction,
+      mappedHeader,
+    ]);
+    expect(direct.slot).toBe('');
+    expect(first.slot).toBe('');
+    expect(second.slot).toBe('');
+    expect(header.slot).toBe('header');
+    expect(mappedHeader.slot).toBe('header');
+    expect(firstAction.slot).toBe('actions');
+    expect(secondAction.slot).toBe('actions');
+
+    const assertSlotTypes = () => {
+      // @ts-expect-error strings are not valid programmatic Light DOM children
+      new Slotted({}, 'text');
+      // @ts-expect-error only configured slot names are accepted as map keys
+      new Slotted({}, { footer: document.createElement('footer') });
+    };
+    void assertSlotTypes;
+  });
+
+  it('rejects invalid Light DOM values and unknown slot names at runtime', () => {
+    const tagName = `nte-generated-${Math.random().toString(36).slice(2)}` as `${string}-${string}`;
+    const Slotted = generate_component({ tagName, slots: ['content'] }, {});
+
+    expect(() => new Slotted({}, 'text' as never)).toThrow(TypeError);
+    expect(() => new Slotted({}, { footer: document.createElement('footer') } as never)).toThrow(
+      'Unknown programmatic slot: footer',
+    );
   });
 });
