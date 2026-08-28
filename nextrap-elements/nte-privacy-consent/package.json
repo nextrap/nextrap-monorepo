@@ -1,0 +1,26 @@
+{
+    "name": "@nextrap/nte-privacy-consent",
+    "version": "1.0.0",
+    "files": [
+        "*.*",
+        "src",
+        "skills"
+    ],
+    "main": "./index.js",
+    "repository": {
+        "directory": "nextrap-elements/nte-privacy-consent",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
+    "dependencies": {
+        "@nextrap/nt-core": "^2.0.0",
+        "@nextrap/nte-dialog": "^2.0.0",
+        "@nextrap/style-button": "^2.0.0",
+        "@nextrap/style-reset": "^2.0.0",
+        "@trunkjs/browser-utils": "^1.0.47",
+        "lit": "^3.3.1"
+    },
+    "type": "module",
+    "types": "./index.d.ts",
+    "web-types": "./web-types.json"
+}

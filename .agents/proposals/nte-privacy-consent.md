@@ -1,15 +1,15 @@
-# Proposal: NTE Consent (HTML-first)
+# Proposal: NTE Privacy Consent (HTML-first)
 
-- Status: Proposed
-- Package: `@nextrap/nte-consent`
-- Element: `<nte-consent>`
+- Status: Implemented in this PR
+- Package: `@nextrap/nte-privacy-consent`
+- Element: `<nte-privacy-consent>`
 - Scope: declarative consent UI and deterministic resource gating
 
 ## Decision summary
 
 Replace the controller-, adapter-, and TypeScript-config-heavy design with an HTML-first custom element.
 
-The page declares optional services directly in markup. Gated JavaScript uses a non-JavaScript `type`; arbitrary embeds use `<template>`. `<nte-consent>` discovers those declarations, renders the consent UI, persists a small versioned decision record, and activates allowed resources by creating fresh DOM nodes.
+The page declares optional services directly in markup. Gated JavaScript uses a non-JavaScript `type`; arbitrary embeds use `<template>`. `<nte-privacy-consent>` discovers those declarations, renders the consent UI, persists a small versioned decision record, and activates allowed resources by creating fresh DOM nodes.
 
 No TypeScript configuration is required for normal use. A JavaScript API remains an optional escape hatch for SPAs and advanced provider integrations.
 
@@ -68,7 +68,7 @@ The proposed syntax intentionally resembles CookieConsent and Klaro so existing 
 For a service that needs one external script, the complete declaration can live on the script tag:
 
 ```html
-<nte-consent policy-version="2026-08">
+<nte-privacy-consent policy-version="2026-08">
   <script
     type="text/plain"
     data-consent-service="plausible"
@@ -79,7 +79,7 @@ For a service that needs one external script, the complete declaration can live 
     data-src="https://plausible.example/js/script.js"
     defer>
   </script>
-</nte-consent>
+</nte-privacy-consent>
 ```
 
 `type="text/plain"` makes the original script a data block. The browser does not execute it and ignores its `src`. `data-src` also makes the blocked URL explicit and avoids eager fetching by tools that inspect `src`.
@@ -89,7 +89,7 @@ For a service that needs one external script, the complete declaration can live 
 Real providers often need an external loader plus inline initialization. Repeating the stable service ID groups all tags into one user choice. Metadata only has to appear on the first declaration.
 
 ```html
-<nte-consent policy-version="2026-08">
+<nte-privacy-consent policy-version="2026-08">
   <script
     type="text/plain"
     data-consent-service="google-analytics"
@@ -107,7 +107,7 @@ Real providers often need an external loader plus inline initialization. Repeati
     gtag('js', new Date());
     gtag('config', 'G-XXXX');
   </script>
-</nte-consent>
+</nte-privacy-consent>
 ```
 
 Tags for the same service activate in DOM order. External classic scripts are sequential by default so an inline initializer cannot overtake its loader. `data-async` opts a tag into asynchronous loading.
@@ -117,7 +117,7 @@ Tags for the same service activate in DOM order. External classic scripts are se
 `<template>` is the preferred inert container for iframes, videos, maps, images, widgets, and mixed markup:
 
 ```html
-<nte-consent policy-version="2026-08">
+<nte-privacy-consent policy-version="2026-08">
   <template
     data-consent-service="youtube"
     data-consent-purpose="media"
@@ -131,7 +131,7 @@ Tags for the same service activate in DOM order. External classic scripts are se
       allowfullscreen>
     </iframe>
   </template>
-</nte-consent>
+</nte-privacy-consent>
 ```
 
 The template content is cloned only after consent. This is safer and more general than inventing `data-src` aliases for every possible HTML element.
@@ -141,8 +141,8 @@ The template content is cloned only after consent. This is safer and more genera
 For verbose metadata or many resources, a declarative wrapper avoids repeating attributes:
 
 ```html
-<nte-consent policy-version="2026-08">
-  <nte-consent-service
+<nte-privacy-consent policy-version="2026-08">
+  <nte-privacy-consent-service
     name="matomo"
     purpose="analytics"
     label="Matomo"
@@ -152,23 +152,23 @@ For verbose metadata or many resources, a declarative wrapper avoids repeating a
     <script type="text/plain">
       window._paq = window._paq || [];
     </script>
-  </nte-consent-service>
-</nte-consent>
+  </nte-privacy-consent-service>
+</nte-privacy-consent>
 ```
 
-The direct `data-consent-service` form is the minimal API. `<nte-consent-service>` is only syntax sugar for multi-resource services; both forms produce the same internal declaration.
+The direct `data-consent-service` form is the minimal API. `<nte-privacy-consent-service>` is only syntax sugar for multi-resource services; both forms produce the same internal declaration.
 
 ## Public element API
 
-### `<nte-consent>` attributes
+### `<nte-privacy-consent>` attributes
 
 | Attribute | Default | Meaning |
 | --- | --- | --- |
 | `policy-version` | required | Invalidates older decisions after a material policy/service change. |
 | `storage` | `local` | `local`, `session`, or `memory`. |
-| `storage-key` | `nte-consent` | First-party storage key. |
+| `storage-key` | `nte-privacy-consent` | First-party storage key. |
 | `prompt` | `auto` | `auto` opens when no valid decision exists; `manual` waits for `show()`. |
-| `selection` | `services` | `services` renders one choice per provider; a later `purposes` mode may aggregate choices. |
+| `show-reject-all` | off | Adds a direct reject-all action to the initial view. |
 | `lang` | document language | Selects component-owned control labels. |
 
 Scripts without a consent declaration execute normally and are outside the component's responsibility. Required code should therefore remain ordinary HTML, not use a fake `necessary` consent category.
@@ -192,11 +192,11 @@ Duplicate service declarations must agree on user-facing metadata. Conflicts emi
 ### Methods
 
 ```ts
-interface NteConsentElement extends HTMLElement {
+interface NtePrivacyConsentElement extends HTMLElement {
   show(): void;
   showPreferences(): void;
   hide(): void;
-  getDecision(): NteConsentDecision;
+  getDecision(): NtePrivacyConsentDecision | null;
   setDecision(services: Record<string, boolean>): Promise<void>;
   reset(): Promise<void>;
 }
@@ -227,7 +227,7 @@ A newly added matching script/template is discovered through a `MutationObserver
 | `launcher` | Persistent control for reopening preferences. |
 | `footer` | Additional site-owned information. |
 
-Accept all, reject optional, configure, and save controls remain component-owned for consistent accessibility and event behavior.
+The first view always uses **Accept all** as its primary button and **Settings** as its secondary action. `show-reject-all` adds **Reject all**. Settings start with all services selected when there is no prior decision, allow individual services to be deselected, and keep **Accept all** as the primary button beside **Save selection**.
 
 ## Activation algorithm
 
@@ -243,7 +243,7 @@ For each allowed declaration, the element:
 6. marks the declaration as activated so it cannot run twice;
 7. waits for ordered external scripts before activating following tags for the same service.
 
-For `<template>`, it clones `template.content` into a generated container beside the template. Generated DOM is recorded so removable embeds can be detached on withdrawal.
+For `<template>`, it clones `template.content` beside the template. Generated nodes are recorded so removable embeds can be detached on withdrawal.
 
 Inline scripts remain subject to the page's Content Security Policy. A page that disallows inline scripts must use external scripts, a valid nonce/hash strategy, or its own event listener. The component does not bypass CSP or Trusted Types.
 
@@ -302,17 +302,19 @@ It should not complicate the base script-gating API.
 
 - Compose the existing public `nte-dialog` API rather than subclassing it.
 - Use native labeled checkboxes for services and fixed text for required functionality.
-- Show equally understandable reject, configure, and accept actions.
+- Keep accept-all visually primary; show direct rejection only with `show-reject-all`.
 - Closing, Escape, scrolling, or navigation never grants consent.
-- On narrow viewports, use a full-width/bottom-sheet presentation; on larger viewports, use a constrained dialog.
-- Export CSS parts for dialog, service list, service item, purpose heading, actions, and launcher.
-- Keep only functional layout in Shadow DOM; visual defaults belong in the package Sass mixin.
+- On narrow viewports, use full-width actions and the responsive behavior of `nte-dialog`; on larger viewports, use a constrained dialog.
+- Export CSS parts for dialog, header, content, footer, title, body, intro, service list, service item, and actions.
+- Keep layout in Shadow DOM. Compile the existing Style Button mixins there so inherited `--nt-*` theme colors remain the source of truth.
 - Site-specific legal text remains slotted HTML; the package owns only generic control labels.
 
 ## Dependencies
 
 - `@nextrap/nt-core` / repository-standard `nextrap_element`
 - `@nextrap/nte-dialog`
+- `@nextrap/style-button` and `@nextrap/style-reset`
+- `@trunkjs/browser-utils` storage helpers
 - existing Lit runtime used by NTE packages
 
 No provider SDK, CMP, scanner, geolocation service, or adapter framework is a runtime dependency.
@@ -338,18 +340,17 @@ No provider SDK, CMP, scanner, geolocation service, or adapter framework is a ru
 - Withdrawal documentation does not claim that arbitrary JavaScript or cookies can be undone.
 - Google Advanced Mode, TCF/GPP, scanning, certification, and server-side evidence remain outside the MVP.
 
-## Open questions
+## Implemented decisions
 
-1. Should `<nte-consent-service>` ship in v1, or is the direct script/template annotation sufficient initially?
-2. Should the UI always expose individual services, or optionally group decisions at purpose level?
-3. Is `localStorage` the right default, or should storage be explicitly selected?
-4. Should withdrawal always offer a reload after any script activation, or only when `data-reload-on-withdraw` is present?
-5. Should `policy-version` be mandatory, or may the component derive a fingerprint from declarations as a convenience?
-6. Should Google Consent Mode Basic remain a documentation recipe or receive an isolated optional helper?
+- Direct script/template annotations are the primary API; the service wrapper ships as optional syntax sugar.
+- Choices are per service, with local storage as the default and session/memory as explicit alternatives.
+- `policy-version` remains explicit so service and policy changes are intentional.
+- Generic script withdrawal emits state changes but does not promise cleanup or automatic cookie deletion.
+- Google Consent Mode remains outside the base component.
 
 ## Recommendation
 
-Adopt the direct annotated script/template API as the MVP. Keep `<nte-consent-service>` as small declarative sugar if the implementation remains trivial. Default to per-service choices and local storage, require an explicit policy version, activate in DOM order, and handle withdrawal honestly through removable embeds, events, and optional reload.
+Adopt the direct annotated script/template API as the MVP. Keep `<nte-privacy-consent-service>` as small declarative sugar if the implementation remains trivial. Default to per-service choices and local storage, require an explicit policy version, activate in DOM order, and handle withdrawal honestly through removable embeds, events, and optional reload.
 
 This gives Nextrap the simplicity requested for static HTML and CMS use while leaving a narrow DOM API for advanced applications.
 

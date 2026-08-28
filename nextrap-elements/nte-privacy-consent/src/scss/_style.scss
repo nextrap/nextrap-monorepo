@@ -1,0 +1,3 @@
+@mixin style-default() {
+  color: var(--nt-text, currentColor);
+}
