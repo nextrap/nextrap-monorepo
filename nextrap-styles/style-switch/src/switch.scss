@@ -30,6 +30,10 @@
   &:has(.switch-input:disabled) {
     cursor: not-allowed;
   }
+
+  &.switch-theme {
+    @include switch-theme();
+  }
 }
 
 @mixin switch-input() {
@@ -201,6 +205,85 @@
   @media (forced-colors: active) {
     .switch-control::before {
       color: ButtonText;
+    }
+  }
+}
+
+// Theme chooser composition: input, control, light icon, dark icon, optional label.
+// Icons remain author-provided so applications can use their own icon set.
+@mixin switch-theme() {
+  --switch-theme-icon-color: var(--nt-text-muted, #6c757d);
+  --switch-theme-icon-active-color: var(--nt-primary, #0d6efd);
+  --switch-theme-icon-inactive-opacity: 0.42;
+
+  .switch-control {
+    order: 1;
+  }
+
+  .switch-label {
+    order: 3;
+  }
+
+  [data-switch-theme-icon] {
+    display: inline-grid;
+    place-items: center;
+    width: var(--switch-theme-icon-size, var(--switch-height));
+    height: var(--switch-theme-icon-size, var(--switch-height));
+    flex: 0 0 auto;
+    transition:
+      color 160ms ease,
+      opacity 160ms ease,
+      transform 160ms ease;
+
+    svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+  }
+
+  [data-switch-theme-icon='light'] {
+    order: 0;
+  }
+
+  [data-switch-theme-icon='dark'] {
+    order: 2;
+  }
+
+  .switch-input:not(:checked) ~ [data-switch-theme-icon='light'],
+  .switch-input:checked ~ [data-switch-theme-icon='dark'] {
+    color: var(--switch-theme-icon-active-color);
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .switch-input:checked ~ [data-switch-theme-icon='light'],
+  .switch-input:not(:checked) ~ [data-switch-theme-icon='dark'] {
+    color: var(--switch-theme-icon-color);
+    opacity: var(--switch-theme-icon-inactive-opacity);
+    transform: scale(0.9);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-switch-theme-icon] {
+      transition-duration: 0.01ms;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .switch-input:not(:checked) ~ [data-switch-theme-icon='light'],
+    .switch-input:checked ~ [data-switch-theme-icon='dark'] {
+      color: Highlight;
+    }
+
+    .switch-input:checked ~ [data-switch-theme-icon='light'],
+    .switch-input:not(:checked) ~ [data-switch-theme-icon='dark'] {
+      color: GrayText;
     }
   }
 }
