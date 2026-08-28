@@ -48,13 +48,12 @@ export class NteNavItem extends nextrap_element({ slotVisibility: true }) {
     super.disconnectedCallback();
   }
 
-  protected override firstUpdated(changedProperties: PropertyValues<this>) {
-    super.firstUpdated(changedProperties);
-    this._startPresentationObserver();
-  }
-
   protected override updated(changedProperties: PropertyValues<this>) {
     super.updated(changedProperties);
+
+    if (!this._presentationObserver) {
+      this._startPresentationObserver();
+    }
 
     if (changedProperties.has('order')) {
       if (this.order === undefined || Number.isNaN(this.order)) {
@@ -128,11 +127,7 @@ export class NteNavItem extends nextrap_element({ slotVisibility: true }) {
   }
 
   private _renderLabelDisclosure(label: unknown) {
-    return html`
-      <summary id="disclosure" part="disclosure" @click=${this._onDisclosureClick}>
-        ${label} ${this._renderIndicator()}
-      </summary>
-    `;
+    return html`<summary id="disclosure" part="disclosure" @click=${this._onDisclosureClick}>${label} ${this._renderIndicator()}</summary>`;
   }
 
   private _renderSubmenu() {
@@ -184,7 +179,16 @@ export class NteNavItem extends nextrap_element({ slotVisibility: true }) {
   private _onDisclosureClick(event: MouseEvent) {
     const submenu = this._submenuElement();
 
-    if (!submenu || this._usesInlinePresentation() || !this._supportsPopover(submenu)) {
+    if (!submenu) {
+      return;
+    }
+
+    if (this._usesInlinePresentation()) {
+      submenu.removeAttribute('popover');
+      return;
+    }
+
+    if (!this._supportsPopover(submenu)) {
       return;
     }
 
@@ -247,17 +251,21 @@ export class NteNavItem extends nextrap_element({ slotVisibility: true }) {
     const submenu = this._submenuElement();
     const details = this.shadowRoot?.getElementById('details') as HTMLDetailsElement | null;
 
-    if (!submenu || !details || !this._supportsPopover(submenu)) {
+    if (!submenu || !details) {
       return;
     }
 
     if (usesInlinePresentation) {
-      if (this._isPopoverOpen(submenu)) {
+      if (this._supportsPopover(submenu) && this._isPopoverOpen(submenu)) {
         this._preserveDetailsOnPopoverClose = details.open;
         submenu.hidePopover();
       } else {
         submenu.removeAttribute('popover');
       }
+      return;
+    }
+
+    if (!this._supportsPopover(submenu)) {
       return;
     }
 
