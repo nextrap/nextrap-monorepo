@@ -632,6 +632,25 @@ export class NteDataTable<
     ) => void,
     options?: boolean | AddEventListenerOptions
   ): void;
+  addEventListener(
+    type: string,
+    listener: EventListenerOrEventListenerObject | null,
+    options?: boolean | AddEventListenerOptions
+  ): void;
+
+  removeEventListener<K extends keyof NteDataTableEventMap<Row>>(
+    type: K,
+    listener: (
+      this: NteDataTable<Row>,
+      event: NteDataTableEventMap<Row>[K]
+    ) => void,
+    options?: boolean | EventListenerOptions
+  ): void;
+  removeEventListener(
+    type: string,
+    listener: EventListenerOrEventListenerObject | null,
+    options?: boolean | EventListenerOptions
+  ): void;
 }
 
 declare global {
