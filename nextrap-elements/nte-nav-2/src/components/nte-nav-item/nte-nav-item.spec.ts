@@ -63,10 +63,41 @@ describe('NteNavItem', () => {
     await element.updateComplete;
 
     const disclosure = element.shadowRoot?.getElementById('disclosure');
+    const labelSlot = disclosure?.querySelector<HTMLSlotElement>('slot:not([name])');
+    const assignedLabel = labelSlot
+      ?.assignedNodes({ flatten: true })
+      .map((node) => node.textContent?.trim() ?? '')
+      .filter(Boolean)
+      .join(' ');
 
     expect(element.shadowRoot?.getElementById('link')).toBeNull();
     expect(disclosure?.tagName).toBe('SUMMARY');
-    expect(disclosure?.textContent).toContain('Produkte');
+    expect(assignedLabel).toContain('Produkte');
+
+    element.remove();
+  });
+
+  it('removes stale popover state before opening an inline submenu', async () => {
+    const element = document.createElement('nte-nav-item') as NteNavItem;
+    element.style.setProperty('--nte-nav-submenu-position', 'static');
+    element.append('Produkte');
+
+    const child = document.createElement('nte-nav-item');
+    child.textContent = 'Produkt A';
+    element.appendChild(child);
+    document.body.appendChild(element);
+
+    await element.updateComplete;
+
+    const disclosure = element.shadowRoot?.getElementById('disclosure');
+    const submenu = element.shadowRoot?.getElementById('submenu');
+    submenu?.setAttribute('popover', 'auto');
+
+    const click = new MouseEvent('click', { bubbles: true, cancelable: true });
+    disclosure?.dispatchEvent(click);
+
+    expect(click.defaultPrevented).toBe(false);
+    expect(submenu?.hasAttribute('popover')).toBe(false);
 
     element.remove();
   });
