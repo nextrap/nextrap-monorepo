@@ -134,7 +134,7 @@ Entscheidungskriterium ist nicht die längste Featureliste, sondern die kleinere
 | `NteDataTableLayoutStore` | serialisierbares Layout laden/speichern/löschen | Local Storage als mitgelieferter Default |
 | Cell-Type-Registry | Anzeige, Sort-/Suchwert, Editor, Parser, Validator | eigene Zelltypen ohne Änderung am Kern |
 
-Die Kernregel lautet: Connector und Store erhalten nur serialisierbare Daten-/Query-Beschreibungen. DOM-Nodes, Lit-Templates, Renderer-Callbacks und komplette UI-Spaltendefinitionen verlassen die Komponente nicht.
+Die Kernregel lautet: Connectoren erhalten ausschließlich DOM-freie Query-/Mutationsdaten; `AbortSignal` wird als Out-of-band-Kontext übergeben. Row- und Cell-Werte sind anwendungsdefiniert und nicht automatisch JSON-fähig – der Connector verantwortet seine Wire-Codierung. Nur LayoutStore-Snapshots müssen JSON-serialisierbar sein. DOM-Nodes, Lit-Templates, Renderer-Callbacks und komplette UI-Spaltendefinitionen verlassen die Komponente nicht.
 
 ## Rendering und Layout
 
@@ -164,7 +164,9 @@ Bei schmalem Viewport bleiben Spaltenbreiten, Min-/Max-Grenzen und Pin-Zonen det
 Jede Spalte besitzt `width`, `minWidth`, `maxWidth` und optional `flex`.
 
 - `scroll` ist der Default: Breiten bleiben stabil; wenn die Summe größer als der Viewport ist, entsteht horizontaler Overflow.
-- `fit` folgt in Phase 1B: Restbreite wird nach `flex` verteilt. Unterschreitet die Summe der Mindestbreiten den Viewport nicht, fällt auch `fit` deterministisch auf Overflow zurück.
+- `fit` folgt in Phase 1B: `width` ist die Basisbreite; `flex` ist dort standardmäßig `1`, explizites `0` fixiert die Basisbreite.
+- Freie Breite beziehungsweise Defizit wird proportional zu positivem `flex` verteilt, iterativ an `minWidth`/`maxWidth` geklemmt. Bleibt nach Erreichen aller Minima ein Defizit, entsteht Overflow; bleibt nach Erreichen aller Maxima Platz, bleibt eine End-Lücke.
+- Persistiert und durch Resize geändert wird nur die Basisbreite. Viewport-abhängig berechnete Fit-Breiten werden nie gespeichert; ein anderer Viewport berechnet sie neu.
 - Während eines Resize wird nur zentraler Layout-State geändert; die native Variante schreibt die resultierenden Breiten über ein `colgroup`.
 - Pointer- und Keyboard-Resize verwenden dieselben Commands.
 - Gespeicherte Breiten werden beim Laden gegen aktuelle Min-/Max-Werte geklemmt.
@@ -220,6 +222,16 @@ Die Komponente baut kein Suchfeld und keine Menüs ein. Ein Suchfeld im Slot ruf
 
 Die beiden Modi sind in der Konfiguration gegenseitig exklusiv.
 
+### Row-ID-, Selection- und Fokus-Lifecycle
+
+Row-IDs müssen innerhalb eines Bestands eindeutig und über Sort, Search und Reload stabil sein. Doppelte IDs sind im Array-Modus ein Usage Error und in einer Connector-Antwort ein Load Error.
+
+- Search, Sort und Reload erhalten Selection anhand der Row-ID; Sort folgt der Row an ihre neue Position.
+- Wird die aktive Row aus der sichtbaren View gefiltert oder bei Reload entfernt, wird `focus.activeCell` gelöscht und ein Active-Cell-Change-Event ausgelöst.
+- Im Array-Modus bleibt Selection für gefilterte, aber weiterhin in `sourceRows` vorhandene Rows erhalten.
+- `setRows()` entfernt ausgewählte IDs, die im neuen `sourceRows`-Bestand fehlen.
+- Im Connector-Modus darf Selection auch stabile, momentan ungeladene IDs halten; die App kann sie explizit zurücksetzen.
+
 ### Query-State
 
 Der öffentliche Sort-State enthält nur `columnId` und `direction`. Der Connector erhält einen aufgelösten `queryKey`; dieser entsteht aus `column.queryKey`, sonst einem String-`field`, sonst der Spalten-ID. Filter werden nicht als untypisiertes Feld in das MVP geschoben. Eine typisierte, diskriminierte Filter-API folgt in Phase 2.
@@ -254,6 +266,7 @@ Aktivierungsregeln:
 `effectiveKey = (persistenceKey ?? "").trim() || host.id.trim()`. Der eigene Store allein aktiviert keine Persistenz. Der Local-Storage-Keyspace lautet `nte-data-table:<effectiveKey>`.
 
 - Der Local-Storage-Store ist die Standardimplementierung, sobald Persistenz aktiviert ist und kein eigener Store gesetzt wurde.
+- `load()` erhält ein `AbortSignal`; bei Kontextwechsel wird der Request abgebrochen und ein dennoch eintreffendes altes Ergebnis verworfen.
 - Der Default-`schemaKey` ist deterministisch aus Store-Version und sortierten Spalten-IDs abgeleitet; Apps können für kontrollierte Migrationen einen eigenen Key setzen.
 - Gespeichert werden in Phase 1 Breite, Reihenfolge und Pin-Zone.
 - Zeilendaten, Suche, Auswahl und Edit-Inhalte gehören nicht in diesen Store.
