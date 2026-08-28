@@ -38,4 +38,4 @@ Available mixins:
 @include card.with-modifier-classes();
 ```
 
-Use `--aspect-ratio` or `--image-aspect-ratio` on `nte-card` to control the image area ratio.
+Use `--aspect-ratio` or `--image-aspect-ratio` on `nte-card` to control the image area ratio. Images in the `image` slot use `object-fit: cover` by default.

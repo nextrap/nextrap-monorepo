@@ -21,6 +21,10 @@ export class NteCardElement extends nextrap_element({
 
   private accessor _linkAnchor: HTMLAnchorElement | null = null;
 
+  private getImageSlot(): HTMLSlotElement | null {
+    return this.shadowRoot?.querySelector('slot[name="image"]') as HTMLSlotElement | null;
+  }
+
   private findAnchorWithHref(root: Element): HTMLAnchorElement | null {
     if (root instanceof HTMLAnchorElement && root.hasAttribute('href')) return root;
     const a = root.querySelector('a[href]');
@@ -50,11 +54,31 @@ export class NteCardElement extends nextrap_element({
   override firstUpdated(_changedProperties: any) {
     super.firstUpdated(_changedProperties);
     this.updateClickableFromLinkSlot();
+    this.applyImageSlotDefaults();
   }
 
   private onLinkSlotChange = (e: Event) => {
     this.updateClickableFromLinkSlot(e.target as HTMLSlotElement);
   };
+
+  private onImageSlotChange = (e: Event) => {
+    this.applyImageSlotDefaults(e.target as HTMLSlotElement);
+  };
+
+  private applyImageSlotDefaults(slot?: HTMLSlotElement | null) {
+    const imageSlot = slot ?? this.getImageSlot();
+    if (!imageSlot) return;
+
+    for (const el of imageSlot.assignedElements({ flatten: true })) {
+      const images = el instanceof HTMLImageElement ? [el] : Array.from(el.querySelectorAll('img'));
+      for (const image of images) {
+        if (image.style.display === '') image.style.display = 'block';
+        if (image.style.width === '') image.style.width = '100%';
+        if (image.style.height === '') image.style.height = '100%';
+        if (image.style.objectFit === '') image.style.objectFit = 'cover';
+      }
+    }
+  }
 
   override render() {
     const wrapper = html`
@@ -65,6 +89,7 @@ export class NteCardElement extends nextrap_element({
             id="image-slot"
             name="image"
             data-query=":scope > .image | :scope > img:not(.keep) | :scope > p:has(img:not(.keep))"
+            @slotchange=${this.onImageSlotChange}
           ></slot>
           <div part="gradient" id="gradient"></div>
         </div>

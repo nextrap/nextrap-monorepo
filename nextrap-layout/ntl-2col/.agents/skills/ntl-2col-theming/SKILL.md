@@ -27,6 +27,8 @@ Entwickler sagen teilweise `header` oder `footer`, meinen aber `top` oder `botto
 
 - Binde die vollständige Baseline an genau eine `style-*` Klasse, normalerweise mit `default-style()`.
 - Nutze vorhandene Mixins, bevor du eigenes `::part(...)`-Styling ergänzt.
+- Erzwinge in der gemeinsamen Standard-Baseline keine vertikale Zentrierung oder sonstige `justify`-Ausrichtung. Standardmäßig bleiben `main` und `aside` ohne zusätzliches Justify-Override; wenn eine Ausrichtung gewünscht ist, muss sie im Theme bewusst ergänzt werden – entweder direkt in der jeweiligen `style-*`-Variante oder ausdrücklich über eine Modifier-Class.
+- Wenn ein Theme eine eigene vertikale Ausrichtungslogik festlegt, wende sie innerhalb dieses Themes konsistent auf alle betroffenen `ntl-2col`-Varianten an statt nur auf einzelne Zufallsfälle.
 - Feature-Klassen beginnen mit `with-*`; jede Style-Variante beginnt mit `style-*` und enthält ihre vollständige Baseline.
 - Ändere Slot-Anordnung und Reihenfolge mit CSS, nicht mit TypeScript oder DOM-Umbauten.
 - Scope Desktop-Regeln auf `[mode='desktop']` und stelle im Mobile-Modus die richtige Lesereihenfolge sicher.
@@ -40,7 +42,7 @@ Erstelle keine zusätzliche `style-*`-Variante nur für konfigurierbare Eigensch
 | Abstand zu anderen Layouts | Theme-Content-Flow mit `--nt-spacing-section` |
 | Section-Fläche | `.surface-*` für Fläche und passende Textfarben; `.bg-*` für reinen Background |
 | Reverse oder Breakout | vorhandene Modifier wie `.reverse`, `.reverse-desktop`, `.breakout-start`, `.breakout-end` |
-| Vertikale Ausrichtung | `.with-justify-top`, `.with-justify-center` oder `.with-justify-bottom`; `default-style()` zentriert beide Spalteninhalte |
+| Vertikale Ausrichtung | nicht in die gemeinsame Standard-Baseline einbauen; nur bei Bedarf explizit im Theme setzen – bevorzugt direkt in der jeweiligen `style-*`-Variante über `::part(main)` und bei Bedarf `::part(aside)`, alternativ bewusst über eine Modifier-Class |
 | Sticky Main | `.with-main-sticky-top`; Offset über `--main-sticky-top` |
 | Wrapper-Background | `default-style($wrapper-bg-color: ...)` oder `with-wrapper-bg-color()` |
 | Border oder Radius | `default-style()`, eine dokumentierte Variable oder ein kombinierbarer `with-*`-Modifier |
@@ -62,7 +64,7 @@ Wichtige Variablen: `--breakpoint`, `--cols`, `--container-width`, `--gap` und `
 | `with-alternating()` | Aufeinanderfolgende Layouts alternieren |
 | `with-breakout-start()` / `with-breakout-end()` | Spalte zum Viewport-Rand erweitern |
 | `with-image-auto-objectfit()` | Automatische Aside-Bilder einpassen |
-| `with-justify($justify)` | Inhalte von `main` und `aside` auf Desktop vertikal ausrichten; Default ist `center` |
+| `with-justify($justify)` | vorhandenes Legacy-Mixin; nicht Teil der empfohlenen Standard-Baseline. Nur bewusst und explizit verwenden, wenn eine Modifier-Class oder eine projektweite Opt-in-Lösung gewünscht ist |
 | `with-main-sticky-top($top)` | Kurzen Main-Content auf Desktop im Viewport halten |
 | `with-background-and-divider()` | Hintergrund und Spaltentrenner |
 | `with-wrapper-bg-color()` | Wrapper-Hintergrund setzen |
