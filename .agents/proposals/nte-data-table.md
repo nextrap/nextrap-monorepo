@@ -1,725 +1,462 @@
-# Proposal: NTE Data Table
+# NTE Data Table – Proposal
 
-**Status:** Draft zur fachlichen und technischen Review  
-**Zielpaket:** `nextrap-elements/nte-data-table` / `@nextrap/nte-data-table` / `<nte-data-table>`  
-**Vorgeschichte:** [Issue #26](https://github.com/nextrap/nextrap-monorepo/issues/26), [PR #48](https://github.com/nextrap/nextrap-monorepo/pull/48)
+**Status:** Proposed  
+**Paket:** `@nextrap/nte-data-table`  
+**Element:** `<nte-data-table>`  
+**API-Details:** [nte-data-table-api.md](./nte-data-table-api.md)
 
-## Entscheidung in Kurzform
+## Kurzentscheidung
 
-`nte-data-table` soll eine Nextrap-native, schema- und datengetriebene Data-Grid-Komponente für Single-Page Applications werden. Der Schwerpunkt liegt zunächst auf einer gut bedienbaren Datentabelle: Daten darstellen, Zellen beziehungsweise Zeilen aktivieren, suchen, sortieren, auswählen und optional editieren.
+`nte-data-table` wird als erweiterbare, DOM-basierte Web Component für Single-Page Applications geplant. Die öffentliche API gehört Nextrep; Datenzugriff, Layout-Persistenz und Zelltypen liegen hinter eigenen Verträgen. Der Standardfall ist eine gut lesbare Datentabelle. Auswahl, Sortierung, Suche, Editing, Pinning und Reordering werden explizit zugeschaltet.
 
-Empfohlen wird:
+Die Komponente rendert genau einen semantischen Tabellen-/Grid-Baum. Kopf und Fuß bleiben sticky, der Body scrollt. Canvas und getrennte Header-/Body-Tabellen sind keine Basis des MVP. Eine Phase-0-Spike entscheidet nur, ob der interne Tabellen-State klein und nativ bleibt oder durch TanStack Table unterstützt wird; die öffentliche NTE-API bleibt davon unberührt.
 
-- ein DOM-basierter Renderer mit genau einem semantischen Tabellen-/Grid-Baum;
-- ein paketunabhängiger öffentlicher API-Vertrag, der keine Typen einer Fremdbibliothek preisgibt;
-- eine klare Trennung zwischen Daten-Connector, Tabellen-State, Layout-Persistenz und Zelltypen;
-- `NteArrayDataTableConnector` und `NteLocalStorageDataTableLayoutStore` als Defaults;
-- Text- und Select-Editing im MVP, alle weiteren Editoren über dieselbe Extension-API;
-- ein fester oberer Bereich, ein scrollender Viewport und ein fester Footer;
-- kein Column-Menü und keine Untermenüs;
-- Row-Virtualisierung erst nach einem funktionsfähigen, vermessenen DOM-MVP.
+Das interaktive MVP besteht aus zwei lieferbaren Inkrementen:
 
-Der alte PR #48 bleibt als UI- und Anforderungs-Spike wertvoll, soll aber technisch nicht fortgeführt werden. Er wird durch dieses Proposal konzeptionell ersetzt, jedoch nicht automatisch geschlossen.
+- **Phase 1A:** Darstellung, Connector, Sticky Layout, Spaltenbreiten, Pinning, Suche, Single-Sort, Aktivierung, einfache Auswahl und Persistenz.
+- **Phase 1B:** Text-/Select-Editing, Validierung, Multi-Selection, Multi-Sort, Column Reordering und `fit`-Layout.
+
+## Bezug zu bestehender Arbeit
+
+PR #48 („airtable-2: Add nte-data-table component“) und Issue #26 werden als UI-Spike und Vorarbeit berücksichtigt. Der alte Ansatz zeigt Sticky Header/Footer und Column Resize, entspricht aber nicht mehr den aktuellen Paketkonventionen und enthält noch keine stabilen Verträge für Connector, Editing, Query-State, Auswahl, Pinning, Virtualisierung oder austauschbare Persistenz.
+
+Dieses Proposal ersetzt den technischen Ansatz von PR #48, schließt oder überschreibt die bestehende Arbeit aber nicht automatisch.
 
 ## Ziele
 
-- Tabellenartige Daten in einer SPA mit stabilen Zeilen- und Spalten-IDs darstellen.
-- Spaltenbreiten konfigurieren, per Pointer und Tastatur ändern und persistent speichern.
-- Vertikales und optional horizontales Scrollen mit festem Spaltenheader und festem Footer.
-- Spalten logisch an `start` oder `end` anheften; keine hardcodierte Links-/Rechts-Logik.
-- Einzel- und Mehrfachauswahl von Zeilen und Spalten.
-- Sortierung nach einer oder mehreren Spalten.
-- Suche über externes UI im Toolbar-Slot und einen kontrollierten Search-State.
-- Optionales Inline-Editing pro Spalte, zunächst Text und Select.
-- Austauschbare Connectoren für lokale Arrays und spätere Remote-/Lazy-Datenquellen.
-- Austauschbare Persistenz für Layoutdaten, standardmäßig `localStorage`.
-- Erweiterbare Renderer, Editoren und Validatoren.
-- Themeing über Parts, Mixins und Nextrap-Tokens.
-- Keyboard- und Screenreader-Bedienung von Anfang an.
+- Daten in einer SPA schnell, semantisch und zugänglich darstellen.
+- Sticky Header und Sticky Footer mit einem dazwischenliegenden Scrollbereich.
+- Optionale horizontale Navigation, einstellbare Breiten und logisch gepinnte Start-/End-Spalten.
+- Single- und Multi-Selection für Zeilen und Spalten.
+- Suche, Sortierung, Column Reordering und optionales Row Reordering klar voneinander trennen.
+- Optionales In-Cell-Editing, zunächst Text und Select, später eigene Zelltypen.
+- Slots für Suche, eigene Toolbar-Inhalte, Ergebnisanzahl, Pagination und Status.
+- Lokale Arrays und asynchrone Datenquellen über denselben Connector-Vertrag unterstützen.
+- Layoutzustand über ein austauschbares Store-Interface speichern; eine Local-Storage-Implementierung mitliefern.
+- Styling über NTE-Default-Style, CSS Custom Properties, Parts und Slots anpassbar halten.
+- Den späteren Wechsel zu Range Loading und Row Virtualization ohne Bruch der öffentlichen API ermöglichen.
 
-## Non-Goals
+## Nicht-Ziele
 
-Nicht Bestandteil des initialen Cores sind:
-
-- Column-Menüs, Kontextmenüs oder verschachtelte Untermenüs;
-- Pivoting, Formeln, Charts oder ein vollständiger Excel-Klon;
-- Tree Data, Master/Detail und verschachtelte Tabellen;
-- automatische responsive Kartenansichten;
-- Canvas-Rendering;
-- ein bestimmtes REST-, GraphQL- oder Datenbankprotokoll;
-- kollaboratives Echtzeit-Editing;
-- Export nach Excel/PDF im MVP.
-
-Filter können später über einen kontrollierten State und externe UI ergänzt werden. Dafür muss kein eingebautes Column-Menü entstehen.
+- Keine eingebauten Kontext-, Header- oder Untermenüs.
+- Kein vollständiger Excel-Klon im MVP.
+- Keine Pivot Tables, Formeln, Charts, Tree Data oder Grouping im Kern.
+- Keine fest verdrahtete REST-, GraphQL- oder Backend-Implementierung.
+- Keine serverseitige Rechteverwaltung oder Saved-View-Verwaltung im Element.
+- Kein ungefragtes Persistieren von Zeilen, Suchbegriffen oder Auswahl im Browser.
+- Kein Canvas-Renderer im ersten Ausbau.
+- Keine variable Row Height vor einer belastbaren festen Virtualisierungsstrategie.
 
 ## Markt- und Open-Source-Vergleich
 
-Stand der Recherche: 28. August 2026. Die Produkte dienen als Funktions- und Architekturvergleich, nicht automatisch als Abhängigkeit.
+Stand der Recherche: August 2026. Aussagen und Lizenzgrenzen sind vor einer tatsächlichen Übernahme einer Abhängigkeit nochmals zu prüfen.
 
-| Referenz | Typischer Einsatz und Umfang | Relevanz für NTE |
-|---|---|---|
-| [TanStack Table](https://tanstack.com/table/latest/docs/overview) | MIT-lizenzierter, headless Table-State mit offizieller [Lit-Integration](https://tanstack.com/table/latest/docs/framework/lit). Enthält unter anderem Sortierung, Selection, Sizing, Ordering und Pinning; Editing, Fetching und Rendering bleiben in der Anwendung. | Beste Referenz für einen kontrollierten, rendererunabhängigen State. Realistische interne Engine-Alternative, falls eine zusätzliche Dependency zugelassen wird. |
-| [Tabulator](https://www.tabulator.info/) | Vollständiges MIT-Grid mit Virtual DOM, Editoren, Remote-Daten, Range-/Row-/Column-Selection, Frozen Columns und erweiterbarer [Persistence](https://www.tabulator.info/docs/6.x/persist). | Nächstes vollständiges OSS-Funktionsvorbild. Als Wrapper schnell, aber mit eigenem Renderer, Stylingmodell und großer API-Oberfläche. |
-| [RevoGrid](https://rv-grid.com/guide/) | MIT-Core als Web Component mit Virtualisierung, Editing, Selection, Pinning und Plugin-System; zusätzliche Funktionen werden als Pro angeboten. Die Doku beschreibt [versionierte State-Persistenz](https://rv-grid.com/guide/state-persistence). | Technisch nächster fertiger Web-Component-Kandidat. Vor einer Übernahme müssten Pro-Grenzen, Attribution, verschachteltes Themeing und API-Lock-in geprüft werden. |
-| [AG Grid](https://www.ag-grid.com/javascript-data-grid/community-vs-enterprise/) | Sehr vollständiges Enterprise-Grid. Community ist MIT; fortgeschrittene Server-, Range- und Analysefunktionen liegen teilweise in der kommerziellen Edition. Mehrere [Row Models](https://www.ag-grid.com/javascript-data-grid/row-models/) trennen lokale und serverseitige Daten. | Gutes Connector- und Capability-Vorbild, aber keine geeignete öffentliche NTE-Abhängigkeit. |
-| [Handsontable](https://handsontable.com/) | DOM-basiertes Spreadsheet-Grid mit Editoren, Validatoren, Clipboard, Frozen Rows/Columns und Virtualisierung. Kommerzielle Produktion benötigt eine [bezahlte Lizenz](https://handsontable.com/docs/javascript-data-grid/software-license/). | Beste Spreadsheet-UX-Referenz, aber für den Nextrap-Core zu schwer und lizenzseitig ungeeignet. |
-| [Glide Data Grid](https://github.com/glideapps/glide-data-grid) | MIT, React und Canvas; optimiert für Millionen Zeilen und schnelles Scrolling. Datenmutation, Sortierung und Filterung bleiben weitgehend beim Host. | Performance-Gegenpol. Canvas würde Nextrap-Parts, DOM-Zellkomponenten und Accessibility erschweren und ist deshalb nicht für den MVP empfohlen. |
-| [MUI X Data Grid](https://mui.com/x/react-data-grid/) | React-/Material-Grid mit Community-, Pro- und Premium-Stufen. Der [Data-Source-Vertrag](https://mui.com/x/react-data-grid/server-side-data/) kapselt serverseitige Reads und Updates. | Bestätigt die Trennung von lokalem/remote Datenmodell und View-State; als React-/Lizenz-gebundene Basis ungeeignet. |
-| [Airtable Grid View](https://support.airtable.com/articles/7905594155-airtable-grid-view) und [GitHub Projects Table](https://docs.github.com/en/issues/planning-and-tracking-with-projects/customizing-views-in-your-project/customizing-the-table-layout) | Geschlossene Produkte mit typisierten Feldern, direktem Editing, gespeicherten Views, Sortierung, Filterung, Spaltenbreite/-sichtbarkeit und Pinning. | UX-Vorbilder. Wichtigste Lehre: Schema, Daten und persistierter View-/Layout-State sind drei verschiedene Dinge. |
+| Produkt | Modell und typischer Einsatz | Relevanter Umfang | Konsequenz für NTE |
+| --- | --- | --- | --- |
+| [TanStack Table](https://tanstack.com/table/latest/docs/overview) | MIT, headless, mit offizieller [Lit-Integration](https://tanstack.com/table/latest/docs/framework/lit); anwendungsnahe Tabellen und eigene Designsysteme | Sortierung, Selection, Sizing, Ordering und Pinning als State; Rendering, Editing und Datenzugriff bleiben bei der App | Stärkster Kandidat für einen optionalen internen State-Kern, ohne NTE an fremdes DOM oder Styling zu binden |
+| [AG Grid](https://www.ag-grid.com/javascript-data-grid/community-vs-enterprise/) | Community unter MIT, Enterprise kommerziell; große Business-Grids | Viele Editoren, Selection, Pinning, [Row Models](https://www.ag-grid.com/javascript-data-grid/row-models/) und [DOM-Virtualisierung](https://www.ag-grid.com/javascript-data-grid/dom-virtualisation/) | Sehr vollständige Buy-Alternative, aber Enterprise-Abgrenzung, API-Oberfläche und Styling passen nicht als schlanker NTE-Standard |
+| [Tabulator](https://www.tabulator.info/) | MIT, vollständiges DOM-Grid für klassische Webanwendungen | Editing, Frozen Columns, Selection, Remote Data, [Virtual DOM](https://www.tabulator.info/docs/6.x/virtual-dom/) und [Persistence](https://www.tabulator.info/docs/6.x/persist) | Gute Funktionsreferenz und schnelle Integrationsalternative; weniger passend für eine eigene Lit-/NTE-Komponenten-API |
+| [RevoGrid](https://rv-grid.com/guide/) | MIT-Core als Web Component, zusätzliche Pro-Angebote; große editierbare Grids | Virtual DOM, Editing, Pinning, Plugins und [State Persistence](https://rv-grid.com/guide/state-persistence) | Beste Wrapper-/Time-to-market-Alternative. Vor Übernahme sind Pro-Grenzen, Attribution, Themeing und langfristige API-Kopplung zu klären |
+| [Handsontable](https://handsontable.com/) | Source-available, kommerzielle Produktionslizenz; spreadsheet-nahe Business-Anwendungen | Cell-/Range-Selection, Editoren, Validierung, Clipboard, Frozen Rows/Columns und [Virtualisierung](https://handsontable.com/docs/javascript-data-grid/row-virtualization/) | Stärkste UX-Referenz für spätere Spreadsheet-Funktionen, aber keine geeignete Standardabhängigkeit für ein frei erweiterbares NTE-Paket |
+| [Glide Data Grid](https://github.com/glideapps/glide-data-grid) | MIT, React und Canvas; sehr große Datensätze | Performantes Scrolling, Editing, Resize, Move und Selection | Performance-Referenz. Canvas kollidiert mit NTE-Parts, DOM-Slots und einer einfachen Accessibility-Strategie |
+| [MUI X Data Grid](https://mui.com/x/react-data-grid/) | React; Community plus kommerzielle Pro-/Premium-Stufen | Große Produkt-API, Server-[Data Source](https://mui.com/x/react-data-grid/server-side-data/), Editing, Selection und Premium-Funktionen | Gute Referenz für Connector-Capabilities, aber React- und Lizenzkopplung schließen einen direkten NTE-Standard aus |
+| [Airtable Grid View](https://support.airtable.com/articles/7905594155-airtable-grid-view) | Closed Source; kollaborative Datensichten | Feldtypen, Resize/Reorder, Frozen Fields, Sort/Filter und Editing | UX-Vorbild für progressive Interaktion, nicht für die interne Architektur |
+| [GitHub Projects Table](https://docs.github.com/en/issues/planning-and-tracking-with-projects/customizing-views-in-your-project/customizing-the-table-layout) | Closed Source; planungsorientierte Datensichten | Inline Editing, Field Layout, Sortierung, Gruppierung und Saved Views | UX-Vorbild für eine ruhige Tabelle ohne permanent sichtbare Menüstruktur |
+
+### Erkenntnisse aus dem Vergleich
+
+1. **Headless-Verträge sind die stabilste Erweiterungsgrenze.** TanStack und die Data-Source-Modelle kommerzieller Grids trennen Query-State von Rendering und Datenzugriff.
+2. **Editing braucht Zelltypen, nicht viele Spezialattribute.** Handsontable, AG Grid, Tabulator und RevoGrid modellieren Renderer, Editor, Parser und Validator getrennt.
+3. **Virtualisierung ist eine Rendering-Strategie.** Sie darf Connector, Selection und Layout-Persistenz nicht definieren.
+4. **Persistence ist Anwendungspolitik.** Tabulator und RevoGrid zeigen den Nutzen, Handsontables Entwicklung zeigt aber auch, warum ein austauschbarer Store besser als festes `localStorage` im Renderer ist.
+5. **Spreadsheet-Funktionen vervielfachen Scope und Accessibility-Aufwand.** Range Selection, Clipboard, Undo und Fill Handle gehören daher in spätere Phasen.
+6. **Ein DOM-Grid ist für NTE der passende Start.** Es harmoniert mit Custom Elements, Slots, Parts, Testing und dem Designsystem. Canvas bleibt nur eine denkbare Spezialalternative.
 
 ## Umsetzungsalternativen
 
-| Alternative | Vorteile | Nachteile | Bewertung |
-|---|---|---|---|
-| A. Nextrap-nativer DOM-Core | Volle Kontrolle über API, Parts, A11y, Bundle und Release-Zyklus; keine neue Dependency; exakt auf den Scope begrenzbar. | Größter eigener Implementierungs- und Testaufwand, insbesondere bei Range-Selection und Virtualisierung. | **Empfehlung für das MVP.** |
-| B. TanStack Table intern | Headless, MIT, Lit-Integration und ausgereifte State-Modelle; NTE behält Renderer und Styling. | Neue Dependency entgegen dem heutigen dependency-armen Repo-Contract; Connector, Editing und A11y bleiben eigene Arbeit. | Beste Alternative, falls eine Dependency ausdrücklich freigegeben wird. |
-| C. NTE-Wrapper um RevoGrid Community | Schnellster Weg zu Virtualisierung und spreadsheetartiger Interaktion; bereits eine Web Component. | Open-Core-/Pro-Grenzen, Attribution, doppelte Komponenten-/Theme-Schicht und Fremd-API-Lock-in. | Sinnvoll, wenn Time-to-Market wichtiger als vollständige Nextrap-Kontrolle ist. |
-| D. Wrapper um Tabulator oder AG Grid | Sehr schneller großer Funktionsumfang. | Renderer-, Styling- und Eventmodell passen schlecht zum Nextrap-Contract; AG Grid hat zusätzliche Lizenzgrenzen. | Für das Hauptpaket nicht empfohlen. |
+### A. Eigener NTE-Kern mit nativem DOM-Renderer – bevorzugte Ausgangslage
 
-Unabhängig von der gewählten internen Engine bleiben alle öffentlichen NTE-Typen eigenständig. Fremdtypen dürfen nicht in `columns`, Connectoren, Events oder Skills auftauchen. Damit kann die interne Engine später geändert werden.
+Vorteile:
 
-## Empfohlene Architektur
+- volle Kontrolle über Web-Component-API, DOM, Parts und Accessibility;
+- kein fremdes Lizenz- oder Themeing-Modell;
+- kleinster Scope für eine reine Data Table;
+- Connector, LayoutStore und Cell Types können exakt auf NTE zugeschnitten werden.
 
-| Schicht | Verantwortung |
-|---|---|
-| `NteDataTable` | Öffentliche Properties, Slots, Methoden und Events; verbindet alle Schichten. |
-| State/Controller | Query, Auswahl, Fokus, Layout, Editing und Ladezustand; verarbeitet Commands deterministisch. |
-| `NteDataTableConnector<Row>` | Liest und mutiert fachliche Daten; kennt keinen DOM- oder Layout-State. |
-| `NteDataTableLayoutStore` | Lädt und speichert ausschließlich Layout-/View-Konfiguration. |
-| Cell-Type Registry | Renderer, Editor, Parser, Validator und Clipboard-Serialisierung je Zelltyp. |
-| DOM Renderer | Semantisches Markup, Sticky Header, gepinnte Spalten, Scrollen, Fokus und Tastatur. |
+Risiken:
 
-Connector-Antworten werden über `AbortSignal` abgebrochen und zusätzlich mit einer Request-ID gegen verspätete Antworten abgesichert.
+- Navigation, Pinning, Multi-Sort und Selection benötigen eigene State-Tests;
+- Virtualisierung muss später gezielt entwickelt oder ergänzt werden.
 
-## Rendering und Scroll-Modell
+### B. NTE-API mit TanStack Table als internem State-Kern – gleichwertiger Spike-Kandidat
 
-Der Host besteht funktional aus drei vertikalen Bereichen:
+Vorteile:
 
-1. einer optionalen festen Toolbar;
-2. einem `minmax(0, 1fr)`-Viewport als einzigem horizontalen und vertikalen Scrollport;
-3. einem festen Footer.
+- erprobter State für Sizing, Ordering, Pinning, Sortierung und Selection;
+- headless und mit Lit integrierbar;
+- NTE behält DOM, Slots, Styling und Connector-Verträge.
 
-Im Viewport liegt genau eine Tabelle mit `colgroup`, `thead` und `tbody`. Header und angeheftete Spalten werden innerhalb dieses Scrollports mit `position: sticky` umgesetzt. Header und Body werden nicht in getrennte Tabellen kopiert, weil dies die semantische Header-Zell-Beziehung und die synchrone Spaltenbreite unnötig erschwert. Für eine native Tabelle ist ein einzelner Baum mit sticky `th` auch die empfohlene Accessibility-Grundlage; siehe [Stanford Accessibility: Sticky Table Header](https://uit.stanford.edu/accessibility/techniques/websites/website-tables/table-sticky).
+Risiken:
 
-Spaltenbreiten werden über `colgroup` beziehungsweise zentrale Grid-Tracks aktualisiert, nicht wie in PR #48 an jeder einzelnen Zelle. Logische Pins verwenden `inset-inline-start` und `inset-inline-end`.
+- zusätzliche Root-Dependency und Adapter-Code;
+- NTE muss verhindern, dass TanStack-Typen Teil der öffentlichen API werden;
+- Editing, Persistenz und Async Connector bleiben eigene Arbeit.
 
-Zwei Layout-Modi bleiben konfigurierbar:
+### C. RevoGrid-Wrapper – Time-to-market-Alternative
 
-- `scroll` (Default): feste/minimale Spaltenbreiten; horizontaler Scroll entsteht bei Bedarf;
-- `fit`: Spalten werden innerhalb der verfügbaren Breite verteilt; kein horizontaler Scroll.
+Sinnvoll, wenn sehr große Datenmengen und Virtualisierung bereits in der ersten Lieferung zwingend sind. Ein Wrapper muss trotzdem NTE-Events, Themeing und Datenadapter definieren. Vorher braucht es eine Lizenz-/Attribution-/Pro-Feature-Prüfung sowie einen Accessibility- und Shadow-DOM-Prototyp.
 
-Auf kleinen Viewports werden Spalten nicht automatisch gestapelt. `scroll` bleibt die sichere Default-Darstellung; Sichtbarkeit oder ein `fit`-Layout werden bewusst konfiguriert. Toolbar und Footer dürfen umbrechen.
+### D. AG Grid oder Handsontable einkaufen
 
-Der MVP nutzt DOM-Rendering ohne Windowing. Die interne Renderergrenze darf später Row-Virtualisierung ergänzen, ohne die öffentliche API zu ändern. Ein Canvas-Renderer wird nicht als öffentlicher Modus versprochen.
+Sinnvoll für ein konkretes Produkt mit Budget und kurzfristigem Bedarf an Spreadsheet-, Pivot- oder Enterprise-Funktionen. Nicht geeignet als allgemeine Standardbasis des frei erweiterbaren NTE-Pakets.
 
-## Öffentliche Konfiguration
+### Phase-0-Entscheidungsspike
 
-Komplexe Werte werden als JavaScript-Properties beziehungsweise über `configure()` übergeben. JSON in HTML-Attributen ist nicht Teil des Contracts.
+Native State/DOM und TanStack-intern werden mit identischem NTE-Prototyp verglichen:
 
-```ts
-export type NteDataTableRowId = string | number;
-export type NteDataTableColumnId = string;
+- 2.000 Zeilen × 20 Spalten;
+- Sticky Header/Footer, zwei gepinnte Start-Spalten;
+- Resize, Column Move, Search, Sort und Auswahl;
+- ein Text-Editor;
+- Keyboard- und Screenreader-Smoke-Test;
+- Bundle-Differenz, API-Leakage, Testbarkeit und Implementierungsaufwand.
 
-export interface NteDataTableBaseConfig<Row> {
-  columns: readonly NteDataTableColumn<Row>[];
+Entscheidungskriterium ist nicht die längste Featureliste, sondern die kleinere, wartbare Implementierung bei unveränderter öffentlicher API. RevoGrid wird nur dann als dritte Spike-Variante aufgenommen, wenn Virtualisierung eine Phase-1-Anforderung wird.
 
-  layoutStore?: NteDataTableLayoutStore;
-  persistenceKey?: string;
-  schemaKey?: string;
+## Architektur
 
-  layoutMode?: "scroll" | "fit";
-  sortMode?: "none" | "single" | "multiple";
+| Schicht | Verantwortung | Erweiterungspunkt |
+| --- | --- | --- |
+| `NteDataTable` | öffentliche Properties, Slots, Methoden und Events | stabiler NTE-Vertrag |
+| Controller/State | Query, Layout, Selection, Fokus, Edit- und Ladezustand | später optional kontrollierter Adapter |
+| Renderer | ein DOM-Baum, Sticky Layout, Navigation, Resize, Pinning | austauschbare interne Rendering-Strategie |
+| `NteDataTableConnector` | Lesen und optional Mutieren/Verschieben | Array-, REST-, IndexedDB- oder App-Connector |
+| `NteDataTableLayoutStore` | serialisierbares Layout laden/speichern/löschen | Local Storage als mitgelieferter Default |
+| Cell-Type-Registry | Anzeige, Sort-/Suchwert, Editor, Parser, Validator | eigene Zelltypen ohne Änderung am Kern |
 
-  selection?: {
-    rows?: "none" | "single" | "multiple";
-    columns?: "none" | "single" | "multiple";
-  };
+Die Kernregel lautet: Connector und Store erhalten nur serialisierbare Daten-/Query-Beschreibungen. DOM-Nodes, Lit-Templates, Renderer-Callbacks und komplette UI-Spaltendefinitionen verlassen die Komponente nicht.
 
-  editing?: {
-    activation?: "single-click" | "double-click" | "enter";
-    commit?: "enter" | "blur-or-enter";
-  };
-}
+## Rendering und Layout
 
-export type NteDataTableConfig<Row> = NteDataTableBaseConfig<Row> &
-  (
-    | {
-        // Bequeme SPA-Variante; intern durch den Array-Connector gekapselt.
-        rows: readonly Row[];
-        getRowId: (row: Row) => NteDataTableRowId;
-        connector?: never;
-      }
-    | {
-        connector: NteDataTableConnector<Row>;
-        rows?: never;
-        getRowId?: never;
-      }
-  );
-```
+### Ein semantischer Baum
 
-`rows` und `connector` sind alternative Datenquellen und dürfen nicht gleichzeitig gesetzt werden. Die `rows`-Variante verlangt einen stabilen `getRowId`-Callback; der Connector besitzt dafür seine eigene `getRowId()`-Methode. Eine widersprüchliche Konfiguration schlägt bereits typseitig und zusätzlich zur Laufzeit verständlich fehl.
+Der Default-Renderer verwendet einen einzigen Tabellenbaum innerhalb eines Scrollports. `thead` und `tfoot` sind sticky; `tbody` bleibt Teil desselben Elements. Damit bleiben Header-Zuordnung, Spaltenbreiten und logische Reihenfolge konsistent. Getrennte synchronisierte Tabellen für Header, Body und Footer sind ausgeschlossen.
 
-Einfache primitive Konfiguration kann zusätzlich als Attribut gespiegelt werden:
+`interactionMode` bestimmt die Semantik:
 
-| Attribut | Default | Bedeutung |
-|---|---|---|
-| `layout-mode` | `scroll` | Horizontaler Scroll oder Fit-Verteilung. |
-| `persistence-key` | – | Stabiler Schlüssel für persistiertes Layout. |
-| `sort-mode` | `single` | Keine, einfache oder mehrfache Sortierung. |
-| `readonly` | aus | Deaktiviert alle Editoren, ohne die Spaltendefinition zu ändern. |
-| `aria-label` | – | Zugänglicher Name der Tabelle. |
+- `table`: reine Datendarstellung mit normaler Tabelleninteraktion;
+- `grid`: roving Tabindex und zellweise Tastaturnavigation;
+- `auto` als Default: `grid`, sobald Zellaktivierung, Auswahl oder Editing konfiguriert ist, sonst `table`.
 
-## Spaltenschema
+`readonly` deaktiviert nur Änderungen. Es schaltet Navigation, Selection oder Sortierung nicht ab.
 
-```ts
-export interface NteDataTableColumn<Row, Value = unknown> {
-  id: NteDataTableColumnId;
-  label: string;
-  ariaLabel?: string;
+### Höhenvertrag
 
-  field?: keyof Row;
-  value?: (row: Row) => Value;
-  setValue?: (row: Row, value: Value) => Row;
-  queryKey?: string;
+Für einen internen vertikalen Scrollbereich braucht der Host eine begrenzte `block-size`, `max-block-size` oder einen entsprechend begrenzten Parent. Ohne Begrenzung wächst die Tabelle natürlich mit ihren Zeilen; es wird kein künstlicher interner Viewport erzwungen. Das wird in Demo und Usage-Skill sichtbar dokumentiert.
 
-  width?: number;
-  minWidth?: number;
-  maxWidth?: number;
-  flex?: number;
-  align?: "start" | "center" | "end";
+### Breiten und horizontales Scrollen
 
-  pinned?: "start" | "end";
-  resizable?: boolean;
-  reorderable?: boolean;
-  sortable?: boolean;
-  searchable?: boolean;
-  selectable?: boolean;
+Jede Spalte besitzt `width`, `minWidth`, `maxWidth` und optional `flex`.
 
-  editable?:
-    | boolean
-    | ((context: NteDataTableCellContext<Row, Value>) => boolean);
+- `scroll` ist der Default: Breiten bleiben stabil; wenn die Summe größer als der Viewport ist, entsteht horizontaler Overflow.
+- `fit` folgt in Phase 1B: Restbreite wird nach `flex` verteilt. Unterschreitet die Summe der Mindestbreiten den Viewport nicht, fällt auch `fit` deterministisch auf Overflow zurück.
+- Während eines Resize wird nur zentraler Layout-State geändert; die native Variante schreibt die resultierenden Breiten über ein `colgroup`.
+- Pointer- und Keyboard-Resize verwenden dieselben Commands.
+- Gespeicherte Breiten werden beim Laden gegen aktuelle Min-/Max-Werte geklemmt.
 
-  cellType?: string;
-  render?: NteDataTableCellRenderer<Row, Value>;
-  editor?:
-    | "text"
-    | NteDataTableSelectEditor<Row, Value>
-    | NteDataTableEditorFactory<Row, Value>;
+### Pinning und Reihenfolge
 
-  parse?: (input: unknown, context: NteDataTableCellContext<Row, Value>) => Value;
-  validate?: (
-    value: Value,
-    context: NteDataTableCellContext<Row, Value>,
-  ) => void | string | Promise<void | string>;
-}
+Spalten werden immer in drei Zonen normalisiert:
 
-export interface NteDataTableCellContext<Row, Value = unknown> {
-  row: Row;
-  rowId: NteDataTableRowId;
-  rowIndex: number;
-  column: NteDataTableColumn<Row, Value>;
-  value: Value;
-}
+1. `start`,
+2. ungepinntes Center,
+3. `end`.
 
-export type NteDataTableCellRenderer<Row, Value> = (
-  context: NteDataTableCellContext<Row, Value>,
-) => Node | string;
+Die relative Reihenfolge innerhalb einer Zone bleibt erhalten. `moveColumn()` bewegt standardmäßig nur innerhalb der aktuellen Zone; `pinColumn(id, "start" | "end" | null)` wechselt die Zone explizit. Logische Richtungen funktionieren auch in RTL. Gepinnte Zellen werden nicht dupliziert.
 
-export interface NteDataTableSelectEditor<Row, Value> {
-  type: "select";
-  options:
-    | readonly { value: Value; label: string; disabled?: boolean }[]
-    | ((
-        context: NteDataTableCellContext<Row, Value>,
-      ) => Promise<readonly { value: Value; label: string; disabled?: boolean }[]>);
-}
+### Slots
 
-export interface NteDataTableMountedEditor<Value> {
-  element: HTMLElement;
-  readValue(): Value;
-  focus(): void;
-  destroy?(): void;
-}
+| Slot | Zweck |
+| --- | --- |
+| `caption` | sichtbare oder screenreader-taugliche Tabellenbeschreibung |
+| `toolbar-start` | Suche, externe Filter oder eigene Controls |
+| `toolbar-end` | eigene Aktionen |
+| `header-start`, `header-end` | zusätzliche Inhalte oberhalb des Tabellen-Headers |
+| `footer-start` | beispielsweise Ergebnisanzahl |
+| `footer-center` | Status oder eigene Zusammenfassung |
+| `footer-end` | Pagination oder Aktionen |
+| `loading`, `empty`, `error` | anwendungsspezifische Zustandsdarstellung |
 
-export type NteDataTableEditorFactory<Row, Value> = (
-  context: NteDataTableCellContext<Row, Value>,
-) => NteDataTableMountedEditor<Value>;
-```
+Die Komponente baut kein Suchfeld und keine Menüs ein. Ein Suchfeld im Slot ruft über die App `setSearch()` auf. Dynamische Slots pro Zelle werden vermieden; dafür gibt es Renderer und Cell Types.
 
-Strings aus Renderern werden immer als Text behandelt, nicht als HTML. Komplexe Zellen nutzen sichere DOM-/Lit-Templates oder registrierte Cell Types.
+## Daten- und State-Modell
 
-`pinned: "start" | "end"` ist absichtlich logischer als `left | right` und funktioniert auch in RTL-Layouts. Pins werden über stabile Column-IDs und nicht nur über eine Anzahl „erste N Spalten“ gespeichert. Eine Convenience-Konfiguration darf später die ersten N Spalten auf `start` setzen.
+### Zwei klar getrennte Datenmodi
 
-## Daten-Connector
+**Direkter Array-Modus**
 
-```ts
-export interface NteDataTableQuery {
-  search: string;
-  sort: readonly {
-    columnId: NteDataTableColumnId;
-    queryKey: string;
-    direction: "asc" | "desc";
-  }[];
-  filters?: readonly unknown[];
+- `configure({ rows, getRowId, columns })` übernimmt eine neue Array-Kopie.
+- Caller-Zeilen werden nie direkt mutiert.
+- Bei einer Feldänderung erzeugt die Tabelle eine flache Kopie der betroffenen Zeile und ein neues Array.
+- Bei berechneten Accessors ist Editing nur mit `setValue(row, value)` möglich; auch dieser Hook muss eine Ersatzzeile liefern.
+- `getRows()` liefert die aktuelle read-only Sicht; `setRows()` ersetzt sie.
+- Nach lokaler Mutation wird `nte-data-table-rows-change` mit dem neuen Array ausgelöst.
 
-  // Bereits im Contract, obwohl Range-Loading erst später vollständig
-  // implementiert wird.
-  range?: {
-    start: number;
-    size: number;
-  };
-}
+**Connector-Modus**
 
-export interface NteDataTableReadResult<Row> {
-  rows: readonly Row[];
-  start: number;
-  totalRowCount: number | null;
-  revision?: string;
-}
+- Der Connector ist die autoritative Datenquelle.
+- Query-Änderungen lösen einen abbrechbaren Read aus; verspätete Antworten werden verworfen.
+- Editing ist nur verfügbar, wenn `updateCells()` implementiert und in der Komponente aktiviert ist.
+- Liefert eine Mutation aktualisierte Zeilen, werden diese eingepatcht. Andernfalls wird der aktuelle Bereich neu geladen.
+- Row Reordering ist nur mit `moveRows()` möglich und bei aktiver Datensortierung standardmäßig deaktiviert.
 
-export interface NteDataTableCellMutation {
-  rowId: NteDataTableRowId;
-  columnId: NteDataTableColumnId;
-  previousValue: unknown;
-  value: unknown;
-  baseRevision?: string;
-}
+Die beiden Modi sind in der Konfiguration gegenseitig exklusiv.
 
-export interface NteDataTableConnector<Row> {
-  getRowId(row: Row): NteDataTableRowId;
+### Query-State
 
-  readonly capabilities?: {
-    search?: boolean;
-    sort?: boolean;
-    multiSort?: boolean;
-    rangeRead?: boolean;
-    updateCells?: boolean;
-    moveRows?: boolean;
-    liveUpdates?: boolean;
-  };
+Der öffentliche Sort-State enthält nur `columnId` und `direction`. Der Connector erhält einen aufgelösten `queryKey`; dieser entsteht aus `column.queryKey`, sonst einem String-`field`, sonst der Spalten-ID. Filter werden nicht als untypisiertes Feld in das MVP geschoben. Eine typisierte, diskriminierte Filter-API folgt in Phase 2.
 
-  read(
-    query: NteDataTableQuery,
-    context: {
-      signal: AbortSignal;
-      columns: readonly NteDataTableColumn<Row>[];
-    },
-  ): Promise<NteDataTableReadResult<Row>>;
+Der Array-Connector berücksichtigt `sortValue`, `compare` und `searchText`, damit Datum, Zahl, `null`, Objekt und eigene Zelltypen nicht über zufällige String-Konvertierung sortiert oder gesucht werden.
 
-  updateCells?(
-    mutations: readonly NteDataTableCellMutation[],
-    context: { signal: AbortSignal },
-  ): Promise<{
-    updatedRows?: readonly Row[];
-    revision?: string;
-  }>;
+### Interner State
 
-  moveRows?(
-    request: {
-      rowIds: readonly NteDataTableRowId[];
-      beforeRowId: NteDataTableRowId | null;
-    },
-    context: { signal: AbortSignal },
-  ): Promise<void>;
+Der State ist intern verwaltet, aber vollständig les- und setzbar:
 
-  subscribe?(listener: (change: unknown) => void): () => void;
-}
-```
+- `getState()` liefert einen unveränderlichen Snapshot;
+- gezielte Methoden ändern Query, Selection und Layout;
+- Events melden jede akzeptierte Änderung;
+- ein wirklich kontrollierter Framework-Adapter kann später auf diesen Verträgen aufbauen.
 
-Mitgeliefert wird `NteArrayDataTableConnector<Row>`. Er übernimmt lokale Suche, Sortierung und Updates für normale SPA-Arrays. Ein REST-, GraphQL-, IndexedDB- oder anderer Connector implementiert denselben Vertrag.
-
-Der Connector meldet Fähigkeiten explizit. Die Tabelle bietet keine Aktion an, die der Connector nicht ausführen kann.
-
-Begriffe werden getrennt:
-
-- **Sortierung:** Anzeigereihenfolge der Daten anhand einer oder mehrerer Spalten.
-- **Column Reordering:** Visuelle Reihenfolge der Spalten.
-- **Row Reordering:** Fachliche manuelle Reihenfolge der Datensätze über `moveRows()`.
-
-Row Reordering ist bei aktiver Sortierung standardmäßig deaktiviert, weil die manuelle und die berechnete Reihenfolge sonst widersprüchlich sind.
+Es gibt im MVP keine Behauptung, dass jede Property automatisch ein „controlled component“-Muster implementiert.
 
 ## Layout-Persistenz
 
-```ts
-export interface NteDataTableLayoutSnapshot {
-  version: 1;
-  schemaKey: string;
-  columns: Record<
-    NteDataTableColumnId,
-    {
-      width?: number;
-      order?: number;
-      pinned?: "start" | "end";
-      hidden?: boolean;
-    }
-  >;
-}
+`NteDataTableLayoutStore` lädt, speichert und löscht versionierte Layout-Snapshots. Mitgeliefert wird `NteLocalStorageDataTableLayoutStore`.
 
-export interface NteDataTableLayoutStore {
-  load(context: {
-    key: string;
-    schemaKey: string;
-    columnIds: readonly NteDataTableColumnId[];
-  }): Promise<NteDataTableLayoutSnapshot | null>;
+- Der Local-Storage-Store ist die Standardimplementierung, sobald Persistenz mit `persistence-key` oder `persistLayout` explizit aktiviert wird.
+- Ohne stabilen Key wird nichts dauerhaft gespeichert.
+- `layoutStore: null` oder `persistLayout: false` deaktiviert Persistenz ausdrücklich.
+- Der Default-`schemaKey` ist deterministisch aus Store-Version und sortierten Spalten-IDs abgeleitet; Apps können für kontrollierte Migrationen einen eigenen Key setzen.
+- Gespeichert werden zunächst Breite, Reihenfolge und Pin-Zone, später optional Sichtbarkeit.
+- Zeilendaten, Suche, Auswahl und Edit-Inhalte gehören nicht in diesen Store.
+- Unbekannte alte Spalten werden ignoriert; neue Spalten erhalten Defaults.
+- Beschädigte Payloads, Quota-, Privacy- und Security-Fehler sind nicht fatal und werden als typisierte Fehler-Events gemeldet.
+- Während des Ziehens wird nur State aktualisiert; Speicherung erfolgt nach Abschluss beziehungsweise debounced.
 
-  save(
-    context: { key: string },
-    snapshot: NteDataTableLayoutSnapshot,
-  ): Promise<void>;
+## Editing und Zelltypen
 
-  clear(context: { key: string }): Promise<void>;
-}
-```
-
-Default ist `NteLocalStorageDataTableLayoutStore`.
-
-Regeln:
-
-- Persistenz wird mit `persistenceKey`, ersatzweise einer stabilen Element-ID aktiviert.
-- Fehlen beide, gibt es keine dauerhafte Speicherung und keinen zufälligen Fallback-Key.
-- Der gespeicherte Schlüssel ist paket- und versionsnamespaced.
-- Im MVP werden nur Breiten geschrieben; `order`, `pinned` und `hidden` sind bereits schemafähig.
-- Während des Ziehens wird nur der interne State aktualisiert. Gespeichert wird auf Resize-Ende beziehungsweise debounced.
-- Gespeicherte Breiten werden gegen `minWidth` und `maxWidth` validiert.
-- Entfernte Spalten werden ignoriert, neue Spalten nutzen Defaults.
-- Beschädigtes JSON, Quota- und Privacy-Fehler sind nicht fatal und lösen ein Fehler-Event aus.
-- `resetColumnLayout()` löscht den gespeicherten Snapshot.
-- Zeilendaten, Search-Text und Auswahl werden nicht im Layout-Store gespeichert.
-
-Weitere Stores, zum Beispiel REST, IndexedDB oder ein Benutzerprofil, werden im Extension-Skill beschrieben.
-
-## Editing-Contract
-
-Editing ist pro Spalte opt-in. Ohne `editable` bleibt die Tabelle eine Read-/Interaction-Tabelle.
-
-MVP-Editoren:
+Editing ist pro Tabelle und Spalte opt-in. Phase 1B liefert:
 
 - `text`;
-- `select` mit statischen oder asynchron geladenen Optionen.
+- `select` mit synchronen oder asynchronen Optionen und `AbortSignal`;
+- Parser und synchrone/asynchrone Validierung;
+- Custom Renderer;
+- Custom Editor über einen klaren Mount-/Read-/Focus-/Destroy-Lifecycle.
 
-Editierablauf:
+Aktivierung: Doppelklick, `Enter` oder `F2`. Commit: `Enter` oder Blur. Abbruch: `Escape`. `Tab` bestätigt und bewegt sich zur nächsten editierbaren Zelle; am Grid-Rand verlässt Tab die Komponente.
 
-1. Aktivierung über die konfigurierte Pointer-Aktion, `Enter` oder `F2`.
-2. Editor liest den aktuellen Zellwert.
-3. `parse()` normalisiert den Kandidaten.
-4. `validate()` läuft synchron oder asynchron.
-5. `nte-data-table-before-edit-commit` wird cancelable ausgelöst.
-6. Der Connector erhält eine oder mehrere Cell Mutations.
-7. Erfolg aktualisiert die Zeile und löst `nte-data-table-edit-commit` aus.
-8. Fehler bleibt sichtbar, setzt `aria-invalid` und löst `nte-data-table-edit-error` aus.
+Ein expliziter Spaltenhook überschreibt die jeweilige Funktion des registrierten Cell Types. Nicht überschriebene Funktionen bleiben vom Cell Type erhalten. Strings aus Renderern werden als Text behandelt; Lit-Templates und Nodes werden regulär gemountet, nicht per `innerHTML`.
 
-Der MVP arbeitet pessimistisch: Erst ein erfolgreicher Connector-Commit beendet den Pending-State. Optimistische Updates mit Rollback folgen in V1.
+## Selection, Sortierung und Reordering
 
-Dropdowns sind Editoren und keine Column-Untermenüs. Custom Editors liefern ein echtes fokussierbares Element und einen klaren Mount-/Read-/Destroy-Lifecycle. Allgemeines `contenteditable` wird nicht als Default verwendet.
+Die Begriffe bleiben strikt getrennt:
 
-## Auswahl und Fokus
+- **Selection:** Zeilen oder Spalten, `none`, `single` oder `multiple`;
+- **Data Sorting:** Zeilenansicht nach einer oder mehreren Spalten;
+- **Column Reordering:** visuelle Spaltenreihenfolge innerhalb beziehungsweise per Pin-Command zwischen Zonen;
+- **Row Reordering:** manuelle Datenreihenfolge über Connector-Mutation.
 
-Der State trennt:
+Die Default-Gestenpriorität ist deterministisch:
 
-- aktive Zelle/Fokus;
-- ausgewählte Row-IDs;
-- ausgewählte Column-IDs;
-- spätere Cell Ranges.
+1. aktiver Editor;
+2. Resize Handle;
+3. Reorder Handle;
+4. Selection/Activation;
+5. Sort-Aktion am Header.
 
-Selection kann kontrolliert über Properties gesetzt und über Events gespiegelt werden. Shift erweitert eine Auswahl, Ctrl/Meta toggelt Einträge. Stabile IDs sind verbindlich; sichtbare Array-Indizes dürfen nicht als persistente Identität dienen.
-
-## Slots
-
-| Slot | Zweck |
-|---|---|
-| `caption` | Zugängliche beziehungsweise sichtbare Tabellenbeschreibung. |
-| `toolbar-start` | Suche, externe Filter oder View-Auswahl. |
-| `toolbar-end` | Anwendungsaktionen für die aktuelle Auswahl. |
-| `footer-start` | Ergebnisanzahl oder Status. |
-| `footer-center` | Zusätzliche Zusammenfassung. |
-| `footer-end` | Externe Pagination oder weitere Controls. |
-| `loading` | Ladezustand. |
-| `empty` | Keine Ergebnisse. |
-| `error` | Fehlerdarstellung. |
-
-Ein Slot platziert nur UI. Ein Suchfeld im `toolbar-start`-Slot wird bewusst über `input` mit `table.setSearch(value)` verbunden; es gibt keine versteckte DOM-Magie.
-
-Spaltenheader und wiederholte Zellen werden über Schema, Renderer und Cell Types konfiguriert, nicht über hunderte dynamische Slots.
-
-## Methoden und Commands
-
-Minimaler imperativer Contract:
-
-```ts
-table.configure(config);
-table.reload();
-
-table.setSearch("auth");
-table.setSort([{ columnId: "name", direction: "asc" }]);
-
-table.setRowSelection(["42", "43"]);
-table.setColumnSelection(["status"]);
-
-table.resizeColumn("name", 320);
-table.pinColumn("name", "start");
-table.moveColumn("status", 1);
-table.moveRows(["42"], "50");
-
-table.startEdit("42", "status");
-table.commitEdit();
-table.cancelEdit();
-
-table.resetColumnLayout();
-table.scrollToRow("42", { align: "center" });
-```
-
-Intern werden diese Aufrufe auf typisierte Commands abgebildet. Der Reducer bleibt DOM- und I/O-frei.
-
-## Events
-
-Alle öffentlichen Events sind `bubbles: true` und `composed: true`.
-
-| Event | Inhalt |
-|---|---|
-| `nte-data-table-query-change` | Search-/Sort-/Filter-State. |
-| `nte-data-table-selection-change` | Vollständiger kontrollierter Selection-State. |
-| `nte-data-table-active-cell-change` | Neue aktive Zelle. |
-| `nte-data-table-cell-activate` | Klick, Doppelklick, Enter oder API-Aktivierung. |
-| `nte-data-table-row-activate` | Zeilenaktivierung. |
-| `nte-data-table-layout-change` | Breite, Reihenfolge, Pinning oder Sichtbarkeit. |
-| `nte-data-table-load-start` / `nte-data-table-load` | Connector-Lifecycle. |
-| `nte-data-table-error` | Read- oder Layout-Fehler. |
-| `nte-data-table-edit-start` | Beginn eines Editors. |
-| `nte-data-table-before-edit-commit` | Cancelable Mutation vor dem Connector. |
-| `nte-data-table-edit-commit` | Erfolgreiche Mutation. |
-| `nte-data-table-edit-error` | Validierungs- oder Connector-Fehler. |
-| `nte-data-table-column-reorder` | Neue Spaltenreihenfolge. |
-| `nte-data-table-row-reorder` | Erfolgreiche oder angeforderte Zeilenverschiebung. |
-
-Event-Details enthalten zusätzlich `source: "pointer" | "keyboard" | "api" | "restore"`.
-
-## Beispiel
-
-```html
-<nte-data-table
-  id="issues"
-  persistence-key="issues:v1"
-  layout-mode="scroll"
-  aria-label="Issues"
->
-  <input id="issue-search" slot="toolbar-start" type="search" placeholder="Suchen" />
-  <span id="issue-count" slot="footer-start"></span>
-</nte-data-table>
-```
-
-```ts
-import type { NteDataTable } from "@nextrap/nte-data-table";
-import "@nextrap/nte-data-table";
-
-const table = document.querySelector<NteDataTable<Issue>>("#issues")!;
-const search = document.querySelector<HTMLInputElement>("#issue-search")!;
-
-table.configure({
-  columns: [
-    {
-      id: "title",
-      label: "Titel",
-      field: "title",
-      width: 320,
-      minWidth: 180,
-      pinned: "start",
-      sortable: true,
-      searchable: true,
-      editable: true,
-      editor: "text",
-    },
-    {
-      id: "status",
-      label: "Status",
-      field: "status",
-      width: 160,
-      sortable: true,
-      editable: true,
-      editor: {
-        type: "select",
-        options: [
-          { value: "open", label: "Offen" },
-          { value: "done", label: "Erledigt" },
-        ],
-      },
-    },
-  ],
-  rows: issues,
-  getRowId: (issue) => issue.id,
-  persistenceKey: "issues:v1",
-  layoutMode: "scroll",
-  sortMode: "multiple",
-  selection: {
-    rows: "multiple",
-    columns: "multiple",
-  },
-});
-
-search.addEventListener("input", () => table.setSearch(search.value));
-```
+Eine normale Header-Aktivierung sortiert nur, wenn die Spalte sortierbar ist. Auswahl und Drag beginnen an getrennten Controls/Hotspots. Es gibt keine versteckten Header-Menüs.
 
 ## Accessibility
 
-Die Interaktion folgt dem [WAI-ARIA Grid Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/grid/).
+Die Umsetzung folgt dem [WAI-ARIA Grid Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) dort, wo Grid-Interaktion aktiv ist, und bleibt sonst eine semantische Tabelle.
 
-MVP-Anforderungen:
+- `caption` hat Vorrang als zugänglicher Name; andernfalls wird Host-`aria-label` auf den inneren Tabellen-/Grid-Baum übertragen.
+- Im Grid-Modus liegt nur die aktive Zelle im Tab-Flow.
+- Pfeile navigieren; Home/End und Ctrl/Cmd+Home/End springen logisch.
+- `Enter`/`F2`, `Escape` und `Tab` folgen dem Editing-Vertrag.
+- `aria-sort`, `aria-selected`, sichtbarer Fokus und Live-Regionen bilden State ab.
+- Das Resize Handle ist ein fokussierbarer Separator mit Keyboard-Steuerung.
+- Reordering hat immer eine Tastaturalternative.
+- Bei unbekannter Gesamtzahl gilt `aria-rowcount="-1"`.
+- Virtualisierte Zeilen verwenden später logische `aria-rowindex`-Werte.
+- Gepinnte Spalten bleiben ein einziges DOM-Vorkommen.
+- Forced Colors, Reduced Motion, RTL und 200-%-Zoom gehören zu den Abnahmetests.
 
-- Read-only ohne Grid-Interaktion behält native Tabellensemantik.
-- Interaktiver Modus nutzt `role="grid"` mit korrekten Row-/Column-Header-Beziehungen.
-- Roving Tabindex: Nur die aktive Zelle liegt in der normalen Tab-Reihenfolge.
-- Pfeiltasten navigieren; `Home`, `End`, `Ctrl+Home` und `Ctrl+End` springen logisch.
-- `Enter` oder `F2` startet Editing, `Escape` verwirft, `Tab` bestätigt und wechselt.
-- `aria-sort` kennzeichnet Sortierung; Multi-Sort wird zusätzlich angekündigt.
-- `aria-selected` kennzeichnet ausgewählte Zeilen beziehungsweise Spalten.
-- Resize Handles sind fokussierbare `role="separator"` mit Min/Max/Now und Pfeiltastensteuerung.
-- Drag-and-drop erhält immer eine Tastatur-/API-Alternative.
-- Validierungsfehler verwenden `aria-invalid`, Beschreibung und Live Region.
-- Pinned Cells werden nicht als zweite fokussierbare DOM-Kopie gerendert.
-- Forced Colors, sichtbarer Fokus und Reduced Motion werden berücksichtigt.
-- Bei späterer Virtualisierung beziehen sich `aria-rowcount`, `aria-rowindex` und `aria-colindex` auf die logischen, nicht nur auf die gerenderten Positionen.
+## Styling und Nextrep-Konventionen
 
-Virtualisierung und eingefrorene Bereiche benötigen explizite Screenreader-Tests; sie werden nicht allein anhand korrekter ARIA-Attribute als fertig betrachtet.
+Das Paket folgt dem bestehenden `nte-*`-Muster:
 
-## Themeing
+- Element erweitert `nextrap_element()` aus `@nextrap/nt-core`;
+- Shadow-CSS bleibt funktional und minimal;
+- visuelles Default-Styling kommt aus dem Paket-Mixin `default-style()` und wird über `.style-default` aktiviert;
+- keine Runtime-Abhängigkeit auf `@nextrap/style-base`;
+- CSS Custom Properties steuern Dichte, Row Height, Farben, Border, Fokus und Resize;
+- `::part()` exponiert mindestens `frame`, `toolbar`, `caption`, `scrollport`, `table`, `header`, `header-cell`, `body`, `row`, `cell`, `footer`, `resize-handle`, `editor`, `loading`, `empty` und `error`;
+- Spalten erhalten sanitizte Part-Tokens wie `col-status`;
+- Slots bleiben für strukturierte App-Inhalte zuständig.
 
-Die Komponente folgt den aktuellen Nextrap-Regeln:
+## Dependencies, Paket und Skills
 
-- Basis ist `nextrap_element()` aus `@nextrap/nt-core`.
-- Shadow-DOM-CSS enthält nur funktional notwendiges Layout, Sticky-/Scroll- und Interaktions-CSS.
-- `@nextrap/style-reset` darf im Shadow DOM verwendet werden.
-- `@nextrap/style-base` wird nicht im ausgelieferten Runtime-Code importiert.
-- Die vollständige visuelle Baseline liegt in `default-style()` und wird an `.style-default` gebunden.
-- Kombinierbare Features verwenden `with-*`; einzelne Farben, Breiten oder Abstände erzeugen keine neue `style-*`-Variante.
-- Öffentliche Elemente erhalten `id` und `part`.
+Bestehende Runtime-Bausteine:
 
-Vorgesehene Parts sind mindestens:
+- `lit`;
+- `@nextrap/nt-core`;
+- bestehender NTE Style Reset und Paket-Default-Style.
 
-`frame`, `toolbar`, `toolbar-start`, `toolbar-end`, `viewport`, `table`, `header`, `header-cell`, `resize-handle`, `body`, `row`, `cell`, `editor`, `footer`, `footer-start`, `footer-center`, `footer-end`, `loading`, `empty` und `error`.
+Für Phase 1A ist **keine neue Grid-Runtime-Abhängigkeit** vorgesehen. Sollte Phase 0 TanStack bestätigen, wird die Dependency ausschließlich im Root-Paket ergänzt und vor Implementierung separat freigegeben. Fremde Grid-Typen werden nicht exportiert.
 
-Spaltenzellen können zusätzlich einen sanitisierten Part-Token wie `col-status` erhalten. Themeing darf nicht von privaten Shadow-DOM-Strukturen oder generierten Selektoren abhängen.
+Das Paket wird mit dem aktuellen Nx-/NTE-Generator angelegt und erhält:
 
-Die genaue öffentliche Variablenliste wird vor Implementierung separat bestätigt. Erwartbare funktionale Kandidaten sind Row-/Header-Höhe, Resize-Hit-Area und Viewport-Höhe; visuelle Werte kommen bevorzugt aus `--nt-*` Tokens und dem Package-Mixin.
+- Root-`index.ts`, korrekte TypeScript-Pfadzuordnung und Vite-Demo-Einstieg;
+- Vitest-Tests und browsernahe Vite-Demos entsprechend aktueller Repo-Konvention;
+- Web-Types beziehungsweise vorhandene Metadatenintegration;
+- mitpublizierte `.agents`-Skills.
 
-## Package-Dokumentation und Skills
+Paket-Skills:
 
-Das spätere Package erhält gemäß Repo-Standard:
+1. `nte-data-table-usage`: Konfiguration, Array-/Connector-Modus, Slots, Height Contract, Accessibility und Beispiele.
+2. `nte-data-table-theming`: Parts, CSS Properties, Default-Style und Links zurück zum Usage-Skill.
+3. `nte-data-table-extensions`: eigene Connectoren, LayoutStores, Cell Types und Editoren; Abort/Race Handling, Schema-Migration, Datenschutz und Contract-Test-Matrix.
 
-- `.agents/skills/nte-data-table-usage/SKILL.md`;
-- `.agents/skills/nte-data-table-theming/SKILL.md`;
-- zusätzlich `.agents/skills/nte-data-table-extensions/SKILL.md`;
-- eine kurze `.ai-usage-info.md` während der Übergangszeit;
-- `web-types.json`;
-- Demos im Vite Demo Viewer.
+Der vollständige `.agents`-Ordner des Pakets wird über die bestehende Copy-/Publish-Pipeline ausgeliefert. Usage und Theming verlinken sich gegenseitig; Extensions verweist auf beide.
 
-Der zusätzliche Extension-Skill dokumentiert konkret:
+Programmatic und deklarative Nutzung verwenden denselben Light-DOM-Slot-Vertrag:
 
-- einen eigenen `NteDataTableConnector`;
-- einen REST- und einen IndexedDB-Read-Adapter als Muster;
-- einen eigenen `NteDataTableLayoutStore`;
-- Versionierung, unbekannte Spalten und beschädigte Payloads;
-- `AbortSignal`, Race Handling und Capabilities;
-- einen eigenen Renderer/Editor/Validator;
-- Contract-Tests für Connectoren und Stores;
-- die Regel, keine Row-Daten oder personenbezogenen Inhalte in den Layout-Store zu schreiben.
+```ts
+const table = document.createElement("nte-data-table");
+// alternativ nach Definition: new NteDataTable()
+table.configure(config);
+table.append(searchInput, resultCount);
+```
 
-## Feature-Roadmap
+Die angehängten Elemente tragen dieselben `slot`-Attribute wie in deklarativem HTML.
 
-### Phase 1 – MVP: Display, Interaktion und Editing
+## Roadmap
 
-- aktuelles NTE-Package-Gerüst mit Root-`index.ts`, Web Types, Usage-/Themeing-/Extension-Skills;
-- Column Schema und stabile Row-/Column-IDs;
-- direkte `rows`-Property plus `NteArrayDataTableConnector`;
-- generischer Async-Connector für Reads und Cell Updates;
-- fester Toolbar-/Header-Bereich, scrollender Body und fester Footer;
-- `scroll`- und `fit`-Layout;
-- konfigurierbare Start-/End-Pins;
-- Column Resize per Pointer und Tastatur;
-- Default-LocalStorage-Store mit austauschbarem Interface;
-- aktiver Cell-/Row-Click;
-- Single-/Multi-Selection für Rows und Columns;
-- einfache und mehrfache Spaltensortierung;
-- Search-State plus Toolbar-Slot;
-- Text- und Select-Editor, Parser, synchrone/async Validierung;
-- Loading-, Empty- und Error-State;
-- grundlegende Keyboard-/ARIA-Umsetzung;
-- funktionale Parts und `default-style()`.
+### Phase 0 – Entscheidungsspike
 
-### Phase 2 – Produktives Data Grid
+- Native State/DOM gegen TanStack-intern vergleichen.
+- Öffentliche NTE-Verträge unverändert halten.
+- DOM-/A11y-Smoke-Test, Bundle-Auswirkung und 2.000 × 20 Benchmark dokumentieren.
+- Ergebnis vor Produktionsimplementierung bestätigen.
 
-- eigene Cell-Type-/Editor-Registry;
-- Column Reordering mit Persistenz;
-- Connector-gesteuertes Row Reordering;
-- Row Reordering bei aktiver Sortierung sperren oder ausdrücklich vom Connector erlauben;
-- Number-, Boolean- und Date-Cell-Types;
-- optimistische Updates mit Rollback und Pending-/Dirty-State;
-- Spalten-Autosize und Sichtbarkeit;
-- kontrollierter Filter-State ohne eingebautes Column-Menü;
-- externe Pagination über Footer-Slot;
-- Live-Updates über `subscribe`;
-- Saved Layout Presets;
-- vollständige Connector-/Store-Contract-Tests.
+### Phase 1A – darstellbare Foundation
 
-### Phase 3 – Scale und Lazy Data
+- Paket, Default Style, Usage/Theming/Extensions-Skills.
+- Column Schema, direkter Array-Modus und Async Read Connector.
+- Sticky Header/Footer, begrenzter Scrollport, `scroll`-Layout.
+- Resize, Start-/End-Pinning und Local-Storage-LayoutStore.
+- Slots für Toolbar, Caption, Footer, Loading, Empty und Error.
+- Search-State, Single-Sort, Cell-/Row-Aktivierung und einfache Single-Selection.
+- Ladezustand, Abort/Race Handling und typisierte Fehler.
+- `table`/`grid`/`auto`, grundlegende Keyboard-Navigation und ARIA.
+- Connector- und LayoutStore-Contract-Tests.
+- Performance-Gate vor Beginn von Phase 1B.
 
-- Row-Virtualisierung mit fester Zeilenhöhe und Overscan;
-- Range-/Cursor-Reads, Cache, Deduplizierung und Retry;
-- scrollbasierte Nachladung;
-- gepinnte Summary Rows;
-- Column-Virtualisierung erst bei nachgewiesenem Bedarf;
-- variable Zeilenhöhen erst nach stabiler Fixed-Height-Virtualisierung;
-- optionale Worker-basierte lokale Suche und Sortierung.
+### Phase 1B – interaktives MVP
 
-### Phase 4 – Vollständige Arbeitsoberfläche
+- Text- und Select-Editing, Parser, Validator und Mutation.
+- Rows-change-Vertrag für direkte Arrays.
+- eigene Renderer-/Editor-/Cell-Type-Registrierung.
+- Multi-Selection für Zeilen und Spalten.
+- Multi-Sort.
+- Column Reordering und Tastaturalternative.
+- `fit`-Layout mit dokumentiertem Overflow-Fallback.
+- optimistische Pending-/Error-Anzeige für Editing.
+- umfassende Keyboard-, RTL-, Zoom- und Forced-Colors-Tests.
+
+### Phase 2 – produktive Erweiterungen
+
+- typisierte Filter-API;
+- API-gesteuerte Spaltensichtbarkeit;
+- Row Reordering über Connector, inklusive Before/Success/Error-Events;
+- Undo/Redo für lokale beziehungsweise bestätigte Edits;
+- Autosize;
+- serialisierbare View-Snapshots und App-Hooks;
+- typisierte Live-Update-Erweiterung;
+- Pagination-Komposition über Footer-Slot.
+
+Serverseitige Saved Views, Freigaben und Berechtigungen bleiben Aufgabe der App oder eines Connectors, nicht des Tabellenkerns.
+
+### Phase 3 – große Datenmengen
+
+- feste Row Height und Row Virtualization mit Overscan;
+- Range Reads mit Offset/Size und Cache;
+- `scrollToRow` mit optionalem Locate-Adapter;
+- Column Virtualization erst bei nachgewiesenem Bedarf;
+- Worker-basierte lokale Suche/Sortierung nur nach Profiling;
+- Screenreader-Modus beziehungsweise getestete Virtualisierungsstrategie.
+
+### Phase 4 – Spreadsheet-Erweiterung
 
 - Cell-/Range-Selection;
-- Copy/Paste, Bulk Edit und Bulk Clear;
-- Undo/Redo;
+- Copy, Cut und Paste;
+- Bulk Edit;
 - Fill Handle;
-- Aggregationen und Summary-Footer;
-- Export-Hooks;
-- serverseitig gespeicherte Views und Berechtigungen;
-- optionale Gruppierungs-Erweiterung.
+- Summary-/Aggregation-Hooks;
+- erweiterte Keyboard-Kommandos.
 
-Pivoting, Formeln, Charts, Tree Data und Column-Untermenüs bleiben auch hier außerhalb des Cores und würden nur als separat freigegebene Erweiterungen betrachtet.
+Formeln, Pivoting, Charts, Tree Data und konfigurierbare Menüs wären separate Produkte oder Plugins und sind nicht automatisch Teil von `nte-data-table`.
 
-## Akzeptanzkriterien für das MVP
+## Messbare Performance-Gates
 
-- Eine Tabelle kann allein mit `columns` und `rows` in einer SPA angezeigt werden.
-- Dieselbe Tabelle kann stattdessen einen eigenen Connector verwenden.
-- Header und Footer bleiben sichtbar, während nur der Viewport scrollt.
-- Horizontaler Scroll ist über `layout-mode` ein- beziehungsweise ausschaltbar.
-- Beliebige Spalten können an `start` oder `end` gepinnt werden.
-- Spaltenbreiten werden über stabile IDs gespeichert und nach Reload korrekt restauriert.
-- Ein eigener Layout-Store lässt sich ohne Subclassing der Komponente einsetzen.
-- Zeilen und Spalten lassen sich einzeln und mehrfach auswählen.
-- Search und Sort funktionieren lokal und werden für Remote-Connectoren als Query weitergereicht.
-- Text- und Select-Zellen lassen sich opt-in editieren; Validation und Connector-Fehler sind sichtbar.
-- Row-/Cell-Aktivierung ist als Event nutzbar.
-- Keyboard-Navigation, Resize und Editing funktionieren ohne Pointer.
-- Die Tabelle ist über Parts und `default-style()` themebar.
-- Loading, Empty und Error sind über Slots anpassbar.
-- Es gibt keine Column-Menüs oder versteckte UI-Abhängigkeiten.
-- Eine große Demo definiert die Performance-Baseline; Virtualisierung wird anhand Messwerten und nicht anhand einer unbelegten Zeilenzahl aktiviert.
+Jeder Benchmark dokumentiert Browser-Version, Hardware, Viewport, Datenform, aktive DevTools und CPU-Throttling.
 
-## Offene Entscheidungen vor der Implementierung
+Referenzszenario vor Virtualisierung: 2.000 Zeilen × 20 einfache Text-/Zahlspalten.
 
-| Entscheidung | Empfehlung |
-|---|---|
-| Interner Core ohne Dependency oder TanStack Table? | MVP zunächst dependency-frei; öffentliche Contracts so halten, dass ein interner TanStack-Adapter später möglich bleibt. |
-| RevoGrid statt Eigenbau? | Nur wählen, wenn schnelle Vollständigkeit wichtiger als NTE-Theme-/API-Kontrolle ist und Pro-/Attribution-Fragen geklärt sind. |
-| Default für horizontales Verhalten? | `layout-mode="scroll"`; `fit` bewusst aktivieren. |
-| Persistenz ohne expliziten Key? | Nur stabile Element-ID als Fallback, niemals ein Zufalls-Key. |
-| Commit-Strategie? | Pessimistisch im MVP; optimistisch mit Rollback in Phase 2. |
-| Row Reordering bei Sortierung? | Standardmäßig deaktiviert. |
-| Virtualisierungsziel? | Nach einer Benchmark-Demo festlegen; zuerst Row-, später gegebenenfalls Column-Virtualisierung. |
+- erste nutzbare Darstellung unter 1.000 ms;
+- lokale Search-/Sort-Antwort unter 250 ms;
+- kein Long Task über 100 ms während eines standardisierten Scroll-/Resize-Laufs;
+- keine vollständige Zellneuberechnung bei reinem Resize;
+- keine veraltete Connector-Antwort nach Query-Wechsel sichtbar.
+
+Wenn das Gate verfehlt wird, wird Row Virtualization vor einer produktiven Phase 1B priorisiert. Marketing-Aussagen fremder Grids gelten nicht als NTE-Benchmark.
+
+## Abnahmekriterien
+
+### Phase 1A
+
+- Ein SPA-Beispiel zeigt mindestens 2.000 Zeilen über Array- und Async-Connector.
+- Header und Footer bleiben sichtbar, während nur der Datenbereich vertikal scrollt.
+- Horizontales Scrollen ist im `scroll`-Modus möglich; zwei Start-Spalten bleiben gepinnt.
+- Breiten sind per Pointer und Tastatur änderbar und werden mit stabilem Key wiederhergestellt.
+- `layoutStore: null` und fehlender Persistenz-Key schreiben nichts dauerhaft.
+- Search und Single-Sort funktionieren lokal und über Connector.
+- Cell-/Row-Aktivierung und Single-Selection sind per Pointer und Tastatur erreichbar.
+- Loading, Empty und Error sind per Default UI und Slot darstellbar.
+- Host-Label oder Caption benennt den inneren semantischen Baum.
+- Connector-/Store-Contract-Tests decken Abort, Race, beschädigte Snapshots und Schemaänderungen ab.
+- Keine Menüs oder produktfremden Controls werden eingebaut.
+
+### Phase 1B
+
+- Text und Select können opt-in editiert, validiert, bestätigt und verworfen werden.
+- Direkte Zeilenobjekte des Callers werden nicht mutiert.
+- Connector-Mutationen zeigen Pending, Success und Error deterministisch.
+- Zeilen und Spalten unterstützen konfigurierbare Multi-Selection.
+- Multi-Sort und Column Reordering sind per API, Pointer und Keyboard erreichbar.
+- `fit` verteilt freie Breite und fällt bei unvereinbaren Mindestbreiten auf Overflow zurück.
+- Custom Cell Type und Custom LayoutStore sind ohne Änderung am Kern implementierbar.
+- Grid-Tastaturmodell, RTL, 200-%-Zoom, Forced Colors und Fokusführung bestehen die Tests.
+
+## Offene Entscheidungen für Review
+
+1. Bestätigt Phase 0 den nativen State-Kern oder TanStack Table als interne Hilfe?
+2. Soll Phase 1A bereits Multi-Selection enthalten, oder reicht die geplante Single-Selection bis Phase 1B?
+3. Ist Row Reordering bei aktiver Sortierung immer gesperrt oder darf ein Connector eine explizite Policy liefern?
+4. Soll der Default-`schemaKey` nur IDs oder zusätzlich eine von der App gesetzte Schema-Version enthalten? Der Vorschlag unterstützt beides und verwendet ohne Angabe die deterministische ID-Version.
+5. Falls Virtualisierung vorgezogen wird: eigene Windowing-Schicht oder RevoGrid-Wrapper als gesonderter Entscheidungs-PR?
 
 ## Implementierungsgrenze
 
-Das eigentliche Package betrifft deutlich mehr als drei beziehungsweise fünf Dateien. Gemäß Repository- und Projektvorgaben beginnt die Implementierung deshalb erst nach Review und ausdrücklicher Freigabe dieses Proposals in einem separaten Feature-PR.
-
-Eine sinnvolle inkrementelle Umsetzung ist:
-
-1. Package-Gerüst, DOM-Viewport, Column Schema, Array Connector und Layout Store;
-2. Selection, Search, Sort und Editing;
-3. Column-/Row-Reordering sowie weitere Cell Types;
-4. Virtualisierung und Remote-Lazy-Loading nach Benchmark.
+Dieser PR enthält nur Proposal und API-Anhang. Nach Review und Freigabe folgt die Paketimplementierung in mehreren Dateien; entsprechend den Repo-Guidelines wird deren genauer Scope vor Beginn nochmals bestätigt.
