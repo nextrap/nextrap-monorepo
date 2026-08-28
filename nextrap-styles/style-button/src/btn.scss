@@ -45,12 +45,6 @@
     cursor: not-allowed;
     pointer-events: none;
   }
-
-  &:active + .dropdown-menu,
-  &:focus + .dropdown-menu {
-    display: block;
-    opacity: 1;
-  }
 }
 
 @mixin btn-link() {
@@ -104,6 +98,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-width: auto !important;
   padding-right: var(--nt-btn-dropdown-padding-right, 2rem);
   background-image: none;
 
