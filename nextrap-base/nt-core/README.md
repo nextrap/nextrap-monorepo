@@ -38,6 +38,179 @@ export class CustomLayout extends nextrap_element({
 
 Nextrap 2.x has one component factory: `nextrap_element()`.
 
+## Generate a complete component
+
+`generate_component()` is the object-based alternative for small and medium components that do
+not need a handwritten class. It still creates a real subclass of `LitElement`, uses
+`nextrap_element()` as its base, and can register and return the finished custom-element
+constructor.
+
+The first argument owns class-level settings such as the tag name, Nextrap features, and functional
+Shadow DOM styles. The second argument describes the typed instance API and behavior.
+
+### Minimal slot component
+
+```ts
+import { css, generate_component, html } from '@nextrap/nt-core';
+
+export const NteSlotPanel = generate_component(
+  {
+    tagName: 'nte-slot-panel',
+    features: { slotVisibility: true },
+    styles: css`
+      :host { display: block; }
+      [part='content'] { min-width: 0; }
+    `,
+  },
+  {
+    $template() {
+      return html`
+        <header part="header"><slot name="header"></slot></header>
+        <div part="content"><slot></slot></div>
+      `;
+    },
+  },
+);
+```
+
+No decorators, lifecycle overrides, or explicit `customElements.define()` call are needed. The
+normal `nextrap_element()` defaults, including `LoaderMixin`, logging, and default-style handling,
+remain active.
+
+### Attributes, state, callbacks, methods, and events
+
+```ts
+import { css, generate_component, html } from '@nextrap/nt-core';
+
+export const NteCounter = generate_component(
+  {
+    tagName: 'nte-generated-counter',
+    styles: css`:host { display: inline-block; }`,
+  },
+  {
+    $options: {
+      prefix: 'Count', // constructor-only and readonly in the public type
+    },
+    $attributes: {
+      count: { type: Number, initial: 0, reflect: true },
+      label: { type: String, initial: 'Clicks', attribute: 'label' },
+      values: {
+        initial: [] as string[],
+        parse: (value) => value?.split(',').map((entry) => entry.trim()) ?? [],
+      },
+    },
+    $state: {
+      rendered: false, // reactive, but absent from the returned public instance type
+    },
+    $fn: {
+      increment() {
+        this.count += 1;
+      },
+      onWindowResize() {
+        this.requestUpdate();
+      },
+      incrementTwice() {
+        this.$call('increment');
+        this.$call('increment');
+      },
+    },
+    $methods: {
+      reset(value = 0) {
+        this.count = value;
+      },
+    },
+    $events: [
+      { type: 'resize', target: 'window', handler: 'onWindowResize', options: { passive: true } },
+    ],
+    $lifecycle: {
+      connected() {
+        // The generated class already called every parent connectedCallback.
+        this.log('counter connected');
+      },
+      firstRender() {
+        this.rendered = true;
+      },
+      updated(changedProperties) {
+        if (changedProperties.has('count')) {
+          this.dispatchEvent(new CustomEvent('count-change', { detail: this.count }));
+        }
+      },
+    },
+    $template({ $attributes, $state, $fn }) {
+      return html`
+        <button @click=${$fn.increment}>
+          ${this.prefix}: ${$attributes.label} ${$attributes.count}
+        </button>
+        <small ?hidden=${!$state.rendered}>ready</small>
+        <slot></slot>
+        <slot name="actions"></slot>
+      `;
+    },
+  },
+);
+```
+
+Callbacks and public methods must use method syntax rather than arrow functions when they access
+`this`. They are invoked with the component instance as `this`. An internal callback can call
+another internal callback through the typed `this.$call(...)`; `$call` and `$fn` do not appear on
+the public constructor result.
+
+The configured lifecycle names currently are `connected`, `disconnected`, `adopted`,
+`attributeChanged`, `shouldUpdate`, `willUpdate`, `firstRender`, and `updated`. The generator keeps
+the native/Lit parent call order and removes configured listeners when the component disconnects.
+Event targets are `host`, `renderRoot`, `window`, and `document`.
+
+### Programmatic construction and slots
+
+Providing `tagName` registers the class by default, so the returned value can be constructed with
+`new` and retains completion for options, attributes, and public methods:
+
+```ts
+const action = document.createElement('button');
+action.textContent = 'Reset';
+
+const counter = new NteCounter(
+  {
+    prefix: 'Total',
+    count: 4,
+    $slots: ['Created through the programmatic API'],
+  },
+  { name: 'actions', content: action },
+);
+
+counter.reset();
+document.body.append(counter);
+```
+
+HTML construction remains unchanged:
+
+```html
+<nte-generated-counter count="4" label="Requests" values="one, two">
+  Created through the HTML API
+  <button slot="actions">Reset</button>
+</nte-generated-counter>
+```
+
+Named programmatic slot content should normally be an `Element`. Primitive or text-node content is
+wrapped in a `<span slot="...">`, because text nodes cannot carry a named `slot` attribute.
+
+### Type and runtime boundaries
+
+- Attribute keys and values are inferred from `type`, `initial`, and the return type of `parse`.
+- Constructor-option keys and public method signatures are inferred from their objects.
+- State and internal callbacks get full contextual `this` completion but are hidden from the public
+  TypeScript instance type. This is API encapsulation, not JavaScript `#private` enforcement.
+- The result is a real class value, so `export const MyElement = generate_component(...)` and
+  `new MyElement(...)` work. TypeScript cannot generate a new lexical `class` declaration or named
+  private fields from runtime object keys.
+- `register: false` returns an unregistered constructor for manual registration or subclassing.
+  Browsers only permit direct `new` construction after that constructor has been added to a custom
+  element registry.
+- Templates are typed Lit template callbacks. Free-form HTML strings with `{{...}}` placeholders
+  are deliberately not parsed: a string parser cannot safely preserve Lit's distinct text,
+  attribute, property, boolean, and event-binding contexts. Lit expressions provide those contexts
+  without `unsafeHTML`, runtime expression evaluation, or decorators.
+
 ## Re-exports
 
 For convenience, `@nextrap/nt-core` re-exports the public APIs from `@trunkjs/browser-utils`, `lit`, and `lit/decorators.js` in addition to the Nextrap core helpers.
