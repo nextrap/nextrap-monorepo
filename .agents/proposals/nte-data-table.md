@@ -31,7 +31,7 @@ Dieses Proposal ersetzt den technischen Ansatz von PR #48, schließt oder übers
 - Suche, Sortierung, Column Reordering und optionales Row Reordering klar voneinander trennen.
 - Optionales In-Cell-Editing, zunächst Text und Select, später eigene Zelltypen.
 - Slots für Suche, eigene Toolbar-Inhalte, Ergebnisanzahl, Pagination und Status.
-- Lokale Arrays und asynchrone Datenquellen über denselben Connector-Vertrag unterstützen.
+- Lokale Arrays und asynchrone Datenquellen über denselben Query-/State-Ablauf unterstützen.
 - Layoutzustand über ein austauschbares Store-Interface speichern; eine Local-Storage-Implementierung mitliefern.
 - Styling über NTE-Default-Style, CSS Custom Properties, Parts und Slots anpassbar halten.
 - Den späteren Wechsel zu Range Loading und Row Virtualization ohne Bruch der öffentlichen API ermöglichen.
@@ -146,13 +146,17 @@ Der Default-Renderer verwendet einen einzigen Tabellenbaum innerhalb eines Scrol
 
 - `table`: reine Datendarstellung mit normaler Tabelleninteraktion;
 - `grid`: roving Tabindex und zellweise Tastaturnavigation;
-- `auto` als Default: `grid`, sobald Zellaktivierung, Auswahl oder Editing konfiguriert ist, sonst `table`.
+- `auto` als Default: `grid`, sobald `activation` nicht `none`, eine Selection nicht `none` oder Editing aktiviert ist; sonst `table`.
 
 `readonly` deaktiviert nur Änderungen. Es schaltet Navigation, Selection oder Sortierung nicht ab.
 
 ### Höhenvertrag
 
 Für einen internen vertikalen Scrollbereich braucht der Host eine begrenzte `block-size`, `max-block-size` oder einen entsprechend begrenzten Parent. Ohne Begrenzung wächst die Tabelle natürlich mit ihren Zeilen; es wird kein künstlicher interner Viewport erzwungen. Das wird in Demo und Usage-Skill sichtbar dokumentiert.
+
+### Responsive Verhalten
+
+Bei schmalem Viewport bleiben Spaltenbreiten, Min-/Max-Grenzen und Pin-Zonen deterministisch. `scroll` erzeugt horizontalen Overflow; `fit` verteilt nur tatsächlich verfügbare Restbreite und fällt bei unvereinbaren Mindestbreiten ebenfalls auf Overflow zurück. Slots dürfen umbrechen, ohne den Scrollport oder Sticky Header/Footer zu entkoppeln. Die Komponente definiert keine geräteabhängigen versteckten Spalten; responsive Visibility steuert die App später über serialisierbaren State.
 
 ### Breiten und horizontales Scrollen
 
@@ -196,6 +200,7 @@ Die Komponente baut kein Suchfeld und keine Menüs ein. Ein Suchfeld im Slot ruf
 **Direkter Array-Modus**
 
 - `configure({ rows, getRowId, columns })` übernimmt eine neue Array-Kopie.
+- Der Direct-Array-Controller verarbeitet Accessor-, Sort- und Search-Hooks intern; dafür wird kein öffentlicher Array-Connector mit UI-Callbacks eingeführt.
 - Caller-Zeilen werden nie direkt mutiert.
 - Bei einer Feldänderung erzeugt die Tabelle eine flache Kopie der betroffenen Zeile und ein neues Array.
 - Bei berechneten Accessors ist Editing nur mit `setValue(row, value)` möglich; auch dieser Hook muss eine Ersatzzeile liefern.
@@ -208,7 +213,7 @@ Die Komponente baut kein Suchfeld und keine Menüs ein. Ein Suchfeld im Slot ruf
 - Query-Änderungen lösen einen abbrechbaren Read aus; verspätete Antworten werden verworfen.
 - Editing ist nur verfügbar, wenn `updateCells()` implementiert und in der Komponente aktiviert ist.
 - Liefert eine Mutation aktualisierte Zeilen, werden diese eingepatcht. Andernfalls wird der aktuelle Bereich neu geladen.
-- Row Reordering ist nur mit `moveRows()` möglich und bei aktiver Datensortierung standardmäßig deaktiviert.
+- Row Reordering folgt erst in Phase 2 über eine typisierte `moveRows()`-Connector-Erweiterung und ist bei aktiver Datensortierung standardmäßig deaktiviert.
 
 Die beiden Modi sind in der Konfiguration gegenseitig exklusiv.
 
@@ -257,6 +262,8 @@ Aktivierung: Doppelklick, `Enter` oder `F2`. Commit: `Enter` oder Blur. Abbruch:
 
 Ein expliziter Spaltenhook überschreibt die jeweilige Funktion des registrierten Cell Types. Nicht überschriebene Funktionen bleiben vom Cell Type erhalten. Strings aus Renderern werden als Text behandelt; Lit-Templates und Nodes werden regulär gemountet, nicht per `innerHTML`.
 
+Remote-Editing ist im interaktiven MVP pessimistisch: Nach Validation bleibt der bisher bestätigte Row-Wert autoritativ, während der Editor einen Saving-State zeigt. Erst eine erfolgreiche Connector-Antwort patcht beziehungsweise lädt die Row und löst das Commit-Event aus. Bei Fehler bleibt der Draft korrigierbar. Optimistic Update, Rollback und Revisionskonflikte folgen erst in Phase 2.
+
 ## Selection, Sortierung und Reordering
 
 Die Begriffe bleiben strikt getrennt:
@@ -300,10 +307,22 @@ Das Paket folgt dem bestehenden `nte-*`-Muster:
 - Shadow-CSS bleibt funktional und minimal;
 - visuelles Default-Styling kommt aus dem Paket-Mixin `default-style()` und wird über `.style-default` aktiviert;
 - keine Runtime-Abhängigkeit auf `@nextrap/style-base`;
-- CSS Custom Properties steuern Dichte, Row Height, Farben, Border, Fokus und Resize;
 - `::part()` exponiert mindestens `frame`, `toolbar`, `caption`, `scrollport`, `table`, `header`, `header-cell`, `body`, `row`, `cell`, `footer`, `resize-handle`, `editor`, `loading`, `empty` und `error`;
 - Spalten erhalten sanitizte Part-Tokens wie `col-status`;
 - Slots bleiben für strukturierte App-Inhalte zuständig.
+
+Neue Shadow-DOM-CSS-Variablen benötigen nach Repo-Guideline vor der Implementierung eine eigene Bestätigung. Vorgeschlagene Minimalmenge:
+
+| Variable | Zweck | vorgeschlagener Default |
+| --- | --- | --- |
+| `--nte-data-table-row-height` | funktionale feste Row Height | `2.5rem` |
+| `--nte-data-table-resize-handle-width` | Pointer-Hit-Area des Separators | `0.5rem` |
+| `--nte-data-table-background` | Surface | passender `--nt-*`-Fallback im `default-style()` |
+| `--nte-data-table-border-color` | Grid-Linien | passender `--nt-*`-Fallback im `default-style()` |
+| `--nte-data-table-focus-color` | sichtbarer Fokus | passender `--nt-*`-Fallback im `default-style()` |
+| `--nte-data-table-selection-background` | Auswahl | passender `--nt-*`-Fallback im `default-style()` |
+
+Funktionale Variablen liegen in `:host`; visuelle Baseline und Defaults bleiben im `default-style()`. Diese Liste ist Proposal, noch keine Freigabe.
 
 ## Dependencies, Paket und Skills
 
@@ -320,6 +339,7 @@ Das Paket wird mit dem aktuellen Nx-/NTE-Generator angelegt und erhält:
 - Root-`index.ts`, korrekte TypeScript-Pfadzuordnung und Vite-Demo-Einstieg;
 - Vitest-Tests und browsernahe Vite-Demos entsprechend aktueller Repo-Konvention;
 - Web-Types beziehungsweise vorhandene Metadatenintegration;
+- die weiterhin verpflichtende, kurze und beispielorientierte `.ai-usage-info.md`;
 - mitpublizierte `.agents`-Skills.
 
 Paket-Skills:
@@ -352,12 +372,12 @@ Die angehängten Elemente tragen dieselben `slot`-Attribute wie in deklarativem 
 
 ### Phase 1A – darstellbare Foundation
 
-- Paket, Default Style, Usage/Theming/Extensions-Skills.
+- Paket, Default Style, `.ai-usage-info.md` sowie Usage/Theming/Extensions-Skills.
 - Column Schema, direkter Array-Modus und Async Read Connector.
 - Sticky Header/Footer, begrenzter Scrollport, `scroll`-Layout.
 - Resize, Start-/End-Pinning und Local-Storage-LayoutStore.
 - Slots für Toolbar, Caption, Footer, Loading, Empty und Error.
-- Search-State, Single-Sort, Cell-/Row-Aktivierung und einfache Single-Selection.
+- Search-State, Single-Sort, explizit konfigurierte Cell-/Row-Aktivierung und einfache Single-Selection.
 - Ladezustand, Abort/Race Handling und typisierte Fehler.
 - `table`/`grid`/`auto`, grundlegende Keyboard-Navigation und ARIA.
 - Connector- und LayoutStore-Contract-Tests.
@@ -372,7 +392,7 @@ Die angehängten Elemente tragen dieselben `slot`-Attribute wie in deklarativem 
 - Multi-Sort.
 - Column Reordering und Tastaturalternative.
 - `fit`-Layout mit dokumentiertem Overflow-Fallback.
-- optimistische Pending-/Error-Anzeige für Editing.
+- pessimistische Pending-/Error-Anzeige für Connector-Editing.
 - umfassende Keyboard-, RTL-, Zoom- und Forced-Colors-Tests.
 
 ### Phase 2 – produktive Erweiterungen
@@ -381,6 +401,7 @@ Die angehängten Elemente tragen dieselben `slot`-Attribute wie in deklarativem 
 - API-gesteuerte Spaltensichtbarkeit;
 - Row Reordering über Connector, inklusive Before/Success/Error-Events;
 - Undo/Redo für lokale beziehungsweise bestätigte Edits;
+- optionales Optimistic Editing mit Rollback-, Revision- und Konfliktvertrag;
 - Autosize;
 - serialisierbare View-Snapshots und App-Hooks;
 - typisierte Live-Update-Erweiterung;
@@ -432,7 +453,7 @@ Wenn das Gate verfehlt wird, wird Row Virtualization vor einer produktiven Phase
 - Breiten sind per Pointer und Tastatur änderbar und werden mit stabilem Key wiederhergestellt.
 - `layoutStore: null` und fehlender Persistenz-Key schreiben nichts dauerhaft.
 - Search und Single-Sort funktionieren lokal und über Connector.
-- Cell-/Row-Aktivierung und Single-Selection sind per Pointer und Tastatur erreichbar.
+- Explizit konfigurierte Cell-/Row-Aktivierung und Single-Selection sind per Pointer und Tastatur erreichbar.
 - Loading, Empty und Error sind per Default UI und Slot darstellbar.
 - Host-Label oder Caption benennt den inneren semantischen Baum.
 - Connector-/Store-Contract-Tests decken Abort, Race, beschädigte Snapshots und Schemaänderungen ab.
@@ -456,6 +477,7 @@ Wenn das Gate verfehlt wird, wird Row Virtualization vor einer produktiven Phase
 3. Ist Row Reordering bei aktiver Sortierung immer gesperrt oder darf ein Connector eine explizite Policy liefern?
 4. Soll der Default-`schemaKey` nur IDs oder zusätzlich eine von der App gesetzte Schema-Version enthalten? Der Vorschlag unterstützt beides und verwendet ohne Angabe die deterministische ID-Version.
 5. Falls Virtualisierung vorgezogen wird: eigene Windowing-Schicht oder RevoGrid-Wrapper als gesonderter Entscheidungs-PR?
+6. Wird die vorgeschlagene Minimalmenge neuer CSS-Variablen bestätigt, reduziert oder vollständig durch Parts und bestehende `--nt-*`-Tokens ersetzt?
 
 ## Implementierungsgrenze
 
