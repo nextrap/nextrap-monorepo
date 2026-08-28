@@ -34,12 +34,12 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 26
           cache: npm
-      #      - name: Install dependencies
-      #        run: npm i
-      #      - name: Build demo viewer
-      #        run: npx vite build
+      - name: Install dependencies
+        run: npm i
+      - name: Build demo viewer
+        run: npx vite build
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
