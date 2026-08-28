@@ -41,6 +41,7 @@ Defaults:
 | Edit activation | `"double-click"` plus Keyboard `Enter`/`F2` |
 | Edit commit | `"blur-or-enter"` |
 | `width` / `minWidth` / `maxWidth` | `160` / `80` / `600` CSS px |
+| `flex` | im `fit`-Modus `1`; explizites `0` fixiert die Basisbreite |
 | `resizable` | `true` |
 | `sortable`, `searchable`, `editable`, `reorderable` | `false` |
 | `selectable` | `true`, sobald Column Selection aktiv ist; sonst ohne Wirkung |
@@ -213,6 +214,13 @@ Regeln:
 - `mutationKey` ist davon unabhängig: Feldname als Default; bei berechneten Connector-Spalten explizit erforderlich.
 - Aktiviert die Tabelle Column Selection, ist `selectable` effektiv `true`; einzelne Spalten können mit `false` ausgeschlossen werden.
 - Breiten werden auf ganze, endliche CSS-Pixel und den Min-/Max-Bereich normalisiert.
+- `flex` ist eine endliche, nichtnegative Zahl.
+
+### Deterministischer `fit`-Algorithmus
+
+`width` ist die Basisbreite. Sichtbare Spalten ohne explizites `flex` verwenden in `fit` den Wert `1`; `flex: 0` hält die Basisbreite. Freie Breite oder Defizit wird proportional zu positivem Flex verteilt und iterativ an Min/Max geklemmt. Unterhalb der Summe aller Minima entsteht Overflow; oberhalb der Summe aller Maxima bleibt End-Freiraum.
+
+Resize und LayoutStore ändern ausschließlich die Basisbreite. Die aus Viewport und Flex berechnete effektive Breite wird weder in `state.layout.widths` noch im Store persistiert und nach jedem Viewportwechsel neu berechnet.
 
 ## Konfiguration und Daten-Ownership
 
@@ -280,6 +288,8 @@ Persistenz folgt exakt dieser Priorität:
 
 `effectiveKey = (persistenceKey ?? "").trim() || host.id.trim()`. `persistLayout: true` ohne effektiven Key erzeugt ein recoverable Konfigurations-Event, aber keinen Load/Write. Ein eigener Store allein aktiviert Persistenz nicht.
 
+Row-IDs müssen eindeutig und über Search, Sort und Reload stabil sein. Duplikate erzeugen im Array-Modus einen Usage Error und in Connector-Reads einen Load Error. Search, Sort und Reload erhalten Selection per ID. Wenn die aktive Row nicht mehr sichtbar ist, wird `focus.activeCell` gelöscht. `setRows()` entfernt Selection-IDs, die im neuen kanonischen Bestand fehlen; gefilterte Rows bleiben selektiert. Connector-Selection darf ungeladene stabile IDs halten.
+
 ## Öffentlicher State
 
 ```ts
@@ -331,7 +341,7 @@ export interface NteDataTableState<Row extends object> {
   layout: Readonly<NteDataTableLayoutState>;
   edit?: Readonly<NteDataTableEditState>;
   data: Readonly<{
-    rows: readonly Row[];
+    rows: readonly Readonly<Row>[];
     status: "idle" | "loading" | "ready" | "error";
     totalRowCount: number | null;
     loadedStart: number;
@@ -345,7 +355,7 @@ export interface NteDataTableState<Row extends object> {
 
 ## Connector-Vertrag
 
-Der Connector kennt keine DOM- oder UI-Spaltendefinition. Er erhält nur aufgelöste Query-Deskriptoren.
+Der Connector kennt keine DOM- oder UI-Spaltendefinition. Er erhält DOM-freie, aufgelöste Query-/Mutationsdaten; `AbortSignal` ist separater Out-of-band-Kontext. Row- und Cell-Werte bleiben anwendungsdefiniert und müssen nicht JSON-fähig sein. Der Connector verantwortet eine notwendige Wire-Codierung.
 
 ```ts
 export interface NteDataTableResolvedSort {
@@ -367,7 +377,7 @@ export interface NteDataTableConnectorQuery {
 }
 
 export interface NteDataTableReadResult<Row extends object> {
-  rows: readonly Row[];
+  rows: readonly Readonly<Row>[];
   start: number;
   totalRowCount: number | null;
 }
@@ -400,7 +410,7 @@ export interface NteDataTableConnector<Row extends object> {
     mutations: readonly NteDataTableCellMutation[],
     context: { signal: AbortSignal }
   ): Promise<{
-    updatedRows?: readonly Row[];
+    updatedRows?: readonly Readonly<Row>[];
   }>;
 }
 ```
@@ -459,7 +469,8 @@ export interface NteDataTableLayoutStoreContext {
 
 export interface NteDataTableLayoutStore {
   load(
-    context: Readonly<NteDataTableLayoutStoreContext>
+    context: Readonly<NteDataTableLayoutStoreContext>,
+    options: { signal: AbortSignal }
   ): Promise<NteDataTableLayoutSnapshot | null>;
 
   save(
@@ -481,7 +492,7 @@ export class NteLocalStorageDataTableLayoutStore
 }
 ```
 
-Default-Keyspace: `nte-data-table:<effectiveKey>`. Der Default-`schemaKey` ist eine versionspräfigierte, deterministische Codierung der sortierten Column-IDs. Der Store speichert ausschließlich JSON-fähigen Layout-State. Writes werden serialisiert; ein älterer Save darf keinen neueren Snapshot überschreiben.
+Default-Keyspace: `nte-data-table:<effectiveKey>`. Der Default-`schemaKey` ist eine versionspräfigierte, deterministische Codierung der sortierten Column-IDs. Der Store speichert ausschließlich JSON-fähigen Layout-State. `load()` beachtet das `AbortSignal`; die Komponente verwirft zusätzlich verspätete Ergebnisse eines alten Store-Kontexts. Writes werden serialisiert; ein älterer Save darf keinen neueren Snapshot überschreiben.
 
 Der Extensions-Skill enthält Contract Tests für Roundtrip, fehlende/entfernte Spalten, korrupte Payloads, parallele Saves, Schemawechsel und Storage-Fehler.
 
@@ -510,6 +521,43 @@ table.unregisterCellType("money");
 
 Die Registrierung ist instanzlokal und überlebt ein erneutes `configure()`. Ein bereits belegter Name wirft ohne `{ replace: true }` einen Usage Error. `unregisterCellType()` liefert bei unbekanntem Namen `false`; reservierte Built-ins können nicht entfernt werden. Globale Registrierung kann später als separater Helper angeboten werden, gehört aber nicht zum Element-Lifecycle.
 
+## Öffentliche Errors
+
+```ts
+export type NteDataTableUsageErrorCode =
+  | "invalid-config"
+  | "mode-conflict"
+  | "unknown-column"
+  | "row-not-loaded"
+  | "duplicate-row-id"
+  | "selection-cardinality"
+  | "unsupported-operation";
+
+export class NteDataTableUsageError extends TypeError {
+  readonly code: NteDataTableUsageErrorCode;
+  constructor(
+    code: NteDataTableUsageErrorCode,
+    message: string,
+    options?: { cause?: unknown }
+  );
+}
+
+export type NteDataTableCapabilityErrorCode =
+  | "search"
+  | "sorting"
+  | "update-cells"
+  | "range-read";
+
+export class NteDataTableCapabilityError extends Error {
+  readonly code: NteDataTableCapabilityErrorCode;
+  constructor(
+    code: NteDataTableCapabilityErrorCode,
+    message: string,
+    options?: { cause?: unknown }
+  );
+}
+```
+
 ## Öffentliche Methoden
 
 ```ts
@@ -526,9 +574,9 @@ export class NteDataTable<
   configure(config: NteDataTableConfig<Row>): Promise<void>;
 
   getState(): Readonly<NteDataTableState<Row>>;
-  getRows(): readonly Row[];
-  getVisibleRows(): readonly Row[];
-  setRows(rows: readonly Row[]): Promise<void>;
+  getRows(): readonly Readonly<Row>[];
+  getVisibleRows(): readonly Readonly<Row>[];
+  setRows(rows: readonly Readonly<Row>[]): Promise<void>;
 
   reload(): Promise<void>;
   setSearch(value: string): Promise<void>;
@@ -575,6 +623,21 @@ export class NteDataTable<
     options?: { replace?: boolean }
   ): void;
   unregisterCellType(name: string): boolean;
+
+  addEventListener<K extends keyof NteDataTableEventMap<Row>>(
+    type: K,
+    listener: (
+      this: NteDataTable<Row>,
+      event: NteDataTableEventMap<Row>[K]
+    ) => void,
+    options?: boolean | AddEventListenerOptions
+  ): void;
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    "nte-data-table": NteDataTable<Record<string, unknown>>;
+  }
 }
 ```
 
@@ -591,7 +654,7 @@ Semantik:
 - Column IDs müssen existieren. Edit und Activation benötigen eine geladene Row. Row Selection darf im Connector-Modus auch ungeladene stabile IDs halten; `scrollToRow()` liefert für ungeladene Rows wie beschrieben `false`.
 - Nicht verfügbare Pointer-/Keyboard-Gesten werden gar nicht angeboten.
 
-Der Row-Typ ist an die Elementinstanz gebunden, beispielsweise `NteDataTable<Issue>`; Methoden sind nicht unabhängig generisch. Das rohe Tag-Name-Mapping verwendet einen sicheren unbekannten Record-Typ, während Anwendungen ihre bekannte Row-Form beim Query beziehungsweise bei einer typisierten Factory angeben.
+Der Row-Typ ist an die Elementinstanz gebunden, beispielsweise `NteDataTable<Issue>`; Methoden sind nicht unabhängig generisch. Das rohe Tag-Name-Mapping verwendet `Record<string, unknown>`, während Anwendungen ihre bekannte Row-Form beim Query beziehungsweise bei einer typisierten Factory angeben.
 
 Primitive Attribute und ihre gleichnamigen Properties werden vor `configure()` als Defaults gelesen; explizite Config-Werte gewinnen. Nach `configure()` bleiben die in der Klasse deklarierten primitiven Properties beziehungsweise Attribute reaktiv:
 
@@ -614,11 +677,116 @@ Primitive Attribute und ihre gleichnamigen Properties werden vor `configure()` a
 | `persist-layout` | `persistLayout` | boolean | Layout-Speicherung aktivieren |
 | `aria-label` | — | string | Fallback-Name für inneren semantischen Baum |
 
-Komplexe Werte wie `columns`, `rows`, `connector`, `layoutStore`, Selection- und Editing-Konfiguration sind Properties beziehungsweise Teil von `configure()`, keine JSON-Attribute.
+Komplexe Werte wie `columns`, `rows`, `connector`, `layoutStore`, Selection- und Editing-Konfiguration sind Konfigurationsfelder von `configure()`, keine unabhängigen Properties und keine JSON-Attribute.
+
+## TypeScript-Event-Vertrag
+
+```ts
+export interface NteDataTableBaseEventDetail {
+  source: NteDataTableSource;
+}
+
+export type NteDataTableErrorKind =
+  | "configuration"
+  | "capability"
+  | "load"
+  | "mutation"
+  | "validation"
+  | "layout-load"
+  | "layout-save"
+  | "layout-reset";
+
+export interface NteDataTableEventMap<Row extends object> {
+  "nte-data-table-query-change": CustomEvent<
+    NteDataTableBaseEventDetail & {
+      query: Readonly<NteDataTableQueryState>;
+    }
+  >;
+  "nte-data-table-load-start": CustomEvent<
+    NteDataTableBaseEventDetail & {
+      query: Readonly<NteDataTableQueryState>;
+      requestId: number;
+    }
+  >;
+  "nte-data-table-load": CustomEvent<
+    NteDataTableBaseEventDetail & {
+      query: Readonly<NteDataTableQueryState>;
+      requestId: number;
+      rowCount: number;
+      totalRowCount: number | null;
+    }
+  >;
+  "nte-data-table-error": CustomEvent<
+    NteDataTableBaseEventDetail & {
+      kind: NteDataTableErrorKind;
+      error: unknown;
+      recoverable: boolean;
+    }
+  >;
+  "nte-data-table-rows-change": CustomEvent<
+    NteDataTableBaseEventDetail & {
+      rows: readonly Readonly<Row>[];
+      changes: readonly NteDataTableCellMutation[];
+    }
+  >;
+  "nte-data-table-selection-change": CustomEvent<
+    NteDataTableBaseEventDetail & {
+      selection: Readonly<NteDataTableSelectionState>;
+    }
+  >;
+  "nte-data-table-active-cell-change": CustomEvent<
+    NteDataTableBaseEventDetail & {
+      activeCell: NteDataTableFocusState["activeCell"];
+    }
+  >;
+  "nte-data-table-cell-activate": CustomEvent<
+    NteDataTableBaseEventDetail & {
+      rowId: NteDataTableRowId;
+      columnId: NteDataTableColumnId;
+    }
+  >;
+  "nte-data-table-row-activate": CustomEvent<
+    NteDataTableBaseEventDetail & {
+      rowId: NteDataTableRowId;
+    }
+  >;
+  "nte-data-table-layout-change": CustomEvent<
+    NteDataTableBaseEventDetail & {
+      layout: Readonly<NteDataTableLayoutState>;
+      reason: "resize" | "move" | "pin" | "restore" | "reset";
+    }
+  >;
+  "nte-data-table-edit-start": CustomEvent<
+    NteDataTableBaseEventDetail & {
+      rowId: NteDataTableRowId;
+      columnId: NteDataTableColumnId;
+      value: unknown;
+    }
+  >;
+  "nte-data-table-before-edit-commit": CustomEvent<
+    NteDataTableBaseEventDetail & {
+      mutation: Readonly<NteDataTableCellMutation>;
+    }
+  >;
+  "nte-data-table-edit-commit": CustomEvent<
+    NteDataTableBaseEventDetail & {
+      mutation: Readonly<NteDataTableCellMutation>;
+      row?: Readonly<Row>;
+    }
+  >;
+  "nte-data-table-edit-error": CustomEvent<
+    NteDataTableBaseEventDetail & {
+      kind: "validation" | "mutation";
+      mutation: Readonly<NteDataTableCellMutation>;
+      error: unknown;
+    }
+  >;
+}
+```
 
 ## Events
 
-Alle Events sind `bubbles: true` und `composed: true`. Jedes Detail enthält `source: NteDataTableSource`.
+Alle Events sind `bubbles: true` und `composed: true`. Jedes Detail enthält `source: NteDataTableSource`; `nte-data-table-before-edit-commit` ist zusätzlich `cancelable: true`.
 
 | Event | Zeitpunkt und Detail |
 | --- | --- |
@@ -636,19 +804,6 @@ Alle Events sind `bubbles: true` und `composed: true`. Jedes Detail enthält `so
 | `nte-data-table-before-edit-commit` | vor Mutation, `cancelable: true`; `{ mutation }` |
 | `nte-data-table-edit-commit` | Mutation bestätigt; `{ mutation, row? }`, da die Row nach Reload außerhalb der Query liegen kann |
 | `nte-data-table-edit-error` | Validation-/Mutation-Fehler; `{ kind, mutation, error }` |
-
-Fehler-`kind` ist mindestens:
-
-```ts
-type NteDataTableErrorKind =
-  | "configuration"
-  | "load"
-  | "mutation"
-  | "validation"
-  | "layout-load"
-  | "layout-save"
-  | "layout-reset";
-```
 
 Abgebrochene Requests durch eine neuere Query sind kein User-Fehler und erzeugen standardmäßig kein Error-Event.
 
@@ -671,16 +826,24 @@ Abgebrochene Requests durch eine neuere Query sind kein User-Fehler und erzeugen
 ```
 
 ```ts
-const table = document.querySelector("nte-data-table");
-const search = document.querySelector("#issues-search");
-const count = document.querySelector("#issues-count");
+const table = document.querySelector<
+  NteDataTable<Record<string, unknown>>
+>("nte-data-table");
+const search = document.querySelector<HTMLInputElement>("#issues-search");
+const count = document.querySelector<HTMLOutputElement>("#issues-count");
 
-search.addEventListener("input", event => {
-  void table.setSearch(event.currentTarget.value);
+if (!table || !search || !count) {
+  throw new Error("Data-table example markup is incomplete");
+}
+
+search.addEventListener("input", () => {
+  void table.setSearch(search.value);
 });
 
 table.addEventListener("nte-data-table-load", event => {
-  count.value = String(event.detail.totalRowCount ?? event.detail.rowCount);
+  count.value = String(
+    event.detail.totalRowCount ?? event.detail.rowCount
+  );
 });
 ```
 
@@ -691,6 +854,10 @@ Slot-Namen: `caption`, `toolbar-start`, `toolbar-end`, `header-start`, `header-e
 ```ts
 const table =
   document.querySelector<NteDataTable<Issue>>("nte-data-table");
+
+if (!table) {
+  throw new Error("Missing nte-data-table");
+}
 
 await table.configure({
   rows: issues,
