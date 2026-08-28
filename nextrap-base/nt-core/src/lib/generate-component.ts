@@ -48,15 +48,18 @@ export type ComponentAttributeValues<Definitions extends ComponentAttributes> = 
 
 export type ComponentEventTarget = 'host' | 'renderRoot' | 'window' | 'document';
 
-export interface ProgrammaticNamedSlot {
-  name: string;
-  content: ProgrammaticSlotContent | readonly ProgrammaticSlotContent[];
-}
+export type ProgrammaticSlotElements = HTMLElement | readonly HTMLElement[];
 
-export type ProgrammaticSlotContent = Node | string | number | boolean | null | undefined;
-export type ProgrammaticSlot = ProgrammaticSlotContent | ProgrammaticNamedSlot;
+export type ProgrammaticSlotMap<SlotName extends string> = Partial<Record<SlotName, ProgrammaticSlotElements>>;
 
-export interface GenerateComponentOptions {
+export type ProgrammaticLightDom<SlotName extends string> =
+  | HTMLElement
+  | readonly HTMLElement[]
+  | ([SlotName] extends [never]
+      ? never
+      : ProgrammaticSlotMap<SlotName> | ReadonlyMap<SlotName, ProgrammaticSlotElements>);
+
+export interface GenerateComponentOptions<SlotNames extends readonly string[] = readonly []> {
   /** Custom-element name. When present, the generated class is registered by default. */
   tagName?: `${string}-${string}`;
   /** Set to false to return the class without registering it. */
@@ -65,6 +68,8 @@ export interface GenerateComponentOptions {
   features?: NteFeatures;
   /** Functional Shadow DOM styles, as a Lit css result or result array. */
   styles?: CSSResultGroup;
+  /** Named slots accepted by the typed programmatic Light DOM API. */
+  slots?: SlotNames;
 }
 
 type NextrapElementInstance = LitElement &
@@ -204,22 +209,26 @@ export interface ComponentDefinition<
   ) => unknown;
 }
 
-export type ComponentConstructorInput<Options extends ValueRecord, Attributes extends ValueRecord> = Partial<
-  Options & Attributes
-> & {
-  $slots?: readonly ProgrammaticSlot[];
+export type ComponentConstructorInput<
+  Options extends ValueRecord,
+  Attributes extends ValueRecord,
+  SlotName extends string = never,
+> = Partial<Options & Attributes> & {
+  $slots?: ProgrammaticLightDom<SlotName>;
 };
 
 export type GeneratedComponentConstructor<
   Options extends ValueRecord,
   Attributes extends ValueRecord,
   Methods extends FunctionRecord,
+  SlotName extends string = never,
 > = {
   new (
-    input?: ComponentConstructorInput<Options, Attributes>,
-    ...slots: ProgrammaticSlot[]
+    input?: ComponentConstructorInput<Options, Attributes, SlotName>,
+    ...lightDom: ProgrammaticLightDom<SlotName>[]
   ): GeneratedComponentPublicInstance<Options, Attributes, Methods>;
   readonly prototype: GeneratedComponentPublicInstance<Options, Attributes, Methods>;
+  readonly slotNames: readonly SlotName[];
 } & Omit<typeof LitElement, 'prototype'>;
 
 function cloneInitialValue<Value>(value: Value): Value {
@@ -249,32 +258,41 @@ function propertyDeclaration(definition: ComponentAttribute): PropertyDeclaratio
   };
 }
 
-function appendSlot(host: HTMLElement, slot: ProgrammaticSlot): void {
-  if (slot === null || slot === undefined || slot === false) {
-    return;
-  }
-
-  if (typeof slot === 'object' && 'name' in slot && 'content' in slot) {
-    const contents = Array.isArray(slot.content) ? slot.content : [slot.content];
-    for (const content of contents) {
-      if (content === null || content === undefined || content === false) {
-        continue;
-      }
-      const node = content instanceof Node ? content : document.createTextNode(String(content));
-      if (node instanceof Element) {
-        node.slot = slot.name;
-        host.append(node);
-      } else {
-        const wrapper = document.createElement('span');
-        wrapper.slot = slot.name;
-        wrapper.append(node);
-        host.append(wrapper);
-      }
+function appendElements(host: HTMLElement, elements: ProgrammaticSlotElements, slotName?: string): void {
+  const entries = Array.isArray(elements) ? elements : [elements];
+  for (const element of entries) {
+    if (!(element instanceof HTMLElement)) {
+      throw new TypeError('Programmatic Light DOM only accepts HTMLElement instances');
     }
+    if (slotName !== undefined) {
+      element.slot = slotName;
+    }
+    host.append(element);
+  }
+}
+
+function appendLightDom<SlotName extends string>(
+  host: HTMLElement,
+  lightDom: ProgrammaticLightDom<SlotName>,
+  availableSlotNames: ReadonlySet<string>,
+): void {
+  if (lightDom instanceof HTMLElement || Array.isArray(lightDom)) {
+    appendElements(host, lightDom);
     return;
   }
+  if (typeof lightDom !== 'object' || lightDom === null) {
+    throw new TypeError('Programmatic Light DOM only accepts HTMLElement instances or slot maps');
+  }
 
-  host.append(slot instanceof Node ? slot : document.createTextNode(String(slot)));
+  const entries = lightDom instanceof Map ? lightDom.entries() : Object.entries(lightDom);
+  for (const [slotName, elements] of entries) {
+    if (!availableSlotNames.has(slotName)) {
+      throw new Error(`Unknown programmatic slot: ${slotName}`);
+    }
+    if (elements !== undefined) {
+      appendElements(host, elements, slotName);
+    }
+  }
 }
 
 function resolveEventTarget(host: LitElement, target: ComponentEventTarget = 'host'): EventTarget {
@@ -297,15 +315,16 @@ function resolveEventTarget(host: LitElement, target: ComponentEventTarget = 'ho
  * while `$state`, `$fn`, and `$call` remain internal to the definition's contextual `this` type.
  */
 export function generate_component<
+  const SlotNames extends readonly string[] = readonly [],
   Options extends ValueRecord = Record<never, never>,
   AttributeDefinitions extends ComponentAttributes = Record<never, never>,
   State extends ValueRecord = Record<never, never>,
   Functions extends FunctionRecord = Record<never, never>,
   Methods extends FunctionRecord = Record<never, never>,
 >(
-  options: GenerateComponentOptions,
+  options: GenerateComponentOptions<SlotNames>,
   definition: ComponentDefinition<Options, AttributeDefinitions, State, Functions, Methods>,
-): GeneratedComponentConstructor<Options, ComponentAttributeValues<AttributeDefinitions>, Methods> {
+): GeneratedComponentConstructor<Options, ComponentAttributeValues<AttributeDefinitions>, Methods, SlotNames[number]> {
   type Attributes = ComponentAttributeValues<AttributeDefinitions>;
   type InternalHost = GeneratedComponentInternalInstance<Options, Attributes, State, Functions, Methods>;
 
@@ -317,6 +336,8 @@ export function generate_component<
   const methods = definition.$methods ?? ({} as Methods);
   const lifecycle = definition.$lifecycle;
   const configuredEvents = definition.$events ?? [];
+  const slotNames = options.slots ?? ([] as unknown as SlotNames);
+  const availableSlotNames = new Set<string>(slotNames);
   const reactiveProperties: Record<string, PropertyDeclaration> = {};
   const baseAdoptedCallback = (Base.prototype as unknown as { adoptedCallback?: (this: LitElement) => void })
     .adoptedCallback;
@@ -347,12 +368,16 @@ export function generate_component<
   class GeneratedComponent extends Base {
     static override properties = reactiveProperties;
     static override styles = options.styles ?? [];
+    static readonly slotNames = slotNames;
 
     readonly #boundFunctions: BoundFunctions<Functions>;
     readonly #renderContext: ComponentRenderContext<InternalHost, Options, Attributes, State, Functions>;
     #eventCleanups: (() => void)[] = [];
 
-    constructor(input: ComponentConstructorInput<Options, Attributes> = {}, ...slots: ProgrammaticSlot[]) {
+    constructor(
+      input: ComponentConstructorInput<Options, Attributes, SlotNames[number]> = {},
+      ...lightDom: ProgrammaticLightDom<SlotNames[number]>[]
+    ) {
       super();
 
       const inputValues = input as Record<string, unknown>;
@@ -387,11 +412,11 @@ export function generate_component<
         $fn: this.#boundFunctions,
       });
 
-      for (const slot of input.$slots ?? []) {
-        appendSlot(this, slot);
+      if (input.$slots !== undefined) {
+        appendLightDom(this, input.$slots, availableSlotNames);
       }
-      for (const slot of slots) {
-        appendSlot(this, slot);
+      for (const child of lightDom) {
+        appendLightDom(this, child, availableSlotNames);
       }
     }
 
@@ -491,5 +516,10 @@ export function generate_component<
     }
   }
 
-  return GeneratedComponent as unknown as GeneratedComponentConstructor<Options, Attributes, Methods>;
+  return GeneratedComponent as unknown as GeneratedComponentConstructor<
+    Options,
+    Attributes,
+    Methods,
+    SlotNames[number]
+  >;
 }
