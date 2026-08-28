@@ -1,11 +1,11 @@
 import { defineDemo } from '@trunkjs/demo-viewer';
 
-import demoHtml from './02-horizontal.html?raw';
+import demoHtml from './05-variations.html?raw';
 import { renderDocumentDemo } from './main';
 
 export default defineDemo({
-  title: 'Horizontal',
-  description: 'Hauptnavigation mit Icons, nicht verlinkten Eltern und mehrstufigen Popup-Untermenüs',
+  title: 'Variationen',
+  description: 'Größen, Varianten, verlinkte und nicht verlinkte Eltern sowie responsive Ausrichtung',
   render(root) {
     renderDocumentDemo(root, demoHtml);
   },

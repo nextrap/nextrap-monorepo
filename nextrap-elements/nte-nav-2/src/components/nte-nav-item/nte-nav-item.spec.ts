@@ -22,7 +22,7 @@ describe('NteNavItem', () => {
     element.remove();
   });
 
-  it('maps nested nav items to the submenu slot and renders a native popover disclosure', async () => {
+  it('maps nested nav items to the submenu slot and renders a native details disclosure', async () => {
     const element = document.createElement('nte-nav-item') as NteNavItem;
     element.href = '/leistungen';
     element.append('Leistungen');
@@ -37,12 +37,50 @@ describe('NteNavItem', () => {
     await new Promise((resolve) => setTimeout(resolve, 0));
     await element.updateComplete;
 
+    const details = element.shadowRoot?.getElementById('details');
     const toggle = element.shadowRoot?.getElementById('toggle');
     const submenu = element.shadowRoot?.getElementById('submenu');
 
     expect(child.getAttribute('slot')).toBe('submenu');
-    expect(toggle?.getAttribute('popovertarget')).toBe('submenu');
-    expect(submenu?.hasAttribute('popover')).toBe(true);
+    expect(details).toBeInstanceOf(HTMLDetailsElement);
+    expect(toggle).toBeInstanceOf(HTMLElement);
+    expect(toggle?.tagName).toBe('SUMMARY');
+    expect(submenu?.hasAttribute('popover')).toBe(false);
+
+    element.remove();
+  });
+
+  it('uses the whole label as the accessible disclosure when a parent has no href', async () => {
+    const element = document.createElement('nte-nav-item') as NteNavItem;
+    element.append('Produkte');
+
+    const child = document.createElement('nte-nav-item');
+    child.setAttribute('href', '/produkte/a');
+    child.textContent = 'Produkt A';
+    element.appendChild(child);
+    document.body.appendChild(element);
+
+    await element.updateComplete;
+
+    const disclosure = element.shadowRoot?.getElementById('disclosure');
+
+    expect(element.shadowRoot?.getElementById('link')).toBeNull();
+    expect(disclosure?.tagName).toBe('SUMMARY');
+    expect(disclosure?.textContent).toContain('Produkte');
+
+    element.remove();
+  });
+
+  it('marks an empty icon slot through nextrap element slot visibility', async () => {
+    const element = document.createElement('nte-nav-item') as NteNavItem;
+    element.textContent = 'Kontakt';
+    document.body.appendChild(element);
+
+    await element.updateComplete;
+
+    const iconSlot = element.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="icon"]');
+
+    expect(iconSlot?.classList.contains('slot-empty')).toBe(true);
 
     element.remove();
   });

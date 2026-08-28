@@ -29,7 +29,7 @@ aside nte-nav-2.style-default {
 
 ```html
 <nte-nav-2 aria-label="Hauptnavigation">
-  <nte-nav-item href="/leistungen">
+  <nte-nav-item>
     <svg slot="icon" aria-hidden="true"><!-- … --></svg>
     Leistungen
 
@@ -42,6 +42,8 @@ aside nte-nav-2.style-default {
 ```
 
 Direct nested `nte-nav-item` children are automatically assigned to the private `submenu` slot. Consumer markup no longer contains a `ul/li/ul` tree. Each item owns its anchor, disclosure control, submenu container and CSS positioning inside its Shadow DOM.
+
+Parents with children are non-linking disclosures by default: omit `href` and the complete visible label toggles the submenu. Add `href` only when the parent page is a real destination of its own; the component then keeps the link and disclosure as two separate keyboard-focusable controls.
 
 ## Attributes
 
@@ -75,7 +77,7 @@ Direct nested `nte-nav-item` children are automatically assigned to the private 
 ## Parts
 
 - `nte-nav-2`: `nav`, `list`
-- `nte-nav-item`: `item`, `link`, `text`, `disclosure`, `toggle`, `icon`, `label`, `indicator`, `submenu`
+- `nte-nav-item`: `item`, `details`, `link`, `text`, `disclosure`, `toggle`, `icon`, `label`, `indicator`, `submenu`, `submenu-inner`
 
 ## Public mixins
 
@@ -87,13 +89,17 @@ Direct nested `nte-nav-item` children are automatically assigned to the private 
 - `responsive($breakpoint, $horizontal-justify)` – vertical below and horizontal above a breakpoint
 - `size-small()`, `size-medium()`, `size-large()` – size presets that only set component variables
 
-## Accessibility and no-custom-JS disclosure
+## Orientation and native disclosure
 
 This is ordinary website navigation, not an application menu. It intentionally uses a `nav` landmark, list/listitem semantics, links and disclosure buttons rather than ARIA `menu`/`menubar` roles.
 
-Submenus use the platform's `button[popovertarget]` + `[popover="auto"]` behavior. The browser owns activation, light dismiss, close requests (including Escape) and focus restoration. CSS owns placement, transitions and the `:popover-open` visual state. CSS `:hover` and `:focus-within` can supplement visual feedback but are not used as the persistent open state.
+Submenus use native `details` / `summary`, so Enter, Space and pointer activation work without a component-authored open-state handler. The Shadow DOM CSS consumes orientation variables from the mixins:
 
-CSS Anchor Positioning is part of this draft's browser baseline. It positions each popover against its invoking button and supplies block/inline flipping. A legacy positioning fallback is deliberately not included yet; decide the supported browser matrix before publishing the package as stable.
+- `horizontal()` positions the expanded submenu as a popup below the item; nested levels open beside it.
+- `vertical()` keeps the expanded submenu in normal document flow, animates it downwards and indents it as part of the navigation path.
+- `responsive()` switches between those presentations at its breakpoint without requiring different author markup.
+
+The optional icon slot is observed by `nextrap_element({ slotVisibility: true })`. Empty icon slots receive `.slot-empty` and are hidden entirely by the component CSS.
 
 ## Deliberately deferred
 
@@ -102,4 +108,4 @@ CSS Anchor Positioning is part of this draft's browser baseline. It positions ea
 - Optional arrow-key navigation beyond normal Tab/Shift+Tab behavior
 - Public imperative `showSubmenu()` / `hideSubmenu()` methods
 - SPA-router adapters and prefetch behavior
-- A documented legacy fallback for browsers without Popover + Anchor Positioning
+- Optional light-dismiss behavior for horizontal disclosures, if a concrete integration requires it

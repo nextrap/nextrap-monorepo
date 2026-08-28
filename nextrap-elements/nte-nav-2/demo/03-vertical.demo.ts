@@ -5,7 +5,7 @@ import { renderDocumentDemo } from './main';
 
 export default defineDemo({
   title: 'Vertikal',
-  description: 'Vertikale Unternavigation mit denselben Komponenten und einem anderen Layout-Mixin',
+  description: 'Vertikale Pfadnavigation mit nach unten auf- und zuslidenden Inline-Unterpunkten',
   render(root) {
     renderDocumentDemo(root, demoHtml);
   },
