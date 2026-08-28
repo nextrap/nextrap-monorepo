@@ -95,6 +95,7 @@
 
 @mixin dropdown-toggle() {
   position: relative;
+  z-index: 10000;
   display: inline-flex;
   align-items: center;
   justify-content: center;
