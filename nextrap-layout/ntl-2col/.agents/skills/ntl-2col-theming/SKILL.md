@@ -49,7 +49,7 @@ Beachte bei jeder Freigabe:
 
 - Prüfe die semantische Rolle und die mobile Lesereihenfolge, nicht nur die Desktop-Position.
 - Vermeide Überschneidungen, bei denen dasselbe Light-DOM-Kind mehrere Selektorvariablen erfüllt.
-- Fehlerhafte Selektoren lösen einen Fehler aus; sie fallen nicht still auf die Standardzuordnung zurück.
+- Fehlerhafte Selektoren werden per `console.error` gemeldet. Nur die fehlerhafte Alternative wird übersprungen; weitere Alternativen, die Standardzuordnung und andere Slots werden weiterhin verarbeitet.
 - Die Selektoren werden beim ersten Update ausgewertet. Ein späteres Ändern der Variablen sortiert vorhandene Inhalte nicht erneut.
 - Die Funktion benötigt eine Version von `@trunkjs/content-pane`, die `@var(...)` in `data-query` unterstützt.
 
