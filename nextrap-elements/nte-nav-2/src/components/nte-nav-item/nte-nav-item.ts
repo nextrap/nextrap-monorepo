@@ -179,7 +179,16 @@ export class NteNavItem extends nextrap_element({ slotVisibility: true }) {
   private _onDisclosureClick(event: MouseEvent) {
     const submenu = this._submenuElement();
 
-    if (!submenu || this._usesInlinePresentation() || !this._supportsPopover(submenu)) {
+    if (!submenu) {
+      return;
+    }
+
+    if (this._usesInlinePresentation()) {
+      submenu.removeAttribute('popover');
+      return;
+    }
+
+    if (!this._supportsPopover(submenu)) {
       return;
     }
 
@@ -242,17 +251,21 @@ export class NteNavItem extends nextrap_element({ slotVisibility: true }) {
     const submenu = this._submenuElement();
     const details = this.shadowRoot?.getElementById('details') as HTMLDetailsElement | null;
 
-    if (!submenu || !details || !this._supportsPopover(submenu)) {
+    if (!submenu || !details) {
       return;
     }
 
     if (usesInlinePresentation) {
-      if (this._isPopoverOpen(submenu)) {
+      if (this._supportsPopover(submenu) && this._isPopoverOpen(submenu)) {
         this._preserveDetailsOnPopoverClose = details.open;
         submenu.hidePopover();
       } else {
         submenu.removeAttribute('popover');
       }
+      return;
+    }
+
+    if (!this._supportsPopover(submenu)) {
       return;
     }
 
