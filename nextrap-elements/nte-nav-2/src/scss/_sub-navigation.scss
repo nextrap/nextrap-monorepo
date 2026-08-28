@@ -1,0 +1,11 @@
+@use 'default-style' as style;
+@use 'sizes' as size;
+
+@mixin sub-navigation() {
+  @include style.default-style(
+    $background: transparent,
+    $hover-background: color-mix(in srgb, var(--nt-primary, #0d6efd) 8%, transparent),
+    $submenu-shadow: 0 0.75rem 2rem color-mix(in srgb, var(--nt-dark, #212529) 14%, transparent)
+  );
+  @include size.size-small();
+}

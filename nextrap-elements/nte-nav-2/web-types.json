@@ -1,0 +1,64 @@
+{
+    "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
+    "name": "@nextrap/nte-nav-2",
+    "version": "1.0.0",
+    "contributions": {
+        "html": {
+            "elements": [
+                {
+                    "name": "nte-nav-2",
+                    "description": "Draft navigation landmark composed of nte-nav-item elements.",
+                    "attributes": [
+                        {
+                            "name": "aria-label",
+                            "description": "Accessible name forwarded to the internal nav landmark.",
+                            "value": { "kind": "expression", "type": "string" }
+                        }
+                    ],
+                    "slots": [
+                        {
+                            "name": "",
+                            "description": "Top-level nte-nav-item elements."
+                        }
+                    ]
+                },
+                {
+                    "name": "nte-nav-item",
+                    "description": "Navigation link and optional native-popover submenu.",
+                    "attributes": [
+                        { "name": "href", "value": { "kind": "expression", "type": "string" } },
+                        { "name": "target", "value": { "kind": "expression", "type": "string" } },
+                        { "name": "rel", "value": { "kind": "expression", "type": "string" } },
+                        { "name": "download", "value": { "kind": "expression", "type": "string" } },
+                        {
+                            "name": "current",
+                            "description": "Value forwarded as aria-current to the internal anchor.",
+                            "value": {
+                                "kind": "expression",
+                                "type": "'page' | 'step' | 'location' | 'date' | 'time' | 'true'"
+                            }
+                        },
+                        {
+                            "name": "order",
+                            "description": "Optional Flexbox order. Does not change DOM or focus order.",
+                            "value": { "kind": "expression", "type": "number" }
+                        },
+                        {
+                            "name": "submenu-label",
+                            "description": "Accessible label prefix for the submenu disclosure.",
+                            "value": { "kind": "expression", "type": "string" }
+                        }
+                    ],
+                    "slots": [
+                        { "name": "", "description": "Rich-text item label." },
+                        { "name": "icon", "description": "Optional icon." },
+                        {
+                            "name": "submenu",
+                            "description": "Nested nte-nav-item elements; normally assigned automatically."
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

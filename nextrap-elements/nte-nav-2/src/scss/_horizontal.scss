@@ -1,0 +1,9 @@
+@mixin horizontal($justify: flex-start, $gap: 0) {
+  --nte-nav-flow: row;
+  --nte-nav-align: stretch;
+  --nte-nav-justify: #{$justify};
+  --nte-nav-gap: #{$gap};
+  --nte-nav-submenu-position-area: block-end span-inline-end;
+  --nte-nav-nested-submenu-position-area: inline-end span-block-end;
+  --nte-nav-submenu-enter-transform: translateY(-0.35rem);
+}
