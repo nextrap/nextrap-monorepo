@@ -92,13 +92,11 @@ Die Größe des Indicators kann direkt über die öffentliche CSS-Variable angep
 </figure>
 
 ## Container
-
 {: layout="1;.container" }
 
 Zentrierter Container mit responsiver Maximalbreite.
 
 ---
-
 {: layout="1;.container-fluid" }
 
 Fluid Container über die verfügbare Breite.
