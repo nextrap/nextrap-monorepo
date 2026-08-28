@@ -53,7 +53,7 @@ Defaults:
 
 `readonly` ist das boolesche HTML-Attribut; `readOnly` ist die entsprechende TypeScript-Property.
 
-`interactionMode: "auto"` ist deterministisch: Der Modus wird `grid`, wenn `activation !== "none"`, Row-/Column-Selection nicht `"none"` oder Editing aktiviert ist. In allen anderen Fällen bleibt er `table`.
+`interactionMode: "auto"` ist deterministisch: Der Modus wird `grid`, wenn `activation !== "none"`, Row-/Column-Selection nicht `"none"` oder Editing effektiv aktiviert ist. `readOnly` macht Editing effektiv inaktiv. In allen anderen Fällen bleibt der Modus `table`. Ein explizites `interactionMode: "table"` zusammen mit Activation, Selection oder effektivem Editing ist ein `NteDataTableUsageError`; die Komponente normalisiert diesen Konflikt nicht still.
 
 ## Column Schema
 
@@ -516,6 +516,13 @@ Die Registrierung ist instanzlokal und überlebt ein erneutes `configure()`. Ein
 export class NteDataTable<
   Row extends object = Record<string, unknown>
 > extends HTMLElement {
+  interactionMode: NteDataTableInteractionMode;
+  activation: NteDataTableActivationMode;
+  layoutMode: NteDataTableLayoutMode;
+  readOnly: boolean;
+  persistenceKey: string;
+  persistLayout: boolean;
+
   configure(config: NteDataTableConfig<Row>): Promise<void>;
 
   getState(): Readonly<NteDataTableState<Row>>;
@@ -586,7 +593,14 @@ Semantik:
 
 Der Row-Typ ist an die Elementinstanz gebunden, beispielsweise `NteDataTable<Issue>`; Methoden sind nicht unabhängig generisch. Das rohe Tag-Name-Mapping verwendet einen sicheren unbekannten Record-Typ, während Anwendungen ihre bekannte Row-Form beim Query beziehungsweise bei einer typisierten Factory angeben.
 
-Primitive Attribute werden vor `configure()` als Defaults gelesen; explizite Config-Werte gewinnen. `columns`, `rows`, `connector` und Stores werden in Phase 1 ausschließlich atomar über `configure()` gesetzt, nicht über voneinander unabhängige Property-Setter. Ein erneutes `configure()` validiert den Vertrag, beendet aktive Requests/Editoren, ersetzt den verwalteten State und lädt neu.
+Primitive Attribute und ihre gleichnamigen Properties werden vor `configure()` als Defaults gelesen; explizite Config-Werte gewinnen. Nach `configure()` bleiben die in der Klasse deklarierten primitiven Properties beziehungsweise Attribute reaktiv:
+
+- `interactionMode`, `activation` und `layoutMode` validieren und rendern synchron neu;
+- `readOnly: true` bricht einen offenen Editor ab; ein späteres `false` wird gegen den aktuellen Interaction-Mode validiert;
+- `persistenceKey` und `persistLayout` wechseln den effektiven Store-Kontext, brechen einen laufenden Layout-Load ab und restaurieren asynchron; Abschluss und Fehler werden über Layout-/Error-Events gemeldet;
+- eine ungültige Property-Änderung wird verworfen und wirft einen Usage Error; eine ungültige Attributänderung wird auf den letzten gültigen Wert zurückgesetzt und meldet ein recoverable Konfigurations-Event.
+
+`columns`, `rows`, `connector` und Stores werden in Phase 1 ausschließlich atomar über `configure()` gesetzt, nicht über voneinander unabhängige Property-Setter. Ein erneutes `configure()` validiert den Vertrag, beendet aktive Requests/Editoren, ersetzt den verwalteten State und lädt neu.
 
 ## Attribute und Properties
 
