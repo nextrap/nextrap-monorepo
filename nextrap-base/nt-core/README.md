@@ -56,6 +56,7 @@ import { css, generate_component, html } from '@nextrap/nt-core';
 export const NteSlotPanel = generate_component(
   {
     tagName: 'nte-slot-panel',
+    slots: ['header'],
     features: { slotVisibility: true },
     styles: css`
       :host { display: block; }
@@ -85,6 +86,7 @@ import { css, generate_component, html } from '@nextrap/nt-core';
 export const NteCounter = generate_component(
   {
     tagName: 'nte-generated-counter',
+    slots: ['actions'],
     styles: css`:host { display: inline-block; }`,
   },
   {
@@ -163,9 +165,17 @@ Event targets are `host`, `renderRoot`, `window`, and `document`.
 ### Programmatic construction and slots
 
 Providing `tagName` registers the class by default, so the returned value can be constructed with
-`new` and retains completion for options, attributes, and public methods:
+`new` and retains completion for options, attributes, public methods, and configured slot names.
+Programmatic Light DOM accepts only `HTMLElement` instances—never strings, text nodes, or arbitrary
+objects.
 
 ```ts
+const content = document.createElement('p');
+content.textContent = 'Created through the programmatic API';
+
+const badge = document.createElement('strong');
+badge.textContent = 'New';
+
 const action = document.createElement('button');
 action.textContent = 'Reset';
 
@@ -173,9 +183,10 @@ const counter = new NteCounter(
   {
     prefix: 'Total',
     count: 4,
-    $slots: ['Created through the programmatic API'],
+    $slots: content, // one element for the default slot
   },
-  { name: 'actions', content: action },
+  [badge], // an element array for the default slot
+  { actions: action }, // a typed object map for named slots
 );
 
 counter.reset();
@@ -191,13 +202,27 @@ HTML construction remains unchanged:
 </nte-generated-counter>
 ```
 
-Named programmatic slot content should normally be an `Element`. Primitive or text-node content is
-wrapped in a `<span slot="...">`, because text nodes cannot carry a named `slot` attribute.
+The available object-map keys come from `slots` in the first generator argument. In the example,
+code completion offers only `actions`. Each map value can be one `HTMLElement` or an array. The
+generator assigns the matching `slot` property to every element before appending it to the Light
+DOM. Unknown names also throw at runtime.
+
+An actual `Map` is accepted as well:
+
+```ts
+const actions = new Map<'actions', HTMLElement>([['actions', action]]);
+const counter = new NteCounter({}, actions);
+```
+
+Direct elements and arrays retain an already assigned `slot` property; otherwise they belong to the
+default slot. The inferred slot names are also available as `NteCounter.slotNames`.
 
 ### Type and runtime boundaries
 
 - Attribute keys and values are inferred from `type`, `initial`, and the return type of `parse`.
 - Constructor-option keys and public method signatures are inferred from their objects.
+- Named programmatic slots are inferred from `slots: ['name', ...]`. Object slot maps accept only
+  these names and only `HTMLElement` values or arrays of them.
 - State and internal callbacks get full contextual `this` completion but are hidden from the public
   TypeScript instance type. This is API encapsulation, not JavaScript `#private` enforcement.
 - The result is a real class value, so `export const MyElement = generate_component(...)` and
