@@ -146,7 +146,8 @@ Der Default-Renderer verwendet einen einzigen Tabellenbaum innerhalb eines Scrol
 
 - `table`: reine Datendarstellung mit normaler Tabelleninteraktion;
 - `grid`: roving Tabindex und zellweise Tastaturnavigation;
-- `auto` als Default: `grid`, sobald `activation` nicht `none`, eine Selection nicht `none` oder Editing aktiviert ist; sonst `table`.
+- `auto` als Default: `grid`, sobald `activation` nicht `none`, eine Selection nicht `none` oder Editing effektiv aktiviert ist; `readOnly` macht Editing dabei effektiv inaktiv. Sonst gilt `table`.
+- Explizites `table` zusammen mit Activation, Selection oder effektivem Editing ist ein Usage Error; es gibt keine stille Normalisierung.
 
 `readonly` sperrt ausschließlich Daten-Edits und das spätere Row Reordering. Query, Navigation, Selection, Resize, Pinning und Column Reordering bleiben verfügbar. Ein vollständig gesperrter Zustand wäre eine separate `disabled`-Semantik und gehört nicht zum MVP.
 
@@ -334,7 +335,7 @@ Neue Shadow-DOM-CSS-Variablen benötigen nach Repo-Guideline vor der Implementie
 | `--nte-data-table-focus-color` | sichtbarer Fokus | passender `--nt-*`-Fallback im `default-style()` |
 | `--nte-data-table-selection-background` | Auswahl | passender `--nt-*`-Fallback im `default-style()` |
 
-Funktionale Variablen liegen in `:host`; visuelle Baseline und Defaults bleiben im `default-style()`. Diese Liste ist Proposal, noch keine Freigabe.
+Alle später bestätigten Public Custom Properties – funktional und visuell – werden gemäß Repo-Guideline in `:host` deklariert. Dort erhalten visuelle Variablen nur neutrale beziehungsweise guaranteed-invalid Werte; `default-style()` setzt die visuelle Baseline und konsumiert passende `--nt-*`-Fallbacks. Diese Liste ist Proposal, noch keine Freigabe.
 
 ## Dependencies, Paket und Skills
 
