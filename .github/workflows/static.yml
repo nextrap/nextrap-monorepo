@@ -31,6 +31,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 26
+          cache: npm
+      - name: Install dependencies
+        run: npm i --package-lock=false
+      - name: Build demo viewer
+        run: npx vite build
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
