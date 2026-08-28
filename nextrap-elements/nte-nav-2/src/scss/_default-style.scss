@@ -14,6 +14,16 @@
   --nte-nav-item-gap: 0.5rem;
   --nte-nav-submenu-gap: 0.35rem;
   --nte-nav-transition-duration: 160ms;
+  --nte-nav-submenu-default-padding: 0.35rem;
+  --nte-nav-submenu-default-background: #{$submenu-background};
+  --nte-nav-submenu-default-border: #{$submenu-border};
+  --nte-nav-submenu-default-radius: #{$submenu-radius};
+  --nte-nav-submenu-default-shadow: #{$submenu-shadow};
+  --nte-nav-submenu-padding: var(--nte-nav-submenu-default-padding);
+  --nte-nav-submenu-background: var(--nte-nav-submenu-default-background);
+  --nte-nav-submenu-border: var(--nte-nav-submenu-default-border);
+  --nte-nav-submenu-radius: var(--nte-nav-submenu-default-radius);
+  --nte-nav-submenu-shadow: var(--nte-nav-submenu-default-shadow);
 
   &::part(nav) {
     color: #{$color};
@@ -86,11 +96,11 @@
   }
 
   & nte-nav-item::part(submenu) {
-    padding: var(--nte-nav-submenu-padding, 0.35rem);
+    padding: var(--nte-nav-submenu-padding);
     color: #{$color};
-    background: #{$submenu-background};
-    border: #{$submenu-border};
-    border-radius: #{$submenu-radius};
-    box-shadow: #{$submenu-shadow};
+    background: var(--nte-nav-submenu-background);
+    border: var(--nte-nav-submenu-border);
+    border-radius: var(--nte-nav-submenu-radius);
+    box-shadow: var(--nte-nav-submenu-shadow);
   }
 }

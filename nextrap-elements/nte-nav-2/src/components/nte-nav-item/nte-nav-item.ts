@@ -8,7 +8,7 @@ import style from './nte-nav-item.scss?inline';
 export type NteNavItemCurrent = 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | '';
 
 @customElement('nte-nav-item')
-export class NteNavItem extends nextrap_element() {
+export class NteNavItem extends nextrap_element({ slotVisibility: true }) {
   static override styles = [unsafeCSS(style)];
 
   @property({ type: String, reflect: true }) public accessor href = '';
@@ -22,7 +22,6 @@ export class NteNavItem extends nextrap_element() {
   @property({ type: String, attribute: 'submenu-label' })
   public accessor submenuLabel = 'Untermenü';
 
-  @state() private accessor _hasIcon = false;
   @state() private accessor _hasSubmenu = false;
   @state() private accessor _labelText = '';
 
@@ -32,6 +31,8 @@ export class NteNavItem extends nextrap_element() {
     if (!this.hasAttribute('role')) {
       this.setAttribute('role', 'listitem');
     }
+
+    this._assignNestedItems();
   }
 
   protected override updated(changedProperties: PropertyValues<this>) {
@@ -52,37 +53,42 @@ export class NteNavItem extends nextrap_element() {
     return html`
       <div id="item" part="item">
         ${
-          this.href
+          this._hasSubmenu
             ? html`
-                <a
-                  id="link"
-                  part="link"
-                  href=${this.href}
-                  target=${ifDefined(this.target || undefined)}
-                  rel=${ifDefined(this.rel || undefined)}
-                  download=${ifDefined(this.hasAttribute('download') ? this.download : undefined)}
-                  aria-current=${ifDefined(this.current || undefined)}
-                >
-                  ${label}
-                </a>
-                ${this._hasSubmenu ? this._renderIconOnlyDisclosure() : nothing}
+                ${this.href ? this._renderLink(label) : nothing}
+                <details id="details" part="details">
+                  ${this.href ? this._renderIconOnlyDisclosure() : this._renderLabelDisclosure(label)}
+                  ${this._renderSubmenu()}
+                </details>
               `
-            : this._hasSubmenu
-              ? this._renderLabelDisclosure(label)
+            : this.href
+              ? this._renderLink(label)
               : html`<span id="text" part="text">${label}</span>`
         }
-
-        <div id="submenu" part="submenu" role="list" aria-label=${this._submenuAccessibleName()} popover="auto">
-          <slot name="submenu" @slotchange=${this._onSubmenuSlotChange}></slot>
-        </div>
       </div>
+    `;
+  }
+
+  private _renderLink(label: unknown) {
+    return html`
+      <a
+        id="link"
+        part="link"
+        href=${this.href}
+        target=${ifDefined(this.target || undefined)}
+        rel=${ifDefined(this.rel || undefined)}
+        download=${ifDefined(this.hasAttribute('download') ? this.download : undefined)}
+        aria-current=${ifDefined(this.current || undefined)}
+      >
+        ${label}
+      </a>
     `;
   }
 
   private _renderLabel() {
     return html`
-      <span id="icon" part="icon" ?hidden=${!this._hasIcon}>
-        <slot name="icon" @slotchange=${this._onIconSlotChange}></slot>
+      <span id="icon" part="icon">
+        <slot name="icon"></slot>
       </span>
       <span id="label" part="label">
         <slot @slotchange=${this._onLabelSlotChange}></slot>
@@ -92,24 +98,23 @@ export class NteNavItem extends nextrap_element() {
 
   private _renderIconOnlyDisclosure() {
     return html`
-      <button
-        id="toggle"
-        part="toggle"
-        type="button"
-        popovertarget="submenu"
-        aria-controls="submenu"
-        aria-label=${this._submenuAccessibleName()}
-      >
+      <summary id="toggle" part="toggle" aria-label=${this._submenuAccessibleName()}>
         ${this._renderIndicator()}
-      </button>
+      </summary>
     `;
   }
 
   private _renderLabelDisclosure(label: unknown) {
+    return html` <summary id="disclosure" part="disclosure">${label} ${this._renderIndicator()}</summary> `;
+  }
+
+  private _renderSubmenu() {
     return html`
-      <button id="disclosure" part="disclosure" type="button" popovertarget="submenu" aria-controls="submenu">
-        ${label} ${this._renderIndicator()}
-      </button>
+      <div id="submenu" part="submenu" role="list" aria-label=${this._submenuAccessibleName()}>
+        <div id="submenu-inner" part="submenu-inner">
+          <slot name="submenu" @slotchange=${this._onSubmenuSlotChange}></slot>
+        </div>
+      </div>
     `;
   }
 
@@ -125,20 +130,11 @@ export class NteNavItem extends nextrap_element() {
     return this._labelText ? `${this.submenuLabel}: ${this._labelText}` : this.submenuLabel;
   }
 
-  private _onIconSlotChange(event: Event) {
-    const slot = event.currentTarget as HTMLSlotElement;
-    this._hasIcon = slot.assignedNodes({ flatten: true }).some((node) => this._hasVisibleContent(node));
-  }
-
   private _onLabelSlotChange(event: Event) {
     const slot = event.currentTarget as HTMLSlotElement;
     const assignedNodes = slot.assignedNodes({ flatten: true });
 
-    assignedNodes.forEach((node) => {
-      if (node instanceof HTMLElement && node.matches('nte-nav-item')) {
-        node.setAttribute('slot', 'submenu');
-      }
-    });
+    this._assignNestedItems();
 
     this._labelText = assignedNodes
       .filter((node) => !(node instanceof HTMLElement && node.matches('nte-nav-item')))
@@ -152,8 +148,11 @@ export class NteNavItem extends nextrap_element() {
     this._hasSubmenu = slot.assignedElements({ flatten: true }).some((element) => element.matches('nte-nav-item'));
   }
 
-  private _hasVisibleContent(node: Node) {
-    return node.nodeType === Node.ELEMENT_NODE || Boolean(node.textContent?.trim());
+  private _assignNestedItems() {
+    const nestedItems = Array.from(this.children).filter((element) => element.matches('nte-nav-item'));
+
+    nestedItems.forEach((item) => item.setAttribute('slot', 'submenu'));
+    this._hasSubmenu = nestedItems.length > 0;
   }
 }
 

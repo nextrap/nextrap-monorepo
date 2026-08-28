@@ -17,7 +17,7 @@ flowchart TD
 
 ```html
 <nte-nav-2 aria-label="Hauptnavigation">
-  <nte-nav-item href="/leistungen">
+  <nte-nav-item>
     <svg slot="icon" aria-hidden="true"><!-- … --></svg>
     Leistungen
     <nte-nav-item href="/leistungen/beratung">Beratung</nte-nav-item>
@@ -27,7 +27,9 @@ flowchart TD
 </nte-nav-2>
 ```
 
-The component host tree contains only meaningful component nodes and label/icon content. Each `nte-nav-item` renders its real `a[href]`, optional disclosure button and popover submenu inside its Shadow DOM. Nested items are auto-assigned to an internal named slot.
+The component host tree contains only meaningful component nodes and label/icon content. Each `nte-nav-item` renders its real `a[href]`, optional native `details`/`summary` disclosure and submenu inside its Shadow DOM. Nested items are auto-assigned to an internal named slot.
+
+Omitting `href` is the default for a parent with children: the complete label is then the disclosure control. If a parent page is also a valid destination, adding `href` renders a separate link plus a dedicated disclosure toggle.
 
 ## Styling contract
 
@@ -47,26 +49,26 @@ Orientation and responsive behavior are deliberately not attributes. They are CS
 }
 ```
 
-The mixins set inherited custom properties. Shadow DOM CSS consumes them for flex direction, spacing, popover placement and transitions. Visual rules target exported parts. `style-default`, `style-*` and `with-*` naming follows the repository contract.
+The mixins set inherited custom properties. Shadow DOM CSS consumes them for flex direction, spacing, submenu presentation and transitions. Horizontal submenus are positioned popups; vertical submenus remain in flow and slide open below their parent. Visual rules target exported parts. `style-default`, `style-*` and `with-*` naming follows the repository contract.
 
 ## CSS/no-custom-JS submenu decision
 
-Pure `:hover` or `:focus-within` visibility is useful as progressive visual enhancement, but it is not the durable interaction state: touch toggle behavior, Escape/light-dismiss, focus return and an exposed expanded state cannot all be provided by those selectors alone.
+Pure `:hover` or `:focus-within` visibility is useful as progressive visual enhancement, but it is not a durable interaction state for touch and keyboard activation.
 
-The prototype therefore uses native HTML Popover invokers:
+The prototype therefore uses the native HTML disclosure primitive:
 
 ```html
-<a href="/leistungen">Leistungen</a>
-<button popovertarget="submenu">…</button>
-<div id="submenu" popover="auto">…</div>
+<details>
+  <summary>Leistungen</summary>
+  <div role="list">…</div>
+</details>
 ```
 
-There is no component-authored click/outside/Escape state machine. The browser owns the open state; CSS uses `:popover-open`, `position-area`, `position-try-fallbacks`, transitions and `prefers-reduced-motion` entirely inside the item Shadow DOM.
+There is no component-authored click state machine. The browser owns the `open` state and exposes the summary as a keyboard-operable disclosure. CSS uses `[open]`, positioning variables, grid transitions and `prefers-reduced-motion` entirely inside the item Shadow DOM. The horizontal mixin makes the submenu a positioned popup; the vertical mixin makes it a full-width, indented grid row in the navigation flow.
 
 This follows the platform examples and guidance:
 
-- [HTML Standard: popover sub-navigation example](https://html.spec.whatwg.org/multipage/popover.html#the-popover-attribute)
-- [CSS Anchor Positioning: Popover API implicit anchor](https://www.w3.org/TR/css-anchor-position-1/)
+- [HTML Standard: details disclosure element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element)
 - [WAI-ARIA APG: disclosure navigation with top-level links](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation-hybrid/)
 - [WAI-ARIA APG: why typical site navigation should not use menubar](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/examples/menubar-navigation/)
 
@@ -76,7 +78,7 @@ This follows the platform examples and guidance:
 - `role="list"` / `role="listitem"` hierarchy instead of application-menu roles.
 - Native anchors with `href`, `target`, `rel`, `download` and `aria-current` forwarding.
 - Separate link and disclosure controls when a parent page and its child pages are both valid destinations.
-- Native Enter/Space activation, Escape close, light dismiss and focus restoration from Popover.
+- Native Enter/Space activation and exposed expanded/collapsed state from `details` / `summary`.
 - Visible `:focus-visible` states and reduced-motion handling.
 - DOM order remains the source of reading and focus order. `order` is exposed but documented as unsuitable for semantic reordering.
 
@@ -91,7 +93,7 @@ Before a stable release, test the composed Shadow DOM accessibility tree with NV
 | `showSubmenu()`, `hideSubmenu()` | Defer | Add only when a real integration needs imperative control. |
 | Optional arrow/Home/End keys | Defer | APG treats these as optional for disclosure navigation; Tab order is the simpler baseline. |
 | `open-on-hover` | Reject as default | Hover is unavailable on touch and must never replace explicit disclosure activation. |
-| Popover/anchor legacy fallback | Decide before stable release | It depends on the supported browser matrix and may require a small positioning controller. |
+| Horizontal light dismiss | Defer | Native details remains open until explicitly toggled; add outside-click behavior only for a concrete product requirement. |
 | `nte-navbar` replacement | Separate package/phase | Navbar owns layout, sticky behavior and brand regions, not navigation semantics. |
 
 ## Migration outline

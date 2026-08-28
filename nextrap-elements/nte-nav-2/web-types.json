@@ -24,7 +24,7 @@
                 },
                 {
                     "name": "nte-nav-item",
-                    "description": "Navigation link and optional native-popover submenu.",
+                    "description": "Navigation link and optional native details/summary submenu.",
                     "attributes": [
                         { "name": "href", "value": { "kind": "expression", "type": "string" } },
                         { "name": "target", "value": { "kind": "expression", "type": "string" } },
