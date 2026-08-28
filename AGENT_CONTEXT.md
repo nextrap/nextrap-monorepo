@@ -24,8 +24,8 @@ Last verified: 2026-08-28
   - `ai-usage-info` when editing `.ai-usage-info.md`
   - `nx-monorepo-setup` for Nx/workspace/package structure changes
 - For package-specific work, prefer local package skills under:
-  - `<package>/.agents/skills/<package>-usage/SKILL.md`
-  - `<package>/.agents/skills/<package>-theming/SKILL.md`
+  - `<package>/skills/<package>-usage/SKILL.md`
+  - `<package>/skills/<package>-theming/SKILL.md`
 
 ## Workspace layout
 

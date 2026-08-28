@@ -28,7 +28,7 @@ export default defineConfig(() => ({
   cacheDir: '../../node_modules/.vite/nextrap-styles/style-switch',
   plugins: [
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss', '.agents/**/*.md']),
+    nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss', 'skills/**/*']),
     tjDemoViewerPlugin({
       include: ['demo/**/*.demo.ts'],
       route: '/',

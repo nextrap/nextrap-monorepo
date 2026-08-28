@@ -7,7 +7,7 @@ Diese Datei bleibt absichtlich kurz. Detaillierter Repository-Kontext steht in `
 1. `AGENT_CONTEXT.md` lesen und als Onboarding-Cache verwenden.
 2. Passende Skills laden, insbesondere `basic-coding` und `nextrap-lib-programming`.
 3. Weitere Skills unter `.agents/skills/` konsultieren; diese können teilweise als Git-Submodule eingebunden sein.
-4. Bei package-spezifischer Arbeit lokale Skills unter `<package>/.agents/skills/` bevorzugen.
+4. Bei package-spezifischer Arbeit lokale Skills unter `<package>/skills/` bevorzugen.
 
 ## Repo-spezifische Kurzregeln
 

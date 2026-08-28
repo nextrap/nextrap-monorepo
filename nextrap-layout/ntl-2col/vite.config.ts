@@ -24,7 +24,7 @@ export default defineConfig(() => ({
   },
   plugins: [
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss', 'web-types.json', '.agents/**/*']),
+    nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss', 'web-types.json', 'skills/**/*']),
     {
       name: 'watch-md-reload',
       handleHotUpdate({ file, server }) {

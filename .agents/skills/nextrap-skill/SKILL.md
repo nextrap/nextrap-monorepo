@@ -16,8 +16,8 @@ Die nextrap elemente werden als einzelne packages auf npmjs veröffentlicht. Es 
 ## Basic rules
 
 - Befolge die Regeln des basic-coding Skills.
-- Wenn du Theme-Styles für ein konkretes `ntl-*`- oder `nte-*`-Package entwickelst oder änderst, lies zuerst dessen lokalen `.agents/skills/<component>-theming/SKILL.md` und nutze ihn als verbindlichen Komponenten-Contract.
-- Wenn du Markup oder Component-API eines Packages verwendest, lies dessen lokalen `.agents/skills/<component>-usage/SKILL.md`.
+- Wenn du Theme-Styles für ein konkretes `ntl-*`- oder `nte-*`-Package entwickelst oder änderst, lies zuerst dessen lokalen `skills/<component>-theming/SKILL.md` und nutze ihn als verbindlichen Komponenten-Contract.
+- Wenn du Markup oder Component-API eines Packages verwendest, lies dessen lokalen `skills/<component>-usage/SKILL.md`.
 - Falls mehrere Komponenten betroffen sind, lies die jeweils relevanten lokalen Skills. Gibt es noch keinen lokalen Skill, gelten dieses Dokument und die bestehende `.ai-usage-info.md` als Fallback.
 - Lies so wenig wie möglich andere Packages ein.
 - So wenig styling wie nötig: Die Webcomponents sollen später von außen gestyled werden. Daher soll im shadow dom nur die nötigsten styles enthalten sein. Es sollten immer parts definiert sein, damit diese von außen gestyled werden können.
@@ -59,17 +59,17 @@ Für jedes pairing wird eine eigene paring-xyz.md erstellt.
 
 ## Package-lokale Usage- und Theming-Skills
 
-Jedes veröffentlichte Nextrap-Package erhält zwei eigene Skills unter `.agents/skills/`. `ntl-2col` und `ntl-card-row` sind die Referenzimplementierungen:
+Jedes veröffentlichte Nextrap-Package erhält zwei eigene Skills unter `skills/` direkt neben seiner `package.json`. `ntl-2col` und `ntl-card-row` sind die Referenzimplementierungen:
 
 ```text
-<package>/.agents/skills/<package-name>-theming/SKILL.md
-<package>/.agents/skills/<package-name>-usage/SKILL.md
+<package>/skills/<package-name>-theming/SKILL.md
+<package>/skills/<package-name>-usage/SKILL.md
 ```
 
 - Verwende den vollständigen Package- beziehungsweise Custom-Element-Namen, z. B. `ntl-2col-theming` und `ntl-2col-usage`.
 - Verlinke im Usage-Skill auf den Theming-Skill und im Theming-Skill auf den Usage-Skill.
 - Halte beide Skills strikt package-spezifisch. Globale Nextrap-Regeln werden nicht dupliziert.
-- Kopiere `.agents` beim Build nach `dist` und veröffentliche die Skills im npm-Package.
+- Kopiere `skills` über die Nx-/Vite-Asset-Konfiguration nach `dist`, nimm `"skills"` in `package.json#files` auf und veröffentliche die Skills im npm-Package.
 - Der Package-Generator legt beide Skills für neue Packages an. Fehlende Skills bestehender Packages werden in eigenen Package-Migrationen ergänzt, nicht nebenbei bei fachfremden Änderungen.
 - Die Package-Skills ersetzen langfristig die jeweilige `.ai-usage-info.md`; bis zur vollständigen Migration bleiben beide Formate bestehen.
 

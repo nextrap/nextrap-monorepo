@@ -29,7 +29,7 @@ export default defineConfig(() => ({
   cacheDir: '../../node_modules/.vite/nextrap-base/style-button',
   plugins: [
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss']),
+    nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss', 'skills/**/*']),
     tjDemoViewerPlugin({
       include: ['demo/**/*.demo.ts'],
       route: '/',

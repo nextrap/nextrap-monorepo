@@ -5,7 +5,7 @@
   "files": [
     "*.*",
     "src",
-    ".agents"
+    "skills"
   ],
   "main": "./index.js",
   "exports": {
