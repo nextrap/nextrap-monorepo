@@ -489,6 +489,20 @@ export class NteLocalStorageDataTableLayoutStore
     storage?: Storage;
     namespace?: string;
   });
+
+  load(
+    context: Readonly<NteDataTableLayoutStoreContext>,
+    options: { signal: AbortSignal }
+  ): Promise<NteDataTableLayoutSnapshot | null>;
+
+  save(
+    context: Readonly<NteDataTableLayoutStoreContext>,
+    snapshot: Readonly<NteDataTableLayoutSnapshot>
+  ): Promise<void>;
+
+  clear(
+    context: Readonly<NteDataTableLayoutStoreContext>
+  ): Promise<void>;
 }
 ```
 
