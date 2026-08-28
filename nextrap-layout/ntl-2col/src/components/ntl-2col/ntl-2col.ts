@@ -24,11 +24,11 @@ export class Ntl2Col extends nextrap_element({
     return html`
       <div part="container" id="container">
         <div part="header" id="header">
-          <slot name="header" data-query=":scope > .header"></slot>
+          <slot name="header" data-query="@var(--ntl-2col-header-selector) | :scope > .header"></slot>
         </div>
         <div part="wrapper" id="wrapper">
           <div part="top" id="top">
-            <slot name="top" data-query=":scope > .top"></slot>
+            <slot name="top" data-query="@var(--ntl-2col-top-selector) | :scope > .top"></slot>
           </div>
           <div part="main" id="main">
             <slot></slot>
@@ -36,16 +36,16 @@ export class Ntl2Col extends nextrap_element({
           <div part="aside" id="aside">
             <slot
               name="aside"
-              data-query=":scope > .aside | :scope > p:has(img)"
+              data-query="@var(--ntl-2col-aside-selector) | :scope > .aside | :scope > p:has(img)"
               data-set-attribute-class="auto"
             ></slot>
           </div>
           <div part="bottom" id="bottom">
-            <slot name="bottom" data-query=":scope > .bottom"></slot>
+            <slot name="bottom" data-query="@var(--ntl-2col-bottom-selector) | :scope > .bottom"></slot>
           </div>
         </div>
         <div part="footer" id="footer">
-          <slot name="footer" data-query=":scope > .footer"></slot>
+          <slot name="footer" data-query="@var(--ntl-2col-footer-selector) | :scope > .footer"></slot>
         </div>
       </div>
     `;

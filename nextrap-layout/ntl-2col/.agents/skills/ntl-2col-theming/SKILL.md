@@ -23,6 +23,36 @@ Weiche von der Standardzuordnung nur für eine ausdrücklich verlangte, wiederve
 
 Entwickler sagen teilweise `header` oder `footer`, meinen aber `top` oder `bottom`. Wenn Position oder Ebene nicht eindeutig ist, frage: „Meinst du `header`/`footer` außerhalb oder `top`/`bottom` innerhalb des Wrappers?“
 
+## Ausnahme: Content-Zuordnung im Theme überschreiben
+
+Die automatischen Selektoren der benannten Slots können über CSS-Variablen ersetzt werden. Verwende diese Möglichkeit ausschließlich für eine ausdrücklich freigegebene, wiederverwendbare Sonderkomposition. Hole vor jeder Nutzung die Erlaubnis des Users ein. Normale Content-Zuordnung, `.reverse`, `.reverse-desktop`, Parts und CSS-Layout haben Vorrang.
+
+| Zielbereich | Selektorvariable |
+|---|---|
+| `header` | `--ntl-2col-header-selector` |
+| `top` | `--ntl-2col-top-selector` |
+| `aside` | `--ntl-2col-aside-selector` |
+| `bottom` | `--ntl-2col-bottom-selector` |
+| `footer` | `--ntl-2col-footer-selector` |
+
+Der unbenannte `main`-Slot besitzt absichtlich keine Selektorvariable. Ein Variablenwert ist ein CSS-Selektor oder eine kommaseparierte Selektorliste und wird ohne Anführungszeichen gesetzt:
+
+```scss
+.page-special-composition ntl-2col {
+  --ntl-2col-top-selector: :scope > .header;
+}
+```
+
+Dieses Beispiel verschiebt direkte `.header`-Kinder in den inneren `top`-Bereich. Sobald der Variablenselektor Elemente findet, ersetzt er für den Zielbereich die eingebaute Zuordnung. Soll die eigene Auswahl die Standardauswahl ergänzen, muss der Standardselektor in einer kommaseparierten Liste enthalten sein, zum Beispiel `--ntl-2col-top-selector: :scope > .special-top, :scope > .top;`.
+
+Beachte bei jeder Freigabe:
+
+- Prüfe die semantische Rolle und die mobile Lesereihenfolge, nicht nur die Desktop-Position.
+- Vermeide Überschneidungen, bei denen dasselbe Light-DOM-Kind mehrere Selektorvariablen erfüllt.
+- Fehlerhafte Selektoren werden per `console.error` gemeldet. Nur die fehlerhafte Alternative wird übersprungen; weitere Alternativen, die Standardzuordnung und andere Slots werden weiterhin verarbeitet.
+- Die Selektoren werden beim ersten Update ausgewertet. Ein späteres Ändern der Variablen sortiert vorhandene Inhalte nicht erneut.
+- Die Funktion benötigt eine Version von `@trunkjs/content-pane`, die `@var(...)` in `data-query` unterstützt.
+
 ## Theme-Regeln
 
 - Binde die vollständige Baseline an genau eine `style-*` Klasse, normalerweise mit `default-style()`.
@@ -51,7 +81,7 @@ Eine weitere `style-*`-Variante ist nur gerechtfertigt, wenn sie eine vollständ
 
 Verfügbare Parts: `container`, `header`, `top`, `wrapper`, `main`, `aside`, `bottom`, `footer`.
 
-Wichtige Variablen: `--breakpoint`, `--cols`, `--container-width`, `--gap` und `--inner-padding`.
+Wichtige Layoutvariablen: `--breakpoint`, `--cols`, `--container-width`, `--gap` und `--inner-padding`. Die Selektorvariablen sind keine normale Layoutkonfiguration; für sie gelten die Freigaberegeln im vorherigen Abschnitt.
 
 ## Vorhandene Mixins
 
