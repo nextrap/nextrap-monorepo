@@ -43,8 +43,9 @@ Read it before changing the component's DOM, scrolling, column sizing, pinning, 
 - Each rendered row uses a non-semantic `::after` table-cell as a visual filler. The row width is at least the usable `tbody` viewport width, so the filler alone absorbs any remainder after the real fixed-width cells.
 - The filler must remain a CSS pseudo-element: it must not appear in `row.cells`, accessibility semantics, selection, sorting, pinning, resizing, or column-reorder logic. When real columns exceed the viewport, it collapses and native horizontal scrolling takes over.
 - Header `data-width`, inline `width`, and the native `width` attribute are accepted as width inputs.
-- Pointer resizing starts only at a header cell's inline-end separator and writes the result back to `data-width`.
-- The minimum resizable width is 48 pixels.
+- The core exposes column measurement and width application through `NteTableRemote`; this geometry remains part of the table layout contract.
+- Pointer resizing is implemented only by the built-in `resize-columns` plugin. It applies widths through the Remote and emits one `nte-table-column-resize` event after a successful gesture.
+- The minimum column width is 48 pixels. Width persistence belongs to higher-level components and uses stable column IDs.
 - Header and footer cells remain single-line so indicators and controls cannot change section height or break cross-section alignment.
 - Hidden columns are derived from the corresponding header cell and hidden consistently in every section.
 - Rows must remain rectangular; `colspan` and `rowspan` are outside the enhanced layout contract.

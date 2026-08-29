@@ -50,7 +50,7 @@ table.remote.clearSelection();
 Built-in plugins are enabled declaratively:
 
 ```html
-<nte-table features="sort reorder-columns reorder-rows">
+<nte-table features="sort resize-columns reorder-columns reorder-rows">
   <table>…</table>
 </nte-table>
 ```

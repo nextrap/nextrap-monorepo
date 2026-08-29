@@ -28,6 +28,7 @@
             "@nextrap/nte-card": ["nextrap-elements/nte-card/src/index.ts"],
             "@nextrap/nte-consent-blocker": ["nextrap-elements/nte-consent-blocker/src/index.ts"],
             "@nextrap/nte-table": ["nextrap-elements/nte-table/index.ts"],
+            "@nextrap/nte-data-table": ["nextrap-elements/nte-data-table/index.ts"],
             "@nextrap/nte-privacy-consent": ["nextrap-elements/nte-privacy-consent/index.ts"],
             "@nextrap/nte-dialog": ["nextrap-elements/nte-dialog/src/index.ts"],
             "@nextrap/nte-dialog-component": ["nextrap-elements/nte-dialog-component/src/index.ts"],

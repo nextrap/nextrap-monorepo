@@ -1,0 +1,1 @@
+{"$schema":"https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json","name":"@nextrap/nte-data-table","version":"1.0.0","contributions":{"html":{"elements":[{"name":"nte-data-table","description":"Renders a native table from data, TableDefinition and TableViewState.","attributes":[{"name":"features"},{"name":"height"},{"name":"scroll-label"}]}]}}}
