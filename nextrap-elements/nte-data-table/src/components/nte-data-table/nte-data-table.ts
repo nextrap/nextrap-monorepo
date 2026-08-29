@@ -60,7 +60,7 @@ export class NteDataTableElement extends nextrap_element({
     super.disconnectedCallback();
   }
 
-  protected override firstUpdated(): void {
+  public override firstUpdated(): void {
     this._bindSourceTable();
   }
 
@@ -318,7 +318,10 @@ export class NteDataTableElement extends nextrap_element({
   }
 
   private _readColumnWidth(headerCell: HTMLTableCellElement): string | null {
-    let value = headerCell.dataset.width?.trim() || headerCell.style.width.trim() || headerCell.getAttribute('width')?.trim();
+    let value =
+      headerCell.dataset['width']?.trim() ||
+      headerCell.style.width.trim() ||
+      headerCell.getAttribute('width')?.trim();
     if (!value) return null;
     if (/^\d+(?:\.\d+)?$/.test(value)) value = `${value}px`;
 
