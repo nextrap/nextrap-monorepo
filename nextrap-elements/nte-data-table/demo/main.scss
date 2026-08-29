@@ -29,11 +29,6 @@
 .nte-data-table-demo .demo-toolbar label { display: inline-flex; align-items: center; gap: 0.5rem; }
 .nte-data-table-demo .demo-toolbar output { min-inline-size: 3.5rem; font-variant-numeric: tabular-nums; }
 .nte-data-table-demo .nte-data-table-example nte-data-table { margin-block-start: 0; }
-.nte-data-table-demo .nte-data-table-example nte-data-table::part(viewport) {
-  border-start-start-radius: 0;
-  border-start-end-radius: 0;
-}
-
 .nte-data-table-demo caption:has(.demo-caption-copy) {
   display: flex !important;
   align-items: center;

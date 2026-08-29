@@ -19,3 +19,8 @@ nte-data-table.style-default.with-header-minimal {
 .nte-data-table-search {
   @include dataTable.nte-data-table-search();
 }
+
+.nte-data-table-header + nte-data-table.style-default {
+  border-start-start-radius: 0;
+  border-start-end-radius: 0;
+}
