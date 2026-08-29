@@ -33,3 +33,19 @@
   border-start-start-radius: 0;
   border-start-end-radius: 0;
 }
+
+.nte-data-table-demo caption:has(.demo-caption-copy) {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.nte-data-table-demo .demo-caption-copy {
+  display: grid;
+  gap: 0.125rem;
+}
+
+.nte-data-table-demo .demo-caption-copy small {
+  font-weight: 400;
+}

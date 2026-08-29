@@ -26,12 +26,54 @@
   }
 
   & > table > :is(thead, tbody, tfoot) > tr > :is(th, td) {
+    --nte-data-table-cell-overflow: hidden;
+    --nte-data-table-cell-white-space: nowrap;
+    --nte-data-table-cell-text-overflow: ellipsis;
+
     padding: $cell-padding-block $cell-padding-inline;
     background: $background;
     border-block-end: 1px solid $border-color;
     border-inline-end: 1px solid $border-color;
+    border-radius: 0;
+    overflow: var(--nte-data-table-cell-overflow);
     text-align: start;
+    text-overflow: var(--nte-data-table-cell-text-overflow);
     vertical-align: middle;
+    white-space: var(--nte-data-table-cell-white-space);
+  }
+
+  & > table > caption {
+    padding: $cell-padding-block $cell-padding-inline;
+    background: $background;
+    border-block-end: 1px solid $border-color;
+    border-radius: 0;
+    font-weight: 600;
+    text-align: start;
+  }
+
+  & :is(.overflow-clip) {
+    --nte-data-table-cell-overflow: hidden;
+    --nte-data-table-cell-white-space: nowrap;
+    --nte-data-table-cell-text-overflow: clip;
+  }
+
+  & :is(.overflow-wrap) {
+    --nte-data-table-cell-overflow: hidden;
+    --nte-data-table-cell-white-space: normal;
+    --nte-data-table-cell-text-overflow: clip;
+    overflow-wrap: anywhere;
+  }
+
+  & :is(.overflow-visible) {
+    --nte-data-table-cell-overflow: visible;
+    --nte-data-table-cell-white-space: normal;
+    --nte-data-table-cell-text-overflow: clip;
+  }
+
+  & :is(.overflow-ellipsis) {
+    --nte-data-table-cell-overflow: hidden;
+    --nte-data-table-cell-white-space: nowrap;
+    --nte-data-table-cell-text-overflow: ellipsis;
   }
 
   @include headers.header-default($header-background, $color, $border-color);

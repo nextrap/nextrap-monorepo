@@ -32,6 +32,10 @@
         { "name": "highlight-warning", "description": "Warning highlighted row/cell or propagated header column." },
         { "name": "highlight-danger", "description": "Danger highlighted row/cell or propagated header column." },
         { "name": "border-free", "description": "Border-free identifier cell; on a header cell the state propagates to its column." },
+        { "name": "overflow-ellipsis", "description": "Single-line ellipsis overflow treatment; this is the default." },
+        { "name": "overflow-clip", "description": "Clip overflowing cell text without an ellipsis." },
+        { "name": "overflow-wrap", "description": "Wrap overflowing cell text and allow the row to grow." },
+        { "name": "overflow-visible", "description": "Allow cell content to overflow visibly." },
         { "name": "nte-data-table-header", "description": "Connected title/action/search wrapper before the table component." },
         { "name": "nte-data-table-search", "description": "Search-field layout inside a data-table header wrapper." }
       ]
