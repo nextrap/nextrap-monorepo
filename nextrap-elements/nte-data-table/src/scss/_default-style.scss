@@ -29,6 +29,7 @@
 
   & > table {
     color: inherit;
+    border: 0;
     font-size: $font-size;
   }
 
@@ -68,14 +69,25 @@
 
     padding: $cell-padding-block $cell-padding-inline;
     background: $background;
+    border: 0;
     border-block-end: 1px solid $border-color;
-    border-inline-end: 1px solid $border-color;
     border-radius: 0;
     overflow: var(--nte-data-table-cell-overflow);
     text-align: start;
     text-overflow: var(--nte-data-table-cell-text-overflow);
     vertical-align: middle;
     white-space: var(--nte-data-table-cell-white-space);
+  }
+
+  & > table > :is(thead, tbody, tfoot) > tr > :is(th, td):has(
+      ~ :is(th, td):not([hidden], [data-nte-data-table-hidden])
+    ) {
+    border-inline-end: 1px solid $border-color;
+  }
+
+  & > table > tbody > tr:last-child > :is(th, td),
+  & > table > tfoot > tr > :is(th, td) {
+    border-block-end: 0;
   }
 
   & > table > caption {

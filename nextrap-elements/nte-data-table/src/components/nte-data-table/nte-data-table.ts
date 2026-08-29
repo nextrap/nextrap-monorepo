@@ -13,7 +13,6 @@ import style from './nte-data-table.scss?inline';
 const DEFAULT_HEIGHT = '24rem';
 const COLUMN_RESIZE_HIT_AREA = 8;
 const MIN_COLUMN_WIDTH = 48;
-const HORIZONTAL_SCROLL_STRIP_HEIGHT = 12;
 const OWNED_ATTRIBUTES = {
   borderFree: 'data-nte-data-table-border-free',
   columnSelected: 'data-nte-data-table-column-selected',
@@ -297,19 +296,6 @@ export class NteDataTableElement extends nextrap_element({
 
     const direction = this.ownerDocument.defaultView?.getComputedStyle(table).direction;
     const offset = this._normalizedScrollLeft(body, direction === 'rtl');
-    const maxOffset = Math.max(0, body.scrollWidth - body.clientWidth);
-    const viewport = this.shadowRoot?.querySelector<HTMLElement>('#viewport');
-    if (viewport) {
-      const trackWidth = Math.max(0, viewport.clientWidth - 16);
-      const thumbWidth = maxOffset > 0 ? Math.max(32, trackWidth * (body.clientWidth / body.scrollWidth)) : 0;
-      const thumbOffset = maxOffset > 0 ? ((trackWidth - thumbWidth) * offset) / maxOffset : 0;
-      viewport.toggleAttribute('data-horizontal-overflow', maxOffset > 0);
-      viewport.style.setProperty('--nte-data-table-scroll-thumb-width', `${thumbWidth}px`);
-      viewport.style.setProperty(
-        '--nte-data-table-scroll-thumb-offset',
-        `${direction === 'rtl' ? -thumbOffset : thumbOffset}px`,
-      );
-    }
     const sectionTransform = `translateX(${-offset}px)`;
     if (table.tHead) this._setManagedStyle(table.tHead, 'transform', sectionTransform);
     if (table.tFoot) this._setManagedStyle(table.tFoot, 'transform', sectionTransform);
@@ -537,17 +523,6 @@ export class NteDataTableElement extends nextrap_element({
         this._setManagedStyle(row, 'table-layout', 'fixed');
         this._setManagedStyle(row, 'inline-size', tableWidth);
       }
-
-      const nativeScrollbarHeight = Math.max(0, body.offsetHeight - body.clientHeight);
-      const horizontalOverflow = body.scrollWidth > body.clientWidth;
-      const scrollStripHeight = horizontalOverflow
-        ? Math.max(nativeScrollbarHeight, HORIZONTAL_SCROLL_STRIP_HEIGHT)
-        : 0;
-      if (table.tFoot) this._setManagedStyle(table.tFoot, 'inset-block-end', `${scrollStripHeight}px`);
-      this._setManagedStyle(body, 'padding-block-end', `${footerHeight + scrollStripHeight}px`);
-      this.shadowRoot
-        ?.querySelector<HTMLElement>('#viewport')
-        ?.style.setProperty('--nte-data-table-scroll-indicator-bottom', `${Math.max(2, (scrollStripHeight - 3) / 2)}px`);
 
       for (const columnIndex of visibleColumns) this._resizableHeaders.add(headerCells[columnIndex]);
       this._applyPinnedColumns(rows, headerCells, visibleColumns, widths);

@@ -16,10 +16,17 @@ Read it before changing the component's DOM, scrolling, column sizing, pinning, 
 
 - `tbody` is the only vertical and horizontal scroll container.
 - The Shadow DOM viewport and the table itself must not become competing scroll containers.
+- The Shadow DOM viewport is only the non-scrolling slot and layout shell; it must not draw synthetic scroll tracks or thumbs.
 - `thead` and `tfoot` are positioned absolutely above and below the body.
 - JavaScript measures header and footer heights and reserves those heights as block padding inside `tbody`.
-- The horizontal scrollbar remains part of `tbody`; the footer is offset above it.
+- The footer stays at the component's block end without an additional synthetic scrollbar strip or bottom offset.
 - Horizontal body scrolling is mirrored to `thead` and `tfoot` with transforms.
+
+## Border ownership contract
+
+- The `nte-data-table` host is the only owner of the component's outer border and border radius.
+- The viewport, native table, caption, sections, rows, and cells must not draw a border or radius along the table's top, inline-start, inline-end, or bottom outer edge.
+- Themes may draw separators only between cells and sections. Removing the host border must therefore leave the complete table without an accidental outer border.
 
 ## Column layout contract
 
