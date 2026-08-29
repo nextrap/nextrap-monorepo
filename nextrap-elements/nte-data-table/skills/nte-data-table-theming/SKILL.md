@@ -17,7 +17,7 @@ nte-data-table.style-brand {
 }
 ```
 
-- `default-style()` emits the grid, default header, footer top border and cell states.
+- `default-style()` emits the grid, default header, fixed-caption treatment, footer top border, zero-radius cells and ellipsis overflow baseline.
 - `header-default()`, `header-strong()`, and `header-minimal()` provide composable header treatments.
 - `cell-states()` styles indicators, selections, semantic highlights and border-free cells.
 - `nte-data-table-header()` and `nte-data-table-search()` style an external connected toolbar.

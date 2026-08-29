@@ -95,10 +95,11 @@ export class NteDataTableElement extends nextrap_element({
   @property({ type: String, reflect: true, attribute: 'aria-label' }) public override accessor ariaLabel = '';
 
   private _body: HTMLTableSectionElement | null = null;
+  private _columnWidths: number[] = [];
   private _columnResize: ColumnResizeState | null = null;
   private _layoutFrame: number | null = null;
   private _managed = new Map<HTMLElement, ManagedState>();
-  private _mutationObserver: MutationObserver | null = null;
+  private _refreshWidths = true;
   private _resizableHeaders = new Set<HTMLTableCellElement>();
   private _resizeObserver: ResizeObserver | null = null;
   private _resizeTargets = new Set<Element>();
@@ -123,6 +124,7 @@ export class NteDataTableElement extends nextrap_element({
   }
 
   public refresh(): void {
+    this._refreshWidths = true;
     this._scheduleLayout();
   }
 
@@ -198,10 +200,6 @@ export class NteDataTableElement extends nextrap_element({
     sourceTable.addEventListener('lostpointercapture', this._handleLostPointerCapture, true);
 
     const view = this.ownerDocument.defaultView;
-    if (view?.MutationObserver) {
-      this._mutationObserver = new view.MutationObserver(this._handleMutations);
-      this._observeSourceTable();
-    }
     if (view?.ResizeObserver) {
       this._resizeObserver = new view.ResizeObserver(() => this._scheduleLayout());
     }
@@ -216,12 +214,12 @@ export class NteDataTableElement extends nextrap_element({
     this._sourceTable?.removeEventListener('lostpointercapture', this._handleLostPointerCapture, true);
     this._setBody(null);
     this._finishColumnResize(false);
-    this._mutationObserver?.disconnect();
-    this._mutationObserver = null;
     this._resizeObserver?.disconnect();
     this._resizeObserver = null;
     this._resizeTargets.clear();
     this._resizableHeaders.clear();
+    this._columnWidths = [];
+    this._refreshWidths = true;
     this._clearSelection();
     this._cancelLayout();
     this._restoreManagedState();
@@ -244,6 +242,19 @@ export class NteDataTableElement extends nextrap_element({
 
     const direction = this.ownerDocument.defaultView?.getComputedStyle(table).direction;
     const offset = this._normalizedScrollLeft(body, direction === 'rtl');
+    const maxOffset = Math.max(0, body.scrollWidth - body.clientWidth);
+    const viewport = this.shadowRoot?.querySelector<HTMLElement>('#viewport');
+    if (viewport) {
+      const trackWidth = Math.max(0, viewport.clientWidth - 16);
+      const thumbWidth = maxOffset > 0 ? Math.max(32, trackWidth * (body.clientWidth / body.scrollWidth)) : 0;
+      const thumbOffset = maxOffset > 0 ? ((trackWidth - thumbWidth) * offset) / maxOffset : 0;
+      viewport.toggleAttribute('data-horizontal-overflow', maxOffset > 0);
+      viewport.style.setProperty('--nte-data-table-scroll-thumb-width', `${thumbWidth}px`);
+      viewport.style.setProperty(
+        '--nte-data-table-scroll-thumb-offset',
+        `${direction === 'rtl' ? -thumbOffset : thumbOffset}px`,
+      );
+    }
     const sectionTransform = `translateX(${-offset}px)`;
     if (table.tHead) this._setManagedStyle(table.tHead, 'transform', sectionTransform);
     if (table.tFoot) this._setManagedStyle(table.tFoot, 'transform', sectionTransform);
@@ -293,10 +304,12 @@ export class NteDataTableElement extends nextrap_element({
 
     event.preventDefault();
     const delta = (event.clientX - resize.startClientX) * resize.direction;
-    resize.headerCell.dataset['width'] = `${Math.max(
-      MIN_COLUMN_WIDTH,
-      Math.round(resize.startWidth + delta),
-    )}px`;
+    const width = Math.max(MIN_COLUMN_WIDTH, Math.round(resize.startWidth + delta));
+    const columnIndex = Array.from(this._sourceTable?.tHead?.rows[0]?.cells ?? []).indexOf(resize.headerCell);
+    if (columnIndex < 0) return;
+    this._columnWidths[columnIndex] = width;
+    resize.headerCell.dataset['width'] = `${width}px`;
+    this._scheduleLayout();
   };
 
   private _handlePointerEnd = (event: PointerEvent): void => {
@@ -332,47 +345,6 @@ export class NteDataTableElement extends nextrap_element({
     this._scheduleLayout();
   }
 
-  private _observeSourceTable(): void {
-    if (!this._sourceTable || !this._mutationObserver) return;
-    this._mutationObserver.observe(this._sourceTable, {
-      attributeFilter: [
-        'aria-label',
-        'class',
-        'colspan',
-        'data-hidden',
-        'data-width',
-        'hidden',
-        'rowspan',
-        'style',
-        'width',
-      ],
-      attributes: true,
-      attributeOldValue: true,
-      characterData: true,
-      childList: true,
-      subtree: true,
-    });
-  }
-
-  private _handleMutations = (records: MutationRecord[]): void => {
-    if (records.some((record) => !this._isScrollSyncMutation(record))) this._scheduleLayout();
-  };
-
-  private _isScrollSyncMutation(record: MutationRecord): boolean {
-    if (record.type !== 'attributes' || record.attributeName !== 'style' || !(record.target instanceof HTMLElement)) {
-      return false;
-    }
-    return this._styleWithoutOwnedProperties(record.oldValue) === this._styleWithoutOwnedProperties(record.target.style.cssText);
-  }
-
-  private _styleWithoutOwnedProperties(value: string | null): string {
-    const probe = this.ownerDocument.createElement('div');
-    probe.style.cssText = value ?? '';
-    probe.style.removeProperty('cursor');
-    probe.style.removeProperty('transform');
-    return probe.style.cssText;
-  }
-
   private _scheduleLayout(): void {
     if (!this.isConnected || !this._sourceTable || this._layoutFrame !== null) return;
     const view = this.ownerDocument.defaultView;
@@ -393,9 +365,9 @@ export class NteDataTableElement extends nextrap_element({
     const table = this._sourceTable;
     if (!table) return;
 
-    this._mutationObserver?.disconnect();
     this._setBody(null);
     this._restoreManagedState();
+    if (this._refreshWidths) this._columnWidths = [];
     this._resizableHeaders.clear();
     let headerCells: HTMLTableCellElement[] = [];
 
@@ -432,18 +404,24 @@ export class NteDataTableElement extends nextrap_element({
       this._setManagedStyle(table, 'position', 'relative');
 
       const visibleColumns: number[] = [];
-      const widths: number[] = [];
       headerCells.forEach((headerCell, columnIndex) => {
         const hidden = headerCell.hidden || this._isDataHidden(headerCell);
         if (!hidden) visibleColumns.push(columnIndex);
+        if (this._columnWidths[columnIndex] !== undefined) return;
         const configuredWidth = this._readColumnWidth(headerCell);
-        if (configuredWidth) {
-          this._setManagedStyle(headerCell, 'inline-size', configuredWidth);
-          this._setManagedStyle(headerCell, 'min-inline-size', configuredWidth);
-          this._setManagedStyle(headerCell, 'max-inline-size', configuredWidth);
-        }
-        widths[columnIndex] = Math.max(MIN_COLUMN_WIDTH, Math.ceil(headerCell.getBoundingClientRect().width));
+        if (!configuredWidth) return;
+        this._setManagedStyle(headerCell, 'inline-size', configuredWidth);
+        this._setManagedStyle(headerCell, 'min-inline-size', configuredWidth);
+        this._setManagedStyle(headerCell, 'max-inline-size', configuredWidth);
       });
+
+      headerCells.forEach((headerCell, columnIndex) => {
+        this._columnWidths[columnIndex] ??= Math.max(
+          MIN_COLUMN_WIDTH,
+          Math.ceil(headerCell.getBoundingClientRect().width),
+        );
+      });
+      const widths = this._columnWidths;
 
       rows.forEach((row) => {
         Array.from(row.cells).forEach((cell, columnIndex) => {
@@ -466,8 +444,21 @@ export class NteDataTableElement extends nextrap_element({
       this._applySelectionState(rows);
 
       const totalWidth = visibleColumns.reduce((sum, columnIndex) => sum + widths[columnIndex], 0);
-      const tableWidth = `${Math.max(totalWidth, table.clientWidth)}px`;
-      this._positionSection(table.tHead!, '0px', null, tableWidth);
+      const tableWidth = `${totalWidth}px`;
+      const caption = table.caption;
+      let captionHeight = 0;
+      if (caption) {
+        const viewportWidth = this.shadowRoot?.querySelector<HTMLElement>('#viewport')?.clientWidth ?? table.clientWidth;
+        this._setManagedStyle(caption, 'box-sizing', 'border-box');
+        this._setManagedStyle(caption, 'display', 'block');
+        this._setManagedStyle(caption, 'inline-size', `${viewportWidth}px`);
+        this._setManagedStyle(caption, 'inset-block-start', '0px');
+        this._setManagedStyle(caption, 'inset-inline-start', '0px');
+        this._setManagedStyle(caption, 'position', 'absolute');
+        this._setManagedStyle(caption, 'z-index', '5');
+        captionHeight = Math.ceil(caption.getBoundingClientRect().height);
+      }
+      this._positionSection(table.tHead!, `${captionHeight}px`, null, tableWidth);
       if (table.tFoot) this._positionSection(table.tFoot, null, '0px', tableWidth);
 
       const body = bodies[0];
@@ -478,7 +469,8 @@ export class NteDataTableElement extends nextrap_element({
       this._setManagedStyle(body, 'inline-size', '100%');
       this._setManagedStyle(body, 'overflow', 'auto');
       this._setManagedStyle(body, 'overscroll-behavior', 'contain');
-      this._setManagedStyle(body, 'padding-block-start', `${Math.ceil(table.tHead!.getBoundingClientRect().height)}px`);
+      const headerHeight = Math.ceil(table.tHead!.getBoundingClientRect().height);
+      this._setManagedStyle(body, 'padding-block-start', `${captionHeight + headerHeight}px`);
       const footerHeight = Math.ceil(table.tFoot?.getBoundingClientRect().height ?? 0);
       this._setManagedStyle(body, 'padding-block-end', `${footerHeight}px`);
       for (const row of Array.from(body.rows)) {
@@ -490,14 +482,17 @@ export class NteDataTableElement extends nextrap_element({
       const horizontalScrollbarHeight = Math.max(0, body.offsetHeight - body.clientHeight);
       if (table.tFoot) this._setManagedStyle(table.tFoot, 'inset-block-end', `${horizontalScrollbarHeight}px`);
       this._setManagedStyle(body, 'padding-block-end', `${footerHeight + horizontalScrollbarHeight}px`);
+      this.shadowRoot
+        ?.querySelector<HTMLElement>('#viewport')
+        ?.style.setProperty('--nte-data-table-scroll-indicator-bottom', `${footerHeight + horizontalScrollbarHeight + 4}px`);
 
       for (const columnIndex of visibleColumns) this._resizableHeaders.add(headerCells[columnIndex]);
       this._applyPinnedColumns(rows, headerCells, visibleColumns, widths);
       this._setBody(body);
       this._syncHorizontalScroll();
+      this._refreshWidths = false;
     } finally {
-      this._updateResizeTargets(table, headerCells);
-      this._observeSourceTable();
+      this._updateResizeTargets(table);
     }
   }
 
@@ -634,9 +629,10 @@ export class NteDataTableElement extends nextrap_element({
     return index < 0 ? null : index;
   }
 
-  private _updateResizeTargets(table: HTMLTableElement, headerCells: HTMLTableCellElement[]): void {
+  private _updateResizeTargets(table: HTMLTableElement): void {
     if (!this._resizeObserver) return;
-    const nextTargets = new Set<Element>([table, ...headerCells, ...Array.from(table.tBodies)]);
+    const nextTargets = new Set<Element>();
+    if (table.caption) nextTargets.add(table.caption);
     const viewport = this.shadowRoot?.querySelector<HTMLElement>('#viewport');
     if (viewport) nextTargets.add(viewport);
     for (const target of this._resizeTargets) if (!nextTargets.has(target)) this._resizeObserver.unobserve(target);

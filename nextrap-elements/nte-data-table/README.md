@@ -27,9 +27,9 @@ Every row must contain the same number of cells and `colspan`/`rowspan` must rem
 ## API
 
 - `height`, `pinned-columns`, `scroll-label` and host `aria-label` configure the viewport.
-- Header `data-width`, inline `width`, or the native `width` attribute sets a fixed column width. Drag the header's inline-end edge to resize it.
+- Header `data-width`, inline `width`, or the native `width` attribute is resolved once and then fixed in pixels across all sections. Drag the header's inline-end edge to resize only that column.
 - Header `hidden` or `data-hidden` hides the complete column.
-- `sourceTable` returns the active native table; `refresh()` manually reapplies layout metadata.
+- `sourceTable` returns the active native table. `refresh()` removes component-owned layout values, measures the current table again, and fixes every visible column in pixels.
 - `remote` controls selection without observing selection classes.
 
 ```ts
@@ -52,8 +52,12 @@ table.remote.clearSelection();
 | `highlight` / `highlight-primary` | `th`, `td`, or `tr` | Primary highlight; a header marker applies to the complete column. |
 | `highlight-secondary`, `highlight-success`, `highlight-info`, `highlight-warning`, `highlight-danger` | `th`, `td`, or `tr` | Semantic highlight; a header marker applies to the complete column. |
 | `border-free` | `th` or `td` | Identifier/fixed-cell treatment; on a header cell it is propagated to the complete column. |
+| `overflow-ellipsis` | `table`, `tr`, `th`, or `td` | Single-line ellipsis; also the default when no overflow class is present. |
+| `overflow-clip` | `table`, `tr`, `th`, or `td` | Clips overflowing text without an ellipsis. |
+| `overflow-wrap` | `table`, `tr`, `th`, or `td` | Wraps long content and permits a taller row. |
+| `overflow-visible` | `table`, `tr`, `th`, or `td` | Deliberately allows visible overflow. |
 | `with-header-strong`, `with-header-minimal` | `nte-data-table` | Alternative header treatment used with `style-default`. |
 | `nte-data-table-header` | Wrapper before the component | Connected title/action/search toolbar. |
 | `nte-data-table-search` | Search label inside the wrapper | Consistent search-field layout. |
 
-The component owns only its `data-nte-data-table-*` markers and functional layout styles. The footer receives a distinct top border. See demos 04 and 05 for the variations and Remote controls.
+An optional native `caption` is measured and kept fixed above the column header. The viewport renders a visual horizontal-scroll track when content overflows, including on mobile browsers that hide native scrollbars; `tbody` remains the only actual scroll container. The component never observes or clones the source table. Applications call `refresh()` after structural or layout-metadata changes.

@@ -4,10 +4,45 @@
 }
 
 #viewport {
+  --nte-data-table-scroll-indicator-bottom: 0px;
+  --nte-data-table-scroll-thumb-offset: 0px;
+  --nte-data-table-scroll-thumb-width: 0px;
+
   box-sizing: border-box;
   inline-size: 100%;
   min-block-size: 0;
   overflow: hidden;
+  position: relative;
+}
+
+#viewport::before,
+#viewport::after {
+  content: '';
+  position: absolute;
+  inset-block-end: var(--nte-data-table-scroll-indicator-bottom);
+  inset-inline-start: 8px;
+  z-index: 10;
+  block-size: 3px;
+  border-radius: 999px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+#viewport::before {
+  inset-inline-end: 8px;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+#viewport::after {
+  inline-size: var(--nte-data-table-scroll-thumb-width);
+  background: color-mix(in srgb, currentColor 42%, transparent);
+  transform: translateX(var(--nte-data-table-scroll-thumb-offset));
+}
+
+#viewport[data-horizontal-overflow]::before,
+#viewport[data-horizontal-overflow]::after {
+  opacity: 1;
 }
 
 ::slotted(table) {
