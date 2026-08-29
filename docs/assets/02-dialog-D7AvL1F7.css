@@ -1,0 +1,491 @@
+.btn {
+    --btn-txt: var(--nt-text-on-primary, #fff);
+    --btn-bg: var(--nt-primary, #0d6efd);
+    --btn-bg-hover: var(--nt-primary-hover, var(--btn-bg));
+    --btn-bg-active: var(--nt-primary-active, var(--btn-bg));
+    display: inline-block;
+    -moz-appearance: none;
+    appearance: none;
+    -webkit-appearance: none;
+    padding: var(--nt-btn-padding-y, 0.5rem) var(--nt-btn-padding-x, 1rem);
+    background-color: var(--btn-bg);
+    color: var(--btn-txt) !important;
+    border-radius: var(--nt-border-radius, var(--nt-radius, 0.375rem));
+    border: var(--nt-border-width, 1px) solid var(--btn-bg);
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
+}
+.btn:link,
+.btn:visited {
+    color: var(--btn-txt) !important;
+}
+.btn:hover {
+    background-color: var(--btn-bg-hover);
+    color: var(--btn-txt) !important;
+    text-decoration: none;
+}
+.btn:active {
+    background-color: var(--btn-bg-active);
+    color: var(--btn-txt) !important;
+}
+.btn.disabled,
+.btn[disabled] {
+    background-color: rgb(from var(--btn-bg) r g b/.5);
+    color: rgb(from var(--nt-text, currentColor) r g b/.5) !important;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+.btn-link {
+    --btn-bg: transparent;
+    --btn-bg-hover: transparent;
+    --btn-bg-active: transparent;
+    --btn-txt: var(--nt-link, currentColor);
+    background-color: transparent;
+    color: var(--nt-link, currentColor) !important;
+    border-color: transparent;
+    text-decoration: var(--nt-text-decoration-link, underline);
+}
+.btn-link:link,
+.btn-link:visited {
+    color: var(--nt-link, currentColor) !important;
+}
+.btn-link:hover {
+    background-color: transparent;
+    color: var(--nt-link-hover, var(--nt-link, currentColor)) !important;
+}
+.btn-link:active {
+    color: var(--nt-link-active, var(--nt-link, currentColor)) !important;
+}
+.btn-sm {
+    padding: var(--nt-btn-sm-padding-y, 0.25rem) var(--nt-btn-sm-padding-x, 0.5rem);
+    font-size: var(--nt-btn-sm-font-size, 0.75rem);
+}
+.btn-lg {
+    padding: var(--nt-btn-lg-padding-y, 0.75rem) var(--nt-btn-lg-padding-x, 1.5rem);
+    font-size: var(--nt-btn-lg-font-size, 1.25rem);
+}
+.btn-xl {
+    padding: var(--nt-btn-xl-padding-y, 1rem) var(--nt-btn-xl-padding-x, 2rem);
+    font-size: var(--nt-btn-xl-font-size, 1.5rem);
+}
+.btn-xxl {
+    padding: var(--nt-btn-xxl-padding-y, 1.25rem) var(--nt-btn-xxl-padding-x, 2.5rem);
+    font-size: var(--nt-btn-xxl-font-size, 2rem);
+}
+.btn-lead {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--btn-lead-gap, 0.625em);
+}
+.btn-lead:after {
+    content: '';
+    flex: 0 0 auto;
+    width: var(--btn-lead-arrow-width, 0.9em);
+    height: var(--btn-lead-arrow-height, 0.65em);
+    background: currentColor;
+    clip-path: polygon(0 42%, 65% 42%, 65% 0, 100% 50%, 65% 100%, 65% 58%, 0 58%);
+    transform: translate(0);
+    transition: transform var(--btn-lead-duration, 0.2s) ease;
+}
+.btn-lead:hover:after,
+.btn-lead:focus-visible:after {
+    transform: translate(var(--btn-lead-offset, 0.2em));
+}
+.dropdown-toggle {
+    position: relative;
+    z-index: 10000;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: auto !important;
+    padding-right: var(--nt-btn-dropdown-padding-right, 2rem);
+    background-image: none;
+}
+.dropdown-toggle:after {
+    content: '';
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    border-left: 0.25rem solid transparent;
+    border-right: 0.25rem solid transparent;
+    border-top: 0.25rem solid var(--btn-txt);
+}
+.btn-primary {
+    --btn-bg: var(--nt-primary) !important;
+    --btn-bg-hover: var(--nt-primary-hover, var(--nt-primary)) !important;
+    --btn-bg-active: var(--nt-primary-active, var(--nt-primary)) !important;
+    --btn-txt: var(--nt-text-on-primary, var(--nt-text-on-primary, #fff)) !important;
+    border-color: var(--nt-primary) !important;
+}
+.btn-accent {
+    --btn-bg: var(--nt-accent) !important;
+    --btn-bg-hover: var(--nt-accent-hover, var(--nt-accent)) !important;
+    --btn-bg-active: var(--nt-accent-active, var(--nt-accent)) !important;
+    --btn-txt: var(--nt-text-on-accent, var(--nt-text-on-primary, #fff)) !important;
+    border-color: var(--nt-accent) !important;
+}
+.btn-secondary {
+    --btn-bg: var(--nt-secondary) !important;
+    --btn-bg-hover: var(--nt-secondary-hover, var(--nt-secondary)) !important;
+    --btn-bg-active: var(--nt-secondary-active, var(--nt-secondary)) !important;
+    --btn-txt: var(--nt-text-on-secondary, var(--nt-text-on-primary, #fff)) !important;
+    border-color: var(--nt-secondary) !important;
+}
+.btn-tertiary {
+    --btn-bg: var(--nt-tertiary) !important;
+    --btn-bg-hover: var(--nt-tertiary-hover, var(--nt-tertiary)) !important;
+    --btn-bg-active: var(--nt-tertiary-active, var(--nt-tertiary)) !important;
+    --btn-txt: var(--nt-text-on-tertiary, var(--nt-text-on-primary, #fff)) !important;
+    border-color: var(--nt-tertiary) !important;
+}
+.btn-success {
+    --btn-bg: var(--nt-success) !important;
+    --btn-bg-hover: var(--nt-success-hover, var(--nt-success)) !important;
+    --btn-bg-active: var(--nt-success-active, var(--nt-success)) !important;
+    --btn-txt: var(--nt-text-on-success, var(--nt-text-on-primary, #fff)) !important;
+    border-color: var(--nt-success) !important;
+}
+.btn-danger {
+    --btn-bg: var(--nt-danger) !important;
+    --btn-bg-hover: var(--nt-danger-hover, var(--nt-danger)) !important;
+    --btn-bg-active: var(--nt-danger-active, var(--nt-danger)) !important;
+    --btn-txt: var(--nt-text-on-danger, var(--nt-text-on-primary, #fff)) !important;
+    border-color: var(--nt-danger) !important;
+}
+.btn-warning {
+    --btn-bg: var(--nt-warning) !important;
+    --btn-bg-hover: var(--nt-warning-hover, var(--nt-warning)) !important;
+    --btn-bg-active: var(--nt-warning-active, var(--nt-warning)) !important;
+    --btn-txt: var(--nt-text-on-warning, var(--nt-text-on-primary, #fff)) !important;
+    border-color: var(--nt-warning) !important;
+}
+.btn-info {
+    --btn-bg: var(--nt-info) !important;
+    --btn-bg-hover: var(--nt-info-hover, var(--nt-info)) !important;
+    --btn-bg-active: var(--nt-info-active, var(--nt-info)) !important;
+    --btn-txt: var(--nt-text-on-info, var(--nt-text-on-primary, #fff)) !important;
+    border-color: var(--nt-info) !important;
+}
+.btn-light {
+    --btn-bg: var(--nt-light) !important;
+    --btn-bg-hover: var(--nt-light-hover, var(--nt-light)) !important;
+    --btn-bg-active: var(--nt-light-active, var(--nt-light)) !important;
+    --btn-txt: var(--nt-text-on-light, var(--nt-text-on-primary, #fff)) !important;
+    border-color: var(--nt-light) !important;
+}
+.btn-dark {
+    --btn-bg: var(--nt-dark) !important;
+    --btn-bg-hover: var(--nt-dark-hover, var(--nt-dark)) !important;
+    --btn-bg-active: var(--nt-dark-active, var(--nt-dark)) !important;
+    --btn-txt: var(--nt-text-on-dark, var(--nt-text-on-primary, #fff)) !important;
+    border-color: var(--nt-dark) !important;
+}
+.btn-outline-primary {
+    --btn-bg: transparent;
+    --btn-bg-hover: var(--nt-primary);
+    --btn-bg-active: var(--nt-primary-active, var(--nt-primary));
+    --btn-txt: var(--nt-primary);
+    background-color: transparent;
+    color: var(--btn-txt) !important;
+    border-color: var(--nt-primary);
+}
+.btn-outline-primary:hover {
+    --btn-txt: var(--nt-text-on-primary, var(--nt-text-on-primary, #fff));
+    background-color: var(--nt-primary);
+    color: var(--btn-txt) !important;
+}
+.btn-outline-accent {
+    --btn-bg: transparent;
+    --btn-bg-hover: var(--nt-accent);
+    --btn-bg-active: var(--nt-accent-active, var(--nt-accent));
+    --btn-txt: var(--nt-accent);
+    background-color: transparent;
+    color: var(--btn-txt) !important;
+    border-color: var(--nt-accent);
+}
+.btn-outline-accent:hover {
+    --btn-txt: var(--nt-text-on-accent, var(--nt-text-on-primary, #fff));
+    background-color: var(--nt-accent);
+    color: var(--btn-txt) !important;
+}
+.btn-outline-secondary {
+    --btn-bg: transparent;
+    --btn-bg-hover: var(--nt-secondary);
+    --btn-bg-active: var(--nt-secondary-active, var(--nt-secondary));
+    --btn-txt: var(--nt-secondary);
+    background-color: transparent;
+    color: var(--btn-txt) !important;
+    border-color: var(--nt-secondary);
+}
+.btn-outline-secondary:hover {
+    --btn-txt: var(--nt-text-on-secondary, var(--nt-text-on-primary, #fff));
+    background-color: var(--nt-secondary);
+    color: var(--btn-txt) !important;
+}
+.btn-outline-tertiary {
+    --btn-bg: transparent;
+    --btn-bg-hover: var(--nt-tertiary);
+    --btn-bg-active: var(--nt-tertiary-active, var(--nt-tertiary));
+    --btn-txt: var(--nt-tertiary);
+    background-color: transparent;
+    color: var(--btn-txt) !important;
+    border-color: var(--nt-tertiary);
+}
+.btn-outline-tertiary:hover {
+    --btn-txt: var(--nt-text-on-tertiary, var(--nt-text-on-primary, #fff));
+    background-color: var(--nt-tertiary);
+    color: var(--btn-txt) !important;
+}
+.btn-outline-success {
+    --btn-bg: transparent;
+    --btn-bg-hover: var(--nt-success);
+    --btn-bg-active: var(--nt-success-active, var(--nt-success));
+    --btn-txt: var(--nt-success);
+    background-color: transparent;
+    color: var(--btn-txt) !important;
+    border-color: var(--nt-success);
+}
+.btn-outline-success:hover {
+    --btn-txt: var(--nt-text-on-success, var(--nt-text-on-primary, #fff));
+    background-color: var(--nt-success);
+    color: var(--btn-txt) !important;
+}
+.btn-outline-danger {
+    --btn-bg: transparent;
+    --btn-bg-hover: var(--nt-danger);
+    --btn-bg-active: var(--nt-danger-active, var(--nt-danger));
+    --btn-txt: var(--nt-danger);
+    background-color: transparent;
+    color: var(--btn-txt) !important;
+    border-color: var(--nt-danger);
+}
+.btn-outline-danger:hover {
+    --btn-txt: var(--nt-text-on-danger, var(--nt-text-on-primary, #fff));
+    background-color: var(--nt-danger);
+    color: var(--btn-txt) !important;
+}
+.btn-outline-warning {
+    --btn-bg: transparent;
+    --btn-bg-hover: var(--nt-warning);
+    --btn-bg-active: var(--nt-warning-active, var(--nt-warning));
+    --btn-txt: var(--nt-warning);
+    background-color: transparent;
+    color: var(--btn-txt) !important;
+    border-color: var(--nt-warning);
+}
+.btn-outline-warning:hover {
+    --btn-txt: var(--nt-text-on-warning, var(--nt-text-on-primary, #fff));
+    background-color: var(--nt-warning);
+    color: var(--btn-txt) !important;
+}
+.btn-outline-info {
+    --btn-bg: transparent;
+    --btn-bg-hover: var(--nt-info);
+    --btn-bg-active: var(--nt-info-active, var(--nt-info));
+    --btn-txt: var(--nt-info);
+    background-color: transparent;
+    color: var(--btn-txt) !important;
+    border-color: var(--nt-info);
+}
+.btn-outline-info:hover {
+    --btn-txt: var(--nt-text-on-info, var(--nt-text-on-primary, #fff));
+    background-color: var(--nt-info);
+    color: var(--btn-txt) !important;
+}
+.btn-outline-light {
+    --btn-bg: transparent;
+    --btn-bg-hover: var(--nt-light);
+    --btn-bg-active: var(--nt-light-active, var(--nt-light));
+    --btn-txt: var(--nt-light);
+    background-color: transparent;
+    color: var(--btn-txt) !important;
+    border-color: var(--nt-light);
+}
+.btn-outline-light:hover {
+    --btn-txt: var(--nt-text-on-light, var(--nt-text-on-primary, #fff));
+    background-color: var(--nt-light);
+    color: var(--btn-txt) !important;
+}
+.btn-outline-dark {
+    --btn-bg: transparent;
+    --btn-bg-hover: var(--nt-dark);
+    --btn-bg-active: var(--nt-dark-active, var(--nt-dark));
+    --btn-txt: var(--nt-dark);
+    background-color: transparent;
+    color: var(--btn-txt) !important;
+    border-color: var(--nt-dark);
+}
+.btn-outline-dark:hover {
+    --btn-txt: var(--nt-text-on-dark, var(--nt-text-on-primary, #fff));
+    background-color: var(--nt-dark);
+    color: var(--btn-txt) !important;
+}
+@media (prefers-reduced-motion: no-preference) {
+    @supports (timeline-trigger: --nt-btn-glow-on-view view()) and
+        (animation-trigger: --nt-btn-glow-on-view replay reset) {
+        .btn-glow-on-view {
+            timeline-trigger: --nt-btn-glow-on-view view();
+            trigger-scope: --nt-btn-glow-on-view;
+        }
+        .btn-glow-on-view:before {
+            animation: nt-btn-glow-on-view var(--btn-glow-duration, 0.8s) var(--btn-glow-easing, ease-out);
+            animation-delay: var(--btn-glow-on-view-delay, 2s);
+            animation-trigger: --nt-btn-glow-on-view replay reset;
+        }
+        @keyframes nt-btn-glow-on-view {
+            0% {
+                transform: translate(var(--btn-glow-start, -175%)) skew(var(--btn-glow-angle, -18deg));
+            }
+            to {
+                transform: translate(var(--btn-glow-end, 360%)) skew(var(--btn-glow-angle, -18deg));
+            }
+        }
+    }
+}
+.btn-glow {
+    --btn-glow-color: rgb(255 255 255 / 0.35);
+    --btn-glow-color: color-mix(in srgb, currentColor 35%, transparent);
+    --btn-glow-duration: 0.8s;
+    --btn-glow-easing: ease-out;
+    --btn-glow-width: 32%;
+    --btn-glow-angle: -18deg;
+    --btn-glow-start: -175%;
+    --btn-glow-end: 360%;
+    position: relative;
+    overflow: hidden;
+}
+.btn-glow:before {
+    content: '';
+    position: absolute;
+    top: -35%;
+    bottom: -35%;
+    left: 0;
+    width: var(--btn-glow-width);
+    transform: translate(var(--btn-glow-start)) skew(var(--btn-glow-angle));
+    transform-origin: center;
+    background: linear-gradient(90deg, transparent 0%, var(--btn-glow-color) 50%, transparent 100%);
+    pointer-events: none;
+    will-change: transform;
+}
+.btn-glow:hover:before,
+.btn-glow:focus-visible:before {
+    animation: nt-btn-glow-hover var(--btn-glow-duration) var(--btn-glow-easing);
+}
+@keyframes nt-btn-glow-hover {
+    0% {
+        transform: translate(var(--btn-glow-start)) skew(var(--btn-glow-angle));
+    }
+    to {
+        transform: translate(var(--btn-glow-end)) skew(var(--btn-glow-angle));
+    }
+}
+.btn-group {
+    --border-radius: var(--nt-border-radius, 0.25rem);
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0;
+}
+.btn-group .btn {
+    flex: 1 1 auto;
+    margin: 0;
+    min-width: 100px;
+    border-radius: 0;
+}
+.btn-group .btn:not(:last-child) {
+    border-right: 0;
+}
+.btn-group .btn:first-child {
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+.btn-group .btn:last-child {
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+}
+.dropdown-menu {
+    --hover-bg: var(--nt-primary);
+    --hover-text: var(--nt-text-on-primary);
+    position: fixed;
+    inset: auto;
+    position-area: block-end span-inline-end;
+    position-try-fallbacks: flip-block, flip-inline;
+    z-index: 10000;
+    opacity: 0;
+    transform: translateY(-0.25rem);
+    display: none;
+    min-width: 160px;
+    max-block-size: min(70vh, 24rem);
+    overflow-y: auto;
+    padding: 0.5rem 0;
+    margin: 0.25rem 0 0;
+    list-style: none;
+    background-color: rgb(from var(--nt-bg) r g b/.9);
+    border: var(--nt-border-width, 1px) solid rgb(from var(--nt-text) r g b/.15);
+    border-radius: var(--nt-border-radius);
+    box-shadow: 0 2px 10px #0000001a;
+    transition:
+        opacity 0.16s ease,
+        transform 0.16s ease,
+        display 0.16s allow-discrete,
+        overlay 0.16s allow-discrete;
+}
+.dropdown-menu:popover-open {
+    display: block;
+    opacity: 1;
+    transform: none;
+}
+@starting-style {
+    .dropdown-menu:popover-open {
+        opacity: 0;
+        transform: translateY(-0.25rem);
+    }
+}
+.dropdown-menu > li {
+    padding: 0;
+    color: var(--nt-text);
+}
+.dropdown-menu > li > hr {
+    margin: 0.5rem 0;
+    border: none;
+    border-top: 1px solid var(--nt-text);
+}
+.dropdown-menu > li > :is(a, button) {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    color: inherit;
+    font: inherit;
+    text-align: start;
+    text-decoration: none;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    display: block;
+    transition:
+        background-color 0.16s ease,
+        color 0.16s ease;
+}
+.dropdown-menu > li > :is(a, button):is(:hover, :focus-visible) {
+    background-color: var(--hover-bg);
+    color: var(--hover-text);
+}
+.dropdown-menu > li.disabled > :is(a, button),
+.dropdown-menu > li > a[aria-disabled='true'],
+.dropdown-menu > li > button:disabled {
+    color: var(--nt-text-disabled);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+    .dropdown-menu {
+        transition-duration: 0.01ms;
+    }
+}
+nte-privacy-consent {
+    display: block;
+    margin-block: 1rem;
+}

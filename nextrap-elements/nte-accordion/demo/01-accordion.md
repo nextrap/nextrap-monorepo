@@ -4,7 +4,7 @@
 Das Accordion eignet sich für FAQ- und Detailbereiche innerhalb eines bestehenden Layouts. Die Beispiele sind direkt im `trunkjs/content-pane`-Markdown-Format geschrieben.
 
 ## Standard
-{: layout="1;.demo-card"}
+{: layout=".demo-card"}
 
 ---
 {: layout="nte-accordion[initial-open-index='0'][exclusive]"}
@@ -22,7 +22,7 @@ Ein Klick auf die Überschrift ändert den reflektierten `open`-Zustand des Item
 Das visuelle Styling wird über die öffentliche Sass-API und Shadow Parts eingebunden.
 
 ## Mehrere offene Einträge
-{: layout="1;.demo-card"}
+{: layout=".demo-card"}
 
 Ohne `exclusive` können mehrere Einträge gleichzeitig geöffnet bleiben.
 
@@ -42,7 +42,7 @@ Dieser Eintrag ist über `initial-open-index="1"` anfangs geöffnet.
 Beim Öffnen bleibt der vorherige Eintrag ebenfalls offen.
 
 ## Marker links als Plus und Minus
-{: layout="1;.demo-card"}
+{: layout=".demo-card"}
 
 ---
 {: layout="nte-accordion.marker-start.marker-plus[initial-open-index='0'][marker-position='start'][marker-icon='plus']"}
@@ -56,7 +56,7 @@ Der Marker steht links und zeigt im geschlossenen Zustand ein Plus.
 Im geöffneten Zustand wechselt der Marker zum Minus.
 
 ## Kompakte Theme-Komposition
-{: layout="1;.demo-card.demo-compact"}
+{: layout=".demo-card.demo-compact"}
 
 ---
 {: layout="nte-accordion[initial-open-index='0']"}

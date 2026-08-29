@@ -1,0 +1,891 @@
+.nte-nav-2-demo {
+    min-block-size: 22rem;
+    padding: 2rem;
+    color: var(--nt-text, #212529);
+    background: var(--nt-body-bg, #f6f7f9);
+    font-family: var(--nt-font-family-base, system-ui, sans-serif);
+}
+.nte-nav-2-demo main {
+    max-inline-size: 64rem;
+    margin-inline: auto;
+}
+.nte-nav-2-demo .demo-frame {
+    padding: 1rem;
+    background: var(--nt-body, #fff);
+    border-radius: calc(var(--nt-border-radius, 0.375rem) * 2);
+    box-shadow: 0 0.5rem 2rem color-mix(in srgb, var(--nt-dark, #212529) 8%, transparent);
+}
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default {
+    --nte-nav-item-gap: 0.5rem;
+    --nte-nav-submenu-gap: 0.35rem;
+    --nte-nav-transition-duration: 0.16s;
+    --nte-nav-submenu-default-padding: 0.35rem;
+    --nte-nav-submenu-default-background: var(--nt-body, #fff);
+    --nte-nav-submenu-default-border: 1px solid color-mix(in srgb, var(--nt-text, #212529) 14%, transparent);
+    --nte-nav-submenu-default-radius: calc(var(--nt-border-radius, 0.375rem) * 2);
+    --nte-nav-submenu-default-shadow: 0 1rem 2.5rem color-mix(in srgb, var(--nt-dark, #212529) 18%, transparent);
+    --nte-nav-submenu-padding: var(--nte-nav-submenu-default-padding);
+    --nte-nav-submenu-background: var(--nte-nav-submenu-default-background);
+    --nte-nav-submenu-border: var(--nte-nav-submenu-default-border);
+    --nte-nav-submenu-radius: var(--nte-nav-submenu-default-radius);
+    --nte-nav-submenu-shadow: var(--nte-nav-submenu-default-shadow);
+}
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default::part(nav) {
+    color: var(--nt-text, #212529);
+    background: var(--nt-body, #fff);
+}
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default nte-nav-item::part(item) {
+    min-block-size: 100%;
+}
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default nte-nav-item::part(link),
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default nte-nav-item::part(text),
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default nte-nav-item::part(disclosure),
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default nte-nav-item::part(toggle) {
+    box-sizing: border-box;
+    color: inherit;
+    font: inherit;
+}
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default nte-nav-item::part(link),
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default nte-nav-item::part(text),
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default nte-nav-item::part(disclosure) {
+    padding: var(--nte-nav-item-padding-block, 0.7rem) var(--nte-nav-item-padding-inline, 1rem);
+    font-size: var(--nte-nav-item-font-size, 1rem);
+    line-height: 1.25;
+    text-decoration: none;
+}
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default nte-nav-item::part(disclosure),
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default nte-nav-item::part(toggle) {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default nte-nav-item::part(toggle) {
+    align-self: stretch;
+    min-inline-size: var(--nte-nav-toggle-size, 2.5rem);
+    padding: 0.5rem;
+}
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default nte-nav-item::part(link):hover,
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default nte-nav-item::part(disclosure):hover,
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default nte-nav-item::part(toggle):hover {
+    color: var(--nt-primary, #0d6efd);
+    background: color-mix(in srgb, var(--nt-primary, #0d6efd) 10%, transparent);
+}
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default nte-nav-item::part(link):focus-visible,
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default nte-nav-item::part(disclosure):focus-visible,
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default nte-nav-item::part(toggle):focus-visible {
+    position: relative;
+    z-index: 1;
+    outline: 2px solid var(--nt-primary, #0d6efd);
+    outline-offset: -2px;
+}
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default nte-nav-item[current='page']::part(link),
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default nte-nav-item[current='true']::part(link) {
+    color: var(--nt-text-on-primary, #fff);
+    background: var(--nt-primary, #0d6efd);
+}
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default nte-nav-item::part(icon) {
+    display: inline-grid;
+    inline-size: var(--nte-nav-icon-size, 1.1em);
+    block-size: var(--nte-nav-icon-size, 1.1em);
+    place-items: center;
+}
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default nte-nav-item::part(submenu) {
+    padding: var(--nte-nav-submenu-padding);
+    color: var(--nt-text, #212529);
+    background: var(--nte-nav-submenu-background);
+    border: var(--nte-nav-submenu-border);
+    border-radius: var(--nte-nav-submenu-radius);
+    box-shadow: var(--nte-nav-submenu-shadow);
+}
+.nte-nav-2-demo .demo-horizontal nte-nav-2.style-default {
+    --nte-nav-flow: row;
+    --nte-nav-align: stretch;
+    --nte-nav-justify: flex-start;
+    --nte-nav-gap: 0;
+    --nte-nav-submenu-position: absolute;
+    --nte-nav-submenu-inset-block-start: 100%;
+    --nte-nav-submenu-inset-inline-start: 0;
+    --nte-nav-nested-submenu-inset-block-start: 0;
+    --nte-nav-nested-submenu-inset-inline-start: 100%;
+    --nte-nav-submenu-enter-transform: translateY(-0.35rem);
+    --nte-nav-nested-submenu-enter-transform: translateX(-0.35rem);
+    --nte-nav-submenu-inline-size: max(100%, var(--nte-nav-submenu-min-inline-size));
+    --nte-nav-submenu-max-block-size: min(70vh, 32rem);
+    --nte-nav-submenu-padding: var(--nte-nav-submenu-default-padding);
+    --nte-nav-submenu-background: var(--nte-nav-submenu-default-background);
+    --nte-nav-submenu-border: var(--nte-nav-submenu-default-border);
+    --nte-nav-submenu-radius: var(--nte-nav-submenu-default-radius);
+    --nte-nav-submenu-shadow: var(--nte-nav-submenu-default-shadow);
+    --nte-nav-item-padding-block: 0.7rem;
+    --nte-nav-item-padding-inline: 1rem;
+    --nte-nav-item-font-size: 1rem;
+    --nte-nav-toggle-size: 2.5rem;
+    --nte-nav-icon-size: 1.1rem;
+}
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default {
+    --nte-nav-item-gap: 0.5rem;
+    --nte-nav-submenu-gap: 0.35rem;
+    --nte-nav-transition-duration: 0.16s;
+    --nte-nav-submenu-default-padding: 0.35rem;
+    --nte-nav-submenu-default-background: var(--nt-body, #fff);
+    --nte-nav-submenu-default-border: 1px solid color-mix(in srgb, var(--nt-text, #212529) 14%, transparent);
+    --nte-nav-submenu-default-radius: calc(var(--nt-border-radius, 0.375rem) * 2);
+    --nte-nav-submenu-default-shadow: 0 0.75rem 2rem color-mix(in srgb, var(--nt-dark, #212529) 14%, transparent);
+    --nte-nav-submenu-padding: var(--nte-nav-submenu-default-padding);
+    --nte-nav-submenu-background: var(--nte-nav-submenu-default-background);
+    --nte-nav-submenu-border: var(--nte-nav-submenu-default-border);
+    --nte-nav-submenu-radius: var(--nte-nav-submenu-default-radius);
+    --nte-nav-submenu-shadow: var(--nte-nav-submenu-default-shadow);
+}
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default::part(nav) {
+    color: var(--nt-text, #212529);
+    background: transparent;
+}
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default nte-nav-item::part(item) {
+    min-block-size: 100%;
+}
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default nte-nav-item::part(link),
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default nte-nav-item::part(text),
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default nte-nav-item::part(disclosure),
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default nte-nav-item::part(toggle) {
+    box-sizing: border-box;
+    color: inherit;
+    font: inherit;
+}
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default nte-nav-item::part(link),
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default nte-nav-item::part(text),
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default nte-nav-item::part(disclosure) {
+    padding: var(--nte-nav-item-padding-block, 0.7rem) var(--nte-nav-item-padding-inline, 1rem);
+    font-size: var(--nte-nav-item-font-size, 1rem);
+    line-height: 1.25;
+    text-decoration: none;
+}
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default nte-nav-item::part(disclosure),
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default nte-nav-item::part(toggle) {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default nte-nav-item::part(toggle) {
+    align-self: stretch;
+    min-inline-size: var(--nte-nav-toggle-size, 2.5rem);
+    padding: 0.5rem;
+}
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default nte-nav-item::part(link):hover,
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default nte-nav-item::part(disclosure):hover,
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default nte-nav-item::part(toggle):hover {
+    color: var(--nt-primary, #0d6efd);
+    background: color-mix(in srgb, var(--nt-primary, #0d6efd) 8%, transparent);
+}
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default nte-nav-item::part(link):focus-visible,
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default nte-nav-item::part(disclosure):focus-visible,
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default nte-nav-item::part(toggle):focus-visible {
+    position: relative;
+    z-index: 1;
+    outline: 2px solid var(--nt-primary, #0d6efd);
+    outline-offset: -2px;
+}
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default nte-nav-item[current='page']::part(link),
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default nte-nav-item[current='true']::part(link) {
+    color: var(--nt-text-on-primary, #fff);
+    background: var(--nt-primary, #0d6efd);
+}
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default nte-nav-item::part(icon) {
+    display: inline-grid;
+    inline-size: var(--nte-nav-icon-size, 1.1em);
+    block-size: var(--nte-nav-icon-size, 1.1em);
+    place-items: center;
+}
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default nte-nav-item::part(submenu) {
+    padding: var(--nte-nav-submenu-padding);
+    color: var(--nt-text, #212529);
+    background: var(--nte-nav-submenu-background);
+    border: var(--nte-nav-submenu-border);
+    border-radius: var(--nte-nav-submenu-radius);
+    box-shadow: var(--nte-nav-submenu-shadow);
+}
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default {
+    --nte-nav-item-padding-block: 0.45rem;
+    --nte-nav-item-padding-inline: 0.7rem;
+    --nte-nav-item-font-size: 0.875rem;
+    --nte-nav-toggle-size: 2rem;
+    --nte-nav-icon-size: 1rem;
+    --nte-nav-flow: column;
+    --nte-nav-align: stretch;
+    --nte-nav-justify: flex-start;
+    --nte-nav-gap: 0.2rem;
+    --nte-nav-submenu-position: static;
+    --nte-nav-submenu-inset-block-start: auto;
+    --nte-nav-submenu-inset-inline-start: auto;
+    --nte-nav-nested-submenu-inset-block-start: auto;
+    --nte-nav-nested-submenu-inset-inline-start: auto;
+    --nte-nav-submenu-enter-transform: translateY(-0.35rem);
+    --nte-nav-nested-submenu-enter-transform: translateY(-0.35rem);
+    --nte-nav-submenu-inline-size: 100%;
+    --nte-nav-submenu-min-inline-size: 0;
+    --nte-nav-submenu-max-block-size: none;
+    --nte-nav-submenu-padding: 0 0 0 var(--nte-nav-inline-submenu-indent, 1rem);
+    --nte-nav-submenu-background: transparent;
+    --nte-nav-submenu-border: 0;
+    --nte-nav-submenu-radius: 0;
+    --nte-nav-submenu-shadow: none;
+    inline-size: 100%;
+}
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default::part(list),
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default > nte-nav-item,
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default > nte-nav-item::part(item) {
+    inline-size: 100%;
+}
+.nte-nav-2-demo .demo-vertical nte-nav-2.style-default {
+    max-inline-size: 20rem;
+}
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default {
+    --nte-nav-item-gap: 0.5rem;
+    --nte-nav-submenu-gap: 0.35rem;
+    --nte-nav-transition-duration: 0.16s;
+    --nte-nav-submenu-default-padding: 0.35rem;
+    --nte-nav-submenu-default-background: var(--nt-body, #fff);
+    --nte-nav-submenu-default-border: 1px solid color-mix(in srgb, var(--nt-text, #212529) 14%, transparent);
+    --nte-nav-submenu-default-radius: calc(var(--nt-border-radius, 0.375rem) * 2);
+    --nte-nav-submenu-default-shadow: 0 1rem 2.5rem color-mix(in srgb, var(--nt-dark, #212529) 18%, transparent);
+    --nte-nav-submenu-padding: var(--nte-nav-submenu-default-padding);
+    --nte-nav-submenu-background: var(--nte-nav-submenu-default-background);
+    --nte-nav-submenu-border: var(--nte-nav-submenu-default-border);
+    --nte-nav-submenu-radius: var(--nte-nav-submenu-default-radius);
+    --nte-nav-submenu-shadow: var(--nte-nav-submenu-default-shadow);
+}
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default::part(nav) {
+    color: var(--nt-text, #212529);
+    background: var(--nt-body, #fff);
+}
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default nte-nav-item::part(item) {
+    min-block-size: 100%;
+}
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default nte-nav-item::part(link),
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default nte-nav-item::part(text),
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default nte-nav-item::part(disclosure),
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default nte-nav-item::part(toggle) {
+    box-sizing: border-box;
+    color: inherit;
+    font: inherit;
+}
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default nte-nav-item::part(link),
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default nte-nav-item::part(text),
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default nte-nav-item::part(disclosure) {
+    padding: var(--nte-nav-item-padding-block, 0.7rem) var(--nte-nav-item-padding-inline, 1rem);
+    font-size: var(--nte-nav-item-font-size, 1rem);
+    line-height: 1.25;
+    text-decoration: none;
+}
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default nte-nav-item::part(disclosure),
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default nte-nav-item::part(toggle) {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default nte-nav-item::part(toggle) {
+    align-self: stretch;
+    min-inline-size: var(--nte-nav-toggle-size, 2.5rem);
+    padding: 0.5rem;
+}
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default nte-nav-item::part(link):hover,
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default nte-nav-item::part(disclosure):hover,
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default nte-nav-item::part(toggle):hover {
+    color: var(--nt-primary, #0d6efd);
+    background: color-mix(in srgb, var(--nt-primary, #0d6efd) 10%, transparent);
+}
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default nte-nav-item::part(link):focus-visible,
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default nte-nav-item::part(disclosure):focus-visible,
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default nte-nav-item::part(toggle):focus-visible {
+    position: relative;
+    z-index: 1;
+    outline: 2px solid var(--nt-primary, #0d6efd);
+    outline-offset: -2px;
+}
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default nte-nav-item[current='page']::part(link),
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default nte-nav-item[current='true']::part(link) {
+    color: var(--nt-text-on-primary, #fff);
+    background: var(--nt-primary, #0d6efd);
+}
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default nte-nav-item::part(icon) {
+    display: inline-grid;
+    inline-size: var(--nte-nav-icon-size, 1.1em);
+    block-size: var(--nte-nav-icon-size, 1.1em);
+    place-items: center;
+}
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default nte-nav-item::part(submenu) {
+    padding: var(--nte-nav-submenu-padding);
+    color: var(--nt-text, #212529);
+    background: var(--nte-nav-submenu-background);
+    border: var(--nte-nav-submenu-border);
+    border-radius: var(--nte-nav-submenu-radius);
+    box-shadow: var(--nte-nav-submenu-shadow);
+}
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default {
+    --nte-nav-item-padding-block: 0.9rem;
+    --nte-nav-item-padding-inline: 1.25rem;
+    --nte-nav-item-font-size: 1.125rem;
+    --nte-nav-toggle-size: 3rem;
+    --nte-nav-icon-size: 1.2rem;
+    --nte-nav-flow: column;
+    --nte-nav-align: stretch;
+    --nte-nav-justify: flex-start;
+    --nte-nav-gap: 0.2rem;
+    --nte-nav-submenu-position: static;
+    --nte-nav-submenu-inset-block-start: auto;
+    --nte-nav-submenu-inset-inline-start: auto;
+    --nte-nav-nested-submenu-inset-block-start: auto;
+    --nte-nav-nested-submenu-inset-inline-start: auto;
+    --nte-nav-submenu-enter-transform: translateY(-0.35rem);
+    --nte-nav-nested-submenu-enter-transform: translateY(-0.35rem);
+    --nte-nav-submenu-inline-size: 100%;
+    --nte-nav-submenu-min-inline-size: 0;
+    --nte-nav-submenu-max-block-size: none;
+    --nte-nav-submenu-padding: 0 0 0 var(--nte-nav-inline-submenu-indent, 1rem);
+    --nte-nav-submenu-background: transparent;
+    --nte-nav-submenu-border: 0;
+    --nte-nav-submenu-radius: 0;
+    --nte-nav-submenu-shadow: none;
+    inline-size: 100%;
+}
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default::part(list),
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default > nte-nav-item,
+.nte-nav-2-demo .demo-responsive nte-nav-2.style-default > nte-nav-item::part(item) {
+    inline-size: 100%;
+}
+@media (min-width: 44rem) {
+    .nte-nav-2-demo .demo-responsive nte-nav-2.style-default {
+        --nte-nav-flow: row;
+        --nte-nav-align: stretch;
+        --nte-nav-justify: flex-start;
+        --nte-nav-gap: 0;
+        --nte-nav-submenu-position: absolute;
+        --nte-nav-submenu-inset-block-start: 100%;
+        --nte-nav-submenu-inset-inline-start: 0;
+        --nte-nav-nested-submenu-inset-block-start: 0;
+        --nte-nav-nested-submenu-inset-inline-start: 100%;
+        --nte-nav-submenu-enter-transform: translateY(-0.35rem);
+        --nte-nav-nested-submenu-enter-transform: translateX(-0.35rem);
+        --nte-nav-submenu-inline-size: max(100%, var(--nte-nav-submenu-min-inline-size));
+        --nte-nav-submenu-max-block-size: min(70vh, 32rem);
+        --nte-nav-submenu-padding: var(--nte-nav-submenu-default-padding);
+        --nte-nav-submenu-background: var(--nte-nav-submenu-default-background);
+        --nte-nav-submenu-border: var(--nte-nav-submenu-default-border);
+        --nte-nav-submenu-radius: var(--nte-nav-submenu-default-radius);
+        --nte-nav-submenu-shadow: var(--nte-nav-submenu-default-shadow);
+    }
+}
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default {
+    --nte-nav-item-gap: 0.5rem;
+    --nte-nav-submenu-gap: 0.35rem;
+    --nte-nav-transition-duration: 0.16s;
+    --nte-nav-submenu-default-padding: 0.35rem;
+    --nte-nav-submenu-default-background: var(--nt-body, #fff);
+    --nte-nav-submenu-default-border: 1px solid color-mix(in srgb, var(--nt-text, #212529) 14%, transparent);
+    --nte-nav-submenu-default-radius: calc(var(--nt-border-radius, 0.375rem) * 2);
+    --nte-nav-submenu-default-shadow: 0 1rem 2.5rem color-mix(in srgb, var(--nt-dark, #212529) 18%, transparent);
+    --nte-nav-submenu-padding: var(--nte-nav-submenu-default-padding);
+    --nte-nav-submenu-background: var(--nte-nav-submenu-default-background);
+    --nte-nav-submenu-border: var(--nte-nav-submenu-default-border);
+    --nte-nav-submenu-radius: var(--nte-nav-submenu-default-radius);
+    --nte-nav-submenu-shadow: var(--nte-nav-submenu-default-shadow);
+}
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default::part(nav) {
+    color: var(--nt-text, #212529);
+    background: var(--nt-body, #fff);
+}
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default nte-nav-item::part(item) {
+    min-block-size: 100%;
+}
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default nte-nav-item::part(link),
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default nte-nav-item::part(text),
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default nte-nav-item::part(disclosure),
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default nte-nav-item::part(toggle) {
+    box-sizing: border-box;
+    color: inherit;
+    font: inherit;
+}
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default nte-nav-item::part(link),
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default nte-nav-item::part(text),
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default nte-nav-item::part(disclosure) {
+    padding: var(--nte-nav-item-padding-block, 0.7rem) var(--nte-nav-item-padding-inline, 1rem);
+    font-size: var(--nte-nav-item-font-size, 1rem);
+    line-height: 1.25;
+    text-decoration: none;
+}
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default nte-nav-item::part(disclosure),
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default nte-nav-item::part(toggle) {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default nte-nav-item::part(toggle) {
+    align-self: stretch;
+    min-inline-size: var(--nte-nav-toggle-size, 2.5rem);
+    padding: 0.5rem;
+}
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default nte-nav-item::part(link):hover,
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default nte-nav-item::part(disclosure):hover,
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default nte-nav-item::part(toggle):hover {
+    color: var(--nt-primary, #0d6efd);
+    background: color-mix(in srgb, var(--nt-primary, #0d6efd) 10%, transparent);
+}
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default nte-nav-item::part(link):focus-visible,
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default nte-nav-item::part(disclosure):focus-visible,
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default nte-nav-item::part(toggle):focus-visible {
+    position: relative;
+    z-index: 1;
+    outline: 2px solid var(--nt-primary, #0d6efd);
+    outline-offset: -2px;
+}
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default nte-nav-item[current='page']::part(link),
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default nte-nav-item[current='true']::part(link) {
+    color: var(--nt-text-on-primary, #fff);
+    background: var(--nt-primary, #0d6efd);
+}
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default nte-nav-item::part(icon) {
+    display: inline-grid;
+    inline-size: var(--nte-nav-icon-size, 1.1em);
+    block-size: var(--nte-nav-icon-size, 1.1em);
+    place-items: center;
+}
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default nte-nav-item::part(submenu) {
+    padding: var(--nte-nav-submenu-padding);
+    color: var(--nt-text, #212529);
+    background: var(--nte-nav-submenu-background);
+    border: var(--nte-nav-submenu-border);
+    border-radius: var(--nte-nav-submenu-radius);
+    box-shadow: var(--nte-nav-submenu-shadow);
+}
+.nte-nav-2-demo .demo-variations .variation-small nte-nav-2.style-default {
+    --nte-nav-flow: row;
+    --nte-nav-align: stretch;
+    --nte-nav-justify: flex-start;
+    --nte-nav-gap: 0.15rem;
+    --nte-nav-submenu-position: absolute;
+    --nte-nav-submenu-inset-block-start: 100%;
+    --nte-nav-submenu-inset-inline-start: 0;
+    --nte-nav-nested-submenu-inset-block-start: 0;
+    --nte-nav-nested-submenu-inset-inline-start: 100%;
+    --nte-nav-submenu-enter-transform: translateY(-0.35rem);
+    --nte-nav-nested-submenu-enter-transform: translateX(-0.35rem);
+    --nte-nav-submenu-inline-size: max(100%, var(--nte-nav-submenu-min-inline-size));
+    --nte-nav-submenu-max-block-size: min(70vh, 32rem);
+    --nte-nav-submenu-padding: var(--nte-nav-submenu-default-padding);
+    --nte-nav-submenu-background: var(--nte-nav-submenu-default-background);
+    --nte-nav-submenu-border: var(--nte-nav-submenu-default-border);
+    --nte-nav-submenu-radius: var(--nte-nav-submenu-default-radius);
+    --nte-nav-submenu-shadow: var(--nte-nav-submenu-default-shadow);
+    --nte-nav-item-padding-block: 0.45rem;
+    --nte-nav-item-padding-inline: 0.7rem;
+    --nte-nav-item-font-size: 0.875rem;
+    --nte-nav-toggle-size: 2rem;
+    --nte-nav-icon-size: 1rem;
+}
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default {
+    --nte-nav-item-gap: 0.5rem;
+    --nte-nav-submenu-gap: 0.35rem;
+    --nte-nav-transition-duration: 0.16s;
+    --nte-nav-submenu-default-padding: 0.35rem;
+    --nte-nav-submenu-default-background: var(--nt-body, #fff);
+    --nte-nav-submenu-default-border: 1px solid color-mix(in srgb, var(--nt-text, #212529) 14%, transparent);
+    --nte-nav-submenu-default-radius: calc(var(--nt-border-radius, 0.375rem) * 2);
+    --nte-nav-submenu-default-shadow: 0 1rem 2.5rem color-mix(in srgb, var(--nt-dark, #212529) 18%, transparent);
+    --nte-nav-submenu-padding: var(--nte-nav-submenu-default-padding);
+    --nte-nav-submenu-background: var(--nte-nav-submenu-default-background);
+    --nte-nav-submenu-border: var(--nte-nav-submenu-default-border);
+    --nte-nav-submenu-radius: var(--nte-nav-submenu-default-radius);
+    --nte-nav-submenu-shadow: var(--nte-nav-submenu-default-shadow);
+}
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default::part(nav) {
+    color: var(--nt-text, #212529);
+    background: var(--nt-body, #fff);
+}
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default nte-nav-item::part(item) {
+    min-block-size: 100%;
+}
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default nte-nav-item::part(link),
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default nte-nav-item::part(text),
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default nte-nav-item::part(disclosure),
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default nte-nav-item::part(toggle) {
+    box-sizing: border-box;
+    color: inherit;
+    font: inherit;
+}
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default nte-nav-item::part(link),
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default nte-nav-item::part(text),
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default nte-nav-item::part(disclosure) {
+    padding: var(--nte-nav-item-padding-block, 0.7rem) var(--nte-nav-item-padding-inline, 1rem);
+    font-size: var(--nte-nav-item-font-size, 1rem);
+    line-height: 1.25;
+    text-decoration: none;
+}
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default nte-nav-item::part(disclosure),
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default nte-nav-item::part(toggle) {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default nte-nav-item::part(toggle) {
+    align-self: stretch;
+    min-inline-size: var(--nte-nav-toggle-size, 2.5rem);
+    padding: 0.5rem;
+}
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default nte-nav-item::part(link):hover,
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default nte-nav-item::part(disclosure):hover,
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default nte-nav-item::part(toggle):hover {
+    color: var(--nt-primary, #0d6efd);
+    background: color-mix(in srgb, var(--nt-primary, #0d6efd) 10%, transparent);
+}
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default nte-nav-item::part(link):focus-visible,
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default nte-nav-item::part(disclosure):focus-visible,
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default nte-nav-item::part(toggle):focus-visible {
+    position: relative;
+    z-index: 1;
+    outline: 2px solid var(--nt-primary, #0d6efd);
+    outline-offset: -2px;
+}
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default nte-nav-item[current='page']::part(link),
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default nte-nav-item[current='true']::part(link) {
+    color: var(--nt-text-on-primary, #fff);
+    background: var(--nt-primary, #0d6efd);
+}
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default nte-nav-item::part(icon) {
+    display: inline-grid;
+    inline-size: var(--nte-nav-icon-size, 1.1em);
+    block-size: var(--nte-nav-icon-size, 1.1em);
+    place-items: center;
+}
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default nte-nav-item::part(submenu) {
+    padding: var(--nte-nav-submenu-padding);
+    color: var(--nt-text, #212529);
+    background: var(--nte-nav-submenu-background);
+    border: var(--nte-nav-submenu-border);
+    border-radius: var(--nte-nav-submenu-radius);
+    box-shadow: var(--nte-nav-submenu-shadow);
+}
+.nte-nav-2-demo .demo-variations .variation-main nte-nav-2.style-default {
+    --nte-nav-item-padding-block: 0.9rem;
+    --nte-nav-item-padding-inline: 1.25rem;
+    --nte-nav-item-font-size: 1.125rem;
+    --nte-nav-toggle-size: 3rem;
+    --nte-nav-icon-size: 1.2rem;
+    --nte-nav-flow: row;
+    --nte-nav-align: stretch;
+    --nte-nav-justify: space-between;
+    --nte-nav-gap: 0.25rem;
+    --nte-nav-submenu-position: absolute;
+    --nte-nav-submenu-inset-block-start: 100%;
+    --nte-nav-submenu-inset-inline-start: 0;
+    --nte-nav-nested-submenu-inset-block-start: 0;
+    --nte-nav-nested-submenu-inset-inline-start: 100%;
+    --nte-nav-submenu-enter-transform: translateY(-0.35rem);
+    --nte-nav-nested-submenu-enter-transform: translateX(-0.35rem);
+    --nte-nav-submenu-inline-size: max(100%, var(--nte-nav-submenu-min-inline-size));
+    --nte-nav-submenu-max-block-size: min(70vh, 32rem);
+    --nte-nav-submenu-padding: var(--nte-nav-submenu-default-padding);
+    --nte-nav-submenu-background: var(--nte-nav-submenu-default-background);
+    --nte-nav-submenu-border: var(--nte-nav-submenu-default-border);
+    --nte-nav-submenu-radius: var(--nte-nav-submenu-default-radius);
+    --nte-nav-submenu-shadow: var(--nte-nav-submenu-default-shadow);
+}
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default {
+    --nte-nav-item-gap: 0.5rem;
+    --nte-nav-submenu-gap: 0.35rem;
+    --nte-nav-transition-duration: 0.16s;
+    --nte-nav-submenu-default-padding: 0.35rem;
+    --nte-nav-submenu-default-background: var(--nt-body, #fff);
+    --nte-nav-submenu-default-border: 1px solid color-mix(in srgb, var(--nt-text, #212529) 14%, transparent);
+    --nte-nav-submenu-default-radius: calc(var(--nt-border-radius, 0.375rem) * 2);
+    --nte-nav-submenu-default-shadow: 0 0.75rem 2rem color-mix(in srgb, var(--nt-dark, #212529) 14%, transparent);
+    --nte-nav-submenu-padding: var(--nte-nav-submenu-default-padding);
+    --nte-nav-submenu-background: var(--nte-nav-submenu-default-background);
+    --nte-nav-submenu-border: var(--nte-nav-submenu-default-border);
+    --nte-nav-submenu-radius: var(--nte-nav-submenu-default-radius);
+    --nte-nav-submenu-shadow: var(--nte-nav-submenu-default-shadow);
+}
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default::part(nav) {
+    color: var(--nt-text, #212529);
+    background: transparent;
+}
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default nte-nav-item::part(item) {
+    min-block-size: 100%;
+}
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default nte-nav-item::part(link),
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default nte-nav-item::part(text),
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default nte-nav-item::part(disclosure),
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default nte-nav-item::part(toggle) {
+    box-sizing: border-box;
+    color: inherit;
+    font: inherit;
+}
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default nte-nav-item::part(link),
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default nte-nav-item::part(text),
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default nte-nav-item::part(disclosure) {
+    padding: var(--nte-nav-item-padding-block, 0.7rem) var(--nte-nav-item-padding-inline, 1rem);
+    font-size: var(--nte-nav-item-font-size, 1rem);
+    line-height: 1.25;
+    text-decoration: none;
+}
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default nte-nav-item::part(disclosure),
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default nte-nav-item::part(toggle) {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default nte-nav-item::part(toggle) {
+    align-self: stretch;
+    min-inline-size: var(--nte-nav-toggle-size, 2.5rem);
+    padding: 0.5rem;
+}
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default nte-nav-item::part(link):hover,
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default nte-nav-item::part(disclosure):hover,
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default nte-nav-item::part(toggle):hover {
+    color: var(--nt-primary, #0d6efd);
+    background: color-mix(in srgb, var(--nt-primary, #0d6efd) 8%, transparent);
+}
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default nte-nav-item::part(link):focus-visible,
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default nte-nav-item::part(disclosure):focus-visible,
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default nte-nav-item::part(toggle):focus-visible {
+    position: relative;
+    z-index: 1;
+    outline: 2px solid var(--nt-primary, #0d6efd);
+    outline-offset: -2px;
+}
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default nte-nav-item[current='page']::part(link),
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default nte-nav-item[current='true']::part(link) {
+    color: var(--nt-text-on-primary, #fff);
+    background: var(--nt-primary, #0d6efd);
+}
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default nte-nav-item::part(icon) {
+    display: inline-grid;
+    inline-size: var(--nte-nav-icon-size, 1.1em);
+    block-size: var(--nte-nav-icon-size, 1.1em);
+    place-items: center;
+}
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default nte-nav-item::part(submenu) {
+    padding: var(--nte-nav-submenu-padding);
+    color: var(--nt-text, #212529);
+    background: var(--nte-nav-submenu-background);
+    border: var(--nte-nav-submenu-border);
+    border-radius: var(--nte-nav-submenu-radius);
+    box-shadow: var(--nte-nav-submenu-shadow);
+}
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default {
+    --nte-nav-item-padding-block: 0.45rem;
+    --nte-nav-item-padding-inline: 0.7rem;
+    --nte-nav-item-font-size: 0.875rem;
+    --nte-nav-toggle-size: 2rem;
+    --nte-nav-icon-size: 1rem;
+    --nte-nav-flow: column;
+    --nte-nav-align: stretch;
+    --nte-nav-justify: flex-start;
+    --nte-nav-gap: 0.1rem;
+    --nte-nav-submenu-position: static;
+    --nte-nav-submenu-inset-block-start: auto;
+    --nte-nav-submenu-inset-inline-start: auto;
+    --nte-nav-nested-submenu-inset-block-start: auto;
+    --nte-nav-nested-submenu-inset-inline-start: auto;
+    --nte-nav-submenu-enter-transform: translateY(-0.35rem);
+    --nte-nav-nested-submenu-enter-transform: translateY(-0.35rem);
+    --nte-nav-submenu-inline-size: 100%;
+    --nte-nav-submenu-min-inline-size: 0;
+    --nte-nav-submenu-max-block-size: none;
+    --nte-nav-submenu-padding: 0 0 0 var(--nte-nav-inline-submenu-indent, 1rem);
+    --nte-nav-submenu-background: transparent;
+    --nte-nav-submenu-border: 0;
+    --nte-nav-submenu-radius: 0;
+    --nte-nav-submenu-shadow: none;
+    inline-size: 100%;
+}
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default::part(list),
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default > nte-nav-item,
+.nte-nav-2-demo .demo-variations .variation-subnav nte-nav-2.style-default > nte-nav-item::part(item) {
+    inline-size: 100%;
+}
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default {
+    --nte-nav-item-gap: 0.5rem;
+    --nte-nav-submenu-gap: 0.35rem;
+    --nte-nav-transition-duration: 0.16s;
+    --nte-nav-submenu-default-padding: 0.35rem;
+    --nte-nav-submenu-default-background: var(--nt-body, #fff);
+    --nte-nav-submenu-default-border: 1px solid color-mix(in srgb, var(--nt-text, #212529) 14%, transparent);
+    --nte-nav-submenu-default-radius: calc(var(--nt-border-radius, 0.375rem) * 2);
+    --nte-nav-submenu-default-shadow: 0 1rem 2.5rem color-mix(in srgb, var(--nt-dark, #212529) 18%, transparent);
+    --nte-nav-submenu-padding: var(--nte-nav-submenu-default-padding);
+    --nte-nav-submenu-background: var(--nte-nav-submenu-default-background);
+    --nte-nav-submenu-border: var(--nte-nav-submenu-default-border);
+    --nte-nav-submenu-radius: var(--nte-nav-submenu-default-radius);
+    --nte-nav-submenu-shadow: var(--nte-nav-submenu-default-shadow);
+}
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default::part(nav) {
+    color: var(--nt-text, #212529);
+    background: var(--nt-body, #fff);
+}
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default nte-nav-item::part(item) {
+    min-block-size: 100%;
+}
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default nte-nav-item::part(link),
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default nte-nav-item::part(text),
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default nte-nav-item::part(disclosure),
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default nte-nav-item::part(toggle) {
+    box-sizing: border-box;
+    color: inherit;
+    font: inherit;
+}
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default nte-nav-item::part(link),
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default nte-nav-item::part(text),
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default nte-nav-item::part(disclosure) {
+    padding: var(--nte-nav-item-padding-block, 0.7rem) var(--nte-nav-item-padding-inline, 1rem);
+    font-size: var(--nte-nav-item-font-size, 1rem);
+    line-height: 1.25;
+    text-decoration: none;
+}
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default nte-nav-item::part(disclosure),
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default nte-nav-item::part(toggle) {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default nte-nav-item::part(toggle) {
+    align-self: stretch;
+    min-inline-size: var(--nte-nav-toggle-size, 2.5rem);
+    padding: 0.5rem;
+}
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default nte-nav-item::part(link):hover,
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default nte-nav-item::part(disclosure):hover,
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default nte-nav-item::part(toggle):hover {
+    color: var(--nt-primary, #0d6efd);
+    background: color-mix(in srgb, var(--nt-primary, #0d6efd) 10%, transparent);
+}
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default nte-nav-item::part(link):focus-visible,
+.nte-nav-2-demo
+    .demo-variations
+    .variation-responsive
+    nte-nav-2.style-default
+    nte-nav-item::part(disclosure):focus-visible,
+.nte-nav-2-demo
+    .demo-variations
+    .variation-responsive
+    nte-nav-2.style-default
+    nte-nav-item::part(toggle):focus-visible {
+    position: relative;
+    z-index: 1;
+    outline: 2px solid var(--nt-primary, #0d6efd);
+    outline-offset: -2px;
+}
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default nte-nav-item[current='page']::part(link),
+.nte-nav-2-demo
+    .demo-variations
+    .variation-responsive
+    nte-nav-2.style-default
+    nte-nav-item[current='true']::part(link) {
+    color: var(--nt-text-on-primary, #fff);
+    background: var(--nt-primary, #0d6efd);
+}
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default nte-nav-item::part(icon) {
+    display: inline-grid;
+    inline-size: var(--nte-nav-icon-size, 1.1em);
+    block-size: var(--nte-nav-icon-size, 1.1em);
+    place-items: center;
+}
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default nte-nav-item::part(submenu) {
+    padding: var(--nte-nav-submenu-padding);
+    color: var(--nt-text, #212529);
+    background: var(--nte-nav-submenu-background);
+    border: var(--nte-nav-submenu-border);
+    border-radius: var(--nte-nav-submenu-radius);
+    box-shadow: var(--nte-nav-submenu-shadow);
+}
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default {
+    --nte-nav-flow: column;
+    --nte-nav-align: stretch;
+    --nte-nav-justify: flex-start;
+    --nte-nav-gap: 0.2rem;
+    --nte-nav-submenu-position: static;
+    --nte-nav-submenu-inset-block-start: auto;
+    --nte-nav-submenu-inset-inline-start: auto;
+    --nte-nav-nested-submenu-inset-block-start: auto;
+    --nte-nav-nested-submenu-inset-inline-start: auto;
+    --nte-nav-submenu-enter-transform: translateY(-0.35rem);
+    --nte-nav-nested-submenu-enter-transform: translateY(-0.35rem);
+    --nte-nav-submenu-inline-size: 100%;
+    --nte-nav-submenu-min-inline-size: 0;
+    --nte-nav-submenu-max-block-size: none;
+    --nte-nav-submenu-padding: 0 0 0 var(--nte-nav-inline-submenu-indent, 1rem);
+    --nte-nav-submenu-background: transparent;
+    --nte-nav-submenu-border: 0;
+    --nte-nav-submenu-radius: 0;
+    --nte-nav-submenu-shadow: none;
+    inline-size: 100%;
+}
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default::part(list),
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default > nte-nav-item,
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default > nte-nav-item::part(item) {
+    inline-size: 100%;
+}
+@media (min-width: 40rem) {
+    .nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default {
+        --nte-nav-flow: row;
+        --nte-nav-align: stretch;
+        --nte-nav-justify: space-between;
+        --nte-nav-gap: 0;
+        --nte-nav-submenu-position: absolute;
+        --nte-nav-submenu-inset-block-start: 100%;
+        --nte-nav-submenu-inset-inline-start: 0;
+        --nte-nav-nested-submenu-inset-block-start: 0;
+        --nte-nav-nested-submenu-inset-inline-start: 100%;
+        --nte-nav-submenu-enter-transform: translateY(-0.35rem);
+        --nte-nav-nested-submenu-enter-transform: translateX(-0.35rem);
+        --nte-nav-submenu-inline-size: max(100%, var(--nte-nav-submenu-min-inline-size));
+        --nte-nav-submenu-max-block-size: min(70vh, 32rem);
+        --nte-nav-submenu-padding: var(--nte-nav-submenu-default-padding);
+        --nte-nav-submenu-background: var(--nte-nav-submenu-default-background);
+        --nte-nav-submenu-border: var(--nte-nav-submenu-default-border);
+        --nte-nav-submenu-radius: var(--nte-nav-submenu-default-radius);
+        --nte-nav-submenu-shadow: var(--nte-nav-submenu-default-shadow);
+    }
+}
+.nte-nav-2-demo .demo-variations .variation-responsive nte-nav-2.style-default {
+    --nte-nav-item-padding-block: 0.7rem;
+    --nte-nav-item-padding-inline: 1rem;
+    --nte-nav-item-font-size: 1rem;
+    --nte-nav-toggle-size: 2.5rem;
+    --nte-nav-icon-size: 1.1rem;
+}
+.nte-nav-2-demo .variations-grid {
+    display: grid;
+    gap: 1.5rem;
+}
+.nte-nav-2-demo .variation h2 {
+    margin-block-start: 0;
+}
+.nte-nav-2-demo .variation-subnav {
+    max-inline-size: 22rem;
+}
+.nte-nav-2-demo nte-nav-item [slot='icon'] {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+}

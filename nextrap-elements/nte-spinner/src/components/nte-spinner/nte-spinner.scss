@@ -21,6 +21,12 @@
   display: inline-block;
 }
 
+:host > div {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 :host(.progress) {
   #spinner {
     animation: none;
@@ -174,8 +180,16 @@
   position: relative;
   height: 100%;
   width: 100%;
+  transform-origin: 50% 50%;
 
   animation: var(--playtime) linear infinite both spin;
+
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
 
   #spinner-circle {
     animation: var(--playtime) ease-in-out infinite both chase;
@@ -184,6 +198,7 @@
     stroke-dasharray: 100;
     stroke-linecap: round;
     stroke-width: 5px;
+    transform-box: fill-box;
     transform-origin: 50% 50%;
   }
 
@@ -210,8 +225,7 @@
 
   #spinner-check {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
     display: none;
     opacity: 0;
     transform-origin: 50% 50%;
@@ -227,8 +241,7 @@
 
   #spinner-cross {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
     display: none;
 
     line {
@@ -242,8 +255,7 @@
 
   #spinner-info {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
     display: none;
     opacity: 0;
     transform-origin: 50% 50%;
@@ -255,8 +267,7 @@
 
   #spinner-warning {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
     display: none;
     opacity: 0;
     transform-origin: 50% 50%;

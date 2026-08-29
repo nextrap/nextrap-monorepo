@@ -1,0 +1,90 @@
+import './_virtual_tdemo-client-CxMeb5Rk.js';
+import './directive-CJw_OlP2.js';
+import './index-BR6EnczS.js';
+import './index-K51eAYk-.js';
+import './index-l0sNRNKZ.js'; /* empty css              */
+import { s as a, r as t } from './main-NvqPSaEw.js';
+import './nextrap-element-DeSHPIJn.js';
+import './property-C2fH_zxw.js';
+import './state-C6dwV5NT.js';
+import { d as n } from './types-4rIte7rE.js';
+const o = `<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>nte-input FormData Submit Demo</title>
+  </head>
+  <body>
+    <main>
+      <h1>nte-input</h1>
+      <p>Formularauswertung per <code>FormData</code>.</p>
+
+      <section>
+        <h2>FormData Beispiel</h2>
+        <p>
+          Mit <code>Absenden</code> wird das Formular per <code>FormData</code> ausgewertet. Die Ausgabe erfolgt als
+          Array von Key-Value-Objekten – auch für Mehrfachwerte wie <code>select-radio</code> und
+          <code>token-input</code>.
+        </p>
+
+        <form id="formdata-demo-form">
+          <nte-input class="hoverlabel" label="Name" type="text" name="name" value="Max Mustermann"></nte-input>
+
+          <nte-input
+            class="hoverlabel"
+            label="Kommentar"
+            type="textarea"
+            name="message"
+            value="Hallo aus dem Demo"
+          ></nte-input>
+
+          <nte-input class="hoverlabel" label="Status" type="select" name="status" value="inprogress">
+            <options>
+              <option value="wrust">Wartet auf Rückmeldung</option>
+              <option value="inprogress">In Bearbeitung</option>
+            </options>
+          </nte-input>
+
+          <nte-input
+            label="Kategorien"
+            type="select-radio"
+            name="categories"
+            multiple
+            value='["news"]'
+            data-options='[{"value":"news","label":"News"},{"value":"events","label":"Events"}]'
+          ></nte-input>
+
+          <nte-input
+            class="hoverlabel"
+            label="Schlagworte"
+            type="token-input"
+            name="tags"
+            value='["news","docs"]'
+            data-options='[{"value":"news","label":"News"},{"value":"events","label":"Events"},{"value":"docs","label":"Dokumentation"}]'
+          ></nte-input>
+
+          <nte-input label="AGB akzeptieren" type="checkbox" name="accepted" value="yes" checked></nte-input>
+
+          <div class="demo-actions">
+            <button id="formdata-submit" type="submit">Absenden</button>
+          </div>
+        </form>
+
+        <label class="json-label" for="formdata-json">FormData Ausgabe</label>
+        <textarea id="formdata-json" class="demo-json" spellcheck="false" readonly></textarea>
+      </section>
+    </main>
+
+    <script src="/demo/main.js" type="module"><\/script>
+  </body>
+</html>
+`,
+  h = n({
+    title: 'FormData Submit',
+    description: 'Native Formularauswertung über new FormData(form)',
+    render(e) {
+      t(e, o, a);
+    },
+  });
+export { h as default };

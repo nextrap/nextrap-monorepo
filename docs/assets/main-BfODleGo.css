@@ -1,0 +1,24 @@
+nte-spinner {
+    color: var(--nt-text-color, inherit);
+}
+.nte-spinner-demo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+    gap: 2rem;
+}
+.nte-spinner-demo-grid figure {
+    display: grid;
+    justify-items: center;
+    gap: 0.75rem;
+    margin: 0;
+}
+.nte-spinner-demo-grid nte-spinner {
+    width: 6rem;
+}
+.nte-spinner-interactive-demo {
+    display: grid;
+    place-items: center;
+}
+.nte-spinner-interactive-demo nte-spinner {
+    width: 10rem;
+}

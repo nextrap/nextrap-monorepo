@@ -1,0 +1,378 @@
+nte-table.style-default {
+    box-sizing: border-box;
+    overflow: hidden;
+    background: var(--nt-body-bg, #ffffff);
+    border: 1px solid var(--nt-border-color, #d0d7de);
+    border-radius: var(--nt-border-radius, 0.375rem);
+}
+nte-table.style-default::part(viewport) {
+    color: var(--nt-body-color, #1f2328);
+    background: var(--nt-body-bg, #ffffff);
+    border: 0;
+    border-radius: 0;
+}
+nte-table.style-default > table {
+    color: inherit;
+    border: 0;
+    font-size: 0.875rem;
+    margin: 0;
+    padding: 0;
+}
+nte-table.style-default > table,
+nte-table.style-default > table > caption,
+nte-table.style-default > table > :is(thead, tbody, tfoot),
+nte-table.style-default > table > :is(thead, tbody, tfoot) > tr,
+nte-table.style-default > table > :is(thead, tbody, tfoot) > tr > :is(th, td) {
+    border-radius: 0 !important;
+}
+nte-table.style-default > table > tbody {
+    scrollbar-color: color-mix(in srgb, var(--nt-body-color, #1f2328) 45%, transparent)
+        color-mix(in srgb, var(--nt-body-color, #1f2328) 12%, transparent);
+    scrollbar-width: thin;
+}
+nte-table.style-default > table > tbody::-webkit-scrollbar {
+    inline-size: 12px;
+    block-size: 12px;
+}
+nte-table.style-default > table > tbody::-webkit-scrollbar-track {
+    background: color-mix(in srgb, var(--nt-body-color, #1f2328) 12%, transparent);
+}
+nte-table.style-default > table > tbody::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--nt-body-color, #1f2328) 45%, transparent);
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background-clip: padding-box;
+}
+nte-table.style-default > table > :is(thead, tbody, tfoot) > tr > :is(th, td) {
+    --nte-table-cell-overflow: hidden;
+    --nte-table-cell-white-space: nowrap;
+    --nte-table-cell-text-overflow: ellipsis;
+    padding: var(--nt-space-2, 0.5rem) var(--nt-space-3, 0.75rem);
+    background: var(--nt-body-bg, #ffffff);
+    border: 0;
+    border-block-end: 1px solid var(--nt-border-color, #d0d7de);
+    border-radius: 0;
+    overflow: var(--nte-table-cell-overflow);
+    text-align: start;
+    text-overflow: var(--nte-table-cell-text-overflow);
+    vertical-align: middle;
+    white-space: var(--nte-table-cell-white-space);
+}
+nte-table.style-default > table > :is(thead, tbody, tfoot) > tr:after {
+    content: '';
+    display: table-cell;
+    padding: 0;
+    background: var(--nt-body-bg, #ffffff);
+    border: 0;
+    border-block-end: 1px solid var(--nt-border-color, #d0d7de);
+    box-shadow: inset 1px 0 0 var(--nt-border-color, #d0d7de);
+}
+nte-table.style-default > table:dir(rtl) > :is(thead, tbody, tfoot) > tr:after {
+    box-shadow: inset -1px 0 0 var(--nt-border-color, #d0d7de);
+}
+nte-table.style-default
+    > table
+    > :is(thead, tbody, tfoot)
+    > tr
+    > :is(th, td):has(~ :is(th, td):not([hidden], [data-nte-table-hidden])) {
+    border-inline-end: 1px solid var(--nt-border-color, #d0d7de);
+}
+nte-table.style-default > table > tfoot > tr > :is(th, td) {
+    border-block-end: 0;
+}
+nte-table.style-default > table > tfoot > tr:after {
+    background: var(--nt-light, #f6f8fa);
+    border-block-start: 2px solid var(--nt-border-color, #d0d7de);
+    border-block-end: 0;
+}
+nte-table.style-default > table > caption {
+    padding: var(--nt-space-2, 0.5rem) var(--nt-space-3, 0.75rem);
+    background: var(--nt-body-bg, #ffffff);
+    border-block-end: 1px solid var(--nt-border-color, #d0d7de);
+    border-radius: 0;
+    font-weight: 600;
+    text-align: start;
+}
+nte-table.style-default :is(.overflow-clip) {
+    --nte-table-cell-overflow: hidden;
+    --nte-table-cell-white-space: nowrap;
+    --nte-table-cell-text-overflow: clip;
+}
+nte-table.style-default :is(.overflow-wrap) {
+    --nte-table-cell-overflow: hidden;
+    --nte-table-cell-white-space: normal;
+    --nte-table-cell-text-overflow: clip;
+    overflow-wrap: anywhere;
+}
+nte-table.style-default :is(.overflow-visible) {
+    --nte-table-cell-overflow: visible;
+    --nte-table-cell-white-space: normal;
+    --nte-table-cell-text-overflow: clip;
+}
+nte-table.style-default :is(.overflow-ellipsis) {
+    --nte-table-cell-overflow: hidden;
+    --nte-table-cell-white-space: nowrap;
+    --nte-table-cell-text-overflow: ellipsis;
+}
+nte-table.style-default > table > thead > tr > th,
+nte-table.style-default > table > thead > tr:after {
+    color: var(--nt-body-color, #1f2328);
+    background: var(--nt-light, #f6f8fa);
+    border-block-end: 2px solid var(--nt-border-color, #d0d7de);
+    font-weight: 650;
+    letter-spacing: 0.01em;
+}
+nte-table.style-default > table > tfoot > tr > :is(th, td) {
+    background: var(--nt-light, #f6f8fa);
+    border-block-start: 2px solid var(--nt-border-color, #d0d7de);
+    font-weight: 600;
+}
+nte-table.style-default > table > :is(thead, tbody, tfoot) > tr > :is(th, td)[data-nte-table-pinned] {
+    background: var(--nt-body-bg, #ffffff);
+    box-shadow: 1px 0 0 var(--nt-border-color, #d0d7de);
+}
+nte-table.style-default > table > :is(thead, tbody, tfoot) > tr > :is(th, td) > .indicator {
+    float: inline-end;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: 1.25rem;
+    min-block-size: 1.25rem;
+    margin-inline-start: var(--nt-space-2, 0.5rem);
+    color: var(--nt-muted-color, #59636e);
+    font-size: 0.75em;
+    line-height: 1;
+}
+nte-table.style-default
+    > table
+    > :is(thead, tbody, tfoot)
+    > tr
+    > :is(th, td):is(.highlight, .highlight-primary, [data-nte-table-highlight='primary']),
+nte-table.style-default > table > tbody > tr:is(.highlight, .highlight-primary) > :is(th, td) {
+    background: color-mix(in srgb, var(--nt-primary, #0d6efd) 14%, var(--nt-body-bg, #ffffff));
+}
+nte-table.style-default
+    > table
+    > :is(thead, tbody, tfoot)
+    > tr
+    > :is(th, td):is(.highlight-secondary, [data-nte-table-highlight='secondary']),
+nte-table.style-default > table > tbody > tr.highlight-secondary > :is(th, td) {
+    background: color-mix(in srgb, var(--nt-secondary, #6c757d) 14%, var(--nt-body-bg, #ffffff));
+}
+nte-table.style-default
+    > table
+    > :is(thead, tbody, tfoot)
+    > tr
+    > :is(th, td):is(.highlight-success, [data-nte-table-highlight='success']),
+nte-table.style-default > table > tbody > tr.highlight-success > :is(th, td) {
+    background: color-mix(in srgb, var(--nt-success, #198754) 14%, var(--nt-body-bg, #ffffff));
+}
+nte-table.style-default
+    > table
+    > :is(thead, tbody, tfoot)
+    > tr
+    > :is(th, td):is(.highlight-info, [data-nte-table-highlight='info']),
+nte-table.style-default > table > tbody > tr.highlight-info > :is(th, td) {
+    background: color-mix(in srgb, var(--nt-info, #0dcaf0) 16%, var(--nt-body-bg, #ffffff));
+}
+nte-table.style-default
+    > table
+    > :is(thead, tbody, tfoot)
+    > tr
+    > :is(th, td):is(.highlight-warning, [data-nte-table-highlight='warning']),
+nte-table.style-default > table > tbody > tr.highlight-warning > :is(th, td) {
+    background: color-mix(in srgb, var(--nt-warning, #ffc107) 22%, var(--nt-body-bg, #ffffff));
+}
+nte-table.style-default
+    > table
+    > :is(thead, tbody, tfoot)
+    > tr
+    > :is(th, td):is(.highlight-danger, [data-nte-table-highlight='danger']),
+nte-table.style-default > table > tbody > tr.highlight-danger > :is(th, td) {
+    background: color-mix(in srgb, var(--nt-danger, #dc3545) 14%, var(--nt-body-bg, #ffffff));
+}
+nte-table.style-default
+    > table
+    > :is(thead, tbody, tfoot)
+    > tr
+    > :is(th, td):is(
+        .selected,
+        [data-nte-table-header-selected],
+        [data-nte-table-column-selected],
+        [data-nte-table-row-selected]
+    ),
+nte-table.style-default > table > tbody > tr.selected > :is(th, td) {
+    color: var(--nt-body-color, #1f2328);
+    background: color-mix(in srgb, var(--nt-primary, #0d6efd) 16%, var(--nt-body-bg, #ffffff));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--nt-primary, #0d6efd) 35%, transparent);
+}
+nte-table.style-default
+    > table
+    > :is(thead, tbody, tfoot)
+    > tr
+    > :is(th, td):is(.border-free, [data-nte-table-border-free]) {
+    background: var(--nt-body-bg, #ffffff);
+    border-inline-end-color: transparent;
+    font-variant-numeric: tabular-nums;
+    font-weight: 650;
+}
+nte-table.style-default > table .nte-table-plugin-control {
+    box-sizing: border-box;
+    display: inline-grid;
+    place-items: center;
+    min-inline-size: 1.5rem;
+    min-block-size: 1.5rem;
+    margin: 0;
+    padding: 0.125rem;
+    color: var(--nt-muted-color, #59636e);
+    background: transparent;
+    border: 0;
+    border-radius: 0.25rem;
+    font: inherit;
+    line-height: 1;
+}
+nte-table.style-default > table .nte-table-plugin-control:is(:hover, :focus-visible) {
+    color: var(--nt-primary, #0d6efd);
+    background: color-mix(in srgb, var(--nt-primary, #0d6efd) 10%, transparent);
+    outline: 0;
+}
+nte-table.style-default > table .nte-table-sort-control {
+    float: inline-end;
+    cursor: pointer;
+}
+nte-table.style-default > table .nte-table-drag-handle {
+    float: inline-start;
+    margin-inline-end: var(--nt-space-1, 0.25rem);
+    cursor: grab;
+    touch-action: none;
+}
+nte-table.style-default > table .nte-table-drag-handle:active {
+    cursor: grabbing;
+}
+nte-table.style-default > table [data-nte-table-dragging] {
+    visibility: hidden;
+}
+nte-table.style-default > table [data-nte-table-drop-target] > :is(th, td),
+nte-table.style-default > table :is(th, td)[data-nte-table-drop-target] {
+    box-shadow: inset 3px 0 0 var(--nt-primary, #0d6efd);
+}
+nte-table.style-default > table tbody > tr[data-nte-table-drop-target] > :is(th, td) {
+    box-shadow: inset 0 3px 0 var(--nt-primary, #0d6efd);
+}
+nte-table.style-default.with-header-strong > table > thead > tr > th,
+nte-table.style-default.with-header-strong > table > thead > tr:after {
+    color: var(--nt-primary-contrast, #ffffff);
+    background: var(--nt-primary, #0d6efd);
+    border-color: var(--nt-primary-dark, #0a58ca);
+    font-weight: 700;
+}
+nte-table.style-default.with-header-minimal > table > thead > tr > th,
+nte-table.style-default.with-header-minimal > table > thead > tr:after {
+    color: var(--nt-muted-color, #59636e);
+    background: var(--nt-body-bg, #ffffff);
+    border-inline-end-color: transparent;
+    border-block-end: 1px solid var(--nt-border-color, #d0d7de);
+    font-size: 0.8125em;
+    font-weight: 700;
+    letter-spacing: 0.045em;
+    text-transform: uppercase;
+}
+.nte-table-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nt-space-3, 0.75rem);
+    padding: var(--nt-space-3, 0.75rem) var(--nt-space-3, 0.75rem);
+    background: var(--nt-light, #f6f8fa);
+    border: 1px solid var(--nt-border-color, #d0d7de);
+    border-block-end: 0;
+    border-radius: var(--nt-border-radius, 0.375rem) var(--nt-border-radius, 0.375rem) 0 0;
+}
+.nte-table-search {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nt-space-2, 0.5rem);
+    min-inline-size: min(100%, 16rem);
+}
+.nte-table-search > input[type='search'] {
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-block-size: 2.25rem;
+    padding-inline: var(--nt-space-3, 0.75rem);
+    color: inherit;
+    background: var(--nt-body-bg, #ffffff);
+    border: 1px solid var(--nt-border-color, #d0d7de);
+    border-radius: var(--nt-border-radius, 0.375rem);
+}
+.nte-table-header + nte-table.style-default {
+    border-start-start-radius: 0;
+    border-start-end-radius: 0;
+}
+.nte-table-demo {
+    max-inline-size: 76rem;
+    margin-inline: auto;
+    padding: 2rem 1rem 4rem;
+    color: var(--nt-text, #1f2328);
+    font-family: var(--nt-font-family-base, system-ui, sans-serif);
+}
+.nte-table-demo > :first-child {
+    margin-block-start: 0;
+}
+.nte-table-demo nte-table {
+    margin-block-start: 1.25rem;
+}
+.nte-table-demo h2 {
+    margin-block-start: 2rem;
+}
+.nte-table-demo caption {
+    padding-block: 0 0.75rem;
+    font-weight: 600;
+    text-align: start;
+}
+.nte-table-demo :is(select, input, button) {
+    font: inherit;
+}
+.nte-table-demo .demo-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+    margin-block: 1.25rem;
+    padding: 1rem;
+    background: var(--nt-surface-muted, #f6f8fa);
+    border: 1px solid var(--nt-border, #d0d7de);
+    border-radius: var(--nt-border-radius, 0.375rem);
+}
+.nte-table-demo .demo-toolbar label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.nte-table-demo .demo-toolbar output {
+    min-inline-size: 3.5rem;
+    font-variant-numeric: tabular-nums;
+}
+.nte-table-demo .nte-table-example nte-table {
+    margin-block-start: 0;
+}
+.nte-table-demo caption:has(.demo-caption-copy) {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+.nte-table-demo .demo-caption-copy {
+    display: grid;
+    gap: 0.125rem;
+}
+.nte-table-demo .demo-caption-copy small {
+    font-weight: 400;
+}
+.nte-table-demo .demo-plugin-events {
+    display: block;
+    margin-block-start: 1rem;
+    padding: 0.75rem;
+    background: var(--nt-surface-muted, #f6f8fa);
+    border-radius: var(--nt-border-radius, 0.375rem);
+}
