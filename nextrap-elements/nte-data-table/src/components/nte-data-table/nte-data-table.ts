@@ -440,7 +440,21 @@ export class NteDataTableElement extends nextrap_element({
       this._setManagedStyle(table, 'border-spacing', '0px');
       this._setManagedStyle(table, 'display', 'block');
       this._setManagedStyle(table, 'inline-size', '100%');
+      this._setManagedStyle(table, 'margin', '0px');
       this._setManagedStyle(table, 'overflow', 'visible');
+      this._setManagedStyle(table, 'padding', '0px');
+
+      const body = bodies[0];
+      this._setManagedAttribute(body, 'tabindex', '0');
+      this._setManagedStyle(body, 'box-sizing', 'border-box');
+      this._setManagedStyle(body, 'display', 'block');
+      this._setManagedStyle(body, 'block-size', this._safeHeight());
+      this._setManagedStyle(body, 'inline-size', '100%');
+      this._setManagedStyle(body, 'overflow-x', 'auto');
+      this._setManagedStyle(body, 'overflow-y', 'auto');
+      this._setManagedStyle(body, 'overscroll-behavior', 'contain');
+      this._setManagedStyle(body, 'touch-action', 'pan-x pan-y');
+      this._setManagedStyle(body, '-webkit-overflow-scrolling', 'touch');
 
       const visibleColumns: number[] = [];
       headerCells.forEach((headerCell, columnIndex) => {
@@ -460,7 +474,12 @@ export class NteDataTableElement extends nextrap_element({
           Math.ceil(headerCell.getBoundingClientRect().width),
         );
       });
-      const widths = this._columnWidths;
+      const widths = [...this._columnWidths];
+      const naturalWidth = visibleColumns.reduce((sum, columnIndex) => sum + widths[columnIndex], 0);
+      const lastVisibleColumn = visibleColumns.at(-1);
+      if (lastVisibleColumn !== undefined && naturalWidth < body.clientWidth) {
+        widths[lastVisibleColumn] += body.clientWidth - naturalWidth;
+      }
 
       rows.forEach((row) => {
         Array.from(row.cells).forEach((cell, columnIndex) => {
@@ -475,6 +494,7 @@ export class NteDataTableElement extends nextrap_element({
             this._setManagedStyle(cell, 'inline-size', width);
             this._setManagedStyle(cell, 'min-inline-size', width);
             this._setManagedStyle(cell, 'max-inline-size', width);
+            if (row.parentElement?.tagName !== 'TBODY') this._setManagedStyle(cell, 'white-space', 'nowrap');
           }
         });
       });
@@ -494,17 +514,6 @@ export class NteDataTableElement extends nextrap_element({
       this._configureSection(table.tHead!, tableWidth);
       if (table.tFoot) this._configureSection(table.tFoot, tableWidth);
 
-      const body = bodies[0];
-      this._setManagedAttribute(body, 'tabindex', '0');
-      this._setManagedStyle(body, 'box-sizing', 'border-box');
-      this._setManagedStyle(body, 'display', 'block');
-      this._setManagedStyle(body, 'block-size', this._safeHeight());
-      this._setManagedStyle(body, 'inline-size', '100%');
-      this._setManagedStyle(body, 'overflow-x', 'auto');
-      this._setManagedStyle(body, 'overflow-y', 'auto');
-      this._setManagedStyle(body, 'overscroll-behavior', 'contain');
-      this._setManagedStyle(body, 'touch-action', 'pan-x pan-y');
-      this._setManagedStyle(body, '-webkit-overflow-scrolling', 'touch');
       for (const row of Array.from(body.rows)) {
         this._setManagedStyle(row, 'display', 'table');
         this._setManagedStyle(row, 'table-layout', 'fixed');
