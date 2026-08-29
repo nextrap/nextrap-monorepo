@@ -1,6 +1,7 @@
 /// <reference types='vitest' />
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
+import { tjDemoViewerPlugin } from '@trunkjs/vite-demo-viewer';
 import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
@@ -18,7 +19,7 @@ export default defineConfig(() => ({
   cacheDir: `../../node_modules/.vite/${dirName}`,
   plugins: [
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md']),
+    nxCopyAssetsPlugin(['*.md', 'skills/**/*']),
     {
       name: 'watch-md-reload',
       handleHotUpdate({ file, server }) {
@@ -27,6 +28,9 @@ export default defineConfig(() => ({
         }
       },
     },
+    tjDemoViewerPlugin({
+      include: ['demo/**/*.demo.ts'],
+    }),
     dts({
       entryRoot: 'src',
       aliasesExclude: [/@nextrap\/.*/],
