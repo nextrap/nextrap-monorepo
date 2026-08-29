@@ -1,0 +1,37 @@
+@mixin default-style(
+  $size: 3rem,
+  $background: var(--nt-primary, #007bff),
+  $background-hover: var(--nt-primary-hover, #0069d9),
+  $color: var(--nt-text-on-primary, #fff),
+  $border-radius: 50%,
+  $shadow: 0 0.5rem 1.25rem rgb(from var(--nt-dark, #212529) r g b / 0.2),
+  $focus-outline: 2px solid var(--nt-focus, var(--nt-primary, #007bff))
+) {
+  &::part(button) {
+    inline-size: #{$size};
+    block-size: #{$size};
+    padding: var(--nt-space-2, 0.5rem);
+    color: #{$color};
+    background: #{$background};
+    border-radius: #{$border-radius};
+    box-shadow: #{$shadow};
+    transition:
+      background 150ms ease,
+      transform 150ms ease,
+      box-shadow 150ms ease;
+  }
+
+  &::part(button):hover {
+    background: #{$background-hover};
+    transform: translateY(-2px);
+  }
+
+  &::part(button):active {
+    transform: translateY(0);
+  }
+
+  &::part(button):focus-visible {
+    outline: #{$focus-outline};
+    outline-offset: 3px;
+  }
+}

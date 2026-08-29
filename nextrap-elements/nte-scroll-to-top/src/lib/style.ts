@@ -2,48 +2,46 @@ import { css } from 'lit';
 
 export const style = css`
   :host {
-  }
-
-  :host(.show) {
-    div {
-      opacity: 1;
-    }
-  }
-
-  div {
-    opacity: 0;
     position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    z-index: 99;
-    border: none;
-    outline: none;
-    background-color: rgba(0, 0, 0, 0.1);
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 5px;
-    color: white;
-    cursor: pointer;
-    padding: 10px;
-    border-radius: 4px;
-
-    display: flex;
-    align-content: center;
-    align-items: center;
-    text-align: center;
-
-    justify-content: center;
-    width: 2.8rem;
-    height: 2.8rem;
+    inset-block-end: var(--nte-scroll-to-top-offset-block, 2rem);
+    inset-inline-end: var(--nte-scroll-to-top-offset-inline, 2rem);
+    z-index: var(--nte-scroll-to-top-z-index, 99);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(0.5rem);
     transition:
-      opacity 0.5s ease-in-out,
-      background-color 0.2s ease-in-out;
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.2);
-    }
+      opacity var(--nte-scroll-to-top-transition-duration, 200ms) ease,
+      transform var(--nte-scroll-to-top-transition-duration, 200ms) ease,
+      visibility 0s linear var(--nte-scroll-to-top-transition-duration, 200ms);
+  }
 
-    svg {
-      width: 40px;
-      height: 40px;
-      color: white;
+  :host([visible]) {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+    transition-delay: 0s;
+  }
+
+  button {
+    display: grid;
+    place-items: center;
+    border: 0;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  svg {
+    display: block;
+    inline-size: 1.5em;
+    block-size: 1.5em;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :host {
+      transform: none;
+      transition-duration: 0s;
     }
   }
 `;
