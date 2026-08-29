@@ -1,6 +1,11 @@
 {
     "name": "@nextrap/nte-scroll-to-top",
     "version": "2.0.0",
+    "files": [
+        "*.*",
+        "skills",
+        "src"
+    ],
     "main": "./index.js",
     "repository": {
         "directory": "nextrap-elements/nte-scroll-to-top",
@@ -8,8 +13,13 @@
         "url": "https://github.com/nextrap/nextrap-monorepo"
     },
     "dependencies": {
-        "@trunkjs/browser-utils": "^1.0.12",
+        "@nextrap/nt-core": "^2.0.0",
+        "@nextrap/style-reset": "^2.0.0",
         "lit": "^3.3.1"
+    },
+    "devDependencies": {
+        "@nextrap/style-base": "^2.0.0",
+        "@nextrap/style-typography": "^2.0.0"
     },
     "type": "module",
     "types": "./index.d.ts"

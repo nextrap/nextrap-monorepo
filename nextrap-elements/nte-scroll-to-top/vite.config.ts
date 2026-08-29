@@ -1,16 +1,22 @@
 /// <reference types='vitest' />
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
+import { tjDemoViewerPlugin } from '@trunkjs/vite-demo-viewer';
 import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
 export default defineConfig(() => ({
+  server: {
+    port: 4000,
+    host: '0.0.0.0',
+    hmr: true,
+  },
   test: {
     passWithNoTests: true,
     watch: false,
     globals: true,
-    environment: 'node',
+    environment: 'jsdom',
     include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     reporters: ['default'],
     coverage: {
@@ -22,7 +28,8 @@ export default defineConfig(() => ({
   cacheDir: '../../node_modules/.vite/nextrap-elements/nte-scroll-to-top',
   plugins: [
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md']),
+    nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss', 'skills/**/*']),
+    tjDemoViewerPlugin({ include: ['demo/**/*.demo.ts'] }),
     dts({
       entryRoot: 'src',
       aliasesExclude: [/@nextrap\/.*/],
@@ -44,7 +51,7 @@ export default defineConfig(() => ({
     },
     lib: {
       // Could also be a dictionary or array of multiple entry points.
-      entry: 'src/index.ts',
+      entry: 'index.ts',
       name: 'nte-scroll-to-top',
       fileName: 'index',
       // Change this to the formats you want to support.
@@ -53,7 +60,7 @@ export default defineConfig(() => ({
     },
     rollupOptions: {
       // External packages that should not be bundled into your library.
-      external: [],
+      external: (id) => !id.startsWith('.') && !path.isAbsolute(id),
     },
   },
 }));
