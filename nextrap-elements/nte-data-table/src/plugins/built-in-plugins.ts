@@ -86,34 +86,57 @@ const REORDER_ANIMATION_MS = 160;
 const AUTO_SCROLL_EDGE = 36;
 const AUTO_SCROLL_STEP = 14;
 
-const copyComputedStyle = (source: Element, target: HTMLElement): void => {
-  const style = source.ownerDocument.defaultView?.getComputedStyle(source);
-  if (!style) return;
-  for (let index = 0; index < style.length; index += 1) {
-    const property = style.item(index);
-    target.style.setProperty(property, style.getPropertyValue(property), style.getPropertyPriority(property));
-  }
-  target.style.position = 'absolute';
-  target.style.inset = 'auto';
-  target.style.margin = '0';
-  target.style.transform = 'none';
-  target.style.visibility = 'visible';
-};
+interface DragGhost {
+  element: HTMLDivElement;
+  rect: Pick<DOMRect, 'bottom' | 'height' | 'left' | 'right' | 'top' | 'width'>;
+}
 
-const createPreview = (document: Document): HTMLDivElement => {
-  const preview = document.createElement('div');
-  preview.dataset['nteDataTableDragPreview'] = '';
-  preview.setAttribute('aria-hidden', 'true');
-  Object.assign(preview.style, {
+const createDragGhost = (
+  elements: Iterable<Element>,
+  clipRect: DOMRect | ((element: Element) => DOMRect),
+): DragGhost | null => {
+  const sources = Array.from(elements);
+  const document = sources[0]?.ownerDocument;
+  const view = document?.defaultView;
+  if (!document || !view) return null;
+  const viewport = { left: 0, top: 0, right: view.innerWidth, bottom: view.innerHeight };
+  const rects = sources.flatMap((element) => {
+    const style = view.getComputedStyle(element);
+    if (style.display === 'none' || style.visibility === 'hidden') return [];
+    const rect = element.getBoundingClientRect();
+    const clip = typeof clipRect === 'function' ? clipRect(element) : clipRect;
+    const left = Math.max(rect.left, clip.left, viewport.left);
+    const top = Math.max(rect.top, clip.top, viewport.top);
+    const right = Math.min(rect.right, clip.right, viewport.right);
+    const bottom = Math.min(rect.bottom, clip.bottom, viewport.bottom);
+    return right > left && bottom > top ? [{ left, top, right, bottom }] : [];
+  });
+  if (!rects.length) return null;
+  const left = Math.min(...rects.map((rect) => rect.left));
+  const top = Math.min(...rects.map((rect) => rect.top));
+  const right = Math.max(...rects.map((rect) => rect.right));
+  const bottom = Math.max(...rects.map((rect) => rect.bottom));
+  const rect = { left, top, right, bottom, width: right - left, height: bottom - top };
+  const element = document.createElement('div');
+  element.dataset['nteDataTableDragPreview'] = '';
+  element.setAttribute('aria-hidden', 'true');
+  Object.assign(element.style, {
     position: 'fixed',
     zIndex: '2147483647',
     pointerEvents: 'none',
-    opacity: '0.94',
+    left: `${rect.left}px`,
+    top: `${rect.top}px`,
+    width: `${rect.width}px`,
+    height: `${rect.height}px`,
+    boxSizing: 'border-box',
+    background: 'rgb(108 117 125 / 0.42)',
+    border: '1px solid rgb(73 80 87 / 0.5)',
+    borderRadius: '0.25rem',
     filter: 'drop-shadow(0 0.5rem 1rem rgb(0 0 0 / 0.22))',
     willChange: 'left, top',
   });
-  document.body.append(preview);
-  return preview;
+  document.body.append(element);
+  return { element, rect };
 };
 
 const animateMove = (elements: HTMLElement[], mutate: () => void, axis: 'x' | 'y'): void => {
@@ -225,14 +248,15 @@ export class NteDataTableColumnReorderPlugin extends PointerReorderPlugin {
     const sourceIndex = headers.indexOf(header!);
     if (!header || sourceIndex < 0) return;
     event.preventDefault();
+    const ghost = this._createColumnGhost(sourceIndex);
+    if (!ghost) return;
     this.pointerId = event.pointerId;
     this._sourceIndex = sourceIndex;
     this._originalCells = Array.from(context.table.rows, (row) => Array.from(row.cells));
-    this.preview = this._createColumnPreview(sourceIndex);
-    const rect = header.getBoundingClientRect();
-    this.grabOffsetX = event.clientX - rect.left;
+    this.preview = ghost.element;
+    this.grabOffsetX = event.clientX - ghost.rect.left;
     this.grabOffsetY = 0;
-    this.movePreview(event.clientX, rect.top, 'x');
+    this.movePreview(event.clientX, ghost.rect.top, 'x');
     for (const row of Array.from(context.table.rows)) row.cells[sourceIndex]?.setAttribute('data-nte-data-table-dragging', '');
     this.bindPointerTracking();
   };
@@ -280,27 +304,14 @@ export class NteDataTableColumnReorderPlugin extends PointerReorderPlugin {
     if (event.pointerId === this.pointerId) this._cancelDrag();
   };
 
-  private _createColumnPreview(columnIndex: number): HTMLDivElement {
+  private _createColumnGhost(columnIndex: number): DragGhost | null {
     const context = this.context!;
-    const preview = createPreview(context.host.ownerDocument);
     const bodyRect = context.table.tBodies[0].getBoundingClientRect();
-    const cells = Array.from(context.table.rows, (row) => row.cells[columnIndex]).filter((cell) => {
-      if (!cell || cell.ownerDocument.defaultView?.getComputedStyle(cell).display === 'none') return false;
-      const rect = cell.getBoundingClientRect();
-      return cell.parentElement?.parentElement?.tagName !== 'TBODY' || (rect.bottom >= bodyRect.top && rect.top <= bodyRect.bottom);
-    });
-    const rects = cells.map((cell) => cell.getBoundingClientRect());
-    const top = Math.min(...rects.map((rect) => rect.top));
-    const bottom = Math.max(...rects.map((rect) => rect.bottom));
-    const width = rects[0]?.width ?? 0;
-    Object.assign(preview.style, { top: `${top}px`, left: `${rects[0]?.left ?? 0}px`, width: `${width}px`, height: `${bottom - top}px` });
-    cells.forEach((cell, index) => {
-      const clone = cell.cloneNode(true) as HTMLElement;
-      copyComputedStyle(cell, clone);
-      Object.assign(clone.style, { top: `${rects[index].top - top}px`, left: '0', width: `${width}px`, height: `${rects[index].height}px` });
-      preview.append(clone);
-    });
-    return preview;
+    const hostRect = context.host.getBoundingClientRect();
+    const cells = Array.from(context.table.rows, (row) => row.cells[columnIndex]).filter(
+      (cell): cell is HTMLTableCellElement => Boolean(cell),
+    );
+    return createDragGhost(cells, (cell) => (cell.closest('tbody') ? bodyRect : hostRect));
   }
 
   private _finishDrag(): void {
@@ -354,13 +365,14 @@ export class NteDataTableRowReorderPlugin extends PointerReorderPlugin {
     const row = handle.closest<HTMLTableRowElement>('tr');
     if (!row) return;
     event.preventDefault();
-    const rect = row.getBoundingClientRect();
+    const ghost = createDragGhost(Array.from(row.cells), context.table.tBodies[0].getBoundingClientRect());
+    if (!ghost) return;
     this.pointerId = event.pointerId;
     this._sourceRow = row;
     this._originalRows = Array.from(context.table.tBodies[0].rows);
-    this.preview = this._createRowPreview(row);
-    this.grabOffsetX = event.clientX - rect.left;
-    this.grabOffsetY = event.clientY - rect.top;
+    this.preview = ghost.element;
+    this.grabOffsetX = event.clientX - ghost.rect.left;
+    this.grabOffsetY = event.clientY - ghost.rect.top;
     this.movePreview(event.clientX, event.clientY, 'both');
     row.setAttribute('data-nte-data-table-dragging', '');
     this.bindPointerTracking();
@@ -401,21 +413,6 @@ export class NteDataTableRowReorderPlugin extends PointerReorderPlugin {
   protected handlePointerCancel = (event: PointerEvent): void => {
     if (event.pointerId === this.pointerId) this._cancelDrag();
   };
-
-  private _createRowPreview(row: HTMLTableRowElement): HTMLDivElement {
-    const preview = createPreview(row.ownerDocument);
-    const rect = row.getBoundingClientRect();
-    Object.assign(preview.style, { display: 'flex', top: `${rect.top}px`, left: `${rect.left}px`, width: `${rect.width}px`, height: `${rect.height}px` });
-    for (const cell of Array.from(row.cells)) {
-      if (cell.ownerDocument.defaultView?.getComputedStyle(cell).display === 'none') continue;
-      const clone = cell.cloneNode(true) as HTMLElement;
-      const cellRect = cell.getBoundingClientRect();
-      copyComputedStyle(cell, clone);
-      Object.assign(clone.style, { position: 'relative', flex: `0 0 ${cellRect.width}px`, width: `${cellRect.width}px`, height: `${cellRect.height}px` });
-      preview.append(clone);
-    }
-    return preview;
-  }
 
   private _finishDrag(): void {
     this.clearDragState();

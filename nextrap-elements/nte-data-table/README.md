@@ -59,7 +59,7 @@ Built-in plugins are enabled declaratively:
 - `reorder-columns` adds header drag handles and moves the corresponding native cells in every table section. Use header `data-reorderable="false"` to opt out.
 - `reorder-rows` adds drag handles to the first cell of each body row and moves the native row. Use row `data-reorderable="false"` to opt out.
 
-Both reorder plugins use Pointer Events. During a drag, an `aria-hidden` overlay of the complete visible row or column follows the pointer, the hidden original reserves its exact position, and displaced rows/cells animate into their preview positions. Pointer cancellation restores the original order; dragging near the body edge scrolls only `tbody`.
+Both reorder plugins use Pointer Events. During a drag, a neutral `aria-hidden` ghost covers only the visible, viewport-clipped extent of the row or column, the hidden original reserves its exact position, and displaced rows/cells animate into their preview positions. Off-screen parts of long rows or columns never enlarge the ghost. Pointer cancellation restores the original order; dragging near the body edge scrolls only `tbody`.
 
 The plugins emit `nte-data-table-sort`, `nte-data-table-column-reorder`, and `nte-data-table-row-reorder` events. They work directly on the Light DOM table and call `refresh()` after structural changes.
 
