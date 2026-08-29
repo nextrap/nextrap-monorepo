@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "files": [
         "*.*",
+        "!ARCHITECTURE.md",
         ".ai-usage-info.md",
         "skills",
         "src"
