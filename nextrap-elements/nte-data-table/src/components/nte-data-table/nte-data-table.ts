@@ -9,10 +9,60 @@ const DEFAULT_HEIGHT = '24rem';
 const COLUMN_RESIZE_HIT_AREA = 8;
 const MIN_COLUMN_WIDTH = 48;
 const OWNED_ATTRIBUTES = {
+  borderFree: 'data-nte-data-table-border-free',
+  columnSelected: 'data-nte-data-table-column-selected',
+  headerSelected: 'data-nte-data-table-header-selected',
+  highlight: 'data-nte-data-table-highlight',
   hidden: 'data-nte-data-table-hidden',
   pinned: 'data-nte-data-table-pinned',
+  rowSelected: 'data-nte-data-table-row-selected',
   sized: 'data-nte-data-table-sized',
 } as const;
+
+const HIGHLIGHT_CLASSES = ['primary', 'secondary', 'success', 'info', 'warning', 'danger'] as const;
+
+export type NteDataTableRowTarget = number | string | HTMLTableRowElement;
+export type NteDataTableColumnTarget = number | string | HTMLTableCellElement;
+
+interface NteDataTableRemoteActions {
+  clearSelection(): void;
+  setColumnSelected(target: NteDataTableColumnTarget, selected: boolean): boolean;
+  setRowSelected(target: NteDataTableRowTarget, selected: boolean): boolean;
+  toggleColumn(target: NteDataTableColumnTarget): boolean;
+  toggleRow(target: NteDataTableRowTarget): boolean;
+}
+
+export class NteDataTableRemote {
+  public constructor(private readonly _actions: NteDataTableRemoteActions) {}
+
+  public selectRow(target: NteDataTableRowTarget): boolean {
+    return this._actions.setRowSelected(target, true);
+  }
+
+  public deselectRow(target: NteDataTableRowTarget): boolean {
+    return this._actions.setRowSelected(target, false);
+  }
+
+  public toggleRow(target: NteDataTableRowTarget): boolean {
+    return this._actions.toggleRow(target);
+  }
+
+  public selectColumn(target: NteDataTableColumnTarget): boolean {
+    return this._actions.setColumnSelected(target, true);
+  }
+
+  public deselectColumn(target: NteDataTableColumnTarget): boolean {
+    return this._actions.setColumnSelected(target, false);
+  }
+
+  public toggleColumn(target: NteDataTableColumnTarget): boolean {
+    return this._actions.toggleColumn(target);
+  }
+
+  public clearSelection(): void {
+    this._actions.clearSelection();
+  }
+}
 
 interface SavedStyle {
   priority: string;
@@ -52,11 +102,24 @@ export class NteDataTableElement extends nextrap_element({
   private _resizableHeaders = new Set<HTMLTableCellElement>();
   private _resizeObserver: ResizeObserver | null = null;
   private _resizeTargets = new Set<Element>();
+  private _selectedColumns = new Set<number>();
+  private _selectedRows = new Set<HTMLTableRowElement>();
   private _sourceTable: HTMLTableElement | null = null;
   private _warnings = new Set<string>();
+  private readonly _remote = new NteDataTableRemote({
+    clearSelection: () => this._clearSelection(),
+    setColumnSelected: (target, selected) => this._setColumnSelected(target, selected),
+    setRowSelected: (target, selected) => this._setRowSelected(target, selected),
+    toggleColumn: (target) => this._toggleColumn(target),
+    toggleRow: (target) => this._toggleRow(target),
+  });
 
   public get sourceTable(): HTMLTableElement | null {
     return this._sourceTable;
+  }
+
+  public get remote(): NteDataTableRemote {
+    return this._remote;
   }
 
   public refresh(): void {
@@ -159,6 +222,7 @@ export class NteDataTableElement extends nextrap_element({
     this._resizeObserver = null;
     this._resizeTargets.clear();
     this._resizableHeaders.clear();
+    this._clearSelection();
     this._cancelLayout();
     this._restoreManagedState();
     this._sourceTable = null;
@@ -271,7 +335,17 @@ export class NteDataTableElement extends nextrap_element({
   private _observeSourceTable(): void {
     if (!this._sourceTable || !this._mutationObserver) return;
     this._mutationObserver.observe(this._sourceTable, {
-      attributeFilter: ['aria-label', 'colspan', 'data-hidden', 'data-width', 'hidden', 'rowspan', 'style', 'width'],
+      attributeFilter: [
+        'aria-label',
+        'class',
+        'colspan',
+        'data-hidden',
+        'data-width',
+        'hidden',
+        'rowspan',
+        'style',
+        'width',
+      ],
       attributes: true,
       attributeOldValue: true,
       characterData: true,
@@ -388,6 +462,9 @@ export class NteDataTableElement extends nextrap_element({
         });
       });
 
+      this._applyHeaderColumnStates(rows, headerCells);
+      this._applySelectionState(rows);
+
       const totalWidth = visibleColumns.reduce((sum, columnIndex) => sum + widths[columnIndex], 0);
       const tableWidth = `${Math.max(totalWidth, table.clientWidth)}px`;
       this._positionSection(table.tHead!, '0px', null, tableWidth);
@@ -458,6 +535,103 @@ export class NteDataTableElement extends nextrap_element({
       }
       offset += widths[columnIndex];
     }
+  }
+
+  private _applyHeaderColumnStates(
+    rows: HTMLTableRowElement[],
+    headerCells: HTMLTableCellElement[],
+  ): void {
+    headerCells.forEach((headerCell, columnIndex) => {
+      const highlight =
+        HIGHLIGHT_CLASSES.find((name) => headerCell.classList.contains(`highlight-${name}`)) ??
+        (headerCell.classList.contains('highlight') ? 'primary' : undefined);
+      const selected = headerCell.classList.contains('selected');
+      const borderFree = headerCell.classList.contains('border-free');
+
+      for (const row of rows) {
+        const cell = row.cells[columnIndex];
+        if (highlight) this._setManagedAttribute(cell, OWNED_ATTRIBUTES.highlight, highlight);
+        if (selected) this._setManagedAttribute(cell, OWNED_ATTRIBUTES.headerSelected, '');
+        if (borderFree) this._setManagedAttribute(cell, OWNED_ATTRIBUTES.borderFree, '');
+      }
+    });
+  }
+
+  private _applySelectionState(rows: HTMLTableRowElement[]): void {
+    for (const row of Array.from(this._selectedRows)) {
+      if (!rows.includes(row)) this._selectedRows.delete(row);
+    }
+
+    for (const row of rows) {
+      const selectedRow = this._selectedRows.has(row);
+      row.toggleAttribute(OWNED_ATTRIBUTES.rowSelected, selectedRow);
+      for (const cell of Array.from(row.cells)) {
+        cell.toggleAttribute(OWNED_ATTRIBUTES.rowSelected, selectedRow);
+      }
+      for (const columnIndex of this._selectedColumns) {
+        row.cells[columnIndex]?.setAttribute(OWNED_ATTRIBUTES.columnSelected, '');
+      }
+    }
+  }
+
+  private _setRowSelected(target: NteDataTableRowTarget, selected: boolean): boolean {
+    const row = this._resolveRow(target);
+    if (!row) return false;
+    if (selected) this._selectedRows.add(row);
+    else this._selectedRows.delete(row);
+    this._applySelectionState(Array.from(this._sourceTable?.rows ?? []));
+    return true;
+  }
+
+  private _toggleRow(target: NteDataTableRowTarget): boolean {
+    const row = this._resolveRow(target);
+    return row ? this._setRowSelected(row, !this._selectedRows.has(row)) : false;
+  }
+
+  private _setColumnSelected(target: NteDataTableColumnTarget, selected: boolean): boolean {
+    const columnIndex = this._resolveColumn(target);
+    if (columnIndex === null) return false;
+    if (selected) this._selectedColumns.add(columnIndex);
+    else this._selectedColumns.delete(columnIndex);
+    this._clearSelectionMarkers(OWNED_ATTRIBUTES.columnSelected);
+    this._applySelectionState(Array.from(this._sourceTable?.rows ?? []));
+    return true;
+  }
+
+  private _toggleColumn(target: NteDataTableColumnTarget): boolean {
+    const columnIndex = this._resolveColumn(target);
+    return columnIndex === null
+      ? false
+      : this._setColumnSelected(columnIndex, !this._selectedColumns.has(columnIndex));
+  }
+
+  private _clearSelection(): void {
+    this._selectedRows.clear();
+    this._selectedColumns.clear();
+    this._clearSelectionMarkers(OWNED_ATTRIBUTES.rowSelected);
+    this._clearSelectionMarkers(OWNED_ATTRIBUTES.columnSelected);
+  }
+
+  private _clearSelectionMarkers(attribute: string): void {
+    this._sourceTable?.querySelectorAll(`[${attribute}]`).forEach((element) => element.removeAttribute(attribute));
+  }
+
+  private _resolveRow(target: NteDataTableRowTarget): HTMLTableRowElement | null {
+    const rows = Array.from(this._sourceTable?.tBodies[0]?.rows ?? []);
+    if (typeof target === 'number') return rows[target] ?? null;
+    if (target instanceof HTMLTableRowElement) return rows.includes(target) ? target : null;
+    return rows.find((row) => row.id === target || row.dataset['rowId'] === target) ?? null;
+  }
+
+  private _resolveColumn(target: NteDataTableColumnTarget): number | null {
+    const headers = Array.from(this._sourceTable?.tHead?.rows[0]?.cells ?? []);
+    if (typeof target === 'number') return headers[target] ? target : null;
+    if (target instanceof HTMLTableCellElement) {
+      const index = headers.indexOf(target);
+      return index < 0 ? null : index;
+    }
+    const index = headers.findIndex((header) => header.id === target || header.dataset['columnId'] === target);
+    return index < 0 ? null : index;
   }
 
   private _updateResizeTargets(table: HTMLTableElement, headerCells: HTMLTableCellElement[]): void {

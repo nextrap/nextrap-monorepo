@@ -1,67 +1,59 @@
 # @nextrap/nte-data-table
 
-Display-only table viewport with a sticky header/footer, fixed column widths, hidden columns and pinned leading columns.
+Display-only table viewport with a fixed header/footer, fixed column widths, hidden columns, pinned leading columns and programmatic selection. The native Light DOM table remains the only table.
 
-The native Light DOM table remains the only table. Native events, focus, form controls and framework bindings therefore keep working without an event bridge.
-
-## Import
+## Import and basic usage
 
 ```ts
 import '@nextrap/nte-data-table';
 ```
 
-Load the default visual style in the app/theme:
-
 ```scss
 @use '@nextrap/nte-data-table/default';
 ```
 
-## Usage
-
 ```html
-<nte-data-table height="32rem" pinned-columns="2" scroll-label="Customers">
+<nte-data-table height="32rem" pinned-columns="1" scroll-label="Customers">
   <table>
-    <caption>Customers</caption>
-    <thead>
-      <tr>
-        <th data-width="14rem" scope="col">Name</th>
-        <th data-width="10rem" scope="col">Company</th>
-        <th data-width="8rem" scope="col" hidden>Status</th>
-        <th data-width="16rem" scope="col">Email</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="row">Ada Lovelace</th>
-        <td>Analytical Engines</td>
-        <td>Active</td>
-        <td><a href="mailto:ada@example.test">ada@example.test</a></td>
-      </tr>
-    </tbody>
-    <tfoot>
-      <tr>
-        <th scope="row">Total</th>
-        <td>1 company</td>
-        <td>1 active</td>
-        <td>1 email</td>
-      </tr>
-    </tfoot>
+    <thead><tr><th class="border-free" data-column-id="id" data-width="6rem">ID</th><th data-column-id="name">Name <span class="indicator">▲</span></th></tr></thead>
+    <tbody><tr id="customer-1"><th scope="row">1</th><td>Ada Lovelace</td></tr></tbody>
+    <tfoot><tr><th>1</th><td>Customer</td></tr></tfoot>
   </table>
 </nte-data-table>
 ```
 
-For the MVP, every row must contain the same number of cells and `colspan`/`rowspan` must remain `1`. The table still renders when that contract is not met, but width, hide and pin enhancements are disabled.
+Every row must contain the same number of cells and `colspan`/`rowspan` must remain `1` for column enhancements.
 
 ## API
 
-- `height`: scroll viewport height; default `24rem`.
-- `pinned-columns`: number of the first visible columns pinned to the inline start.
-- `scroll-label` or host `aria-label`: accessible name for the keyboard-focusable scroll viewport. A table `aria-label` or caption is used as fallback.
-- Header `data-width`, inline CSS `style="width: …"`, or the native `width` attribute sets a fixed column width. Unitless values are treated as pixels.
+- `height`, `pinned-columns`, `scroll-label` and host `aria-label` configure the viewport.
+- Header `data-width`, inline `width`, or the native `width` attribute sets a fixed column width. Drag the header's inline-end edge to resize it.
 - Header `hidden` or `data-hidden` hides the complete column.
-- `sourceTable`: the active direct Light DOM table.
-- `refresh()`: manually reapplies layout metadata. Structural and metadata changes are observed automatically.
+- `sourceTable` returns the active native table; `refresh()` manually reapplies layout metadata.
+- `remote` controls selection without observing selection classes.
 
-The component owns only its `data-nte-data-table-*` markers and the functional table/cell styles needed for sizing, hiding and sticky positioning while connected. Existing inline values are restored when the source table changes or the component disconnects.
+```ts
+const table = document.querySelector('nte-data-table');
+table.remote.selectRow(0);                 // zero-based tbody index
+table.remote.selectRow('customer-1');      // tr id or data-row-id
+table.remote.toggleColumn('name');         // th id or data-column-id
+table.remote.deselectColumn(1);            // zero-based column index
+table.remote.clearSelection();
+```
 
-The footer is sticky while the table overflows. It is not forced to the viewport bottom when the table has only a few rows.
+`selectRow`, `deselectRow`, `toggleRow`, `selectColumn`, `deselectColumn`, and `toggleColumn` return `false` when the target cannot be resolved.
+
+## Visual classes
+
+| Class | Place on | Effect |
+| --- | --- | --- |
+| `indicator` | Element inside `th` | Aligns a sort/status indicator at the inline end. |
+| `selected` | `th`, `td`, or `tr` | Selected treatment; on a header cell it is propagated to the complete column. |
+| `highlight` / `highlight-primary` | `th`, `td`, or `tr` | Primary highlight; a header marker applies to the complete column. |
+| `highlight-secondary`, `highlight-success`, `highlight-info`, `highlight-warning`, `highlight-danger` | `th`, `td`, or `tr` | Semantic highlight; a header marker applies to the complete column. |
+| `border-free` | `th` or `td` | Identifier/fixed-cell treatment; on a header cell it is propagated to the complete column. |
+| `with-header-strong`, `with-header-minimal` | `nte-data-table` | Alternative header treatment used with `style-default`. |
+| `nte-data-table-header` | Wrapper before the component | Connected title/action/search toolbar. |
+| `nte-data-table-search` | Search label inside the wrapper | Consistent search-field layout. |
+
+The component owns only its `data-nte-data-table-*` markers and functional layout styles. The footer receives a distinct top border. See demos 04 and 05 for the variations and Remote controls.
