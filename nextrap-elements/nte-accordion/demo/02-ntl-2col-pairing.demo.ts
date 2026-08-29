@@ -1,5 +1,6 @@
 import '@nextrap/style-base/default';
 import '@nextrap/style-typography/default';
+import '@trunkjs/content-pane';
 import { defineDemo } from '@trunkjs/demo-viewer';
 
 import '@nextrap/ntl-2col';
@@ -11,4 +12,5 @@ export default defineDemo({
   title: 'Accordion in NTL 2col',
   description: 'Pairing des Accordions in der Haupt- und Seitenspalte eines Zweispalten-Layouts',
   markdown,
+  wrapper_html: '<tj-content-pane>{{content}}</tj-content-pane>',
 });

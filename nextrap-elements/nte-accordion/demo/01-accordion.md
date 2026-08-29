@@ -6,18 +6,18 @@ Das Accordion eignet sich für FAQ- und Detailbereiche innerhalb eines bestehend
 ## Standard
 {: layout="1;.demo-card"}
 
-### Häufige Fragen
+---
 {: layout="nte-accordion[initial-open-index='0'][exclusive]"}
 
-#### Was macht nte-accordion?
+### Was macht nte-accordion?
 
 Direkte Abschnitte werden zu zugänglichen, aufklappbaren Accordion-Items.
 
-#### Wie wird ein Eintrag geöffnet?
+### Wie wird ein Eintrag geöffnet?
 
 Ein Klick auf die Überschrift ändert den reflektierten `open`-Zustand des Items.
 
-#### Woher kommt das Styling?
+### Woher kommt das Styling?
 
 Das visuelle Styling wird über die öffentliche Sass-API und Shadow Parts eingebunden.
 
@@ -26,45 +26,45 @@ Das visuelle Styling wird über die öffentliche Sass-API und Shadow Parts einge
 
 Ohne `exclusive` können mehrere Einträge gleichzeitig geöffnet bleiben.
 
-### Produktdetails
+---
 {: layout="nte-accordion[initial-open-index='1']"}
 
-#### Überblick
+### Überblick
 
 Dieser Eintrag ist zunächst geschlossen.
 
-#### Technische Daten
+### Technische Daten
 
 Dieser Eintrag ist über `initial-open-index="1"` anfangs geöffnet.
 
-#### Downloads
+### Downloads
 
 Beim Öffnen bleibt der vorherige Eintrag ebenfalls offen.
 
 ## Marker links als Plus und Minus
 {: layout="1;.demo-card"}
 
-### Versand und Zahlung
+---
 {: layout="nte-accordion.marker-start.marker-plus[initial-open-index='0'][marker-position='start'][marker-icon='plus']"}
 
-#### Versand
+### Versand
 
 Der Marker steht links und zeigt im geschlossenen Zustand ein Plus.
 
-#### Zahlung
+### Zahlung
 
 Im geöffneten Zustand wechselt der Marker zum Minus.
 
 ## Kompakte Theme-Komposition
 {: layout="1;.demo-card.demo-compact"}
 
-### Kompakte FAQ
+---
 {: layout="nte-accordion[initial-open-index='0']"}
 
-#### Erste Frage
+### Erste Frage
 
 Der umgebende Demo-Block komponiert kleinere Padding-Werte über die Sass-API.
 
-#### Zweite Frage
+### Zweite Frage
 
 Das Markup bleibt dabei identisch und kann direkt in Content-Markdown übernommen werden.
