@@ -3,6 +3,11 @@ import { resetStyle } from '@nextrap/style-reset';
 import { html, type PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
+import {
+  nteDataTablePluginRegistry,
+  type NteDataTablePlugin,
+  type NteDataTablePluginContext,
+} from '../../plugins/plugin-registry';
 import style from './nte-data-table.scss?inline';
 
 const DEFAULT_HEIGHT = '24rem';
@@ -38,7 +43,6 @@ export class NteDataTableRemote {
   public selectRow(target: NteDataTableRowTarget): boolean {
     return this._actions.setRowSelected(target, true);
   }
-
   public deselectRow(target: NteDataTableRowTarget): boolean {
     return this._actions.setRowSelected(target, false);
   }
@@ -90,6 +94,7 @@ export class NteDataTableElement extends nextrap_element({
   static override styles = [unsafeCSS(resetStyle), unsafeCSS(style)];
 
   @property({ type: String }) public accessor height = DEFAULT_HEIGHT;
+  @property({ type: String }) public accessor features = '';
   @property({ type: Number, attribute: 'pinned-columns' }) public accessor pinnedColumns = 0;
   @property({ type: String, attribute: 'scroll-label' }) public accessor scrollLabel = '';
   @property({ type: String, reflect: true, attribute: 'aria-label' }) public override accessor ariaLabel = '';
@@ -99,6 +104,7 @@ export class NteDataTableElement extends nextrap_element({
   private _columnResize: ColumnResizeState | null = null;
   private _layoutFrame: number | null = null;
   private _managed = new Map<HTMLElement, ManagedState>();
+  private _plugins = new Map<string, NteDataTablePlugin>();
   private _refreshWidths = true;
   private _resizableHeaders = new Set<HTMLTableCellElement>();
   private _resizeObserver: ResizeObserver | null = null;
@@ -124,6 +130,7 @@ export class NteDataTableElement extends nextrap_element({
   }
 
   public refresh(): void {
+    for (const plugin of this._plugins.values()) plugin.refresh?.();
     this._refreshWidths = true;
     this._scheduleLayout();
   }
@@ -145,6 +152,7 @@ export class NteDataTableElement extends nextrap_element({
   protected override updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
     if (changedProperties.has('height')) this._validateHeight();
+    if (changedProperties.has('features')) this._syncPlugins();
     if (
       changedProperties.has('ariaLabel') ||
       changedProperties.has('height') ||
@@ -203,6 +211,7 @@ export class NteDataTableElement extends nextrap_element({
     if (view?.ResizeObserver) {
       this._resizeObserver = new view.ResizeObserver(() => this._scheduleLayout());
     }
+    this._syncPlugins();
     this._scheduleLayout();
   }
 
@@ -218,12 +227,57 @@ export class NteDataTableElement extends nextrap_element({
     this._resizeObserver = null;
     this._resizeTargets.clear();
     this._resizableHeaders.clear();
+    this._disconnectPlugins();
     this._columnWidths = [];
     this._refreshWidths = true;
     this._clearSelection();
     this._cancelLayout();
     this._restoreManagedState();
     this._sourceTable = null;
+  }
+
+  private _pluginContext(table: HTMLTableElement): NteDataTablePluginContext {
+    return {
+      host: this,
+      remote: this.remote,
+      table,
+      refresh: () => this.refresh(),
+    };
+  }
+
+  private _syncPlugins(): void {
+    const table = this._sourceTable;
+    if (!table) return;
+    const requested = new Set(
+      (this.features ?? '')
+        .split(/[\s,]+/)
+        .map((name) => name.trim().toLowerCase())
+        .filter(Boolean),
+    );
+
+    for (const [name, plugin] of this._plugins) {
+      if (requested.has(name)) continue;
+      plugin.disconnect();
+      this._plugins.delete(name);
+    }
+
+    for (const name of requested) {
+      if (this._plugins.has(name)) continue;
+      const plugin = nteDataTablePluginRegistry.create(name);
+      if (!plugin) {
+        this._warnOnce(`nte-data-table feature is not registered: ${name}`);
+        continue;
+      }
+      plugin.connect(this._pluginContext(table));
+      this._plugins.set(name, plugin);
+    }
+    this._refreshWidths = true;
+    this._scheduleLayout();
+  }
+
+  private _disconnectPlugins(): void {
+    for (const plugin of this._plugins.values()) plugin.disconnect();
+    this._plugins.clear();
   }
 
   private _setBody(body: HTMLTableSectionElement | null): void {
@@ -275,6 +329,7 @@ export class NteDataTableElement extends nextrap_element({
 
   private _handlePointerDown = (event: PointerEvent): void => {
     if (event.button !== 0 || !event.isPrimary || this._columnResize) return;
+    if (event.target instanceof Element && event.target.closest('.nte-data-table-plugin-control')) return;
     const headerCell = this._resizeCellAt(event);
     if (!headerCell) return;
 

@@ -49,3 +49,11 @@
 .nte-data-table-demo .demo-caption-copy small {
   font-weight: 400;
 }
+
+.nte-data-table-demo .demo-plugin-events {
+  display: block;
+  margin-block-start: 1rem;
+  padding: 0.75rem;
+  background: var(--nt-surface-muted, #f6f8fa);
+  border-radius: var(--nt-border-radius, 0.375rem);
+}

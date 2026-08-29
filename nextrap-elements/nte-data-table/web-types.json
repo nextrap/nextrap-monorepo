@@ -11,6 +11,7 @@
         "attributes": [
           { "name": "aria-label", "description": "Accessible name for the keyboard-focusable scroll viewport.", "value": { "kind": "expression", "type": "string" } },
           { "name": "height", "description": "CSS height of the scroll viewport. Default: 24rem.", "value": { "kind": "expression", "type": "string" } },
+          { "name": "features", "description": "Whitespace- or comma-separated registered plugins: sort, reorder-columns, reorder-rows.", "value": { "kind": "expression", "type": "string" } },
           { "name": "pinned-columns", "description": "Number of first visible columns pinned to the inline start.", "value": { "kind": "expression", "type": "number" } },
           { "name": "scroll-label", "description": "Accessible label for the keyboard-focusable scroll viewport.", "value": { "kind": "expression", "type": "string" } }
         ],

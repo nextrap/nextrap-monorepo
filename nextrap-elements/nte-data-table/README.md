@@ -27,6 +27,7 @@ Every row must contain the same number of cells and `colspan`/`rowspan` must rem
 ## API
 
 - `height`, `pinned-columns`, `scroll-label` and host `aria-label` configure the viewport.
+- `features` activates registered plugins by whitespace- or comma-separated name.
 - Header `data-width`, inline `width`, or the native `width` attribute is resolved once and then fixed in pixels across all sections. Drag the header's inline-end edge to resize only that column.
 - Header `hidden` or `data-hidden` hides the complete column.
 - `sourceTable` returns the active native table. `refresh()` removes component-owned layout values, measures the current table again, and fixes every visible column in pixels.
@@ -42,6 +43,32 @@ table.remote.clearSelection();
 ```
 
 `selectRow`, `deselectRow`, `toggleRow`, `selectColumn`, `deselectColumn`, and `toggleColumn` return `false` when the target cannot be resolved.
+
+## Plugins
+
+Built-in plugins are enabled declaratively:
+
+```html
+<nte-data-table features="sort reorder-columns reorder-rows">
+  <table>…</table>
+</nte-data-table>
+```
+
+- `sort` adds accessible sort controls to headers and reorders the existing `tbody > tr` elements. Use header `data-sort-type="string|number|date"`, cell `data-sort-value`, or `data-sortable="false"`.
+- `reorder-columns` adds header drag handles and moves the corresponding native cells in every table section. Use header `data-reorderable="false"` to opt out.
+- `reorder-rows` adds drag handles to the first cell of each body row and moves the native row. Use row `data-reorderable="false"` to opt out.
+
+The plugins emit `nte-data-table-sort`, `nte-data-table-column-reorder`, and `nte-data-table-row-reorder` events. They work directly on the Light DOM table and call `refresh()` after structural changes.
+
+Register application plugins before the component connects:
+
+```ts
+import { nteDataTablePluginRegistry, type NteDataTablePlugin } from '@nextrap/nte-data-table';
+
+nteDataTablePluginRegistry.register('audit', () => new AuditTablePlugin());
+```
+
+An `NteDataTablePlugin` receives `host`, `table`, `remote`, and `refresh()` through `connect(context)`, plus optional `refresh()` and required `disconnect()` lifecycle methods.
 
 ## Visual classes
 
