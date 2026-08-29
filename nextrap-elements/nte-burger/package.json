@@ -1,6 +1,11 @@
 {
     "name": "@nextrap/nte-burger",
     "version": "2.0.0",
+    "files": [
+        "*.*",
+        "skills",
+        "src"
+    ],
     "main": "./index.js",
     "repository": {
         "directory": "nextrap-elements/nte-burger",
@@ -11,6 +16,10 @@
         "@nextrap/nt-core": "^2.0.0",
         "@nextrap/nt-framework": "^2.0.0",
         "@trunkjs/browser-utils": "^1.0.12"
+    },
+    "devDependencies": {
+        "@nextrap/style-base": "^2.0.0",
+        "@nextrap/style-typography": "^2.0.0"
     },
     "type": "module",
     "types": "./index.d.ts"

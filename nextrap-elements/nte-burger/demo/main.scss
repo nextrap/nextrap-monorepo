@@ -1,0 +1,19 @@
+.nte-burger-demo {
+  display: grid;
+  gap: 1.5rem;
+  max-width: 48rem;
+  margin-inline: auto;
+
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  &__menu {
+    padding: 1rem;
+    border: 1px solid var(--nt-border-color, currentColor);
+    border-radius: 0.5rem;
+  }
+}

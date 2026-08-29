@@ -1,11 +1,11 @@
-import { EVENT_NAME_GROUP_OPEN_CLOSE, triggerGroupOpenCloseEvent } from '@nextrap/nt-framework';
 import { nextrap_element } from '@nextrap/nt-core';
-import { unsafeCSS } from 'lit';
+import { EVENT_NAME_GROUP_OPEN_CLOSE, triggerGroupOpenCloseEvent } from '@nextrap/nt-framework';
+import { html, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import style from './hamburger.scss?inline';
 
 import { Listen } from '@trunkjs/browser-utils';
-import { html } from 'lit/static-html.js';
 
 @customElement('nte-burger')
 export class NteBurger extends nextrap_element({
@@ -19,22 +19,43 @@ export class NteBurger extends nextrap_element({
   @property({ type: String, reflect: true })
   accessor text = 'Menu';
 
+  @property({ type: String, attribute: 'aria-label' })
+  accessor accessibleLabel = '';
+
+  @property({ type: String, attribute: 'aria-controls' })
+  accessor controls = '';
+
+  @property({ type: Boolean, reflect: true })
+  accessor disabled = false;
+
   /**
    * Listen to burger-open and burger-close events on main document
    */
   @property({ type: String, reflect: false, attribute: 'data-group-name' })
   accessor dataGroupName = '';
 
-  constructor() {
-    super();
+  override render() {
+    return html`
+      <button
+        id="button"
+        class="hamburger"
+        part="button"
+        type="button"
+        aria-label=${this.accessibleLabel || this.text || 'Menu'}
+        aria-expanded=${this.open ? 'true' : 'false'}
+        aria-controls=${ifDefined(this.controls || undefined)}
+        ?disabled=${this.disabled}
+        @click=${this.toggle}
+      >
+        <span class="bar" part="bar bar-top"></span>
+        <span class="bar" part="bar bar-middle"></span>
+        <span class="bar" part="bar bar-bottom"></span>
+      </button>
+    `;
   }
 
-  override render() {
-    return html` <button id="button" class="hamburger">
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-    </button>`;
+  toggle(): void {
+    if (!this.disabled) this.open = !this.open;
   }
 
   @Listen(EVENT_NAME_GROUP_OPEN_CLOSE, { target: 'document' })
@@ -46,18 +67,6 @@ export class NteBurger extends nextrap_element({
       return;
     }
     this.open = event.detail.open;
-  }
-
-  override firstUpdated(_changedProperties: Map<string | number | symbol, unknown>): void {
-    super.firstUpdated(_changedProperties);
-    const button = this.renderRoot.querySelector('#button');
-    if (button) {
-      Array.from(this.attributes).forEach((attr) => {
-        if (attr.name.startsWith('aria-')) {
-          button.setAttribute(attr.name, attr.value);
-        }
-      });
-    }
   }
 
   override update(changedProperties: Map<string | number | symbol, unknown>): void {
