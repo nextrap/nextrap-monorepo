@@ -45,7 +45,7 @@ Read it before changing the component's DOM, scrolling, column sizing, pinning, 
 
 - The component always resets margin and padding on its direct native table because host-page content styles commonly add table margins that would otherwise shift or enlarge the component layout.
 - Internal cell separators remain visible, including the block-end border of the last `tbody` row. This line deliberately separates the final data row from unused white body viewport space.
-- Header, body, and footer filler cells inherit their section background and body-facing divider so short tables still reach the viewport edge. No real or cloned DOM cell may be added for this presentation-only space.
+- Header, body, and footer filler cells inherit their section background and body-facing divider so short tables still reach the viewport edge. When a filler has positive remaining width, it also draws an inset inline-start separator from the final real cell. The separator must not contribute layout width: a collapsed filler must remain invisible and must not create an outer table border. No real or cloned DOM cell may be added for this presentation-only space.
 
 ## Pinned-column contract
 

@@ -88,6 +88,11 @@
     background: $background;
     border: 0;
     border-block-end: 1px solid $border-color;
+    box-shadow: inset 1px 0 0 $border-color;
+  }
+
+  & > table:dir(rtl) > :is(thead, tbody, tfoot) > tr::after {
+    box-shadow: inset -1px 0 0 $border-color;
   }
 
   & > table > :is(thead, tbody, tfoot) > tr > :is(th, td):has(
