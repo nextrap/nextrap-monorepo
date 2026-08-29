@@ -85,6 +85,9 @@ export class NteDataTableSortPlugin extends TablePlugin {
 const REORDER_ANIMATION_MS = 160;
 const AUTO_SCROLL_EDGE = 36;
 const AUTO_SCROLL_STEP = 14;
+const REORDER_HYSTERESIS_MIN = 8;
+const REORDER_HYSTERESIS_MAX = 24;
+const REORDER_HYSTERESIS_RATIO = 0.15;
 
 interface DragGhost {
   element: HTMLDivElement;
@@ -163,7 +166,11 @@ const animateMove = (elements: HTMLElement[], mutate: () => void, axis: 'x' | 'y
   }
 };
 
-const autoScroll = (body: HTMLTableSectionElement, event: PointerEvent, axis: 'x' | 'y'): void => {
+const autoScroll = (
+  body: HTMLTableSectionElement,
+  event: Pick<PointerEvent, 'clientX' | 'clientY'>,
+  axis: 'x' | 'y',
+): void => {
   const rect = body.getBoundingClientRect();
   if (axis === 'y') {
     if (event.clientY < rect.top + AUTO_SCROLL_EDGE) body.scrollTop -= AUTO_SCROLL_STEP;
@@ -217,6 +224,11 @@ abstract class PointerReorderPlugin extends TablePlugin {
 export class NteDataTableColumnReorderPlugin extends PointerReorderPlugin {
   private _sourceIndex: number | null = null;
   private _originalCells: HTMLTableCellElement[][] = [];
+  private _lastPointerX = 0;
+  private _lastSwapDirection: -1 | 1 | null = null;
+  private _reverseLockedUntil = 0;
+  private _pendingMove: Pick<PointerEvent, 'clientX' | 'clientY' | 'timeStamp'> | null = null;
+  private _moveFrame: number | null = null;
 
   protected onConnect(): void {
     this.context?.table.tHead?.addEventListener('pointerdown', this._handlePointerDown);
@@ -256,6 +268,7 @@ export class NteDataTableColumnReorderPlugin extends PointerReorderPlugin {
     this.preview = ghost.element;
     this.grabOffsetX = event.clientX - ghost.rect.left;
     this.grabOffsetY = 0;
+    this._lastPointerX = event.clientX;
     this.movePreview(event.clientX, ghost.rect.top, 'x');
     for (const row of Array.from(context.table.rows)) row.cells[sourceIndex]?.setAttribute('data-nte-data-table-dragging', '');
     this.bindPointerTracking();
@@ -266,13 +279,51 @@ export class NteDataTableColumnReorderPlugin extends PointerReorderPlugin {
     if (!context || event.pointerId !== this.pointerId || this._sourceIndex === null) return;
     event.preventDefault();
     this.movePreview(event.clientX, event.clientY, 'x');
-    autoScroll(context.table.tBodies[0], event, 'x');
-    const headers = Array.from(context.table.tHead?.rows[0]?.cells ?? []);
-    const target = headers.find((header) => event.clientX < header.getBoundingClientRect().left + header.getBoundingClientRect().width / 2) ?? headers[headers.length - 1];
-    const targetIndex = target ? headers.indexOf(target) : -1;
-    if (targetIndex < 0 || targetIndex === this._sourceIndex) return;
-    const cells = Array.from(context.table.rows).flatMap((row) => Array.from(row.cells));
+    this._pendingMove = event;
+    if (this._moveFrame !== null) return;
+    const view = context.host.ownerDocument.defaultView;
+    if (!view) {
+      const move = this._pendingMove;
+      this._pendingMove = null;
+      if (move) this._processPointerMove(move);
+      return;
+    }
+    this._moveFrame = view.requestAnimationFrame(() => {
+      this._moveFrame = null;
+      const move = this._pendingMove;
+      this._pendingMove = null;
+      if (move) this._processPointerMove(move);
+    });
+  };
+
+  private _processPointerMove(event: Pick<PointerEvent, 'clientX' | 'clientY' | 'timeStamp'>): void {
+    const context = this.context;
     const sourceIndex = this._sourceIndex;
+    if (!context || sourceIndex === null || !this.preview) return;
+    autoScroll(context.table.tBodies[0], event, 'x');
+    const delta = event.clientX - this._lastPointerX;
+    if (!delta) return;
+    this._lastPointerX = event.clientX;
+    const direction: -1 | 1 = delta < 0 ? -1 : 1;
+    if (
+      this._lastSwapDirection !== null &&
+      direction !== this._lastSwapDirection &&
+      event.timeStamp < this._reverseLockedUntil
+    ) return;
+    const headers = Array.from(context.table.tHead?.rows[0]?.cells ?? []);
+    const targetIndex = sourceIndex + direction;
+    const target = headers[targetIndex];
+    if (!target) return;
+    const targetRect = target.getBoundingClientRect();
+    const hysteresis = Math.min(
+      REORDER_HYSTERESIS_MAX,
+      Math.max(REORDER_HYSTERESIS_MIN, targetRect.width * REORDER_HYSTERESIS_RATIO),
+    );
+    const targetThreshold = targetRect.left + targetRect.width / 2 + direction * hysteresis;
+    const previewRect = this.preview.getBoundingClientRect();
+    const ghostCenter = previewRect.left + previewRect.width / 2;
+    if ((direction > 0 && ghostCenter <= targetThreshold) || (direction < 0 && ghostCenter >= targetThreshold)) return;
+    const cells = Array.from(context.table.rows).flatMap((row) => Array.from(row.cells));
     animateMove(cells, () => {
       for (const row of Array.from(context.table.rows)) {
         const sourceCell = row.cells[sourceIndex];
@@ -281,9 +332,11 @@ export class NteDataTableColumnReorderPlugin extends PointerReorderPlugin {
       }
     }, 'x');
     this._sourceIndex = targetIndex;
+    this._lastSwapDirection = direction;
+    this._reverseLockedUntil = event.timeStamp + REORDER_ANIMATION_MS;
     context.table.querySelectorAll('[data-nte-data-table-drop-target]').forEach((item) => item.removeAttribute('data-nte-data-table-drop-target'));
     target.setAttribute('data-nte-data-table-drop-target', '');
-  };
+  }
 
   protected handlePointerEnd = (event: PointerEvent): void => {
     if (event.pointerId !== this.pointerId) return;
@@ -315,9 +368,14 @@ export class NteDataTableColumnReorderPlugin extends PointerReorderPlugin {
   }
 
   private _finishDrag(): void {
+    if (this._moveFrame !== null) this.context?.host.ownerDocument.defaultView?.cancelAnimationFrame(this._moveFrame);
+    this._moveFrame = null;
+    this._pendingMove = null;
     this.clearDragState();
     this._sourceIndex = null;
     this._originalCells = [];
+    this._lastSwapDirection = null;
+    this._reverseLockedUntil = 0;
   }
 
   private _cancelDrag(): void {
