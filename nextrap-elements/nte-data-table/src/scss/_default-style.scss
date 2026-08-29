@@ -31,6 +31,8 @@
     color: inherit;
     border: 0;
     font-size: $font-size;
+    margin: 0;
+    padding: 0;
   }
 
   & > table,
@@ -85,7 +87,6 @@
     border-inline-end: 1px solid $border-color;
   }
 
-  & > table > tbody > tr:last-child > :is(th, td),
   & > table > tfoot > tr > :is(th, td) {
     border-block-end: 0;
   }

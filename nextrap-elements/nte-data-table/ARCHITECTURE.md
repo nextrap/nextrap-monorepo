@@ -31,11 +31,20 @@ Read it before changing the component's DOM, scrolling, column sizing, pinning, 
 ## Column layout contract
 
 - JavaScript resolves every visible column to one concrete pixel width and applies that width to the corresponding header, body, and footer cells.
+- The sum of the effective visible column widths must be at least the usable `tbody` viewport width. If the natural/configured widths are smaller, JavaScript adds the exact remainder to the last visible column for that layout pass.
+- This fill width is derived and must not overwrite the last column's configured width. Recomputing it on resize keeps all sections aligned without inventing a separate background or divider surface.
 - Header `data-width`, inline `width`, and the native `width` attribute are accepted as width inputs.
 - Pointer resizing starts only at a header cell's inline-end separator and writes the result back to `data-width`.
 - The minimum resizable width is 48 pixels.
+- Header and footer cells remain single-line so indicators and controls cannot change section height or break cross-section alignment.
 - Hidden columns are derived from the corresponding header cell and hidden consistently in every section.
 - Rows must remain rectangular; `colspan` and `rowspan` are outside the enhanced layout contract.
+
+## Native table normalization
+
+- The component always resets margin and padding on its direct native table because host-page content styles commonly add table margins that would otherwise shift or enlarge the component layout.
+- Internal cell separators remain visible, including the block-end border of the last `tbody` row. This line deliberately separates the final data row from unused white body viewport space.
+- Header and footer backgrounds and their body-facing divider lines reach the viewport end through the minimum-width column calculation, not through cloned elements, generated filler cells, or independent overlay backgrounds.
 
 ## Pinned-column contract
 
@@ -50,9 +59,9 @@ Read it before changing the component's DOM, scrolling, column sizing, pinning, 
 1. Restore only styles/attributes previously owned by the component.
 2. Validate the single table, single header row, single body, optional single footer row, and rectangular rows.
 3. Read configured widths and measure unresolved header widths.
-4. Apply identical fixed pixel widths across all table sections.
-5. Keep caption/header/footer in normal flow and configure `tbody` with the requested height as the only scroll container.
-6. Apply cumulative pinned-column offsets.
+4. Configure `tbody` with the requested height as the only scroll container and read its usable viewport width.
+5. Expand the last visible column when necessary, then apply identical effective pixel widths across all table sections.
+6. Keep caption/header/footer in normal flow and apply cumulative pinned-column offsets.
 7. Attach the body scroll listener and synchronize the current header/footer horizontal transforms.
 8. Reconnect permitted size observation.
 

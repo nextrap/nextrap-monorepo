@@ -29,6 +29,7 @@ Every row must contain the same number of cells and `colspan`/`rowspan` must rem
 - `height` configures the `tbody` scroll viewport; `pinned-columns`, `scroll-label` and host `aria-label` configure its behavior and accessible name.
 - `features` activates registered plugins by whitespace- or comma-separated name.
 - Header `data-width`, inline `width`, or the native `width` attribute is resolved once and then fixed in pixels across all sections. Drag the header's inline-end edge to resize only that column.
+- Visible columns always fill at least the usable body width; the last visible column temporarily absorbs any remaining width without changing its configured width.
 - Header `hidden` or `data-hidden` hides the complete column.
 - `sourceTable` returns the active native table. `refresh()` removes component-owned layout values, measures the current table again, and fixes every visible column in pixels.
 - `remote` controls selection without observing selection classes.
@@ -87,4 +88,4 @@ An `NteDataTablePlugin` receives `host`, `table`, `remote`, and `refresh()` thro
 | `nte-data-table-header` | Wrapper before the component | Connected title/action/search toolbar. |
 | `nte-data-table-search` | Search label inside the wrapper | Consistent search-field layout. |
 
-An optional native `caption` stays in normal flow above the column header. The component host is the only element that owns the outer border and radius; nested table elements draw only internal separators and remain radius-free. `tbody` receives the configured height and remains the only actual scroll container, while `thead` and `tfoot` stay in normal flow outside its native scrollbars. The component never observes or clones the source table. Applications call `refresh()` after structural or layout-metadata changes.
+An optional native `caption` stays in normal flow above the column header. The component host is the only element that owns the outer border and radius; nested table elements draw only internal separators and remain radius-free. Native table margin/padding are reset, header/footer cells remain single-line, and the last body row keeps a bottom separator before unused white viewport space. `tbody` receives the configured height and remains the only actual scroll container, while `thead` and `tfoot` stay in normal flow outside its native scrollbars. The component never observes or clones the source table. Applications call `refresh()` after structural or layout-metadata changes.
