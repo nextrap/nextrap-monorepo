@@ -1,22 +1,31 @@
 @use '../index' as accordion;
 @use '@nextrap/ntl-2col' as twoCol;
 
-nte-accordion.style-default {
+.nte-accordion-demo {
+  max-inline-size: 72rem;
+  margin-inline: auto;
+  padding: 2rem 1rem 4rem;
+  color: var(--nt-text, #1f2328);
+  font-family: var(--nt-font-family-base, system-ui, sans-serif);
+}
+
+.nte-accordion-demo nte-accordion.style-default {
   @include accordion.default-style();
 }
 
-ntl-2col.style-default {
+.nte-accordion-demo ntl-2col.style-default {
   @include twoCol.default-style();
 }
 
-.demo-card {
+.nte-accordion-demo .demo-card {
+  margin-block-start: 1.5rem;
   padding: var(--nt-space-4);
   border: 1px solid var(--nt-border-color, #e5e7eb);
   border-radius: var(--nt-border-radius);
   background: var(--nt-light-subtle);
 }
 
-.demo-compact nte-accordion.style-default {
+.nte-accordion-demo .demo-compact nte-accordion.style-default {
   @include accordion.default-style(
     $summary-padding: var(--nt-space-2),
     $content-padding: var(--nt-space-2),

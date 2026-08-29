@@ -18,7 +18,7 @@ export default defineConfig(() => ({
   cacheDir: `../../node_modules/.vite/${dirName}`,
   plugins: [
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md']),
+    nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss', 'skills/**/*', 'web-types.json']),
     dts({
       entryRoot: 'src',
       aliasesExclude: [/@nextrap\/.*/],
