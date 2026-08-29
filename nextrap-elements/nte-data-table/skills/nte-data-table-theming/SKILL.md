@@ -23,5 +23,5 @@ nte-data-table.style-brand {
 - `plugin-controls()` styles sort controls, drag handles, dragging state and drop targets.
 - `nte-data-table-header()` and `nte-data-table-search()` style an external connected toolbar.
 - The host owns the only outer border and border radius. Use `::part(viewport)` only for inner viewport color/layout and keep its border/radius at zero; native table descendants must remain radius-free.
-- Preserve the component's zero table margin/padding, single-line header/footer cells, derived last-column fill width, and final body-row separator.
+- Preserve the component's zero table margin/padding, single-line header/footer cells, section-colored `tr::after` filler cells, and final body-row separator.
 - Treat `data-nte-data-table-*` as read-only state hooks. Preserve tbody-only scrolling, functional widths, visibility, sticky positioning and opaque pinned-cell backgrounds.

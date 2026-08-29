@@ -81,6 +81,15 @@
     white-space: var(--nte-data-table-cell-white-space);
   }
 
+  & > table > :is(thead, tbody, tfoot) > tr::after {
+    content: '';
+    display: table-cell;
+    padding: 0;
+    background: $background;
+    border: 0;
+    border-block-end: 1px solid $border-color;
+  }
+
   & > table > :is(thead, tbody, tfoot) > tr > :is(th, td):has(
       ~ :is(th, td):not([hidden], [data-nte-data-table-hidden])
     ) {
@@ -88,6 +97,12 @@
   }
 
   & > table > tfoot > tr > :is(th, td) {
+    border-block-end: 0;
+  }
+
+  & > table > tfoot > tr::after {
+    background: $footer-background;
+    border-block-start: 2px solid $border-color;
     border-block-end: 0;
   }
 

@@ -3,7 +3,8 @@
   $color: var(--nt-body-color, #1f2328),
   $border-color: var(--nt-border-color, #d0d7de)
 ) {
-  & > table > thead > tr > th {
+  & > table > thead > tr > th,
+  & > table > thead > tr::after {
     color: $color;
     background: $background;
     border-block-end: 2px solid $border-color;
@@ -17,7 +18,8 @@
   $color: var(--nt-primary-contrast, #ffffff),
   $border-color: var(--nt-primary-dark, #0a58ca)
 ) {
-  & > table > thead > tr > th {
+  & > table > thead > tr > th,
+  & > table > thead > tr::after {
     color: $color;
     background: $background;
     border-color: $border-color;
@@ -30,7 +32,8 @@
   $color: var(--nt-muted-color, #59636e),
   $border-color: var(--nt-border-color, #d0d7de)
 ) {
-  & > table > thead > tr > th {
+  & > table > thead > tr > th,
+  & > table > thead > tr::after {
     color: $color;
     background: $background;
     border-inline-end-color: transparent;
