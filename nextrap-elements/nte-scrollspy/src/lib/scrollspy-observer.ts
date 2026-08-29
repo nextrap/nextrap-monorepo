@@ -104,7 +104,9 @@ export class ScrollSpyObserver {
     // Find all sections to observe based on item IDs
     this.observedSections.clear();
     this.config.itemIds.forEach((id) => {
-      const section = document.getElementById(id);
+      const section =
+        this.config.targetElement.querySelector<HTMLElement>(`#${CSS.escape(id)}`) ??
+        (this.config.targetElement.id === id ? this.config.targetElement : null);
 
       if (section) {
         this.observedSections.set(id, section);
@@ -210,7 +212,6 @@ export class ScrollSpyObserver {
               const viewportHeight = window.innerHeight;
               const visibleHeight = Math.min(rect.bottom, viewportHeight) - Math.max(rect.top, 0);
               const visibilityRatio = visibleHeight / rect.height;
-              console.log(id, visibilityRatio);
               if (visibilityRatio > maxVisibility) {
                 maxVisibility = visibilityRatio;
                 activeId = id;
@@ -364,6 +365,10 @@ export class ScrollSpyObserver {
     if (this.intersectionObserver) {
       this.intersectionObserver.disconnect();
       this.intersectionObserver = null;
+    }
+    if (this.debounceTimeout !== null) {
+      window.clearTimeout(this.debounceTimeout);
+      this.debounceTimeout = null;
     }
   }
 
