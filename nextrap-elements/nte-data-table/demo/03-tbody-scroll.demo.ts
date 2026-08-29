@@ -27,7 +27,7 @@ export default defineDemo({
       <main class="nte-data-table-demo">
         <h1>Separater Tabellen-Body</h1>
         <p>
-          Nur der Tabellenkörper scrollt. Header und Footer bleiben außerhalb des Scrollbereichs; die ersten beiden
+          Nur der Tabellenkörper bestimmt die Scrollhöhe und scrollt. Header und Footer bleiben im normalen Tabellenfluss außerhalb seiner Scrollbars; die ersten beiden
           Spalten bleiben beim horizontalen Scrollen stehen. Die Spaltenbreite lässt sich an jeder rechten
           Headerkante mit der Maus ändern.
         </p>

@@ -11,7 +11,7 @@ Use this skill for markup and component API. For theme SCSS, use `nte-data-table
 - Set widths, visibility and stable identifiers on header cells with `data-width`, `hidden`/`data-hidden`, and `data-column-id`. Width inputs are resolved and fixed in pixels.
 - Use `selected`, `highlight`, semantic `highlight-*`, or `border-free` on a header cell to propagate that state to its column. Use the same highlight/selected classes directly on body rows for row styling.
 - Put sort/status content in a child with class `indicator`.
-- Use `pinned-columns` for leading columns; only `tbody` scrolls while header/footer remain fixed.
+- Use `height` for the `tbody` scroll viewport and `pinned-columns` for leading columns; header/footer remain in normal flow outside the body scrollbars.
 - Use `remote.selectRow|deselectRow|toggleRow` and `remote.selectColumn|deselectColumn|toggleColumn`; accept a zero-based index, element, or stable ID. `clearSelection()` clears Remote selection.
 - Activate plugins through `features`: `sort`, `reorder-columns`, and `reorder-rows`. Sorting supports header `data-sort-type`, cell `data-sort-value`, and `data-sortable="false"`; reorder plugins support `data-reorderable="false"`.
 - Listen for `nte-data-table-sort`, `nte-data-table-column-reorder`, and `nte-data-table-row-reorder`.
