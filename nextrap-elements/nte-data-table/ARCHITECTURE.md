@@ -31,8 +31,9 @@ Read it before changing the component's DOM, scrolling, column sizing, pinning, 
 ## Column layout contract
 
 - JavaScript resolves every visible column to one concrete pixel width and applies that width to the corresponding header, body, and footer cells.
-- The sum of the effective visible column widths must be at least the usable `tbody` viewport width. If the natural/configured widths are smaller, JavaScript adds the exact remainder to the last visible column for that layout pass.
-- This fill width is derived and must not overwrite the last column's configured width. Recomputing it on resize keeps all sections aligned without inventing a separate background or divider surface.
+- Real column widths remain independent from viewport fill. Resizing or reordering one column must never implicitly change the width of whichever real column happens to be last.
+- Each rendered row uses a non-semantic `::after` table-cell as a visual filler. The row width is at least the usable `tbody` viewport width, so the filler alone absorbs any remainder after the real fixed-width cells.
+- The filler must remain a CSS pseudo-element: it must not appear in `row.cells`, accessibility semantics, selection, sorting, pinning, resizing, or column-reorder logic. When real columns exceed the viewport, it collapses and native horizontal scrolling takes over.
 - Header `data-width`, inline `width`, and the native `width` attribute are accepted as width inputs.
 - Pointer resizing starts only at a header cell's inline-end separator and writes the result back to `data-width`.
 - The minimum resizable width is 48 pixels.
@@ -44,7 +45,7 @@ Read it before changing the component's DOM, scrolling, column sizing, pinning, 
 
 - The component always resets margin and padding on its direct native table because host-page content styles commonly add table margins that would otherwise shift or enlarge the component layout.
 - Internal cell separators remain visible, including the block-end border of the last `tbody` row. This line deliberately separates the final data row from unused white body viewport space.
-- Header and footer backgrounds and their body-facing divider lines reach the viewport end through the minimum-width column calculation, not through cloned elements, generated filler cells, or independent overlay backgrounds.
+- Header, body, and footer filler cells inherit their section background and body-facing divider so short tables still reach the viewport edge. No real or cloned DOM cell may be added for this presentation-only space.
 
 ## Pinned-column contract
 
@@ -60,7 +61,7 @@ Read it before changing the component's DOM, scrolling, column sizing, pinning, 
 2. Validate the single table, single header row, single body, optional single footer row, and rectangular rows.
 3. Read configured widths and measure unresolved header widths.
 4. Configure `tbody` with the requested height as the only scroll container and read its usable viewport width.
-5. Expand the last visible column when necessary, then apply identical effective pixel widths across all table sections.
+5. Apply identical real pixel widths across all table sections and size each row to at least the body viewport so its CSS filler receives the remainder.
 6. Keep caption/header/footer in normal flow and apply cumulative pinned-column offsets.
 7. Attach the body scroll listener and synchronize the current header/footer horizontal transforms.
 8. Reconnect permitted size observation.

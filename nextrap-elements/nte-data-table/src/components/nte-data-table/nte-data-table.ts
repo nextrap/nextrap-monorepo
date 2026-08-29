@@ -474,12 +474,7 @@ export class NteDataTableElement extends nextrap_element({
           Math.ceil(headerCell.getBoundingClientRect().width),
         );
       });
-      const widths = [...this._columnWidths];
-      const naturalWidth = visibleColumns.reduce((sum, columnIndex) => sum + widths[columnIndex], 0);
-      const lastVisibleColumn = visibleColumns.at(-1);
-      if (lastVisibleColumn !== undefined && naturalWidth < body.clientWidth) {
-        widths[lastVisibleColumn] += body.clientWidth - naturalWidth;
-      }
+      const widths = this._columnWidths;
 
       rows.forEach((row) => {
         Array.from(row.cells).forEach((cell, columnIndex) => {
@@ -502,8 +497,8 @@ export class NteDataTableElement extends nextrap_element({
       this._applyHeaderColumnStates(rows, headerCells);
       this._applySelectionState(rows);
 
-      const totalWidth = visibleColumns.reduce((sum, columnIndex) => sum + widths[columnIndex], 0);
-      const tableWidth = `${totalWidth}px`;
+      const contentWidth = visibleColumns.reduce((sum, columnIndex) => sum + widths[columnIndex], 0);
+      const tableWidth = `${Math.max(contentWidth, body.clientWidth)}px`;
       const caption = table.caption;
       if (caption) {
         const viewportWidth = this.shadowRoot?.querySelector<HTMLElement>('#viewport')?.clientWidth ?? table.clientWidth;

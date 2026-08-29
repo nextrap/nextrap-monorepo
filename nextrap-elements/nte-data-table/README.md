@@ -29,7 +29,7 @@ Every row must contain the same number of cells and `colspan`/`rowspan` must rem
 - `height` configures the `tbody` scroll viewport; `pinned-columns`, `scroll-label` and host `aria-label` configure its behavior and accessible name.
 - `features` activates registered plugins by whitespace- or comma-separated name.
 - Header `data-width`, inline `width`, or the native `width` attribute is resolved once and then fixed in pixels across all sections. Drag the header's inline-end edge to resize only that column.
-- Visible columns always fill at least the usable body width; the last visible column temporarily absorbs any remaining width without changing its configured width.
+- Real columns keep their configured widths. A presentation-only `tr::after` filler cell absorbs any unused body width and is not part of the table API or accessibility tree.
 - Header `hidden` or `data-hidden` hides the complete column.
 - `sourceTable` returns the active native table. `refresh()` removes component-owned layout values, measures the current table again, and fixes every visible column in pixels.
 - `remote` controls selection without observing selection classes.
