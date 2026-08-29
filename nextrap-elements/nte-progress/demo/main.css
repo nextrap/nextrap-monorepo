@@ -1,0 +1,49 @@
+.nte-progress-demo {
+    display: grid;
+    gap: 2rem;
+    max-inline-size: 56rem;
+    margin-inline: auto;
+    padding: 2rem;
+}
+
+.nte-progress-demo__examples {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.nte-progress-demo__example {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.nte-progress-demo__example h2,
+.nte-progress-demo__example p {
+    margin: 0;
+}
+
+.nte-progress-demo__circles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    align-items: center;
+}
+
+.nte-progress-demo__circle-value,
+.nte-progress-demo__circle-label {
+    display: block;
+    text-align: center;
+}
+
+.nte-progress-demo__circle-label {
+    font-size: 0.75rem;
+}
+
+.nte-progress-demo__events {
+    min-block-size: 5rem;
+    max-block-size: 12rem;
+    overflow: auto;
+    padding: 1rem;
+    background: var(--nt-light, #f8f9fa);
+    font-family: monospace;
+    white-space: pre-wrap;
+}
