@@ -1,30 +1,18 @@
 ---
 name: nte-data-table-usage
-description: "Use @nextrap/nte-data-table to display one native Light DOM table with scrolling, sticky header/footer, fixed or hidden columns, and pinned leading columns."
+description: "Use @nextrap/nte-data-table with its native Light DOM table, tbody-only scrolling, column states and programmatic selection Remote."
 ---
 
 # Nte Data Table Usage
 
 Use this skill for markup and component API. For theme SCSS, use `nte-data-table-theming`.
 
-```ts
-import '@nextrap/nte-data-table';
-```
-
-```html
-<nte-data-table height="30rem" pinned-columns="1" scroll-label="Invoices">
-  <table>
-    <thead><tr><th data-width="12rem">Invoice</th><th data-width="9rem">Amount</th></tr></thead>
-    <tbody><tr><td>2026-001</td><td>€ 120.00</td></tr></tbody>
-    <tfoot><tr><td>Total</td><td>€ 120.00</td></tr></tfoot>
-  </table>
-</nte-data-table>
-```
-
-- Provide exactly one direct `<table>` with one header row and at most one footer row.
-- Keep all rows rectangular; `colspan` and `rowspan` disable column enhancements.
-- Set widths with header `data-width`, inline CSS `style="width: …"`, or `width`; drag a visible header cell's inline-end edge to resize it with the pointer. The resulting pixel width (minimum 48 px) is written to `data-width`.
-- Set `hidden`/`data-hidden` on a header to hide that column.
-- `pinned-columns` counts the first visible columns and keeps them fixed during horizontal scrolling. `height` controls the scroll viewport; header and footer remain visible during vertical scrolling.
-- The Light DOM table remains the real interactive table, so use normal table listeners and form controls without event forwarding.
-- Mutation/Resize observers update layout automatically; `refresh()` is the manual fallback.
+- Provide exactly one direct rectangular `<table>`; avoid `colspan`/`rowspan`.
+- Set widths, visibility and stable identifiers on header cells with `data-width`, `hidden`/`data-hidden`, and `data-column-id`.
+- Use `selected`, `highlight`, semantic `highlight-*`, or `border-free` on a header cell to propagate that state to its column. Use the same highlight/selected classes directly on body rows for row styling.
+- Put sort/status content in a child with class `indicator`.
+- Use `pinned-columns` for leading columns; only `tbody` scrolls while header/footer remain fixed.
+- Use `remote.selectRow|deselectRow|toggleRow` and `remote.selectColumn|deselectColumn|toggleColumn`; accept a zero-based index, element, or stable ID. `clearSelection()` clears Remote selection.
+- Row strings resolve against `id`/`data-row-id`; column strings resolve against header `id`/`data-column-id`.
+- Use `nte-data-table-header` and `nte-data-table-search` for a connected toolbar/search layout; filtering remains application behavior.
+- The Light DOM table remains the interactive table. Use `refresh()` only when normal layout observation cannot see a layout input.

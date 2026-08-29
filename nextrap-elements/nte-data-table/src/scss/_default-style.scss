@@ -1,3 +1,6 @@
+@use 'cell-states' as states;
+@use 'header-styles' as headers;
+
 @mixin default-style(
   $border-color: var(--nt-border-color, #d0d7de),
   $background: var(--nt-body-bg, #ffffff),
@@ -31,13 +34,11 @@
     vertical-align: middle;
   }
 
-  & > table > thead > tr > th {
-    background: $header-background;
-    font-weight: 600;
-  }
+  @include headers.header-default($header-background, $color, $border-color);
 
   & > table > tfoot > tr > :is(th, td) {
     background: $footer-background;
+    border-block-start: 2px solid $border-color;
     font-weight: 600;
   }
 
@@ -45,4 +46,6 @@
     background: $pinned-background;
     box-shadow: 1px 0 0 $border-color;
   }
+
+  @include states.cell-states();
 }
