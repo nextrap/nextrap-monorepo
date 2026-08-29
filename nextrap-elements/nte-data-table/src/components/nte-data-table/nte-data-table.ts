@@ -6,6 +6,8 @@ import { customElement, property } from 'lit/decorators.js';
 import style from './nte-data-table.scss?inline';
 
 const DEFAULT_HEIGHT = '24rem';
+const COLUMN_RESIZE_HIT_AREA = 8;
+const MIN_COLUMN_WIDTH = 48;
 const OWNED_ATTRIBUTES = {
   hidden: 'data-nte-data-table-hidden',
   pinned: 'data-nte-data-table-pinned',
@@ -20,6 +22,14 @@ interface SavedStyle {
 interface ManagedState {
   attributes: Map<string, string | null>;
   styles: Map<string, SavedStyle>;
+}
+
+interface ColumnResizeState {
+  direction: 1 | -1;
+  headerCell: HTMLTableCellElement;
+  pointerId: number;
+  startClientX: number;
+  startWidth: number;
 }
 
 @customElement('nte-data-table')
@@ -37,9 +47,15 @@ export class NteDataTableElement extends nextrap_element({
   private _layoutFrame: number | null = null;
   private _managed = new Map<HTMLElement, ManagedState>();
   private _mutationObserver: MutationObserver | null = null;
+  private _columnResize: ColumnResizeState | null = null;
   private _resizeObserver: ResizeObserver | null = null;
+  private _resizeCursorCell: HTMLTableCellElement | null = null;
+  private _resizeCursorStyle: SavedStyle | null = null;
+  private _resizableHeaders = new Set<HTMLTableCellElement>();
   private _resizeTargets = new Set<Element>();
   private _sourceTable: HTMLTableElement | null = null;
+  private _suppressedClickCell: HTMLTableCellElement | null = null;
+  private _suppressedClickTimer: number | null = null;
   private _warnings = new Set<string>();
 
   public get sourceTable(): HTMLTableElement | null {
@@ -118,6 +134,14 @@ export class NteDataTableElement extends nextrap_element({
       return;
     }
 
+    sourceTable.addEventListener('pointerdown', this._handleTablePointerDown, true);
+    sourceTable.addEventListener('pointermove', this._handleTablePointerMove, true);
+    sourceTable.addEventListener('pointerup', this._handleTablePointerEnd, true);
+    sourceTable.addEventListener('pointercancel', this._handleTablePointerEnd, true);
+    sourceTable.addEventListener('lostpointercapture', this._handleLostPointerCapture, true);
+    sourceTable.addEventListener('pointerleave', this._handleTablePointerLeave, true);
+    sourceTable.addEventListener('click', this._handleTableClick, true);
+
     const view = this.ownerDocument.defaultView;
     if (view?.MutationObserver) {
       this._mutationObserver = new view.MutationObserver(this._handleMutations);
@@ -131,14 +155,179 @@ export class NteDataTableElement extends nextrap_element({
   }
 
   private _unbindSourceTable(): void {
+    this._sourceTable?.removeEventListener('pointerdown', this._handleTablePointerDown, true);
+    this._sourceTable?.removeEventListener('pointermove', this._handleTablePointerMove, true);
+    this._sourceTable?.removeEventListener('pointerup', this._handleTablePointerEnd, true);
+    this._sourceTable?.removeEventListener('pointercancel', this._handleTablePointerEnd, true);
+    this._sourceTable?.removeEventListener('lostpointercapture', this._handleLostPointerCapture, true);
+    this._sourceTable?.removeEventListener('pointerleave', this._handleTablePointerLeave, true);
+    this._sourceTable?.removeEventListener('click', this._handleTableClick, true);
+    this._finishColumnResize(true, false);
+    this._clearClickSuppression();
+    this._setResizeCursor(null);
     this._mutationObserver?.disconnect();
     this._mutationObserver = null;
     this._resizeObserver?.disconnect();
     this._resizeObserver = null;
+    this._resizableHeaders.clear();
     this._resizeTargets.clear();
     this._cancelLayout();
     this._restoreManagedState();
     this._sourceTable = null;
+  }
+
+  private _handleTablePointerDown = (event: PointerEvent): void => {
+    if (event.button !== 0 || !event.isPrimary || this._columnResize) return;
+
+    const table = this._sourceTable;
+    if (!table) return;
+    const headerCell = this._resizeCellAt(event);
+    if (!headerCell) return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    const direction = this.ownerDocument.defaultView?.getComputedStyle(table).direction;
+    this._columnResize = {
+      direction: direction === 'rtl' ? -1 : 1,
+      headerCell,
+      pointerId: event.pointerId,
+      startClientX: event.clientX,
+      startWidth: headerCell.getBoundingClientRect().width,
+    };
+    this._setResizeCursor(headerCell);
+    if (typeof headerCell.setPointerCapture !== 'function') {
+      this._finishColumnResize(false, false);
+      return;
+    }
+    try {
+      headerCell.setPointerCapture(event.pointerId);
+    } catch {
+      this._finishColumnResize(false, false);
+    }
+  };
+
+  private _handleTablePointerMove = (event: PointerEvent): void => {
+    const resize = this._columnResize;
+    if (!resize) {
+      this._setResizeCursor(this._resizeCellAt(event));
+      return;
+    }
+    if (resize.pointerId !== event.pointerId) return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    const delta = (event.clientX - resize.startClientX) * resize.direction;
+    const width = `${Math.max(MIN_COLUMN_WIDTH, Math.round(resize.startWidth + delta))}px`;
+    if (resize.headerCell.dataset['width'] !== width) resize.headerCell.dataset['width'] = width;
+  };
+
+  private _handleTablePointerEnd = (event: PointerEvent): void => {
+    if (this._columnResize?.pointerId !== event.pointerId) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    this._finishColumnResize();
+  };
+
+  private _handleLostPointerCapture = (event: PointerEvent): void => {
+    if (this._columnResize?.pointerId === event.pointerId) this._finishColumnResize(false);
+  };
+
+  private _handleTablePointerLeave = (): void => {
+    const resize = this._columnResize;
+    if (!resize) {
+      this._setResizeCursor(null);
+      return;
+    }
+    if (!resize.headerCell.hasPointerCapture?.(resize.pointerId)) this._finishColumnResize(false);
+  };
+
+  private _handleTableClick = (event: MouseEvent): void => {
+    const target = event.target;
+    if (!this._suppressedClickCell || !(target instanceof Node) || !this._suppressedClickCell.contains(target)) {
+      return;
+    }
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    this._clearClickSuppression();
+  };
+
+  private _resizeCellAt(event: PointerEvent): HTMLTableCellElement | null {
+    const target = event.target;
+    if (!(target instanceof Element)) return null;
+
+    const table = this._sourceTable;
+    const headerCell = target.closest<HTMLTableCellElement>('th, td');
+    const headerRow = table?.tHead?.rows[0];
+    if (
+      !headerCell ||
+      !headerRow ||
+      headerCell.parentElement !== headerRow ||
+      !this._resizableHeaders.has(headerCell) ||
+      headerCell.hidden ||
+      this._isDataHidden(headerCell)
+    ) {
+      return null;
+    }
+
+    const bounds = headerCell.getBoundingClientRect();
+    const direction = table ? this.ownerDocument.defaultView?.getComputedStyle(table).direction : 'ltr';
+    const distance = direction === 'rtl' ? event.clientX - bounds.left : bounds.right - event.clientX;
+    return distance >= 0 && distance <= COLUMN_RESIZE_HIT_AREA ? headerCell : null;
+  }
+
+  private _finishColumnResize(releaseCapture = true, suppressClick = true): void {
+    const resize = this._columnResize;
+    if (!resize) return;
+
+    this._columnResize = null;
+    try {
+      if (releaseCapture && resize.headerCell.hasPointerCapture?.(resize.pointerId)) {
+        resize.headerCell.releasePointerCapture?.(resize.pointerId);
+      }
+    } catch {
+      // The browser may have released capture already after pointercancel or DOM removal.
+    }
+    if (suppressClick) this._suppressNextClick(resize.headerCell);
+    this._setResizeCursor(null);
+    this._scheduleLayout();
+  }
+
+  private _suppressNextClick(headerCell: HTMLTableCellElement): void {
+    this._clearClickSuppression();
+    const view = this.ownerDocument.defaultView;
+    if (!view) return;
+
+    this._suppressedClickCell = headerCell;
+    this._suppressedClickTimer = view.setTimeout(() => this._clearClickSuppression(), 0);
+  }
+
+  private _clearClickSuppression(): void {
+    if (this._suppressedClickTimer !== null) {
+      this.ownerDocument.defaultView?.clearTimeout(this._suppressedClickTimer);
+    }
+    this._suppressedClickCell = null;
+    this._suppressedClickTimer = null;
+  }
+
+  private _setResizeCursor(headerCell: HTMLTableCellElement | null): void {
+    if (headerCell === this._resizeCursorCell) return;
+
+    if (this._resizeCursorCell && this._resizeCursorStyle) {
+      const { priority, value } = this._resizeCursorStyle;
+      if (value) this._resizeCursorCell.style.setProperty('cursor', value, priority);
+      else this._resizeCursorCell.style.removeProperty('cursor');
+    }
+
+    this._resizeCursorCell = headerCell;
+    this._resizeCursorStyle = headerCell
+      ? {
+          priority: headerCell.style.getPropertyPriority('cursor'),
+          value: headerCell.style.getPropertyValue('cursor'),
+        }
+      : null;
+    headerCell?.style.setProperty('cursor', 'col-resize');
   }
 
   private _observeSourceTable(): void {
@@ -153,6 +342,10 @@ export class NteDataTableElement extends nextrap_element({
   }
 
   private _handleMutations = (records: MutationRecord[]): void => {
+    const resize = this._columnResize;
+    if (resize && resize.headerCell.parentElement !== this._sourceTable?.tHead?.rows[0]) {
+      this._finishColumnResize(true, false);
+    }
     if (records.some((record) => this._mutationAffectsLayout(record))) this._scheduleLayout();
   };
 
@@ -206,6 +399,7 @@ export class NteDataTableElement extends nextrap_element({
 
     this._mutationObserver?.disconnect();
     this._restoreManagedState();
+    this._resizableHeaders.clear();
     let headerCells: HTMLTableCellElement[] = [];
 
     try {
@@ -217,6 +411,7 @@ export class NteDataTableElement extends nextrap_element({
 
       const headerRow = table.tHead?.rows[0];
       if (!headerRow || table.tHead?.rows.length !== 1 || (table.tFoot && table.tFoot.rows.length !== 1)) {
+        this._finishColumnResize(true, false);
         this._warnOnce('nte-data-table layout enhancements require exactly one header row and at most one footer row.');
         return;
       }
@@ -253,6 +448,7 @@ export class NteDataTableElement extends nextrap_element({
         );
 
       if (!isRectangular) {
+        this._finishColumnResize(true, false);
         this._warnOnce('nte-data-table width, hide and pin enhancements do not support colspan or rowspan.');
         return;
       }
@@ -279,6 +475,11 @@ export class NteDataTableElement extends nextrap_element({
 
         if (!hidden) visibleColumns.push(columnIndex);
       });
+
+      for (const columnIndex of visibleColumns) {
+        const headerCell = headerCells[columnIndex];
+        if (headerCell) this._resizableHeaders.add(headerCell);
+      }
 
       const pinnedCount = Math.min(this._safePinnedColumns(), visibleColumns.length);
       let pinOffset = 0;
