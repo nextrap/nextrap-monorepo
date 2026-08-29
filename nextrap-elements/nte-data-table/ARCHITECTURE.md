@@ -58,11 +58,13 @@ Read it before changing the component's DOM, scrolling, column sizing, pinning, 
 ## Reorder interaction contract
 
 - Row and column reordering uses Pointer Events, not native HTML drag-and-drop. This provides one controlled interaction model for mouse, pen, and touch and permits deterministic previews and animation.
-- Dragging starts only from the plugin handle. A non-semantic, `aria-hidden` overlay copies the complete visible row or the visible cells of the complete column and follows the pointer above the document.
+- Dragging starts only from the plugin handle. A non-semantic, `aria-hidden` neutral-gray ghost follows the pointer above the document. It visualizes the dragged extent without cloning cell content or computed styles.
+- The ghost geometry is the union of only the visible intersections of the supplied element rectangles. Row cells are clipped to the `tbody` viewport and browser viewport; column body cells are clipped to `tbody`, while header/footer cells are clipped to the component host, and all are clipped to the browser viewport. Off-screen parts of very long rows or columns must never enlarge the ghost.
 - The original row or source-column cells remain in the native table with `visibility: hidden`; they are the exact-size placeholder and must keep the table geometry stable. Do not insert synthetic placeholder rows or cells into the table DOM.
 - Crossing another row or column previews the new order immediately in the real Light DOM. Displaced rows/cells animate from their previous rectangles to their new rectangles with a short FLIP transition.
 - Pointer cancellation or plugin disconnection restores the exact original element order. A successful pointer release emits the existing reorder event once with the original and final indices, then calls the normal component refresh lifecycle.
 - Edge auto-scroll may change only `tbody.scrollTop` for rows and `tbody.scrollLeft` for columns. The overlay is presentation-only and must never participate in selection, sorting, pinning, resizing, events, or accessibility semantics.
+- `createDragGhost` deliberately accepts an element list plus a clipping rectangle (or per-element clipping function), so its measurement and presentation logic can later move to a higher-level or shared library repository when a second consumer establishes the reusable API. The complete drag-and-drop flow stays table-specific for now: reorder indices, Light-DOM placeholders, FLIP moves, body auto-scroll, rollback, and component events are coupled to this table's contract, so a broader helper would add abstraction without a proven shared behavior.
 
 ## Layout lifecycle
 

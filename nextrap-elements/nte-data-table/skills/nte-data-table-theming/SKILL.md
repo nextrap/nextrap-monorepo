@@ -21,7 +21,7 @@ nte-data-table.style-brand {
 - `header-default()`, `header-strong()`, and `header-minimal()` provide composable header treatments.
 - `cell-states()` styles indicators, selections, semantic highlights and border-free cells.
 - `plugin-controls()` styles sort controls, drag handles, dragging state and drop targets.
-- Preserve hidden-original placeholders, drop-target indicators, and reduced-motion handling used by the animated Pointer Event reorder previews.
+- Preserve the neutral, `aria-hidden`, viewport-clipped drag ghost, hidden-original placeholders, drop-target indicators, and reduced-motion handling used by the animated Pointer Event reorder previews.
 - `nte-data-table-header()` and `nte-data-table-search()` style an external connected toolbar.
 - The host owns the only outer border and border radius. Use `::part(viewport)` only for inner viewport color/layout and keep its border/radius at zero; native table descendants must remain radius-free.
 - Preserve the component's zero table margin/padding, single-line header/footer cells, section-colored `tr::after` filler cells, and final body-row separator.
