@@ -9,10 +9,8 @@ import type { TableColumnDefinition, TableDefinition, TableSortState, TableViewS
 import { nteDataTableCellRendererRegistry } from '../../rendering/cell-renderer-registry';
 import style from './nte-data-table.scss?inline';
 
-type DataRow = Record<string, unknown>;
-
 @customElement('nte-data-table')
-export class NteDataTableElement<T extends DataRow = DataRow> extends nextrap_element({ eventBinding: false, slotVisibility: false }) {
+export class NteDataTableElement<T extends object = Record<string, unknown>> extends nextrap_element({ eventBinding: false, slotVisibility: false }) {
   static override styles = [unsafeCSS(resetStyle), unsafeCSS(style)];
 
   @property({ attribute: false }) public accessor data: readonly T[] = [];
