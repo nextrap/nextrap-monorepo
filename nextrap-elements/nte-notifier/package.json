@@ -1,6 +1,12 @@
 {
     "name": "@nextrap/nte-notifier",
     "version": "2.0.0",
+    "files": [
+        "*.*",
+        ".ai-usage-info.md",
+        "skills",
+        "src"
+    ],
     "main": "./index.js",
     "repository": {
         "directory": "nextrap-elements/nte-notifier",
