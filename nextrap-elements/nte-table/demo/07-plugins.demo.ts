@@ -28,7 +28,7 @@ const table = (features: string, label: string) => `
   </nte-table>`;
 
 export default defineDemo({
-  title: 'Data-Table-Plugins',
+  title: 'Table-Plugins',
   description: 'Sortierung sowie Spalten- und Zeilen-Reorder über das features-Attribut',
   render(root) {
     root.innerHTML = `

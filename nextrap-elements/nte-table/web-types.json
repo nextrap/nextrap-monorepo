@@ -38,7 +38,7 @@
         { "name": "overflow-wrap", "description": "Wrap overflowing cell text and allow the row to grow." },
         { "name": "overflow-visible", "description": "Allow cell content to overflow visibly." },
         { "name": "nte-table-header", "description": "Connected title/action/search wrapper before the table component." },
-        { "name": "nte-table-search", "description": "Search-field layout inside a data-table header wrapper." }
+        { "name": "nte-table-search", "description": "Search-field layout inside a table header wrapper." }
       ]
     }
   }
