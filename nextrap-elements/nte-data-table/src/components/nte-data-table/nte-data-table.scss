@@ -7,13 +7,10 @@
   box-sizing: border-box;
   inline-size: 100%;
   min-block-size: 0;
-  overflow: auto;
-  overscroll-behavior: contain;
+  overflow: hidden;
 }
 
 ::slotted(table) {
   border-collapse: separate;
   border-spacing: 0;
-  inline-size: max-content;
-  table-layout: fixed;
 }
