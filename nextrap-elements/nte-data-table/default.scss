@@ -1,0 +1,5 @@
+@use './index' as dataTable;
+
+nte-data-table.style-default {
+  @include dataTable.default-style();
+}
