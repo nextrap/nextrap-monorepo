@@ -11,7 +11,6 @@ import {
 import style from './nte-table.scss?inline';
 
 const DEFAULT_HEIGHT = '24rem';
-const COLUMN_RESIZE_HIT_AREA = 8;
 const MIN_COLUMN_WIDTH = 48;
 const OWNED_ATTRIBUTES = {
   borderFree: 'data-nte-table-border-free',
@@ -29,7 +28,13 @@ const HIGHLIGHT_CLASSES = ['primary', 'secondary', 'success', 'info', 'warning',
 export type NteTableRowTarget = number | string | HTMLTableRowElement;
 export type NteTableColumnTarget = number | string | HTMLTableCellElement;
 
+export interface NteTableColumnLayout { width?: number; hidden?: boolean; pinned?: boolean; }
+export interface NteTableLayoutState { columns: Record<string, NteTableColumnLayout>; order: string[]; }
+
 interface NteTableRemoteActions {
+  getColumnWidth(target: NteTableColumnTarget): number | null;
+  setColumnWidth(target: NteTableColumnTarget, width: number): boolean;
+  getLayoutState(): NteTableLayoutState;
   clearSelection(): void;
   setColumnSelected(target: NteTableColumnTarget, selected: boolean): boolean;
   setRowSelected(target: NteTableRowTarget, selected: boolean): boolean;
@@ -63,9 +68,10 @@ export class NteTableRemote {
     return this._actions.toggleColumn(target);
   }
 
-  public clearSelection(): void {
-    this._actions.clearSelection();
-  }
+  public clearSelection(): void { this._actions.clearSelection(); }
+  public getColumnWidth(target: NteTableColumnTarget): number | null { return this._actions.getColumnWidth(target); }
+  public setColumnWidth(target: NteTableColumnTarget, width: number): boolean { return this._actions.setColumnWidth(target, width); }
+  public getLayoutState(): NteTableLayoutState { return this._actions.getLayoutState(); }
 }
 
 interface SavedStyle {
@@ -76,14 +82,6 @@ interface SavedStyle {
 interface ManagedState {
   attributes: Map<string, string | null>;
   styles: Map<string, SavedStyle>;
-}
-
-interface ColumnResizeState {
-  direction: 1 | -1;
-  headerCell: HTMLTableCellElement;
-  pointerId: number;
-  startClientX: number;
-  startWidth: number;
 }
 
 @customElement('nte-table')
@@ -101,12 +99,10 @@ export class NteTableElement extends nextrap_element({
 
   private _body: HTMLTableSectionElement | null = null;
   private _columnWidths: number[] = [];
-  private _columnResize: ColumnResizeState | null = null;
   private _layoutFrame: number | null = null;
   private _managed = new Map<HTMLElement, ManagedState>();
   private _plugins = new Map<string, NteTablePlugin>();
   private _refreshWidths = true;
-  private _resizableHeaders = new Set<HTMLTableCellElement>();
   private _resizeObserver: ResizeObserver | null = null;
   private _resizeTargets = new Set<Element>();
   private _selectedColumns = new Set<number>();
@@ -114,6 +110,9 @@ export class NteTableElement extends nextrap_element({
   private _sourceTable: HTMLTableElement | null = null;
   private _warnings = new Set<string>();
   private readonly _remote = new NteTableRemote({
+    getColumnWidth: (target) => this._getColumnWidth(target),
+    setColumnWidth: (target, width) => this._setColumnWidth(target, width),
+    getLayoutState: () => this._getLayoutState(),
     clearSelection: () => this._clearSelection(),
     setColumnSelected: (target, selected) => this._setColumnSelected(target, selected),
     setRowSelected: (target, selected) => this._setRowSelected(target, selected),
@@ -200,12 +199,6 @@ export class NteTableElement extends nextrap_element({
       return;
     }
 
-    sourceTable.addEventListener('pointerdown', this._handlePointerDown, true);
-    sourceTable.addEventListener('pointermove', this._handlePointerMove, true);
-    sourceTable.addEventListener('pointerup', this._handlePointerEnd, true);
-    sourceTable.addEventListener('pointercancel', this._handlePointerEnd, true);
-    sourceTable.addEventListener('lostpointercapture', this._handleLostPointerCapture, true);
-
     const view = this.ownerDocument.defaultView;
     if (view?.ResizeObserver) {
       this._resizeObserver = new view.ResizeObserver(() => this._scheduleLayout());
@@ -215,17 +208,10 @@ export class NteTableElement extends nextrap_element({
   }
 
   private _unbindSourceTable(): void {
-    this._sourceTable?.removeEventListener('pointerdown', this._handlePointerDown, true);
-    this._sourceTable?.removeEventListener('pointermove', this._handlePointerMove, true);
-    this._sourceTable?.removeEventListener('pointerup', this._handlePointerEnd, true);
-    this._sourceTable?.removeEventListener('pointercancel', this._handlePointerEnd, true);
-    this._sourceTable?.removeEventListener('lostpointercapture', this._handleLostPointerCapture, true);
     this._setBody(null);
-    this._finishColumnResize(false);
     this._resizeObserver?.disconnect();
     this._resizeObserver = null;
     this._resizeTargets.clear();
-    this._resizableHeaders.clear();
     this._disconnectPlugins();
     this._columnWidths = [];
     this._refreshWidths = true;
@@ -313,79 +299,6 @@ export class NteTableElement extends nextrap_element({
     return body.scrollLeft < 0 ? -body.scrollLeft : max - body.scrollLeft;
   }
 
-  private _handlePointerDown = (event: PointerEvent): void => {
-    if (event.button !== 0 || !event.isPrimary || this._columnResize) return;
-    if (event.target instanceof Element && event.target.closest('.nte-table-plugin-control')) return;
-    const headerCell = this._resizeCellAt(event);
-    if (!headerCell) return;
-
-    event.preventDefault();
-    const direction = this.ownerDocument.defaultView?.getComputedStyle(this._sourceTable!).direction;
-    this._columnResize = {
-      direction: direction === 'rtl' ? -1 : 1,
-      headerCell,
-      pointerId: event.pointerId,
-      startClientX: event.clientX,
-      startWidth: headerCell.getBoundingClientRect().width,
-    };
-    this._setManagedStyle(headerCell, 'cursor', 'col-resize');
-    headerCell.setPointerCapture?.(event.pointerId);
-  };
-
-  private _handlePointerMove = (event: PointerEvent): void => {
-    const resize = this._columnResize;
-    if (!resize) {
-      const cell = this._resizeCellAt(event);
-      for (const header of this._resizableHeaders) {
-        this._setManagedStyle(header, 'cursor', header === cell ? 'col-resize' : '');
-      }
-      return;
-    }
-    if (resize.pointerId !== event.pointerId) return;
-
-    event.preventDefault();
-    const delta = (event.clientX - resize.startClientX) * resize.direction;
-    const width = Math.max(MIN_COLUMN_WIDTH, Math.round(resize.startWidth + delta));
-    const columnIndex = Array.from(this._sourceTable?.tHead?.rows[0]?.cells ?? []).indexOf(resize.headerCell);
-    if (columnIndex < 0) return;
-    this._columnWidths[columnIndex] = width;
-    resize.headerCell.dataset['width'] = `${width}px`;
-    this._scheduleLayout();
-  };
-
-  private _handlePointerEnd = (event: PointerEvent): void => {
-    if (this._columnResize?.pointerId !== event.pointerId) return;
-    event.preventDefault();
-    this._finishColumnResize();
-  };
-
-  private _handleLostPointerCapture = (event: PointerEvent): void => {
-    if (this._columnResize?.pointerId === event.pointerId) this._finishColumnResize(false);
-  };
-
-  private _resizeCellAt(event: PointerEvent): HTMLTableCellElement | null {
-    const target = event.target;
-    if (!(target instanceof Element)) return null;
-    const headerCell = target.closest<HTMLTableCellElement>('th, td');
-    if (!headerCell || !this._resizableHeaders.has(headerCell)) return null;
-
-    const bounds = headerCell.getBoundingClientRect();
-    const rtl = this.ownerDocument.defaultView?.getComputedStyle(this._sourceTable!).direction === 'rtl';
-    const distance = rtl ? event.clientX - bounds.left : bounds.right - event.clientX;
-    return distance >= 0 && distance <= COLUMN_RESIZE_HIT_AREA ? headerCell : null;
-  }
-
-  private _finishColumnResize(releaseCapture = true): void {
-    const resize = this._columnResize;
-    if (!resize) return;
-    this._columnResize = null;
-    if (releaseCapture && resize.headerCell.hasPointerCapture?.(resize.pointerId)) {
-      resize.headerCell.releasePointerCapture?.(resize.pointerId);
-    }
-    this._setManagedStyle(resize.headerCell, 'cursor', '');
-    this._scheduleLayout();
-  }
-
   private _scheduleLayout(): void {
     if (!this.isConnected || !this._sourceTable || this._layoutFrame !== null) return;
     const view = this.ownerDocument.defaultView;
@@ -409,7 +322,6 @@ export class NteTableElement extends nextrap_element({
     this._setBody(null);
     this._restoreManagedState();
     if (this._refreshWidths) this._columnWidths = [];
-    this._resizableHeaders.clear();
     let headerCells: HTMLTableCellElement[] = [];
 
     try {
@@ -515,7 +427,6 @@ export class NteTableElement extends nextrap_element({
         this._setManagedStyle(row, 'inline-size', tableWidth);
       }
 
-      for (const columnIndex of visibleColumns) this._resizableHeaders.add(headerCells[columnIndex]);
       this._applyPinnedColumns(rows, headerCells, visibleColumns, widths);
       this._setBody(body);
       this._syncHorizontalScroll();
@@ -586,6 +497,34 @@ export class NteTableElement extends nextrap_element({
         row.cells[columnIndex]?.setAttribute(OWNED_ATTRIBUTES.columnSelected, '');
       }
     }
+  }
+
+  private _getColumnWidth(target: NteTableColumnTarget): number | null {
+    const index = this._resolveColumn(target);
+    return index === null ? null : this._columnWidths[index] ?? this._sourceTable?.tHead?.rows[0]?.cells[index]?.getBoundingClientRect().width ?? null;
+  }
+  private _setColumnWidth(target: NteTableColumnTarget, width: number): boolean {
+    const index = this._resolveColumn(target);
+    const header = index === null ? null : this._sourceTable?.tHead?.rows[0]?.cells[index];
+    if (index === null || !header || !Number.isFinite(width)) return false;
+    const normalized = Math.max(MIN_COLUMN_WIDTH, Math.round(width));
+    this._columnWidths[index] = normalized;
+    header.dataset['width'] = `${normalized}px`;
+    this._scheduleLayout();
+    return true;
+  }
+  private _getLayoutState(): NteTableLayoutState {
+    const headers = Array.from(this._sourceTable?.tHead?.rows[0]?.cells ?? []);
+    const visible = headers.filter((header) => !header.hidden && !this._isDataHidden(header));
+    const pinned = new Set(visible.slice(0, this._safePinnedColumns()));
+    const columns: Record<string, NteTableColumnLayout> = {};
+    const order = headers.map((header, index) => header.dataset['columnId']?.trim() || header.id.trim() || String(index));
+    headers.forEach((header, index) => columns[order[index]] = {
+      width: this._columnWidths[index] ?? Math.round(header.getBoundingClientRect().width),
+      hidden: header.hidden || this._isDataHidden(header),
+      pinned: pinned.has(header),
+    });
+    return { columns, order };
   }
 
   private _setRowSelected(target: NteTableRowTarget, selected: boolean): boolean {

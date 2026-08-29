@@ -82,6 +82,55 @@ export class NteTableSortPlugin extends TablePlugin {
   }
 }
 
+const COLUMN_RESIZE_HIT_AREA = 8;
+interface ColumnResizeState { direction: 1 | -1; header: HTMLTableCellElement; pointerId: number; previousWidth: number; startClientX: number; }
+export class NteTableColumnResizePlugin extends TablePlugin {
+  private _resize: ColumnResizeState | null = null;
+  protected onConnect(): void {
+    const table=this.context?.table;
+    table?.addEventListener('pointerdown',this._down,true); table?.addEventListener('pointermove',this._move,true);
+    table?.addEventListener('pointerup',this._end,true); table?.addEventListener('pointercancel',this._cancel,true);
+  }
+  protected onDisconnect(): void {
+    const table=this.context?.table;
+    table?.removeEventListener('pointerdown',this._down,true); table?.removeEventListener('pointermove',this._move,true);
+    table?.removeEventListener('pointerup',this._end,true); table?.removeEventListener('pointercancel',this._cancel,true);
+    this._finish(false);
+  }
+  protected onRefresh(): void {}
+  private _at(event: PointerEvent): HTMLTableCellElement | null {
+    if (!(event.target instanceof Element)) return null;
+    const header=event.target.closest<HTMLTableCellElement>('th,td');
+    if(!header || header.closest('thead')!==this.context?.table.tHead || header.dataset['resizable']==='false' || header.hidden) return null;
+    const rect=header.getBoundingClientRect(), rtl=getComputedStyle(this.context!.table).direction==='rtl';
+    const distance=rtl ? event.clientX-rect.left : rect.right-event.clientX;
+    return distance>=0 && distance<=COLUMN_RESIZE_HIT_AREA ? header : null;
+  }
+  private _down=(event: PointerEvent):void=>{
+    if(!this.context || event.button!==0 || !event.isPrimary || this._resize || (event.target instanceof Element && event.target.closest('.nte-table-plugin-control'))) return;
+    const header=this._at(event), previousWidth=header ? this.context.remote.getColumnWidth(header) : null;
+    if(!header || previousWidth===null) return;
+    event.preventDefault();
+    this._resize={direction:getComputedStyle(this.context.table).direction==='rtl'?-1:1,header,pointerId:event.pointerId,previousWidth,startClientX:event.clientX};
+    header.style.cursor='col-resize'; header.setPointerCapture?.(event.pointerId);
+  };
+  private _move=(event: PointerEvent):void=>{
+    if(!this.context) return;
+    if(!this._resize){const header=this._at(event); for(const cell of Array.from(this.context.table.tHead?.rows[0]?.cells??[])) cell.style.cursor=cell===header?'col-resize':''; return;}
+    if(this._resize.pointerId!==event.pointerId)return;
+    event.preventDefault(); this.context.remote.setColumnWidth(this._resize.header,this._resize.previousWidth+(event.clientX-this._resize.startClientX)*this._resize.direction);
+  };
+  private _end=(event: PointerEvent):void=>{if(this._resize?.pointerId===event.pointerId){event.preventDefault();this._finish(true);}};
+  private _cancel=(event: PointerEvent):void=>{if(this._resize?.pointerId===event.pointerId){this.context?.remote.setColumnWidth(this._resize.header,this._resize.previousWidth);this._finish(false);}};
+  private _finish(emit:boolean):void{
+    const context=this.context, resize=this._resize; if(!context||!resize)return; this._resize=null; resize.header.style.cursor='';
+    const width=context.remote.getColumnWidth(resize.header); if(!emit||width===null||width===resize.previousWidth)return;
+    const headers=Array.from(context.table.tHead?.rows[0]?.cells??[]), columnIndex=headers.indexOf(resize.header);
+    const columnId=resize.header.dataset['columnId']?.trim()||resize.header.id.trim()||String(columnIndex);
+    context.host.dispatchEvent(new CustomEvent('nte-table-column-resize',{bubbles:true,composed:true,detail:{columnId,columnIndex,previousWidth:resize.previousWidth,width}}));
+  }
+}
+
 const REORDER_ANIMATION_MS = 160;
 const AUTO_SCROLL_EDGE = 36;
 const AUTO_SCROLL_STEP = 14;
@@ -486,5 +535,6 @@ export class NteTableRowReorderPlugin extends PointerReorderPlugin {
 }
 
 nteTablePluginRegistry.register('sort', () => new NteTableSortPlugin());
+nteTablePluginRegistry.register('resize-columns', () => new NteTableColumnResizePlugin());
 nteTablePluginRegistry.register('reorder-columns', () => new NteTableColumnReorderPlugin());
 nteTablePluginRegistry.register('reorder-rows', () => new NteTableRowReorderPlugin());
