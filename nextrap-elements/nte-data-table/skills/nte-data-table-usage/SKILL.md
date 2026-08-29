@@ -23,7 +23,8 @@ import '@nextrap/nte-data-table';
 
 - Provide exactly one direct `<table>` with one header row and at most one footer row.
 - Keep all rows rectangular; `colspan` and `rowspan` disable column enhancements.
-- Set widths with header `data-width`, inline CSS `style="width: …"`, or `width`; set `hidden`/`data-hidden` on a header to hide that column.
-- `pinned-columns` counts the first visible columns. `height` controls the scroll viewport.
+- Set widths with header `data-width`, inline CSS `style="width: …"`, or `width`; drag a visible header cell's inline-end edge to resize it with the pointer. The resulting pixel width (minimum 48 px) is written to `data-width`.
+- Set `hidden`/`data-hidden` on a header to hide that column.
+- `pinned-columns` counts the first visible columns and keeps them fixed during horizontal scrolling. `height` controls the scroll viewport; header and footer remain visible during vertical scrolling.
 - The Light DOM table remains the real interactive table, so use normal table listeners and form controls without event forwarding.
 - Mutation/Resize observers update layout automatically; `refresh()` is the manual fallback.
