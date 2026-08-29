@@ -55,6 +55,15 @@ Read it before changing the component's DOM, scrolling, column sizing, pinning, 
 - Header and footer sections follow the horizontal scroll transform; their pinned cells receive the inverse transform so they remain fixed.
 - Column hiding and resizing must always trigger recalculation of all following pin offsets.
 
+## Reorder interaction contract
+
+- Row and column reordering uses Pointer Events, not native HTML drag-and-drop. This provides one controlled interaction model for mouse, pen, and touch and permits deterministic previews and animation.
+- Dragging starts only from the plugin handle. A non-semantic, `aria-hidden` overlay copies the complete visible row or the visible cells of the complete column and follows the pointer above the document.
+- The original row or source-column cells remain in the native table with `visibility: hidden`; they are the exact-size placeholder and must keep the table geometry stable. Do not insert synthetic placeholder rows or cells into the table DOM.
+- Crossing another row or column previews the new order immediately in the real Light DOM. Displaced rows/cells animate from their previous rectangles to their new rectangles with a short FLIP transition.
+- Pointer cancellation or plugin disconnection restores the exact original element order. A successful pointer release emits the existing reorder event once with the original and final indices, then calls the normal component refresh lifecycle.
+- Edge auto-scroll may change only `tbody.scrollTop` for rows and `tbody.scrollLeft` for columns. The overlay is presentation-only and must never participate in selection, sorting, pinning, resizing, events, or accessibility semantics.
+
 ## Layout lifecycle
 
 1. Restore only styles/attributes previously owned by the component.

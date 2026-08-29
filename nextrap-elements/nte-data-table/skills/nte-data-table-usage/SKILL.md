@@ -15,6 +15,7 @@ Use this skill for markup and component API. For theme SCSS, use `nte-data-table
 - Use `height` for the `tbody` scroll viewport and `pinned-columns` for leading columns; header/footer remain in normal flow outside the body scrollbars.
 - Use `remote.selectRow|deselectRow|toggleRow` and `remote.selectColumn|deselectColumn|toggleColumn`; accept a zero-based index, element, or stable ID. `clearSelection()` clears Remote selection.
 - Activate plugins through `features`: `sort`, `reorder-columns`, and `reorder-rows`. Sorting supports header `data-sort-type`, cell `data-sort-value`, and `data-sortable="false"`; reorder plugins support `data-reorderable="false"`.
+- Reorder handles use Pointer Events with a full-row/full-column visual overlay, an exact-size hidden original placeholder, animated preview moves, cancellation rollback, and tbody-only edge auto-scroll.
 - Listen for `nte-data-table-sort`, `nte-data-table-column-reorder`, and `nte-data-table-row-reorder`.
 - `NteDataTablePluginRegistry` exposes `register()`, `unregister()`, `create()`, and `has()` through `nteDataTablePluginRegistry`. An `NteDataTablePlugin.connect(context)` receives exact `host`, `table`, `remote`, and `refresh` references; implement `disconnect()` and optionally `refresh()`. Built-in classes are `NteDataTableSortPlugin`, `NteDataTableColumnReorderPlugin`, and `NteDataTableRowReorderPlugin`.
 - Row strings resolve against `id`/`data-row-id`; column strings resolve against header `id`/`data-column-id`.
