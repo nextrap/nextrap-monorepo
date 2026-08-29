@@ -22,5 +22,5 @@ nte-data-table.style-brand {
 - `cell-states()` styles indicators, selections, semantic highlights and border-free cells.
 - `plugin-controls()` styles sort controls, drag handles, dragging state and drop targets.
 - `nte-data-table-header()` and `nte-data-table-search()` style an external connected toolbar.
-- Style the Shadow wrapper through `::part(viewport)` and scope Light DOM rules to direct table sections/cells.
+- The host owns the only outer border and border radius. Use `::part(viewport)` only for inner viewport color/layout and keep its border/radius at zero; native table descendants must remain radius-free.
 - Treat `data-nte-data-table-*` as read-only state hooks. Preserve tbody-only scrolling, functional widths, visibility, sticky positioning and opaque pinned-cell backgrounds.
