@@ -1,5 +1,6 @@
 @use 'cell-states' as states;
 @use 'header-styles' as headers;
+@use 'plugins' as plugins;
 
 @mixin default-style(
   $border-color: var(--nt-border-color, #d0d7de),
@@ -90,4 +91,5 @@
   }
 
   @include states.cell-states();
+  @include plugins.plugin-controls();
 }
