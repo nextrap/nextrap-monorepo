@@ -7,7 +7,8 @@ Read it before changing the component's DOM, scrolling, column sizing, pinning, 
 ## Core model
 
 - The direct Light DOM `<table>` is the only table and remains the visible, interactive source of truth.
-- Never clone the table into Shadow DOM and never add an event-forwarding bridge.
+- Never observe the table with a `MutationObserver`.
+- Never copy or clone the table or any of its contents into Shadow DOM.
 - Shadow DOM provides only the non-scrolling viewport shell and the slot.
 - Native table events, focus, form controls, framework bindings, and DOM mutations therefore continue to work directly.
 
@@ -39,14 +40,14 @@ Read it before changing the component's DOM, scrolling, column sizing, pinning, 
 
 ## Layout lifecycle
 
-1. Disconnect observers and restore only styles/attributes previously owned by the component.
+1. Restore only styles/attributes previously owned by the component.
 2. Validate the single table, single header row, single body, optional single footer row, and rectangular rows.
 3. Read configured widths and measure unresolved header widths.
 4. Apply identical fixed pixel widths across all table sections.
 5. Position header/footer and configure `tbody` as the only scroll container.
 6. Measure and reserve header, footer, and horizontal-scrollbar space.
 7. Apply cumulative pinned-column offsets.
-8. Reconnect Mutation/Resize observers and synchronize the current horizontal scroll position.
+8. Reconnect permitted size observation and synchronize the current horizontal scroll position.
 
 All component-owned inline styles and `data-nte-data-table-*` markers must be restored when the source table changes or the component disconnects.
 
