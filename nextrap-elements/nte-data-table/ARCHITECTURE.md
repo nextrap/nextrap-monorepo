@@ -15,12 +15,12 @@ Read it before changing the component's DOM, scrolling, column sizing, pinning, 
 ## Scrolling contract
 
 - `tbody` is the only vertical and horizontal scroll container.
+- The configured `height` applies to `tbody`; the body viewport therefore determines the table's scrollable height.
 - The Shadow DOM viewport and the table itself must not become competing scroll containers.
 - The Shadow DOM viewport is only the non-scrolling slot and layout shell; it must not draw synthetic scroll tracks or thumbs.
-- `thead` and `tfoot` are positioned absolutely above and below the body.
-- JavaScript measures header and footer heights and reserves those heights as block padding inside `tbody`.
-- The footer stays at the component's block end without an additional synthetic scrollbar strip or bottom offset.
-- Horizontal body scrolling is mirrored to `thead` and `tfoot` with transforms.
+- `caption`, `thead`, `tbody`, and `tfoot` remain in normal document order; header and footer must not be absolutely positioned or emulated with body padding.
+- Because the native scrollbars belong only to `tbody`, they start below `thead` and end above `tfoot` and cannot be covered by either section.
+- JavaScript observes `tbody` scroll events and mirrors its horizontal offset to `thead` and `tfoot` with transforms. Vertical scrolling needs no section offset because header and footer remain outside the body scroll viewport.
 
 ## Border ownership contract
 
@@ -51,10 +51,10 @@ Read it before changing the component's DOM, scrolling, column sizing, pinning, 
 2. Validate the single table, single header row, single body, optional single footer row, and rectangular rows.
 3. Read configured widths and measure unresolved header widths.
 4. Apply identical fixed pixel widths across all table sections.
-5. Position header/footer and configure `tbody` as the only scroll container.
-6. Measure and reserve header, footer, and horizontal-scrollbar space.
-7. Apply cumulative pinned-column offsets.
-8. Reconnect permitted size observation and synchronize the current horizontal scroll position.
+5. Keep caption/header/footer in normal flow and configure `tbody` with the requested height as the only scroll container.
+6. Apply cumulative pinned-column offsets.
+7. Attach the body scroll listener and synchronize the current header/footer horizontal transforms.
+8. Reconnect permitted size observation.
 
 All component-owned inline styles and `data-nte-data-table-*` markers must be restored when the source table changes or the component disconnects.
 

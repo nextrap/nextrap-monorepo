@@ -26,7 +26,7 @@ Every row must contain the same number of cells and `colspan`/`rowspan` must rem
 
 ## API
 
-- `height`, `pinned-columns`, `scroll-label` and host `aria-label` configure the viewport.
+- `height` configures the `tbody` scroll viewport; `pinned-columns`, `scroll-label` and host `aria-label` configure its behavior and accessible name.
 - `features` activates registered plugins by whitespace- or comma-separated name.
 - Header `data-width`, inline `width`, or the native `width` attribute is resolved once and then fixed in pixels across all sections. Drag the header's inline-end edge to resize only that column.
 - Header `hidden` or `data-hidden` hides the complete column.
@@ -87,4 +87,4 @@ An `NteDataTablePlugin` receives `host`, `table`, `remote`, and `refresh()` thro
 | `nte-data-table-header` | Wrapper before the component | Connected title/action/search toolbar. |
 | `nte-data-table-search` | Search label inside the wrapper | Consistent search-field layout. |
 
-An optional native `caption` is measured and kept fixed above the column header. The component host is the only element that owns the outer border and radius; nested table elements draw only internal separators and remain radius-free. `tbody` remains the only actual scroll container, without a synthetic Shadow DOM track or extra footer offset. The component never observes or clones the source table. Applications call `refresh()` after structural or layout-metadata changes.
+An optional native `caption` stays in normal flow above the column header. The component host is the only element that owns the outer border and radius; nested table elements draw only internal separators and remain radius-free. `tbody` receives the configured height and remains the only actual scroll container, while `thead` and `tfoot` stay in normal flow outside its native scrollbars. The component never observes or clones the source table. Applications call `refresh()` after structural or layout-metadata changes.

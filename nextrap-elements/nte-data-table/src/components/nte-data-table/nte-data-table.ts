@@ -170,7 +170,6 @@ export class NteDataTableElement extends nextrap_element({
         part="viewport"
         role="region"
         aria-label="${this._viewportLabel()}"
-        style="block-size: ${this._safeHeight()};"
       >
         <slot @slotchange=${this._handleSlotChange}></slot>
       </div>
@@ -440,10 +439,8 @@ export class NteDataTableElement extends nextrap_element({
       this._setManagedStyle(table, 'border-collapse', 'separate');
       this._setManagedStyle(table, 'border-spacing', '0px');
       this._setManagedStyle(table, 'display', 'block');
-      this._setManagedStyle(table, 'block-size', '100%');
       this._setManagedStyle(table, 'inline-size', '100%');
       this._setManagedStyle(table, 'overflow', 'visible');
-      this._setManagedStyle(table, 'position', 'relative');
 
       const visibleColumns: number[] = [];
       headerCells.forEach((headerCell, columnIndex) => {
@@ -488,36 +485,26 @@ export class NteDataTableElement extends nextrap_element({
       const totalWidth = visibleColumns.reduce((sum, columnIndex) => sum + widths[columnIndex], 0);
       const tableWidth = `${totalWidth}px`;
       const caption = table.caption;
-      let captionHeight = 0;
       if (caption) {
         const viewportWidth = this.shadowRoot?.querySelector<HTMLElement>('#viewport')?.clientWidth ?? table.clientWidth;
         this._setManagedStyle(caption, 'box-sizing', 'border-box');
         this._setManagedStyle(caption, 'display', 'block');
         this._setManagedStyle(caption, 'inline-size', `${viewportWidth}px`);
-        this._setManagedStyle(caption, 'inset-block-start', '0px');
-        this._setManagedStyle(caption, 'inset-inline-start', '0px');
-        this._setManagedStyle(caption, 'position', 'absolute');
-        this._setManagedStyle(caption, 'z-index', '5');
-        captionHeight = Math.ceil(caption.getBoundingClientRect().height);
       }
-      this._positionSection(table.tHead!, `${captionHeight}px`, null, tableWidth);
-      if (table.tFoot) this._positionSection(table.tFoot, null, '0px', tableWidth);
+      this._configureSection(table.tHead!, tableWidth);
+      if (table.tFoot) this._configureSection(table.tFoot, tableWidth);
 
       const body = bodies[0];
       this._setManagedAttribute(body, 'tabindex', '0');
       this._setManagedStyle(body, 'box-sizing', 'border-box');
       this._setManagedStyle(body, 'display', 'block');
-      this._setManagedStyle(body, 'block-size', '100%');
+      this._setManagedStyle(body, 'block-size', this._safeHeight());
       this._setManagedStyle(body, 'inline-size', '100%');
       this._setManagedStyle(body, 'overflow-x', 'auto');
       this._setManagedStyle(body, 'overflow-y', 'auto');
       this._setManagedStyle(body, 'overscroll-behavior', 'contain');
       this._setManagedStyle(body, 'touch-action', 'pan-x pan-y');
       this._setManagedStyle(body, '-webkit-overflow-scrolling', 'touch');
-      const headerHeight = Math.ceil(table.tHead!.getBoundingClientRect().height);
-      this._setManagedStyle(body, 'padding-block-start', `${captionHeight + headerHeight}px`);
-      const footerHeight = Math.ceil(table.tFoot?.getBoundingClientRect().height ?? 0);
-      this._setManagedStyle(body, 'padding-block-end', `${footerHeight}px`);
       for (const row of Array.from(body.rows)) {
         this._setManagedStyle(row, 'display', 'table');
         this._setManagedStyle(row, 'table-layout', 'fixed');
@@ -534,20 +521,10 @@ export class NteDataTableElement extends nextrap_element({
     }
   }
 
-  private _positionSection(
-    section: HTMLTableSectionElement,
-    top: string | null,
-    bottom: string | null,
-    width: string,
-  ): void {
+  private _configureSection(section: HTMLTableSectionElement, width: string): void {
     this._setManagedStyle(section, 'display', 'table');
     this._setManagedStyle(section, 'inline-size', width);
-    this._setManagedStyle(section, 'position', 'absolute');
-    this._setManagedStyle(section, 'inset-inline-start', '0px');
     this._setManagedStyle(section, 'table-layout', 'fixed');
-    this._setManagedStyle(section, 'z-index', '3');
-    if (top !== null) this._setManagedStyle(section, 'inset-block-start', top);
-    if (bottom !== null) this._setManagedStyle(section, 'inset-block-end', bottom);
   }
 
   private _applyPinnedColumns(
