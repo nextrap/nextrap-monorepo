@@ -1,0 +1,24 @@
+{
+    "name": "@nextrap/nte-data-table",
+    "version": "1.0.0",
+    "files": [
+        "*.*",
+        ".ai-usage-info.md",
+        "skills",
+        "src"
+    ],
+    "main": "./index.js",
+    "repository": {
+        "directory": "nextrap-elements/nte-data-table",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
+    "dependencies": {
+        "@nextrap/nt-core": "^2.0.0",
+        "@nextrap/style-reset": "^2.0.0",
+        "lit": "^3.3.1"
+    },
+    "type": "module",
+    "types": "./index.d.ts",
+    "web-types": "./web-types.json"
+}
