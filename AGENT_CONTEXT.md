@@ -62,7 +62,8 @@ Do not treat ignored/local `workspaces/` content as part of the committed Nx wor
 | `@nextrap/nte-burger` | `nextrap-elements/nte-burger` | Burger-/Menu-Button-Element |
 | `@nextrap/nte-card` | `nextrap-elements/nte-card` | Card-Element |
 | `@nextrap/nte-consent-blocker` | `nextrap-elements/nte-consent-blocker` | Consent-/Privacy-Blocker-Element |
-| `@nextrap/nte-data-table` | `nextrap-elements/nte-data-table` | Tabellen-Viewport mit Sticky Header/Footer und Spaltenlayout |
+| `@nextrap/nte-table` | `nextrap-elements/nte-table` | Native Tabellenbasis mit Body-Viewport, festem Header/Footer und Spalteninteraktionen |
+| `@nextrap/nte-data-table` | `nextrap-elements/nte-data-table` | Rendert Objektarrays über TableDefinition und serialisierbaren TableViewState |
 | `@nextrap/nte-demo-viewer` | `nextrap-elements/nte-demo-viewer` | Demo-Viewer-Element |
 | `@nextrap/nte-dialog` | `nextrap-elements/nte-dialog` | Dialog-/Modal-Element |
 | `@nextrap/nte-dialog-component` | `nextrap-elements/nte-dialog-component` | Dialog-Komponentenbasis |

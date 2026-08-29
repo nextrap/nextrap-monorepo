@@ -3,7 +3,7 @@ import '@nextrap/style-typography/default';
 import { defineDemo } from '@trunkjs/demo-viewer';
 
 import '../index';
-import type { NteDataTableElement } from '../src/components/nte-data-table/nte-data-table';
+import type { NteTableElement } from '../src/components/nte-table/nte-table';
 import './main.scss';
 
 const people = [
@@ -20,14 +20,14 @@ export default defineDemo({
   description: 'Toolbar oberhalb der Tabelle und programmatische Zeilen-/Spaltenselektion ohne Selection-Observer',
   render(root) {
     root.innerHTML = `
-      <main class="nte-data-table-demo">
+      <main class="nte-table-demo">
         <h1>Suche und Remote-Steuerung</h1>
-        <section class="nte-data-table-example">
-          <header class="nte-data-table-header">
+        <section class="nte-table-example">
+          <header class="nte-table-header">
             <div><strong>Teammitglieder</strong><br><small>6 Einträge</small></div>
-            <label class="nte-data-table-search"><span>Suche</span><input type="search" placeholder="Name, Team oder Status" /></label>
+            <label class="nte-table-search"><span>Suche</span><input type="search" placeholder="Name, Team oder Status" /></label>
           </header>
-          <nte-data-table id="people-table" height="20rem" pinned-columns="1" scroll-label="Teammitglieder">
+          <nte-table id="people-table" height="20rem" pinned-columns="1" scroll-label="Teammitglieder">
             <table>
               <thead><tr>
                 <th class="border-free" data-column-id="id" data-width="6rem">ID</th>
@@ -38,7 +38,7 @@ export default defineDemo({
               <tbody>${people.map(([id, name, team, status]) => `<tr id="${id}" data-row-id="${id}"><th scope="row">${id.slice(2)}</th><td>${name}</td><td>${team}</td><td>${status}</td></tr>`).join('')}</tbody>
               <tfoot><tr><th>6</th><td>Personen</td><td>6 Teams</td><td>3 Zustände</td></tr></tfoot>
             </table>
-          </nte-data-table>
+          </nte-table>
         </section>
         <div class="demo-toolbar" aria-label="Selection-Demo">
           <button type="button" data-action="row">Zeile u-103 umschalten</button>
@@ -47,7 +47,7 @@ export default defineDemo({
         </div>
       </main>`;
 
-    const table = root.querySelector<NteDataTableElement>('#people-table');
+    const table = root.querySelector<NteTableElement>('#people-table');
     const search = root.querySelector<HTMLInputElement>('input[type="search"]');
     search?.addEventListener('input', () => {
       const query = search.value.trim().toLocaleLowerCase();

@@ -18,19 +18,19 @@ export default defineDemo({
   description: 'Caption und Spaltenkopf bleiben stehen; Zellen zeigen Ellipsis, Clip oder Wrap',
   render(root) {
     root.innerHTML = `
-      <main class="nte-data-table-demo">
+      <main class="nte-table-demo">
         <h1>Caption als fester Tabellenkopf</h1>
-        <nte-data-table height="24rem" pinned-columns="1" scroll-label="Aufträge mit Suchfeld">
+        <nte-table height="24rem" pinned-columns="1" scroll-label="Aufträge mit Suchfeld">
           <table>
             <caption>
               <span class="demo-caption-copy"><strong>Aufträge</strong><small>Caption, Suche und Beschreibung bleiben oberhalb der Spalten sichtbar.</small></span>
-              <label class="nte-data-table-search"><span>Suche</span><input data-caption-search type="search" placeholder="Auftrag oder Kunde" /></label>
+              <label class="nte-table-search"><span>Suche</span><input data-caption-search type="search" placeholder="Auftrag oder Kunde" /></label>
             </caption>
             <thead><tr><th data-width="96">ID</th><th data-width="240">Kunde</th><th data-width="420">Beschreibung</th><th data-width="160">Status</th></tr></thead>
             <tbody>${rows}</tbody>
             <tfoot><tr><th>18</th><td>3 Kunden</td><td>Ellipsis ist der Standard; einzelne Zellen überschreiben ihn.</td><td>3 Zustände</td></tr></tfoot>
           </table>
-        </nte-data-table>
+        </nte-table>
       </main>`;
 
     const search = root.querySelector<HTMLInputElement>('[data-caption-search]');

@@ -42,14 +42,14 @@ export default defineDemo({
   description: 'Sticky Header und Footer, feste Breiten, zwei gepinnte Spalten und native Form Controls',
   render(root) {
     root.innerHTML = `
-      <main class="nte-data-table-demo">
-        <h1>NTE Data Table</h1>
+      <main class="nte-table-demo">
+        <h1>NTE Table</h1>
         <p>
           Der Body scrollt vertikal und horizontal. Auftrag und Kunde bleiben links stehen; die ausgeblendete Region
           bleibt Bestandteil der originalen Light-DOM-Tabelle.
         </p>
 
-        <nte-data-table height="22rem" pinned-columns="2" scroll-label="Aufträge">
+        <nte-table height="22rem" pinned-columns="2" scroll-label="Aufträge">
           <table>
             <caption>Aktuelle Aufträge</caption>
             <thead>
@@ -80,7 +80,7 @@ export default defineDemo({
               </tr>
             </tfoot>
           </table>
-        </nte-data-table>
+        </nte-table>
       </main>
     `;
 

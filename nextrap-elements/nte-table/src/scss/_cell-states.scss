@@ -21,41 +21,41 @@
     line-height: 1;
   }
 
-  & > table > :is(thead, tbody, tfoot) > tr > :is(th, td):is(.highlight, .highlight-primary, [data-nte-data-table-highlight='primary']),
+  & > table > :is(thead, tbody, tfoot) > tr > :is(th, td):is(.highlight, .highlight-primary, [data-nte-table-highlight='primary']),
   & > table > tbody > tr:is(.highlight, .highlight-primary) > :is(th, td) {
     background: $primary;
   }
 
-  & > table > :is(thead, tbody, tfoot) > tr > :is(th, td):is(.highlight-secondary, [data-nte-data-table-highlight='secondary']),
+  & > table > :is(thead, tbody, tfoot) > tr > :is(th, td):is(.highlight-secondary, [data-nte-table-highlight='secondary']),
   & > table > tbody > tr.highlight-secondary > :is(th, td) {
     background: $secondary;
   }
 
-  & > table > :is(thead, tbody, tfoot) > tr > :is(th, td):is(.highlight-success, [data-nte-data-table-highlight='success']),
+  & > table > :is(thead, tbody, tfoot) > tr > :is(th, td):is(.highlight-success, [data-nte-table-highlight='success']),
   & > table > tbody > tr.highlight-success > :is(th, td) {
     background: $success;
   }
 
-  & > table > :is(thead, tbody, tfoot) > tr > :is(th, td):is(.highlight-info, [data-nte-data-table-highlight='info']),
+  & > table > :is(thead, tbody, tfoot) > tr > :is(th, td):is(.highlight-info, [data-nte-table-highlight='info']),
   & > table > tbody > tr.highlight-info > :is(th, td) {
     background: $info;
   }
 
-  & > table > :is(thead, tbody, tfoot) > tr > :is(th, td):is(.highlight-warning, [data-nte-data-table-highlight='warning']),
+  & > table > :is(thead, tbody, tfoot) > tr > :is(th, td):is(.highlight-warning, [data-nte-table-highlight='warning']),
   & > table > tbody > tr.highlight-warning > :is(th, td) {
     background: $warning;
   }
 
-  & > table > :is(thead, tbody, tfoot) > tr > :is(th, td):is(.highlight-danger, [data-nte-data-table-highlight='danger']),
+  & > table > :is(thead, tbody, tfoot) > tr > :is(th, td):is(.highlight-danger, [data-nte-table-highlight='danger']),
   & > table > tbody > tr.highlight-danger > :is(th, td) {
     background: $danger;
   }
 
   & > table > :is(thead, tbody, tfoot) > tr > :is(th, td):is(
       .selected,
-      [data-nte-data-table-header-selected],
-      [data-nte-data-table-column-selected],
-      [data-nte-data-table-row-selected]
+      [data-nte-table-header-selected],
+      [data-nte-table-column-selected],
+      [data-nte-table-row-selected]
     ),
   & > table > tbody > tr.selected > :is(th, td) {
     color: $selected-color;
@@ -63,7 +63,7 @@
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--nt-primary, #0d6efd) 35%, transparent);
   }
 
-  & > table > :is(thead, tbody, tfoot) > tr > :is(th, td):is(.border-free, [data-nte-data-table-border-free]) {
+  & > table > :is(thead, tbody, tfoot) > tr > :is(th, td):is(.border-free, [data-nte-table-border-free]) {
     background: var(--nt-body-bg, #ffffff);
     border-inline-end-color: transparent;
     font-variant-numeric: tabular-nums;

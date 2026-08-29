@@ -13,7 +13,7 @@ const rows = [
 ].map(([id, name, date, amount]) => `<tr id="${id}"><th>${id}</th><td>${name}</td><td data-sort-value="${date}">${new Date(date).toLocaleDateString('de-DE')}</td><td data-sort-value="${amount}">${Number(amount).toLocaleString('de-DE')} €</td></tr>`).join('');
 
 const table = (features: string, label: string) => `
-  <nte-data-table features="${features}" height="17rem" pinned-columns="1" scroll-label="${label}">
+  <nte-table features="${features}" height="17rem" pinned-columns="1" scroll-label="${label}">
     <table>
       <caption>${label}</caption>
       <thead><tr>
@@ -25,14 +25,14 @@ const table = (features: string, label: string) => `
       <tbody>${rows}</tbody>
       <tfoot><tr><th>4</th><td>Projekte</td><td>Termine</td><td>15.500 €</td></tr></tfoot>
     </table>
-  </nte-data-table>`;
+  </nte-table>`;
 
 export default defineDemo({
-  title: 'Data-Table-Plugins',
+  title: 'Table-Plugins',
   description: 'Sortierung sowie Spalten- und Zeilen-Reorder über das features-Attribut',
   render(root) {
     root.innerHTML = `
-      <main class="nte-data-table-demo">
+      <main class="nte-table-demo">
         <h1>Registrierbare Features</h1>
         <p>Die Plugins ändern ausschließlich die native Light-DOM-Tabelle. Sortierbuttons und Drag-Handles werden beim Aktivieren ergänzt und beim Deaktivieren entfernt.</p>
         <h2>Sortieren</h2>
@@ -47,15 +47,15 @@ export default defineDemo({
       </main>`;
 
     const output = root.querySelector<HTMLOutputElement>('[data-plugin-events]');
-    root.addEventListener('nte-data-table-sort', (event) => {
+    root.addEventListener('nte-table-sort', (event) => {
       const detail = (event as CustomEvent<{ columnIndex: number; direction: string }>).detail;
       if (output) output.value = `Spalte ${detail.columnIndex + 1}: ${detail.direction}`;
     });
-    root.addEventListener('nte-data-table-column-reorder', (event) => {
+    root.addEventListener('nte-table-column-reorder', (event) => {
       const detail = (event as CustomEvent<{ from: number; to: number }>).detail;
       if (output) output.value = `Spalte ${detail.from + 1} → ${detail.to + 1}`;
     });
-    root.addEventListener('nte-data-table-row-reorder', (event) => {
+    root.addEventListener('nte-table-row-reorder', (event) => {
       const detail = (event as CustomEvent<{ from: number; to: number }>).detail;
       if (output) output.value = `Zeile ${detail.from + 1} → ${detail.to + 1}`;
     });

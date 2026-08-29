@@ -1,17 +1,17 @@
-import { type NteDataTablePlugin, type NteDataTablePluginContext, nteDataTablePluginRegistry } from './plugin-registry';
+import { type NteTablePlugin, type NteTablePluginContext, nteTablePluginRegistry } from './plugin-registry';
 
 const createControl = (document: Document, className: string, label: string, content: string): HTMLButtonElement => {
   const button = document.createElement('button');
   button.type = 'button';
-  button.className = `nte-data-table-plugin-control ${className}`;
+  button.className = `nte-table-plugin-control ${className}`;
   button.setAttribute('aria-label', label);
   button.textContent = content;
   return button;
 };
 
-abstract class TablePlugin implements NteDataTablePlugin {
-  protected context: NteDataTablePluginContext | null = null;
-  public connect(context: NteDataTablePluginContext): void { this.context = context; this.onConnect(); }
+abstract class TablePlugin implements NteTablePlugin {
+  protected context: NteTablePluginContext | null = null;
+  public connect(context: NteTablePluginContext): void { this.context = context; this.onConnect(); }
   public disconnect(): void { this.onDisconnect(); this.context = null; }
   public refresh(): void { this.onRefresh(); }
   protected abstract onConnect(): void;
@@ -19,7 +19,7 @@ abstract class TablePlugin implements NteDataTablePlugin {
   protected abstract onRefresh(): void;
 }
 
-export class NteDataTableSortPlugin extends TablePlugin {
+export class NteTableSortPlugin extends TablePlugin {
   private readonly _collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
 
   protected onConnect(): void {
@@ -29,16 +29,16 @@ export class NteDataTableSortPlugin extends TablePlugin {
 
   protected onDisconnect(): void {
     this.context?.table.tHead?.removeEventListener('click', this._handleClick);
-    this.context?.table.querySelectorAll('[data-nte-data-table-sort-control]').forEach((control) => control.remove());
+    this.context?.table.querySelectorAll('[data-nte-table-sort-control]').forEach((control) => control.remove());
     this.context?.table.tHead?.querySelectorAll('[aria-sort]').forEach((header) => header.removeAttribute('aria-sort'));
   }
 
   protected onRefresh(): void {
     const context = this.context;
     Array.from(context?.table.tHead?.rows[0]?.cells ?? []).forEach((header, columnIndex) => {
-      if (header.dataset['sortable'] === 'false' || header.querySelector('[data-nte-data-table-sort-control]')) return;
-      const control = createControl(context!.host.ownerDocument, 'nte-data-table-sort-control indicator', `Spalte ${columnIndex + 1} sortieren`, '↕');
-      control.dataset['nteDataTableSortControl'] = '';
+      if (header.dataset['sortable'] === 'false' || header.querySelector('[data-nte-table-sort-control]')) return;
+      const control = createControl(context!.host.ownerDocument, 'nte-table-sort-control indicator', `Spalte ${columnIndex + 1} sortieren`, '↕');
+      control.dataset['nteTableSortControl'] = '';
       header.append(control);
     });
   }
@@ -46,7 +46,7 @@ export class NteDataTableSortPlugin extends TablePlugin {
   private _handleClick = (event: Event): void => {
     const target = event.target;
     if (!(target instanceof Element)) return;
-    const control = target.closest<HTMLElement>('[data-nte-data-table-sort-control]');
+    const control = target.closest<HTMLElement>('[data-nte-table-sort-control]');
     const header = control?.closest<HTMLTableCellElement>('th, td');
     const context = this.context;
     if (!control || !header || !context) return;
@@ -56,7 +56,7 @@ export class NteDataTableSortPlugin extends TablePlugin {
     const direction = header.getAttribute('aria-sort') === 'ascending' ? 'descending' : 'ascending';
     headers.forEach((cell) => {
       cell.removeAttribute('aria-sort');
-      const indicator = cell.querySelector<HTMLElement>('[data-nte-data-table-sort-control]');
+      const indicator = cell.querySelector<HTMLElement>('[data-nte-table-sort-control]');
       if (indicator) indicator.textContent = '↕';
     });
     header.setAttribute('aria-sort', direction);
@@ -67,7 +67,7 @@ export class NteDataTableSortPlugin extends TablePlugin {
     const type = header.dataset['sortType'] ?? 'string';
     rows.sort((left, right) => multiplier * this._compare(left.cells[columnIndex], right.cells[columnIndex], type));
     body?.append(...rows);
-    context.host.dispatchEvent(new CustomEvent('nte-data-table-sort', {
+    context.host.dispatchEvent(new CustomEvent('nte-table-sort', {
       bubbles: true, composed: true, detail: { columnIndex, direction, header },
     }));
     context.refresh();
@@ -79,6 +79,55 @@ export class NteDataTableSortPlugin extends TablePlugin {
     if (type === 'number') return (Number(leftValue) || 0) - (Number(rightValue) || 0);
     if (type === 'date') return (Date.parse(leftValue) || 0) - (Date.parse(rightValue) || 0);
     return this._collator.compare(leftValue, rightValue);
+  }
+}
+
+const COLUMN_RESIZE_HIT_AREA = 8;
+interface ColumnResizeState { direction: 1 | -1; header: HTMLTableCellElement; pointerId: number; previousWidth: number; startClientX: number; }
+export class NteTableColumnResizePlugin extends TablePlugin {
+  private _resize: ColumnResizeState | null = null;
+  protected onConnect(): void {
+    const table=this.context?.table;
+    table?.addEventListener('pointerdown',this._down,true); table?.addEventListener('pointermove',this._move,true);
+    table?.addEventListener('pointerup',this._end,true); table?.addEventListener('pointercancel',this._cancel,true);
+  }
+  protected onDisconnect(): void {
+    const table=this.context?.table;
+    table?.removeEventListener('pointerdown',this._down,true); table?.removeEventListener('pointermove',this._move,true);
+    table?.removeEventListener('pointerup',this._end,true); table?.removeEventListener('pointercancel',this._cancel,true);
+    this._finish(false);
+  }
+  protected onRefresh(): void {}
+  private _at(event: PointerEvent): HTMLTableCellElement | null {
+    if (!(event.target instanceof Element)) return null;
+    const header=event.target.closest<HTMLTableCellElement>('th,td');
+    if(!header || header.closest('thead')!==this.context?.table.tHead || header.dataset['resizable']==='false' || header.hidden) return null;
+    const rect=header.getBoundingClientRect(), rtl=getComputedStyle(this.context!.table).direction==='rtl';
+    const distance=rtl ? event.clientX-rect.left : rect.right-event.clientX;
+    return distance>=0 && distance<=COLUMN_RESIZE_HIT_AREA ? header : null;
+  }
+  private _down=(event: PointerEvent):void=>{
+    if(!this.context || event.button!==0 || !event.isPrimary || this._resize || (event.target instanceof Element && event.target.closest('.nte-table-plugin-control'))) return;
+    const header=this._at(event), previousWidth=header ? this.context.remote.getColumnWidth(header) : null;
+    if(!header || previousWidth===null) return;
+    event.preventDefault();
+    this._resize={direction:getComputedStyle(this.context.table).direction==='rtl'?-1:1,header,pointerId:event.pointerId,previousWidth,startClientX:event.clientX};
+    header.style.cursor='col-resize'; header.setPointerCapture?.(event.pointerId);
+  };
+  private _move=(event: PointerEvent):void=>{
+    if(!this.context) return;
+    if(!this._resize){const header=this._at(event); for(const cell of Array.from(this.context.table.tHead?.rows[0]?.cells??[])) cell.style.cursor=cell===header?'col-resize':''; return;}
+    if(this._resize.pointerId!==event.pointerId)return;
+    event.preventDefault(); this.context.remote.setColumnWidth(this._resize.header,this._resize.previousWidth+(event.clientX-this._resize.startClientX)*this._resize.direction);
+  };
+  private _end=(event: PointerEvent):void=>{if(this._resize?.pointerId===event.pointerId){event.preventDefault();this._finish(true);}};
+  private _cancel=(event: PointerEvent):void=>{if(this._resize?.pointerId===event.pointerId){this.context?.remote.setColumnWidth(this._resize.header,this._resize.previousWidth);this._finish(false);}};
+  private _finish(emit:boolean):void{
+    const context=this.context, resize=this._resize; if(!context||!resize)return; this._resize=null; resize.header.style.cursor='';
+    const width=context.remote.getColumnWidth(resize.header); if(!emit||width===null||width===resize.previousWidth)return;
+    const headers=Array.from(context.table.tHead?.rows[0]?.cells??[]), columnIndex=headers.indexOf(resize.header);
+    const columnId=resize.header.dataset['columnId']?.trim()||resize.header.id.trim()||String(columnIndex);
+    context.host.dispatchEvent(new CustomEvent('nte-table-column-resize',{bubbles:true,composed:true,detail:{columnId,columnIndex,previousWidth:resize.previousWidth,width}}));
   }
 }
 
@@ -121,7 +170,7 @@ const createDragGhost = (
   const bottom = Math.max(...rects.map((rect) => rect.bottom));
   const rect = { left, top, right, bottom, width: right - left, height: bottom - top };
   const element = document.createElement('div');
-  element.dataset['nteDataTableDragPreview'] = '';
+  element.dataset['nteTableDragPreview'] = '';
   element.setAttribute('aria-hidden', 'true');
   Object.assign(element.style, {
     position: 'fixed',
@@ -212,8 +261,8 @@ abstract class PointerReorderPlugin extends TablePlugin {
     this.preview?.remove();
     this.preview = null;
     this.pointerId = null;
-    this.context?.table.querySelectorAll('[data-nte-data-table-dragging]').forEach((item) => item.removeAttribute('data-nte-data-table-dragging'));
-    this.context?.table.querySelectorAll('[data-nte-data-table-drop-target]').forEach((item) => item.removeAttribute('data-nte-data-table-drop-target'));
+    this.context?.table.querySelectorAll('[data-nte-table-dragging]').forEach((item) => item.removeAttribute('data-nte-table-dragging'));
+    this.context?.table.querySelectorAll('[data-nte-table-drop-target]').forEach((item) => item.removeAttribute('data-nte-table-drop-target'));
   }
 
   protected abstract handlePointerMove(event: PointerEvent): void;
@@ -221,7 +270,7 @@ abstract class PointerReorderPlugin extends TablePlugin {
   protected abstract handlePointerCancel(event: PointerEvent): void;
 }
 
-export class NteDataTableColumnReorderPlugin extends PointerReorderPlugin {
+export class NteTableColumnReorderPlugin extends PointerReorderPlugin {
   private _sourceIndex: number | null = null;
   private _originalCells: HTMLTableCellElement[][] = [];
   private _lastPointerX = 0;
@@ -237,22 +286,22 @@ export class NteDataTableColumnReorderPlugin extends PointerReorderPlugin {
 
   protected onDisconnect(): void {
     this.context?.table.tHead?.removeEventListener('pointerdown', this._handlePointerDown);
-    this.context?.table.querySelectorAll('[data-nte-data-table-column-handle]').forEach((handle) => handle.remove());
+    this.context?.table.querySelectorAll('[data-nte-table-column-handle]').forEach((handle) => handle.remove());
     this._cancelDrag();
   }
 
   protected onRefresh(): void {
     const context = this.context;
     Array.from(context?.table.tHead?.rows[0]?.cells ?? []).forEach((header, columnIndex) => {
-      if (header.dataset['reorderable'] === 'false' || header.querySelector('[data-nte-data-table-column-handle]')) return;
-      const handle = createControl(context!.host.ownerDocument, 'nte-data-table-drag-handle', `Spalte ${columnIndex + 1} verschieben`, '⋮⋮');
-      handle.dataset['nteDataTableColumnHandle'] = '';
+      if (header.dataset['reorderable'] === 'false' || header.querySelector('[data-nte-table-column-handle]')) return;
+      const handle = createControl(context!.host.ownerDocument, 'nte-table-drag-handle', `Spalte ${columnIndex + 1} verschieben`, '⋮⋮');
+      handle.dataset['nteTableColumnHandle'] = '';
       header.prepend(handle);
     });
   }
 
   private _handlePointerDown = (event: PointerEvent): void => {
-    const handle = event.target instanceof Element ? event.target.closest<HTMLElement>('[data-nte-data-table-column-handle]') : null;
+    const handle = event.target instanceof Element ? event.target.closest<HTMLElement>('[data-nte-table-column-handle]') : null;
     const context = this.context;
     if (!handle || !context || event.button !== 0 || this.pointerId !== null) return;
     const header = handle.closest<HTMLTableCellElement>('th, td');
@@ -270,7 +319,7 @@ export class NteDataTableColumnReorderPlugin extends PointerReorderPlugin {
     this.grabOffsetY = 0;
     this._lastPointerX = event.clientX;
     this.movePreview(event.clientX, ghost.rect.top, 'x');
-    for (const row of Array.from(context.table.rows)) row.cells[sourceIndex]?.setAttribute('data-nte-data-table-dragging', '');
+    for (const row of Array.from(context.table.rows)) row.cells[sourceIndex]?.setAttribute('data-nte-table-dragging', '');
     this.bindPointerTracking();
   };
 
@@ -334,20 +383,20 @@ export class NteDataTableColumnReorderPlugin extends PointerReorderPlugin {
     this._sourceIndex = targetIndex;
     this._lastSwapDirection = direction;
     this._reverseLockedUntil = event.timeStamp + REORDER_ANIMATION_MS;
-    context.table.querySelectorAll('[data-nte-data-table-drop-target]').forEach((item) => item.removeAttribute('data-nte-data-table-drop-target'));
-    target.setAttribute('data-nte-data-table-drop-target', '');
+    context.table.querySelectorAll('[data-nte-table-drop-target]').forEach((item) => item.removeAttribute('data-nte-table-drop-target'));
+    target.setAttribute('data-nte-table-drop-target', '');
   }
 
   protected handlePointerEnd = (event: PointerEvent): void => {
     if (event.pointerId !== this.pointerId) return;
     const context = this.context;
-    const sourceHeader = this._originalCells[0]?.find((cell) => cell.hasAttribute('data-nte-data-table-dragging'));
+    const sourceHeader = this._originalCells[0]?.find((cell) => cell.hasAttribute('data-nte-table-dragging'));
     const originalIndex = sourceHeader ? this._originalCells[0].indexOf(sourceHeader) : -1;
     const to = sourceHeader ? Array.from(context?.table.tHead?.rows[0]?.cells ?? []).indexOf(sourceHeader) : -1;
     this._finishDrag();
     if (!context || originalIndex < 0 || to < 0 || originalIndex === to) return;
     context.remote.clearSelection();
-    context.host.dispatchEvent(new CustomEvent('nte-data-table-column-reorder', {
+    context.host.dispatchEvent(new CustomEvent('nte-table-column-reorder', {
       bubbles: true, composed: true, detail: { from: originalIndex, to },
     }));
     context.refresh();
@@ -389,7 +438,7 @@ export class NteDataTableColumnReorderPlugin extends PointerReorderPlugin {
   }
 }
 
-export class NteDataTableRowReorderPlugin extends PointerReorderPlugin {
+export class NteTableRowReorderPlugin extends PointerReorderPlugin {
   private _sourceRow: HTMLTableRowElement | null = null;
   private _originalRows: HTMLTableRowElement[] = [];
 
@@ -401,7 +450,7 @@ export class NteDataTableRowReorderPlugin extends PointerReorderPlugin {
   protected onDisconnect(): void {
     const body = this.context?.table.tBodies[0];
     body?.removeEventListener('pointerdown', this._handlePointerDown);
-    body?.querySelectorAll('[data-nte-data-table-row-handle]').forEach((handle) => handle.remove());
+    body?.querySelectorAll('[data-nte-table-row-handle]').forEach((handle) => handle.remove());
     this._cancelDrag();
   }
 
@@ -409,15 +458,15 @@ export class NteDataTableRowReorderPlugin extends PointerReorderPlugin {
     const context = this.context;
     Array.from(context?.table.tBodies[0]?.rows ?? []).forEach((row, rowIndex) => {
       const firstCell = row.cells[0];
-      if (!firstCell || row.dataset['reorderable'] === 'false' || firstCell.querySelector('[data-nte-data-table-row-handle]')) return;
-      const handle = createControl(context!.host.ownerDocument, 'nte-data-table-drag-handle', `Zeile ${rowIndex + 1} verschieben`, '⠿');
-      handle.dataset['nteDataTableRowHandle'] = '';
+      if (!firstCell || row.dataset['reorderable'] === 'false' || firstCell.querySelector('[data-nte-table-row-handle]')) return;
+      const handle = createControl(context!.host.ownerDocument, 'nte-table-drag-handle', `Zeile ${rowIndex + 1} verschieben`, '⠿');
+      handle.dataset['nteTableRowHandle'] = '';
       firstCell.prepend(handle);
     });
   }
 
   private _handlePointerDown = (event: PointerEvent): void => {
-    const handle = event.target instanceof Element ? event.target.closest<HTMLElement>('[data-nte-data-table-row-handle]') : null;
+    const handle = event.target instanceof Element ? event.target.closest<HTMLElement>('[data-nte-table-row-handle]') : null;
     const context = this.context;
     if (!handle || !context || event.button !== 0 || this.pointerId !== null) return;
     const row = handle.closest<HTMLTableRowElement>('tr');
@@ -432,7 +481,7 @@ export class NteDataTableRowReorderPlugin extends PointerReorderPlugin {
     this.grabOffsetX = event.clientX - ghost.rect.left;
     this.grabOffsetY = event.clientY - ghost.rect.top;
     this.movePreview(event.clientX, event.clientY, 'both');
-    row.setAttribute('data-nte-data-table-dragging', '');
+    row.setAttribute('data-nte-table-dragging', '');
     this.bindPointerTracking();
   };
 
@@ -450,8 +499,8 @@ export class NteDataTableRowReorderPlugin extends PointerReorderPlugin {
     const nextSibling = after ? target.nextSibling : target;
     if (nextSibling === this._sourceRow || (!after && target.previousSibling === this._sourceRow)) return;
     animateMove(Array.from(body.rows), () => body.insertBefore(this._sourceRow!, nextSibling), 'y');
-    body.querySelectorAll('[data-nte-data-table-drop-target]').forEach((item) => item.removeAttribute('data-nte-data-table-drop-target'));
-    target.setAttribute('data-nte-data-table-drop-target', '');
+    body.querySelectorAll('[data-nte-table-drop-target]').forEach((item) => item.removeAttribute('data-nte-table-drop-target'));
+    target.setAttribute('data-nte-table-drop-target', '');
   };
 
   protected handlePointerEnd = (event: PointerEvent): void => {
@@ -462,7 +511,7 @@ export class NteDataTableRowReorderPlugin extends PointerReorderPlugin {
     const to = source ? Array.from(context?.table.tBodies[0]?.rows ?? []).indexOf(source) : -1;
     this._finishDrag();
     if (!context || from < 0 || to < 0 || from === to) return;
-    context.host.dispatchEvent(new CustomEvent('nte-data-table-row-reorder', {
+    context.host.dispatchEvent(new CustomEvent('nte-table-row-reorder', {
       bubbles: true, composed: true, detail: { from, to },
     }));
     context.refresh();
@@ -485,6 +534,7 @@ export class NteDataTableRowReorderPlugin extends PointerReorderPlugin {
   }
 }
 
-nteDataTablePluginRegistry.register('sort', () => new NteDataTableSortPlugin());
-nteDataTablePluginRegistry.register('reorder-columns', () => new NteDataTableColumnReorderPlugin());
-nteDataTablePluginRegistry.register('reorder-rows', () => new NteDataTableRowReorderPlugin());
+nteTablePluginRegistry.register('sort', () => new NteTableSortPlugin());
+nteTablePluginRegistry.register('resize-columns', () => new NteTableColumnResizePlugin());
+nteTablePluginRegistry.register('reorder-columns', () => new NteTableColumnReorderPlugin());
+nteTablePluginRegistry.register('reorder-rows', () => new NteTableRowReorderPlugin());

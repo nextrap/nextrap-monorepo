@@ -24,7 +24,7 @@ export default defineDemo({
   description: 'Absoluter Header/Footer, reservierter Body-Abstand, zwei gepinnte Spalten und Drag-Resize',
   render(root) {
     root.innerHTML = `
-      <main class="nte-data-table-demo">
+      <main class="nte-table-demo">
         <h1>Separater Tabellen-Body</h1>
         <p>
           Nur der Tabellenkörper bestimmt die Scrollhöhe und scrollt. Header und Footer bleiben im normalen Tabellenfluss außerhalb seiner Scrollbars; die ersten beiden
@@ -32,7 +32,7 @@ export default defineDemo({
           Headerkante mit der Maus ändern.
         </p>
 
-        <nte-data-table height="24rem" pinned-columns="2" scroll-label="Umsatzliste">
+        <nte-table height="24rem" pinned-columns="2" scroll-label="Umsatzliste">
           <table>
             <thead>
               <tr>
@@ -56,7 +56,7 @@ export default defineDemo({
               </tr>
             </tfoot>
           </table>
-        </nte-data-table>
+        </nte-table>
       </main>
     `;
   },
