@@ -25,9 +25,19 @@ const demoCss = `
 }
 
 .style-button-demo__dropdown {
-  display: inline-grid;
-  gap: .5rem;
-  max-width: 240px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.style-button-demo__dropdown-example {
+  display: inline-flex;
+  align-items: flex-start;
+}
+
+.style-button-demo__flag {
+  margin-inline-end: .5rem;
 }
 `;
 
@@ -129,15 +139,79 @@ export default defineDemo({
       </section>
 
       <section>
-        <h2>Dropdown</h2>
+        <h2>Dropdowns</h2>
         <div class="style-button-demo__dropdown">
-          <button class="btn btn-primary dropdown-toggle" type="button">Dropdown Button</button>
-          <ul class="dropdown-menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><hr /></li>
-            <li><a href="#">Something else here</a></li>
-          </ul>
+          <div class="style-button-demo__dropdown-example">
+            <button
+              id="actions-toggle"
+              class="btn btn-primary dropdown-toggle"
+              type="button"
+              popovertarget="actions-menu"
+              aria-controls="actions-menu"
+            >
+              Aktionen
+            </button>
+            <ul id="actions-menu" class="dropdown-menu" popover="auto" aria-labelledby="actions-toggle">
+              <li>
+                <button type="button" popovertarget="actions-menu" popovertargetaction="hide">Duplizieren</button>
+              </li>
+              <li>
+                <button type="button" popovertarget="actions-menu" popovertargetaction="hide">Archivieren</button>
+              </li>
+              <li><hr /></li>
+              <li>
+                <button type="button" popovertarget="actions-menu" popovertargetaction="hide">Löschen</button>
+              </li>
+            </ul>
+          </div>
+
+          <div class="style-button-demo__dropdown-example">
+            <button
+              id="language-toggle"
+              class="btn btn-outline-primary dropdown-toggle"
+              type="button"
+              popovertarget="language-menu"
+              aria-controls="language-menu"
+            >
+              <span class="style-button-demo__flag" aria-hidden="true">🇩🇪</span>Deutsch
+            </button>
+            <ul id="language-menu" class="dropdown-menu" popover="auto" aria-labelledby="language-toggle">
+              <li>
+                <a href="?lang=de" lang="de" hreflang="de" aria-current="true">
+                  <span class="style-button-demo__flag" aria-hidden="true">🇩🇪</span>Deutsch
+                </a>
+              </li>
+              <li>
+                <a href="?lang=en" lang="en" hreflang="en">
+                  <span class="style-button-demo__flag" aria-hidden="true">🇬🇧</span>English
+                </a>
+              </li>
+              <li>
+                <a href="?lang=fr" lang="fr" hreflang="fr">
+                  <span class="style-button-demo__flag" aria-hidden="true">🇫🇷</span>Français
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="style-button-demo__dropdown-example">
+            <div class="btn-group" role="group" aria-label="Download und weitere Formate">
+              <a class="btn btn-secondary" href="?download=default">Herunterladen</a>
+              <button
+                id="download-toggle"
+                class="btn btn-secondary dropdown-toggle"
+                type="button"
+                popovertarget="download-menu"
+                aria-controls="download-menu"
+                aria-label="Weitere Downloadformate"
+              ></button>
+            </div>
+            <ul id="download-menu" class="dropdown-menu" popover="auto" aria-label="Weitere Downloadformate">
+              <li><a href="?download=pdf">PDF herunterladen</a></li>
+              <li><a href="?download=docx">Word herunterladen</a></li>
+              <li><a href="?download=txt">Text herunterladen</a></li>
+            </ul>
+          </div>
         </div>
       </section>
     </div>

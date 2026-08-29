@@ -1,0 +1,45 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
+  "name": "@nextrap/nte-data-table",
+  "version": "1.0.0",
+  "description": "Native Light DOM data table with tbody-only scrolling, fixed sections and programmatic selection.",
+  "contributions": {
+    "html": {
+      "elements": [{
+        "name": "nte-data-table",
+        "description": "Adds tbody scrolling, fixed table sections, column sizing/pinning and a selection Remote without replacing the native table.",
+        "attributes": [
+          { "name": "aria-label", "description": "Accessible name for the keyboard-focusable scroll viewport.", "value": { "kind": "expression", "type": "string" } },
+          { "name": "height", "description": "CSS height of the tbody scroll viewport. Default: 24rem.", "value": { "kind": "expression", "type": "string" } },
+          { "name": "features", "description": "Whitespace- or comma-separated registered plugins: sort, reorder-columns, reorder-rows.", "value": { "kind": "expression", "type": "string" } },
+          { "name": "pinned-columns", "description": "Number of first visible columns pinned to the inline start.", "value": { "kind": "expression", "type": "number" } },
+          { "name": "scroll-label", "description": "Accessible label for the keyboard-focusable scroll viewport.", "value": { "kind": "expression", "type": "string" } }
+        ],
+        "slots": [{ "name": "", "description": "Exactly one direct rectangular native table with thead, tbody and optional tfoot." }]
+      }]
+    },
+    "css": {
+      "classes": [
+        { "name": "style-default", "description": "Default visual table style, added automatically when no style-* class is present." },
+        { "name": "with-header-strong", "description": "Strong primary-color header treatment." },
+        { "name": "with-header-minimal", "description": "Minimal uppercase header treatment." },
+        { "name": "indicator", "description": "Inline-end aligned indicator inside a table header cell." },
+        { "name": "selected", "description": "Selected row/cell; on a header cell the state propagates to its column." },
+        { "name": "highlight", "description": "Primary highlighted row/cell; on a header cell the state propagates to its column." },
+        { "name": "highlight-primary", "description": "Primary highlighted row/cell or propagated header column." },
+        { "name": "highlight-secondary", "description": "Secondary highlighted row/cell or propagated header column." },
+        { "name": "highlight-success", "description": "Success highlighted row/cell or propagated header column." },
+        { "name": "highlight-info", "description": "Info highlighted row/cell or propagated header column." },
+        { "name": "highlight-warning", "description": "Warning highlighted row/cell or propagated header column." },
+        { "name": "highlight-danger", "description": "Danger highlighted row/cell or propagated header column." },
+        { "name": "border-free", "description": "Border-free identifier cell; on a header cell the state propagates to its column." },
+        { "name": "overflow-ellipsis", "description": "Single-line ellipsis overflow treatment; this is the default." },
+        { "name": "overflow-clip", "description": "Clip overflowing cell text without an ellipsis." },
+        { "name": "overflow-wrap", "description": "Wrap overflowing cell text and allow the row to grow." },
+        { "name": "overflow-visible", "description": "Allow cell content to overflow visibly." },
+        { "name": "nte-data-table-header", "description": "Connected title/action/search wrapper before the table component." },
+        { "name": "nte-data-table-search", "description": "Search-field layout inside a data-table header wrapper." }
+      ]
+    }
+  }
+}

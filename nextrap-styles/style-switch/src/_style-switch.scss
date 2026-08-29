@@ -1,0 +1,20 @@
+// Materialize the complete style-switch class API in the current Sass scope.
+
+@use './switch' as s;
+
+@mixin style-switch() {
+  .switch { @include s.switch(); }
+  .switch-input { @include s.switch-input(); }
+  .switch-control { @include s.switch-control(); }
+  .switch-label { @include s.switch-label(); }
+  .switch-label-start { @include s.switch-label-start(); }
+
+  .switch-sm { @include s.switch-sm(); }
+  .switch-lg { @include s.switch-lg(); }
+  .switch-xl { @include s.switch-xl(); }
+
+  .switch-outline { @include s.switch-outline(); }
+  .switch-material { @include s.switch-material(); }
+  .switch-square { @include s.switch-square(); }
+  .switch-icon { @include s.switch-icon(); }
+}

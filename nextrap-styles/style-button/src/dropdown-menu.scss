@@ -4,26 +4,46 @@
   --hover-bg: var(--nt-primary);
   --hover-text: var(--nt-text-on-primary);
 
+  position: fixed;
+  inset: auto;
+  position-area: block-end span-inline-end;
+  position-try-fallbacks: flip-block, flip-inline;
+  z-index: 10000;
   opacity: 0;
-  transition: opacity 0.3s ease;
-  position: absolute;
-  top: auto;
-  left: auto;
-  z-index: 1000;
+  transform: translateY(-0.25rem);
   display: none;
   min-width: 160px;
+  max-block-size: min(70vh, 24rem);
+  overflow-y: auto;
   padding: 0.5rem 0;
-  margin: 0;
+  margin: 0.25rem 0 0;
   list-style: none;
   background-color: rgb(from var(--nt-bg) r g b / 0.9);
+  border: var(--nt-border-width, 1px) solid rgb(from var(--nt-text) r g b / 0.15);
   border-radius: var(--nt-border-radius);
   box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease,
+    display 160ms allow-discrete,
+    overlay 160ms allow-discrete;
+
+  &:popover-open {
+    display: block;
+    opacity: 1;
+    transform: none;
+  }
+
+  @starting-style {
+    &:popover-open {
+      opacity: 0;
+      transform: translateY(-0.25rem);
+    }
+  }
 
   > li {
-    padding: 0.25rem 1rem;
+    padding: 0;
     color: var(--nt-text);
-    cursor: pointer;
-    transition: background-color 0.3s ease;
 
     > hr {
       margin: 0.5rem 0;
@@ -31,25 +51,38 @@
       border-top: 1px solid var(--nt-text);
     }
 
-    > a {
+    > :is(a, button) {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 0.5rem 1rem;
       color: inherit;
+      font: inherit;
+      text-align: start;
       text-decoration: none;
+      background: transparent;
+      border: 0;
+      cursor: pointer;
       display: block;
+      transition:
+        background-color 160ms ease,
+        color 160ms ease;
     }
 
-    &:has(hr):hover {
-      background-color: transparent;
-    }
-
-    &:hover {
+    > :is(a, button):is(:hover, :focus-visible) {
       background-color: var(--hover-bg);
       color: var(--hover-text);
     }
 
-    &.disabled {
+    &.disabled > :is(a, button),
+    > a[aria-disabled='true'],
+    > button:disabled {
       color: var(--nt-text-disabled);
       cursor: not-allowed;
       pointer-events: none;
     }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition-duration: 0.01ms;
   }
 }

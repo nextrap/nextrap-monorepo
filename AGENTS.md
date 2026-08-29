@@ -1,161 +1,17 @@
-# AGENTS.md – AI Agent Guide for nextrap-monorepo
+# AGENTS.md – nextrap-monorepo
 
-Diese Datei beschreibt, wie ein Coding-Agent in diesem Repository arbeiten soll.
+Diese Datei bleibt absichtlich kurz. Detaillierter Repository-Kontext steht in `AGENT_CONTEXT.md`; allgemeine Arbeitsregeln stehen in den Skills.
 
-## Grundprinzipien
+## Start
 
-- **Nicht unnötig kompliziert coden.** Bevorzuge einfache, gut lesbare und wartbare Lösungen.
-- **Nicht alles komplett umbauen, wenn es nicht ausdrücklich verlangt ist.** Änderungen sollen so klein und zielgerichtet wie möglich bleiben.
-- **Lieber nachfragen, wenn Anforderungen unklar sind.** Keine weitreichenden Annahmen treffen, wenn die Richtung nicht eindeutig ist.
-- **Lieber früher stoppen und nachfragen, ob weitergemacht werden soll.** Besonders bei größeren Refactorings, strukturellen Änderungen oder Folgearbeiten.
-- **An bestehendem Code orientieren.** Nutze vorhandene Patterns, Konventionen, Dateistrukturen und Stilmittel im Repository.
+1. `AGENT_CONTEXT.md` lesen und als Onboarding-Cache verwenden.
+2. Passende Skills laden, insbesondere `basic-coding`, `nextrap-lib-programming` und bei interner Arbeit an komplexen Strukturen `architecture-decisions`.
+3. Weitere Skills unter `.agents/skills/` konsultieren; diese können teilweise als Git-Submodule eingebunden sein.
+4. Bei package-spezifischer Arbeit lokale Skills unter `<package>/.agents/skills/` bevorzugen.
+5. Bei interner Projektentwicklung vor strukturellen Änderungen nach anwendbaren `ARCHITECTURE.md`-Dateien in Repository- und Package-Wurzeln suchen und deren Verträge unverändert einhalten. Diese Dateien sind keine Library-Usage-Dokumentation.
 
-## Vorgehen bei Änderungen
+## Repo-spezifische Kurzregeln
 
-- Arbeite bevorzugt **inkrementell** statt mit großen Rundum-Umbauten.
-- Passe vorhandene Lösungen an, bevor du neue Abstraktionen oder neue Architekturen einführst.
-- Vermeide "clevere" Lösungen, wenn eine einfache Lösung ausreicht.
-- Halte Diffs klein und nachvollziehbar.
-- Wenn eine Änderung potentiell mehrere sinnvolle Richtungen hat, stelle erst eine Rückfrage.
-
-## Rückfragen sind besonders sinnvoll, wenn
-
-- Anforderungen mehrdeutig sind.
-- ein Refactoring über den eigentlichen Auftrag hinausgehen würde.
-- bestehende Strukturen, APIs oder Dateiformate verändert werden müssten.
-- zusätzliche Folgearbeiten naheliegen, aber nicht ausdrücklich beauftragt wurden.
-- eine schnelle Minimaländerung ebenso möglich wäre wie eine größere "saubere" Lösung.
-
-## Orientierung an bestehendem Repository-Kontext
-
-- Bestehende Konventionen und Dokumentation im Repository haben Vorrang.
-- Vorhandene Hilfsfunktionen, Utilities und Muster sollen bevorzugt wiederverwendet werden.
-- Neue Strukturen nur dann einführen, wenn der vorhandene Aufbau dafür nicht geeignet ist.
-
-## Ziel
-
-Der Agent soll pragmatisch arbeiten: **einfach, passend zum Bestand, minimal-invasiv und mit rechtzeitigen Rückfragen statt unnötig großer Umbauten.**
-
-## Shadow DOM Komponenten
-
-Der shadow dom css sollte lediglich für die funktion unbedingt nötige css und variablen enthalten. Das eigentliche
-Styling wird durch ein mixin in der mixin.scss vorgenommen (über parts). Im Shadow DOM können Globae css variablen
-aus @nextrap/style-base verwendet werden (--nt-*).
-
-Lege im SCSS eine Klasse `.style-default` an, die das Styling-Mixin mit Standardwerten included. Beispiele sollten diese Klasse normalerweise nicht explizit setzen: `SetDefaultStyleMixin` fügt automatisch `style-default` hinzu, wenn keine Klasse mit Prefix `style-` vorhanden ist. Selektoren ohne `style-*` Klasse, z. B. nur `ntl-demo { ... }`, dürfen keine visuellen Default-Styles enthalten; ein Element ohne `style-*` Klasse sollte ungestyled bleiben. Pro Element darf immer nur eine `style-*` Klasse gesetzt sein. Weitere Style-Varianten müssen ebenfalls mit `style-` beginnen, z. B. `.style-testimonial`, und ihre vollständige visuelle Baseline selbst enthalten. Feature-/Modifier-Klassen verwenden dagegen sprechende `with-*` Namen, z. B. `.with-background-and-divider`.
-
-## Die .ai-usage-info.md Datei
-
-Diese Datei sollte für alle Pakete uptodate gehalten werden. In dieser sollten alle Informationen enthalten sein, um
-die AI zu informieren, damit sie die Anforderungen der Pakete versteht und entsprechend coden kann. In dieser Datei
-sollten hauptsächlich Beispiele enthalten sein. Suche ggf auch nach .ai-usage-info.md Dateien in anderen Paketen, um zu sehen, wie diese aufgebaut sind. (auch in node-modules)
-
-## Orientierung
-
-Orientiere dich beim Programmieren an Kompontneten wie nextrap-layout/ntl-2col und nextrap-elements/nte-notifier 
-
-
-## Architecture Overview
-
-Nx-managed npm monorepo with three package groups:
-
-| Directory | Prefix | Purpose |
-|---|---|---|
-| `nextrap-base/` | `nt-*` | Shared utilities, styling foundations, generators |
-| `nextrap-elements/` | `nte-*` | Lit web components (Shadow DOM) |
-| `nextrap-layout/` | `ntl-*` | Layout-level web components |
-
-All packages are independently versioned and published to npm under `@nextrap/`.
-
-New Packages should comply with de .ai-agent-info.md of ntl-core (for layout) or nte-core (for elements).
-
-## Key Developer Commands
-
-```bash
-nx dev <package>           # Start dev server (e.g. nx dev ntl-2col)
-nx build <package>         # Build a single package
-nx test <package>          # Run Vitest tests
-nx lint <package>          # ESLint check
-nx show project <package>  # List all available targets for a package
-
-# Generate a new element package:
-nx g @nextrap/nt-nx-generators:base --name nte-demo --path nextrap-elements/nte-demo
-
-# Release (from main branch only):
-nx release --skip-publish -p <package>
-git push --follow-tags origin main
-```
-
-After generating a new package, run `npm i` to link workspace dependencies.
-
-
-## Demos
-
-Use "@trunkjs/vite-demo-viewer" for visual demos of components. See the package for usage instructions.
-
-Package entrypoints must live in the package root: `index.ts` always belongs next to `package.json`, not below `src/`. The library build should use this root `index.ts` as entrypoint; `src/` contains implementation files only.
-
-
-## Component Authoring (Lit)
-
-Components use [Lit](https://lit.dev/) with Shadow DOM. Standard pattern:
-
-```ts
-import { LitElement, unsafeCSS } from 'lit';
-import { customElement } from 'lit/decorators.js';
-import style from './nte-my-component.scss?inline';
-import { nextrap_element } from './nextrap-element'; // ?inline = CSS string, not injected
-
-
-
-@customElement('nte-my-component')
-export class NteMyComponent extends nextrap_element() {
-    static override styles = [unsafeCSS(style)];
-}
-```
-
-- Import `@nextrap/style-reset` inside component `.scss` for baseline styles.
-- Do **not** import `@nextrap/style-base` in shipped component `.ts`/`.js` runtime code. `style-base` belongs to the consuming app/theme and must be included exactly once there. Direct `@nextrap/style-base` imports are allowed only in demos or explicit dev-only demo setups.
-- **Never import `style-*` packages (except `style-reset`) inside the Shadow DOM.**
-
-## Styling Conventions
-
-- Define all component CSS variables in `:host { }` – this is the public theming API.
-- Use default values from `@nextrap/style-base` variables (e.g. `var(--nt-primary)`).
-- Reference shadow DOM elements by `id`, never by class.
-- Add `part="..."` attributes to main shadow DOM elements for external styling.
-- Use `::slotted()` only for top-level slotted elements (nested selectors don't work in Shadow DOM).
-- For deep/nested slot styling, use Light DOM styles scoped to `nte-my-component { }`.
-- Do **not** use `::part()` inside shadow DOM stylesheets.
-
-## Dual Usage Pattern
-
-Components support both declarative HTML and programmatic instantiation – both produce identical Light DOM:
-
-```html
-<!-- Declarative -->
-<nte-card><h1 slot="title">Hello</h1></nte-card>
-```
-```js
-// Programmatic
-document.body.appendChild(new NteCard({ data: { title: 'Hello' } }));
-```
-
-## Path Aliases
-
-All intra-repo imports use `@nextrap/<package-name>` aliases defined in `tsconfig.base.json`. When adding a new package, register its path alias there.
-
-## External Dependencies
-
-All npm dependencies are defined **only** in the root `package.json` (single version per dependency). Do not add `dependencies` to individual package `package.json` files for external packages.
-
-## Key Files
-
-- `tsconfig.base.json` – all `@nextrap/*` path aliases
-- `nextrap-base/nt-nx-generators/` – Nx generator for scaffolding new packages (see these how to create new packages and follow their patterns)
-- `nextrap-base/nt-nx-generators/src/generators/` – generator project templates that new projects should use as the primary reference/orientation
-- `nextrap-base/style-base/` – global CSS variables / theming foundation (These may not be used inside of nte or ntl components - only defined once per Project)
-- `docs/style-packages-architecture.md` – architecture contract for all `@nextrap/style-*` packages (`index.scss` API vs `default.scss` output, class↔mixin parity, token-only `style-base`)
-- `nextrap-base/style-reset/` – Shadow DOM baseline reset (safe for Shadow DOM)
-- `docs/nextrap-elements-concept.md` – dual-usage pattern explained
-- `README_STYLING.md` – full component styling guide
+- Nicht aus `workspaces/`, `node_modules/`, `dist/` oder generierten Artefakten implementieren.
+- Cross-Package-Imports immer über `@nextrap/<package-name>`.
+- Externe npm-Abhängigkeiten nur im Root-`package.json` pflegen.

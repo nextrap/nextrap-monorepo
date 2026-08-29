@@ -1,0 +1,10 @@
+// @nextrap/style-switch — Sass API only. Importing this entry point emits no CSS.
+//
+// @use '@nextrap/style-switch' as s;
+// .theme-switch { @include s.switch(); @include s.switch-material(); }
+// .theme { @include s.style-switch(); }
+//
+// For ready-to-use root-level classes use `@nextrap/style-switch/default`.
+
+@forward './src/switch';
+@forward './src/style-switch' show style-switch;

@@ -8,8 +8,12 @@ import style from './nte-nav-item.scss?inline';
 export type NteNavItemCurrent = 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | '';
 
 @customElement('nte-nav-item')
-export class NteNavItem extends nextrap_element() {
+export class NteNavItem extends nextrap_element({ slotVisibility: true }) {
   static override styles = [unsafeCSS(style)];
+
+  private _presentationObserver: ResizeObserver | undefined;
+  private _lastInlinePresentation: boolean | undefined;
+  private _preserveDetailsOnPopoverClose = false;
 
   @property({ type: String, reflect: true }) public accessor href = '';
   @property({ type: String, reflect: true }) public accessor target = '';
@@ -22,7 +26,6 @@ export class NteNavItem extends nextrap_element() {
   @property({ type: String, attribute: 'submenu-label' })
   public accessor submenuLabel = 'Untermenü';
 
-  @state() private accessor _hasIcon = false;
   @state() private accessor _hasSubmenu = false;
   @state() private accessor _labelText = '';
 
@@ -32,10 +35,25 @@ export class NteNavItem extends nextrap_element() {
     if (!this.hasAttribute('role')) {
       this.setAttribute('role', 'listitem');
     }
+
+    this._assignNestedItems();
+
+    if (this.hasUpdated) {
+      queueMicrotask(() => this._startPresentationObserver());
+    }
+  }
+
+  override disconnectedCallback() {
+    this._presentationObserver?.disconnect();
+    super.disconnectedCallback();
   }
 
   protected override updated(changedProperties: PropertyValues<this>) {
     super.updated(changedProperties);
+
+    if (!this._presentationObserver) {
+      this._startPresentationObserver();
+    }
 
     if (changedProperties.has('order')) {
       if (this.order === undefined || Number.isNaN(this.order)) {
@@ -52,37 +70,42 @@ export class NteNavItem extends nextrap_element() {
     return html`
       <div id="item" part="item">
         ${
-          this.href
+          this._hasSubmenu
             ? html`
-                <a
-                  id="link"
-                  part="link"
-                  href=${this.href}
-                  target=${ifDefined(this.target || undefined)}
-                  rel=${ifDefined(this.rel || undefined)}
-                  download=${ifDefined(this.hasAttribute('download') ? this.download : undefined)}
-                  aria-current=${ifDefined(this.current || undefined)}
-                >
-                  ${label}
-                </a>
-                ${this._hasSubmenu ? this._renderIconOnlyDisclosure() : nothing}
+                ${this.href ? this._renderLink(label) : nothing}
+                <details id="details" part="details">
+                  ${this.href ? this._renderIconOnlyDisclosure() : this._renderLabelDisclosure(label)}
+                  ${this._renderSubmenu()}
+                </details>
               `
-            : this._hasSubmenu
-              ? this._renderLabelDisclosure(label)
+            : this.href
+              ? this._renderLink(label)
               : html`<span id="text" part="text">${label}</span>`
         }
-
-        <div id="submenu" part="submenu" role="list" aria-label=${this._submenuAccessibleName()} popover="auto">
-          <slot name="submenu" @slotchange=${this._onSubmenuSlotChange}></slot>
-        </div>
       </div>
+    `;
+  }
+
+  private _renderLink(label: unknown) {
+    return html`
+      <a
+        id="link"
+        part="link"
+        href=${this.href}
+        target=${ifDefined(this.target || undefined)}
+        rel=${ifDefined(this.rel || undefined)}
+        download=${ifDefined(this.hasAttribute('download') ? this.download : undefined)}
+        aria-current=${ifDefined(this.current || undefined)}
+      >
+        ${label}
+      </a>
     `;
   }
 
   private _renderLabel() {
     return html`
-      <span id="icon" part="icon" ?hidden=${!this._hasIcon}>
-        <slot name="icon" @slotchange=${this._onIconSlotChange}></slot>
+      <span id="icon" part="icon">
+        <slot name="icon"></slot>
       </span>
       <span id="label" part="label">
         <slot @slotchange=${this._onLabelSlotChange}></slot>
@@ -92,24 +115,34 @@ export class NteNavItem extends nextrap_element() {
 
   private _renderIconOnlyDisclosure() {
     return html`
-      <button
+      <summary
         id="toggle"
         part="toggle"
-        type="button"
-        popovertarget="submenu"
-        aria-controls="submenu"
         aria-label=${this._submenuAccessibleName()}
+        @click=${this._onDisclosureClick}
       >
         ${this._renderIndicator()}
-      </button>
+      </summary>
     `;
   }
 
   private _renderLabelDisclosure(label: unknown) {
+    return html`<summary id="disclosure" part="disclosure" @click=${this._onDisclosureClick}>${label} ${this._renderIndicator()}</summary>`;
+  }
+
+  private _renderSubmenu() {
     return html`
-      <button id="disclosure" part="disclosure" type="button" popovertarget="submenu" aria-controls="submenu">
-        ${label} ${this._renderIndicator()}
-      </button>
+      <div
+        id="submenu"
+        part="submenu"
+        role="list"
+        aria-label=${this._submenuAccessibleName()}
+        @toggle=${this._onPopoverToggle}
+      >
+        <div id="submenu-inner" part="submenu-inner">
+          <slot name="submenu" @slotchange=${this._onSubmenuSlotChange}></slot>
+        </div>
+      </div>
     `;
   }
 
@@ -125,20 +158,11 @@ export class NteNavItem extends nextrap_element() {
     return this._labelText ? `${this.submenuLabel}: ${this._labelText}` : this.submenuLabel;
   }
 
-  private _onIconSlotChange(event: Event) {
-    const slot = event.currentTarget as HTMLSlotElement;
-    this._hasIcon = slot.assignedNodes({ flatten: true }).some((node) => this._hasVisibleContent(node));
-  }
-
   private _onLabelSlotChange(event: Event) {
     const slot = event.currentTarget as HTMLSlotElement;
     const assignedNodes = slot.assignedNodes({ flatten: true });
 
-    assignedNodes.forEach((node) => {
-      if (node instanceof HTMLElement && node.matches('nte-nav-item')) {
-        node.setAttribute('slot', 'submenu');
-      }
-    });
+    this._assignNestedItems();
 
     this._labelText = assignedNodes
       .filter((node) => !(node instanceof HTMLElement && node.matches('nte-nav-item')))
@@ -152,8 +176,150 @@ export class NteNavItem extends nextrap_element() {
     this._hasSubmenu = slot.assignedElements({ flatten: true }).some((element) => element.matches('nte-nav-item'));
   }
 
-  private _hasVisibleContent(node: Node) {
-    return node.nodeType === Node.ELEMENT_NODE || Boolean(node.textContent?.trim());
+  private _onDisclosureClick(event: MouseEvent) {
+    const submenu = this._submenuElement();
+
+    if (!submenu) {
+      return;
+    }
+
+    if (this._usesInlinePresentation()) {
+      submenu.removeAttribute('popover');
+      return;
+    }
+
+    if (!this._supportsPopover(submenu)) {
+      return;
+    }
+
+    event.preventDefault();
+
+    if (this._isPopoverOpen(submenu)) {
+      submenu.hidePopover();
+      return;
+    }
+
+    this._showPopover(submenu, event.currentTarget as HTMLElement);
+  }
+
+  private _onPopoverToggle(event: Event) {
+    const toggleEvent = event as Event & { newState?: 'open' | 'closed' };
+
+    if (toggleEvent.newState !== 'closed') {
+      return;
+    }
+
+    const submenu = event.currentTarget as HTMLElement;
+    const details = this.shadowRoot?.getElementById('details') as HTMLDetailsElement | null;
+
+    submenu.removeAttribute('popover');
+
+    if (this._preserveDetailsOnPopoverClose) {
+      this._preserveDetailsOnPopoverClose = false;
+      if (details) {
+        details.open = true;
+      }
+      return;
+    }
+
+    if (details) {
+      details.open = false;
+    }
+  }
+
+  private _startPresentationObserver() {
+    if (!this.isConnected || typeof ResizeObserver === 'undefined') {
+      return;
+    }
+
+    this._presentationObserver ??= new ResizeObserver(() => this._syncSubmenuPresentation());
+    this._presentationObserver.disconnect();
+    this._presentationObserver.observe(this);
+    this._presentationObserver.observe(document.documentElement);
+    this._syncSubmenuPresentation();
+  }
+
+  private _syncSubmenuPresentation() {
+    const usesInlinePresentation = this._usesInlinePresentation();
+
+    if (usesInlinePresentation === this._lastInlinePresentation) {
+      return;
+    }
+
+    this._lastInlinePresentation = usesInlinePresentation;
+
+    const submenu = this._submenuElement();
+    const details = this.shadowRoot?.getElementById('details') as HTMLDetailsElement | null;
+
+    if (!submenu || !details) {
+      return;
+    }
+
+    if (usesInlinePresentation) {
+      if (this._supportsPopover(submenu) && this._isPopoverOpen(submenu)) {
+        this._preserveDetailsOnPopoverClose = details.open;
+        submenu.hidePopover();
+      } else {
+        submenu.removeAttribute('popover');
+      }
+      return;
+    }
+
+    if (!this._supportsPopover(submenu)) {
+      return;
+    }
+
+    if (details.open) {
+      this._showPopover(submenu);
+    }
+  }
+
+  private _showPopover(submenu: HTMLElement, source = this._disclosureElement()) {
+    const details = this.shadowRoot?.getElementById('details') as HTMLDetailsElement | null;
+
+    if (!details || !this._supportsPopover(submenu)) {
+      return;
+    }
+
+    details.open = true;
+    submenu.setAttribute('popover', 'auto');
+
+    try {
+      (submenu.showPopover as (options?: { source?: HTMLElement }) => void)({ source: source ?? undefined });
+    } catch {
+      submenu.removeAttribute('popover');
+    }
+  }
+
+  private _usesInlinePresentation() {
+    return getComputedStyle(this).getPropertyValue('--nte-nav-submenu-position').trim() === 'static';
+  }
+
+  private _submenuElement() {
+    return this.shadowRoot?.getElementById('submenu') ?? null;
+  }
+
+  private _disclosureElement() {
+    return this.shadowRoot?.querySelector<HTMLElement>('#toggle, #disclosure') ?? null;
+  }
+
+  private _supportsPopover(element: HTMLElement) {
+    return typeof element.showPopover === 'function' && typeof element.hidePopover === 'function';
+  }
+
+  private _isPopoverOpen(element: HTMLElement) {
+    try {
+      return element.matches(':popover-open');
+    } catch {
+      return false;
+    }
+  }
+
+  private _assignNestedItems() {
+    const nestedItems = Array.from(this.children).filter((element) => element.matches('nte-nav-item'));
+
+    nestedItems.forEach((item) => item.setAttribute('slot', 'submenu'));
+    this._hasSubmenu = nestedItems.length > 0;
   }
 }
 

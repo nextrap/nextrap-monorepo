@@ -1,0 +1,5 @@
+// @nextrap/style-switch/default — ready-to-use root-level switch classes.
+
+@use './index' as s;
+
+@include s.style-switch();

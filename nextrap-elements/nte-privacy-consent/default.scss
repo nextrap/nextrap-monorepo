@@ -1,0 +1,5 @@
+@use './index' as privacy-consent;
+
+nte-privacy-consent.style-default {
+  @include privacy-consent.style-default();
+}

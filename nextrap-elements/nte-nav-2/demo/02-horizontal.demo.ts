@@ -5,7 +5,7 @@ import { renderDocumentDemo } from './main';
 
 export default defineDemo({
   title: 'Horizontal',
-  description: 'Hauptnavigation mit Icons und mehrstufigen Popover-Untermenüs',
+  description: 'Hauptnavigation mit Icons, nicht verlinkten Eltern und mehrstufigen Popup-Untermenüs',
   render(root) {
     renderDocumentDemo(root, demoHtml);
   },
