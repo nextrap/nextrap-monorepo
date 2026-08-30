@@ -1,0 +1,25 @@
+.nte-spinner-demo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 2rem;
+
+  figure {
+    display: grid;
+    justify-items: center;
+    gap: 0.75rem;
+    margin: 0;
+  }
+
+  nte-spinner {
+    width: 6rem;
+  }
+}
+
+.nte-spinner-interactive-demo {
+  display: grid;
+  place-items: center;
+
+  nte-spinner {
+    width: 10rem;
+  }
+}

@@ -1,0 +1,39 @@
+.nte-scrollspy-demo {
+  display: grid;
+  grid-template-columns: minmax(12rem, 16rem) minmax(0, 1fr);
+  gap: var(--nt-space-4, 1rem);
+  max-inline-size: 64rem;
+  margin-inline: auto;
+  padding: var(--nt-space-4, 1rem);
+}
+
+.nte-scrollspy-demo__navigation {
+  align-self: start;
+  position: sticky;
+  inset-block-start: var(--nt-space-4, 1rem);
+}
+
+.nte-scrollspy-demo__content {
+  max-block-size: 32rem;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  padding-inline: var(--nt-space-4, 1rem);
+  border: 1px solid var(--nt-border, #dee2e6);
+  border-radius: var(--nt-border-radius, 0.5rem);
+}
+
+.nte-scrollspy-demo__content section {
+  min-block-size: 22rem;
+  padding-block: var(--nt-space-4, 1rem);
+  scroll-margin-block-start: var(--nt-space-3, 0.75rem);
+}
+
+@media (max-width: 42rem) {
+  .nte-scrollspy-demo {
+    grid-template-columns: 1fr;
+  }
+
+  .nte-scrollspy-demo__navigation {
+    position: static;
+  }
+}

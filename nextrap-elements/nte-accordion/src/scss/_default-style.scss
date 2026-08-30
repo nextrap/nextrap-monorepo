@@ -7,7 +7,7 @@
   $summary-padding: var(--nt-space-3),
   $content-padding: var(--nt-space-3),
   $summary-background: var(--nt-light-subtle),
-  $summary-background-hover: var(--nt-light),
+  $summary-background-hover: color-mix(in oklch, var(--summary-background) 88%, var(--nt-primary, #007bff) 12%),
   $summary-color: inherit,
   $content-background: transparent,
   $marker-size: 1.25rem,
@@ -46,14 +46,36 @@
   nte-accordion-item {
     &::part(details) {
       border: var(--border);
-      border-radius: var(--border-radius);
       overflow: hidden;
+
+      @if ($item-gap == 0) {
+        border-radius: 0;
+      } @else {
+        border-radius: var(--border-radius);
+      }
+    }
+
+    @if ($item-gap == 0) {
+      &:first-of-type::part(details) {
+        border-start-start-radius: var(--border-radius);
+        border-start-end-radius: var(--border-radius);
+      }
+
+      &:last-of-type::part(details) {
+        border-end-start-radius: var(--border-radius);
+        border-end-end-radius: var(--border-radius);
+      }
+
+      & + nte-accordion-item::part(details) {
+        border-block-start: 0;
+      }
     }
 
     &::part(summary) {
       padding: var(--summary-padding);
       color: var(--summary-color);
       background: var(--summary-background);
+      transition: background var(--transition-duration, 150ms) ease;
     }
 
     &::part(summary):hover {

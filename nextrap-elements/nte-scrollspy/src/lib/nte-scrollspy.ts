@@ -1,4 +1,4 @@
-import { html, LitElement, PropertyValues, unsafeCSS } from 'lit';
+import { html, LitElement, nothing, PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { IScrollSpyObserverConfig, ScrollSpyObserver } from './scrollspy-observer';
 import style from './scrollspy-shadow.scss?inline';
@@ -89,6 +89,8 @@ export class NtScrollSpyElement extends LitElement {
   // Reference to the slot element
   private slotElement: HTMLSlotElement | null = null;
 
+  private readonly handleSlotChangeListener = () => this.handleSlotChange();
+
   // Track if slot content exists
   @state()
   private hasSlottedContent = false;
@@ -112,8 +114,7 @@ export class NtScrollSpyElement extends LitElement {
     this.slotElement = this.shadowRoot?.querySelector('slot') || null;
 
     if (this.slotElement) {
-      // Use bind(this) to ensure correct context
-      this.slotElement.addEventListener('slotchange', this.handleSlotChange.bind(this));
+      this.slotElement.addEventListener('slotchange', this.handleSlotChangeListener);
       // Initial check
       this.handleSlotChange();
     } else {
@@ -141,11 +142,9 @@ export class NtScrollSpyElement extends LitElement {
     // Filter out text nodes and empty nodes
     const hasContent = assignedNodes.some((node) => {
       if (node.nodeType === Node.ELEMENT_NODE) {
-        console.log('nte-scrollspy: Found element in slot:', (node as Element).tagName);
         return true;
       }
       if (node.nodeType === Node.TEXT_NODE && node.textContent && node.textContent.trim()) {
-        console.log('nte-scrollspy: Found non-empty text node in slot');
         return true;
       }
       return false;
@@ -170,13 +169,15 @@ export class NtScrollSpyElement extends LitElement {
   protected override updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
 
-    if (changedProperties.has('config')) {
+    if (changedProperties.has('config') || changedProperties.has('dataTarget')) {
       // Reset target element cache when config changes
       this._targetElementCache = null;
 
       this.updateNavigationItems();
-      this.applyClasses();
-      this.applyAttributes();
+      if (changedProperties.has('config')) {
+        this.applyClasses();
+        this.applyAttributes();
+      }
       this.setupScrollObserver(); // Re-initialize observer with new config
     }
   }
@@ -189,7 +190,7 @@ export class NtScrollSpyElement extends LitElement {
 
     // Remove slot change listener if exists
     if (this.slotElement) {
-      this.slotElement.removeEventListener('slotchange', this.handleSlotChange.bind(this));
+      this.slotElement.removeEventListener('slotchange', this.handleSlotChangeListener);
     }
 
     this.disconnectObserver();
@@ -442,19 +443,21 @@ export class NtScrollSpyElement extends LitElement {
     };
 
     // Create link or span for the item content
-    const contentElement = !this.config.linkItems
-      ? html`<a
-          href="#${item.id}"
-          @click=${handleClick}
-          part="scrollspy-item-link item-link ${item.active ? 'active-link' : ''} ${isVisited ? 'viewed-link' : ''}"
-          class="scrollspy-item-link"
-          >${item.label}</a
-        >`
-      : html`<span
-          part="scrollspy-item-label ${item.active ? 'active-label' : ''} ${isVisited ? 'viewed-label' : ''}"
-          class="scrollspy-item-label"
-          >${item.label}</span
-        >`;
+    const contentElement =
+      this.config.linkItems !== false
+        ? html`<a
+            href="#${item.id}"
+            @click=${handleClick}
+            aria-current=${item.active ? 'location' : nothing}
+            part="scrollspy-item-link item-link ${item.active ? 'active-link' : ''} ${isVisited ? 'viewed-link' : ''}"
+            class="scrollspy-item-link"
+            >${item.label}</a
+          >`
+        : html`<span
+            part="scrollspy-item-label ${item.active ? 'active-label' : ''} ${isVisited ? 'viewed-label' : ''}"
+            class="scrollspy-item-label"
+            >${item.label}</span
+          >`;
 
     return html`
       <li
@@ -462,12 +465,11 @@ export class NtScrollSpyElement extends LitElement {
         part="scrollspy-item item ${item.active ? 'active-item' : ''} ${isVisited ? 'viewed-item' : ''}"
         class="${itemClass}"
         ?data-viewed="${isVisited}"
-        aria-current="${item.active ? 'true' : 'false'}"
       >
         <span
-          part="scrollspy-decorator decorator ${item.active ? 'active-decorator' : ''} ${isVisited
-            ? 'viewed-decorator'
-            : ''}"
+          part="scrollspy-decorator decorator ${item.active ? 'active-decorator' : ''} ${
+            isVisited ? 'viewed-decorator' : ''
+          }"
           class="scrollspy-item-decorator"
           data-index="${index + 1}"
         ></span>
@@ -479,19 +481,19 @@ export class NtScrollSpyElement extends LitElement {
   // Renders the navigation list
   protected override render() {
     const orientation = this.getOrientation();
-    console.log('nte-scrollspy: Rendering with hasSlottedContent:', this.hasSlottedContent);
-
     return html`
       <div id="scrollspy" part="scrollspy container" class="scrollspy scrollspy-${orientation}">
         <!-- Always include the slot in the template -->
         <slot></slot>
-        ${!this.hasSlottedContent
-          ? html`
-              <ul part="scrollspy-menu menu" class="scrollspy-menu">
-                ${this.navigationItems.map((item, index) => this.renderNavigationItem(item, index))}
-              </ul>
-            `
-          : ''}
+        ${
+          !this.hasSlottedContent
+            ? html`
+                <ul part="scrollspy-menu menu" class="scrollspy-menu">
+                  ${this.navigationItems.map((item, index) => this.renderNavigationItem(item, index))}
+                </ul>
+              `
+            : ''
+        }
       </div>
     `;
   }

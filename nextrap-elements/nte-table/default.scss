@@ -1,0 +1,26 @@
+@use './index' as table;
+
+nte-table.style-default {
+  @include table.default-style();
+}
+
+nte-table.style-default.with-header-strong {
+  @include table.header-strong();
+}
+
+nte-table.style-default.with-header-minimal {
+  @include table.header-minimal();
+}
+
+.nte-table-header {
+  @include table.nte-table-header();
+}
+
+.nte-table-search {
+  @include table.nte-table-search();
+}
+
+.nte-table-header + nte-table.style-default {
+  border-start-start-radius: 0;
+  border-start-end-radius: 0;
+}

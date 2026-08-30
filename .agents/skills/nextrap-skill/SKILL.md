@@ -33,7 +33,8 @@ Die nextrap elemente werden als einzelne packages auf npmjs veröffentlicht. Es 
 - SCSS-Feature-Mixins sollen keine konkreten Demo-/Modifier-Klassennamen enthalten. Das Mixin beschreibt nur das Feature; die Klasse oder der Zielselektor bindet das Mixin ein.
 - Jedes Mixin wird in einer eigenen SCSS-Datei unter src/scss/ definiert und in index.scss exportiert.
 - Der Name für Feature-/Modifier-Mixins startet mit `with-<feature>` und beschreibt das Feature, z. B. `with-background-and-divider`.
-- Layout-Beispiele in Dokumentation und Demos immer im `trunkjs/content-pane` Markdown-Format mit `{: layout="..."}` schreiben, nicht als direktes HTML.
+- Layout-Beispiele in Dokumentation und Demos immer im `trunkjs/content-pane` Markdown-Format mit `{: layout="..."}` schreiben, nicht als direktes HTML. Kramdown-Blockattribute müssen ohne Leerzeile direkt auf den zugehörigen Block folgen; das gilt für horizontale Linien (`---`), Tabellen, Absätze und alle anderen Blöcke, zum Beispiel `---` unmittelbar gefolgt von `{: layout="..."}`.
+- Jedes Package mit einer Element-/Markup-API, das in Layout-Komponenten eingesetzt werden kann oder dafür vorgesehen ist, erhält als primäres Beispiel eine Markdown-zentrierte `.demo.ts`. Nur rein programmatische APIs sind davon ausgenommen. Die Demo muss `@trunkjs/content-pane` importieren und das gerenderte Markdown über `wrapper_html: '<tj-content-pane>{{content}}</tj-content-pane>'` durch Content Pane verarbeiten; befolge dafür den package-lokalen `content-pane-demo` Skill von `@trunkjs/content-pane`.
 - `Migrations` immer kurz als Tabelle mit den Spalten `Old` und `New` dokumentieren; keine vollständigen Vorher-/Nachher-Beispiele duplizieren.
 
 ## Proposals

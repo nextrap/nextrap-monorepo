@@ -1,28 +1,13 @@
 ---
 name: nte-data-table-theming
-description: "Theme @nextrap/nte-data-table through its default, header, cell-state, toolbar and search Sass mixins."
+description: "Theme @nextrap/nte-data-table through its composed nte-table and default-style Sass entry point."
 ---
 
-# Nte Data Table Theming
+# NTE Data Table Theming
 
-Use this skill for theme SCSS. For markup and API, use `nte-data-table-usage`.
+- The generated native table is presented by the inner `nte-table`; use the public `@nextrap/nte-table` theming contract for cells, headers, states and plugin controls.
+- `@nextrap/nte-data-table/default` includes the table default.
+- Do not target the outer Shadow DOM internals or duplicate table layout rules.
+- Data renderers may return deliberate Nodes for semantic content; instance-specific presentation belongs in renderer output or application classes.
 
-```scss
-@use '@nextrap/nte-data-table' as dataTable;
-
-nte-data-table.style-brand {
-  @include dataTable.default-style();
-  @include dataTable.header-strong($background: var(--nt-primary));
-  @include dataTable.cell-states();
-}
-```
-
-- `default-style()` emits the grid, default header, fixed-caption treatment, footer top border, zero-radius cells and ellipsis overflow baseline.
-- `header-default()`, `header-strong()`, and `header-minimal()` provide composable header treatments.
-- `cell-states()` styles indicators, selections, semantic highlights and border-free cells.
-- `plugin-controls()` styles sort controls, drag handles, dragging state and drop targets.
-- Preserve the neutral, `aria-hidden`, viewport-clipped drag ghost, hidden-original placeholders, drop-target indicators, and reduced-motion handling used by the animated Pointer Event reorder previews.
-- `nte-data-table-header()` and `nte-data-table-search()` style an external connected toolbar.
-- The host owns the only outer border and border radius. Use `::part(viewport)` only for inner viewport color/layout and keep its border/radius at zero; native table descendants must remain radius-free.
-- Preserve the component's zero table margin/padding, single-line header/footer cells, section-colored `tr::after` filler cells, their non-sizing inline-start separator when remainder space exists, and the final body-row separator.
-- Treat `data-nte-data-table-*` as read-only state hooks. Preserve tbody-only scrolling, functional widths, visibility, sticky positioning and opaque pinned-cell backgrounds.
+See `../nte-data-table-usage/SKILL.md` and `demo/01-data.demo.ts`.

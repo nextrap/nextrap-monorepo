@@ -1,3 +1,5 @@
-# nte-burger
+# NTE Burger
 
-A burger element, e.g. for a navigation menu.
+An accessible responsive disclosure button for navigation menus.
+
+See the packaged [`nte-burger-usage`](skills/nte-burger-usage/SKILL.md) skill and the demos for the public API and examples.

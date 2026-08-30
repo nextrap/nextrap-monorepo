@@ -6,6 +6,7 @@ workspaces/
 dist
 tmp
 out-tsc
+/docs/assets/
 
 # test assets
 nextrap-base/**/__screenshots__
@@ -53,3 +54,6 @@ vite.config.*.timestamp*
 vitest.config.*.timestamp*
 .cursor/rules/nx-rules.mdc
 .github/instructions/nx.instructions.md
+
+# Agent skills from npm packages (managed by skills-npm)
+**/skills/npm-*

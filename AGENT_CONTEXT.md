@@ -43,11 +43,12 @@ Root `package.json` workspaces:
   "nextrap-base/*",
   "nextrap-elements/*",
   "nextrap-layout/*",
-  "nextrap-styles/*"
+  "nextrap-styles/*",
+  "workspaces/trunkjs-monorepo/packages/*"
 ]
 ```
 
-Do not treat ignored/local `workspaces/` content as part of the committed Nx workspace.
+`workspaces/trunkjs-monorepo/packages/*` is included as a root npm workspace when present; do not implement unrelated changes from other ignored/local `workspaces/` content.
 
 ## Project list
 
@@ -62,7 +63,8 @@ Do not treat ignored/local `workspaces/` content as part of the committed Nx wor
 | `@nextrap/nte-burger` | `nextrap-elements/nte-burger` | Burger-/Menu-Button-Element |
 | `@nextrap/nte-card` | `nextrap-elements/nte-card` | Card-Element |
 | `@nextrap/nte-consent-blocker` | `nextrap-elements/nte-consent-blocker` | Consent-/Privacy-Blocker-Element |
-| `@nextrap/nte-data-table` | `nextrap-elements/nte-data-table` | Tabellen-Viewport mit Sticky Header/Footer und Spaltenlayout |
+| `@nextrap/nte-table` | `nextrap-elements/nte-table` | Native Tabellenbasis mit Body-Viewport, festem Header/Footer und Spalteninteraktionen |
+| `@nextrap/nte-data-table` | `nextrap-elements/nte-data-table` | Rendert Objektarrays über TableDefinition und serialisierbaren TableViewState |
 | `@nextrap/nte-demo-viewer` | `nextrap-elements/nte-demo-viewer` | Demo-Viewer-Element |
 | `@nextrap/nte-dialog` | `nextrap-elements/nte-dialog` | Dialog-/Modal-Element |
 | `@nextrap/nte-dialog-component` | `nextrap-elements/nte-dialog-component` | Dialog-Komponentenbasis |
@@ -137,6 +139,7 @@ npx vite build
 | `nx.json` | Nx workspace config |
 | `tsconfig.base.json` | `@nextrap/*` path aliases |
 | `vite.config.ts` | root Vite demo viewer config |
+| `skills-npm.config.ts` | configures npm-shipped skill links into `.agents/skills` for allowed orgs |
 | `README_STYLING.md` | styling guide |
 | `docs/style-packages-architecture.md` | `@nextrap/style-*` architecture contract |
 | `docs/nextrap-elements-concept.md` | dual-usage concept |
@@ -148,7 +151,8 @@ npx vite build
 
 - External npm dependencies are managed centrally in root `package.json`.
 - Intra-repo imports should use `@nextrap/<package-name>` aliases, not relative cross-package paths.
-- `@trunkjs/vite-demo-viewer` is a root dev dependency resolved from npm registry, not from a local `workspaces/trunkjs-monorepo` workspace.
+- `workspaces/trunkjs-monorepo/packages/*` is included in root npm workspaces when present; run `npm install` to refresh workspace links after changes.
+- `skills-npm` is configured with `agents: ['universal']` and allowed orgs `@leuffen/*`, `@nextrap/*`, `@trunkjs/*`; generated links live directly in `.agents/skills`. The root `prepare` script runs `skills-npm --source node_modules --yes --force` so workspace-linked package skills are included without install-time prompts or stale cache cleanup.
 - Determine package versions with targeted commands (`npm pkg get`, `npm ls`, `jq`, short Node scripts). Do not read full lockfiles unless a full lockfile analysis is explicitly requested.
 
 ## Package authoring reminders
