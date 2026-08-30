@@ -301,6 +301,18 @@ button {
 
 Diese Mixins beziehen Farbe, Border, Radius, Spacing und weitere Theme-Werte selbst aus den geerbten `--nt-*` Tokens. Solche Werte dürfen in der Web Component nicht nochmals nachgebaut oder als lokale Kopien der globalen Tokens definiert werden. Lokale Custom Properties sind nur für eine echte, dokumentierte Komponenten-API oder einen internen komponentenspezifischen Wert zulässig, nicht als Weiterleitungsmechanismus für `style-base`.
 
+Interne Custom Properties sollen durch einen internen Namen wie `--_<component>-<property>` als nicht öffentliche API erkennbar sein. Wenn ein Wert auch nicht an Nachfahren oder einen darin verschachtelten Shadow DOM vererbt werden soll, kann die Property zusätzlich typisiert und mit `inherits: false` registriert werden:
+
+```css
+@property --_dialog-animation-offset {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+```
+
+`inherits: false` bedeutet „nicht vererbbar“, nicht „privat“ oder sicher verborgen: CSS kann den Namen weiterhin referenzieren oder überschreiben. Die Registrierung stoppt außerdem die Vererbung an **alle** Nachfahren innerhalb desselben Shadow Trees. Verwende sie daher nur für Werte, die direkt auf dem Element gesetzt und dort konsumiert werden. Muss ein interner Wert zwischen mehreren Shadow-DOM-internen Nachfahren vererbt werden, bleibt er vererbbar und wird lediglich über die interne Namenskonvention als nicht öffentliche Komponenten-API markiert.
+
 Für Shadow-DOM-SCSS gilt:
 
 - Bevorzuge einzelne öffentliche Mixins wie `btn()`, `btn-primary()`, `table()` oder gezielte Utility-Mixins.
