@@ -77,9 +77,8 @@ describe('NteNavItem', () => {
     element.remove();
   });
 
-  it('removes stale popover state before opening an inline submenu', async () => {
+  it('keeps the submenu out of the Popover top layer when the disclosure opens', async () => {
     const element = document.createElement('nte-nav-item') as NteNavItem;
-    element.style.setProperty('--nte-nav-submenu-position', 'static');
     element.append('Produkte');
 
     const child = document.createElement('nte-nav-item');
@@ -89,15 +88,16 @@ describe('NteNavItem', () => {
 
     await element.updateComplete;
 
+    const details = element.shadowRoot?.getElementById('details') as HTMLDetailsElement | null;
     const disclosure = element.shadowRoot?.getElementById('disclosure');
     const submenu = element.shadowRoot?.getElementById('submenu');
-    submenu?.setAttribute('popover', 'auto');
 
-    const click = new MouseEvent('click', { bubbles: true, cancelable: true });
-    disclosure?.dispatchEvent(click);
+    disclosure?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    details!.open = true;
 
-    expect(click.defaultPrevented).toBe(false);
+    expect(details?.open).toBe(true);
     expect(submenu?.hasAttribute('popover')).toBe(false);
+    expect(disclosure?.hasAttribute('popovertarget')).toBe(false);
 
     element.remove();
   });
