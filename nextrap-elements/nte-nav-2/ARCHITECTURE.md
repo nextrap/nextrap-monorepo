@@ -14,15 +14,24 @@ package SCSS mixins. Orientation custom properties are owned by `nte-nav-2` and
 inherited by every nested `nte-nav-item`; an item must not replace inherited
 orientation values with local horizontal defaults.
 
-- Horizontal submenus use a native Popover in the top layer.
-- Vertical submenus remain in normal document flow and expand below their
-  parent item through the native `details` state.
+All submenu variations use the same native `details`/`summary` disclosure and
+remain in normal document flow. Horizontal and vertical variations may change
+only the submenu's CSS presentation; they must not replace its interaction
+model or move it into the browser's top layer.
 
-CSS cannot move an already open Popover out of the browser's top layer. The
-item therefore synchronizes presentation in JavaScript: before entering the
-vertical mode it calls `hidePopover()` when necessary and removes the
-`popover` attribute while preserving the open `details` state. When returning
-to horizontal mode, an open disclosure may be promoted to a Popover again.
+## Popover invariant
 
-The DOM, link semantics and disclosure state remain stable across mode changes;
-the component neither clones nor relocates navigation items.
+The submenu element must never receive a `popover` attribute, and disclosure
+elements must never receive `popovertarget`. Do not call `showPopover()` or
+`hidePopover()` from `nte-nav-item`.
+
+This is an intentional architectural constraint, not a missing enhancement.
+Enabling Popover moves the submenu into the top layer and breaks the vertical
+menu's inline expansion. Style variations must therefore preserve the native
+`details` state and keep Popover disabled.
+
+A regression test must verify that opening a submenu leaves both `popover` and
+`popovertarget` absent.
+
+The DOM, link semantics and disclosure state remain stable across presentation
+changes; the component neither clones nor relocates navigation items.
