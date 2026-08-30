@@ -1,3 +1,5 @@
+@use '@nextrap/style-button' as button;
+
 :host {
   position: relative;
   z-index: 9999;
@@ -8,9 +10,13 @@
   max-height: var(--nte-app-interaction-dialog-max-height, calc(100vh - 2rem));
   margin: 0;
   padding: 0;
-  background: white;
-  border: 1px solid darkgray;
-  color: var(--nte-app-interaction-dialog-color, inherit);
+  background: var(--nt-surface-raised);
+  border: var(--nt-border-width) solid var(--nt-border);
+  border-radius: var(--nt-border-radius-xl);
+  box-shadow:
+    0 0.5rem 1rem rgb(from var(--nt-text) r g b / 0.15),
+    0 0.125rem 0.25rem rgb(from var(--nt-text) r g b / 0.075);
+  color: var(--nt-text);
   position: fixed;
   inset: 50% auto auto 50%;
   transform: translate(-50%, -50%);
@@ -22,7 +28,12 @@
 }
 
 #dialog::backdrop {
-  background: var(--nte-app-interaction-dialog-backdrop, rgba(0, 0, 0, 0.45));
+  background: rgb(from var(--nt-dark) r g b / 0.5);
+  backdrop-filter: blur(6px);
+}
+
+#dialog.shake {
+  animation: dialog-shake 0.35s ease;
 }
 
 #panel {
@@ -31,6 +42,7 @@
   gap: var(--nte-app-interaction-panel-gap, 1rem);
   overflow: auto;
   max-height: var(--nte-app-interaction-dialog-max-height, calc(100vh - 2rem));
+  padding: var(--nt-spacing-component);
 }
 
 #header {
@@ -41,11 +53,10 @@
 }
 
 #close {
-  appearance: none;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  cursor: pointer;
+  @include button.btn();
+  @include button.btn-link();
+
+  padding: var(--nt-space-1);
   line-height: 1;
 }
 
@@ -109,5 +120,45 @@
 }
 
 .btn {
-  border: 1px solid black;
+  @include button.btn();
+}
+
+.btn[part~='button-primary'] {
+  @include button.btn-primary();
+}
+
+.btn[part~='button-secondary'] {
+  @include button.btn-secondary();
+}
+
+.btn[part~='button-danger'] {
+  @include button.btn-danger();
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #dialog.shake {
+    animation: none;
+  }
+}
+
+@keyframes dialog-shake {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) translateX(0);
+  }
+  15% {
+    transform: translate(-50%, -50%) translateX(-10px);
+  }
+  30% {
+    transform: translate(-50%, -50%) translateX(10px);
+  }
+  45% {
+    transform: translate(-50%, -50%) translateX(-8px);
+  }
+  60% {
+    transform: translate(-50%, -50%) translateX(8px);
+  }
+  75% {
+    transform: translate(-50%, -50%) translateX(-4px);
+  }
 }

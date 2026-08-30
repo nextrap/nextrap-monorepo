@@ -7,6 +7,8 @@ The component only needs to be mounted once, e.g. directly in the `body` – it 
 
 The current presenter uses a native `<dialog>` and exposes screen-reader context for waiting states and confirmation questions. The public component name deliberately does not make the dialog presentation part of its responsibility.
 
+The dialog inherits its raised surface, text, border, radius and backdrop colors from `@nextrap/style-base`. Its actions use the matching `@nextrap/style-button` mixins inside the Shadow DOM. Clicking the backdrop dismisses passive messages. Confirmations, selections and non-cancelable running operations remain open and shake to signal that an explicit interaction is required.
+
 ## Installation
 
 ```bash

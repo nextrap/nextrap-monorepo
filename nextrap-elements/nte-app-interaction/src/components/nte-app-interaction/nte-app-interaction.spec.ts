@@ -164,4 +164,49 @@ describe('nte-app-interaction', () => {
     expect(callback).toHaveBeenCalledTimes(1);
     expect(dialog?.open).toBe(false);
   });
+
+  it('shakes instead of closing when a backdrop click requires a selection', async () => {
+    vi.useFakeTimers();
+    const el = new NteAppInteraction();
+    document.body.appendChild(el);
+    await el.updateComplete;
+
+    window.dispatchEvent(
+      new CustomEvent('nextrap:confirm', {
+        detail: {
+          message: 'Bitte auswählen',
+          actions: [{ label: 'Bestätigen' }],
+        },
+      }),
+    );
+    await el.updateComplete;
+
+    const dialog = el.shadowRoot?.querySelector('#dialog') as HTMLDialogElement;
+    dialog.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: 10, clientY: 10 }));
+
+    expect(dialog.open).toBe(true);
+    expect(dialog.classList.contains('shake')).toBe(true);
+
+    vi.advanceTimersByTime(350);
+    expect(dialog.classList.contains('shake')).toBe(false);
+  });
+
+  it('closes passive notifications when their backdrop is clicked', async () => {
+    const el = new NteAppInteraction();
+    document.body.appendChild(el);
+    await el.updateComplete;
+
+    window.dispatchEvent(
+      new CustomEvent('nextrap:success', {
+        detail: { message: 'Gespeichert', autoClose: false },
+      }),
+    );
+    await el.updateComplete;
+
+    const dialog = el.shadowRoot?.querySelector('#dialog') as HTMLDialogElement;
+    dialog.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: 10, clientY: 10 }));
+    await el.updateComplete;
+
+    expect(dialog.open).toBe(false);
+  });
 });

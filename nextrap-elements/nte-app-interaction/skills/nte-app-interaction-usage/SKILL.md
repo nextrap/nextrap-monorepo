@@ -17,3 +17,5 @@ description: "Use @nextrap/nte-app-interaction: nte-app-interaction (element), N
 - `NteAppInteractionStatus` — Union of the internal app interaction states exposed for typed integrations. See the [source](../../src/lib/types.ts).
 
 A future toast presenter may be delegated to for non-blocking messages. Keep that renderer separate from the global event coordinator; confirmations and blocking or cancelable operations remain modal.
+
+The dialog presenter inherits its surface, text, border, radius and backdrop colors directly from `@nextrap/style-base`. Its Shadow DOM buttons use the targeted `@nextrap/style-button` mixins. Backdrop clicks close passive messages; interactions that require a selection or a non-cancelable running operation shake instead.

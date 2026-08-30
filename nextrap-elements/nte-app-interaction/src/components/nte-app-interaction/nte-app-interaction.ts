@@ -45,9 +45,11 @@ export class NteAppInteraction extends nextrap_element(features) {
   private _abortCallback?: () => void;
   private _infoConfirmCallback?: () => void;
   private _autoCloseTimer: number | null = null;
+  private _shakeTimer: number | null = null;
 
   override disconnectedCallback() {
     this._clearAutoCloseTimer();
+    this._clearShakeTimer();
     this._syncDialogState(false);
     super.disconnectedCallback();
   }
@@ -68,6 +70,7 @@ export class NteAppInteraction extends nextrap_element(features) {
         aria-busy=${this._isBusy() ? 'true' : 'false'}
         role=${this._getRole()}
         @cancel=${this._onDialogCancel}
+        @click=${this._onDialogClick}
       >
         ${this._open && this._status !== 'idle'
           ? html`
@@ -145,6 +148,8 @@ export class NteAppInteraction extends nextrap_element(features) {
 
   close() {
     this._clearAutoCloseTimer();
+    this._clearShakeTimer();
+    this._dialogElement?.classList.remove('shake');
     this._syncDialogState(false);
     this._open = false;
     this._status = 'idle';
@@ -436,6 +441,43 @@ export class NteAppInteraction extends nextrap_element(features) {
     this._autoCloseTimer = null;
   }
 
+  private _clearShakeTimer() {
+    if (this._shakeTimer === null) {
+      return;
+    }
+
+    window.clearTimeout(this._shakeTimer);
+    this._shakeTimer = null;
+  }
+
+  private _requiresExplicitInteraction() {
+    if (this._status === 'confirm') {
+      return true;
+    }
+
+    if (this._status === 'info' && this._infoConfirmCallback) {
+      return true;
+    }
+
+    return (this._status === 'loading' || this._status === 'progress') && !this._cancelable;
+  }
+
+  private _shake() {
+    const dialog = this._dialogElement;
+    if (!dialog) {
+      return;
+    }
+
+    this._clearShakeTimer();
+    dialog.classList.remove('shake');
+    void dialog.offsetWidth;
+    dialog.classList.add('shake');
+    this._shakeTimer = window.setTimeout(() => {
+      dialog.classList.remove('shake');
+      this._shakeTimer = null;
+    }, 350);
+  }
+
   private _syncDialogState(open: boolean) {
     const dialog = this._dialogElement;
 
@@ -497,6 +539,32 @@ export class NteAppInteraction extends nextrap_element(features) {
     event.preventDefault();
 
     if (!this._cancelable) {
+      return;
+    }
+
+    this._dismiss();
+  };
+
+  private readonly _onDialogClick = (event: MouseEvent) => {
+    const dialog = this._dialogElement;
+    if (!dialog?.open) {
+      return;
+    }
+
+    const rect = dialog.getBoundingClientRect();
+    const clickedBackdrop =
+      event.clientX < rect.left ||
+      event.clientX > rect.right ||
+      event.clientY < rect.top ||
+      event.clientY > rect.bottom;
+
+    if (!clickedBackdrop) {
+      return;
+    }
+
+    event.preventDefault();
+    if (this._requiresExplicitInteraction()) {
+      this._shake();
       return;
     }
 
