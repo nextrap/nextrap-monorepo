@@ -11,10 +11,6 @@ export type NteNavItemCurrent = 'page' | 'step' | 'location' | 'date' | 'time' |
 export class NteNavItem extends nextrap_element({ slotVisibility: true }) {
   static override styles = [unsafeCSS(style)];
 
-  private _presentationObserver: ResizeObserver | undefined;
-  private _lastInlinePresentation: boolean | undefined;
-  private _preserveDetailsOnPopoverClose = false;
-
   @property({ type: String, reflect: true }) public accessor href = '';
   @property({ type: String, reflect: true }) public accessor target = '';
   @property({ type: String, reflect: true }) public accessor rel = '';
@@ -37,23 +33,10 @@ export class NteNavItem extends nextrap_element({ slotVisibility: true }) {
     }
 
     this._assignNestedItems();
-
-    if (this.hasUpdated) {
-      queueMicrotask(() => this._startPresentationObserver());
-    }
-  }
-
-  override disconnectedCallback() {
-    this._presentationObserver?.disconnect();
-    super.disconnectedCallback();
   }
 
   protected override updated(changedProperties: PropertyValues<this>) {
     super.updated(changedProperties);
-
-    if (!this._presentationObserver) {
-      this._startPresentationObserver();
-    }
 
     if (changedProperties.has('order')) {
       if (this.order === undefined || Number.isNaN(this.order)) {
@@ -115,30 +98,19 @@ export class NteNavItem extends nextrap_element({ slotVisibility: true }) {
 
   private _renderIconOnlyDisclosure() {
     return html`
-      <summary
-        id="toggle"
-        part="toggle"
-        aria-label=${this._submenuAccessibleName()}
-        @click=${this._onDisclosureClick}
-      >
+      <summary id="toggle" part="toggle" aria-label=${this._submenuAccessibleName()}>
         ${this._renderIndicator()}
       </summary>
     `;
   }
 
   private _renderLabelDisclosure(label: unknown) {
-    return html`<summary id="disclosure" part="disclosure" @click=${this._onDisclosureClick}>${label} ${this._renderIndicator()}</summary>`;
+    return html` <summary id="disclosure" part="disclosure">${label} ${this._renderIndicator()}</summary> `;
   }
 
   private _renderSubmenu() {
     return html`
-      <div
-        id="submenu"
-        part="submenu"
-        role="list"
-        aria-label=${this._submenuAccessibleName()}
-        @toggle=${this._onPopoverToggle}
-      >
+      <div id="submenu" part="submenu" role="list" aria-label=${this._submenuAccessibleName()}>
         <div id="submenu-inner" part="submenu-inner">
           <slot name="submenu" @slotchange=${this._onSubmenuSlotChange}></slot>
         </div>
@@ -174,145 +146,6 @@ export class NteNavItem extends nextrap_element({ slotVisibility: true }) {
   private _onSubmenuSlotChange(event: Event) {
     const slot = event.currentTarget as HTMLSlotElement;
     this._hasSubmenu = slot.assignedElements({ flatten: true }).some((element) => element.matches('nte-nav-item'));
-  }
-
-  private _onDisclosureClick(event: MouseEvent) {
-    const submenu = this._submenuElement();
-
-    if (!submenu) {
-      return;
-    }
-
-    if (this._usesInlinePresentation()) {
-      submenu.removeAttribute('popover');
-      return;
-    }
-
-    if (!this._supportsPopover(submenu)) {
-      return;
-    }
-
-    event.preventDefault();
-
-    if (this._isPopoverOpen(submenu)) {
-      submenu.hidePopover();
-      return;
-    }
-
-    this._showPopover(submenu, event.currentTarget as HTMLElement);
-  }
-
-  private _onPopoverToggle(event: Event) {
-    const toggleEvent = event as Event & { newState?: 'open' | 'closed' };
-
-    if (toggleEvent.newState !== 'closed') {
-      return;
-    }
-
-    const submenu = event.currentTarget as HTMLElement;
-    const details = this.shadowRoot?.getElementById('details') as HTMLDetailsElement | null;
-
-    submenu.removeAttribute('popover');
-
-    if (this._preserveDetailsOnPopoverClose) {
-      this._preserveDetailsOnPopoverClose = false;
-      if (details) {
-        details.open = true;
-      }
-      return;
-    }
-
-    if (details) {
-      details.open = false;
-    }
-  }
-
-  private _startPresentationObserver() {
-    if (!this.isConnected || typeof ResizeObserver === 'undefined') {
-      return;
-    }
-
-    this._presentationObserver ??= new ResizeObserver(() => this._syncSubmenuPresentation());
-    this._presentationObserver.disconnect();
-    this._presentationObserver.observe(this);
-    this._presentationObserver.observe(document.documentElement);
-    this._syncSubmenuPresentation();
-  }
-
-  private _syncSubmenuPresentation() {
-    const usesInlinePresentation = this._usesInlinePresentation();
-
-    if (usesInlinePresentation === this._lastInlinePresentation) {
-      return;
-    }
-
-    this._lastInlinePresentation = usesInlinePresentation;
-
-    const submenu = this._submenuElement();
-    const details = this.shadowRoot?.getElementById('details') as HTMLDetailsElement | null;
-
-    if (!submenu || !details) {
-      return;
-    }
-
-    if (usesInlinePresentation) {
-      if (this._supportsPopover(submenu) && this._isPopoverOpen(submenu)) {
-        this._preserveDetailsOnPopoverClose = details.open;
-        submenu.hidePopover();
-      } else {
-        submenu.removeAttribute('popover');
-      }
-      return;
-    }
-
-    if (!this._supportsPopover(submenu)) {
-      return;
-    }
-
-    if (details.open) {
-      this._showPopover(submenu);
-    }
-  }
-
-  private _showPopover(submenu: HTMLElement, source = this._disclosureElement()) {
-    const details = this.shadowRoot?.getElementById('details') as HTMLDetailsElement | null;
-
-    if (!details || !this._supportsPopover(submenu)) {
-      return;
-    }
-
-    details.open = true;
-    submenu.setAttribute('popover', 'auto');
-
-    try {
-      (submenu.showPopover as (options?: { source?: HTMLElement }) => void)({ source: source ?? undefined });
-    } catch {
-      submenu.removeAttribute('popover');
-    }
-  }
-
-  private _usesInlinePresentation() {
-    return getComputedStyle(this).getPropertyValue('--nte-nav-submenu-position').trim() === 'static';
-  }
-
-  private _submenuElement() {
-    return this.shadowRoot?.getElementById('submenu') ?? null;
-  }
-
-  private _disclosureElement() {
-    return this.shadowRoot?.querySelector<HTMLElement>('#toggle, #disclosure') ?? null;
-  }
-
-  private _supportsPopover(element: HTMLElement) {
-    return typeof element.showPopover === 'function' && typeof element.hidePopover === 'function';
-  }
-
-  private _isPopoverOpen(element: HTMLElement) {
-    try {
-      return element.matches(':popover-open');
-    } catch {
-      return false;
-    }
   }
 
   private _assignNestedItems() {
