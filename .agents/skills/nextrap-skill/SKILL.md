@@ -284,6 +284,43 @@ Allowed: CSS custom properties (`--nt-*`). Not allowed: resets, `body` rules, na
 
 Important runtime rule: `@nextrap/style-base` must **not** be imported by shipped `nte-*` or `ntl-*` component runtime code (`.ts` / `.js`). The project/theme/app owns `style-base` and includes it exactly once at app/theme level. Only demos or explicit dev-only demo setups may import `@nextrap/style-base` directly.
 
+### Shadow DOM: Tokens erben, benötigte Styles gezielt materialisieren
+
+Normale CSS Custom Properties (einschließlich der von `style-base` am Hauptdokument definierten `--nt-*` Tokens) werden über den Shadow Host in den Shadow DOM und auch durch weitere verschachtelte Shadow-DOM-Grenzen vererbt. Eine Komponente darf diese Tokens deshalb direkt mit `var(--nt-...)` verwenden. Sie darf Theme-Werte wie Farben, Border, Border-Radius oder Abstände nicht an jeder Shadow-DOM-Grenze erneut deklarieren, kopieren oder per JavaScript weiterreichen.
+
+Die Vererbung der Tokens bedeutet nicht, dass Selektorregeln aus dem Hauptdokument in den Shadow DOM hineinwirken. Nutzt eine Komponente im Shadow DOM ein visuelles Element wie einen Button, muss sie die dafür benötigten Styles aus dem zuständigen Style-Package innerhalb ihres Shadow-DOM-SCSS materialisieren. Verwende dazu die öffentlichen, selektorspezifischen Mixins und nur die tatsächlich benötigte Basis und Modifier:
+
+```scss
+@use '@nextrap/style-button' as button;
+
+button {
+  @include button.btn();
+  @include button.btn-primary();
+}
+```
+
+Diese Mixins beziehen Farbe, Border, Radius, Spacing und weitere Theme-Werte selbst aus den geerbten `--nt-*` Tokens. Solche Werte dürfen in der Web Component nicht nochmals nachgebaut oder als lokale Kopien der globalen Tokens definiert werden. Lokale Custom Properties sind nur für eine echte, dokumentierte Komponenten-API oder einen internen komponentenspezifischen Wert zulässig, nicht als Weiterleitungsmechanismus für `style-base`.
+
+Interne Custom Properties sollen durch einen internen Namen wie `--_<component>-<property>` als nicht öffentliche API erkennbar sein. Wenn ein Wert auch nicht an Nachfahren oder einen darin verschachtelten Shadow DOM vererbt werden soll, kann die Property zusätzlich typisiert und mit `inherits: false` registriert werden:
+
+```css
+@property --_dialog-animation-offset {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+```
+
+`inherits: false` bedeutet „nicht vererbbar“, nicht „privat“ oder sicher verborgen: CSS kann den Namen weiterhin referenzieren oder überschreiben. Die Registrierung stoppt außerdem die Vererbung an **alle** Nachfahren innerhalb desselben Shadow Trees. Verwende sie daher nur für Werte, die direkt auf dem Element gesetzt und dort konsumiert werden. Muss ein interner Wert zwischen mehreren Shadow-DOM-internen Nachfahren vererbt werden, bleibt er vererbbar und wird lediglich über die interne Namenskonvention als nicht öffentliche Komponenten-API markiert.
+
+Für Shadow-DOM-SCSS gilt:
+
+- Bevorzuge einzelne öffentliche Mixins wie `btn()`, `btn-primary()`, `table()` oder gezielte Utility-Mixins.
+- Binde ein kleines spezialisiertes Aggregat wie `buttons()` nur ein, wenn die Komponente dessen vollständige Selektor-API tatsächlich nutzt.
+- Binde keine vollständigen Aggregate wie `utils()`, `elements()` oder `typography()` vorsorglich ein. Wenn ein Aggregat ausnahmsweise erforderlich ist, muss im SCSS am Include explizit dokumentiert werden, welche enthaltenen Komponenten beziehungsweise Selektoren im Shadow DOM benötigt werden und weshalb Einzel-Mixins nicht ausreichen.
+- Importiere weder `style-base` noch dessen Default-Ausgabe in den Komponenten-Runtime-Code. Das Hauptdokument beziehungsweise Theme stellt die Tokens einmal bereit; die Komponente konsumiert sie über die normale CSS-Vererbung.
+- Berücksichtige Fallbacks nur dort, wo ein Style-Package sie in seinem öffentlichen Mixin-/Token-Contract vorsieht. Erfinde in der Komponente keine abweichenden Theme-Defaults.
+
 ### Cross-package interoperability via `--nt-*` tokens
 
 Style packages communicate through `--nt-*` CSS custom properties, not private Sass imports from sibling packages:
