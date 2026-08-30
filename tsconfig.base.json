@@ -38,7 +38,7 @@
             "@nextrap/nte-input": ["nextrap-elements/nte-input/src/index.ts"],
             "@nextrap/nte-nav": ["nextrap-elements/nte-nav/src/index.ts"],
             "@nextrap/nte-nav-2": ["nextrap-elements/nte-nav-2/index.ts"],
-            "@nextrap/nte-notifier": ["nextrap-elements/nte-notifier/index.ts"],
+            "@nextrap/nte-app-interaction": ["nextrap-elements/nte-app-interaction/index.ts"],
             "@nextrap/nte-offcanvas": ["nextrap-elements/nte-offcanvas/src/index.ts"],
             "@nextrap/nte-parallax-bg": ["nextrap-elements/nte-parallax-bg/src/index.ts"],
             "@nextrap/nte-progress": ["nextrap-elements/nte-progress/src/index.ts"],

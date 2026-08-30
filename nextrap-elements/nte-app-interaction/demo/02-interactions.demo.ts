@@ -12,7 +12,7 @@ import type {
   NextrapLoadingDetail,
   NextrapProgressDetail,
   NextrapSuccessDetail,
-  NteNotifier,
+  NteAppInteraction,
 } from '../index';
 import './main.scss';
 
@@ -80,7 +80,7 @@ const info = () =>
 const confirm = () =>
   dispatch<NextrapConfirmDetail>('nextrap:confirm', {
     message: 'Wie soll der Beispielprozess enden?',
-    html: '<p>Die Auswahl löst direkt den nächsten Notifier-Status aus.</p>',
+    html: '<p>Die Auswahl löst direkt den nächsten App Interaction-Status aus.</p>',
     actions: [
       { label: 'Erfolgreich', variant: 'primary', callback: success },
       { label: 'Fehler', variant: 'danger', callback: fail },
@@ -89,7 +89,7 @@ const confirm = () =>
   });
 
 export default defineDemo({
-  title: 'Notifier-Interaktionen',
+  title: 'App Interaction-Interaktionen',
   description: 'Status-Events, Callbacks und Sequenzen über die Demo-Controls',
   controls: [
     { label: 'Loading', element: 'button', onclick: loading },
@@ -112,7 +112,7 @@ export default defineDemo({
     {
       label: 'Schließen',
       element: 'button',
-      onclick: () => demoRoot?.querySelector<NteNotifier>('nte-notifier')?.close(),
+      onclick: () => demoRoot?.querySelector<NteAppInteraction>('nte-app-interaction')?.close(),
     },
     {
       label: 'Log leeren',
@@ -127,8 +127,8 @@ export default defineDemo({
     clearTimers();
     demoRoot = root;
     root.innerHTML = `
-      <main class="nte-notifier-demo">
-        <h1>NTE Notifier</h1>
+      <main class="nte-app-interaction-demo">
+        <h1>NTE App Interaction</h1>
         <p>Öffne die Controls-Leiste unten und löse einzelne Zustände oder einen vollständigen Ablauf aus.</p>
         <section>
           <h2>Referenzziel</h2>
@@ -138,7 +138,7 @@ export default defineDemo({
           <h2>Gesendete Events</h2>
           <output data-event-log aria-live="polite">Noch kein Event gesendet.</output>
         </section>
-        <nte-notifier></nte-notifier>
+        <nte-app-interaction></nte-app-interaction>
       </main>
     `;
   },

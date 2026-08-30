@@ -1,9 +1,9 @@
-# `nte-notifier` verwenden
+# `nte-app-interaction` verwenden
 
 Das Element wird genau einmal auf der Seite gemountet und anschließend über globale `window`-Events gesteuert.
 
 ```html
-<nte-notifier></nte-notifier>
+<nte-app-interaction></nte-app-interaction>
 ```
 
 ```ts
@@ -30,6 +30,6 @@ window.dispatchEvent(
 | `nextrap:info` | `NextrapInfoDetail` | Hinweis mit optionalem Bestätigungs-Callback |
 | `nextrap:confirm` | `NextrapConfirmDetail` | Entscheidung mit frei definierbaren `NextrapConfirmAction`-Aktionen |
 
-`title`, `message` und `cancelable` stehen in allen Detail-Typen zur Verfügung. Statusabhängig kommen `reference`, `onAbort`, `progress`, `autoClose`, `details`, `onConfirm`, `html` oder `actions` hinzu. Mit `NteNotifier.close()` lässt sich der aktuelle Dialog programmgesteuert schließen.
+`title`, `message` und `cancelable` stehen in allen Detail-Typen zur Verfügung. Statusabhängig kommen `reference`, `onAbort`, `progress`, `autoClose`, `details`, `onConfirm`, `html` oder `actions` hinzu. Mit `NteAppInteraction.close()` lässt sich der aktuelle Dialog programmgesteuert schließen.
 
 Die interaktive Demo zeigt alle Zustände über die ausblendbare Controls-Leiste am unteren Fensterrand.

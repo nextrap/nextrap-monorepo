@@ -1,19 +1,19 @@
 import { vi } from 'vitest';
-import { NTE_NOTIFIER_DEFAULT_AUTO_CLOSE_MS } from '../../lib/types';
-import { NteNotifier } from './nte-notifier';
+import { NTE_APP_INTERACTION_DEFAULT_AUTO_CLOSE_MS } from '../../lib/types';
+import { NteAppInteraction } from './nte-app-interaction';
 
-describe('nte-notifier', () => {
+describe('nte-app-interaction', () => {
   afterEach(() => {
     document.body.innerHTML = '';
     vi.useRealTimers();
   });
 
   it('registers the custom element', () => {
-    expect(customElements.get('nte-notifier')).toBe(NteNotifier);
+    expect(customElements.get('nte-app-interaction')).toBe(NteAppInteraction);
   });
 
   it('renders a custom title from the event detail', async () => {
-    const el = new NteNotifier();
+    const el = new NteAppInteraction();
     document.body.appendChild(el);
     await el.updateComplete;
 
@@ -40,7 +40,7 @@ describe('nte-notifier', () => {
   });
 
   it('falls back to the default title when no title is provided', async () => {
-    const el = new NteNotifier();
+    const el = new NteAppInteraction();
     document.body.appendChild(el);
     await el.updateComplete;
 
@@ -59,7 +59,7 @@ describe('nte-notifier', () => {
   });
 
   it('renders fail details inside details summary', async () => {
-    const el = new NteNotifier();
+    const el = new NteAppInteraction();
     document.body.appendChild(el);
     await el.updateComplete;
 
@@ -81,7 +81,7 @@ describe('nte-notifier', () => {
   });
 
   it('shows a close button only for cancelable dialogs', async () => {
-    const el = new NteNotifier();
+    const el = new NteAppInteraction();
     document.body.appendChild(el);
     await el.updateComplete;
 
@@ -112,7 +112,7 @@ describe('nte-notifier', () => {
   it('auto closes success dialogs by default', async () => {
     vi.useFakeTimers();
 
-    const el = new NteNotifier();
+    const el = new NteAppInteraction();
     document.body.appendChild(el);
     await el.updateComplete;
 
@@ -127,7 +127,7 @@ describe('nte-notifier', () => {
     await el.updateComplete;
     expect((el.shadowRoot?.querySelector('#dialog') as HTMLDialogElement | null)?.open).toBe(true);
 
-    vi.advanceTimersByTime(NTE_NOTIFIER_DEFAULT_AUTO_CLOSE_MS);
+    vi.advanceTimersByTime(NTE_APP_INTERACTION_DEFAULT_AUTO_CLOSE_MS);
     await Promise.resolve();
     await el.updateComplete;
 
@@ -137,7 +137,7 @@ describe('nte-notifier', () => {
 
   it('calls confirm callbacks and closes afterwards', async () => {
     const callback = vi.fn();
-    const el = new NteNotifier();
+    const el = new NteAppInteraction();
     document.body.appendChild(el);
     await el.updateComplete;
 
@@ -163,5 +163,50 @@ describe('nte-notifier', () => {
 
     expect(callback).toHaveBeenCalledTimes(1);
     expect(dialog?.open).toBe(false);
+  });
+
+  it('shakes instead of closing when a backdrop click requires a selection', async () => {
+    vi.useFakeTimers();
+    const el = new NteAppInteraction();
+    document.body.appendChild(el);
+    await el.updateComplete;
+
+    window.dispatchEvent(
+      new CustomEvent('nextrap:confirm', {
+        detail: {
+          message: 'Bitte auswählen',
+          actions: [{ label: 'Bestätigen' }],
+        },
+      }),
+    );
+    await el.updateComplete;
+
+    const dialog = el.shadowRoot?.querySelector('#dialog') as HTMLDialogElement;
+    dialog.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: 10, clientY: 10 }));
+
+    expect(dialog.open).toBe(true);
+    expect(dialog.classList.contains('shake')).toBe(true);
+
+    vi.advanceTimersByTime(350);
+    expect(dialog.classList.contains('shake')).toBe(false);
+  });
+
+  it('closes passive notifications when their backdrop is clicked', async () => {
+    const el = new NteAppInteraction();
+    document.body.appendChild(el);
+    await el.updateComplete;
+
+    window.dispatchEvent(
+      new CustomEvent('nextrap:success', {
+        detail: { message: 'Gespeichert', autoClose: false },
+      }),
+    );
+    await el.updateComplete;
+
+    const dialog = el.shadowRoot?.querySelector('#dialog') as HTMLDialogElement;
+    dialog.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: 10, clientY: 10 }));
+    await el.updateComplete;
+
+    expect(dialog.open).toBe(false);
   });
 });

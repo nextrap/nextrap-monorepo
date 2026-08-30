@@ -1,5 +1,5 @@
 {
-    "name": "@nextrap/nte-notifier",
+    "name": "@nextrap/nte-app-interaction",
     "version": "2.0.0",
     "files": [
         "*.*",
@@ -9,18 +9,18 @@
     ],
     "main": "./index.js",
     "repository": {
-        "directory": "nextrap-elements/nte-notifier",
+        "directory": "nextrap-elements/nte-app-interaction",
         "type": "git",
         "url": "https://github.com/nextrap/nextrap-monorepo"
     },
     "dependencies": {
         "@nextrap/nte-spinner": "^2.0.0",
+        "@nextrap/style-button": "^2.0.0",
         "@nextrap/style-reset": "^2.0.0",
         "lit": "^3.3.1"
     },
     "devDependencies": {
         "@nextrap/style-base": "^2.0.0",
-        "@nextrap/style-button": "^2.0.0",
         "@nextrap/style-typography": "^2.0.0",
         "@nextrap/style-utils": "^2.0.0"
     },

@@ -6,8 +6,8 @@ import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
-const projectName = 'nte-notifier';
-const dirName = `nextrap-elements/nte-notifier`;
+const projectName = 'nte-app-interaction';
+const dirName = `nextrap-elements/nte-app-interaction`;
 
 export default defineConfig(() => ({
   server: {

@@ -8,7 +8,7 @@ import { html, nothing, unsafeCSS } from 'lit';
 import { customElement, query, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import {
-  NTE_NOTIFIER_DEFAULT_AUTO_CLOSE_MS,
+  NTE_APP_INTERACTION_DEFAULT_AUTO_CLOSE_MS,
   type NextrapConfirmAction,
   type NextrapConfirmDetail,
   type NextrapFailDetail,
@@ -16,23 +16,23 @@ import {
   type NextrapLoadingDetail,
   type NextrapProgressDetail,
   type NextrapSuccessDetail,
-  type NteNotifierStatus,
+  type NteAppInteractionStatus,
 } from '../../lib/types';
-import style from './nte-notifier.scss?inline';
+import style from './nte-app-interaction.scss?inline';
 
 const features: NteFeatures = {
   eventBinding: true,
 };
 
-@customElement('nte-notifier')
-export class NteNotifier extends nextrap_element(features) {
+@customElement('nte-app-interaction')
+export class NteAppInteraction extends nextrap_element(features) {
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
   @query('#dialog')
   private accessor _dialogElement: HTMLDialogElement | null = null;
 
   @state() private accessor _open = false;
-  @state() private accessor _status: NteNotifierStatus = 'idle';
+  @state() private accessor _status: NteAppInteractionStatus = 'idle';
   @state() private accessor _title = '';
   @state() private accessor _message = '';
   @state() private accessor _details = '';
@@ -45,9 +45,11 @@ export class NteNotifier extends nextrap_element(features) {
   private _abortCallback?: () => void;
   private _infoConfirmCallback?: () => void;
   private _autoCloseTimer: number | null = null;
+  private _shakeTimer: number | null = null;
 
   override disconnectedCallback() {
     this._clearAutoCloseTimer();
+    this._clearShakeTimer();
     this._syncDialogState(false);
     super.disconnectedCallback();
   }
@@ -68,6 +70,7 @@ export class NteNotifier extends nextrap_element(features) {
         aria-busy=${this._isBusy() ? 'true' : 'false'}
         role=${this._getRole()}
         @cancel=${this._onDialogCancel}
+        @click=${this._onDialogClick}
       >
         ${this._open && this._status !== 'idle'
           ? html`
@@ -145,6 +148,8 @@ export class NteNotifier extends nextrap_element(features) {
 
   close() {
     this._clearAutoCloseTimer();
+    this._clearShakeTimer();
+    this._dialogElement?.classList.remove('shake');
     this._syncDialogState(false);
     this._open = false;
     this._status = 'idle';
@@ -227,7 +232,7 @@ export class NteNotifier extends nextrap_element(features) {
   }
 
   private _openState(
-    status: Exclude<NteNotifierStatus, 'idle'>,
+    status: Exclude<NteAppInteractionStatus, 'idle'>,
     title?: string,
     message?: string,
     reference?: string | HTMLElement,
@@ -308,7 +313,7 @@ export class NteNotifier extends nextrap_element(features) {
     return this._title || this._getDefaultTitle(this._status);
   }
 
-  private _getDefaultTitle(status: NteNotifierStatus) {
+  private _getDefaultTitle(status: NteAppInteractionStatus) {
     switch (status) {
       case 'loading':
         return 'Loading';
@@ -345,7 +350,7 @@ export class NteNotifier extends nextrap_element(features) {
     }
   }
 
-  private _getDefaultMessage(status: Exclude<NteNotifierStatus, 'idle'>) {
+  private _getDefaultMessage(status: Exclude<NteAppInteractionStatus, 'idle'>) {
     switch (status) {
       case 'loading':
         return 'Please wait...';
@@ -417,7 +422,7 @@ export class NteNotifier extends nextrap_element(features) {
     return `button button-${variant}`;
   }
 
-  private _scheduleAutoClose(enabled: boolean, delay = NTE_NOTIFIER_DEFAULT_AUTO_CLOSE_MS) {
+  private _scheduleAutoClose(enabled: boolean, delay = NTE_APP_INTERACTION_DEFAULT_AUTO_CLOSE_MS) {
     this._clearAutoCloseTimer();
 
     if (!enabled) {
@@ -434,6 +439,43 @@ export class NteNotifier extends nextrap_element(features) {
 
     window.clearTimeout(this._autoCloseTimer);
     this._autoCloseTimer = null;
+  }
+
+  private _clearShakeTimer() {
+    if (this._shakeTimer === null) {
+      return;
+    }
+
+    window.clearTimeout(this._shakeTimer);
+    this._shakeTimer = null;
+  }
+
+  private _requiresExplicitInteraction() {
+    if (this._status === 'confirm') {
+      return true;
+    }
+
+    if (this._status === 'info' && this._infoConfirmCallback) {
+      return true;
+    }
+
+    return (this._status === 'loading' || this._status === 'progress') && !this._cancelable;
+  }
+
+  private _shake() {
+    const dialog = this._dialogElement;
+    if (!dialog) {
+      return;
+    }
+
+    this._clearShakeTimer();
+    dialog.classList.remove('shake');
+    void dialog.offsetWidth;
+    dialog.classList.add('shake');
+    this._shakeTimer = window.setTimeout(() => {
+      dialog.classList.remove('shake');
+      this._shakeTimer = null;
+    }, 350);
   }
 
   private _syncDialogState(open: boolean) {
@@ -503,6 +545,32 @@ export class NteNotifier extends nextrap_element(features) {
     this._dismiss();
   };
 
+  private readonly _onDialogClick = (event: MouseEvent) => {
+    const dialog = this._dialogElement;
+    if (!dialog?.open) {
+      return;
+    }
+
+    const rect = dialog.getBoundingClientRect();
+    const clickedBackdrop =
+      event.clientX < rect.left ||
+      event.clientX > rect.right ||
+      event.clientY < rect.top ||
+      event.clientY > rect.bottom;
+
+    if (!clickedBackdrop) {
+      return;
+    }
+
+    event.preventDefault();
+    if (this._requiresExplicitInteraction()) {
+      this._shake();
+      return;
+    }
+
+    this._dismiss();
+  };
+
   private _onConfirmAction(action: NextrapConfirmAction) {
     this.close();
     action.callback?.();
@@ -511,6 +579,6 @@ export class NteNotifier extends nextrap_element(features) {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'nte-notifier': NteNotifier;
+    'nte-app-interaction': NteAppInteraction;
   }
 }

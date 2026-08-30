@@ -1,4 +1,4 @@
-.nte-notifier-demo {
+.nte-app-interaction-demo {
   display: grid;
   gap: 1.5rem;
   max-width: 60rem;
@@ -6,8 +6,8 @@
 
   section {
     padding: 1.5rem;
-    border: 1px solid var(--nt-border-color, #d1d5db);
-    border-radius: var(--nt-border-radius, 0.5rem);
+    border: var(--nt-border-width) solid var(--nt-border);
+    border-radius: var(--nt-border-radius);
   }
 
   output {
@@ -16,9 +16,9 @@
     padding: 1rem;
     overflow: auto;
     white-space: pre-wrap;
-    border-radius: 0.35rem;
-    background: var(--nt-dark, #111827);
-    color: var(--nt-light, #f8fafc);
+    border-radius: var(--nt-border-radius);
+    background: var(--nt-dark);
+    color: var(--nt-text-on-dark);
     font-family: monospace;
   }
 }
