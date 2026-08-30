@@ -76,7 +76,7 @@ Root `package.json` workspaces:
 | `@nextrap/nte-multiselect` | `nextrap-elements/nte-multiselect` | Multiselect-Element |
 | `@nextrap/nte-nav` | `nextrap-elements/nte-nav` | Navigation-Element, ältere Variante |
 | `@nextrap/nte-nav-2` | `nextrap-elements/nte-nav-2` | Navigation-Element, aktuelle/alternative Variante |
-| `@nextrap/nte-notifier` | `nextrap-elements/nte-notifier` | Notification-/Toast-Element; Element-Referenz |
+| `@nextrap/nte-app-interaction` | `nextrap-elements/nte-app-interaction` | Globaler Kanal für Anwendungsmeldungen und Rückfragen; Element-Referenz |
 | `@nextrap/nte-offcanvas` | `nextrap-elements/nte-offcanvas` | Offcanvas-/Drawer-Element |
 | `@nextrap/nte-parallax-bg` | `nextrap-elements/nte-parallax-bg` | Parallax-Background-Element |
 | `@nextrap/nte-progress` | `nextrap-elements/nte-progress` | Progress-/Fortschrittsanzeige |
@@ -145,7 +145,7 @@ npx vite build
 | `docs/nextrap-elements-concept.md` | dual-usage concept |
 | `nextrap-base/nt-nx-generators/src/generators/` | generator templates for packages |
 | `nextrap-layout/ntl-2col/` | layout reference component |
-| `nextrap-elements/nte-notifier/` | element reference component |
+| `nextrap-elements/nte-app-interaction/` | element reference component |
 
 ## Dependency notes
 

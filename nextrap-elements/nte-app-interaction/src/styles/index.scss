@@ -1,0 +1,5 @@
+@use '../../mixins' as appInteraction;
+
+nte-app-interaction.default {
+  @include appInteraction.app-interaction-default;
+}

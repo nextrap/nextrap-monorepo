@@ -1,4 +1,4 @@
-@mixin notifier-default {
+@mixin app-interaction-default {
   &::part(overlay) {
     padding: var(--nt-space-3);
     background: rgb(from var(--nt-dark) r g b / 0.5);

@@ -1,4 +1,4 @@
-export const NTE_NOTIFIER_DEFAULT_AUTO_CLOSE_MS = 10_000;
+export const NTE_APP_INTERACTION_DEFAULT_AUTO_CLOSE_MS = 10_000;
 
 export interface NextrapLoadingDetail {
   title?: string;
@@ -53,4 +53,4 @@ export interface NextrapConfirmDetail {
   cancelable?: boolean;
 }
 
-export type NteNotifierStatus = 'idle' | 'loading' | 'progress' | 'success' | 'fail' | 'info' | 'confirm';
+export type NteAppInteractionStatus = 'idle' | 'loading' | 'progress' | 'success' | 'fail' | 'info' | 'confirm';

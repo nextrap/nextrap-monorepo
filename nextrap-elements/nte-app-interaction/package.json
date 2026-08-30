@@ -1,5 +1,5 @@
 {
-    "name": "@nextrap/nte-notifier",
+    "name": "@nextrap/nte-app-interaction",
     "version": "2.0.0",
     "files": [
         "*.*",
@@ -9,7 +9,7 @@
     ],
     "main": "./index.js",
     "repository": {
-        "directory": "nextrap-elements/nte-notifier",
+        "directory": "nextrap-elements/nte-app-interaction",
         "type": "git",
         "url": "https://github.com/nextrap/nextrap-monorepo"
     },

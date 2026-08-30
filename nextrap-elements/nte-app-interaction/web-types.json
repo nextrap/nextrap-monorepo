@@ -1,12 +1,12 @@
 {
-    "name": "nte-notifier",
+    "name": "nte-app-interaction",
     "version": "1.0.0",
     "contributions": {
         "html": {
             "elements": [
                 {
-                    "name": "nte-notifier",
-                    "description": "Global notifier component based on a native dialog for loading states, progress, status messages and confirm dialogs."
+                    "name": "nte-app-interaction",
+                    "description": "Global application interaction coordinator for loading states, progress, status messages and confirmation questions."
                 }
             ]
         },

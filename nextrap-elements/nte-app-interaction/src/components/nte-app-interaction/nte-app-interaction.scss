@@ -4,13 +4,13 @@
 }
 
 #dialog {
-  width: var(--nte-notifier-dialog-width, min(calc(100vw - 2rem), 42rem));
-  max-height: var(--nte-notifier-dialog-max-height, calc(100vh - 2rem));
+  width: var(--nte-app-interaction-dialog-width, min(calc(100vw - 2rem), 42rem));
+  max-height: var(--nte-app-interaction-dialog-max-height, calc(100vh - 2rem));
   margin: 0;
   padding: 0;
   background: white;
   border: 1px solid darkgray;
-  color: var(--nte-notifier-dialog-color, inherit);
+  color: var(--nte-app-interaction-dialog-color, inherit);
   position: fixed;
   inset: 50% auto auto 50%;
   transform: translate(-50%, -50%);
@@ -22,21 +22,21 @@
 }
 
 #dialog::backdrop {
-  background: var(--nte-notifier-dialog-backdrop, rgba(0, 0, 0, 0.45));
+  background: var(--nte-app-interaction-dialog-backdrop, rgba(0, 0, 0, 0.45));
 }
 
 #panel {
   position: relative;
   display: grid;
-  gap: var(--nte-notifier-panel-gap, 1rem);
+  gap: var(--nte-app-interaction-panel-gap, 1rem);
   overflow: auto;
-  max-height: var(--nte-notifier-dialog-max-height, calc(100vh - 2rem));
+  max-height: var(--nte-app-interaction-dialog-max-height, calc(100vh - 2rem));
 }
 
 #header {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: var(--nte-notifier-header-gap, 1rem);
+  gap: var(--nte-app-interaction-header-gap, 1rem);
   align-items: start;
 }
 
@@ -56,18 +56,18 @@
 
 #content {
   display: grid;
-  gap: var(--nte-notifier-content-gap, 0.75rem);
+  gap: var(--nte-app-interaction-content-gap, 0.75rem);
 }
 
 #progress {
   display: grid;
-  gap: var(--nte-notifier-progress-gap, 0.5rem);
+  gap: var(--nte-app-interaction-progress-gap, 0.5rem);
 }
 
 #progress-meta {
   display: flex;
   justify-content: space-between;
-  gap: var(--nte-notifier-progress-meta-gap, 1rem);
+  gap: var(--nte-app-interaction-progress-meta-gap, 1rem);
 }
 
 #progress-bar {
@@ -93,7 +93,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: var(--nte-notifier-actions-gap, 0.75rem);
+  gap: var(--nte-app-interaction-actions-gap, 0.75rem);
 }
 
 #assistive-context {

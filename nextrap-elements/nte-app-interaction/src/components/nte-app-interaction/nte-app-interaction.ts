@@ -8,7 +8,7 @@ import { html, nothing, unsafeCSS } from 'lit';
 import { customElement, query, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import {
-  NTE_NOTIFIER_DEFAULT_AUTO_CLOSE_MS,
+  NTE_APP_INTERACTION_DEFAULT_AUTO_CLOSE_MS,
   type NextrapConfirmAction,
   type NextrapConfirmDetail,
   type NextrapFailDetail,
@@ -16,23 +16,23 @@ import {
   type NextrapLoadingDetail,
   type NextrapProgressDetail,
   type NextrapSuccessDetail,
-  type NteNotifierStatus,
+  type NteAppInteractionStatus,
 } from '../../lib/types';
-import style from './nte-notifier.scss?inline';
+import style from './nte-app-interaction.scss?inline';
 
 const features: NteFeatures = {
   eventBinding: true,
 };
 
-@customElement('nte-notifier')
-export class NteNotifier extends nextrap_element(features) {
+@customElement('nte-app-interaction')
+export class NteAppInteraction extends nextrap_element(features) {
   static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
 
   @query('#dialog')
   private accessor _dialogElement: HTMLDialogElement | null = null;
 
   @state() private accessor _open = false;
-  @state() private accessor _status: NteNotifierStatus = 'idle';
+  @state() private accessor _status: NteAppInteractionStatus = 'idle';
   @state() private accessor _title = '';
   @state() private accessor _message = '';
   @state() private accessor _details = '';
@@ -227,7 +227,7 @@ export class NteNotifier extends nextrap_element(features) {
   }
 
   private _openState(
-    status: Exclude<NteNotifierStatus, 'idle'>,
+    status: Exclude<NteAppInteractionStatus, 'idle'>,
     title?: string,
     message?: string,
     reference?: string | HTMLElement,
@@ -308,7 +308,7 @@ export class NteNotifier extends nextrap_element(features) {
     return this._title || this._getDefaultTitle(this._status);
   }
 
-  private _getDefaultTitle(status: NteNotifierStatus) {
+  private _getDefaultTitle(status: NteAppInteractionStatus) {
     switch (status) {
       case 'loading':
         return 'Loading';
@@ -345,7 +345,7 @@ export class NteNotifier extends nextrap_element(features) {
     }
   }
 
-  private _getDefaultMessage(status: Exclude<NteNotifierStatus, 'idle'>) {
+  private _getDefaultMessage(status: Exclude<NteAppInteractionStatus, 'idle'>) {
     switch (status) {
       case 'loading':
         return 'Please wait...';
@@ -417,7 +417,7 @@ export class NteNotifier extends nextrap_element(features) {
     return `button button-${variant}`;
   }
 
-  private _scheduleAutoClose(enabled: boolean, delay = NTE_NOTIFIER_DEFAULT_AUTO_CLOSE_MS) {
+  private _scheduleAutoClose(enabled: boolean, delay = NTE_APP_INTERACTION_DEFAULT_AUTO_CLOSE_MS) {
     this._clearAutoCloseTimer();
 
     if (!enabled) {
@@ -511,6 +511,6 @@ export class NteNotifier extends nextrap_element(features) {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'nte-notifier': NteNotifier;
+    'nte-app-interaction': NteAppInteraction;
   }
 }

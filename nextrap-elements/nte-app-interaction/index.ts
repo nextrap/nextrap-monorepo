@@ -1,4 +1,4 @@
-export * from './src/components/nte-notifier/nte-notifier';
+export * from './src/components/nte-app-interaction/nte-app-interaction';
 export * from './src/lib/types';
 
 /* this bundles light dom styles by default */
