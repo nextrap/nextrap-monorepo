@@ -1,6 +1,5 @@
 import { nextrap_element, type NteFeatures } from '@nextrap/nt-core';
 import '@nextrap/nte-spinner';
-import '@nextrap/style-base';
 import { resetStyle } from '@nextrap/style-reset';
 import { Listen } from '@trunkjs/browser-utils';
 import type { PropertyValues } from 'lit';
@@ -72,76 +71,90 @@ export class NteAppInteraction extends nextrap_element(features) {
         @cancel=${this._onDialogCancel}
         @click=${this._onDialogClick}
       >
-        ${this._open && this._status !== 'idle'
-          ? html`
-              <div id="panel" part="panel">
-                <div id="assistive-context" part="assistive-context">${this._getAssistiveContext()}</div>
+        ${
+          this._open && this._status !== 'idle'
+            ? html`
+                <div id="panel" part="panel">
+                  <div id="assistive-context" part="assistive-context">${this._getAssistiveContext()}</div>
 
-                <div id="header" part="header">
-                  <div id="headline" part="headline">${this._getTitle()}</div>
+                  <div id="header" part="header">
+                    <div id="headline" part="headline">${this._getTitle()}</div>
 
-                  ${this._cancelable
-                    ? html`
-                        <button
-                          id="close"
-                          part="close-button"
-                          type="button"
-                          aria-label="Dialog schließen"
-                          @click=${this._onDismissClick}
-                        >
-                          <span aria-hidden="true">×</span>
-                        </button>
-                      `
-                    : nothing}
+                    ${
+                      this._cancelable
+                        ? html`
+                            <button
+                              id="close"
+                              part="close-button"
+                              type="button"
+                              aria-label="Dialog schließen"
+                              @click=${this._onDismissClick}
+                            >
+                              <span aria-hidden="true">×</span>
+                            </button>
+                          `
+                        : nothing
+                    }
+                  </div>
+
+                  ${
+                    this._showsSpinner()
+                      ? html`
+                          <nte-spinner
+                            id="spinner"
+                            part="spinner"
+                            class=${this._getSpinnerClass()}
+                            style=${this._getSpinnerStyle()}
+                          ></nte-spinner>
+                        `
+                      : nothing
+                  }
+
+                  <div id="content" part="content">
+                    <div id="message" part="message">${this._message}</div>
+
+                    ${
+                      this._referenceLabel
+                        ? html`<div id="reference" part="reference">${this._referenceLabel}</div>`
+                        : nothing
+                    }
+                    ${
+                      this._status === 'progress'
+                        ? html`
+                            <div id="progress" part="progress">
+                              <div id="progress-meta" part="progress-meta">
+                                <span part="progress-label">Fortschritt</span>
+                                <span part="progress-percent">${Math.round(this._progress)}%</span>
+                              </div>
+                              <div id="progress-bar" part="progress-bar">
+                                <div id="progress-value" part="progress-value" style="width: ${this._progress}%"></div>
+                              </div>
+                            </div>
+                          `
+                        : nothing
+                    }
+                    ${
+                      this._status === 'fail' && this._details
+                        ? html`
+                            <details id="details" part="details">
+                              <summary id="details-summary" part="details-summary">Details anzeigen</summary>
+                              <pre id="details-content" part="details-content">${this._details}</pre>
+                            </details>
+                          `
+                        : nothing
+                    }
+                    ${
+                      this._status === 'confirm' && this._confirmHtml
+                        ? html`<div id="html" part="html">${unsafeHTML(this._confirmHtml)}</div>`
+                        : nothing
+                    }
+                  </div>
+
+                  ${this._hasActions() ? html`<div id="actions" part="actions">${this._renderActions()}</div>` : nothing}
                 </div>
-
-                ${this._showsSpinner()
-                  ? html`
-                      <nte-spinner
-                        id="spinner"
-                        part="spinner"
-                        class=${this._getSpinnerClass()}
-                        style=${this._getSpinnerStyle()}
-                      ></nte-spinner>
-                    `
-                  : nothing}
-
-                <div id="content" part="content">
-                  <div id="message" part="message">${this._message}</div>
-
-                  ${this._referenceLabel
-                    ? html`<div id="reference" part="reference">${this._referenceLabel}</div>`
-                    : nothing}
-                  ${this._status === 'progress'
-                    ? html`
-                        <div id="progress" part="progress">
-                          <div id="progress-meta" part="progress-meta">
-                            <span part="progress-label">Fortschritt</span>
-                            <span part="progress-percent">${Math.round(this._progress)}%</span>
-                          </div>
-                          <div id="progress-bar" part="progress-bar">
-                            <div id="progress-value" part="progress-value" style="width: ${this._progress}%"></div>
-                          </div>
-                        </div>
-                      `
-                    : nothing}
-                  ${this._status === 'fail' && this._details
-                    ? html`
-                        <details id="details" part="details">
-                          <summary id="details-summary" part="details-summary">Details anzeigen</summary>
-                          <pre id="details-content" part="details-content">${this._details}</pre>
-                        </details>
-                      `
-                    : nothing}
-                  ${this._status === 'confirm' && this._confirmHtml
-                    ? html`<div id="html" part="html">${unsafeHTML(this._confirmHtml)}</div>`
-                    : nothing}
-                </div>
-
-                ${this._hasActions() ? html`<div id="actions" part="actions">${this._renderActions()}</div>` : nothing}
-              </div>
-            `
-          : nothing}
+              `
+            : nothing
+        }
       </dialog>
     `;
   }

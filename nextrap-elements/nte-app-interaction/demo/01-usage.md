@@ -32,4 +32,4 @@ window.dispatchEvent(
 
 `title`, `message` und `cancelable` stehen in allen Detail-Typen zur Verfügung. Statusabhängig kommen `reference`, `onAbort`, `progress`, `autoClose`, `details`, `onConfirm`, `html` oder `actions` hinzu. Mit `NteAppInteraction.close()` lässt sich der aktuelle Dialog programmgesteuert schließen.
 
-Die interaktive Demo zeigt alle Zustände über die ausblendbare Controls-Leiste am unteren Fensterrand.
+Die interaktive Demo zeigt alle Zustände über die ausblendbaren Controls. Gesendete Events erscheinen als kurzlebige Toasts und zusätzlich im persistenten Logging-Toast.

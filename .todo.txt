@@ -1,0 +1,281 @@
+# TODO: Inspectierbare Code-Beispiele im trunkjs Demo Viewer
+
+## Ziel
+
+Im `@trunkjs/demo-viewer` sollen nicht nur komplette `.demo.ts`-Quelldateien, sondern gezielt die sichtbaren Beispiel- und Control-Codeabschnitte angezeigt werden.
+
+- Der Code des eigentlichen Beispiels soll über „Show code“ sichtbar sein.
+- HTML und Markdown werden als Raw-Inhalt angezeigt.
+- Bei `render()` soll nur der Funktionsbody erscheinen, nicht die vollständige `.demo.ts`-Datei.
+- Neben jedem Action-Bar-Control mit Handler soll ein Code-Dropdown erscheinen.
+- Das Dropdown soll die vorhandenen Handler (`onClick`, `onChange`, `onInput`, `onApply`, `validate`) anbieten.
+- Der gewählte Code wird in einem zentralen Dialog/Fenster mit Copy-Button angezeigt.
+- Die bisherige vollständige `source` bleibt als kompatibler Fallback erhalten.
+
+## Arbeitsort und Freigabe
+
+Quellrepository:
+
+`/opt/workspaces/trunkjs-monorepo`
+
+Der User hat die Bearbeitung dieses Workspace ausdrücklich erlaubt. `/opt/AGENTS.md` und der `basic-coding`-Skill wurden so angepasst, dass Workspace-Änderungen nach ausdrücklicher Zustimmung erlaubt sind. In einer neuen Agent-Sitzung die Regeln neu laden und die Zustimmung berücksichtigen.
+
+Betroffene Packages:
+
+- `packages/demo-viewer`
+- `packages/vite-demo-viewer`
+
+Vor der Umsetzung erneut lesen:
+
+- `/opt/AGENT_CONTEXT.md`
+- `/opt/AGENTS.md`
+- `basic-coding`
+- `demo-viewer`
+- gegebenenfalls `vite-demo-viewer-setup`
+- nach anwendbaren `ARCHITECTURE.md` suchen; aktuell wurde in diesen beiden Packages keines gefunden
+
+## Empfohlene Architektur
+
+### 1. Automatische Build-Extraktion
+
+Der Vite-Plugin liest `.demo.ts` bereits ein und hängt die vollständige Datei als `source` an die Demo. `packages/vite-demo-viewer/src/lib/generateRegistry.ts` verwendet bereits:
+
+- `readFile`
+- `transformWithEsbuild`
+- `parseAst`
+- Erkennung von `defineDemo({...})`
+
+Diese Analyse erweitern, sodass aus der transformierten, nicht minifizierten Quelle zusätzlich Code-Snippets gewonnen werden:
+
+- `render`-Funktionsbody
+- optional `afterRender`-Funktionsbody
+- rekursiv aus `actionBar.items`:
+  - `onClick`
+  - `onChange`
+  - `onInput`
+  - `onApply`
+  - `validate`
+
+Nur den Inhalt zwischen den geschweiften Klammern extrahieren und sinnvoll dedenten. Bei Expression-Bodies den Ausdruck anzeigen.
+
+Keine Browser-Analyse über `Function.prototype.toString()` verwenden: Im Production-Build wäre die Funktion bereits transformiert oder minifiziert.
+
+### 2. HTML und Markdown
+
+Für statische Beispiele keine AST-Extraktion erzwingen:
+
+- Wenn `demo.html` vorhanden ist, diesen String als `html` anzeigen.
+- Wenn `demo.markdown` vorhanden ist, diesen String als `markdown` anzeigen.
+- Das funktioniert auch bei `import html from './example.html?raw'`, da nach dem Laden der Demo der Raw-Inhalt im Definition-Objekt liegt.
+- `wrapper_html` gegebenenfalls als separaten Abschnitt anbieten, nicht anstelle des eigentlichen Beispiels.
+
+Priorität für „Show code“:
+
+1. `demo.html`
+2. `demo.markdown`
+3. extrahierter `render`-Body
+4. vollständige `demo.source` als Fallback
+
+### 3. `inspectable()` als Escape-Hatch
+
+Normale Inline-Handler sollen ohne zusätzliche Syntax automatisch erkannt werden.
+
+Für referenzierte Funktionen oder bewusst abgegrenzte Codeabschnitte zusätzlich eine öffentliche Hilfsfunktion vorsehen:
+
+```ts
+const openDialog = inspectable((_, env) => {
+  env.query<HTMLDialogElement>('dialog').showModal();
+});
+```
+
+Der Build-Plugin soll `inspectable(<function>)` erkennen und Source-Metadaten hinzufügen beziehungsweise die Funktion so transformieren, dass das Snippet zur Laufzeit abrufbar ist. Die Funktion selbst muss unverändert als Handler verwendbar bleiben.
+
+Falls die Transformationslogik dafür den Scope deutlich vergrößert, zuerst die automatische Inline-Extraktion vollständig implementieren und `inspectable()` danach als kleinen zweiten Schritt ergänzen. Keine manuelle Duplizierung des Codes in String-Literalen als Standard-API verlangen.
+
+### 4. Source-Datenmodell
+
+Das bestehende Feld:
+
+```ts
+source?: string
+```
+
+behalten. Es repräsentiert weiterhin die vollständige Datei.
+
+Zusätzliche strukturierte Source-Metadaten einführen, beispielsweise:
+
+```ts
+export type TDemoCodeSnippet = {
+  code: string;
+  language: 'ts' | 'js' | 'html' | 'markdown';
+  label?: string;
+};
+
+export type TDemoSourceInfo = {
+  example?: TDemoCodeSnippet;
+  controls?: Record<string, Partial<Record<
+    'onClick' | 'onChange' | 'onInput' | 'onApply' | 'validate',
+    TDemoCodeSnippet
+  >>>;
+};
+```
+
+`TDemoDefinition` erhält zum Beispiel:
+
+```ts
+sourceInfo?: TDemoSourceInfo;
+```
+
+Für Action-Bar-Items bevorzugt deren `id` als Schlüssel verwenden. Falls keine `id` vorhanden ist, einen rekursiven Array-Pfad wie `0`, `1.2` verwenden. Alternativ können die Source-Metadaten direkt am Action-Bar-Item abgelegt werden, wenn dadurch Registry und UI wesentlich einfacher und typsicherer werden.
+
+Beim Lazy Loading müssen die Snippets zusammen mit dem jeweiligen Demo-Chunk verfügbar werden und dürfen nicht dazu führen, dass alle Demo-Module wieder eager in den Haupt-Bundle gezogen werden.
+
+### 5. Registry/Plugin
+
+Relevante Dateien:
+
+- `packages/vite-demo-viewer/src/lib/generateRegistry.ts`
+- `packages/vite-demo-viewer/src/lib/tjDemoViewerPlugin.ts`
+- Tests in `packages/vite-demo-viewer/src/index.spec.ts` beziehungsweise neue fokussierte Tests
+
+Die vorhandenen Lazy- und Tagged-Registry-Pfade beide berücksichtigen:
+
+- `generateLazyRegistry()`
+- `generateTaggedRegistry()`
+- `normalizeDemoDefinition()`
+
+Source-Informationen dürfen bei `load()` und bei Tag-Filterung nicht verloren gehen.
+
+Tests mindestens für:
+
+- Method-Syntax `render(root) { ... }`
+- Arrow Function `render: (root) => { ... }`
+- Expression-Body
+- Action-Bar-Button mit `onClick`
+- Control mit mehreren Handlern
+- verschachtelte `group.items`
+- HTML
+- Markdown
+- Fallback auf vollständiges `source`
+- Lazy Registry behält Code-Splitting
+
+### 6. Haupt-Codeanzeige
+
+Aktueller Stand:
+
+- `packages/demo-viewer/src/components/tj-demo/tj-demo.ts` zeigt „Source“ als Link.
+- `packages/demo-viewer/src/components/tj-demo-renderer/tj-demo-renderer.ts` hat einen `source`-View-Mode und rendert derzeit `demo.source` vollständig.
+
+Anpassen:
+
+- Beschriftung bevorzugt „Show code“.
+- Im Source-View den priorisierten Beispielcode statt immer der ganzen Datei anzeigen.
+- Vollständige Datei weiterhin als Fallback oder optional als zweite Auswahl „Full source“ anbieten.
+- Sprache als Metadatum an die Codeanzeige übergeben; bestehendes `<pre><code>` kann zunächst weiterverwendet werden.
+
+### 7. Codeanzeige für Controls
+
+Relevante Dateien:
+
+- `packages/demo-viewer/src/components/tj-demo-controls/tj-demo-controls.ts`
+- `packages/demo-viewer/src/components/tj-demo-controls/tj-demo-controls.scss`
+- gegebenenfalls neue kleine Dialog-Komponente unter `packages/demo-viewer/src/components/`
+- Registrierung/Exports in den vorhandenen Index-Dateien beachten
+
+Verhalten:
+
+- Neben jedem Control mit mindestens einem verfügbaren Snippet einen kleinen „Code ▾“-Button anzeigen.
+- Beim Button-Control als Split-Action neben dem eigentlichen Button.
+- Bei Inputs/Selects/JSON-Feldern passend innerhalb des Feld-Wrappers positionieren.
+- Dropdown-Inhalte nach vorhandenen Handlern benennen (`onClick`, `onChange` usw.).
+- Bei genau einem Handler darf der Button direkt den Dialog öffnen; das visuelle Verhalten sollte trotzdem konsistent bleiben.
+- Ein zentraler Dialog zeigt Titel, Control-Label, Handlername, Sprache, Code und Copy-Button.
+- Dialog tastaturbedienbar machen, Escape/Close unterstützen und Fokus sinnvoll zurückgeben.
+- Bestehende Controls ohne Source-Informationen unverändert rendern.
+
+Keine externe UI-Abhängigkeit installieren. Vor einer neuen Dependency ausdrücklich fragen.
+
+### 8. Öffentliche API und Dokumentation
+
+Aktualisieren:
+
+- `packages/demo-viewer/src/types.ts`
+- öffentliche Exports in `packages/demo-viewer/src/index.ts` und gegebenenfalls Root-Entrypoints
+- `.ai-usage-info.md` beider bearbeiteten Packages kurz aktualisieren
+- package-lokalen Demo-Viewer-Skill/Referenzen ergänzen, falls `inspectable()` öffentlich eingeführt wird
+- README/CHANGELOG nur entsprechend den bestehenden Konventionen ändern
+
+Beispiel für normale Verwendung:
+
+```ts
+export default defineDemo({
+  render(root) {
+    const button = document.createElement('button');
+    button.textContent = 'Hello';
+    root.append(button);
+  },
+  actionBar: {
+    items: [{
+      type: 'button',
+      label: 'Open',
+      onClick(_, env) {
+        env.query<HTMLDialogElement>('dialog').showModal();
+      },
+    }],
+  },
+});
+```
+
+Dafür sollen ohne zusätzliche Autorenarbeit beide Bodies angezeigt werden können.
+
+## Vorhandener Stand
+
+Bereits vorhanden:
+
+- Vollständige `.demo.ts` wird als `source` über eine virtuelle `?raw`-Import-URL geladen.
+- `TDemoDefinition.source?: string` existiert.
+- Source-View-Mode existiert.
+- Action Bar mit rekursiven Gruppen existiert.
+- Lazy Demo-Imports und per-Demo Code-Splitting existieren.
+
+Die Implementierung sollte diese Strukturen erweitern und nicht ersetzen.
+
+## Vergleich zu anderen Frameworks
+
+Storybook verwendet ebenfalls Build-/Loader-Metadaten statt `Function.prototype.toString()`. Es unterstützt:
+
+- automatisch erzeugte Source-Snippets
+- expliziten `docs.source.code`-Override
+- `docs.source.transform`
+- dynamische, frameworkabhängige Source
+
+Für trunkjs daher dieselbe Grundreihenfolge:
+
+1. automatische Extraktion
+2. `inspectable()` für Sonderfälle
+3. optionaler manueller Code-Override
+
+## Verifikation
+
+Nach der Umsetzung gezielt ausführen:
+
+```bash
+cd /opt/workspaces/trunkjs-monorepo
+npx nx test demo-viewer
+npx nx test vite-demo-viewer
+npx nx build demo-viewer
+npx nx build vite-demo-viewer
+```
+
+Falls die Nx-Projektnamen anders lauten, zunächst gezielt `project.json` lesen. Danach die lokalen Demo-Viewer-Demos bauen/öffnen und prüfen:
+
+- „Show code“ zeigt nur das Beispiel.
+- HTML und Markdown erscheinen raw.
+- Controls zeigen jeweils nur ihren Handlerbody.
+- Der Dialog funktioniert mit Tastatur und Copy-Button.
+- Production-Build enthält die Snippets.
+- Lazy Loading und per-Demo CSS/Chunks bleiben erhalten.
+
+## Scope-Hinweis
+
+Die Änderung betrifft voraussichtlich mehr als drei Dateien und beide Packages. Der User hat die Umsetzung und Änderungen in `/opt/workspaces/trunkjs-monorepo` ausdrücklich freigegeben. Keine zusätzlichen Packages installieren, ohne erneut zu fragen.

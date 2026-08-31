@@ -12,6 +12,6 @@ Diese Datei bleibt absichtlich kurz. Detaillierter Repository-Kontext steht in `
 
 ## Repo-spezifische Kurzregeln
 
-- Nicht aus `workspaces/`, `node_modules/`, `dist/` oder generierten Artefakten implementieren.
+- Nicht aus `node_modules/`, `dist/` oder generierten Artefakten implementieren. Änderungen unter `workspaces/` sind nur nach ausdrücklicher Zustimmung des Users erlaubt; vorher den geplanten Umfang kurz erläutern.
 - Cross-Package-Imports immer über `@nextrap/<package-name>`.
 - Externe npm-Abhängigkeiten nur im Root-`package.json` pflegen.
