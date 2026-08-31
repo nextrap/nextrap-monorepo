@@ -80,9 +80,48 @@ In particular, it must be possible to use NTE Nav as the content of:
 - a top or bottom navigation surface where appropriate
 - a fullscreen primary/main navigation
 
-`nte-offcanvas` must therefore avoid assumptions about its slotted content that would interfere with NTE Nav's own layout, focus handling, submenu logic, responsive behavior, events, or internal stacking.
+`nte-offcanvas` must therefore avoid assumptions about its content that would interfere with NTE Nav's own layout, focus handling, submenu logic, responsive behavior, events, or internal stacking.
 
 The integration contract should favor composition: `nte-offcanvas` owns surface placement, opening/closing, modality, backdrop, page displacement and arbitration; NTE Nav owns navigation structure and navigation-specific interaction.
+
+## Content model and programmatic construction
+
+`nte-offcanvas` must support both declarative HTML content and programmatically supplied content.
+
+Programmatic construction should use a constructor options object. The options object may contain a `content` value. The exact TypeScript type will be finalized during API design, but the architecture requires at least the following content forms:
+
+- a Lit `TemplateResult` / template
+- an `HTMLElement`
+- a custom element or any suitable element derived from `HTMLElement`
+
+Conceptually:
+
+```ts
+const offcanvas = new NteOffcanvas({
+  content: html`<new-form></new-form>`
+});
+```
+
+or:
+
+```ts
+const form = new NewForm();
+const offcanvas = new NteOffcanvas({ content: form });
+```
+
+This allows application code to create reusable forms, navigation components, editors or other custom elements first and then hand the resulting element directly to the offcanvas surface.
+
+The content abstraction should normalize the supported input forms internally so the rest of the offcanvas lifecycle does not care whether the content originated from a template or an element instance.
+
+### Extending offcanvas
+
+The architecture should also allow application-specific classes to extend the offcanvas abstraction and predefine their content/configuration. This provides a programmatic usage pattern comparable to the existing NTE Dialog component approach while retaining the offcanvas-specific lifecycle and grouping behavior.
+
+A derived offcanvas may therefore establish default constructor options/content and still participate in the normal `open()`, `close()`, group, modal and presentation mechanisms.
+
+The implementation must define a clean content render boundary so application-specific content can be encapsulated where appropriate, including Shadow DOM based custom elements. Passing an existing custom element as `content` must preserve that element's own Shadow DOM and lifecycle rather than cloning/recreating its internals.
+
+Declarative slot-based content remains supported and should not require the programmatic constructor API.
 
 ## Behavioral dimensions
 
@@ -102,6 +141,8 @@ For edge-attached surfaces, animation direction and layout effects derive from t
 
 Placement itself does not define exclusivity. Two offcanvas instances at the same or at different placements may coexist unless they share an exclusivity group or another explicit policy prevents it.
 
+Placement is treated as stable for an active open/close cycle. Changing placement while an offcanvas is open is not supported.
+
 ### Layout strategy
 
 Two primary strategies exist for edge-attached surfaces.
@@ -110,21 +151,36 @@ Two primary strategies exist for edge-attached surfaces.
 
 The surface does not change the available layout space of the page. It enters above existing content.
 
-This is suitable for transient navigation, inspectors, carts and modal interactions.
-
 #### Push
 
-The surface participates in the effective application layout and reduces the space available to a configured content/layout container.
+The surface participates in the effective application layout and reduces the space available to a configured content pane.
 
-For left/right surfaces this shifts or constrains the target content horizontally.
-
-For top/bottom surfaces this reserves vertical space. In particular, a bottom push surface must not permanently cover the end of the document; users must still be able to scroll all page content into view.
+For left/right surfaces this shifts or constrains the target content horizontally. For top/bottom surfaces this reserves vertical space. A bottom push surface must not permanently cover the end of the document; users must still be able to scroll all page content into view.
 
 Fullscreen does not use `push`; it occupies the full available viewport/application surface.
 
-The component should not directly and unconditionally manipulate `document.body`. Push behavior must instead be expressed through an explicit layout contract so it can work with the document body, an application shell, an embedded layout or another chosen container.
+The component must not directly and unconditionally manipulate `document.body`.
 
-### Interaction mode
+## CSS-driven presentation configuration
+
+Presentation values should be available as CSS custom properties with component-local defaults. Themes may override these values globally or selectively without being required to define them.
+
+Important presentation values include at least:
+
+- effective mode (`overlay` / `push`)
+- placement
+- width/height and relevant min/max sizing
+- transition duration
+- transition easing
+- backdrop presentation such as color/opacity/blur
+
+Responsive behavior is explicitly outside the responsibility of `nte-offcanvas`. Responsive frameworks such as trunk.js may change classes/styles which in turn change the effective CSS custom properties.
+
+The component evaluates its effective CSS configuration using `getComputedStyle()` initially and re-evaluates it when its own `class` or `style` attribute changes. It does not implement its own breakpoint system.
+
+Because arbitrary CSS-context changes cannot always be observed reliably, structural presentation changes such as placement changes are not supported while the offcanvas is open.
+
+## Interaction mode
 
 Interaction blocking is separate from placement and layout strategy.
 
@@ -137,13 +193,7 @@ A modal surface may optionally use a backdrop. The standard backdrop should foll
 
 Modal behavior is expected to include proper focus handling, keyboard dismissal rules where allowed, scroll handling and inaccessible/inert background content.
 
-Fullscreen surfaces will commonly be modal, but the architecture must not hard-code fullscreen and modality as the same concept.
-
-### Backdrop
-
-Backdrop behavior must not define whether the offcanvas is overlay or push. For example, a push layout can still temporarily lock interaction if required.
-
-The backdrop should therefore be modeled as an interaction/presentation option rather than as a layout mode.
+Fullscreen surfaces will commonly be modal, but fullscreen and modality are not the same concept.
 
 ## Multiple offcanvas instances
 
@@ -153,9 +203,7 @@ A page may contain many `nte-offcanvas` elements.
 
 Exclusivity is controlled through an optional named group rather than being hard-coded by edge or placement.
 
-The working concept is an **open group** (final public naming still to be decided, e.g. `open-group`).
-
-If an offcanvas belongs to an open group, opening it requests all other currently open and replaceable members of that same group to close. This creates a mutually exclusive set independent of where the individual surfaces are placed.
+If an offcanvas belongs to an open group, opening it requests all other currently open members of that same group to close. This creates a mutually exclusive set independent of where the individual surfaces are placed.
 
 Examples:
 
@@ -164,25 +212,11 @@ Examples:
 - a `global-surface` group could contain surfaces at different edges that must never coexist.
 - an offcanvas without an open group is not automatically exclusive with another instance merely because both use the same placement.
 
-This group model also enables controlled toggling/cycling between related surfaces. Opening the next member naturally closes the previously active member without requiring direct coupling between those components.
+This group model also enables controlled toggling/cycling between related surfaces.
 
-A single offcanvas should initially belong to at most one exclusivity/open group. Multiple simultaneous group memberships would make arbitration and locks significantly harder to reason about and should only be introduced if a concrete requirement appears.
+A single offcanvas should initially belong to at most one exclusivity/open group.
 
-### Priority / lock
-
-An active offcanvas can acquire a lock for its open group/arbitration scope. While locked, a competing offcanvas in the same exclusivity scope cannot replace it.
-
-This is intended for surfaces that must remain authoritative until an explicit condition is fulfilled, for example:
-
-- mandatory consent flows
-- critical confirmation or transactional steps
-- unsaved editor/tool state
-- application states where replacement would be destructive or confusing
-- a primary fullscreen navigation/workflow that must not be interrupted by another grouped offcanvas request
-
-The coordination layer must distinguish between normal close requests and forced/internal teardown. A lock must not make lifecycle cleanup impossible.
-
-The exact lock semantics remain to be specified separately: replacement, Escape dismissal, backdrop dismissal and programmatic close do not necessarily need to share the same lock rule.
+Locking/priorities are intentionally out of scope for the initial architecture.
 
 ### Coordination instead of DOM assumptions
 
@@ -193,68 +227,26 @@ The coordination mechanism is responsible for:
 - registering offcanvas instances and their open groups
 - tracking the active member of each open group
 - handling replacement and toggle requests
-- respecting locks/priorities
 - serializing close/open transitions where necessary
 - avoiding animation races
 
-Placement and open-group membership are independent metadata. The manager must not infer exclusivity solely from `left`, `right`, `top`, `bottom` or `fullscreen`.
+Placement and open-group membership are independent metadata.
 
-Whether this manager lives in the framework layer or inside the package remains an implementation decision.
+## NTE Offcanvas Pane
 
-## Push layout contract
+Push mode requires cooperation between the offcanvas and the page/application content. This responsibility should be represented by a separate element in the same package, currently named **`nte-offcanvas-pane`**.
 
-Push mode requires cooperation between the offcanvas and the page/application layout. This should be implemented as an explicit styling/layout contract rather than by directly rewriting body styles from the component.
+The pane is an offcanvas-aware content container. It can be associated with one or more offcanvas layout groups and reacts to active push surfaces by reserving the appropriate space on the corresponding side.
 
-### Layout target
+A single pane may therefore react to different surfaces on different sides, for example a left navigation and a right inspector.
 
-The application must be able to define which element is displaced when a push offcanvas opens. This may be:
+The pane should use real layout insets/padding where practical rather than treating push solely as a visual transform, so the available content area remains correct.
 
-- the document/body-level application content
-- an application shell
-- a page wrapper
-- a nested workspace/layout container
+Offcanvas and pane must share the effective geometry and animation timing so both move synchronously.
 
-The final API may expose this through a target/group identifier, shared state attributes, CSS custom properties, or another framework-supported mechanism. The important architectural rule is that push behavior targets an explicit layout context.
+The pane does not own responsive logic. If CSS/class changes cause an associated offcanvas to evaluate to `overlay` instead of `push`, the pane simply stops reserving space for that surface.
 
-### SCSS mixin
-
-The package should provide an SCSS mixin that can be included on the body or another layout container to opt that container into offcanvas push behavior.
-
-Conceptually:
-
-```scss
-.app-layout {
-  @include offcanvas.push-layout(...);
-}
-```
-
-The exact mixin name and parameters remain to be defined.
-
-The mixin should provide the CSS necessary to react to the active push offcanvas and move/reduce the target content in the corresponding direction.
-
-### Shared geometry and timing
-
-The offcanvas surface and its push target must use the same source of truth for geometry and animation timing.
-
-At minimum, the layout contract should expose shared values equivalent to:
-
-- active placement/direction
-- effective offcanvas width or height
-- transition duration
-- transition easing
-- open/closed state
-
-This avoids duplicated magic values such as a panel animating for `200ms` while the page moves for `400ms`.
-
-The preferred implementation should rely on CSS custom properties/state selectors where possible so the panel and pushed content animate in the same rendering cycle.
-
-For a left push surface, for example, opening the offcanvas and shifting the layout target to the right should be two visual consequences of the same state transition rather than separate JavaScript animations.
-
-### Multiple push surfaces
-
-The layout model must not assume that `body` can only ever be affected by one hard-coded offcanvas. Layout groups/targets should make it possible to define which surfaces affect which layout context.
-
-If multiple simultaneously open push surfaces are allowed for the same layout target, the behavior must be deterministic. The initial implementation should prefer mutually exclusive open groups for conflicting push surfaces rather than attempt arbitrary additive transforms until a real requirement for combined pushes exists.
+The package may additionally provide SCSS mixins for pane/push styling and theme defaults, but the pane element is the runtime coordination primitive.
 
 ## Stacking
 
@@ -262,9 +254,7 @@ Open-group exclusivity is different from visual `z-index` stacking.
 
 The architecture should still allow a well-defined global layer order so an offcanvas can coexist predictably with dialogs, toasts, popovers and other application surfaces.
 
-Fullscreen belongs to the same offcanvas coordination model but visually occupies a viewport-covering surface role.
-
-Nested or deliberately stacked offcanvas surfaces are not a primary use case. They should only be introduced later if a concrete requirement cannot be represented by independent groups, placements, fullscreen, or another surface type.
+Nested or deliberately stacked offcanvas surfaces are not a primary use case.
 
 ## Expected use-case matrix
 
@@ -276,25 +266,12 @@ Nested or deliberately stacked offcanvas surfaces are not a primary use case. Th
 | Cart | right | overlay | modal or non-modal |
 | Inspector/details | left/right | push or overlay | usually non-modal |
 | Application sidebar | left/right | push | non-modal |
-| Cookie/consent | bottom/top | push or overlay | optionally modal/locked |
+| Cookie/consent | bottom/top | push or overlay | optionally modal |
 | Announcement | top/bottom | push | non-modal |
 | Persistent action bar | bottom | push | non-modal |
 | Mobile tool sheet | bottom | overlay | often modal |
 | Fullscreen search/command surface | fullscreen | fullscreen/overlay | usually modal |
-| Critical workflow surface | any edge/fullscreen | overlay, push or fullscreen | modal and optionally locked |
-
-## Additional application areas to keep in scope
-
-The same architecture naturally covers several cases beyond navigation and cookie banners:
-
-- **responsive desktop/mobile sidebars:** a push sidebar on desktop can use the same conceptual surface as an overlay drawer or fullscreen navigation on mobile, with all variants sharing one `main-navigation` open group.
-- **master-detail / inspector UI:** selecting an item opens a persistent detail pane without navigating away.
-- **filter and search panels:** especially useful when switching between push and modal overlay behavior at breakpoints.
-- **shopping carts and checkout summaries:** transient right-side surfaces with optional interaction blocking.
-- **command/help/settings surfaces:** contextual application tools that should not require a centered dialog.
-- **persistent status/action regions:** upload progress, media controls, bulk-selection actions or workflow controls attached to top/bottom.
-- **system notices requiring acknowledgement:** an edge surface can be locked and modal without necessarily behaving like a centered dialog.
-- **fullscreen application navigation:** NTE Nav can occupy the entire viewport while remaining part of the same offcanvas lifecycle and arbitration system.
+| Programmatic form/editor | any | overlay or push | application-specific |
 
 ## Cases that should probably remain separate components
 
@@ -308,32 +285,34 @@ The following are better represented by dedicated primitives unless future requi
 - transient toast notifications
 - fully draggable/resizable floating windows
 
-Fullscreen is intentionally an exception to the otherwise edge-attached definition because it is needed as a first-class presentation for navigation and other large application surfaces and benefits from the same offcanvas coordination model.
-
-The defining characteristic of `nte-offcanvas` should therefore remain: **a substantial application surface attached to a viewport/application edge or occupying it entirely, whose opening may overlay, replace, or alter the available page space and whose lifecycle is coordinated with related offcanvas surfaces through explicit groups.**
+Fullscreen is intentionally an exception because it is needed as a first-class presentation for navigation and other large application surfaces and benefits from the same offcanvas coordination model.
 
 ## Architecture decisions made
 
-The following decisions are currently established:
-
 1. Exclusivity is configurable and based on named open groups, not implicitly on edge/placement.
-2. Opening one member of an open group closes other replaceable open members of that group.
-3. Grouping must work across placements, including fullscreen, enabling responsive navigation variants to share one group.
-4. Push mode should not directly depend on arbitrary `body.style` manipulation.
-5. Push behavior uses an explicit layout target/context and should be supported by a package SCSS mixin.
-6. Offcanvas and push target must share geometry, duration and easing so their transitions stay synchronized.
+2. Opening one member of an open group closes other open members of that group.
+3. Grouping works across placements, including fullscreen.
+4. Locking/priorities are not part of the initial scope.
+5. Push does not directly manipulate the body; `nte-offcanvas-pane` is the runtime content/layout primitive.
+6. A pane can react to one or more associated offcanvas/layout groups and can reserve space on multiple sides.
+7. Offcanvas and pane share geometry, duration and easing so transitions remain synchronized.
+8. Presentation configuration is CSS-variable driven and may be changed through classes/styles; responsive logic remains external to the component.
+9. Effective CSS configuration is evaluated on connect and re-evaluated when the offcanvas element's own `class` or `style` attribute changes.
+10. Placement changes while open are not supported.
+11. Programmatic construction uses an options object which may contain content.
+12. Programmatic content supports Lit templates and existing `HTMLElement`/custom-element instances.
+13. Application-specific offcanvas classes may extend the abstraction and predefine content/configuration.
+14. Existing element instances supplied as content retain their own lifecycle and Shadow DOM.
 
 ## Open architecture questions
 
-The following questions should be decided before finalizing the public API:
-
-1. What should the final public names be for exclusivity and layout coordination (`open-group`, `layout-group`, `push-target`, etc.)?
+1. What should the final public names be for exclusivity and layout coordination (`open-group`, `layout-group`, etc.)?
 2. Can modal offcanvas surfaces from different open groups coexist, or should modality optionally introduce a separate global exclusivity rule?
-3. How should the offcanvas communicate push state and dimensions to its layout target: attributes/classes on a shared root, CSS custom properties, framework events/controller state, or a combination?
-4. Should responsive mode changes (for example push on desktop, overlay or fullscreen on mobile) be built into `nte-offcanvas` or handled externally through CSS/application state?
-5. What exactly does a lock prevent: competing opens only, dismissal by backdrop/Escape, programmatic close, or each independently?
+3. How exactly should offcanvas communicate push state and dimensions to `nte-offcanvas-pane`?
+4. What is the final constructor options type and content union type?
+5. How should declarative slotted content and constructor-supplied content behave if both are provided?
 6. Do top/bottom surfaces need intrinsic/auto sizing in addition to explicit sizes?
-7. Should opening/replacement be synchronous from the caller's perspective or expose an asynchronous lifecycle (`open()` / `close()` promises and before/after events)?
-8. Should fullscreen have its own transition presets (fade, scale, slide) or share the edge transition model with a configurable animation strategy?
-9. Which integration contract between `nte-offcanvas` and NTE Nav should be guaranteed by tests (focus, nested submenus, sizing, scroll ownership, close events, responsive mode changes)?
-10. Should toggling/cycling through members of an open group be exposed directly by the manager API or remain an application-level operation built from `open()` calls?
+7. Should opening/replacement expose an asynchronous lifecycle (`open()` / `close()` promises and before/after events)?
+8. Should fullscreen have its own transition presets or share the edge transition model?
+9. Which integration contract between `nte-offcanvas` and NTE Nav should be guaranteed by tests?
+10. Should toggling/cycling through members of an open group be exposed directly by the manager API?
