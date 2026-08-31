@@ -6,6 +6,8 @@
   --background: transparent;
   --text-color: var(--nt-text);
   display: block;
+  position: relative;
+  isolation: isolate;
   width: 100%;
   height: var(--height);
   color: var(--text-color);
