@@ -84,9 +84,44 @@ In particular, it must be possible to use NTE Nav as the content of:
 
 The integration contract should favor composition: `nte-offcanvas` owns surface placement, opening/closing, modality, backdrop, page displacement and arbitration; NTE Nav owns navigation structure and navigation-specific interaction.
 
-## Content model and programmatic construction
+## Content model and slots
 
 `nte-offcanvas` must support both declarative HTML content and programmatically supplied content.
+
+The declarative content model consists of three primary content regions plus an optional close-control region:
+
+- `slot="header"` for titles, toolbars, navigation headers and related controls
+- the default slot for the main content
+- `slot="footer"` for actions, status areas or persistent controls
+- `slot="close"` for an application-supplied close control that replaces the built-in default close control
+
+The corresponding internal styling parts should expose at least `header`, `main`, `footer` and `close` so themes can style these regions independently.
+
+Header and footer regions should collapse completely when no content is present.
+
+The component must not require applications to create a header only to obtain a close button. The close control has its own region and can be positioned together with the header when one exists or use a defined standalone position when no header exists.
+
+### Default close control
+
+`nte-offcanvas` should provide a built-in default close button. Its purpose is to keep close affordances consistent and remove repetitive markup from common offcanvas use cases.
+
+If the `close` slot is populated, the supplied content replaces the built-in close control.
+
+Visibility of the close control must be presentation-driven and configurable through CSS custom properties rather than requiring a dedicated HTML visibility attribute. This allows themes, style classes and responsive class systems to determine whether the close affordance is shown.
+
+The built-in close button must remain accessible and provide an appropriate accessible name independently of the visual icon.
+
+For the first implementation, the close icon and close-button styling may live directly in the `nte-offcanvas` component styles.
+
+### Future shared close-button styling
+
+A future style-system cleanup should move the generic close icon into Style Base as a global icon token so all Nextrap components can use the same close glyph.
+
+The same future cleanup should introduce a reusable generic close-button style or Sass mixin in the appropriate shared styling package (for example Style Utils or Style Elements). Dialog, Offcanvas and other components should then consume that shared primitive instead of maintaining independent close-button visuals.
+
+The long-term goal is one themeable close icon and one consistent close-button interaction style across components, including hit area, hover/focus treatment and disabled/interaction states.
+
+## Programmatic construction
 
 Programmatic construction should use a constructor options object. The options object may contain a `content` value. The exact TypeScript type will be finalized during API design, but the architecture requires at least the following content forms:
 
@@ -173,6 +208,7 @@ Important presentation values include at least:
 - transition duration
 - transition easing
 - backdrop presentation such as color/opacity/blur
+- close-control visibility and related close-control presentation values
 
 Responsive behavior is explicitly outside the responsibility of `nte-offcanvas`. Responsive frameworks such as trunk.js may change classes/styles which in turn change the effective CSS custom properties.
 
@@ -325,6 +361,10 @@ Fullscreen is intentionally an exception because it is needed as a first-class p
 15. Cross-instance and cross-package coordination uses a public namespaced `window` `CustomEvent` protocol.
 16. `nte-offcanvas-pane` consumes the same event protocol rather than requiring direct instance references.
 17. Any optional manager/controller is a convenience layer on top of the event protocol, not the source of truth.
+18. Declarative content uses `header`, default and `footer` content regions plus an optional `close` slot.
+19. `nte-offcanvas` provides a built-in accessible default close button; supplying the `close` slot replaces it.
+20. Close-control visibility is controlled through CSS custom properties rather than a dedicated visibility attribute.
+21. The initial close icon/style may be component-local; future work should move the icon to Style Base and the reusable close-button style/mixin to the shared style utilities/elements package.
 
 ## Open architecture questions
 
@@ -334,8 +374,9 @@ Fullscreen is intentionally an exception because it is needed as a first-class p
 4. Should opening/closing intent events be cancelable?
 5. What is the final constructor options type and content union type?
 6. How should declarative slotted content and constructor-supplied content behave if both are provided?
-7. Do top/bottom surfaces need intrinsic/auto sizing in addition to explicit sizes?
-8. Should opening/replacement expose an asynchronous lifecycle (`open()` / `close()` promises and before/after events)?
-9. Should fullscreen have its own transition presets or share the edge transition model?
-10. Which integration contract between `nte-offcanvas` and NTE Nav should be guaranteed by tests?
-11. Should toggling/cycling through members of an open group be exposed directly by a convenience API or remain an application-level operation built from events / `open()` calls?
+7. What are the exact CSS custom-property names and value semantics for close-control visibility and placement?
+8. Do top/bottom surfaces need intrinsic/auto sizing in addition to explicit sizes?
+9. Should opening/replacement expose an asynchronous lifecycle (`open()` / `close()` promises and before/after events)?
+10. Should fullscreen have its own transition presets or share the edge transition model?
+11. Which integration contract between `nte-offcanvas` and NTE Nav should be guaranteed by tests?
+12. Should toggling/cycling through members of an open group be exposed directly by a convenience API or remain an application-level operation built from events / `open()` calls?
