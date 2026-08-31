@@ -1,0 +1,50 @@
+.brand-logo {
+  --nt-navbar-brand-logo-aspect-ratio: 3 / 1;
+
+  display: flex;
+  align-items: center;
+  block-size: 100%;
+  inline-size: auto;
+  max-inline-size: 100%;
+  aspect-ratio: var(--nt-navbar-brand-logo-aspect-ratio);
+  transition:
+    inline-size 0.2s ease-in-out,
+    block-size 0.2s ease-in-out,
+    max-inline-size 0.2s ease-in-out;
+}
+
+.brand-logo[slot='start'] {
+  justify-content: flex-start;
+  margin-inline-end: auto;
+}
+
+.brand-logo[slot='center'] {
+  justify-content: center;
+  margin-inline: auto;
+}
+
+.brand-logo[slot='end'] {
+  justify-content: flex-end;
+  margin-inline-start: auto;
+}
+
+.brand-logo > img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  max-inline-size: 100%;
+  max-block-size: 100%;
+  object-fit: contain;
+  object-position: center;
+  transition:
+    inline-size 0.2s ease-in-out,
+    block-size 0.2s ease-in-out;
+}
+
+.brand-logo[slot='start'] > img {
+  object-position: left center;
+}
+
+.brand-logo[slot='end'] > img {
+  object-position: right center;
+}
