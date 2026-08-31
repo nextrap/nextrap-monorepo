@@ -3,7 +3,7 @@ name: nextrap-lib-programming
 description: Use this skill for programming within the nextrap library project.
 ---
 
-# Basic Coding
+# Nextrap Library Programming
 
 Nextrap is a css,ts webcomponents library project with no dependencies except trunkjs and lit elements.
 
@@ -15,7 +15,6 @@ Die nextrap elemente werden als einzelne packages auf npmjs veröffentlicht. Es 
 
 ## Basic rules
 
-- Befolge die Regeln des basic-coding Skills.
 - Wenn du Theme-Styles für ein konkretes `ntl-*`- oder `nte-*`-Package entwickelst oder änderst, lies zuerst dessen lokalen `.agents/skills/<component>-theming/SKILL.md` und nutze ihn als verbindlichen Komponenten-Contract.
 - Wenn du Markup oder Component-API eines Packages verwendest, lies dessen lokalen `.agents/skills/<component>-usage/SKILL.md`.
 - Falls mehrere Komponenten betroffen sind, lies die jeweils relevanten lokalen Skills. Gibt es noch keinen lokalen Skill, gelten dieses Dokument und die bestehende `.ai-usage-info.md` als Fallback.

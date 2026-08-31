@@ -19,7 +19,6 @@ Last verified: 2026-08-29
 - Read root `AGENTS.md` for repository-local rules.
 - Use skills first, especially:
   - `project-context-cache`
-  - `basic-coding`
   - `nextrap-lib-programming`
   - `ai-usage-info` when editing `.ai-usage-info.md`
   - `nx-monorepo-setup` for Nx/workspace/package structure changes
