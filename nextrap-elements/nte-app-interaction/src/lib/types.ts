@@ -1,11 +1,14 @@
 export const NTE_APP_INTERACTION_DEFAULT_AUTO_CLOSE_MS = 10_000;
 
+export type NextrapBackdropBehavior = 'shake' | 'dismiss';
+
 export interface NextrapLoadingDetail {
   title?: string;
   message?: string;
   reference?: string | HTMLElement;
   onAbort?: () => void;
   cancelable?: boolean;
+  backdropBehavior?: NextrapBackdropBehavior;
 }
 
 export interface NextrapProgressDetail {
@@ -15,6 +18,7 @@ export interface NextrapProgressDetail {
   reference?: string | HTMLElement;
   onAbort?: () => void;
   cancelable?: boolean;
+  backdropBehavior?: NextrapBackdropBehavior;
 }
 
 export interface NextrapSuccessDetail {
@@ -22,6 +26,7 @@ export interface NextrapSuccessDetail {
   message?: string;
   autoClose?: boolean;
   cancelable?: boolean;
+  backdropBehavior?: NextrapBackdropBehavior;
 }
 
 export interface NextrapFailDetail {
@@ -30,6 +35,7 @@ export interface NextrapFailDetail {
   details?: string;
   autoClose?: boolean;
   cancelable?: boolean;
+  backdropBehavior?: NextrapBackdropBehavior;
 }
 
 export interface NextrapInfoDetail {
@@ -37,6 +43,7 @@ export interface NextrapInfoDetail {
   message?: string;
   onConfirm?: () => void;
   cancelable?: boolean;
+  backdropBehavior?: NextrapBackdropBehavior;
 }
 
 export interface NextrapConfirmAction {
@@ -51,6 +58,7 @@ export interface NextrapConfirmDetail {
   html?: string;
   actions?: NextrapConfirmAction[];
   cancelable?: boolean;
+  backdropBehavior?: NextrapBackdropBehavior;
 }
 
 export type NteAppInteractionStatus = 'idle' | 'loading' | 'progress' | 'success' | 'fail' | 'info' | 'confirm';
