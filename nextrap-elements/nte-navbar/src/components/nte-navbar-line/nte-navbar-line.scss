@@ -1,0 +1,66 @@
+@use '@nextrap/style-reset' as *;
+
+:host {
+  --height: auto;
+  --height-scrolled: var(--height);
+  --background: transparent;
+  --text-color: var(--nt-text);
+  display: block;
+  width: 100%;
+  height: var(--height);
+  color: var(--text-color);
+  background: var(--background);
+  transition: height 0.2s ease-in-out, max-height 0.2s ease-in-out;
+}
+
+:host-context(nte-navbar.is-scrolled) {
+  height: var(--height-scrolled);
+}
+
+:host(.hide-on-scroll) {
+  max-height: var(--height);
+  overflow: hidden;
+}
+
+:host-context(nte-navbar.is-scrolled):host(.hide-on-scroll) {
+  height: 0;
+  max-height: 0;
+}
+
+#line {
+  width: 100%;
+  height: 100%;
+}
+
+#container {
+  width: min(100%, var(--container-width, var(--nt-container-width, 100%)));
+  height: 100%;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+}
+
+.region {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+#start {
+  justify-content: flex-start;
+}
+
+#center {
+  justify-content: center;
+  justify-self: center;
+}
+
+#end {
+  justify-content: flex-end;
+}
+
+.region:has(> slot.slot-empty) {
+  visibility: hidden;
+  pointer-events: none;
+}
