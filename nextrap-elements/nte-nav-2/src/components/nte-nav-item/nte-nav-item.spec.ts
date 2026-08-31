@@ -102,6 +102,15 @@ describe('NteNavItem', () => {
     element.remove();
   });
 
+  it('does not ship Popover styling that could detach vertical submenus from inline flow', () => {
+    const styles = Array.isArray(NteNavItem.styles) ? NteNavItem.styles : [NteNavItem.styles];
+    const cssText = styles.map((style) => ('cssText' in style ? style.cssText : String(style))).join('\n');
+
+    expect(cssText).not.toContain('[popover]');
+    expect(cssText).not.toContain(':popover-open');
+    expect(cssText).not.toContain('position-anchor');
+  });
+
   it('marks an empty icon slot through nextrap element slot visibility', async () => {
     const element = document.createElement('nte-nav-item') as NteNavItem;
     element.textContent = 'Kontakt';
