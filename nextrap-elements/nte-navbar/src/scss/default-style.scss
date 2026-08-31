@@ -1,6 +1,8 @@
 .brand-logo {
   --nt-navbar-brand-logo-aspect-ratio: 3 / 1;
 
+  position: relative;
+  z-index: var(--nt-navbar-content-z-index, 1);
   display: flex;
   align-items: center;
   block-size: 100%;
@@ -47,4 +49,11 @@
 
 .brand-logo[slot='end'] > img {
   object-position: right center;
+}
+
+.navbar-control {
+  position: relative;
+  z-index: var(--nt-navbar-control-z-index, 2);
+  min-inline-size: 0;
+  pointer-events: auto;
 }
