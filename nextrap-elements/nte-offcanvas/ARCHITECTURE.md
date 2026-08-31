@@ -218,19 +218,38 @@ A single offcanvas should initially belong to at most one exclusivity/open group
 
 Locking/priorities are intentionally out of scope for the initial architecture.
 
-### Coordination instead of DOM assumptions
+## Window event coordination protocol
 
-Multiple instances should be coordinated through a dedicated offcanvas manager/controller or equivalent shared mechanism. Components should not locate and manipulate arbitrary sibling instances directly through document queries.
+Communication between offcanvas instances and offcanvas-aware consumers must use events dispatched on `window`.
 
-The coordination mechanism is responsible for:
+This is the public interoperability contract. It must be possible for compatible surfaces, panes and controls implemented in other packages to participate in the same coordination model without importing a shared singleton manager or relying on package-local registries.
 
-- registering offcanvas instances and their open groups
-- tracking the active member of each open group
-- handling replacement and toggle requests
-- serializing close/open transitions where necessary
-- avoiding animation races
+The protocol should use namespaced `CustomEvent`s with typed `detail` payloads. The final event names are part of the API design, but the protocol must cover at least:
 
-Placement and open-group membership are independent metadata.
+- opening intent / request
+- opened notification
+- closing intent / request
+- closed notification
+- open-group identity
+- layout-group identity where applicable
+- effective placement
+- effective mode (`overlay` / `push`)
+- effective size/geometry relevant to push layout
+- transition duration
+- transition easing
+- a stable instance identifier or equivalent source identity
+
+An offcanvas opening in an `open-group` broadcasts that intent/state on `window`. Other compatible instances in the same group can react and close themselves. This keeps exclusivity decentralized and interoperable across package boundaries.
+
+`nte-offcanvas-pane` also consumes the window protocol for push state. It must not require direct references to `nte-offcanvas` instances in order to determine which associated groups currently reserve space on `left`, `right`, `top` or `bottom`.
+
+External packages may implement their own compatible offcanvas-like surfaces as long as they follow the same event contract. Likewise, external consumers may observe the protocol without depending on the `nte-offcanvas` implementation package.
+
+A manager/controller may still exist as an optional convenience abstraction for local state queries, helper methods or event serialization. If present, it must be implemented on top of the same public window-event protocol and must not become a second, incompatible source of truth.
+
+Components must not coordinate by querying arbitrary sibling DOM elements or by requiring that all participating elements originate from the same package version or module instance.
+
+The exact event naming, payload interfaces and whether intent events are cancelable remain API-design decisions.
 
 ## NTE Offcanvas Pane
 
@@ -242,9 +261,9 @@ A single pane may therefore react to different surfaces on different sides, for 
 
 The pane should use real layout insets/padding where practical rather than treating push solely as a visual transform, so the available content area remains correct.
 
-Offcanvas and pane must share the effective geometry and animation timing so both move synchronously.
+Offcanvas and pane must share the effective geometry and animation timing so both move synchronously. These effective values are communicated through the public window-event protocol.
 
-The pane does not own responsive logic. If CSS/class changes cause an associated offcanvas to evaluate to `overlay` instead of `push`, the pane simply stops reserving space for that surface.
+The pane does not own responsive logic. If CSS/class changes cause an associated offcanvas to evaluate to `overlay` instead of `push`, the resulting state update is broadcast and the pane stops reserving space for that surface.
 
 The package may additionally provide SCSS mixins for pane/push styling and theme defaults, but the pane element is the runtime coordination primitive.
 
@@ -303,16 +322,20 @@ Fullscreen is intentionally an exception because it is needed as a first-class p
 12. Programmatic content supports Lit templates and existing `HTMLElement`/custom-element instances.
 13. Application-specific offcanvas classes may extend the abstraction and predefine content/configuration.
 14. Existing element instances supplied as content retain their own lifecycle and Shadow DOM.
+15. Cross-instance and cross-package coordination uses a public namespaced `window` `CustomEvent` protocol.
+16. `nte-offcanvas-pane` consumes the same event protocol rather than requiring direct instance references.
+17. Any optional manager/controller is a convenience layer on top of the event protocol, not the source of truth.
 
 ## Open architecture questions
 
 1. What should the final public names be for exclusivity and layout coordination (`open-group`, `layout-group`, etc.)?
 2. Can modal offcanvas surfaces from different open groups coexist, or should modality optionally introduce a separate global exclusivity rule?
-3. How exactly should offcanvas communicate push state and dimensions to `nte-offcanvas-pane`?
-4. What is the final constructor options type and content union type?
-5. How should declarative slotted content and constructor-supplied content behave if both are provided?
-6. Do top/bottom surfaces need intrinsic/auto sizing in addition to explicit sizes?
-7. Should opening/replacement expose an asynchronous lifecycle (`open()` / `close()` promises and before/after events)?
-8. Should fullscreen have its own transition presets or share the edge transition model?
-9. Which integration contract between `nte-offcanvas` and NTE Nav should be guaranteed by tests?
-10. Should toggling/cycling through members of an open group be exposed directly by the manager API?
+3. What are the exact event names and typed payload interfaces for the public window protocol?
+4. Should opening/closing intent events be cancelable?
+5. What is the final constructor options type and content union type?
+6. How should declarative slotted content and constructor-supplied content behave if both are provided?
+7. Do top/bottom surfaces need intrinsic/auto sizing in addition to explicit sizes?
+8. Should opening/replacement expose an asynchronous lifecycle (`open()` / `close()` promises and before/after events)?
+9. Should fullscreen have its own transition presets or share the edge transition model?
+10. Which integration contract between `nte-offcanvas` and NTE Nav should be guaranteed by tests?
+11. Should toggling/cycling through members of an open group be exposed directly by a convenience API or remain an application-level operation built from events / `open()` calls?
