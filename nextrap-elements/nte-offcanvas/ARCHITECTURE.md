@@ -209,12 +209,68 @@ Important presentation values include at least:
 - transition easing
 - backdrop presentation such as color/opacity/blur
 - close-control visibility and related close-control presentation values
+- motion/animation values used by the default placement transitions
 
 Responsive behavior is explicitly outside the responsibility of `nte-offcanvas`. Responsive frameworks such as trunk.js may change classes/styles which in turn change the effective CSS custom properties.
 
 The component evaluates its effective CSS configuration using `getComputedStyle()` initially and re-evaluates it when its own `class` or `style` attribute changes. It does not implement its own breakpoint system.
 
 Because arbitrary CSS-context changes cannot always be observed reliably, structural presentation changes such as placement changes are not supported while the offcanvas is open.
+
+## Motion and animation
+
+Motion is part of the default component presentation but must remain themeable. Themes/classes may replace the default transition timing, easing and motion characteristics through CSS.
+
+The component should prefer CSS-driven animation so presentation can be overridden without changing component logic. JavaScript owns lifecycle/state; CSS owns the visual interpolation.
+
+### Left and right placement
+
+The default left/right motion should not be a plain linear slide to the final position. It should use a small overshoot / settling effect so the surface appears to snap into place.
+
+Conceptually, opening uses three states:
+
+1. the surface begins outside the viewport on its placement side
+2. it moves slightly beyond the final resting position (approximately a five-percent overshoot)
+3. it settles back to the final `100%` / resting position
+
+Closing mirrors that motion: the surface first moves slightly into the overshoot/settling direction and then leaves the viewport completely toward its placement side.
+
+The exact percentage, timing distribution and easing are styling concerns and should be represented by component CSS/custom properties rather than hard-coded JavaScript delays.
+
+The default should feel responsive and slightly elastic without behaving like a pronounced spring animation.
+
+### Fullscreen placement
+
+Fullscreen should initially use a simple top-to-bottom drop/slide presentation rather than a 3D flip.
+
+A 3D flip may be implemented later as an optional theme/style variant, but should not be the baseline motion because it is more visually dominant and less neutral for general application/navigation content.
+
+The default fullscreen surface therefore enters from above and settles into the full viewport, and exits back toward the top.
+
+### Top and bottom placement
+
+Top and bottom placements should use a sliding-window / sheet presentation. The surface moves into the viewport from its corresponding edge and returns toward that edge when closed.
+
+For bottom placement this is intended to support mobile-sheet patterns such as carts, navigation, action panels and similar surfaces.
+
+The visual design may include a handle/bar near the exposed edge of the sheet so it communicates that the surface can conceptually be moved or dismissed.
+
+### Future drag and swipe interaction
+
+Direct gesture interaction is intentionally deferred from the first implementation.
+
+A future extension may allow top/bottom sheets to be dragged with pointer/touch input, including:
+
+- dragging a bottom sheet downward to close it
+- dragging a sheet toward a larger/open state where multiple snap positions are later required
+- velocity/threshold based completion or cancellation of a drag
+- a dedicated drag-handle region
+
+The initial animation/style architecture should avoid making such a future implementation unnecessarily difficult, but no drag physics, snap-point API or gesture state is required now.
+
+### Reduced motion
+
+The default styles should respect `prefers-reduced-motion`. Reduced-motion behavior should be implemented in CSS so themes can preserve or refine that accessibility behavior.
 
 ## Interaction mode
 
@@ -365,6 +421,11 @@ Fullscreen is intentionally an exception because it is needed as a first-class p
 19. `nte-offcanvas` provides a built-in accessible default close button; supplying the `close` slot replaces it.
 20. Close-control visibility is controlled through CSS custom properties rather than a dedicated visibility attribute.
 21. The initial close icon/style may be component-local; future work should move the icon to Style Base and the reusable close-button style/mixin to the shared style utilities/elements package.
+22. Default left/right motion uses a subtle overshoot and settle effect rather than a plain slide.
+23. Default fullscreen motion is a drop/slide from the top; a 3D flip is reserved as an optional future style variant.
+24. Top/bottom placements use a sheet/sliding-window motion baseline.
+25. Drag/swipe sheet interaction is deferred to a later extension.
+26. Default motion is CSS/theme overrideable and respects `prefers-reduced-motion`.
 
 ## Open architecture questions
 
@@ -377,6 +438,7 @@ Fullscreen is intentionally an exception because it is needed as a first-class p
 7. What are the exact CSS custom-property names and value semantics for close-control visibility and placement?
 8. Do top/bottom surfaces need intrinsic/auto sizing in addition to explicit sizes?
 9. Should opening/replacement expose an asynchronous lifecycle (`open()` / `close()` promises and before/after events)?
-10. Should fullscreen have its own transition presets or share the edge transition model?
+10. Should motion presets be represented only through CSS custom properties/classes or also expose named component-level style variants?
 11. Which integration contract between `nte-offcanvas` and NTE Nav should be guaranteed by tests?
 12. Should toggling/cycling through members of an open group be exposed directly by a convenience API or remain an application-level operation built from events / `open()` calls?
+13. If drag/swipe is added later, should top/bottom sheets support only close gestures or also multiple snap positions?
