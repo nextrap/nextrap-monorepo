@@ -1,1 +1,11 @@
-:host { display: block; } nte-table { display: block; }
+@use '@nextrap/nte-table' as table;
+
+:host {
+  display: block;
+}
+
+// The composed nte-table lives inside this component's shadow root, so the
+// document-level @nextrap/nte-table/default selectors cannot reach it.
+nte-table.style-default {
+  @include table.default-style();
+}

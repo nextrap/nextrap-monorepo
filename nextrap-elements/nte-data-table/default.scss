@@ -1,1 +1,6 @@
 @use '@nextrap/nte-table/default';
+@use './index' as data-table;
+
+nte-data-table.style-default {
+  @include data-table.default-style();
+}
