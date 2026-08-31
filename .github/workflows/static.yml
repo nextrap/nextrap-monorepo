@@ -36,6 +36,9 @@ jobs:
         with:
           node-version: 26
           cache: npm
+      - name: Refresh workspace lockfile metadata
+        # Required while npm workspaces are used; otherwise package-lock.json may not contain the correct workspace package versions for npm ci.
+        run: npm install
       - name: Install dependencies
         run: npm ci
       - name: Build demo viewer
