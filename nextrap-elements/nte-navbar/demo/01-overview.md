@@ -13,6 +13,38 @@
 </nte-navbar>
 ```
 
+## Brand-Logo
+
+Für Logos gibt es die Default-Klasse `brand-logo`. Sie wird auf einen Wrapper gesetzt, dessen direktes `img` immer den verfügbaren Platz nutzt. Das Bild wird mit `object-fit: contain` proportional skaliert und nicht abgeschnitten. Die Default-Aspect-Ratio ist `3 / 1` und kann über `--nt-navbar-brand-logo-aspect-ratio` angepasst werden.
+
+Die Ausrichtung folgt automatisch dem Slot: `start` links, `center` geometrisch zentriert und `end` rechts. Da der Wrapper die Höhe der Navbar-Line übernimmt, folgt das Logo auch einer Änderung von `--height` zu `--height-scrolled` weich.
+
+```html
+<nte-navbar style="--container-width: 1200px">
+  <nte-navbar-line style="--height: 96px; --height-scrolled: 60px">
+    <nav slot="start">Produkte · Lösungen</nav>
+
+    <div
+      slot="center"
+      class="brand-logo"
+      style="--nt-navbar-brand-logo-aspect-ratio: 3 / 1"
+    >
+      <img src="./assets/nextrap-logo.svg" alt="Nextrap" />
+    </div>
+
+    <nav slot="end">Kontakt · Login</nav>
+  </nte-navbar-line>
+</nte-navbar>
+```
+
+Das gleiche Markup kann ohne weitere CSS-Regeln zwischen den Slots verschoben werden:
+
+```html
+<div slot="start" class="brand-logo">
+  <img src="./assets/nextrap-logo.svg" alt="Nextrap" />
+</div>
+```
+
 ## Wirklich zentriertes Logo
 
 Der Center-Slot bleibt geometrisch in der Mitte der vom Navbar vorgegebenen Containerbreite – unabhängig davon, wie breit Start oder End sind.
@@ -21,7 +53,9 @@ Der Center-Slot bleibt geometrisch in der Mitte der vom Navbar vorgegebenen Cont
 <nte-navbar style="--container-width: 1200px">
   <nte-navbar-line style="--height: 80px">
     <nav slot="start">Shop · Produkte · Lösungen · Unternehmen</nav>
-    <a slot="center" href="/" aria-label="Startseite">LOGO</a>
+    <div slot="center" class="brand-logo">
+      <img src="./assets/nextrap-logo.svg" alt="Nextrap" />
+    </div>
     <a slot="end" href="/kontakt">Kontakt</a>
   </nte-navbar-line>
 </nte-navbar>
@@ -39,7 +73,9 @@ Der Center-Slot bleibt geometrisch in der Mitte der vom Navbar vorgegebenen Cont
   </nte-navbar-line>
 
   <nte-navbar-line style="--height: 88px; --height-scrolled: 64px">
-    <a slot="start" href="/">LOGO</a>
+    <div slot="start" class="brand-logo">
+      <img src="./assets/nextrap-logo.svg" alt="Nextrap" />
+    </div>
     <nav slot="center">Produkte · Lösungen · Über uns</nav>
     <a slot="end" href="/kontakt">Kontakt</a>
   </nte-navbar-line>
