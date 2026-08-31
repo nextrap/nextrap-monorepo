@@ -17,6 +17,7 @@ export class NteNavItem extends nextrap_element({ slotVisibility: true }) {
   @property({ type: String, reflect: true }) public accessor download = '';
   @property({ type: String, reflect: true }) public accessor current: NteNavItemCurrent = '';
   @property({ type: Number, reflect: true }) public accessor order: number | undefined;
+  @property({ type: Boolean, reflect: true, attribute: 'submenu-popover' }) public accessor submenuPopover = false;
 
   /** Accessible name prefix for a submenu disclosure control. */
   @property({ type: String, attribute: 'submenu-label' })
@@ -54,13 +55,19 @@ export class NteNavItem extends nextrap_element({ slotVisibility: true }) {
       <div id="item" part="item">
         ${
           this._hasSubmenu
-            ? html`
-                ${this.href ? this._renderLink(label) : nothing}
-                <details id="details" part="details">
-                  ${this.href ? this._renderIconOnlyDisclosure() : this._renderLabelDisclosure(label)}
+            ? this.submenuPopover
+              ? html`
+                  ${this.href ? this._renderLink(label) : nothing}
+                  ${this.href ? this._renderIconOnlyPopoverControl() : this._renderLabelPopoverControl(label)}
                   ${this._renderSubmenu()}
-                </details>
-              `
+                `
+              : html`
+                  ${this.href ? this._renderLink(label) : nothing}
+                  <details id="details" part="details">
+                    ${this.href ? this._renderIconOnlyDisclosure() : this._renderLabelDisclosure(label)}
+                    ${this._renderSubmenu()}
+                  </details>
+                `
             : this.href
               ? this._renderLink(label)
               : html`<span id="text" part="text">${label}</span>`
@@ -108,9 +115,37 @@ export class NteNavItem extends nextrap_element({ slotVisibility: true }) {
     return html` <summary id="disclosure" part="disclosure">${label} ${this._renderIndicator()}</summary> `;
   }
 
+  private _renderIconOnlyPopoverControl() {
+    return html`
+      <button
+        id="toggle"
+        type="button"
+        part="toggle"
+        popovertarget="submenu"
+        aria-label=${this._submenuAccessibleName()}
+      >
+        ${this._renderIndicator()}
+      </button>
+    `;
+  }
+
+  private _renderLabelPopoverControl(label: unknown) {
+    return html`
+      <button id="disclosure" type="button" part="disclosure" popovertarget="submenu">
+        ${label} ${this._renderIndicator()}
+      </button>
+    `;
+  }
+
   private _renderSubmenu() {
     return html`
-      <div id="submenu" part="submenu" role="list" aria-label=${this._submenuAccessibleName()}>
+      <div
+        id="submenu"
+        part="submenu"
+        role="list"
+        aria-label=${this._submenuAccessibleName()}
+        popover=${ifDefined(this.submenuPopover ? 'auto' : undefined)}
+      >
         <div id="submenu-inner" part="submenu-inner">
           <slot name="submenu" @slotchange=${this._onSubmenuSlotChange}></slot>
         </div>

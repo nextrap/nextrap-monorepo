@@ -102,13 +102,34 @@ describe('NteNavItem', () => {
     element.remove();
   });
 
-  it('does not ship Popover styling that could detach vertical submenus from inline flow', () => {
-    const styles = Array.isArray(NteNavItem.styles) ? NteNavItem.styles : [NteNavItem.styles];
-    const cssText = styles.map((style) => ('cssText' in style ? style.cssText : String(style))).join('\n');
+  it('maps the manual submenu-popover attribute to declarative Popover markup', async () => {
+    const element = document.createElement('nte-nav-item') as NteNavItem;
+    element.setAttribute('submenu-popover', '');
+    element.append('Produkte');
 
-    expect(cssText).not.toContain('[popover]');
-    expect(cssText).not.toContain(':popover-open');
-    expect(cssText).not.toContain('position-anchor');
+    const child = document.createElement('nte-nav-item');
+    child.textContent = 'Produkt A';
+    element.appendChild(child);
+    document.body.appendChild(element);
+
+    await element.updateComplete;
+
+    const details = element.shadowRoot?.getElementById('details');
+    const disclosure = element.shadowRoot?.getElementById('disclosure');
+    const submenu = element.shadowRoot?.getElementById('submenu');
+
+    expect(details).toBeNull();
+    expect(disclosure?.tagName).toBe('BUTTON');
+    expect(disclosure?.getAttribute('popovertarget')).toBe('submenu');
+    expect(submenu?.getAttribute('popover')).toBe('auto');
+
+    element.removeAttribute('submenu-popover');
+    await element.updateComplete;
+
+    expect(element.shadowRoot?.getElementById('details')).toBeInstanceOf(HTMLDetailsElement);
+    expect(element.shadowRoot?.getElementById('submenu')?.hasAttribute('popover')).toBe(false);
+
+    element.remove();
   });
 
   it('marks an empty icon slot through nextrap element slot visibility', async () => {

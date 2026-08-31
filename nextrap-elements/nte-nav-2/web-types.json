@@ -44,6 +44,11 @@
                             "value": { "kind": "expression", "type": "number" }
                         },
                         {
+                            "name": "submenu-popover",
+                            "description": "Manually render the submenu as declarative Popover markup for horizontal navigation. Omit for vertical inline details/summary navigation.",
+                            "value": { "kind": "no-value" }
+                        },
+                        {
                             "name": "submenu-label",
                             "description": "Accessible label prefix for the submenu disclosure.",
                             "value": { "kind": "expression", "type": "string" }
