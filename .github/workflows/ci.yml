@@ -25,7 +25,9 @@ jobs:
         with:
           node-version: 26
           cache: 'npm'
-      - run: npm install
+      - name: Refresh workspace lockfile metadata
+        # Required while npm workspaces are used; otherwise package-lock.json may not contain the correct workspace package versions for npm ci.
+        run: npm install
       - run: npm ci
       - uses: nrwl/nx-set-shas@v4
       - run: npx nx affected -t test build
