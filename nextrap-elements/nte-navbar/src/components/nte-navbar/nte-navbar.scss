@@ -1,0 +1,12 @@
+@use '@nextrap/style-reset' as *;
+
+:host {
+  --container-width: var(--nt-container-width, 100%);
+  display: block;
+  width: 100%;
+}
+
+#navbar {
+  display: block;
+  width: 100%;
+}

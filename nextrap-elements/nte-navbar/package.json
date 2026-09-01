@@ -1,0 +1,18 @@
+{
+  "name": "@nextrap/nte-navbar",
+  "version": "1.0.0",
+  "files": ["*.*", "src", "demo"],
+  "main": "./index.js",
+  "repository": {
+    "directory": "nextrap-elements/nte-navbar",
+    "type": "git",
+    "url": "https://github.com/nextrap/nextrap-monorepo"
+  },
+  "dependencies": {
+    "@nextrap/nt-core": "^2.0.0",
+    "@nextrap/style-reset": "^2.0.0",
+    "lit": "^3.3.1"
+  },
+  "type": "module",
+  "types": "./index.d.ts"
+}

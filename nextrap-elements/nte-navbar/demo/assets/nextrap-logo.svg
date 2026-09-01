@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 120" role="img" aria-labelledby="title">
+  <title id="title">Nextrap demo logo</title>
+  <rect width="360" height="120" rx="18" fill="#111827"/>
+  <path d="M42 82V38h12l28 28V38h14v44H84L56 54v28H42Z" fill="#fff"/>
+  <text x="116" y="76" fill="#fff" font-family="Arial, sans-serif" font-size="38" font-weight="700">NEXTRAP</text>
+</svg>
