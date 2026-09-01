@@ -1,5 +1,3 @@
-import fullsizeCloseButtonStyle from './nte-image-fullsize.scss?inline';
-
 /**
  * Converts a CSS-style string into a JSON object.
  *
@@ -359,8 +357,8 @@ export const createFullsizeView = (
   // Create close button
   const closeBtn = document.createElement('button');
   closeBtn.className = 'nxa-fullsize-close-btn';
-  closeBtn.setAttribute('aria-label', 'Close fullsize image');
-  closeBtn.style.display = isMobileDevice ? 'inline-grid' : 'none';
+  closeBtn.innerHTML = '×';
+  closeBtn.style.display = isMobileDevice ? 'flex' : 'none';
 
   // Add instance ID to close button if provided
   if (instanceId) {
@@ -712,6 +710,48 @@ export const getFullsizeStyles = (imgSrc: string): string => {
             will-change: transform, opacity;
         }
 
+        .nxa-fullsize-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: nxa-fullsize-fade-in 0.5s ease-out 0.2s backwards;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .nxa-fullsize-close-btn:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .nxa-fullsize-close-btn:active {
+            transform: scale(0.95);
+        }
+
+        @media (max-width: 768px) {
+            .nxa-fullsize-close-btn {
+                top: 16px;
+                right: 16px;
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+        }
+
         /* Animation for closing */
         .nxa-fullsize-container.closing {
             animation: nxa-fullsize-fade-in 0.3s ease-in reverse;
@@ -768,7 +808,5 @@ export const getFullsizeStyles = (imgSrc: string): string => {
                 width: 45px;
             }
         }
-
-        ${fullsizeCloseButtonStyle}
     `;
 };

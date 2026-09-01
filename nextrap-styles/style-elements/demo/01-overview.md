@@ -13,9 +13,9 @@ Sie formatiert Überschriften, [Links](#tabellen), Zitate, Code und weitere Inha
 
 > Ein gutes Element-Style bleibt semantisch und lässt sich über Tokens an das Theme anpassen.
 
-```scss
+~~~scss
 @use '@nextrap/style-elements/default';
-```
+~~~
 
 ## Tabellen
 
@@ -90,20 +90,6 @@ Die Größe des Indicators kann direkt über die öffentliche CSS-Variable angep
   </svg>
   <figcaption>Responsive Bilddarstellung mit Thumbnail-Rahmen.</figcaption>
 </figure>
-
-## Close-Button
-
-Der generische Close-Button verwendet das zentrale Icon-Token `--nt-icon-close` und benötigt einen zugänglichen Namen.
-
-[ ](#close-button){: .close-btn role="button" aria-label="Demo schließen" }
-
-```scss
-@use '@nextrap/style-elements' as elements;
-
-.my-close-button {
-  @include elements.close-btn();
-}
-```
 
 ## Container
 {: layout="1;.container" }

@@ -89,7 +89,9 @@ export class NteAppInteraction extends nextrap_element(features) {
                               type="button"
                               aria-label="Dialog schließen"
                               @click=${this._onDismissClick}
-                            ></button>
+                            >
+                              <span aria-hidden="true">×</span>
+                            </button>
                           `
                         : nothing
                     }

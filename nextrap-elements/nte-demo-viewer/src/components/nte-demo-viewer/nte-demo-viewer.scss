@@ -7,8 +7,6 @@
  * This file is kept for potential future use if Shadow DOM is needed.
  */
 
-@use '@nextrap/style-elements' as elements;
-
 :host {
   display: block;
   // CSS Custom Properties for theming
@@ -335,7 +333,23 @@
 }
 
 .code-close {
-  @include elements.close-btn();
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: #0d6efd;
+  color: #ffffff;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: #0a58ca;
+    color: #ffffff;
+  }
 }
 
 // Code Editor Textarea

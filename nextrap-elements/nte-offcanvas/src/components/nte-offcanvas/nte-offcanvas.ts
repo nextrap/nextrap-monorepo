@@ -13,7 +13,6 @@ export type NteOffcanvasContent = TemplateResult | HTMLElement | null | undefine
 export interface NteOffcanvasOptions {
   content?: NteOffcanvasContent;
   openGroup?: string;
-  layoutGroup?: string;
   opened?: boolean;
   backdrop?: boolean;
 }
@@ -23,7 +22,6 @@ export interface NteOffcanvasEventDetail {
   placement: NteOffcanvasPlacement;
   mode: NteOffcanvasMode;
   openGroup: string;
-  layoutGroup: string;
   modal: boolean;
   size: string;
   duration: string;
@@ -72,9 +70,6 @@ export class NteOffcanvas extends nextrap_element({
   @property({ type: String, attribute: 'open-group' })
   public accessor openGroup = '';
 
-  @property({ type: String, attribute: 'layout-group' })
-  public accessor layoutGroup = '';
-
   /** @deprecated use open-group */
   @property({ type: String, attribute: 'data-group-name' })
   private accessor legacyGroupName = '';
@@ -111,9 +106,6 @@ export class NteOffcanvas extends nextrap_element({
     if (options.openGroup !== undefined) {
       this.openGroup = options.openGroup;
     }
-    if (options.layoutGroup !== undefined) {
-      this.layoutGroup = options.layoutGroup;
-    }
     if (options.opened !== undefined) {
       this.opened = options.opened;
     }
@@ -145,7 +137,7 @@ export class NteOffcanvas extends nextrap_element({
     super.disconnectedCallback();
   }
 
-  public override async firstUpdated(): Promise<void> {
+  protected override async firstUpdated(): Promise<void> {
     this.presentation = this.readPresentation();
     this.requestUpdate();
 
@@ -176,12 +168,11 @@ export class NteOffcanvas extends nextrap_element({
       document.body.append(this);
     }
 
-    // Reflecting `opened` can trigger updated() before performOpen() advances past updateComplete; reuse that in-flight operation.
-    if (this.openPromise !== undefined && this.lifecycle !== 'closing') {
-      return this.openPromise;
-    }
     if (this.lifecycle === 'open') {
       return Promise.resolve();
+    }
+    if (this.lifecycle === 'opening' && this.openPromise !== undefined) {
+      return this.openPromise;
     }
     if (this.lifecycle === 'closing' && this.closePromise !== undefined) {
       return this.closePromise.then(() => this.open());
@@ -224,10 +215,11 @@ export class NteOffcanvas extends nextrap_element({
     }
 
     const active = this.activePresentation ?? this.presentation;
-    // Open groups coordinate across placements; same-edge sequencing is limited to modal surfaces.
+    const samePlacement = active.placement === detail.placement;
     const sameGroup = this.groupName !== '' && detail.openGroup !== '' && this.groupName === detail.openGroup;
-    const sameModalPlacement = active.modal && detail.modal && active.placement === detail.placement;
-    if (!sameGroup && !sameModalPlacement) {
+    const modalConflict = active.modal && detail.modal;
+
+    if (!samePlacement && !sameGroup && !modalConflict) {
       return;
     }
 
@@ -237,11 +229,11 @@ export class NteOffcanvas extends nextrap_element({
 
   @Listen('click', { target: 'host' })
   protected onHostClick(event: Event): void {
-    // composedPath preserves dismiss controls across shadow and slot boundaries where event.target is retargeted.
-    const dismissControl = event
-      .composedPath()
-      .some((target) => target instanceof HTMLElement && target.matches("[data-nt-dismiss='offcanvas']"));
-    if (dismissControl) {
+    if (!(event.target instanceof HTMLElement)) {
+      return;
+    }
+
+    if (event.target.closest("[data-nt-dismiss='offcanvas']") !== null) {
       void this.close();
     }
   }
@@ -262,20 +254,18 @@ export class NteOffcanvas extends nextrap_element({
     this.lifecycle = 'opening';
     this.visualState = 'closed';
     this.requestUpdate();
-    await this.updateComplete;
+
+    const waits = this.dispatchState(NTE_OFFCANVAS_EVENTS.opening, this.activePresentation, true);
+    await Promise.allSettled(waits);
+
+    if (!this.opened || this.lifecycle !== 'opening') {
+      return;
+    }
 
     const dialog = this.dialog;
     if (dialog === null) {
       this.lifecycle = 'closed';
       this.visualState = 'closed';
-      return;
-    }
-
-    this.activePresentation = this.resolveAutoSize(this.activePresentation, dialog);
-    const waits = this.dispatchState(NTE_OFFCANVAS_EVENTS.opening, this.activePresentation, true);
-    await Promise.allSettled(waits);
-
-    if (!this.opened || this.lifecycle !== 'opening') {
       return;
     }
 
@@ -336,7 +326,6 @@ export class NteOffcanvas extends nextrap_element({
       placement: presentation.placement,
       mode: presentation.mode,
       openGroup: this.groupName,
-      layoutGroup: this.layoutGroup.trim(),
       modal: presentation.modal,
       size: presentation.size,
       duration: presentation.duration,
@@ -388,8 +377,7 @@ export class NteOffcanvas extends nextrap_element({
       : 'right';
 
     const modeValue = css('--nte-offcanvas-mode', 'overlay');
-    const configuredMode = MODES.includes(modeValue as NteOffcanvasMode) ? (modeValue as NteOffcanvasMode) : 'overlay';
-    const mode = placement === 'fullscreen' ? 'overlay' : configuredMode;
+    const mode = MODES.includes(modeValue as NteOffcanvasMode) ? (modeValue as NteOffcanvasMode) : 'overlay';
     const modal = this.parseCssBoolean(css('--nte-offcanvas-modal', '1'), true);
     const duration = css('--nte-offcanvas-transition-duration', css('--transition-duration', '240ms'));
     const easing = css('--nte-offcanvas-transition-easing', 'ease-in-out');
@@ -399,29 +387,15 @@ export class NteOffcanvas extends nextrap_element({
       size = css('--nte-offcanvas-width', css('--width', '33vw'));
     } else if (placement === 'top' || placement === 'bottom') {
       size = css('--nte-offcanvas-height', 'auto');
+      if (size === 'auto') {
+        const measured = this.dialog?.getBoundingClientRect().height ?? 0;
+        size = measured > 0 ? `${measured}px` : '0px';
+      }
     } else {
       size = '100%';
     }
 
     return { placement, mode, modal, size, duration, easing };
-  }
-
-  private resolveAutoSize(presentation: EffectivePresentation, dialog: HTMLDialogElement): EffectivePresentation {
-    if ((presentation.placement !== 'top' && presentation.placement !== 'bottom') || presentation.size !== 'auto') {
-      return presentation;
-    }
-
-    // A closed dialog has no measurable intrinsic height, so expose it in its off-screen state for one synchronous measurement.
-    const wasOpen = dialog.open;
-    if (!wasOpen) {
-      dialog.setAttribute('open', '');
-    }
-    const measuredHeight = dialog.getBoundingClientRect().height;
-    if (!wasOpen) {
-      dialog.removeAttribute('open');
-    }
-
-    return { ...presentation, size: `${measuredHeight}px` };
   }
 
   private parseCssBoolean(value: string, fallback: boolean): boolean {
@@ -437,8 +411,6 @@ export class NteOffcanvas extends nextrap_element({
 
   private async waitForVisualTransition(element: HTMLElement): Promise<void> {
     await this.updateComplete;
-    // Two frames ensure the new data-state has replaced any completed opening animation before getAnimations() is read.
-    await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
     await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
     const animations = element.getAnimations();
     if (animations.length === 0) {
@@ -485,16 +457,13 @@ export class NteOffcanvas extends nextrap_element({
         aria-label=${label}
         data-placement=${presentation.placement}
         data-mode=${presentation.mode}
-        data-modal=${presentation.modal ? 'true' : 'false'}
         data-state=${this.visualState}
         data-backdrop=${this.backdrop ? 'visible' : 'hidden'}
         @cancel=${this.onDialogCancel}
         @click=${this.onDialogBackdropClick}
       >
-        <div id="top">
-          <div id="header" part="header">
-            <slot name="header"></slot>
-          </div>
+        <div id="header" part="header">
+          <slot name="header"></slot>
           <div id="close" part="close">
             <slot name="close">
               <button
@@ -503,19 +472,19 @@ export class NteOffcanvas extends nextrap_element({
                 aria-label="Close"
                 data-nt-dismiss="offcanvas"
                 part="close-button"
-              ></button>
+              >
+                <span aria-hidden="true"></span>
+              </button>
             </slot>
           </div>
         </div>
 
         <div id="main" part="main">
-          ${
-            this.programmaticContent === undefined
-              ? html`<slot></slot>`
-              : this.programmaticContent === null
-                ? nothing
-                : this.programmaticContent
-          }
+          ${this.programmaticContent === undefined
+            ? html`<slot></slot>`
+            : this.programmaticContent === null
+              ? nothing
+              : this.programmaticContent}
         </div>
 
         <div id="footer" part="footer">

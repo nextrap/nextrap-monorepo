@@ -15,56 +15,54 @@ function setValue(value: number) {
 
 export default defineDemo({
   title: 'Interactive API and events',
-  description: 'Change properties from the controls and inspect the emitted progress events.',
+  description: 'Change properties from the action bar and inspect the emitted progress events.',
   order: 30,
   css: ['default', style],
-  controls: {
-    items: [
-      {
-        id: 'value',
-        type: 'input',
-        label: 'Progress value',
-        info: 'Sets the value property from 0 to 100.',
-        value: 25,
-        attributes: { type: 'range', min: '0', max: '100' },
-        onInput(event) {
-          setValue(Number(event.value));
-        },
+  controls: [
+    {
+      label: 'Progress value',
+      info: 'Sets the value property from 0 to 100.',
+      element: 'input',
+      init(element) {
+        const input = element as HTMLInputElement;
+        input.type = 'range';
+        input.min = '0';
+        input.max = '100';
+        input.value = '25';
       },
-      {
-        id: 'stripes',
-        type: 'button',
-        label: 'Toggle stripes',
-        onClick() {
-          if (progress) progress.striped = !progress.striped;
-        },
+      oninput(event) {
+        setValue((event.target as HTMLInputElement).valueAsNumber);
       },
-      {
-        id: 'animation',
-        type: 'button',
-        label: 'Toggle animation',
-        onClick() {
-          if (progress) progress.animated = !progress.animated;
-        },
+    },
+    {
+      label: 'Toggle stripes',
+      element: 'button',
+      onclick() {
+        if (progress) progress.striped = !progress.striped;
       },
-      {
-        id: 'complete',
-        type: 'button',
-        label: 'Complete',
-        onClick() {
-          if (progress) setValue(progress.max);
-        },
+    },
+    {
+      label: 'Toggle animation',
+      element: 'button',
+      onclick() {
+        if (progress) progress.animated = !progress.animated;
       },
-      {
-        id: 'clear',
-        type: 'button',
-        label: 'Clear events',
-        onClick() {
-          if (output) output.value = '';
-        },
+    },
+    {
+      label: 'Complete',
+      element: 'button',
+      onclick() {
+        if (progress) setValue(progress.max);
       },
-    ],
-  },
+    },
+    {
+      label: 'Clear events',
+      element: 'button',
+      onclick() {
+        if (output) output.value = '';
+      },
+    },
+  ],
   render(root) {
     root.innerHTML = `
       <main class="nte-progress-demo">

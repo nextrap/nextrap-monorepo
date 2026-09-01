@@ -1,7 +1,7 @@
 {
     "name": "@nextrap/style-elements",
     "version": "2.0.0",
-    "description": "Nextrap reusable element styles: prose, tables, lists, containers, close buttons",
+    "description": "Nextrap reusable element styles: prose, table, list-group, container",
     "files": [
         "*.*",
         "src"
@@ -12,15 +12,15 @@
         "type": "git",
         "url": "https://github.com/nextrap/nextrap-monorepo"
     },
+    "exports": {
+        ".": "./index.scss",
+        "./default": "./default.scss"
+    },
     "dependencies": {},
     "devDependencies": {
         "@nextrap/style-base": "^2.0.0",
         "@nextrap/style-typography": "^2.0.0"
     },
     "type": "module",
-    "exports": {
-        ".": "./index.scss",
-        "./default": "./default.scss"
-    },
     "types": "./index.d.ts"
 }

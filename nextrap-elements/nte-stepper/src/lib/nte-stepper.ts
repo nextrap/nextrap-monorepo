@@ -578,12 +578,7 @@ export class nteStepperElement extends LitElement {
         <div class="nte-stepper-menu" @click="${(e: Event) => e.stopPropagation()}">
           <div class="nte-stepper-menu-header">
             <h3>Steps</h3>
-            <button
-              class="nte-stepper-menu-close"
-              type="button"
-              aria-label="Close step menu"
-              @click="${this.closeMenu}"
-            ></button>
+            <button class="nte-stepper-menu-close" @click="${this.closeMenu}">×</button>
           </div>
           <div class="nte-stepper-menu-items">
             ${this.stepElements.map((step, index) => {
@@ -595,17 +590,15 @@ export class nteStepperElement extends LitElement {
 
               return html`
                 <div
-                  class="nte-stepper-menu-item ${isActive ? 'active' : ''} ${
-                    isCompleted ? 'completed' : ''
-                  } ${isSelectable ? 'selectable' : ''}"
+                  class="nte-stepper-menu-item ${isActive ? 'active' : ''} ${isCompleted
+                    ? 'completed'
+                    : ''} ${isSelectable ? 'selectable' : ''}"
                   @click="${isSelectable ? () => this.navigateToStep(index) : null}"
                 >
                   <div class="nte-stepper-menu-item-icon">
-                    ${
-                      iconElement
-                        ? iconElement.cloneNode(true)
-                        : html`<div class="nte-stepper-menu-item-number">${index + 1}</div>`
-                    }
+                    ${iconElement
+                      ? iconElement.cloneNode(true)
+                      : html`<div class="nte-stepper-menu-item-number">${index + 1}</div>`}
                   </div>
                   <div class="nte-stepper-menu-item-title">${title}</div>
                 </div>
@@ -634,32 +627,30 @@ export class nteStepperElement extends LitElement {
 
     return html`
       <div class="nte-stepper-wrapper nte-stepper-mode-${this.mode}" part="wrapper">
-        ${
-          this.mode === 'circular'
-            ? html`
-                ${renderCircularProgress()} ${renderMenu()}
-                <div class="nte-stepper-steps">
-                  <slot @slotchange=${this.handleSlotChange}></slot>
-                </div>
-                <div
-                  style="cursor:pointer; width:48px;height:48px;background-color:var(--nt-primary);;margin-inline:1rem; border-radius:8px; place-items:center;display:grid; color:white; font-size:1.5rem;"
-                  @click="${this.increaseActiveIndex}"
-                >
-                  +
-                </div>
-                <div
-                  style="cursor:pointer; width:48px;height:48px;background-color:var(--nt-primary); border-radius:8px; place-items:center;display:grid; color:white; font-size:1.5rem;margin-inline:1rem;"
-                  @click="${this.decreaseActiveIndex}"
-                >
-                  -
-                </div>
-              `
-            : html`
-                <div class="nte-stepper-steps">
-                  <slot @slotchange=${this.handleSlotChange}></slot>
-                </div>
-              `
-        }
+        ${this.mode === 'circular'
+          ? html`
+              ${renderCircularProgress()} ${renderMenu()}
+              <div class="nte-stepper-steps">
+                <slot @slotchange=${this.handleSlotChange}></slot>
+              </div>
+              <div
+                style="cursor:pointer; width:48px;height:48px;background-color:var(--nt-primary);;margin-inline:1rem; border-radius:8px; place-items:center;display:grid; color:white; font-size:1.5rem;"
+                @click="${this.increaseActiveIndex}"
+              >
+                +
+              </div>
+              <div
+                style="cursor:pointer; width:48px;height:48px;background-color:var(--nt-primary); border-radius:8px; place-items:center;display:grid; color:white; font-size:1.5rem;margin-inline:1rem;"
+                @click="${this.decreaseActiveIndex}"
+              >
+                -
+              </div>
+            `
+          : html`
+              <div class="nte-stepper-steps">
+                <slot @slotchange=${this.handleSlotChange}></slot>
+              </div>
+            `}
       </div>
     `;
   }

@@ -1,17 +1,16 @@
 {
     "name": "nte-offcanvas",
-    "version": "2.0.0",
+    "version": "1.0.19",
     "contributions": {
         "html": {
             "elements": [
                 {
                     "name": "nte-offcanvas",
-                    "description": "Edge-attached or fullscreen application surface with overlay and push modes.",
+                    "description": "Slide-in offcanvas panel with optional backdrop, header and footer slots.",
                     "slots": [
                         { "name": "default", "description": "Main offcanvas content" },
                         { "name": "header", "description": "Header content" },
-                        { "name": "footer", "description": "Footer content" },
-                        { "name": "close", "description": "Close control replacing the built-in close button" }
+                        { "name": "footer", "description": "Footer content" }
                     ],
                     "attributes": [
                         {
@@ -25,31 +24,9 @@
                             "description": "Show the backdrop behind the panel"
                         },
                         {
-                            "name": "open-group",
-                            "type": "string",
-                            "description": "Named mutual-exclusion group"
-                        },
-                        {
-                            "name": "layout-group",
-                            "type": "string",
-                            "description": "Layout group used to coordinate push mode with panes"
-                        },
-                        {
                             "name": "data-group-name",
                             "type": "string",
-                            "description": "Deprecated alias for open-group"
-                        }
-                    ]
-                },
-                {
-                    "name": "nte-offcanvas-pane",
-                    "description": "Content pane that reserves space for associated push-mode offcanvas surfaces.",
-                    "slots": [{ "name": "default", "description": "Pane content" }],
-                    "attributes": [
-                        {
-                            "name": "layout-group",
-                            "type": "string",
-                            "description": "Whitespace-separated layout groups observed by this pane"
+                            "description": "Group name for Nextrap open/close synchronization events"
                         }
                     ]
                 }
@@ -63,14 +40,11 @@
                 }
             ],
             "parts": [
-                { "name": "offcanvas", "description": "Offcanvas surface" },
-                { "name": "dialog", "description": "Offcanvas dialog surface" },
+                { "name": "backdrop", "description": "Backdrop layer" },
+                { "name": "offcanvas", "description": "Offcanvas panel" },
                 { "name": "header", "description": "Header area" },
                 { "name": "main", "description": "Main content area" },
-                { "name": "footer", "description": "Footer area" },
-                { "name": "close", "description": "Close-control region" },
-                { "name": "close-button", "description": "Built-in close button" },
-                { "name": "pane", "description": "Offcanvas-aware content pane" }
+                { "name": "footer", "description": "Footer area" }
             ]
         }
     }

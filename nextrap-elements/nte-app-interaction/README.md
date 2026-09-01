@@ -51,7 +51,7 @@ Most event detail payloads support:
 
 - `title?: string` → custom dialog title, otherwise the default status title is used
 - `message?: string`
-- `cancelable?: boolean` → shows the shared icon-based close button and allows ESC / cancel
+- `cancelable?: boolean` → shows a close button (`×`) and allows ESC / cancel
 
 Additional options depend on the event type, e.g. `progress`, `details`, `html`, `actions`, `onAbort`, `onConfirm`, `autoClose`.
 

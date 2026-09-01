@@ -25,12 +25,12 @@
   --nt-black: #000; // Absolute black for contrast fallbacks and explicit black usage.
 
   // === TYPOGRAPHY / SHAPE / CONTAINER INPUT TOKENS ===
-  --nt-radius: 0.5rem; // Base corner radius; components derive small/large radii from this value.
+  --nt-radius: .5rem; // Base corner radius; components derive small/large radii from this value.
   --nt-font-family: sans-serif; // Default body/control font family.
   --nt-font-family-header: var(--nt-font-family); // Heading/display font family; defaults to body family.
   --nt-font-size: 1rem; // Base text size used as reference for the runtime text scale.
   --nt-font-size-header: 2rem; // Maximum heading size (h1); h2-h6 interpolate down to base size.
-  --nt-font-size-small: 0.875rem; // Small/supporting text such as captions, metadata and helper text.
+  --nt-font-size-small: .875rem; // Small/supporting text such as captions, metadata and helper text.
   --nt-font-weight-base: 400; // Default body/control font weight.
   --nt-font-weight-header: 500; // Default heading font weight.
   --nt-font-weight-bold: 600; // Strong emphasis/bold text weight.
@@ -38,16 +38,11 @@
   --nt-line-height-header: 1.2; // Compact line height for headings/display text.
   --nt-container-max: 1320px; // Maximum width of centered page/content containers.
 
-  // === ICON TOKENS ===
-  // Icons are monochrome SVG masks so consuming components can apply their own foreground color.
-  --nt-icon-close: url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%3E%3Cpath%20d=%27M6%206l12%2012M18%206L6%2018%27%20fill=%27none%27%20stroke=%27black%27%20stroke-width=%272%27%20stroke-linecap=%27round%27/%3E%3C/svg%3E');
-  --nt-icon-close-sidebar: url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%3E%3Crect%20x=%272%27%20y=%273%27%20width=%2720%27%20height=%2718%27%20rx=%272%27%20fill=%27none%27%20stroke=%27black%27%20stroke-width=%271.8%27/%3E%3Cpath%20d=%27M8%203v18M16%209l-3%203%203%203%27%20fill=%27none%27%20stroke=%27black%27%20stroke-width=%271.8%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27/%3E%3C/svg%3E');
-
   // === PRIMITIVE SPACING SCALE ===
   --nt-space-0: 0; // No spacing/reset value.
-  --nt-space-1: 0.25rem; // Micro spacing: icon nudges, very tight inline gaps.
-  --nt-space-2: 0.5rem; // Tight spacing: icon/text gaps, compact control internals.
-  --nt-space-3: 0.75rem; // Small spacing: default control gaps/padding reference.
+  --nt-space-1: .25rem; // Micro spacing: icon nudges, very tight inline gaps.
+  --nt-space-2: .5rem; // Tight spacing: icon/text gaps, compact control internals.
+  --nt-space-3: .75rem; // Small spacing: default control gaps/padding reference.
   --nt-space-4: 1rem; // Base spacing: normal text rhythm and common gaps.
   --nt-space-5: 1.5rem; // Medium spacing: component padding and container gutter reference.
   --nt-space-6: 2rem; // Large spacing: layout gaps between sibling components/regions.
@@ -58,85 +53,51 @@
 
   // === SEMANTIC SPACING ===
   --nt-spacing-text: var(--nt-space-4); // Vertical text rhythm: paragraphs, lists, prose blocks and stacked labels.
-  --nt-spacing-control: var(
-    --nt-space-3
-  ); // Controls: button/input internal padding reference and gaps between tightly related controls.
-  --nt-spacing-component: var(
-    --nt-space-5
-  ); // Component interior: card/dialog/panel padding and gaps between a component's internal regions.
-  --nt-spacing-layout: var(
-    --nt-space-6
-  ); // Layout composition: gaps between sibling components, columns, cards and content regions.
-  --nt-spacing-section: clamp(
-    var(--nt-space-7),
-    5vw,
-    var(--nt-space-9)
-  ); // Page composition: vertical separation between major sections; intentionally fluid.
+  --nt-spacing-control: var(--nt-space-3); // Controls: button/input internal padding reference and gaps between tightly related controls.
+  --nt-spacing-component: var(--nt-space-5); // Component interior: card/dialog/panel padding and gaps between a component's internal regions.
+  --nt-spacing-layout: var(--nt-space-6); // Layout composition: gaps between sibling components, columns, cards and content regions.
+  --nt-spacing-section: clamp(var(--nt-space-7), 5vw, var(--nt-space-9)); // Page composition: vertical separation between major sections; intentionally fluid.
   --nt-container-gutter: var(--nt-space-5); // Horizontal page/container inset from the viewport edge.
 
   // === DERIVED BRAND / STATE COLORS ===
   --nt-primary-hover: color-mix(in oklch, var(--nt-primary) 90%, light-dark(black, white) 10%);
   --nt-primary-active: color-mix(in oklch, var(--nt-primary) 85%, light-dark(black, white) 15%);
-  --nt-primary-subtle: light-dark(
-    color-mix(in oklch, var(--nt-primary) 15%, white),
-    color-mix(in oklch, var(--nt-primary) 28%, black)
-  );
+  --nt-primary-subtle: light-dark(color-mix(in oklch, var(--nt-primary) 15%, white), color-mix(in oklch, var(--nt-primary) 28%, black));
   --nt-primary-emphasis: color-mix(in oklch, var(--nt-primary) 80%, light-dark(black, white) 20%);
 
   --nt-secondary-hover: color-mix(in oklch, var(--nt-secondary) 90%, light-dark(black, white) 10%);
   --nt-secondary-active: color-mix(in oklch, var(--nt-secondary) 85%, light-dark(black, white) 15%);
-  --nt-secondary-subtle: light-dark(
-    color-mix(in oklch, var(--nt-secondary) 15%, white),
-    color-mix(in oklch, var(--nt-secondary) 28%, black)
-  );
+  --nt-secondary-subtle: light-dark(color-mix(in oklch, var(--nt-secondary) 15%, white), color-mix(in oklch, var(--nt-secondary) 28%, black));
   --nt-secondary-emphasis: color-mix(in oklch, var(--nt-secondary) 80%, light-dark(black, white) 20%);
 
   --nt-tertiary-hover: color-mix(in oklch, var(--nt-tertiary) 90%, light-dark(black, white) 10%);
   --nt-tertiary-active: color-mix(in oklch, var(--nt-tertiary) 85%, light-dark(black, white) 15%);
-  --nt-tertiary-subtle: light-dark(
-    color-mix(in oklch, var(--nt-tertiary) 15%, white),
-    color-mix(in oklch, var(--nt-tertiary) 28%, black)
-  );
+  --nt-tertiary-subtle: light-dark(color-mix(in oklch, var(--nt-tertiary) 15%, white), color-mix(in oklch, var(--nt-tertiary) 28%, black));
   --nt-tertiary-emphasis: color-mix(in oklch, var(--nt-tertiary) 80%, light-dark(black, white) 20%);
 
   --nt-accent-hover: color-mix(in oklch, var(--nt-accent) 90%, light-dark(black, white) 10%);
   --nt-accent-active: color-mix(in oklch, var(--nt-accent) 85%, light-dark(black, white) 15%);
-  --nt-accent-subtle: light-dark(
-    color-mix(in oklch, var(--nt-accent) 15%, white),
-    color-mix(in oklch, var(--nt-accent) 28%, black)
-  );
+  --nt-accent-subtle: light-dark(color-mix(in oklch, var(--nt-accent) 15%, white), color-mix(in oklch, var(--nt-accent) 28%, black));
   --nt-accent-emphasis: color-mix(in oklch, var(--nt-accent) 80%, light-dark(black, white) 20%);
 
   --nt-success-hover: color-mix(in oklch, var(--nt-success) 90%, light-dark(black, white) 10%);
   --nt-success-active: color-mix(in oklch, var(--nt-success) 85%, light-dark(black, white) 15%);
-  --nt-success-subtle: light-dark(
-    color-mix(in oklch, var(--nt-success) 15%, white),
-    color-mix(in oklch, var(--nt-success) 28%, black)
-  );
+  --nt-success-subtle: light-dark(color-mix(in oklch, var(--nt-success) 15%, white), color-mix(in oklch, var(--nt-success) 28%, black));
   --nt-success-emphasis: color-mix(in oklch, var(--nt-success) 80%, light-dark(black, white) 20%);
 
   --nt-info-hover: color-mix(in oklch, var(--nt-info) 90%, light-dark(black, white) 10%);
   --nt-info-active: color-mix(in oklch, var(--nt-info) 85%, light-dark(black, white) 15%);
-  --nt-info-subtle: light-dark(
-    color-mix(in oklch, var(--nt-info) 15%, white),
-    color-mix(in oklch, var(--nt-info) 28%, black)
-  );
+  --nt-info-subtle: light-dark(color-mix(in oklch, var(--nt-info) 15%, white), color-mix(in oklch, var(--nt-info) 28%, black));
   --nt-info-emphasis: color-mix(in oklch, var(--nt-info) 80%, light-dark(black, white) 20%);
 
   --nt-warning-hover: color-mix(in oklch, var(--nt-warning) 90%, light-dark(black, white) 10%);
   --nt-warning-active: color-mix(in oklch, var(--nt-warning) 85%, light-dark(black, white) 15%);
-  --nt-warning-subtle: light-dark(
-    color-mix(in oklch, var(--nt-warning) 15%, white),
-    color-mix(in oklch, var(--nt-warning) 28%, black)
-  );
+  --nt-warning-subtle: light-dark(color-mix(in oklch, var(--nt-warning) 15%, white), color-mix(in oklch, var(--nt-warning) 28%, black));
   --nt-warning-emphasis: color-mix(in oklch, var(--nt-warning) 80%, light-dark(black, white) 20%);
 
   --nt-danger-hover: color-mix(in oklch, var(--nt-danger) 90%, light-dark(black, white) 10%);
   --nt-danger-active: color-mix(in oklch, var(--nt-danger) 85%, light-dark(black, white) 15%);
-  --nt-danger-subtle: light-dark(
-    color-mix(in oklch, var(--nt-danger) 15%, white),
-    color-mix(in oklch, var(--nt-danger) 28%, black)
-  );
+  --nt-danger-subtle: light-dark(color-mix(in oklch, var(--nt-danger) 15%, white), color-mix(in oklch, var(--nt-danger) 28%, black));
   --nt-danger-emphasis: color-mix(in oklch, var(--nt-danger) 80%, light-dark(black, white) 20%);
 
   --nt-light-subtle: color-mix(in oklch, var(--nt-light) 75%, white 25%);
@@ -148,28 +109,12 @@
   // Surface is the foreground contrast source of truth. The fallback text color
   // remains scheme-aware for browsers without contrast-color(). Supporting
   // browsers derive text directly from the actual computed surface.
-  --nt-surface: light-dark(
-    color-mix(in oklch, var(--nt-neutral) 2%, white),
-    color-mix(in oklch, var(--nt-neutral) 12%, black)
-  );
-  --nt-surface-muted: light-dark(
-    color-mix(in oklch, var(--nt-neutral) 8%, white),
-    color-mix(in oklch, var(--nt-neutral) 18%, black)
-  );
+  --nt-surface: light-dark(color-mix(in oklch, var(--nt-neutral) 2%, white), color-mix(in oklch, var(--nt-neutral) 12%, black));
+  --nt-surface-muted: light-dark(color-mix(in oklch, var(--nt-neutral) 8%, white), color-mix(in oklch, var(--nt-neutral) 18%, black));
   --nt-surface-raised: light-dark(white, color-mix(in oklch, var(--nt-neutral) 25%, black));
-  --nt-text: light-dark(
-    color-mix(in oklch, var(--nt-neutral) 15%, black),
-    color-mix(in oklch, var(--nt-neutral) 3%, white)
-  ); // Fallback; overridden below when contrast-color() is supported.
-  --nt-text-muted: color-mix(
-    in oklch,
-    var(--nt-text) 70%,
-    var(--nt-surface)
-  ); // Secondary text follows both foreground and actual surface.
-  --nt-border: light-dark(
-    color-mix(in oklch, var(--nt-neutral) 28%, white),
-    color-mix(in oklch, var(--nt-neutral) 45%, black)
-  );
+  --nt-text: light-dark(color-mix(in oklch, var(--nt-neutral) 15%, black), color-mix(in oklch, var(--nt-neutral) 3%, white)); // Fallback; overridden below when contrast-color() is supported.
+  --nt-text-muted: color-mix(in oklch, var(--nt-text) 70%, var(--nt-surface)); // Secondary text follows both foreground and actual surface.
+  --nt-border: light-dark(color-mix(in oklch, var(--nt-neutral) 28%, white), color-mix(in oklch, var(--nt-neutral) 45%, black));
   --nt-header: var(--nt-text); // Headings inherit the automatically contrasted standard foreground.
   --nt-focus: var(--nt-primary);
   --nt-link: var(--nt-primary);
@@ -228,26 +173,26 @@
   --nt-fs-1: calc(var(--nt-font-size-base) * 1.2);
   --nt-fs-2: calc(var(--nt-font-size-base) * 1.1);
   --nt-fs-3: var(--nt-font-size-base);
-  --nt-fs-4: calc(var(--nt-font-size-base) * 0.9);
-  --nt-fs-5: calc(var(--nt-font-size-base) * 0.85);
-  --nt-fs-6: calc(var(--nt-font-size-base) * 0.75);
+  --nt-fs-4: calc(var(--nt-font-size-base) * .9);
+  --nt-fs-5: calc(var(--nt-font-size-base) * .85);
+  --nt-fs-6: calc(var(--nt-font-size-base) * .75);
   --nt-fs-h1: var(--nt-font-size-header);
-  --nt-fs-h2: calc(var(--nt-font-size-base) + (var(--nt-font-size-header) - var(--nt-font-size-base)) * 0.8);
-  --nt-fs-h3: calc(var(--nt-font-size-base) + (var(--nt-font-size-header) - var(--nt-font-size-base)) * 0.6);
-  --nt-fs-h4: calc(var(--nt-font-size-base) + (var(--nt-font-size-header) - var(--nt-font-size-base)) * 0.4);
-  --nt-fs-h5: calc(var(--nt-font-size-base) + (var(--nt-font-size-header) - var(--nt-font-size-base)) * 0.2);
+  --nt-fs-h2: calc(var(--nt-font-size-base) + (var(--nt-font-size-header) - var(--nt-font-size-base)) * .8);
+  --nt-fs-h3: calc(var(--nt-font-size-base) + (var(--nt-font-size-header) - var(--nt-font-size-base)) * .6);
+  --nt-fs-h4: calc(var(--nt-font-size-base) + (var(--nt-font-size-header) - var(--nt-font-size-base)) * .4);
+  --nt-fs-h5: calc(var(--nt-font-size-base) + (var(--nt-font-size-header) - var(--nt-font-size-base)) * .2);
   --nt-fs-h6: var(--nt-font-size-base);
 
   // === SHAPE ===
   --nt-border-radius: var(--nt-radius);
-  --nt-border-radius-sm: calc(var(--nt-radius) * 0.5);
+  --nt-border-radius-sm: calc(var(--nt-radius) * .5);
   --nt-border-radius-xl: calc(var(--nt-radius) * 2);
   --nt-border-width: 1px;
 
   // === CONTAINER / LEGACY COMPATIBILITY ===
   --nt-font-size-root: 1rem;
   --nt-container-width: min(calc(100% - 2 * var(--nt-container-gutter)), var(--nt-container-max));
-  --nt-scroll-padding-top: calc(0.33 * 100vh);
+  --nt-scroll-padding-top: calc(.33 * 100vh);
   --nt-link-on-dark: var(--nt-white);
   --nt-text-decoration-link: underline;
 
@@ -263,6 +208,7 @@
   // scope. This lets scoped themes inherit an explicit user selection reliably.
 
   color-scheme: light dark;
+
 
   &[data-nt-scheme='light'] {
     color-scheme: light;

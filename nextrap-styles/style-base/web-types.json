@@ -1,7 +1,7 @@
 {
     "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
     "name": "@nextrap/style-base",
-    "version": "2.0.0",
+    "version": "1.2.1",
     "description": "Nextrap token layer: --nt-* custom properties only (visually side-effect free, no reset/native/component styling)",
     "contributions": {
         "css": {
@@ -63,11 +63,6 @@
                 { "name": "--nt-header", "description": "Header text color" },
                 { "name": "--nt-border", "description": "Default border color" },
                 { "name": "--nt-focus", "description": "Focus ring color" },
-                { "name": "--nt-icon-close", "description": "Monochrome SVG mask for a generic close icon" },
-                {
-                    "name": "--nt-icon-close-sidebar",
-                    "description": "Monochrome SVG mask for a left-oriented close-sidebar icon"
-                },
                 { "name": "--nt-body", "description": "Body background color (alias for --nt-surface)" },
                 { "name": "--nt-body-secondary", "description": "Secondary body background color" },
                 { "name": "--nt-body-tertiary", "description": "Tertiary body background color" },

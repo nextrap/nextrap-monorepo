@@ -30,7 +30,7 @@ export default defineDemo({
       </div>
     </nte-offcanvas>
   `,
-  controls: {
+  actionBar: {
     items: [
       {
         id: 'open',

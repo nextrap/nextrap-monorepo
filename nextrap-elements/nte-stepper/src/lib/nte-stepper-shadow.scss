@@ -1,6 +1,5 @@
 // This is styling for the stepper container shadow DOM
 @use '@nextrap/style-reset';
-@use '@nextrap/style-elements' as elements;
 :host {
   position: relative;
   display: flex;
@@ -124,7 +123,23 @@
         color: var(--nte-stepper-menu-text-color);
       }
       .nte-stepper-menu-close {
-        @include elements.close-btn();
+        border: none;
+        background: none;
+        font-size: 1.5rem;
+        line-height: 1;
+        padding: 0;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--nte-stepper-menu-disabled-color);
+        border-radius: 50%;
+        &:hover {
+          background-color: var(--nte-stepper-menu-item-hover-bg);
+          color: var(--nte-stepper-menu-text-color);
+        }
       }
     }
     .nte-stepper-menu-items {

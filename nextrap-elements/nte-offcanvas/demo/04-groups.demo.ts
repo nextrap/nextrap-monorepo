@@ -8,18 +8,17 @@ import style from './main.scss?inline';
 
 export default defineDemo({
   title: 'Open Groups',
-  description:
-    'Open Groups koordinieren beliebige Flächen; modale Flächen desselben Placements werden automatisch sequenziert',
+  description: 'Exklusivität gilt pro Placement und optional zusätzlich über open-group',
   navPath: ['NTE Offcanvas'],
   order: 40,
   tags: ['public'],
   css: ['default', style],
   html: `
     <nte-offcanvas id="same-right-a" class="demo-right" aria-label="Right A">
-      <div class="demo-offcanvas-body"><h3>Right A</h3><p>Modales Right-Placement ohne Open Group.</p></div>
+      <div class="demo-offcanvas-body"><h3>Right A</h3><p>Beim Öffnen von Right B schließt sich dieses Element zuerst.</p></div>
     </nte-offcanvas>
     <nte-offcanvas id="same-right-b" class="demo-right demo-wide" aria-label="Right B">
-      <div class="demo-offcanvas-body"><h3>Right B</h3><p>Wartet, bis Right A vollständig geschlossen ist, bevor es öffnet.</p></div>
+      <div class="demo-offcanvas-body"><h3>Right B</h3><p>Gleiches Placement, andere Breite.</p></div>
     </nte-offcanvas>
 
     <nte-offcanvas id="group-left" class="demo-left" open-group="main-navigation" aria-label="Grouped left">
@@ -29,31 +28,39 @@ export default defineDemo({
       <div class="demo-offcanvas-body"><h2>Mobile Navigation</h2><p>Dasselbe open-group trotz anderem Placement.</p></div>
     </nte-offcanvas>
   `,
-  controls: {
+  actionBar: {
     items: [
       {
         id: 'right-a',
         type: 'button',
         label: 'Right A',
-        onClick: (_, env) => void env.query<NteOffcanvas>('#same-right-a').open(),
+        onClick(_, env) {
+          void env.query<NteOffcanvas>('#same-right-a').open();
+        },
       },
       {
         id: 'right-b',
         type: 'button',
         label: 'Right B',
-        onClick: (_, env) => void env.query<NteOffcanvas>('#same-right-b').open(),
+        onClick(_, env) {
+          void env.query<NteOffcanvas>('#same-right-b').open();
+        },
       },
       {
         id: 'group-left',
         type: 'button',
         label: 'Group Left',
-        onClick: (_, env) => void env.query<NteOffcanvas>('#group-left').open(),
+        onClick(_, env) {
+          void env.query<NteOffcanvas>('#group-left').open();
+        },
       },
       {
         id: 'group-fullscreen',
         type: 'button',
         label: 'Group Fullscreen',
-        onClick: (_, env) => void env.query<NteOffcanvas>('#group-fullscreen').open(),
+        onClick(_, env) {
+          void env.query<NteOffcanvas>('#group-fullscreen').open();
+        },
       },
     ],
   },

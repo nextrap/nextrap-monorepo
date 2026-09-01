@@ -45,48 +45,14 @@
     position: relative;
     z-index: var(--nt-navbar-control-z-index, 2);
   }
-}
 
-.demo-scroll-page {
-  min-height: 220dvh;
-
-  nte-navbar {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background: Canvas;
-    box-shadow: 0 0.25rem 1rem color-mix(in srgb, currentColor 12%, transparent);
-  }
-
-  nte-navbar-line {
-    padding-inline: 1rem;
-  }
-
-  .demo-links {
-    display: flex;
+  .demo-scroll-state {
+    display: grid;
     gap: 1rem;
-    align-items: center;
   }
 
-  .brand-logo {
-    display: block;
-    height: 100%;
-    aspect-ratio: var(--nt-navbar-brand-logo-aspect-ratio, 3 / 1);
-  }
-
-  .brand-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
-  .demo-scroll-content {
-    width: min(100% - 2rem, 72rem);
-    margin-inline: auto;
-    padding-block: 3rem;
-  }
-
-  .demo-scroll-spacer {
-    min-height: 125dvh;
+  .demo-hint {
+    margin: 0;
+    color: color-mix(in srgb, currentColor 70%, transparent);
   }
 }
