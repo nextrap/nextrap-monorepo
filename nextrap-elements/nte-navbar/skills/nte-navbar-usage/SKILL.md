@@ -1,33 +1,52 @@
 ---
 name: nte-navbar-usage
-description: "Use @nextrap/nte-navbar to compose multi-line site headers with start, center and end regions. For responsive mobile/desktop navigation, use @trunkjs/element-relocator to move navbar navigation into an off-canvas element and restore it to its original navbar position."
+description: "Use @nextrap/nte-navbar to compose multi-line site headers with start, center and end regions. Covers static/sticky/fixed placement, scroll collapse/shrink behavior and responsive composition with Nav 2, Burger, Offcanvas and @trunkjs/element-relocator."
 ---
 
 # NTE Navbar usage
 
 `<nte-navbar>` is the header wrapper and `<nte-navbar-line>` provides the `start`, `center` and `end` regions. Keep navigation content as normal light-DOM children assigned to these slots.
 
+## Placement and scroll behavior
+
+Use `position="static"` when the navbar should scroll away with the page, `position="sticky"` when it should remain at the block start, and `position="fixed"` only when it must be removed from normal flow. `scroll-threshold` controls when the host receives `is-below-threshold`.
+
+Lines opt into scroll effects independently:
+
+- `with-collapse-on-scroll` collapses a complete optional line to zero height after the threshold.
+- `with-shrink-on-scroll` switches from `--height` to `--height-scrolled` after the threshold.
+- `hide-on-scroll` remains a compatibility alias for line collapse.
+
+```html
+<nte-navbar position="sticky" scroll-threshold="12" class="with-transparent-at-top with-shadow-on-scroll">
+  <nte-navbar-line class="with-collapse-on-scroll" style="--height: 2.25rem">
+    <span slot="start">Service & Support</span>
+  </nte-navbar-line>
+  <nte-navbar-line class="with-shrink-on-scroll" style="--height: 5.5rem; --height-scrolled: 4rem">
+    ...
+  </nte-navbar-line>
+</nte-navbar>
+```
+
+`with-transparent-at-top` removes the navbar background and shadow until the scroll threshold is crossed. `with-shadow-on-scroll` adds elevation below the threshold; `with-shadow` keeps it permanently. `with-overlay-at-top` can be combined with `--nte-navbar-overlay-offset` when the top state must overlap following content.
+
 ## Responsive navigation and off-canvas
 
-Navbar itself must not own automatic mobile relocation, breakpoint listeners or off-canvas transfer logic. When navigation belongs in the navbar on desktop but in an off-canvas element on mobile, compose the navbar with `@trunkjs/element-relocator`.
+Navbar itself must not own automatic mobile relocation or off-canvas transfer logic. When navigation belongs in the navbar on desktop but in an off-canvas element on mobile, compose the navbar with `@trunkjs/element-relocator` and `@trunkjs/responsive`.
 
-Keep one navigation DOM instance in its canonical desktop navbar position. Put the relocator at the mobile off-canvas destination, select the navigation with `source`, and let `@trunkjs/responsive` add/remove the relocator's `relocated` class. Removing `relocated` restores the navigation to the exact original navbar position.
+Keep one navigation DOM instance in its canonical desktop navbar position. Put the relocator at the mobile off-canvas destination, select the navigation with `source`, and let the responsive layer add/remove the relocator's `relocate` class. Removing `relocate` restores the navigation to the exact original navbar position.
 
 ```html
 <nte-navbar>
   <nte-navbar-line>
     <div slot="start" class="brand-logo">...</div>
-    <nte-nav-2 id="main-navigation" slot="center">...</nte-nav-2>
-    <nte-burger slot="end" class="navbar-control">...</nte-burger>
+    <nte-nav-2 id="main-navigation" slot="end">...</nte-nav-2>
+    <nte-burger slot="end" aria-controls="site-menu"></nte-burger>
   </nte-navbar-line>
 </nte-navbar>
 
-<nte-offcanvas>
-  <tj-element-relocator
-    source="#main-navigation"
-    placement="after"
-    class="-lg:relocated"
-  ></tj-element-relocator>
+<nte-offcanvas id="site-menu">
+  <tj-element-relocator source="#main-navigation" placement="after"></tj-element-relocator>
 </nte-offcanvas>
 ```
 
@@ -38,7 +57,7 @@ This separation is intentional:
 - `@nextrap/nte-navbar` owns header geometry, lines, slots, scroll state and navbar presentation.
 - `@nextrap/nte-nav-2` owns navigation semantics and submenu behavior.
 - `@trunkjs/element-relocator` owns moving and restoring the existing navigation DOM node.
-- `@trunkjs/responsive` owns breakpoint-driven activation of `relocated`.
+- `@trunkjs/responsive` owns breakpoint-driven activation of `relocate`.
 - The off-canvas component owns overlay/disclosure behavior.
 
 Do not render separate desktop and mobile navigation copies when this composition can preserve one navigation instance and its state.
