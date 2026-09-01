@@ -2,10 +2,46 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import './nte-privacy-consent';
 import { NtePrivacyConsent } from './nte-privacy-consent';
 
+const createMemoryStorage = (): Storage => {
+  const entries = new Map<string, string>();
+
+  return {
+    get length() {
+      return entries.size;
+    },
+    clear: () => entries.clear(),
+    getItem: (key: string) => entries.get(key) ?? null,
+    key: (index: number) => Array.from(entries.keys())[index] ?? null,
+    removeItem: (key: string) => entries.delete(key),
+    setItem: (key: string, value: string) => entries.set(key, value),
+  } as Storage;
+};
+
 describe('nte-privacy-consent', () => {
   beforeEach(() => {
     document.body.innerHTML = '';
-    localStorage.clear();
+    Object.defineProperty(window, 'localStorage', {
+      configurable: true,
+      value: createMemoryStorage(),
+    });
+    window.localStorage.clear();
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      writable: true,
+      value: vi.fn(
+        (query: string) =>
+          ({
+            matches: false,
+            media: query,
+            onchange: null,
+            addEventListener: vi.fn(),
+            removeEventListener: vi.fn(),
+            addListener: vi.fn(),
+            removeListener: vi.fn(),
+            dispatchEvent: vi.fn(),
+          }) as MediaQueryList,
+      ),
+    });
 
     Object.defineProperty(HTMLDialogElement.prototype, 'showModal', {
       configurable: true,
@@ -57,7 +93,7 @@ describe('nte-privacy-consent', () => {
     (element.shadowRoot?.querySelector('#accept-all') as HTMLButtonElement).click();
     await changed;
 
-    const decision = JSON.parse(localStorage.getItem('privacy-test') ?? '{}');
+    const decision = JSON.parse(window.localStorage.getItem('privacy-test') ?? '{}');
     expect(decision.services).toEqual({ analytics: true, video: true });
     expect(element.querySelector('script[data-consent-service="analytics"] + script')).not.toBeNull();
     expect(element.querySelector('iframe[title="Video"]')).not.toBeNull();
@@ -92,7 +128,7 @@ describe('nte-privacy-consent', () => {
   });
 
   it('restores a matching stored decision without prompting again', async () => {
-    localStorage.setItem(
+    window.localStorage.setItem(
       'privacy-existing',
       JSON.stringify({
         schema: 1,
