@@ -1,7 +1,13 @@
 .nte-offcanvas-demo {
   display: grid;
   gap: var(--nt-space-3);
-  max-width: 48rem;
+  max-width: 64rem;
+}
+
+.demo-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--nt-space-2);
 }
 
 nte-offcanvas .demo-offcanvas-body {
@@ -17,4 +23,65 @@ nte-offcanvas .demo-offcanvas-header {
   align-items: center;
   justify-content: space-between;
   width: 100%;
+}
+
+nte-offcanvas.demo-left {
+  --nte-offcanvas-placement: left;
+  --nte-offcanvas-width: 20rem;
+}
+
+nte-offcanvas.demo-right {
+  --nte-offcanvas-placement: right;
+  --nte-offcanvas-width: 20rem;
+}
+
+nte-offcanvas.demo-wide {
+  --nte-offcanvas-width: 28rem;
+}
+
+nte-offcanvas.demo-top {
+  --nte-offcanvas-placement: top;
+  --nte-offcanvas-height: 14rem;
+}
+
+nte-offcanvas.demo-bottom {
+  --nte-offcanvas-placement: bottom;
+  --nte-offcanvas-height: 18rem;
+}
+
+nte-offcanvas.demo-fullscreen {
+  --nte-offcanvas-placement: fullscreen;
+}
+
+nte-offcanvas.demo-push-left-a {
+  --nte-offcanvas-placement: left;
+  --nte-offcanvas-mode: push;
+  --nte-offcanvas-modal: 0;
+  --nte-offcanvas-width: 17.5rem;
+}
+
+nte-offcanvas.demo-push-left-b {
+  --nte-offcanvas-placement: left;
+  --nte-offcanvas-mode: push;
+  --nte-offcanvas-modal: 0;
+  --nte-offcanvas-width: 23.75rem;
+}
+
+nte-offcanvas.demo-push-right {
+  --nte-offcanvas-placement: right;
+  --nte-offcanvas-mode: push;
+  --nte-offcanvas-modal: 0;
+  --nte-offcanvas-width: 16rem;
+}
+
+.demo-pane {
+  min-height: 20rem;
+}
+
+.demo-pane-content {
+  min-height: 20rem;
+  box-sizing: border-box;
+  padding: var(--nt-space-5);
+  border: 1px dashed currentColor;
+  border-radius: 0.5rem;
 }
