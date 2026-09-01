@@ -1,4 +1,5 @@
 @use '@nextrap/style-button' as button;
+@use '@nextrap/style-elements' as elements;
 
 :host {
   position: relative;
@@ -53,11 +54,7 @@
 }
 
 #close {
-  @include button.btn();
-  @include button.btn-link();
-
-  padding: var(--nt-space-1);
-  line-height: 1;
+  @include elements.close-btn();
 }
 
 #spinner {

@@ -51,11 +51,11 @@
     },
     "private": true,
     "workspaces": [
-        "--workspaces/trunkjs-monorepo/packages/*",
         "nextrap-base/*",
         "nextrap-elements/*",
         "nextrap-layout/*",
-        "nextrap-styles/*"
+        "nextrap-styles/*",
+        "workspaces/trunkjs-monorepo/packages/*"
     ],
     "nx": {
         "includedScripts": []

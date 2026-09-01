@@ -37,7 +37,21 @@ For styling:
 
 - `opened` (`boolean`) opens the panel when set.
 - `backdrop` (`boolean`, default `true`) toggles the backdrop.
-- `data-group-name` (`string`) dispatches the shared Nextrap group open/close event for paired controls like `nte-burger`.
+- `open-group` (`string`) makes surfaces in the same named group mutually exclusive across placements and interaction modes. Independently of groups, two modal surfaces at the same effective placement are sequenced: the second waits until the first has closed. Non-modal surfaces at the same placement remain independent.
+- `layout-group` (`string`) associates a push surface with matching `nte-offcanvas-pane` elements.
+- `data-group-name` is the deprecated alias for `open-group`.
+
+A pane accepts one or more whitespace-separated names in `layout-group`. A pane without a layout group ignores push events:
+
+```html
+<nte-offcanvas layout-group="application" style="--nte-offcanvas-mode: push">
+  Navigation
+</nte-offcanvas>
+
+<nte-offcanvas-pane layout-group="application tools">
+  <main>Application content</main>
+</nte-offcanvas-pane>
+```
 
 ## Methods
 
@@ -48,9 +62,11 @@ offcanvas?.close();
 offcanvas?.toggle();
 ```
 
-## Parts
+## Slots and parts
 
-Use `::part(backdrop)`, `::part(offcanvas)`, `::part(header)`, `::part(main)` and `::part(footer)` for theme styling.
+The element provides `header`, default, `footer`, and `close` slots. Supplying the `close` slot replaces the built-in accessible close button. The built-in control uses the shared `@nextrap/style-elements` `close-btn()` pattern and `--nt-icon-close`.
+
+Use `::part(offcanvas)`, `::part(dialog)`, `::part(header)`, `::part(main)`, `::part(footer)`, `::part(close)`, and `::part(close-button)` for theme styling. `nte-offcanvas-pane` exposes `::part(pane)`.
 
 ## Mixins
 
@@ -65,7 +81,7 @@ Use `::part(backdrop)`, `::part(offcanvas)`, `::part(header)`, `::part(main)` an
   $header-background: transparent,
   $shadow-color: rgb(from var(--nt-dark) r g b / 0.5),
   $header-padding: var(--nt-space-4),
-  $main-padding: 0,
+  $main-padding: 1rem,
   $footer-padding: var(--nt-space-4),
   $main-min-height: 200px,
   $transition-duration: 0.2s

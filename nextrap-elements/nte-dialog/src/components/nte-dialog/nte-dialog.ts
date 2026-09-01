@@ -1,4 +1,3 @@
-import '@nextrap/nte-burger';
 import { nextrap_element } from '@nextrap/nt-core';
 import { resetStyle } from '@nextrap/style-reset';
 import { SubLayoutApplyMixin } from '@trunkjs/content-pane';
@@ -98,15 +97,20 @@ export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibil
 
       <dialog part="dialog" @cancel=${this.onDialogCancel} @close=${this.onDialogClose} @click=${this.onDialogClick}>
         <div id="header" part="header">
-          <slot
-            name="title"
-            data-query=":scope > h1 | :scope > h2 | :scope > h3 | :scope > h4 | :scope > h5"
-          ></slot>
-          ${showCloseButton
-            ? html`<button part="close-button" id="close-button" type="button" @click=${this.onCloseButtonClick}>
-                <slot name="closeButton"><nte-burger open></nte-burger></slot>
-              </button>`
-            : null}
+          <slot name="title" data-query=":scope > h1 | :scope > h2 | :scope > h3 | :scope > h4 | :scope > h5"></slot>
+          ${
+            showCloseButton
+              ? html`<button
+                  part="close-button"
+                  id="close-button"
+                  type="button"
+                  aria-label="Close"
+                  @click=${this.onCloseButtonClick}
+                >
+                  <slot name="closeButton"></slot>
+                </button>`
+              : null
+          }
         </div>
         <div id="content" part="content"><slot></slot></div>
         <div id="footer" part="footer">

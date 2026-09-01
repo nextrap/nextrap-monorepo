@@ -9,6 +9,7 @@
     },
     "dependencies": {
         "@nextrap/nt-core": "^2.0.0",
+        "@nextrap/style-elements": "^2.0.0",
         "@nextrap/style-reset": "^2.0.0",
         "@trunkjs/browser-utils": "^1.0.47",
         "lit": "^3.3.1"
