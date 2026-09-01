@@ -2,6 +2,7 @@ import type {
   FeedbackConfirmOptions,
   FeedbackDetail,
   FeedbackKind,
+  NextrapDeterminateProgressDetail,
   NextrapFailDetail,
   NextrapInfoDetail,
   NextrapLoadingDetail,
@@ -34,13 +35,18 @@ export class Feedback {
   }
 
   static progress(detail: NextrapProgressDetail): Promise<void>;
-  static progress(progress: number, detail?: Omit<NextrapProgressDetail, 'progress'>): Promise<void>;
+  static progress(
+    progress: number,
+    detail?: Omit<NextrapDeterminateProgressDetail, 'progress'>,
+  ): Promise<void>;
   static progress(
     progressOrDetail: number | NextrapProgressDetail,
-    detail: Omit<NextrapProgressDetail, 'progress'> = {},
+    detail: Omit<NextrapDeterminateProgressDetail, 'progress'> = {},
   ): Promise<void> {
-    const progressDetail =
-      typeof progressOrDetail === 'number' ? { ...detail, progress: progressOrDetail } : progressOrDetail;
+    const progressDetail: NextrapProgressDetail =
+      typeof progressOrDetail === 'number'
+        ? { ...detail, mode: 'determinate', progress: progressOrDetail }
+        : progressOrDetail;
     return Feedback.open('progress', progressDetail);
   }
 
@@ -91,6 +97,7 @@ export class Feedback {
             title: options.title,
             message: options.message,
             html: options.html,
+            details: options.details,
             cancelable: false,
             actions: [
               {
