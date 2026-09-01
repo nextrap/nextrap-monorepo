@@ -1,7 +1,6 @@
 @use '@nextrap/style-base/default' as baseDefault;
 @use '@nextrap/style-button/default' as buttonDefault;
 @use '@nextrap/style-typography/default' as typographyDefault;
-@use '@nextrap/nte-app-interaction/mixins' as appInteraction;
 @use '../index' as nteInput;
 
 .nte-input-demo {
@@ -32,10 +31,6 @@
 
 .nte-input-demo nte-input.hoverlabel {
   @include nteInput.floating-labels();
-}
-
-.nte-input-demo nte-app-interaction.style-default {
-  @include appInteraction.app-interaction-default();
 }
 
 .nte-input-demo .demo-actions {
