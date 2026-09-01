@@ -15,15 +15,15 @@
   box-sizing: border-box;
   min-width: 0;
   min-height: 0;
-  padding-inline-start: var(--nte-offcanvas-pane-left);
-  padding-inline-end: var(--nte-offcanvas-pane-right);
-  padding-block-start: var(--nte-offcanvas-pane-top);
-  padding-block-end: var(--nte-offcanvas-pane-bottom);
+  padding-left: var(--nte-offcanvas-pane-left);
+  padding-right: var(--nte-offcanvas-pane-right);
+  padding-top: var(--nte-offcanvas-pane-top);
+  padding-bottom: var(--nte-offcanvas-pane-bottom);
   transition:
-    padding-inline-start var(--nte-offcanvas-pane-transition-duration) var(--nte-offcanvas-pane-transition-easing),
-    padding-inline-end var(--nte-offcanvas-pane-transition-duration) var(--nte-offcanvas-pane-transition-easing),
-    padding-block-start var(--nte-offcanvas-pane-transition-duration) var(--nte-offcanvas-pane-transition-easing),
-    padding-block-end var(--nte-offcanvas-pane-transition-duration) var(--nte-offcanvas-pane-transition-easing);
+    padding-left var(--nte-offcanvas-pane-transition-duration) var(--nte-offcanvas-pane-transition-easing),
+    padding-right var(--nte-offcanvas-pane-transition-duration) var(--nte-offcanvas-pane-transition-easing),
+    padding-top var(--nte-offcanvas-pane-transition-duration) var(--nte-offcanvas-pane-transition-easing),
+    padding-bottom var(--nte-offcanvas-pane-transition-duration) var(--nte-offcanvas-pane-transition-easing);
 }
 
 @media (prefers-reduced-motion: reduce) {

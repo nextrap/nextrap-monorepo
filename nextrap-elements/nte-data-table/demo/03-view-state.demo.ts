@@ -67,7 +67,7 @@ export default defineDemo({
     table.data = data;
     table.viewState = { hiddenColumns: ['region'] };
   },
-  actionBar: {
+  controls: {
     items: [
       {
         id: 'pin-one',
@@ -118,7 +118,7 @@ export default defineDemo({
         label: 'State zurücksetzen',
         onClick(_, env) {
           env.query<NteDataTableElement<Service>>('nte-data-table').setViewState({});
-          env.actionBar.setValue('show-region', true);
+          env.controls.setValue('show-region', true);
         },
       },
       { id: 'state', type: 'json', label: 'TableViewState', readonly: true, value: {} },
@@ -127,10 +127,10 @@ export default defineDemo({
   afterRender(env) {
     const table = env.query<NteDataTableElement<Service>>('nte-data-table');
     const updateState = (event: Event): void => {
-      env.actionBar.setValue('state', (event as CustomEvent<TableViewStateChangeDetail>).detail.state);
+      env.controls.setValue('state', (event as CustomEvent<TableViewStateChangeDetail>).detail.state);
     };
     table.addEventListener('nte-data-table-view-state-change', updateState);
-    env.actionBar.setValue('state', table.getViewState());
+    env.controls.setValue('state', table.getViewState());
     return () => table.removeEventListener('nte-data-table-view-state-change', updateState);
   },
 });

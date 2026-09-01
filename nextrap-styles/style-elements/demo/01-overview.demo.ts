@@ -10,7 +10,7 @@ import markdown from './01-overview.md?raw';
 export default defineDemo({
   title: 'Style Elements',
   group: 'style-elements',
-  description: 'Prose, Tabellen, Listen, List Groups, Bilder und Container',
+  description: 'Prose, Tabellen, Listen, List Groups, Bilder, Container und Close-Buttons',
   css: ['default'],
   markdown,
 });
