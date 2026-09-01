@@ -174,7 +174,7 @@ An offcanvas uses one of the following placements/presentations:
 
 For edge-attached surfaces, animation direction and layout effects derive from the edge. Fullscreen uses a dedicated viewport-covering presentation and animation policy.
 
-Placement itself does not define exclusivity. Two offcanvas instances at the same or at different placements may coexist unless they share an exclusivity group or another explicit policy prevents it.
+Placement alone does not define exclusivity. Two modal offcanvas surfaces with the same effective placement are mutually exclusive: when a second one opens, it waits until the first one has completed closing before it opens. Non-modal surfaces do not become exclusive merely because they share a placement. Named open groups continue to provide exclusivity across placements and interaction modes.
 
 Placement is treated as stable for an active open/close cycle. Changing placement while an offcanvas is open is not supported.
 
@@ -302,7 +302,7 @@ Examples:
 - a `main-navigation` group could contain a left desktop navigation, a right alternative navigation and a fullscreen mobile navigation; only one may be active at a time.
 - a `tools` group could contain multiple inspectors that all use the right edge and replace each other.
 - a `global-surface` group could contain surfaces at different edges that must never coexist.
-- an offcanvas without an open group is not automatically exclusive with another instance merely because both use the same placement.
+- an offcanvas without an open group is not automatically exclusive with another instance merely because both use the same placement, unless both surfaces are modal.
 
 This group model also enables controlled toggling/cycling between related surfaces.
 
@@ -400,7 +400,7 @@ Fullscreen is intentionally an exception because it is needed as a first-class p
 
 ## Architecture decisions made
 
-1. Exclusivity is configurable and based on named open groups, not implicitly on edge/placement.
+1. Named open groups provide configurable exclusivity across placements and interaction modes. In addition, two modal surfaces with the same effective placement are mutually exclusive, and the second waits for the first to complete closing before it opens.
 2. Opening one member of an open group closes other open members of that group.
 3. Grouping works across placements, including fullscreen.
 4. Locking/priorities are not part of the initial scope.
@@ -430,15 +430,14 @@ Fullscreen is intentionally an exception because it is needed as a first-class p
 ## Open architecture questions
 
 1. What should the final public names be for exclusivity and layout coordination (`open-group`, `layout-group`, etc.)?
-2. Can modal offcanvas surfaces from different open groups coexist, or should modality optionally introduce a separate global exclusivity rule?
-3. What are the exact event names and typed payload interfaces for the public window protocol?
-4. Should opening/closing intent events be cancelable?
-5. What is the final constructor options type and content union type?
-6. How should declarative slotted content and constructor-supplied content behave if both are provided?
-7. What are the exact CSS custom-property names and value semantics for close-control visibility and placement?
-8. Do top/bottom surfaces need intrinsic/auto sizing in addition to explicit sizes?
-9. Should opening/replacement expose an asynchronous lifecycle (`open()` / `close()` promises and before/after events)?
-10. Should motion presets be represented only through CSS custom properties/classes or also expose named component-level style variants?
-11. Which integration contract between `nte-offcanvas` and NTE Nav should be guaranteed by tests?
-12. Should toggling/cycling through members of an open group be exposed directly by a convenience API or remain an application-level operation built from events / `open()` calls?
-13. If drag/swipe is added later, should top/bottom sheets support only close gestures or also multiple snap positions?
+2. What are the exact event names and typed payload interfaces for the public window protocol?
+3. Should opening/closing intent events be cancelable?
+4. What is the final constructor options type and content union type?
+5. How should declarative slotted content and constructor-supplied content behave if both are provided?
+6. What are the exact CSS custom-property names and value semantics for close-control visibility and placement?
+7. Do top/bottom surfaces need intrinsic/auto sizing in addition to explicit sizes?
+8. Should opening/replacement expose an asynchronous lifecycle (`open()` / `close()` promises and before/after events)?
+9. Should motion presets be represented only through CSS custom properties/classes or also expose named component-level style variants?
+10. Which integration contract between `nte-offcanvas` and NTE Nav should be guaranteed by tests?
+11. Should toggling/cycling through members of an open group be exposed directly by a convenience API or remain an application-level operation built from events / `open()` calls?
+12. If drag/swipe is added later, should top/bottom sheets support only close gestures or also multiple snap positions?

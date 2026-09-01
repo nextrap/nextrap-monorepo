@@ -30,13 +30,38 @@ export default defineDemo({
       <div class="demo-offcanvas-body"><h2>Fullscreen</h2><p>Füllt den Viewport und droppt standardmäßig von oben herein.</p></div>
     </nte-offcanvas>
   `,
-  actionBar: {
+  controls: {
     items: [
-      { id: 'left', type: 'button', label: 'Left', onClick(_, env) { void env.query<NteOffcanvas>('#placement-left').open(); } },
-      { id: 'right', type: 'button', label: 'Right', onClick(_, env) { void env.query<NteOffcanvas>('#placement-right').open(); } },
-      { id: 'top', type: 'button', label: 'Top', onClick(_, env) { void env.query<NteOffcanvas>('#placement-top').open(); } },
-      { id: 'bottom', type: 'button', label: 'Bottom', onClick(_, env) { void env.query<NteOffcanvas>('#placement-bottom').open(); } },
-      { id: 'fullscreen', type: 'button', label: 'Fullscreen', onClick(_, env) { void env.query<NteOffcanvas>('#placement-fullscreen').open(); } },
+      {
+        id: 'left',
+        type: 'button',
+        label: 'Left',
+        onClick: (_, env) => void env.query<NteOffcanvas>('#placement-left').open(),
+      },
+      {
+        id: 'right',
+        type: 'button',
+        label: 'Right',
+        onClick: (_, env) => void env.query<NteOffcanvas>('#placement-right').open(),
+      },
+      {
+        id: 'top',
+        type: 'button',
+        label: 'Top',
+        onClick: (_, env) => void env.query<NteOffcanvas>('#placement-top').open(),
+      },
+      {
+        id: 'bottom',
+        type: 'button',
+        label: 'Bottom',
+        onClick: (_, env) => void env.query<NteOffcanvas>('#placement-bottom').open(),
+      },
+      {
+        id: 'fullscreen',
+        type: 'button',
+        label: 'Fullscreen',
+        onClick: (_, env) => void env.query<NteOffcanvas>('#placement-fullscreen').open(),
+      },
     ],
   },
 });

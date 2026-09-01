@@ -13,8 +13,8 @@ export default defineDemo({
   order: 50,
   tags: ['public'],
   css: ['default', style],
-  html: '<div class="demo-programmatic-host"><p>Die Offcanvas-Instanzen werden erst über die Action Bar erzeugt.</p></div>',
-  actionBar: {
+  html: '<div class="demo-programmatic-host"><p>Die Offcanvas-Instanzen werden erst über die Controls erzeugt.</p></div>',
+  controls: {
     items: [
       {
         id: 'template',

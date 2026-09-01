@@ -1,0 +1,46 @@
+// @nextrap/style-elements — generic close-button pattern
+//
+// Usage:
+//   @use '@nextrap/style-elements' as elements;
+//   button[aria-label='Close'] { @include elements.close-btn(); }
+
+@mixin close-btn() {
+  appearance: none;
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--close-btn-size, 2.5rem);
+  block-size: var(--close-btn-size, 2.5rem);
+  padding: 0;
+  border: 0;
+  border-radius: var(--close-btn-border-radius, 999px);
+  background: var(--close-btn-background, transparent);
+  color: var(--close-btn-color, inherit);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    opacity 0.15s ease;
+
+  &::before {
+    content: '';
+    display: block;
+    inline-size: var(--close-btn-icon-size, 1.25rem);
+    block-size: var(--close-btn-icon-size, 1.25rem);
+    background-color: currentColor;
+    mask: var(--nt-icon-close) center / contain no-repeat;
+  }
+
+  &:hover {
+    background: var(--close-btn-hover-background, color-mix(in srgb, currentColor 8%, transparent));
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--nt-focus, currentColor);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

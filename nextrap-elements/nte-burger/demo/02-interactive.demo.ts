@@ -5,7 +5,7 @@ import './main';
 function updateState(env: TDemoEnvironment) {
   const burger = env.query<NteBurger>('#interactive-burger');
   env.query<HTMLElement>('#interactive-menu').hidden = !burger.open;
-  env.actionBar.setValue('state', burger.open ? 'Navigation is open.' : 'Navigation is closed.');
+  env.controls.setValue('state', burger.open ? 'Navigation is open.' : 'Navigation is closed.');
 }
 
 export default defineDemo({
@@ -21,7 +21,7 @@ export default defineDemo({
         <a href="#contact">Contact</a>
       </nav>
     </main>`,
-  actionBar: {
+  controls: {
     items: [
       {
         type: 'button',

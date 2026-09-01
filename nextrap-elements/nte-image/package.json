@@ -13,6 +13,7 @@
     },
     "dependencies": {
         "@nextrap/style-base": "^2.0.0",
+        "@nextrap/style-elements": "^2.0.0",
         "jsdom": "~26.1.0",
         "lit": "^3.3.1",
         "vitest": "^3.2.0"
