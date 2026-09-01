@@ -1,19 +1,18 @@
-# nte-offcanvas usage examples
+# Basis
 {: layout="1;.container.nte-offcanvas-demo"}
 
-Das Offcanvas erhält automatisch `style-default`, solange keine andere `style-*` Klasse gesetzt ist.
+Das Offcanvas stellt Header, Main und Footer bereit. Der Close-Button wird standardmäßig von der Komponente gerendert und kann über den `close`-Slot ersetzt werden.
 
 <button class="btn btn-primary" data-demo-open="#demo-offcanvas">Offcanvas öffnen</button>
 
-<nte-offcanvas id="demo-offcanvas">
+<nte-offcanvas id="demo-offcanvas" aria-label="Basis Offcanvas">
   <div slot="header" class="demo-offcanvas-header">
     <strong>Offcanvas Header</strong>
-    <button class="btn btn-primary" data-nt-dismiss="offcanvas">Schließen</button>
   </div>
 
   <div class="demo-offcanvas-body">
-    <p>Dies ist der Inhalt des Offcanvas.</p>
-    <p>Buttons mit <code>data-nt-dismiss="offcanvas"</code> schließen das nächstgelegene Offcanvas.</p>
+    <p>Dies ist der Default-Slot des Offcanvas.</p>
+    <p>Der eingebaute Close-Button benötigt kein zusätzliches Markup.</p>
   </div>
 
   <div slot="footer" class="demo-offcanvas-actions">
