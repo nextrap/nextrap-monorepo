@@ -14,9 +14,11 @@
         "lit": "^3.3.1"
     },
     "devDependencies": {
+        "@nextrap/nte-app-interaction": "^2.0.0",
         "@nextrap/style-base": "^2.0.0",
         "@nextrap/style-typography": "^2.0.0",
-        "@nextrap/style-utils": "^2.0.0"
+        "@nextrap/style-utils": "^2.0.0",
+        "@trunkjs/form": "^1.0.0"
     },
     "type": "module",
     "types": "./index.d.ts",
