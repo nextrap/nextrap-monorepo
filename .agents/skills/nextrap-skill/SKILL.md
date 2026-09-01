@@ -19,6 +19,7 @@ Die nextrap elemente werden als einzelne packages auf npmjs veröffentlicht. Es 
 - Wenn du Markup oder Component-API eines Packages verwendest, lies dessen lokalen `.agents/skills/<component>-usage/SKILL.md`.
 - Falls mehrere Komponenten betroffen sind, lies die jeweils relevanten lokalen Skills. Gibt es noch keinen lokalen Skill, gelten dieses Dokument und die bestehende `.ai-usage-info.md` als Fallback.
 - Lies so wenig wie möglich andere Packages ein.
+- Bei asynchronem TypeScript bevorzugt `async`/`await` und die modernen asynchronen APIs beziehungsweise Methoden statt älterer Promise-Callback-/`.then()`-Syntax, sofern die bestehende API und Browser-/Runtime-Kompatibilität das zulassen. Das gilt besonders für neue Beispiele, Demos und Dokumentationscode.
 - So wenig styling wie nötig: Die Webcomponents sollen später von außen gestyled werden. Daher soll im shadow dom nur die nötigsten styles enthalten sein. Es sollten immer parts definiert sein, damit diese von außen gestyled werden können.
 - Das default styling erfolgt in den mixins jedes packages, das nachher in den theme importiert wird.
 - Demo-/Theme-SCSS bindet den visuellen Default über `.style-default`, z. B. `ntl-2col.style-default { @include twoCol.default-style(); }`.
