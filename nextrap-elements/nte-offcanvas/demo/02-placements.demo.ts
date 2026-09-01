@@ -32,14 +32,11 @@ export default defineDemo({
   `,
   actionBar: {
     items: [
-      ...(['left', 'right', 'top', 'bottom', 'fullscreen'] as const).map((placement) => ({
-        id: placement,
-        type: 'button' as const,
-        label: placement[0].toUpperCase() + placement.slice(1),
-        onClick(_: unknown, env: Parameters<NonNullable<NonNullable<ReturnType<typeof defineDemo>['actionBar']>['items'][number]['onClick']>>[1]) {
-          void env.query<NteOffcanvas>(`#placement-${placement}`).open();
-        },
-      })),
+      { id: 'left', type: 'button', label: 'Left', onClick(_, env) { void env.query<NteOffcanvas>('#placement-left').open(); } },
+      { id: 'right', type: 'button', label: 'Right', onClick(_, env) { void env.query<NteOffcanvas>('#placement-right').open(); } },
+      { id: 'top', type: 'button', label: 'Top', onClick(_, env) { void env.query<NteOffcanvas>('#placement-top').open(); } },
+      { id: 'bottom', type: 'button', label: 'Bottom', onClick(_, env) { void env.query<NteOffcanvas>('#placement-bottom').open(); } },
+      { id: 'fullscreen', type: 'button', label: 'Fullscreen', onClick(_, env) { void env.query<NteOffcanvas>('#placement-fullscreen').open(); } },
     ],
   },
 });
