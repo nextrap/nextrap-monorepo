@@ -8,9 +8,11 @@ import { customElement, query, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import {
   NTE_FEEDBACK_DEFAULT_AUTO_CLOSE_MS,
+  NTE_FEEDBACK_MOCK_PROGRESS_INTERVAL_MS,
   type NextrapConfirmAction,
   type NextrapConfirmDetail,
   type NextrapFailDetail,
+  type NextrapFeedbackDetails,
   type NextrapInfoDetail,
   type NextrapLoadingDetail,
   type NextrapProgressDetail,
@@ -30,7 +32,7 @@ export class NteFeedback extends nextrap_element(features) {
   @state() private accessor _status: NteFeedbackStatus = 'idle';
   @state() private accessor _title = '';
   @state() private accessor _message = '';
-  @state() private accessor _details = '';
+  @state() private accessor _details: NextrapFeedbackDetails | undefined;
   @state() private accessor _progress = 0;
   @state() private accessor _confirmHtml = '';
   @state() private accessor _actions: NextrapConfirmAction[] = [];
@@ -40,10 +42,12 @@ export class NteFeedback extends nextrap_element(features) {
   private _abortCallback?: () => void;
   private _infoConfirmCallback?: () => void;
   private _autoCloseTimer: number | null = null;
+  private _mockProgressTimer: number | null = null;
   private _shakeTimer: number | null = null;
 
   override disconnectedCallback() {
     this._clearAutoCloseTimer();
+    this._clearMockProgressTimer();
     this._clearShakeTimer();
     this._syncDialogState(false);
     super.disconnectedCallback();
@@ -70,12 +74,7 @@ export class NteFeedback extends nextrap_element(features) {
             <div id="content" part="content">
               <div id="message" part="message">${this._message}</div>
               ${this._referenceLabel ? html`<div id="reference" part="reference">${this._referenceLabel}</div>` : nothing}
-              ${this._status === 'progress' ? html`
-                <div id="progress" part="progress">
-                  <div id="progress-meta" part="progress-meta"><span part="progress-label">Fortschritt</span><span part="progress-percent">${Math.round(this._progress)}%</span></div>
-                  <div id="progress-bar" part="progress-bar"><div id="progress-value" part="progress-value" style="width: ${this._progress}%"></div></div>
-                </div>` : nothing}
-              ${this._status === 'fail' && this._details ? html`<details id="details" part="details"><summary id="details-summary" part="details-summary">Details anzeigen</summary><pre id="details-content" part="details-content">${this._details}</pre></details>` : nothing}
+              ${this._hasDetails() ? html`<details id="details" part="details"><summary id="details-summary" part="details-summary">Details anzeigen</summary><pre id="details-content" part="details-content"><code>${this._formatDetails()}</code></pre></details>` : nothing}
               ${this._status === 'confirm' && this._confirmHtml ? html`<div id="html" part="html">${unsafeHTML(this._confirmHtml)}</div>` : nothing}
             </div>
             ${this._hasActions() ? html`<div id="actions" part="actions">${this._renderActions()}</div>` : nothing}
@@ -86,6 +85,7 @@ export class NteFeedback extends nextrap_element(features) {
   close() {
     const wasOpen = this._open;
     this._clearAutoCloseTimer();
+    this._clearMockProgressTimer();
     this._clearShakeTimer();
     this._dialogElement?.classList.remove('shake');
     this._syncDialogState(false);
@@ -93,7 +93,7 @@ export class NteFeedback extends nextrap_element(features) {
     this._status = 'idle';
     this._title = '';
     this._message = '';
-    this._details = '';
+    this._details = undefined;
     this._progress = 0;
     this._confirmHtml = '';
     this._actions = [];
@@ -110,7 +110,7 @@ export class NteFeedback extends nextrap_element(features) {
   @Listen('nextrap:loading', { target: 'window' })
   private _handleLoading(event: Event) {
     const detail = (event as CustomEvent<NextrapLoadingDetail>).detail ?? {};
-    this._openState('loading', detail.title, detail.message, detail.reference, detail.cancelable ?? !!detail.onAbort);
+    this._openState('loading', detail.title, detail.message, detail.details, detail.reference, detail.cancelable ?? !!detail.onAbort);
     this._abortCallback = detail.onAbort;
     this._progress = 0;
   }
@@ -119,8 +119,14 @@ export class NteFeedback extends nextrap_element(features) {
   private _handleProgress(event: Event) {
     const detail = (event as CustomEvent<NextrapProgressDetail>).detail;
     if (!detail) return;
-    this._openState('progress', detail.title, detail.message, detail.reference, detail.cancelable ?? !!detail.onAbort);
+    this._openState('progress', detail.title, detail.message, detail.details, detail.reference, detail.cancelable ?? !!detail.onAbort);
     this._abortCallback = detail.onAbort;
+
+    if (detail.mode === 'mock') {
+      this._startMockProgress(detail.durationMs);
+      return;
+    }
+
     this._progress = this._clampProgress(detail.progress);
     if (this._progress >= 100) this._scheduleAutoClose(true);
   }
@@ -128,40 +134,47 @@ export class NteFeedback extends nextrap_element(features) {
   @Listen('nextrap:success', { target: 'window' })
   private _handleSuccess(event: Event) {
     const detail = (event as CustomEvent<NextrapSuccessDetail>).detail ?? {};
-    this._openState('success', detail.title, detail.message, undefined, detail.cancelable ?? true);
+    this._openState('success', detail.title, detail.message, detail.details, undefined, detail.cancelable ?? true);
     this._scheduleAutoClose(detail.autoClose ?? true);
   }
 
   @Listen('nextrap:fail', { target: 'window' })
   private _handleFail(event: Event) {
     const detail = (event as CustomEvent<NextrapFailDetail>).detail ?? {};
-    this._openState('fail', detail.title, detail.message, undefined, detail.cancelable ?? true);
-    this._details = detail.details ?? '';
+    this._openState('fail', detail.title, detail.message, detail.details, undefined, detail.cancelable ?? true);
     this._scheduleAutoClose(detail.autoClose ?? true);
   }
 
   @Listen('nextrap:info', { target: 'window' })
   private _handleInfo(event: Event) {
     const detail = (event as CustomEvent<NextrapInfoDetail>).detail ?? {};
-    this._openState('info', detail.title, detail.message, undefined, detail.cancelable ?? true);
+    this._openState('info', detail.title, detail.message, detail.details, undefined, detail.cancelable ?? true);
     this._infoConfirmCallback = detail.onConfirm;
   }
 
   @Listen('nextrap:confirm', { target: 'window' })
   private _handleConfirm(event: Event) {
     const detail = (event as CustomEvent<NextrapConfirmDetail>).detail ?? {};
-    this._openState('confirm', detail.title, detail.message, undefined, detail.cancelable ?? true);
+    this._openState('confirm', detail.title, detail.message, detail.details, undefined, detail.cancelable ?? true);
     this._confirmHtml = detail.html ?? '';
     this._actions = detail.actions?.length ? detail.actions : [{ label: 'OK', variant: 'primary' }];
   }
 
-  private _openState(status: Exclude<NteFeedbackStatus, 'idle'>, title?: string, message?: string, reference?: string | HTMLElement, cancelable = false) {
+  private _openState(
+    status: Exclude<NteFeedbackStatus, 'idle'>,
+    title?: string,
+    message?: string,
+    details?: NextrapFeedbackDetails,
+    reference?: string | HTMLElement,
+    cancelable = false,
+  ) {
     this._clearAutoCloseTimer();
+    this._clearMockProgressTimer();
     this._open = true;
     this._status = status;
     this._title = title?.trim() || this._getDefaultTitle(status);
     this._message = message?.trim() || this._getDefaultMessage(status);
-    this._details = '';
+    this._details = details;
     this._confirmHtml = '';
     this._actions = [];
     this._referenceLabel = this._getReferenceLabel(reference);
@@ -251,8 +264,57 @@ export class NteFeedback extends nextrap_element(features) {
     return '';
   }
 
+  private _hasDetails() {
+    if (Array.isArray(this._details)) return this._details.length > 0;
+    return typeof this._details === 'string' && this._details.trim().length > 0;
+  }
+
+  private _formatDetails() {
+    if (Array.isArray(this._details)) return JSON.stringify(this._details, null, 2);
+    return this._details ?? '';
+  }
+
   private _clampProgress(progress: number) { return Math.min(100, Math.max(0, Number.isFinite(progress) ? progress : 0)); }
   private _getButtonPart(variant: NonNullable<NextrapConfirmAction['variant']>) { return `button button-${variant}`; }
+
+  private _startMockProgress(durationMs: number) {
+    this._clearMockProgressTimer();
+    const duration = Math.max(0, Number.isFinite(durationMs) ? durationMs : 0);
+    const startedAt = Date.now();
+
+    const updateProgress = () => {
+      const elapsed = Math.min(duration, Math.max(0, Date.now() - startedAt));
+      if (duration === 0 || elapsed >= duration) {
+        this._progress = 100;
+        this.close();
+        return;
+      }
+      this._progress = this._getMockProgress(elapsed, duration);
+    };
+
+    updateProgress();
+    if (!this._open || this._status !== 'progress') return;
+    this._mockProgressTimer = window.setInterval(updateProgress, NTE_FEEDBACK_MOCK_PROGRESS_INTERVAL_MS);
+  }
+
+  private _getMockProgress(elapsedMs: number, durationMs: number) {
+    const fastEnd = Math.min(durationMs * 0.1, 2_000);
+    const quarterEnd = Math.max(fastEnd, durationMs * 0.25);
+    const middleEnd = Math.max(quarterEnd, durationMs * 0.6);
+    const slowEnd = Math.max(middleEnd, durationMs * 0.9);
+
+    if (elapsedMs <= fastEnd) return this._interpolate(elapsedMs, 0, fastEnd, 0, 55);
+    if (elapsedMs <= quarterEnd) return this._interpolate(elapsedMs, fastEnd, quarterEnd, 55, 75);
+    if (elapsedMs <= middleEnd) return this._interpolate(elapsedMs, quarterEnd, middleEnd, 75, 90);
+    if (elapsedMs <= slowEnd) return this._interpolate(elapsedMs, middleEnd, slowEnd, 90, 97);
+    return this._interpolate(elapsedMs, slowEnd, durationMs, 97, 99.5);
+  }
+
+  private _interpolate(value: number, from: number, to: number, start: number, end: number) {
+    if (to <= from) return end;
+    const ratio = Math.min(1, Math.max(0, (value - from) / (to - from)));
+    return start + (end - start) * ratio;
+  }
 
   private _scheduleAutoClose(enabled: boolean, delay = NTE_FEEDBACK_DEFAULT_AUTO_CLOSE_MS) {
     this._clearAutoCloseTimer();
@@ -263,6 +325,12 @@ export class NteFeedback extends nextrap_element(features) {
     if (this._autoCloseTimer === null) return;
     window.clearTimeout(this._autoCloseTimer);
     this._autoCloseTimer = null;
+  }
+
+  private _clearMockProgressTimer() {
+    if (this._mockProgressTimer === null) return;
+    window.clearInterval(this._mockProgressTimer);
+    this._mockProgressTimer = null;
   }
 
   private _clearShakeTimer() {
