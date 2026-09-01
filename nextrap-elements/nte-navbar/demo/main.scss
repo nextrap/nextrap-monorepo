@@ -96,24 +96,3 @@
   min-height: 60dvh;
   padding: 2rem;
 }
-
-.demo-nav-horizontal {
-  --nte-nav-flow: row;
-}
-
-.demo-nav-vertical {
-  --nte-nav-flow: column;
-  --nte-nav-align: stretch;
-  width: 100%;
-  padding: 1rem;
-}
-
-.demo-mobile-only {
-  display: none;
-}
-
-@media (max-width: 63.999rem) {
-  .demo-responsive-shell .demo-mobile-only {
-    display: block;
-  }
-}
