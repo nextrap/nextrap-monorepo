@@ -3,22 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>nte-input FormData Submit Demo</title>
+    <title>nte-input TJForm Submit Demo</title>
   </head>
   <body>
     <main>
       <h1>nte-input</h1>
-      <p>Formularauswertung per <code>FormData</code>.</p>
+      <p>Komplettes Formular mit <code>TJForm</code> und <code>nte-app-interaction</code>.</p>
 
       <section>
-        <h2>FormData Beispiel</h2>
+        <h2>TJForm Beispiel</h2>
         <p>
-          Mit <code>Absenden</code> wird das Formular per <code>FormData</code> ausgewertet. Die Ausgabe erfolgt als
-          Array von Key-Value-Objekten – auch für Mehrfachwerte wie <code>select-radio</code> und
-          <code>token-input</code>.
+          Beim Absenden wertet <code>TJForm</code> alle benannten <code>nte-input</code>-Elemente als Objekt aus. Während
+          der simulierten Verarbeitung zeigt <code>nte-app-interaction</code> die Meldung <em>Bitte warten …</em> an.
+          Anschließend erscheint der übermittelte Wert als JSON.
         </p>
 
-        <form id="formdata-demo-form">
+        <nte-app-interaction></nte-app-interaction>
+
+        <tj-form preset="nte-input-form-demo">
           <nte-input class="hoverlabel" label="Name" type="text" name="name" value="Max Mustermann"></nte-input>
 
           <nte-input
@@ -57,12 +59,12 @@
           <nte-input label="AGB akzeptieren" type="checkbox" name="accepted" value="yes" checked></nte-input>
 
           <div class="demo-actions">
-            <button id="formdata-submit" type="submit">Absenden</button>
+            <button type="submit">Absenden</button>
           </div>
-        </form>
+        </tj-form>
 
-        <label class="json-label" for="formdata-json">FormData Ausgabe</label>
-        <textarea id="formdata-json" class="demo-json" spellcheck="false" readonly></textarea>
+        <label class="json-label" for="tjform-json">TJForm JSON-Ausgabe</label>
+        <textarea id="tjform-json" class="demo-json" spellcheck="false" readonly></textarea>
       </section>
     </main>
 
