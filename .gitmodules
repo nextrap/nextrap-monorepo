@@ -1,4 +1,5 @@
 [submodule ".agents/skills/infracamp-ai-skills"]
 	path = .agents/skills/infracamp-ai-skills
 	url = git@github.com:infracamp/infracamp-ai-skills.git
+	pushurl = git@github.com:infracamp/infracamp-ai-skills.git
 	branch = main
