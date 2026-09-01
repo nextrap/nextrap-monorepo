@@ -1,7 +1,9 @@
 import { nextrap_element } from '@nextrap/nt-core';
 import { html, unsafeCSS } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import style from './nte-navbar.scss?inline';
+
+export type NteNavbarPosition = 'static' | 'sticky' | 'fixed';
 
 @customElement('nte-navbar')
 export class NteNavbar extends nextrap_element({}) {
@@ -10,6 +12,12 @@ export class NteNavbar extends nextrap_element({}) {
   }
 
   static override styles = [unsafeCSS(style)];
+
+  @property({ type: String, reflect: true })
+  public accessor position: NteNavbarPosition = 'static';
+
+  @property({ type: Number, attribute: 'scroll-threshold' })
+  public accessor scrollThreshold = 1;
 
   private readonly _onScroll = () => this.updateScrollState();
 
@@ -25,7 +33,9 @@ export class NteNavbar extends nextrap_element({}) {
   }
 
   private updateScrollState() {
-    this.classList.toggle('is-scrolled', window.scrollY > 1);
+    const scrollY = Math.max(0, window.scrollY);
+    this.classList.toggle('is-scrolled', scrollY > 0);
+    this.classList.toggle('is-below-threshold', scrollY > Math.max(0, this.scrollThreshold));
   }
 
   override render() {
