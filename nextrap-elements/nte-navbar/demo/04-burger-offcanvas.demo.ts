@@ -9,10 +9,32 @@ export default defineDemo({
   title: 'Burger + Offcanvas',
   description: 'Navbar mit NTE Burger als Trigger für ein externes Offcanvas',
   iframe: true,
+  controls: {
+    items: [
+      {
+        id: 'navbar-shadow',
+        type: 'button',
+        label: 'Schatten an/aus',
+        onClick(_, env) {
+          env.query<HTMLElement>('#burger-navbar').classList.toggle('with-shadow');
+        },
+      },
+      {
+        id: 'navbar-position',
+        type: 'button',
+        label: 'Static / Sticky',
+        onClick(_, env) {
+          const navbar = env.query<HTMLElement>('#burger-navbar');
+          const current = getComputedStyle(navbar).getPropertyValue('--nte-navbar-position').trim();
+          navbar.style.setProperty('--nte-navbar-position', current === 'sticky' ? 'static' : 'sticky');
+        },
+      },
+    ],
+  },
   render(root) {
     root.innerHTML = `
       <section class="nte-navbar-demo">
-        <nte-navbar position="sticky" class="with-shadow" style="--container-width: 72rem">
+        <nte-navbar id="burger-navbar" class="with-shadow" style="--container-width: 72rem; --nte-navbar-position: sticky">
           <nte-navbar-line style="--height: 4.5rem">
             <a slot="start" class="brand-logo" href="/" aria-label="Nextrap Startseite"><img src="${logoUrl}" alt="" /></a>
             <nte-burger slot="end" id="offcanvas-burger" aria-label="Navigation öffnen" aria-controls="navbar-offcanvas"></nte-burger>
