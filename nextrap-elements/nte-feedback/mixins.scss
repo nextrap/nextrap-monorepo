@@ -1,0 +1,15 @@
+@mixin feedback-default {
+  &::part(dialog) {
+    background: var(--nt-surface-raised);
+    color: var(--nt-text);
+    border: var(--nt-border-width) solid var(--nt-border);
+    border-radius: var(--nt-border-radius-xl);
+    box-shadow: 0 0.5rem 1rem rgb(from var(--nt-text) r g b / 0.15), 0 0.125rem 0.25rem rgb(from var(--nt-text) r g b / 0.075);
+  }
+  &::part(headline) { font-size: var(--nt-fs-h4); font-weight: var(--nt-font-weight-header); line-height: var(--nt-line-height-header); }
+  &::part(message) { font-size: var(--nt-font-size-base); line-height: var(--nt-line-height-base); }
+  &::part(reference), &::part(progress-meta) { color: var(--nt-dark-subtle); font-size: var(--nt-font-size-small); }
+  &::part(details), &::part(html) { padding: 0.875rem 1rem; background: rgb(from var(--nt-dark) r g b / 0.04); border-radius: var(--nt-border-radius); }
+  &::part(progress-bar) { height: 0.625rem; background: rgb(from var(--nt-dark) r g b / 0.08); border-radius: 999px; }
+  &::part(progress-value) { background: var(--nt-primary); border-radius: inherit; }
+}

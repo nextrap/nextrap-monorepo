@@ -2,7 +2,7 @@
 
 Created automatically by a coding agent as an onboarding context cache. Keep this file concise and factual; update it when stable repository facts change.
 
-Last verified: 2026-08-29
+Last verified: 2026-09-01
 
 ## Repository
 
@@ -75,7 +75,7 @@ Root `package.json` workspaces:
 | `@nextrap/nte-multiselect` | `nextrap-elements/nte-multiselect` | Multiselect-Element |
 | `@nextrap/nte-nav` | `nextrap-elements/nte-nav` | Navigation-Element, ältere Variante |
 | `@nextrap/nte-nav-2` | `nextrap-elements/nte-nav-2` | Navigation-Element, aktuelle/alternative Variante |
-| `@nextrap/nte-app-interaction` | `nextrap-elements/nte-app-interaction` | Globaler Kanal für Anwendungsmeldungen und Rückfragen; Element-Referenz |
+| `@nextrap/nte-feedback` | `nextrap-elements/nte-feedback` | Zentraler Feedback-Kanal für Loading, Progress, Statusmeldungen, Alerts und Rückfragen |
 | `@nextrap/nte-offcanvas` | `nextrap-elements/nte-offcanvas` | Offcanvas-/Drawer-Element |
 | `@nextrap/nte-parallax-bg` | `nextrap-elements/nte-parallax-bg` | Parallax-Background-Element |
 | `@nextrap/nte-progress` | `nextrap-elements/nte-progress` | Progress-/Fortschrittsanzeige |
@@ -144,7 +144,7 @@ npx vite build
 | `docs/nextrap-elements-concept.md` | dual-usage concept |
 | `nextrap-base/nt-nx-generators/src/generators/` | generator templates for packages |
 | `nextrap-layout/ntl-2col/` | layout reference component |
-| `nextrap-elements/nte-app-interaction/` | element reference component |
+| `nextrap-elements/nte-feedback/` | central feedback element and public `Feedback` API |
 
 ## Dependency notes
 

@@ -14,7 +14,7 @@
         "lit": "^3.3.1"
     },
     "devDependencies": {
-        "@nextrap/nte-app-interaction": "^2.0.0",
+        "@nextrap/nte-feedback": "^2.0.0",
         "@nextrap/style-base": "^2.0.0",
         "@nextrap/style-typography": "^2.0.0",
         "@nextrap/style-utils": "^2.0.0",

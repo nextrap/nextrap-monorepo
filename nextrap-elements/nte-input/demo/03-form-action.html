@@ -1,16 +1,16 @@
 <main class="nte-input-demo">
   <h1>nte-input</h1>
-  <p>Komplettes Formular mit <code>TJForm</code> und <code>nte-app-interaction</code>.</p>
+  <p>Komplettes Formular mit <code>TJForm</code> und zentralem <code>nte-feedback</code>.</p>
 
   <section>
     <h2>TJForm Beispiel</h2>
     <p>
       Beim Absenden wertet <code>TJForm</code> alle benannten <code>nte-input</code>-Elemente als Objekt aus. Während
-      der simulierten Verarbeitung zeigt <code>nte-app-interaction</code> die Meldung <em>Bitte warten …</em> und
-      anschließend den erfolgreichen Abschluss an.
+      der simulierten Verarbeitung zeigt <code>nte-feedback</code> die Meldung <em>Bitte warten …</em> und anschließend
+      den erfolgreichen Abschluss an.
     </p>
 
-    <nte-app-interaction class="style-default"></nte-app-interaction>
+    <nte-feedback></nte-feedback>
 
     <tj-form preset="nte-input-form-demo">
       <nte-input

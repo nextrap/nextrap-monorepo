@@ -1,19 +1,19 @@
 import { vi } from 'vitest';
-import { NTE_APP_INTERACTION_DEFAULT_AUTO_CLOSE_MS } from '../../lib/types';
-import { NteAppInteraction } from './nte-app-interaction';
+import { NTE_FEEDBACK_DEFAULT_AUTO_CLOSE_MS } from '../../lib/types';
+import { NteFeedback } from './nte-feedback';
 
-describe('nte-app-interaction', () => {
+describe('nte-feedback', () => {
   afterEach(() => {
     document.body.innerHTML = '';
     vi.useRealTimers();
   });
 
   it('registers the custom element', () => {
-    expect(customElements.get('nte-app-interaction')).toBe(NteAppInteraction);
+    expect(customElements.get('nte-feedback')).toBe(NteFeedback);
   });
 
   it('renders a custom title from the event detail', async () => {
-    const el = new NteAppInteraction();
+    const el = new NteFeedback();
     document.body.appendChild(el);
     await el.updateComplete;
 
@@ -40,7 +40,7 @@ describe('nte-app-interaction', () => {
   });
 
   it('falls back to the default title when no title is provided', async () => {
-    const el = new NteAppInteraction();
+    const el = new NteFeedback();
     document.body.appendChild(el);
     await el.updateComplete;
 
@@ -59,7 +59,7 @@ describe('nte-app-interaction', () => {
   });
 
   it('renders fail details inside details summary', async () => {
-    const el = new NteAppInteraction();
+    const el = new NteFeedback();
     document.body.appendChild(el);
     await el.updateComplete;
 
@@ -81,30 +81,17 @@ describe('nte-app-interaction', () => {
   });
 
   it('shows a close button only for cancelable dialogs', async () => {
-    const el = new NteAppInteraction();
+    const el = new NteFeedback();
     document.body.appendChild(el);
     await el.updateComplete;
 
-    window.dispatchEvent(
-      new CustomEvent('nextrap:loading', {
-        detail: {
-          message: 'Bitte warten',
-        },
-      }),
-    );
-
+    window.dispatchEvent(new CustomEvent('nextrap:loading', { detail: { message: 'Bitte warten' } }));
     await el.updateComplete;
     expect(el.shadowRoot?.querySelector('#close')).toBeFalsy();
 
     window.dispatchEvent(
-      new CustomEvent('nextrap:loading', {
-        detail: {
-          message: 'Bitte warten',
-          cancelable: true,
-        },
-      }),
+      new CustomEvent('nextrap:loading', { detail: { message: 'Bitte warten', cancelable: true } }),
     );
-
     await el.updateComplete;
     expect(el.shadowRoot?.querySelector('#close')).toBeTruthy();
   });
@@ -112,22 +99,15 @@ describe('nte-app-interaction', () => {
   it('auto closes success dialogs by default', async () => {
     vi.useFakeTimers();
 
-    const el = new NteAppInteraction();
+    const el = new NteFeedback();
     document.body.appendChild(el);
     await el.updateComplete;
 
-    window.dispatchEvent(
-      new CustomEvent('nextrap:success', {
-        detail: {
-          message: 'Fertig',
-        },
-      }),
-    );
-
+    window.dispatchEvent(new CustomEvent('nextrap:success', { detail: { message: 'Fertig' } }));
     await el.updateComplete;
     expect((el.shadowRoot?.querySelector('#dialog') as HTMLDialogElement | null)?.open).toBe(true);
 
-    vi.advanceTimersByTime(NTE_APP_INTERACTION_DEFAULT_AUTO_CLOSE_MS);
+    vi.advanceTimersByTime(NTE_FEEDBACK_DEFAULT_AUTO_CLOSE_MS);
     await Promise.resolve();
     await el.updateComplete;
 
@@ -137,7 +117,7 @@ describe('nte-app-interaction', () => {
 
   it('calls confirm callbacks and closes afterwards', async () => {
     const callback = vi.fn();
-    const el = new NteAppInteraction();
+    const el = new NteFeedback();
     document.body.appendChild(el);
     await el.updateComplete;
 
@@ -167,7 +147,7 @@ describe('nte-app-interaction', () => {
 
   it('shakes instead of closing when a backdrop click requires a selection', async () => {
     vi.useFakeTimers();
-    const el = new NteAppInteraction();
+    const el = new NteFeedback();
     document.body.appendChild(el);
     await el.updateComplete;
 
@@ -192,7 +172,7 @@ describe('nte-app-interaction', () => {
   });
 
   it('closes passive notifications when their backdrop is clicked', async () => {
-    const el = new NteAppInteraction();
+    const el = new NteFeedback();
     document.body.appendChild(el);
     await el.updateComplete;
 
