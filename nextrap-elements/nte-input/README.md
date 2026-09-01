@@ -59,6 +59,18 @@ element.selectedOptions;
 
 `nte-input` is also form-associated, so `new FormData(form)` can read named `nte-input` elements directly.
 
+For object-based read/write access across several controls, use the shared Browser Utils accessor:
+
+```ts
+import { FormDataAccessor } from '@trunkjs/browser-utils';
+
+const accessor = new FormDataAccessor(container);
+accessor.data = { email: 'mail@example.com' };
+console.log(accessor.data);
+```
+
+`@nextrap/nte-input` does not maintain or re-export a separate accessor implementation.
+
 Built-in value behavior:
 
 - text / email / password / textarea → `string`

@@ -1,7 +1,6 @@
 import { NteInput } from './components/nte-input/nte-input';
 
 export * from './components/nte-input/nte-input';
-export * from './lib/form-data-accessor';
 export * from './lib/options';
 export * from './lib/plugin';
 export * from './lib/types';

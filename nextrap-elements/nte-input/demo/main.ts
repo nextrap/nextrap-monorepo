@@ -1,4 +1,4 @@
-import { FormDataAccessor } from '@nextrap/nte-input';
+import { FormDataAccessor } from '@trunkjs/browser-utils';
 import '@nextrap/style-base';
 import '@nextrap/style-typography';
 import '@nextrap/style-utils';
