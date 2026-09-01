@@ -1,4 +1,5 @@
-export * from './src/components/nte-app-interaction/nte-app-interaction';
+export * from './src/components/nte-feedback/nte-feedback';
+export * from './src/lib/feedback';
 export * from './src/lib/types';
 
 /* this bundles light dom styles by default */
@@ -21,5 +22,7 @@ declare global {
     'nextrap:fail': CustomEvent<NextrapFailDetail>;
     'nextrap:info': CustomEvent<NextrapInfoDetail>;
     'nextrap:confirm': CustomEvent<NextrapConfirmDetail>;
+    'nextrap:feedback-close': CustomEvent<void>;
+    'nextrap:feedback-closed': CustomEvent<void>;
   }
 }

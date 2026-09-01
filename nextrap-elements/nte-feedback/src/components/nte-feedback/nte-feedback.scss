@@ -7,8 +7,8 @@
 }
 
 #dialog {
-  width: var(--nte-app-interaction-dialog-width, min(calc(100vw - 2rem), 42rem));
-  max-height: var(--nte-app-interaction-dialog-max-height, calc(100vh - 2rem));
+  width: var(--nte-feedback-dialog-width, min(calc(100vw - 2rem), 42rem));
+  max-height: var(--nte-feedback-dialog-max-height, calc(100vh - 2rem));
   margin: 0;
   padding: 0;
   background: var(--nt-surface-raised);
@@ -40,16 +40,16 @@
 #panel {
   position: relative;
   display: grid;
-  gap: var(--nte-app-interaction-panel-gap, 1rem);
+  gap: var(--nte-feedback-panel-gap, 1rem);
   overflow: auto;
-  max-height: var(--nte-app-interaction-dialog-max-height, calc(100vh - 2rem));
+  max-height: var(--nte-feedback-dialog-max-height, calc(100vh - 2rem));
   padding: var(--nt-spacing-component);
 }
 
 #header {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: var(--nte-app-interaction-header-gap, 1rem);
+  gap: var(--nte-feedback-header-gap, 1rem);
   align-items: start;
 }
 
@@ -64,18 +64,18 @@
 
 #content {
   display: grid;
-  gap: var(--nte-app-interaction-content-gap, 0.75rem);
+  gap: var(--nte-feedback-content-gap, 0.75rem);
 }
 
 #progress {
   display: grid;
-  gap: var(--nte-app-interaction-progress-gap, 0.5rem);
+  gap: var(--nte-feedback-progress-gap, 0.5rem);
 }
 
 #progress-meta {
   display: flex;
   justify-content: space-between;
-  gap: var(--nte-app-interaction-progress-meta-gap, 1rem);
+  gap: var(--nte-feedback-progress-meta-gap, 1rem);
 }
 
 #progress-bar {
@@ -101,7 +101,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: var(--nte-app-interaction-actions-gap, 0.75rem);
+  gap: var(--nte-feedback-actions-gap, 0.75rem);
 }
 
 #assistive-context {
