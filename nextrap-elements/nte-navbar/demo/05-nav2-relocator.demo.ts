@@ -15,13 +15,13 @@ export default defineDemo({
   render(root) {
     root.innerHTML = `
       <tj-responsive class="demo-responsive-shell">
-        <section class="nte-navbar-demo">
-          <nte-navbar class="with-shadow-on-scroll" style="--container-width: 72rem; --nte-navbar-position: sticky">
-            <nte-navbar-line style="--height: 4.75rem">
-              <a slot="start" class="brand-logo" href="/" aria-label="Nextrap Startseite"><img src="${logoUrl}" alt="" /></a>
+        <nte-navbar class="with-shadow-on-scroll" style="--container-width: 72rem; --nte-navbar-position: sticky">
+          <nte-navbar-line style="--height: 4.75rem">
+            <a slot="start" class="brand-logo" href="/" aria-label="Nextrap Startseite"><img src="${logoUrl}" alt="" /></a>
+
+            <div slot="end" class="demo-desktop-nav-slot">
               <nte-nav-2
                 id="responsive-main-nav"
-                slot="end"
                 aria-label="Hauptnavigation"
                 style="--nte-nav-flow: column; --nte-nav-align: stretch; width: 100%; padding: 1rem"
                 style-lg="--nte-nav-flow: row; --nte-nav-align: stretch; width: auto; padding: 0"
@@ -34,27 +34,28 @@ export default defineDemo({
                 </nte-nav-item>
                 <nte-nav-item href="/unternehmen">Unternehmen</nte-nav-item>
               </nte-nav-2>
-              <nte-burger
-                slot="end"
-                id="responsive-burger"
-                aria-label="Navigation öffnen"
-                aria-controls="responsive-offcanvas"
-                style="display: block"
-                style-lg="display: none"
-              ></nte-burger>
-            </nte-navbar-line>
-          </nte-navbar>
+            </div>
 
-          <nte-offcanvas id="responsive-offcanvas" aria-label="Mobile Hauptnavigation">
-            <div slot="header"><strong>Navigation</strong></div>
-            <tj-element-relocator source="#responsive-main-nav" placement="after" class="-lg:relocate"></tj-element-relocator>
-          </nte-offcanvas>
+            <nte-burger
+              slot="end"
+              id="responsive-burger"
+              aria-label="Navigation öffnen"
+              aria-controls="responsive-offcanvas"
+              style="display: block"
+              style-lg="display: none"
+            ></nte-burger>
+          </nte-navbar-line>
+        </nte-navbar>
 
-          <main class="demo-responsive-content">
-            <h2>Ein DOM-Baum, zwei Positionen</h2>
-            <p>Unterhalb von <code>lg</code> setzt TrunkJS Responsive die Relocate-Klasse und die vertikalen CSS-Werte. Ab <code>lg</code> kehrt dieselbe Navigation rechts in die Navbar zurück und wird horizontal.</p>
-          </main>
-        </section>
+        <nte-offcanvas id="responsive-offcanvas" aria-label="Mobile Hauptnavigation">
+          <div slot="header"><strong>Navigation</strong></div>
+          <tj-element-relocator source="#responsive-main-nav" placement="after" class="-lg:relocate"></tj-element-relocator>
+        </nte-offcanvas>
+
+        <main class="demo-responsive-content">
+          <h2>Ein DOM-Baum, zwei Positionen</h2>
+          <p>Unterhalb von <code>lg</code> setzt TrunkJS Responsive die Relocate-Klasse und die vertikalen CSS-Werte. Ab <code>lg</code> kehrt dieselbe Navigation in ihren Desktop-Wrapper rechts in der Navbar zurück und wird horizontal.</p>
+        </main>
       </tj-responsive>
     `;
 
