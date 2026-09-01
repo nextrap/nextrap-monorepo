@@ -3,7 +3,6 @@
   gap: 2rem;
 
   nte-navbar {
-    overflow: hidden;
     border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
     border-radius: 0.75rem;
   }
@@ -51,11 +50,7 @@
   min-height: 220dvh;
 
   nte-navbar {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background: Canvas;
-    box-shadow: 0 0.25rem 1rem color-mix(in srgb, currentColor 12%, transparent);
+    --nte-navbar-background: Canvas;
   }
 
   nte-navbar-line {
@@ -89,4 +84,15 @@
   .demo-scroll-spacer {
     min-height: 125dvh;
   }
+}
+
+.demo-offcanvas-nav {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.demo-responsive-content {
+  min-height: 60dvh;
+  padding: 2rem;
 }

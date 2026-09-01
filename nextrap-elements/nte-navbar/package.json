@@ -13,6 +13,13 @@
     "@nextrap/style-reset": "^2.0.0",
     "lit": "^3.3.1"
   },
+  "devDependencies": {
+    "@nextrap/nte-burger": "^2.0.0",
+    "@nextrap/nte-nav-2": "^1.0.0",
+    "@nextrap/nte-offcanvas": "^2.0.0",
+    "@trunkjs/element-relocator": "^1.0.1",
+    "@trunkjs/responsive": "^1.0.11"
+  },
   "type": "module",
   "types": "./index.d.ts"
 }
