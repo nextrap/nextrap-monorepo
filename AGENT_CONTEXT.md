@@ -126,7 +126,7 @@ npx vite build
 | `.github/workflows/publish-tags.yml` | tag/package publishing workflow |
 | `.github/workflows/static.yml` | GitHub Pages static demo deploy |
 
-`static.yml` installs with `npm ci` and builds the root Vite demo viewer.
+`static.yml` installs with npm in CI and builds the root Vite demo viewer. When GitHub Actions must pick up updated local workspace sources, run `npm update` instead of only `npm ci`; `npm ci` stays locked to `package-lock.json` and does not refresh those workspace-linked sources.
 
 ## Frequently used files
 
@@ -150,7 +150,7 @@ npx vite build
 
 - External npm dependencies are managed centrally in root `package.json`.
 - Intra-repo imports should use `@nextrap/<package-name>` aliases, not relative cross-package paths.
-- `workspaces/trunkjs-monorepo/packages/*` is included in root npm workspaces when present; run `npm install` to refresh workspace links after changes.
+- `workspaces/trunkjs-monorepo/packages/*` is included in root npm workspaces when present; run `npm install` to refresh workspace links after local changes. In GitHub Actions, use `npm update` when updated local workspace sources must be resolved, because `npm ci` alone installs the locked state.
 - `skills-npm` is configured with `agents: ['universal']` and allowed orgs `@leuffen/*`, `@nextrap/*`, `@trunkjs/*`; generated links live directly in `.agents/skills`. The root `prepare` script runs `skills-npm --source node_modules --yes --force` so workspace-linked package skills are included without install-time prompts or stale cache cleanup.
 - Determine package versions with targeted commands (`npm pkg get`, `npm ls`, `jq`, short Node scripts). Do not read full lockfiles unless a full lockfile analysis is explicitly requested.
 
