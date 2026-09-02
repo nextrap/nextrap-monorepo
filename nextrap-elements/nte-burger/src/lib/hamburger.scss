@@ -59,6 +59,13 @@
   }
 }
 
+// Highlights the burger while its internal button has keyboard focus.
+:host(:focus-within) .hamburger {
+  outline: 2px solid currentColor;
+  outline-offset: -2px;
+  border-radius: var(--nt-border-radius, 0.375rem);
+}
+
 // Not open
 :host(:not([open])) {
   #button:hover {

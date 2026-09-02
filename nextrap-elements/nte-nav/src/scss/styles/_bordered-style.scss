@@ -1,0 +1,14 @@
+@use '../default-style' as default;
+
+/// Bordered navigation variant extending the default visual baseline.
+@mixin bordered-style() {
+  @include default.default-style();
+
+  & nte-nav-item::part(link),
+  & nte-nav-item::part(text),
+  & nte-nav-item::part(disclosure),
+  & nte-nav-item::part(toggle) {
+    border: var(--nt-border-width) solid var(--nt-border);
+    border-radius: var(--nt-border-radius-sm);
+  }
+}

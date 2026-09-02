@@ -35,6 +35,17 @@ describe('nte-burger', () => {
     expect(burger.shadowRoot?.querySelector('button')?.getAttribute('aria-expanded')).toBe('true');
   });
 
+  it('keeps the state closed when static-state is enabled', async () => {
+    const burger = renderBurger('<nte-burger static-state></nte-burger>');
+    await burger.updateComplete;
+
+    burger.shadowRoot?.querySelector('button')?.click();
+    await burger.updateComplete;
+
+    expect(burger.open).toBe(false);
+    expect(burger.shadowRoot?.querySelector('button')?.getAttribute('aria-expanded')).toBe('false');
+  });
+
   it('reactively forwards an explicit aria-label', async () => {
     const burger = renderBurger();
     burger.setAttribute('aria-label', 'Open account navigation');

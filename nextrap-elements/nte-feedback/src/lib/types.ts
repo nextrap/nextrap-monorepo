@@ -16,6 +16,9 @@ export interface NextrapLoadingDetail extends NextrapFeedbackDetail {
 
 export interface NextrapProgressDetail extends NextrapFeedbackDetail {
   progress: number;
+  mock?: boolean;
+  mockDuration?: number;
+  mockMessages?: string[];
   reference?: string | HTMLElement;
   onAbort?: () => void;
 }

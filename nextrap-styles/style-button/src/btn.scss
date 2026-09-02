@@ -18,6 +18,13 @@
   text-decoration: none;
   text-align: center;
   cursor: pointer;
+
+  // Provides a keyboard-only focus indicator without changing the button layout.
+  &:focus-visible {
+    outline: 2px solid var(--nt-primary, #0d6efd);
+    outline-offset: 2px;
+  }
+
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
@@ -73,9 +80,33 @@
   }
 }
 
+// Renders a text-like button that reserves button space and gains a surface on hover.
+@mixin btn-hover() {
+  --btn-bg: transparent;
+  --btn-bg-hover: var(--nt-light, #f8f9fa);
+  --btn-bg-active: var(--nt-light, #f8f9fa);
+  --btn-txt: var(--nt-dark, var(--nt-text, currentColor));
+
+  background-color: transparent;
+  color: var(--btn-txt) !important;
+  border-color: transparent;
+  text-decoration: none;
+
+  &:hover {
+    background-color: var(--btn-bg-hover);
+    color: var(--nt-dark, var(--nt-text, currentColor)) !important;
+    border-color: var(--btn-bg-hover);
+  }
+
+  &:active {
+    background-color: var(--btn-bg-active);
+    color: var(--nt-dark, var(--nt-text, currentColor)) !important;
+  }
+}
+
+// Reduziert beim kleinen Button nur den Innenabstand und behält die normale Textgröße.
 @mixin btn-sm() {
   padding: var(--nt-btn-sm-padding-y, 0.25rem) var(--nt-btn-sm-padding-x, 0.5rem);
-  font-size: var(--nt-btn-sm-font-size, 0.75rem);
 }
 
 @mixin btn-lg() {

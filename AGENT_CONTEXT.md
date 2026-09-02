@@ -74,7 +74,7 @@ Root `package.json` workspaces:
 | `@nextrap/nte-input-old` | `nextrap-elements/nte-input-old` | Legacy-Input-Element |
 | `@nextrap/nte-multiselect` | `nextrap-elements/nte-multiselect` | Multiselect-Element |
 | `@nextrap/nte-nav` | `nextrap-elements/nte-nav` | Navigation-Element, ältere Variante |
-| `@nextrap/nte-nav-2` | `nextrap-elements/nte-nav-2` | Navigation-Element, aktuelle/alternative Variante |
+| `@nextrap/nte-nav` | `nextrap-elements/nte-nav-2` | Navigation-Element, aktuelle/alternative Variante |
 | `@nextrap/nte-feedback` | `nextrap-elements/nte-feedback` | Zentraler Feedback-Kanal für Loading, Progress, Statusmeldungen, Alerts und Rückfragen |
 | `@nextrap/nte-offcanvas` | `nextrap-elements/nte-offcanvas` | Offcanvas-/Drawer-Element |
 | `@nextrap/nte-parallax-bg` | `nextrap-elements/nte-parallax-bg` | Parallax-Background-Element |

@@ -7,8 +7,8 @@ import {
   property,
   state,
   unsafeCSS,
-  waitForDomContentLoaded,
 } from '@nextrap/nt-core';
+import { waitForPreVisual } from '@trunkjs/browser-utils';
 import '@nextrap/style-base';
 import { resetStyle } from '@nextrap/style-reset';
 
@@ -92,7 +92,7 @@ export class NteInput extends nextrap_element({
   }
 
   override async connectedCallback() {
-    await waitForDomContentLoaded();
+    await waitForPreVisual();
 
     const pluginClass = NteInput.getPlugin(this.#normalizedType);
 
@@ -116,8 +116,18 @@ export class NteInput extends nextrap_element({
   }
 
   override disconnectedCallback() {
-    this.#plugin?.disconnected();
     super.disconnectedCallback();
+    this.#plugin?.disconnected();
+  }
+
+  // Exposes the form-associated validity contract so tj-form can validate this custom control before submit.
+  checkValidity(): boolean {
+    return this.#internals?.checkValidity() ?? this.#plugin?.isValid() ?? true;
+  }
+
+  // Reports the native validation state and lets the browser display the control's validation feedback.
+  reportValidity(): boolean {
+    return this.#internals?.reportValidity() ?? this.#plugin?.isValid() ?? true;
   }
 
   override attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null) {

@@ -1,6 +1,6 @@
 import { defineDemo } from '@trunkjs/demo-viewer';
 import '@nextrap/nte-burger';
-import '@nextrap/nte-nav-2';
+import '@nextrap/nte-nav';
 import '@nextrap/nte-offcanvas';
 import '@trunkjs/element-relocator';
 import '@trunkjs/responsive';
@@ -19,12 +19,11 @@ export default defineDemo({
           <nte-navbar class="with-shadow-on-scroll" style="--container-width: 72rem; --nte-navbar-position: sticky">
             <nte-navbar-line style="--height: 4.75rem">
               <a slot="start" class="brand-logo" href="/" aria-label="Nextrap Startseite"><img src="${logoUrl}" alt="" /></a>
-              <nte-nav-2
-                id="responsive-main-nav"
+              <nte-nav
+                id="responsive-main-nav-horizontal"
                 slot="end"
                 aria-label="Hauptnavigation"
-                style="--nte-nav-flow: column; --nte-nav-align: stretch; width: 100%; padding: 1rem"
-                style-lg="--nte-nav-flow: row; --nte-nav-align: stretch; width: auto; padding: 0"
+                style="--nte-nav-flow: row; --nte-nav-align: stretch; width: auto; padding: 0"
               >
                 <nte-nav-item href="/">Start</nte-nav-item>
                 <nte-nav-item href="/leistungen" submenu-popover>
@@ -33,7 +32,7 @@ export default defineDemo({
                   <nte-nav-item href="/entwicklung">Entwicklung</nte-nav-item>
                 </nte-nav-item>
                 <nte-nav-item href="/unternehmen">Unternehmen</nte-nav-item>
-              </nte-nav-2>
+              </nte-nav>
               <nte-burger
                 slot="end"
                 id="responsive-burger"
@@ -47,7 +46,16 @@ export default defineDemo({
 
           <nte-offcanvas id="responsive-offcanvas" aria-label="Mobile Hauptnavigation">
             <div slot="header"><strong>Navigation</strong></div>
-            <tj-element-relocator source="#responsive-main-nav" placement="after" class="-lg:relocate"></tj-element-relocator>
+            <nte-nav
+              id="responsive-main-nav-vertical"
+              aria-label="Mobile Hauptnavigation"
+              style="--nte-nav-flow: column; --nte-nav-align: stretch; width: 100%; padding: 1rem"
+            ></nte-nav>
+            <tj-element-relocator
+              source="#responsive-main-nav-horizontal"
+              target="#responsive-main-nav-vertical"
+              class="-lg:relocate"
+            ></tj-element-relocator>
           </nte-offcanvas>
 
           <main class="demo-responsive-content">

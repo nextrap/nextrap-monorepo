@@ -1,15 +1,15 @@
 @use 'index' as nte-input;
 
 nte-input:not(.skip-style) {
-  @include nte-input.theme(nte-input.$themeBootstrap);
+  @include nte-input.default-style(nte-input.$themeBootstrap);
 }
 
 nte-input.default {
-  @include nte-input.theme(nte-input.$themeBootstrap);
+  @include nte-input.default-style(nte-input.$themeBootstrap);
 }
 
 nte-input.carbon {
-  @include nte-input.theme(nte-input.$themeCarbon);
+  @include nte-input.default-style(nte-input.$themeCarbon);
 }
 
 nte-input.hoverlabel {

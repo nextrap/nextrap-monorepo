@@ -32,12 +32,6 @@
   max-block-size: var(--height);
 }
 
-:host-context(nte-navbar.is-below-threshold):host(.with-collapse-on-scroll),
-:host-context(nte-navbar.is-below-threshold):host(.hide-on-scroll) {
-  block-size: 0;
-  max-block-size: 0;
-  opacity: 0;
-}
 
 #line {
   width: 100%;
@@ -61,6 +55,16 @@
   block-size: 100%;
   display: flex;
   align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.region ::slotted(*) {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #start {
@@ -74,6 +78,20 @@
 
 #end {
   justify-content: flex-end;
+}
+
+#container:has(> #center > slot.slot-empty) {
+  display: flex;
+  justify-content: space-between;
+}
+
+#container:has(> #center > slot.slot-empty) #start,
+#container:has(> #center > slot.slot-empty) #end {
+  flex: 0 1 auto;
+}
+
+#container:has(> #center > slot.slot-empty) #center {
+  display: none;
 }
 
 .region:has(> slot.slot-empty) {

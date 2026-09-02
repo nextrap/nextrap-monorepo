@@ -1,5 +1,0 @@
-@use './index' as nav;
-
-nte-navbar.style-default {
-  @include nav.navbar-default-style();
-}

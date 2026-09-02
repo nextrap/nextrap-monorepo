@@ -67,27 +67,6 @@
   gap: var(--nte-feedback-content-gap, 0.75rem);
 }
 
-#progress {
-  display: grid;
-  gap: var(--nte-feedback-progress-gap, 0.5rem);
-}
-
-#progress-meta {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--nte-feedback-progress-meta-gap, 1rem);
-}
-
-#progress-bar {
-  width: 100%;
-  overflow: hidden;
-}
-
-#progress-value {
-  height: 100%;
-  transition: width 0.2s ease-out;
-}
-
 #details-summary {
   cursor: pointer;
 }

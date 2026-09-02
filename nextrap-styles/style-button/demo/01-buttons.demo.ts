@@ -74,6 +74,7 @@ export default defineDemo({
           <button class="btn btn-light" type="button">Light</button>
           <button class="btn btn-dark" type="button">Dark</button>
           <button class="btn btn-link" type="button">Link</button>
+          <button class="btn btn-hover" type="button">Hover</button>
         </div>
       </section>
 
@@ -168,7 +169,7 @@ export default defineDemo({
           <div class="style-button-demo__dropdown-example">
             <button
               id="language-toggle"
-              class="btn btn-outline-primary dropdown-toggle"
+              class="btn btn-hover dropdown-toggle"
               type="button"
               popovertarget="language-menu"
               aria-controls="language-menu"

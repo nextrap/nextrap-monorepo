@@ -2,12 +2,12 @@
 
 **Status:** Draft for review. Do not implement before this proposal is approved.
 
-**Related work:** [`@nextrap/nte-nav-2` API draft](../../docs/nte-nav-2-api-draft.md) and [PR #121](https://github.com/nextrap/nextrap-monorepo/pull/121).
+**Related work:** [`@nextrap/nte-nav` API draft](../../docs/nte-nav-2-api-draft.md) and [PR #121](https://github.com/nextrap/nextrap-monorepo/pull/121).
 
 ## Decision summary
 
 - Create a separate `@nextrap/nte-navbar` package. Its MVP contains exactly two elements: `nte-navbar` and `nte-navbar-line`.
-- Keep navigation semantics in `@nextrap/nte-nav-2`. Navbar owns the page-header shell, placement, scroll state, line composition and mobile-sidebar orchestration.
+- Keep navigation semantics in `@nextrap/nte-nav`. Navbar owns the page-header shell, placement, scroll state, line composition and mobile-sidebar orchestration.
 - Allow any number of lines. Every line exposes the logical regions `start`, `center` and `end` and can use the Nextrap container width or the full available width.
 - Support `static`, `sticky` and `fixed` placement. `static` is the safe default; `sticky` is the recommended persistent mode; `fixed` exists for legacy parity.
 - In fixed mode render a configurable Spacer. Its default `initial` mode reserves the fully expanded initial Navbar height and does not shrink when lines collapse. `current` and `none` are explicit alternatives.
@@ -25,7 +25,7 @@ The legacy `@nextrap/nte-nav` combines three responsibilities:
 2. multi-line Navbar layout and scroll behavior;
 3. responsive Burger/Offcanvas transfer.
 
-`@nextrap/nte-nav-2` already isolates the first responsibility. The Navbar replacement should complete that separation rather than reintroduce menu behavior into the shell.
+`@nextrap/nte-nav` already isolates the first responsibility. The Navbar replacement should complete that separation rather than reintroduce menu behavior into the shell.
 
 | Component | Owns | Does not own |
 |---|---|---|
@@ -102,7 +102,7 @@ No single Navbar system covers the desired combination. The following official s
 - hover-only menus;
 - moving or cloning Navbar/nav content during scrolling;
 - supporting a custom scroll container in the MVP;
-- replacing `@nextrap/nte-nav-2` with its eventual final package name.
+- replacing `@nextrap/nte-nav` with its eventual final package name.
 
 ## Proposed author API
 
@@ -467,7 +467,7 @@ For a later adapter:
 
 | Old | New |
 |---|---|
-| `import '@nextrap/nte-nav'` for Navbar and menu | `import '@nextrap/nte-navbar'` plus `import '@nextrap/nte-nav-2'` |
+| `import '@nextrap/nte-nav'` for Navbar and menu | `import '@nextrap/nte-navbar'` plus `import '@nextrap/nte-nav'` |
 | legacy `nte-nav` with `ul/li/ul` | `nte-nav-2` with nested `nte-nav-item` |
 | `.active` link | `current="page"` on `nte-nav-item` |
 | `slot="brand"` | `slot="start"` or `slot="center"` |

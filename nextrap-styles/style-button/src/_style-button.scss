@@ -11,6 +11,7 @@
 @mixin style-button() {
   .btn { @include b.btn(); }
   .btn-link { @include b.btn-link(); }
+  .btn-hover { @include b.btn-hover(); }
   .btn-sm { @include b.btn-sm(); }
   .btn-lg { @include b.btn-lg(); }
   .btn-xl { @include b.btn-xl(); }

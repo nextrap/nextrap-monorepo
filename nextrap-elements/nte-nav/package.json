@@ -1,6 +1,11 @@
 {
     "name": "@nextrap/nte-nav",
     "version": "2.0.0",
+    "files": [
+        "*.*",
+        ".agents",
+        "src"
+    ],
     "main": "./index.js",
     "repository": {
         "directory": "nextrap-elements/nte-nav",
@@ -8,16 +13,15 @@
         "url": "https://github.com/nextrap/nextrap-monorepo"
     },
     "dependencies": {
-        "@nextrap/nt-framework": "^2.0.0",
-        "@nextrap/nte-burger": "^2.0.0",
         "@nextrap/nt-core": "^2.0.0",
-        "@nextrap/nte-offcanvas": "^2.0.0",
-        "@trunkjs/browser-utils": "^1.0.12"
+        "@nextrap/style-reset": "^2.0.0",
+        "lit": "^3.3.1"
     },
     "devDependencies": {
         "@nextrap/style-base": "^2.0.0",
-        "@nextrap/style-reset": "^2.0.0"
+        "@nextrap/style-typography": "^2.0.0"
     },
     "type": "module",
-    "types": "./index.d.ts"
+    "types": "./index.d.ts",
+    "web-types": "./web-types.json"
 }

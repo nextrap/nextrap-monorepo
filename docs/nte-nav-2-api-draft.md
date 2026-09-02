@@ -1,4 +1,4 @@
-# `@nextrap/nte-nav-2` API draft
+# `@nextrap/nte-nav` API draft
 
 Status: working prototype, not a migration commitment.
 
@@ -36,7 +36,7 @@ Omitting `href` is the default for a parent with children: the complete label is
 Orientation and responsive behavior are deliberately not attributes. They are CSS decisions so the same markup can react to its placement:
 
 ```scss
-@use '@nextrap/nte-nav-2' as nav;
+@use '@nextrap/nte-nav' as nav;
 
 .site-header nte-nav-2.style-default {
   @include nav.main-navigation();

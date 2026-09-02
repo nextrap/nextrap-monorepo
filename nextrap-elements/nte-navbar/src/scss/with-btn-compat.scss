@@ -1,0 +1,18 @@
+// Adds the outer spacing required by legacy .btn controls placed directly in a navbar line.
+@mixin with-btn-compat($margin: var(--nt-space-1)) {
+  // Fits the button into the line's content height while preserving the configured outer spacing.
+  nte-navbar-line :where(.btn, .btn-group) {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    block-size: calc(100% - (2 * #{$margin}));
+    min-block-size: 0;
+    margin: $margin;
+  }
+
+  // Lets grouped buttons share the compatibility height without multiplying the outer margin.
+  nte-navbar-line :where(.btn-group) > .btn {
+    block-size: 100%;
+    margin: 0;
+  }
+}

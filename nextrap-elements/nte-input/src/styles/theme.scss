@@ -152,8 +152,8 @@ $themeCarbon: map.merge(
     min-height: auto;
     padding: 0;
     background: transparent;
-    border: 0;
-    border-radius: 0;
+    border: 1px solid transparent;
+    border-radius: map.get($theme, border-radius);
     box-shadow: none;
   }
 
@@ -164,6 +164,12 @@ $themeCarbon: map.merge(
   &:not([type='checkbox']):focus-within::part(control) {
     border-color: map.get($theme, border-color-focus);
     border-bottom-width: map.get($theme, control-focus-border-bottom-width);
+    box-shadow: map.get($theme, control-focus-shadow);
+  }
+
+  // Provides a visible keyboard-focus box around the complete checkbox control.
+  &[type='checkbox']:focus-within::part(control) {
+    border-color: map.get($theme, border-color-focus);
     box-shadow: map.get($theme, control-focus-shadow);
   }
 
@@ -360,4 +366,9 @@ $themeCarbon: map.merge(
     min-width: calc(#{map.get($theme, token-input-min-width)} * #{$input-scale});
     flex: 1 1 calc(#{map.get($theme, token-input-min-width)} * #{$input-scale});
   }
+}
+
+// Provides the public default-style mixin used by themes and the package entrypoint.
+@mixin default-style($theme: $themeBootstrap) {
+  @include theme($theme);
 }

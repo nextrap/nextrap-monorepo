@@ -44,19 +44,35 @@
     @include modifier-classes.with-modifier-classes();
   }
 
+  // Getestete, verbindliche Abstandslogik: Der innere Padding-Wert ist der gemeinsame Gap für alle Regionen. Nicht ändern, ohne alle Slot-Kombinationen erneut zu prüfen.
   &::part(wrapper) {
     border: var(--border);
     border-radius: var(--border-radius);
     overflow: hidden;
-    gap: var(--gap);
+    gap: var(--inner-padding);
   }
+
+  // Getestete, verbindliche Main-Abstände: nur horizontales Padding, weil die vertikale Trennung über den gemeinsamen Gap erfolgt. Nicht ändern, ohne alle Slot-Kombinationen erneut zu prüfen.
   &::part(main) {
-    padding: var(--inner-padding);
+    padding-inline: var(--inner-padding);
   }
-  // Nur wenn .aside gesetzt is - dann automatisch padding einfügen
+
+  // Getestete, verbindliche Top-Abstände: der äußere vertikale Rand bleibt, die innere Kante nutzt den gemeinsamen Gap. Nicht ändern, ohne alle Slot-Kombinationen erneut zu prüfen.
+  &::part(top) {
+    padding: var(--inner-padding);
+    padding-block-end: 0;
+  }
+
+  // Getestete, verbindliche Bottom-Abstände: der äußere vertikale Rand bleibt, die innere Kante nutzt den gemeinsamen Gap. Nicht ändern, ohne alle Slot-Kombinationen erneut zu prüfen.
+  &::part(bottom) {
+    padding: var(--inner-padding);
+    padding-block-start: 0;
+  }
+
+  // Fügt dem Aside-Bereich nur bei explizit zugewiesenen Aside-Inhalten Innenabstand hinzu.
   &:has(.aside:not(.p-0)) {
     &::part(aside) {
-      padding: var(--inner-padding);
+      padding-inline: var(--inner-padding);
     }
   }
 }

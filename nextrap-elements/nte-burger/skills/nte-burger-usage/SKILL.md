@@ -1,6 +1,6 @@
 ---
 name: nte-burger-usage
-description: "Use @nextrap/nte-burger: <nte-burger> (element) and NteBurger (programmatic API) as an accessible responsive disclosure button for navigation with open, disabled, text, aria-controls, data-group-name, and toggle()."
+description: "Use @nextrap/nte-burger: <nte-burger> (element) and NteBurger (programmatic API) as an accessible responsive disclosure button for navigation with open, static-state, disabled, text, aria-controls, data-group-name, and toggle()."
 ---
 
 # NTE Burger usage

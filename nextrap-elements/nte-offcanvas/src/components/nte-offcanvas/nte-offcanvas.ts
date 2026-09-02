@@ -145,7 +145,8 @@ export class NteOffcanvas extends nextrap_element({
     super.disconnectedCallback();
   }
 
-  public override async firstUpdated(): Promise<void> {
+  public override async firstUpdated(changedProperties: Map<string, unknown>): Promise<void> {
+    super.firstUpdated(changedProperties);
     this.presentation = this.readPresentation();
     this.requestUpdate();
 

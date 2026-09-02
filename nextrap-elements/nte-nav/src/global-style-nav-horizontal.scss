@@ -1,5 +1,0 @@
-@use './index' as nav;
-
-nte-nav.style-default.nav-horizontal {
-  @include nav.default-style();
-}

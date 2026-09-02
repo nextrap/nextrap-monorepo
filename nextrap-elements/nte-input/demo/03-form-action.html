@@ -1,72 +1,66 @@
 <main class="nte-input-demo">
   <h1>nte-input</h1>
-  <p>Komplettes Formular mit <code>TJForm</code> und zentralem <code>nte-feedback</code>.</p>
+  <p>Komplettes Kontaktformular mit <code>TJForm</code> und zentralem <code>nte-feedback</code>.</p>
 
   <section>
     <h2>TJForm Beispiel</h2>
     <p>
-      Beim Absenden wertet <code>TJForm</code> alle benannten <code>nte-input</code>-Elemente als Objekt aus. Während
-      der simulierten Verarbeitung zeigt <code>nte-feedback</code> die Meldung <em>Bitte warten …</em> und anschließend
-      den erfolgreichen Abschluss an.
+      Beim Absenden wertet <code>TJForm</code> alle benannten <code>nte-input</code>-Elemente als Objekt aus.
     </p>
 
     <nte-feedback></nte-feedback>
 
     <tj-form preset="nte-input-form-demo">
-      <nte-input
-        class="style-default hoverlabel"
-        label="Name"
-        type="text"
-        name="name"
-        value="Max Mustermann"
-      ></nte-input>
+      <ntl-2col class="style-default">
+        <div slot="main">
+          <nte-input
+            class="style-default hoverlabel"
+            label="Name"
+            type="text"
+            name="name"
+            required
+          ></nte-input>
 
-      <nte-input
-        class="style-default hoverlabel"
-        label="Kommentar"
-        type="textarea"
-        name="message"
-        value="Hallo aus dem Demo"
-      ></nte-input>
+          <nte-input
+            class="style-default hoverlabel"
+            label="Telefon"
+            type="text"
+            inputmode="tel"
+            name="telefon"
+          ></nte-input>
 
-      <nte-input class="style-default hoverlabel" label="Status" type="select" name="status" value="inprogress">
-        <options>
-          <option value="wrust">Wartet auf Rückmeldung</option>
-          <option value="inprogress">In Bearbeitung</option>
-        </options>
-      </nte-input>
+          <nte-input
+            class="style-default hoverlabel"
+            label="E-Mail"
+            type="email"
+            name="email"
+            required
+          ></nte-input>
+        </div>
 
-      <nte-input
-        class="style-default"
-        label="Kategorien"
-        type="select-radio"
-        name="categories"
-        multiple
-        value='["news"]'
-        data-options='[{"value":"news","label":"News"},{"value":"events","label":"Events"}]'
-      ></nte-input>
+        <div slot="aside">
+          <nte-input
+            class="style-default hoverlabel"
+            label="Nachricht"
+            type="textarea"
+            name="nachricht"
+            required
+          ></nte-input>
 
-      <nte-input
-        class="style-default hoverlabel"
-        label="Schlagworte"
-        type="token-input"
-        name="tags"
-        value='["news","docs"]'
-        data-options='[{"value":"news","label":"News"},{"value":"events","label":"Events"},{"value":"docs","label":"Dokumentation"}]'
-      ></nte-input>
+          <nte-input
+            class="style-default"
+            label="Ich akzeptiere die Datenschutzerklärung"
+            type="checkbox"
+            name="datenschutz"
+            value="accepted"
+            required
+          ></nte-input>
 
-      <nte-input
-        class="style-default"
-        label="AGB akzeptieren"
-        type="checkbox"
-        name="accepted"
-        value="yes"
-        checked
-      ></nte-input>
-
-      <div class="demo-actions">
-        <button class="btn btn-primary" type="submit">Absenden</button>
-      </div>
+          <div class="demo-actions">
+            <button class="btn btn-primary" type="submit">Absenden</button>
+          </div>
+        </div>
+      </ntl-2col>
     </tj-form>
   </section>
 </main>

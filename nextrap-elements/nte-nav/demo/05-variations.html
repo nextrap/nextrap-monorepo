@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="de">
+  <body>
+    <main class="demo-variations">
+      <h1>Navigationsvariationen</h1>
+
+      <div class="variations-grid">
+        <section class="demo-frame variation variation-small">
+          <h2>Kleine horizontale Navigation</h2>
+          <nte-nav aria-label="Servicenavigation">
+            <nte-nav-item href="/hilfe">Hilfe</nte-nav-item>
+            <nte-nav-item href="/kontakt">Kontakt</nte-nav-item>
+            <nte-nav-item submenu-popover>
+              Sprache
+              <nte-nav-item href="/de" current="page">Deutsch</nte-nav-item>
+              <nte-nav-item href="/en">English</nte-nav-item>
+            </nte-nav-item>
+          </nte-nav>
+        </section>
+
+        <section class="demo-frame variation variation-main">
+          <h2>Große Hauptnavigation</h2>
+          <nte-nav aria-label="Hauptnavigation">
+            <nte-nav-item href="/" current="page">Start</nte-nav-item>
+            <nte-nav-item submenu-popover>
+              Produkte
+              <nte-nav-item href="/produkte/cloud">Cloud</nte-nav-item>
+              <nte-nav-item href="/produkte/commerce">Commerce</nte-nav-item>
+            </nte-nav-item>
+            <nte-nav-item href="/unternehmen" submenu-popover>
+              Unternehmen
+              <nte-nav-item href="/unternehmen/ueber-uns">Über uns</nte-nav-item>
+              <nte-nav-item href="/unternehmen/karriere">Karriere</nte-nav-item>
+            </nte-nav-item>
+            <nte-nav-item href="/kontakt">Kontakt</nte-nav-item>
+          </nte-nav>
+        </section>
+
+        <section class="demo-frame variation variation-subnav">
+          <h2>Kompakte vertikale Pfadnavigation</h2>
+          <nte-nav aria-label="Dokumentationsnavigation">
+            <nte-nav-item href="/docs">Einführung</nte-nav-item>
+            <nte-nav-item>
+              Komponenten
+              <nte-nav-item href="/docs/button">Button</nte-nav-item>
+              <nte-nav-item>
+                Navigation
+                <nte-nav-item href="/docs/nav/api">API</nte-nav-item>
+                <nte-nav-item href="/docs/nav/styling">Styling</nte-nav-item>
+              </nte-nav-item>
+            </nte-nav-item>
+            <nte-nav-item href="/docs/migration">Migration</nte-nav-item>
+          </nte-nav>
+        </section>
+
+        <section class="demo-frame variation variation-bordered">
+          <h2>Bordered-Navigation</h2>
+          <nte-nav class="style-bordered" aria-label="Bordered-Navigation">
+            <nte-nav-item href="/start">Start</nte-nav-item>
+            <nte-nav-item submenu-popover>
+              Site
+              <nte-nav-item href="/site/ueber-uns">Über uns</nte-nav-item>
+              <nte-nav-item href="/site/kontakt">Kontakt</nte-nav-item>
+            </nte-nav-item>
+            <nte-nav-item href="/kontakt">Kontakt</nte-nav-item>
+          </nte-nav>
+        </section>
+
+        <section class="demo-frame variation variation-responsive">
+          <h2>Responsive mittelgroße Navigation</h2>
+          <nte-nav aria-label="Bereichsnavigation">
+            <nte-nav-item href="/dashboard" style="--order: 10">Dashboard</nte-nav-item>
+            <nte-nav-item style="--order: 20">
+              Berichte
+              <nte-nav-item href="/berichte/monat">Monatsbericht</nte-nav-item>
+              <nte-nav-item href="/berichte/jahr">Jahresbericht</nte-nav-item>
+            </nte-nav-item>
+            <nte-nav-item href="/einstellungen" style="--order: 30">Einstellungen</nte-nav-item>
+          </nte-nav>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

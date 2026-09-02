@@ -1,0 +1,50 @@
+// Configures the navigation for full-width inline disclosure submenus.
+@mixin vertical($gap: 0.2rem) {
+  --nte-nav-flow: column;
+  --nte-nav-align: stretch;
+  --nte-nav-justify: flex-start;
+  --nte-nav-gap: #{$gap};
+  --nte-nav-submenu-position: static;
+  --nte-nav-submenu-inset-block-start: auto;
+  --nte-nav-submenu-inset-inline-start: auto;
+  --nte-nav-nested-submenu-inset-block-start: auto;
+  --nte-nav-nested-submenu-inset-inline-start: auto;
+  --nte-nav-submenu-enter-transform: translateY(-0.35rem);
+  --nte-nav-nested-submenu-enter-transform: translateY(-0.35rem);
+  --nte-nav-submenu-inline-size: 100%;
+  --nte-nav-submenu-min-inline-size: 0;
+  --nte-nav-submenu-max-block-size: none;
+  inline-size: 100%;
+
+  // Removes dropdown decoration while keeping vertical submenus transparent.
+  & nte-nav-item::part(submenu) {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  // Indents only nested item content while preserving full-width hover surfaces.
+  & nte-nav-item nte-nav-item::part(link),
+  & nte-nav-item nte-nav-item::part(text),
+  & nte-nav-item nte-nav-item::part(disclosure) {
+    padding-inline-start: calc(1rem + var(--nte-nav-inline-submenu-indent, 1rem));
+  }
+
+  // Stacks vertical items and disclosure submenus in normal document flow.
+  &::part(list) {
+    flex-flow: column nowrap;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: #{$gap};
+  }
+
+  // Makes every top-level vertical item fill the navigation width.
+  & > nte-nav-item,
+  & > nte-nav-item::part(item),
+  & > nte-nav-item::part(link),
+  & > nte-nav-item::part(text),
+  & > nte-nav-item::part(disclosure) {
+    inline-size: 100%;
+  }
+}

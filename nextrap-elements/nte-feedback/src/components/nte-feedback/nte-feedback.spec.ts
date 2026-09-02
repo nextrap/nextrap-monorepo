@@ -35,7 +35,6 @@ describe('nte-feedback', () => {
     expect(dialog?.getAttribute('aria-busy')).toBe('true');
     expect(el.shadowRoot?.querySelector('#headline')?.textContent).toBe('Datei-Upload');
     expect(el.shadowRoot?.querySelector('#message')?.textContent).toBe('Dateien werden verarbeitet...');
-    expect(el.shadowRoot?.querySelector('[part="progress-percent"]')?.textContent).toBe('45%');
     expect(el.shadowRoot?.querySelector('#assistive-context')?.textContent).toContain('Wartedialog');
   });
 

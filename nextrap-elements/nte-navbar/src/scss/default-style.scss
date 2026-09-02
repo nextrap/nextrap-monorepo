@@ -1,3 +1,35 @@
+@use 'with-btn-compat' as btn-compat;
+
+// Provides the reusable public default styling mixin for navbar state and utility classes.
+@mixin default-style() {
+  // Keeps legacy button controls from touching the navbar line edges.
+  @include btn-compat.with-btn-compat();
+  // Animates optional navbar-line size and position changes from public light-DOM state classes.
+  nte-navbar-line.with-collapse-on-scroll,
+nte-navbar-line.hide-on-scroll {
+  transition:
+    block-size 0.2s ease-in-out,
+    max-block-size 0.2s ease-in-out,
+    opacity 0.2s ease-in-out,
+    transform 0.2s ease-in-out;
+}
+
+// Slides and collapses the opt-in top line when the parent navbar is scrolled.
+nte-navbar.is-scrolled > nte-navbar-line.with-collapse-on-scroll {
+  block-size: 0;
+  max-block-size: 0;
+  opacity: 0;
+  transform: translateY(-100%);
+}
+
+// Hides compatibility lines after the configured navbar threshold.
+nte-navbar.is-below-threshold > nte-navbar-line.hide-on-scroll {
+  block-size: 0;
+  max-block-size: 0;
+  opacity: 0;
+}
+
+// Aligns the brand logo and its dimensions within a navbar line.
 .brand-logo {
   --nt-navbar-brand-logo-aspect-ratio: 3 / 1;
 
@@ -30,6 +62,17 @@
   margin-inline-start: auto;
 }
 
+// Reserves an inner focus frame so the indicator remains visible at clipped container edges.
+.brand-logo {
+  box-sizing: border-box;
+  border: 2px solid transparent;
+}
+
+.brand-logo:focus-visible {
+  border-color: var(--nt-primary, #0d6efd);
+  outline: 0;
+}
+
 .brand-logo > img {
   display: block;
   inline-size: 100%;
@@ -52,8 +95,9 @@
 }
 
 .navbar-control {
-  position: relative;
-  z-index: var(--nt-navbar-control-z-index, 2);
-  min-inline-size: 0;
-  pointer-events: auto;
+    position: relative;
+    z-index: var(--nt-navbar-control-z-index, 2);
+    min-inline-size: 0;
+    pointer-events: auto;
+  }
 }

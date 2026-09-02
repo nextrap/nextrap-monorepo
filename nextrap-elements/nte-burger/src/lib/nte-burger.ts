@@ -16,6 +16,10 @@ export class NteBurger extends nextrap_element({
   @property({ type: Boolean, attribute: 'open', reflect: true })
   accessor open = false;
 
+  // Keeps the burger visually closed while allowing its click event to control an external disclosure.
+  @property({ type: Boolean, attribute: 'static-state', reflect: true })
+  accessor staticState = false;
+
   @property({ type: String, reflect: true })
   accessor text = 'Menu';
 
@@ -55,7 +59,7 @@ export class NteBurger extends nextrap_element({
   }
 
   toggle(): void {
-    if (!this.disabled) this.open = !this.open;
+    if (!this.disabled && !this.staticState) this.open = !this.open;
   }
 
   @Listen(EVENT_NAME_GROUP_OPEN_CLOSE, { target: 'document' })

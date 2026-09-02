@@ -1,0 +1,56 @@
+@mixin size-small() {
+  & nte-nav-item::part(link),
+  & nte-nav-item::part(text),
+  & nte-nav-item::part(disclosure) {
+    padding-block: 0.45rem;
+    padding-inline: 0.7rem;
+    font-size: 0.875rem;
+  }
+
+  & nte-nav-item::part(toggle) {
+    min-inline-size: 2rem;
+  }
+
+  & nte-nav-item::part(icon) {
+    inline-size: 1rem;
+    block-size: 1rem;
+  }
+}
+
+@mixin size-medium() {
+  & nte-nav-item::part(link),
+  & nte-nav-item::part(text),
+  & nte-nav-item::part(disclosure) {
+    padding-block: 0.7rem;
+    padding-inline: 1rem;
+    font-size: 1rem;
+  }
+
+  & nte-nav-item::part(toggle) {
+    min-inline-size: 2.5rem;
+  }
+
+  & nte-nav-item::part(icon) {
+    inline-size: 1.1rem;
+    block-size: 1.1rem;
+  }
+}
+
+@mixin size-large() {
+  & nte-nav-item::part(link),
+  & nte-nav-item::part(text),
+  & nte-nav-item::part(disclosure) {
+    padding-block: 0.9rem;
+    padding-inline: 1.25rem;
+    font-size: 1.125rem;
+  }
+
+  & nte-nav-item::part(toggle) {
+    min-inline-size: 3rem;
+  }
+
+  & nte-nav-item::part(icon) {
+    inline-size: 1.2rem;
+    block-size: 1.2rem;
+  }
+}

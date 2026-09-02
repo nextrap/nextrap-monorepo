@@ -1,65 +1,130 @@
-@use 'with-horizontal' as horizontal;
-@use 'with-vertical' as vertical;
-
+// Defines the shared visual baseline for navigation links, states, and parts.
 @mixin default-style(
-  $text-color: var(--nt-text),
-  $hover-color: var(--nt-primary),
-  $hover-text-color: var(--nt-text-on-primary),
-  $submenu-bg: var(--nt-light),
-  $submenu-text-color: var(--nt-text),
-  $submenu-hover-color: var(--nt-primary),
-  $submenu-hover-text-color: var(--nt-text-on-primary),
-  $item-padding: 0.65em 1.1em,
-  $transition: 0.2s ease-in-out,
-  $justify-content: center,
-  $burger-padding: 15px,
-  $menu-text-gap: 10px,
-  $default-alpha: 0.7
+  $background: transparent,
+  $color: var(--nt-text, #212529),
+  $hover-background: color-mix(in srgb, var(--nt-primary, #0d6efd) 10%, transparent),
+  $hover-color: var(--nt-primary, #0d6efd),
+  $current-background: var(--nt-primary, #0d6efd),
+  $current-color: var(--nt-text-on-primary, #fff),
+  $submenu-background: var(--nt-body, #fff),
+  $submenu-border: 1px solid color-mix(in srgb, var(--nt-text, #212529) 14%, transparent),
+  $submenu-radius: calc(var(--nt-border-radius, 0.375rem) * 2),
+  $submenu-shadow: 0 1rem 2.5rem color-mix(in srgb, var(--nt-dark, #212529) 18%, transparent),
+  $focus-color: var(--nt-primary, #0d6efd)
 ) {
-  --text-color: #{$text-color};
-  --hover-color: #{$hover-color};
-  --hover-text-color: #{$hover-text-color};
-  --submenu-bg: #{$submenu-bg};
-  --submenu-text-color: #{$submenu-text-color};
-  --submenu-hover-color: #{$submenu-hover-color};
-  --submenu-hover-text-color: #{$submenu-hover-text-color};
-  --item-padding: #{$item-padding};
-  --transition: #{$transition};
-  --justify-content: #{$justify-content};
-  --padding: 0;
-  --default-alpha: #{$default-alpha};
+  --nte-nav-item-gap: 0.5rem;
+  --nte-nav-submenu-gap: 0.35rem;
+  --nte-nav-transition-duration: 160ms;
 
-  &::part(burger-wrapper) {
-    padding: #{$burger-padding};
+  // Applies the baseline navigation foreground and background colors.
+  &::part(nav) {
+    color: #{$color};
+    background: #{$background};
   }
 
-  &::part(burger-default) {
+  // Keeps navigation items aligned with the height of their navigation line.
+  & nte-nav-item::part(item) {
+    min-block-size: 100%;
+  }
+
+  // Normalizes sizing and typography across all interactive navigation parts.
+  & nte-nav-item::part(link),
+  & nte-nav-item::part(text),
+  & nte-nav-item::part(disclosure),
+  & nte-nav-item::part(toggle) {
+    box-sizing: border-box;
+    color: inherit;
+    font: inherit;
+  }
+
+  // Provides the default spacing and typography for visible item content.
+  & nte-nav-item::part(link),
+  & nte-nav-item::part(text),
+  & nte-nav-item::part(disclosure) {
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    font-size: 1rem;
+    line-height: 1.25;
+    text-decoration: none;
+  }
+
+  // Makes disclosure controls compact, clipped, and keyboard-usable.
+  & nte-nav-item::part(disclosure),
+  & nte-nav-item::part(toggle) {
+    appearance: none;
+    min-inline-size: 0;
+    overflow: hidden;
+    border: 0;
+    background: transparent;
     cursor: pointer;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
-  &::part(menutext) {
-    padding-right: #{$menu-text-gap};
-    color: rgb(from var(--text-color) r g b / var(--default-alpha));
-    transition: color var(--transition);
+  // Reserves a predictable hit area for submenu toggle controls.
+  & nte-nav-item::part(toggle) {
+    align-self: stretch;
+    min-inline-size: 2.5rem;
+    padding: 0.5rem;
   }
 
-  &::part(burger) {
-    --color: rgb(from var(--text-color) r g b / var(--default-alpha));
+  // Animates color and background changes for interactive states.
+  & nte-nav-item::part(link),
+  & nte-nav-item::part(text),
+  & nte-nav-item::part(disclosure),
+  & nte-nav-item::part(toggle) {
+    transition:
+      color 160ms ease,
+      background-color 160ms ease;
   }
 
-  &:hover::part(menutext) {
-    color: var(--text-color);
+  // Highlights navigation parts while the pointer is over them.
+  & nte-nav-item::part(link):hover,
+  & nte-nav-item::part(text):hover,
+  & nte-nav-item::part(disclosure):hover,
+  & nte-nav-item::part(toggle):hover {
+    color: #{$hover-color};
+    background-color: #{$hover-background};
   }
 
-  &:hover::part(burger) {
-    --color: var(--text-color);
+  // Provides a visible keyboard focus indicator for actionable parts.
+  & nte-nav-item::part(link):focus-visible,
+  & nte-nav-item::part(disclosure):focus-visible,
+  & nte-nav-item::part(toggle):focus-visible {
+    position: relative;
+    z-index: 1;
+    outline: 2px solid #{$focus-color};
+    outline-offset: -2px;
   }
 
-  &.nav-horizontal {
-    @include horizontal.with-horizontal();
+  // Marks the current page with the active navigation colors.
+  & nte-nav-item[current='page']::part(link),
+  & nte-nav-item[current='true']::part(link) {
+    color: #{$current-color};
+    background: #{$current-background};
   }
 
-  &.nav-vertical {
-    @include vertical.with-vertical();
+  // Aligns optional navigation icons with the item label.
+  & nte-nav-item::part(icon) {
+    display: inline-grid;
+    inline-size: 1.1em;
+    block-size: 1.1em;
+    place-items: center;
+  }
+
+  // Pushes submenu indicators to the trailing edge of the item.
+  & nte-nav-item::part(indicator) {
+    flex: 0 0 auto;
+    margin-inline-start: auto;
+  }
+
+  // Reduces interactive transitions when the user requests less motion.
+  @media (prefers-reduced-motion: reduce) {
+    & nte-nav-item::part(link),
+    & nte-nav-item::part(text),
+    & nte-nav-item::part(disclosure),
+    & nte-nav-item::part(toggle) {
+      transition-duration: 0.01ms;
+    }
   }
 }

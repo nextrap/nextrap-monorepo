@@ -41,9 +41,12 @@ export class NteFeedback extends nextrap_element(features) {
   private _infoConfirmCallback?: () => void;
   private _autoCloseTimer: number | null = null;
   private _shakeTimer: number | null = null;
+  private _mockMessageTimer: number | null = null;
+  private _mockAnimationFrame: number | null = null;
 
   override disconnectedCallback() {
     this._clearAutoCloseTimer();
+    this._clearMockProgress();
     this._clearShakeTimer();
     this._syncDialogState(false);
     super.disconnectedCallback();
@@ -70,11 +73,6 @@ export class NteFeedback extends nextrap_element(features) {
             <div id="content" part="content">
               <div id="message" part="message">${this._message}</div>
               ${this._referenceLabel ? html`<div id="reference" part="reference">${this._referenceLabel}</div>` : nothing}
-              ${this._status === 'progress' ? html`
-                <div id="progress" part="progress">
-                  <div id="progress-meta" part="progress-meta"><span part="progress-label">Fortschritt</span><span part="progress-percent">${Math.round(this._progress)}%</span></div>
-                  <div id="progress-bar" part="progress-bar"><div id="progress-value" part="progress-value" style="width: ${this._progress}%"></div></div>
-                </div>` : nothing}
               ${this._status === 'fail' && this._details ? html`<details id="details" part="details"><summary id="details-summary" part="details-summary">Details anzeigen</summary><pre id="details-content" part="details-content">${this._details}</pre></details>` : nothing}
               ${this._status === 'confirm' && this._confirmHtml ? html`<div id="html" part="html">${unsafeHTML(this._confirmHtml)}</div>` : nothing}
             </div>
@@ -86,6 +84,7 @@ export class NteFeedback extends nextrap_element(features) {
   close() {
     const wasOpen = this._open;
     this._clearAutoCloseTimer();
+    this._clearMockProgress();
     this._clearShakeTimer();
     this._dialogElement?.classList.remove('shake');
     this._syncDialogState(false);
@@ -122,6 +121,7 @@ export class NteFeedback extends nextrap_element(features) {
     this._openState('progress', detail.title, detail.message, detail.reference, detail.cancelable ?? !!detail.onAbort);
     this._abortCallback = detail.onAbort;
     this._progress = this._clampProgress(detail.progress);
+    this._startMockProgress(detail);
     if (this._progress >= 100) this._scheduleAutoClose(true);
   }
 
@@ -263,6 +263,48 @@ export class NteFeedback extends nextrap_element(features) {
     if (this._autoCloseTimer === null) return;
     window.clearTimeout(this._autoCloseTimer);
     this._autoCloseTimer = null;
+  }
+
+  // Animates mock progress without reaching 100% before the real operation reports completion.
+  private _startMockProgress(detail: NextrapProgressDetail) {
+    this._clearMockProgress();
+    if (!detail.mock) return;
+
+    const duration = Math.max(1, detail.mockDuration ?? 10_000);
+    const messages = detail.mockMessages?.filter(Boolean) ?? [];
+    const startedAt = performance.now();
+    const target = Math.min(95, this._progress || 0);
+
+    if (messages.length > 0) {
+      this._message = messages[0];
+      const step = duration / messages.length;
+      this._mockMessageTimer = window.setInterval(() => {
+        const index = Math.min(messages.length - 1, Math.floor((performance.now() - startedAt) / step));
+        this._message = messages[index];
+      }, Math.max(50, step));
+    }
+
+    const animate = (now: number) => {
+      const elapsed = Math.min(duration, now - startedAt);
+      const ratio = elapsed / duration;
+      const eased = 1 - Math.pow(1 - ratio, 2);
+      this._progress = target + (95 - target) * eased;
+      if (elapsed < duration && this._status === 'progress') {
+        this._mockAnimationFrame = window.requestAnimationFrame(animate);
+      }
+    };
+    this._mockAnimationFrame = window.requestAnimationFrame(animate);
+  }
+
+  private _clearMockProgress() {
+    if (this._mockMessageTimer !== null) {
+      window.clearInterval(this._mockMessageTimer);
+      this._mockMessageTimer = null;
+    }
+    if (this._mockAnimationFrame !== null) {
+      window.cancelAnimationFrame(this._mockAnimationFrame);
+      this._mockAnimationFrame = null;
+    }
   }
 
   private _clearShakeTimer() {
