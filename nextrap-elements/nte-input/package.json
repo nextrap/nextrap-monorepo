@@ -10,12 +10,15 @@
     "dependencies": {
         "@nextrap/nt-core": "^2.0.0",
         "@nextrap/style-reset": "^2.0.0",
+        "@trunkjs/browser-utils": "^1.0.51",
         "lit": "^3.3.1"
     },
     "devDependencies": {
+        "@nextrap/nte-feedback": "^2.0.0",
         "@nextrap/style-base": "^2.0.0",
         "@nextrap/style-typography": "^2.0.0",
-        "@nextrap/style-utils": "^2.0.0"
+        "@nextrap/style-utils": "^2.0.0",
+        "@trunkjs/form": "^1.0.0"
     },
     "type": "module",
     "types": "./index.d.ts",

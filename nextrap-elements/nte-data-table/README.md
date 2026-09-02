@@ -10,3 +10,5 @@ table.addEventListener('nte-data-table-view-state-change', ({ detail }) => save(
 ```
 
 Complex values are properties, not attributes. `TableViewState` can be read with `getViewState()` and restored with `setViewState()`.
+
+Leading columns support `pinned: true` defaults. Supplying `viewState.pinnedColumns` overrides them with stable column IDs; an empty array explicitly disables pinning. A column `footer` can be static content or a callback over the rendered rows and creates a fixed native footer row.

@@ -19,36 +19,33 @@ function updateSpinner() {
 export default defineDemo({
   title: 'Interactive states',
   description: 'Switch states and update determinate progress at runtime',
-  controls: [
-    {
-      label: 'State',
-      element: 'select',
-      selectOptions: [...states],
-      init(element) {
-        (element as HTMLSelectElement).value = state;
+  controls: {
+    items: [
+      {
+        id: 'state',
+        type: 'select',
+        label: 'State',
+        options: [...states],
+        value: () => state,
+        onChange(event) {
+          state = String(event.value);
+          updateSpinner();
+        },
       },
-      onchange(event) {
-        state = (event.currentTarget as HTMLSelectElement).value;
-        updateSpinner();
+      {
+        id: 'progress',
+        type: 'input',
+        label: 'Progress',
+        info: 'Used when the progress state is selected.',
+        value: () => percentage,
+        attributes: { type: 'range', min: '0', max: '100' },
+        onInput(event) {
+          percentage = String(event.value);
+          updateSpinner();
+        },
       },
-    },
-    {
-      label: 'Progress',
-      info: 'Used when the progress state is selected.',
-      element: 'input',
-      init(element) {
-        const input = element as HTMLInputElement;
-        input.type = 'range';
-        input.min = '0';
-        input.max = '100';
-        input.value = percentage;
-      },
-      oninput(event) {
-        percentage = (event.currentTarget as HTMLInputElement).value;
-        updateSpinner();
-      },
-    },
-  ],
+    ],
+  },
   render(root) {
     root.innerHTML = `
       <section class="nte-spinner-interactive-demo">

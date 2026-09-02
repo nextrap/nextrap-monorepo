@@ -1,0 +1,39 @@
+@use '@nextrap/style-base/default' as baseDefault;
+@use '@nextrap/style-button/default' as buttonDefault;
+@use '@nextrap/style-typography/default' as typographyDefault;
+@use '../index' as nteInput;
+
+.nte-input-demo {
+  font-family: var(--nt-font-family-base, system-ui, sans-serif);
+  color: var(--nt-dark, #212529);
+  background: var(--nt-body-bg, #f8f9fa);
+}
+
+.nte-input-demo main {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+.nte-input-demo section + section {
+  margin-top: 1.5rem;
+}
+
+.nte-input-demo form,
+.nte-input-demo tj-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.nte-input-demo nte-input.style-default {
+  @include nteInput.theme(nteInput.$themeBootstrap);
+}
+
+.nte-input-demo nte-input.hoverlabel {
+  @include nteInput.floating-labels();
+}
+
+.nte-input-demo .demo-actions {
+  display: flex;
+  justify-content: flex-start;
+}

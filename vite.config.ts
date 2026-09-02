@@ -8,7 +8,7 @@ const demoInclude = [
   'nextrap-layout/*/demo/**/*.demo.ts',
 ];
 
-export default defineConfig(() => ({
+export default defineConfig({
   base: './',
   root: __dirname,
   publicDir: false,
@@ -33,4 +33,4 @@ export default defineConfig(() => ({
     outDir: './docs',
     emptyOutDir: false,
   },
-}));
+});

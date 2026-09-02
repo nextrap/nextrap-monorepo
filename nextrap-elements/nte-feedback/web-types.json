@@ -1,0 +1,13 @@
+{
+  "name": "nte-feedback",
+  "version": "2.0.0",
+  "contributions": {
+    "html": {
+      "elements": [{
+        "name": "nte-feedback",
+        "description": "Global application feedback coordinator for loading, progress, status messages, alerts and confirmation questions."
+      }]
+    },
+    "css": { "classes": [], "scopes": [] }
+  }
+}

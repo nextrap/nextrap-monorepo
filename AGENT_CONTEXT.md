@@ -2,7 +2,7 @@
 
 Created automatically by a coding agent as an onboarding context cache. Keep this file concise and factual; update it when stable repository facts change.
 
-Last verified: 2026-08-29
+Last verified: 2026-09-01
 
 ## Repository
 
@@ -19,7 +19,6 @@ Last verified: 2026-08-29
 - Read root `AGENTS.md` for repository-local rules.
 - Use skills first, especially:
   - `project-context-cache`
-  - `basic-coding`
   - `nextrap-lib-programming`
   - `ai-usage-info` when editing `.ai-usage-info.md`
   - `nx-monorepo-setup` for Nx/workspace/package structure changes
@@ -76,7 +75,7 @@ Root `package.json` workspaces:
 | `@nextrap/nte-multiselect` | `nextrap-elements/nte-multiselect` | Multiselect-Element |
 | `@nextrap/nte-nav` | `nextrap-elements/nte-nav` | Navigation-Element, ältere Variante |
 | `@nextrap/nte-nav-2` | `nextrap-elements/nte-nav-2` | Navigation-Element, aktuelle/alternative Variante |
-| `@nextrap/nte-notifier` | `nextrap-elements/nte-notifier` | Notification-/Toast-Element; Element-Referenz |
+| `@nextrap/nte-feedback` | `nextrap-elements/nte-feedback` | Zentraler Feedback-Kanal für Loading, Progress, Statusmeldungen, Alerts und Rückfragen |
 | `@nextrap/nte-offcanvas` | `nextrap-elements/nte-offcanvas` | Offcanvas-/Drawer-Element |
 | `@nextrap/nte-parallax-bg` | `nextrap-elements/nte-parallax-bg` | Parallax-Background-Element |
 | `@nextrap/nte-progress` | `nextrap-elements/nte-progress` | Progress-/Fortschrittsanzeige |
@@ -127,7 +126,7 @@ npx vite build
 | `.github/workflows/publish-tags.yml` | tag/package publishing workflow |
 | `.github/workflows/static.yml` | GitHub Pages static demo deploy |
 
-`static.yml` installs with `npm ci` and builds the root Vite demo viewer.
+`static.yml` installs with npm in CI and builds the root Vite demo viewer. When GitHub Actions must pick up updated local workspace sources, run `npm update` instead of only `npm ci`; `npm ci` stays locked to `package-lock.json` and does not refresh those workspace-linked sources.
 
 ## Frequently used files
 
@@ -145,13 +144,13 @@ npx vite build
 | `docs/nextrap-elements-concept.md` | dual-usage concept |
 | `nextrap-base/nt-nx-generators/src/generators/` | generator templates for packages |
 | `nextrap-layout/ntl-2col/` | layout reference component |
-| `nextrap-elements/nte-notifier/` | element reference component |
+| `nextrap-elements/nte-feedback/` | central feedback element and public `Feedback` API |
 
 ## Dependency notes
 
 - External npm dependencies are managed centrally in root `package.json`.
 - Intra-repo imports should use `@nextrap/<package-name>` aliases, not relative cross-package paths.
-- `workspaces/trunkjs-monorepo/packages/*` is included in root npm workspaces when present; run `npm install` to refresh workspace links after changes.
+- `workspaces/trunkjs-monorepo/packages/*` is included in root npm workspaces when present; run `npm install` to refresh workspace links after local changes. In GitHub Actions, use `npm update` when updated local workspace sources must be resolved, because `npm ci` alone installs the locked state.
 - `skills-npm` is configured with `agents: ['universal']` and allowed orgs `@leuffen/*`, `@nextrap/*`, `@trunkjs/*`; generated links live directly in `.agents/skills`. The root `prepare` script runs `skills-npm --source node_modules --yes --force` so workspace-linked package skills are included without install-time prompts or stale cache cleanup.
 - Determine package versions with targeted commands (`npm pkg get`, `npm ls`, `jq`, short Node scripts). Do not read full lockfiles unless a full lockfile analysis is explicitly requested.
 

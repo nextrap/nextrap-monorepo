@@ -29,7 +29,7 @@ aside nte-nav-2.style-default {
 
 ```html
 <nte-nav-2 aria-label="Hauptnavigation">
-  <nte-nav-item>
+  <nte-nav-item submenu-popover>
     <svg slot="icon" aria-hidden="true"><!-- … --></svg>
     Leistungen
 
@@ -63,6 +63,7 @@ Parents with children are non-linking disclosures by default: omit `href` and th
 | `download` | string | Forwarded to the internal anchor. |
 | `current` | ARIA current token | Forwarded as `aria-current` to the internal anchor. |
 | `order` | number | Sets the host's Flexbox `order`. Use sparingly because visual order does not change DOM or keyboard order. |
+| `submenu-popover` | boolean attribute | Manually renders nested items as declarative Popover markup for horizontal navigation. Omit for vertical inline `details`/`summary`. |
 | `submenu-label` | string | Prefix for the submenu disclosure's accessible name. Default: `Untermenü`. |
 
 ## Slots
@@ -93,11 +94,11 @@ Parents with children are non-linking disclosures by default: omit `href` and th
 
 This is ordinary website navigation, not an application menu. It intentionally uses a `nav` landmark, list/listitem semantics, links and disclosure buttons rather than ARIA `menu`/`menubar` roles.
 
-Submenus use native `details` / `summary`, so Enter, Space and pointer activation work without a component-authored open-state handler. The Shadow DOM CSS consumes orientation variables from the mixins:
+Submenus are selected manually per item. The Shadow DOM CSS consumes orientation variables from the mixins; the markup variant is controlled by the public `submenu-popover` attribute:
 
-- `horizontal()` positions the expanded submenu as a popup below the item; nested levels open beside it.
-- `vertical()` keeps the expanded submenu in normal document flow, animates it downwards and indents it as part of the navigation path.
-- `responsive()` switches between those presentations at its breakpoint without requiring different author markup.
+- For `horizontal()`, add `submenu-popover` to parent items with nested items. The component renders a native `<button popovertarget="submenu">` and `<div id="submenu" popover="auto">`, so the browser handles the Popover declaratively.
+- For `vertical()`, omit `submenu-popover`. The component renders native `details` / `summary`; the submenu stays in normal document flow, animates downwards and is indented as part of the navigation path.
+- `responsive()` changes only CSS orientation. With nested submenus and no JavaScript, the integration must manually add/remove `submenu-popover` or choose one authored variant.
 
 The optional icon slot is observed by `nextrap_element({ slotVisibility: true })`. Empty icon slots receive `.slot-empty` and are hidden entirely by the component CSS.
 
@@ -108,4 +109,4 @@ The optional icon slot is observed by `nextrap_element({ slotVisibility: true })
 - Optional arrow-key navigation beyond normal Tab/Shift+Tab behavior
 - Public imperative `showSubmenu()` / `hideSubmenu()` methods
 - SPA-router adapters and prefetch behavior
-- Optional light-dismiss behavior for horizontal disclosures, if a concrete integration requires it
+- Public imperative `showSubmenu()` / `hideSubmenu()` methods beyond the internal Popover synchronization

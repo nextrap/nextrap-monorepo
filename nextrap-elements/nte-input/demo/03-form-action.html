@@ -1,71 +1,72 @@
-<!doctype html>
-<html lang="de">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>nte-input FormData Submit Demo</title>
-  </head>
-  <body>
-    <main>
-      <h1>nte-input</h1>
-      <p>Formularauswertung per <code>FormData</code>.</p>
+<main class="nte-input-demo">
+  <h1>nte-input</h1>
+  <p>Komplettes Formular mit <code>TJForm</code> und zentralem <code>nte-feedback</code>.</p>
 
-      <section>
-        <h2>FormData Beispiel</h2>
-        <p>
-          Mit <code>Absenden</code> wird das Formular per <code>FormData</code> ausgewertet. Die Ausgabe erfolgt als
-          Array von Key-Value-Objekten – auch für Mehrfachwerte wie <code>select-radio</code> und
-          <code>token-input</code>.
-        </p>
+  <section>
+    <h2>TJForm Beispiel</h2>
+    <p>
+      Beim Absenden wertet <code>TJForm</code> alle benannten <code>nte-input</code>-Elemente als Objekt aus. Während
+      der simulierten Verarbeitung zeigt <code>nte-feedback</code> die Meldung <em>Bitte warten …</em> und anschließend
+      den erfolgreichen Abschluss an.
+    </p>
 
-        <form id="formdata-demo-form">
-          <nte-input class="hoverlabel" label="Name" type="text" name="name" value="Max Mustermann"></nte-input>
+    <nte-feedback></nte-feedback>
 
-          <nte-input
-            class="hoverlabel"
-            label="Kommentar"
-            type="textarea"
-            name="message"
-            value="Hallo aus dem Demo"
-          ></nte-input>
+    <tj-form preset="nte-input-form-demo">
+      <nte-input
+        class="style-default hoverlabel"
+        label="Name"
+        type="text"
+        name="name"
+        value="Max Mustermann"
+      ></nte-input>
 
-          <nte-input class="hoverlabel" label="Status" type="select" name="status" value="inprogress">
-            <options>
-              <option value="wrust">Wartet auf Rückmeldung</option>
-              <option value="inprogress">In Bearbeitung</option>
-            </options>
-          </nte-input>
+      <nte-input
+        class="style-default hoverlabel"
+        label="Kommentar"
+        type="textarea"
+        name="message"
+        value="Hallo aus dem Demo"
+      ></nte-input>
 
-          <nte-input
-            label="Kategorien"
-            type="select-radio"
-            name="categories"
-            multiple
-            value='["news"]'
-            data-options='[{"value":"news","label":"News"},{"value":"events","label":"Events"}]'
-          ></nte-input>
+      <nte-input class="style-default hoverlabel" label="Status" type="select" name="status" value="inprogress">
+        <options>
+          <option value="wrust">Wartet auf Rückmeldung</option>
+          <option value="inprogress">In Bearbeitung</option>
+        </options>
+      </nte-input>
 
-          <nte-input
-            class="hoverlabel"
-            label="Schlagworte"
-            type="token-input"
-            name="tags"
-            value='["news","docs"]'
-            data-options='[{"value":"news","label":"News"},{"value":"events","label":"Events"},{"value":"docs","label":"Dokumentation"}]'
-          ></nte-input>
+      <nte-input
+        class="style-default"
+        label="Kategorien"
+        type="select-radio"
+        name="categories"
+        multiple
+        value='["news"]'
+        data-options='[{"value":"news","label":"News"},{"value":"events","label":"Events"}]'
+      ></nte-input>
 
-          <nte-input label="AGB akzeptieren" type="checkbox" name="accepted" value="yes" checked></nte-input>
+      <nte-input
+        class="style-default hoverlabel"
+        label="Schlagworte"
+        type="token-input"
+        name="tags"
+        value='["news","docs"]'
+        data-options='[{"value":"news","label":"News"},{"value":"events","label":"Events"},{"value":"docs","label":"Dokumentation"}]'
+      ></nte-input>
 
-          <div class="demo-actions">
-            <button id="formdata-submit" type="submit">Absenden</button>
-          </div>
-        </form>
+      <nte-input
+        class="style-default"
+        label="AGB akzeptieren"
+        type="checkbox"
+        name="accepted"
+        value="yes"
+        checked
+      ></nte-input>
 
-        <label class="json-label" for="formdata-json">FormData Ausgabe</label>
-        <textarea id="formdata-json" class="demo-json" spellcheck="false" readonly></textarea>
-      </section>
-    </main>
-
-    <script src="/demo/main.js" type="module"></script>
-  </body>
-</html>
+      <div class="demo-actions">
+        <button class="btn btn-primary" type="submit">Absenden</button>
+      </div>
+    </tj-form>
+  </section>
+</main>

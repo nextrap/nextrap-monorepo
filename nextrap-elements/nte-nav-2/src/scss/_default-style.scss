@@ -14,7 +14,7 @@
   --nte-nav-item-gap: 0.5rem;
   --nte-nav-submenu-gap: 0.35rem;
   --nte-nav-transition-duration: 160ms;
-  --nte-nav-submenu-default-padding: 0.35rem;
+  --nte-nav-submenu-default-padding: 0;
   --nte-nav-submenu-default-background: #{$submenu-background};
   --nte-nav-submenu-default-border: #{$submenu-border};
   --nte-nav-submenu-default-radius: #{$submenu-radius};
@@ -66,6 +66,14 @@
     padding: 0.5rem;
   }
 
+  & nte-nav-item::part(link),
+  & nte-nav-item::part(disclosure),
+  & nte-nav-item::part(toggle) {
+    transition:
+      color var(--nte-nav-transition-duration) ease,
+      background-color var(--nte-nav-transition-duration) ease;
+  }
+
   & nte-nav-item::part(link):hover,
   & nte-nav-item::part(disclosure):hover,
   & nte-nav-item::part(toggle):hover {
@@ -102,5 +110,13 @@
     border: var(--nte-nav-submenu-border);
     border-radius: var(--nte-nav-submenu-radius);
     box-shadow: var(--nte-nav-submenu-shadow);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    & nte-nav-item::part(link),
+    & nte-nav-item::part(disclosure),
+    & nte-nav-item::part(toggle) {
+      transition-duration: 0.01ms;
+    }
   }
 }

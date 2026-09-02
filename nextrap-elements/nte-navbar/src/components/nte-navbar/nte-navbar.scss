@@ -1,0 +1,41 @@
+@use '@nextrap/style-reset' as *;
+
+:host {
+  --container-width: var(--nt-container-width, 100%);
+  --nte-navbar-position: static;
+  --nte-navbar-scroll-threshold: 1;
+  --nte-navbar-top: 0;
+  --nte-navbar-background: Canvas;
+  --nte-navbar-background-at-top: var(--nte-navbar-background);
+  --nte-navbar-shadow: 0 0.25rem 1rem color-mix(in srgb, currentColor 12%, transparent);
+  --nte-navbar-overlay-offset: 0px;
+  display: block;
+  position: var(--nte-navbar-position);
+  inset-block-start: var(--nte-navbar-top);
+  z-index: var(--nt-navbar-z-index, 10);
+  width: 100%;
+  background: var(--nte-navbar-background);
+  transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+:host(.with-shadow) {
+  box-shadow: var(--nte-navbar-shadow);
+}
+
+:host(.with-shadow-on-scroll.is-below-threshold) {
+  box-shadow: var(--nte-navbar-shadow);
+}
+
+:host(.with-transparent-at-top:not(.is-below-threshold)) {
+  background: transparent;
+  box-shadow: none;
+}
+
+:host(.with-overlay-at-top:not(.is-below-threshold)) {
+  margin-block-end: calc(-1 * var(--nte-navbar-overlay-offset));
+}
+
+#navbar {
+  display: block;
+  width: 100%;
+}

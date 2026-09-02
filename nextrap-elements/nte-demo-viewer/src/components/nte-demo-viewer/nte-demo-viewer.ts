@@ -603,43 +603,49 @@ export class NteDemoViewerElement extends nextrap_element() {
       <div class="welcome">
         <header class="welcome-header">
           <h1 class="welcome-title">${this.welcomeTitle}</h1>
-          ${this.readme
-            ? html`
-                <button class="readme-link" @click="${this._showReadme}">
-                  <span class="readme-icon">📄</span>
-                  README.md
-                </button>
-              `
-            : nothing}
+          ${
+            this.readme
+              ? html`
+                  <button class="readme-link" @click="${this._showReadme}">
+                    <span class="readme-icon">📄</span>
+                    README.md
+                  </button>
+                `
+              : nothing
+          }
         </header>
 
         <div class="demo-cards">
           ${this._demos.map((demo, i) => {
             return html`
               <button
-                class="demo-card ${demo.valid === false ? 'demo-card-invalid' : ''} ${demo.valid === undefined
-                  ? 'demo-card-pending'
-                  : ''}"
+                class="demo-card ${demo.valid === false ? 'demo-card-invalid' : ''} ${
+                  demo.valid === undefined ? 'demo-card-pending' : ''
+                }"
                 @click="${() => this._selectDemo(i)}"
                 ?disabled="${demo.valid !== true}"
-                title="${demo.valid === false
-                  ? demo.error || 'File not found'
-                  : demo.valid === undefined
-                    ? 'Validating...'
-                    : demo.title}"
+                title="${
+                  demo.valid === false
+                    ? demo.error || 'File not found'
+                    : demo.valid === undefined
+                      ? 'Validating...'
+                      : demo.title
+                }"
               >
                 <span class="demo-card-index"
                   >${demo.valid === false ? '⚠' : demo.valid === undefined ? '⏳' : i + 1}</span
                 >
                 <div class="demo-card-content">
                   <h3 class="demo-card-title">${demo.title}</h3>
-                  ${demo.valid === false
-                    ? html`<p class="demo-card-error">⚠ ${demo.error || 'File not found'}</p>`
-                    : demo.valid === undefined
-                      ? html`<p class="demo-card-description" style="color: #999;">Validating...</p>`
-                      : demo.description
-                        ? html`<p class="demo-card-description">${demo.description}</p>`
-                        : nothing}
+                  ${
+                    demo.valid === false
+                      ? html`<p class="demo-card-error">⚠ ${demo.error || 'File not found'}</p>`
+                      : demo.valid === undefined
+                        ? html`<p class="demo-card-description" style="color: #999;">Validating...</p>`
+                        : demo.description
+                          ? html`<p class="demo-card-description">${demo.description}</p>`
+                          : nothing
+                  }
                 </div>
                 ${demo.valid === true ? html`<span class="demo-card-arrow">→</span>` : nothing}
               </button>
@@ -660,27 +666,35 @@ export class NteDemoViewerElement extends nextrap_element() {
           <slot name="demo-content"></slot>
         </div>
 
-        ${this._codeViewOpen && !(currentDemo && this._isHtmlFile(currentDemo.src))
-          ? html`
-              <div class="code-panel">
-                <div class="code-header">
-                  <span class="code-title"
-                    >${this._isHtmlFile(currentDemo.src) ? 'HTML Source' : 'Markdown Source'}</span
-                  >
-                  <span class="code-file">${currentDemo.src}</span>
-                  <button class="code-close" @click="${this._toggleCodeView}" title="Close editor">✕</button>
+        ${
+          this._codeViewOpen && !(currentDemo && this._isHtmlFile(currentDemo.src))
+            ? html`
+                <div class="code-panel">
+                  <div class="code-header">
+                    <span class="code-title"
+                      >${this._isHtmlFile(currentDemo.src) ? 'HTML Source' : 'Markdown Source'}</span
+                    >
+                    <span class="code-file">${currentDemo.src}</span>
+                    <button
+                      class="code-close"
+                      type="button"
+                      aria-label="Close editor"
+                      title="Close editor"
+                      @click="${this._toggleCodeView}"
+                    ></button>
+                  </div>
+                  <textarea
+                    class="code-editor"
+                    .value="${this._markdownContent}"
+                    @input="${this._handleCodeInput}"
+                    spellcheck="false"
+                    placeholder="${this._isLoadingCode ? 'Loading...' : 'Markdown content'}"
+                    ?disabled="${this._isLoadingCode}"
+                  ></textarea>
                 </div>
-                <textarea
-                  class="code-editor"
-                  .value="${this._markdownContent}"
-                  @input="${this._handleCodeInput}"
-                  spellcheck="false"
-                  placeholder="${this._isLoadingCode ? 'Loading...' : 'Markdown content'}"
-                  ?disabled="${this._isLoadingCode}"
-                ></textarea>
-              </div>
-            `
-          : nothing}
+              `
+            : nothing
+        }
       </div>
     `;
   }
@@ -701,107 +715,123 @@ export class NteDemoViewerElement extends nextrap_element() {
 
     return html`
       <!-- Floating Action Button - only show when not on welcome screen -->
-      ${isInDemoOrReadme
-        ? html`
-            <button
-              class="fab"
-              @click="${this._toggleMenu}"
-              title="Menu"
-              aria-label="Open menu"
-              aria-expanded="${this._menuOpen}"
-            >
-              📋 ${this._demos.length > 0 ? html`<span class="badge">${this._demos.length}</span>` : ''}
-            </button>
-          `
-        : nothing}
+      ${
+        isInDemoOrReadme
+          ? html`
+              <button
+                class="fab"
+                @click="${this._toggleMenu}"
+                title="Menu"
+                aria-label="Open menu"
+                aria-expanded="${this._menuOpen}"
+              >
+                📋 ${this._demos.length > 0 ? html`<span class="badge">${this._demos.length}</span>` : ''}
+              </button>
+            `
+          : nothing
+      }
 
       <!-- Menu -->
-      ${this._menuOpen
-        ? html`
-            <div class="backdrop" @click="${this._toggleMenu}"></div>
-            <nav class="menu" role="menu" aria-label="Demo selection">
-              <div class="menu-header">
-                <span>Navigation</span>
-                ${this._viewState === 'demo' && !(currentDemo && this._isHtmlFile(currentDemo.src))
+      ${
+        this._menuOpen
+          ? html`
+              <div class="backdrop" @click="${this._toggleMenu}"></div>
+              <nav class="menu" role="menu" aria-label="Demo selection">
+                <div class="menu-header">
+                  <span>Navigation</span>
+                  ${
+                  this._viewState === 'demo' && !(currentDemo && this._isHtmlFile(currentDemo.src))
+                    ? html`
+                        <button
+                          class="code-toggle ${this._codeViewOpen ? 'active' : ''}"
+                          @click="${this._toggleCodeView}"
+                          title="${this._codeViewOpen ? 'Hide Code' : 'Show Code'}"
+                        >
+                          &lt;/&gt;
+                        </button>
+                      `
+                    : nothing
+                }
+                </div>
+
+                <!-- Home Button -->
+                <button class="menu-item menu-home" role="menuitem" @click="${this._goHome}">
+                  <div class="menu-item-content">
+                    <span class="menu-item-title">🏠 Home</span>
+                  </div>
+                </button>
+
+                <!-- README Link -->
+                ${
+                this.readme
                   ? html`
                       <button
-                        class="code-toggle ${this._codeViewOpen ? 'active' : ''}"
-                        @click="${this._toggleCodeView}"
-                        title="${this._codeViewOpen ? 'Hide Code' : 'Show Code'}"
+                        class="menu-item ${this._viewState === 'readme' ? 'active' : ''}"
+                        role="menuitem"
+                        @click="${this._showReadme}"
                       >
-                        &lt;/&gt;
+                        <div class="menu-item-content">
+                          <span class="menu-item-title">📄 README.md</span>
+                        </div>
+                        ${
+                        this._viewState === 'readme'
+                          ? html`<span class="menu-item-check" aria-hidden="true">✓</span>`
+                          : ''
+                      }
                       </button>
                     `
-                  : nothing}
-              </div>
+                  : nothing
+              }
 
-              <!-- Home Button -->
-              <button class="menu-item menu-home" role="menuitem" @click="${this._goHome}">
-                <div class="menu-item-content">
-                  <span class="menu-item-title">🏠 Home</span>
-                </div>
-              </button>
+                <div class="menu-divider"></div>
 
-              <!-- README Link -->
-              ${this.readme
-                ? html`
-                    <button
-                      class="menu-item ${this._viewState === 'readme' ? 'active' : ''}"
-                      role="menuitem"
-                      @click="${this._showReadme}"
-                    >
-                      <div class="menu-item-content">
-                        <span class="menu-item-title">📄 README.md</span>
-                      </div>
-                      ${this._viewState === 'readme'
-                        ? html`<span class="menu-item-check" aria-hidden="true">✓</span>`
-                        : ''}
-                    </button>
-                  `
-                : nothing}
-
-              <div class="menu-divider"></div>
-
-              <!-- Demo List -->
-              ${this._demos.map(
+                <!-- Demo List -->
+                ${this._demos.map(
                 (demo, i) => html`
                   <button
-                    class="menu-item ${i === this._currentIndex && this._viewState === 'demo'
-                      ? 'active'
-                      : ''} ${demo.valid === false ? 'menu-item-invalid' : ''} ${demo.valid === undefined
-                      ? 'menu-item-pending'
-                      : ''}"
+                    class="menu-item ${
+                      i === this._currentIndex && this._viewState === 'demo' ? 'active' : ''
+                    } ${demo.valid === false ? 'menu-item-invalid' : ''} ${
+                      demo.valid === undefined ? 'menu-item-pending' : ''
+                    }"
                     role="menuitem"
                     aria-current="${i === this._currentIndex && this._viewState === 'demo' ? 'true' : 'false'}"
                     @click="${() => this._selectDemo(i)}"
                     ?disabled="${demo.valid !== true}"
-                    title="${demo.valid === false
-                      ? demo.error || 'File not found'
-                      : demo.valid === undefined
-                        ? 'Validating...'
-                        : ''}"
+                    title="${
+                      demo.valid === false
+                        ? demo.error || 'File not found'
+                        : demo.valid === undefined
+                          ? 'Validating...'
+                          : ''
+                    }"
                   >
                     <div class="menu-item-content">
                       <span class="menu-item-title"
                         >${demo.valid === false ? '⚠ ' : demo.valid === undefined ? '⏳ ' : ''}${demo.title}</span
                       >
-                      ${demo.valid === false
-                        ? html`<span class="menu-item-error">${demo.error || 'File not found'}</span>`
-                        : demo.valid === undefined
-                          ? html`<span class="menu-item-description" style="color: #999;">Validating...</span>`
-                          : demo.description
-                            ? html`<span class="menu-item-description">${demo.description}</span>`
-                            : nothing}
+                      ${
+                        demo.valid === false
+                          ? html`<span class="menu-item-error">${demo.error || 'File not found'}</span>`
+                          : demo.valid === undefined
+                            ? html`<span class="menu-item-description" style="color: #999;">Validating...</span>`
+                            : demo.description
+                              ? html`<span class="menu-item-description">${demo.description}</span>`
+                              : nothing
+                      }
                     </div>
-                    ${i === this._currentIndex && this._viewState === 'demo'
-                      ? html`<span class="menu-item-check" aria-hidden="true">✓</span>`
-                      : ''}
+                    ${
+                      i === this._currentIndex && this._viewState === 'demo'
+                        ? html`<span class="menu-item-check" aria-hidden="true">✓</span>`
+                        : ''
+                    }
                   </button>
                 `,
               )}
-            </nav>
-          `
-        : ''}
+              </nav>
+            `
+          : ''
+      }
     `;
   }
 

@@ -1,0 +1,82 @@
+@use '@nextrap/style-reset' as *;
+
+:host {
+  --height: auto;
+  --height-scrolled: var(--height);
+  --background: transparent;
+  --text-color: var(--nt-text);
+  display: block;
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  block-size: var(--height);
+  max-block-size: var(--height);
+  min-block-size: 0;
+  overflow: clip;
+  color: var(--text-color);
+  background: var(--background);
+  transition: block-size 0.2s ease-in-out, max-block-size 0.2s ease-in-out, opacity 0.2s ease-in-out;
+}
+
+:host(.with-shrink-on-scroll) {
+  max-block-size: var(--height);
+}
+
+:host-context(nte-navbar.is-below-threshold):host(.with-shrink-on-scroll) {
+  block-size: var(--height-scrolled);
+  max-block-size: var(--height-scrolled);
+}
+
+:host(.with-collapse-on-scroll),
+:host(.hide-on-scroll) {
+  max-block-size: var(--height);
+}
+
+:host-context(nte-navbar.is-below-threshold):host(.with-collapse-on-scroll),
+:host-context(nte-navbar.is-below-threshold):host(.hide-on-scroll) {
+  block-size: 0;
+  max-block-size: 0;
+  opacity: 0;
+}
+
+#line {
+  width: 100%;
+  block-size: 100%;
+  min-block-size: 0;
+}
+
+#container {
+  width: min(100%, var(--container-width, var(--nt-container-width, 100%)));
+  block-size: 100%;
+  min-block-size: 0;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+}
+
+.region {
+  min-width: 0;
+  min-block-size: 0;
+  block-size: 100%;
+  display: flex;
+  align-items: center;
+}
+
+#start {
+  justify-content: flex-start;
+}
+
+#center {
+  justify-content: center;
+  justify-self: center;
+}
+
+#end {
+  justify-content: flex-end;
+}
+
+.region:has(> slot.slot-empty) {
+  visibility: hidden;
+  pointer-events: none;
+}

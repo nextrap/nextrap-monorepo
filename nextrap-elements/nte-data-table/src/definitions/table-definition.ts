@@ -1,4 +1,5 @@
 export type TableCellContent = Node | string | number | boolean | null | undefined;
+export type TableFooterContent<T extends object> = TableCellContent | ((rows: readonly T[]) => TableCellContent);
 export type TableSortDirection = 'ascending' | 'descending';
 
 export interface TableSortState {
@@ -12,11 +13,13 @@ export interface TableColumnDefinition<T extends object> {
   field?: keyof T;
   value?: (row: T) => unknown;
   render?: (value: unknown, row: T) => TableCellContent;
+  footer?: TableFooterContent<T>;
   preset?: string;
   defaultWidth?: number;
   minWidth?: number;
   maxWidth?: number;
   hidden?: boolean;
+  pinned?: boolean;
   resizable?: boolean;
   reorderable?: boolean;
   sortable?: boolean;

@@ -139,6 +139,22 @@ An external theme package should own only its overrides and use `style-base` as 
 
 Do not duplicate Nextrap's derived variables in the external repository unless the design explicitly needs an exception. This keeps new derived tokens and fixes in `style-base` available automatically.
 
+## Icon tokens
+
+Monochrome shared icons are provided as SVG mask values. Components apply their own foreground color through `background-color`:
+
+```css
+.icon-close {
+  background-color: currentColor;
+  mask: var(--nt-icon-close) center / contain no-repeat;
+}
+```
+
+Available icons:
+
+- `--nt-icon-close`
+- `--nt-icon-close-sidebar` — base orientation points toward the left edge and can be rotated for other placements.
+
 ## Spacing model
 
 Spacing has two layers:

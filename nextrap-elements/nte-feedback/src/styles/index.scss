@@ -1,0 +1,5 @@
+@use '../../mixins' as feedback;
+
+nte-feedback.style-default {
+  @include feedback.feedback-default;
+}

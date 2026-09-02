@@ -1,11 +1,28 @@
+import { Feedback } from '@nextrap/nte-feedback';
+import { sleep } from '@trunkjs/browser-utils';
 import { defineDemo } from '@trunkjs/demo-viewer';
+import { registerFormPreset } from '@trunkjs/form';
+import '../index';
 import demoHtml from './03-form-action.html?raw';
-import { renderDocumentDemo, setupFormDataDemo } from './main';
+import style from './03-form-action.scss?inline';
 
 export default defineDemo({
-  title: 'FormData Submit',
-  description: 'Native Formularauswertung über new FormData(form)',
+  title: 'TJForm Submit',
+  description: 'Komplettes nte-input Formular mit TJForm und nte-feedback.',
+  css: ['default', style],
   render(root) {
-    renderDocumentDemo(root, demoHtml, setupFormDataDemo);
+    registerFormPreset('nte-input-form-demo', {
+      async onSubmit({ value }) {
+        await Feedback.loading({ message: 'Die Nachricht wird sicher verarbeitet …' });
+
+        await sleep(2000);
+
+        await Feedback.success({ message: 'Gesicherte Übertragung erfolgreich.' });
+
+        return value;
+      },
+    });
+
+    root.innerHTML = demoHtml;
   },
 });

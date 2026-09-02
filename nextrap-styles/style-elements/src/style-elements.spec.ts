@@ -16,8 +16,26 @@ describe('styleElements', () => {
 
     expect(result.css).toContain('.prose');
     expect(result.css).toContain('.prose.prose-xl');
+    expect(result.css).toContain('.close-btn');
+    expect(result.css).toContain('var(--nt-icon-close)');
     expect(result.css).toContain('var(--nt-text');
     expect(result.css).not.toContain('--nt-surface-');
+  });
+
+  it('exposes the close button as an individually composable mixin', () => {
+    const result = compileString(
+      `
+        @use 'index' as e;
+
+        .dialog-close {
+          @include e.close-btn();
+        }
+      `,
+      { loadPaths: [packageRoot] },
+    );
+
+    expect(result.css).toContain('.dialog-close::before');
+    expect(result.css).toContain('var(--nt-icon-close)');
   });
 
   it('materializes elements inside the caller scope', () => {

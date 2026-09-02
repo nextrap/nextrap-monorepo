@@ -5,13 +5,13 @@ Diese Datei bleibt absichtlich kurz. Detaillierter Repository-Kontext steht in `
 ## Start
 
 1. `AGENT_CONTEXT.md` lesen und als Onboarding-Cache verwenden.
-2. Passende Skills laden, insbesondere `basic-coding`, `nextrap-lib-programming` und bei interner Arbeit an komplexen Strukturen `architecture-decisions`.
+2. Passende Skills laden, insbesondere `nextrap-lib-programming` und bei interner Arbeit an komplexen Strukturen `architecture-decisions`.
 3. Weitere Skills unter `.agents/skills/` konsultieren; diese können teilweise als Git-Submodule eingebunden sein.
 4. Bei package-spezifischer Arbeit lokale Skills unter `<package>/.agents/skills/` bevorzugen.
 5. Bei interner Projektentwicklung vor strukturellen Änderungen nach anwendbaren `ARCHITECTURE.md`-Dateien in Repository- und Package-Wurzeln suchen und deren Verträge unverändert einhalten. Diese Dateien sind keine Library-Usage-Dokumentation.
 
 ## Repo-spezifische Kurzregeln
 
-- Nicht aus `workspaces/`, `node_modules/`, `dist/` oder generierten Artefakten implementieren.
+- Nicht aus `node_modules/`, `dist/` oder generierten Artefakten implementieren. Änderungen unter `workspaces/` sind nur nach ausdrücklicher Zustimmung des Users erlaubt; vorher den geplanten Umfang kurz erläutern.
 - Cross-Package-Imports immer über `@nextrap/<package-name>`.
 - Externe npm-Abhängigkeiten nur im Root-`package.json` pflegen.
