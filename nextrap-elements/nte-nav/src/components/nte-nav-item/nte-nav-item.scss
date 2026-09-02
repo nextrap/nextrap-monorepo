@@ -1,4 +1,6 @@
-@use '@nextrap/style-reset';
+@use '@nextrap/style-reset' as reset;
+
+@include reset.reset();
 
 slot.slot-empty {
   display: none !important;

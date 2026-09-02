@@ -1,0 +1,4 @@
+// @nextrap/style-reset/default — ready-to-use reset CSS output.
+@use "./index" as reset;
+
+@include reset.reset();

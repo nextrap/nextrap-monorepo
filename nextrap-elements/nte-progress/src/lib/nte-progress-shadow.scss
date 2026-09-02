@@ -1,5 +1,7 @@
 // Styling for the progress bar component
-@use '@nextrap/style-reset';
+@use '@nextrap/style-reset' as reset;
+
+@include reset.reset();
 
 :host {
   /* Colors */

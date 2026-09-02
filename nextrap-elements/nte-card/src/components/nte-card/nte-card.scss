@@ -9,6 +9,7 @@
 }
 
 #wrapper {
+  box-sizing: border-box;
   border: var(--border);
   background-color: var(--background-color);
   display: flex;

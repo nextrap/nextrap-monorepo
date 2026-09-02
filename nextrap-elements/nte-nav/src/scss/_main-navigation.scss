@@ -1,7 +1,20 @@
 @use 'default-style' as style;
 @use 'sizes' as size;
 
-@mixin main-navigation() {
-  @include style.default-style();
+// Provides the default navigation composition while allowing themes to define its color contract.
+@mixin main-navigation(
+  $color: var(--nt-text, #212529),
+  $hover-color: var(--nt-primary, #0d6efd),
+  $current-background: var(--nt-primary, #0d6efd),
+  $current-color: var(--nt-text-on-primary, #fff),
+  $focus-color: var(--nt-primary, #0d6efd)
+) {
+  @include style.default-style(
+    $color: $color,
+    $hover-color: $hover-color,
+    $current-background: $current-background,
+    $current-color: $current-color,
+    $focus-color: $focus-color
+  );
   @include size.size-large();
 }

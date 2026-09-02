@@ -1,5 +1,7 @@
 // This is styling for the stepper container shadow DOM
-@use '@nextrap/style-reset';
+@use '@nextrap/style-reset' as reset;
+
+@include reset.reset();
 @use '@nextrap/style-elements' as elements;
 :host {
   position: relative;

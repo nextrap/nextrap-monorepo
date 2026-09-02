@@ -1,1 +1,2 @@
-@use './src/reset' as *;
+// @nextrap/style-reset — mixin-only Sass API.
+@forward './src/reset';

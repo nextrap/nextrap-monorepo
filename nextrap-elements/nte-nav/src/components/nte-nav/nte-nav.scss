@@ -1,4 +1,6 @@
-@use '@nextrap/style-reset';
+@use '@nextrap/style-reset' as reset;
+
+@include reset.reset();
 
 // Provides the navigation host with its default flow tokens and intrinsic width.
 :host {

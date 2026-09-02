@@ -1,4 +1,6 @@
-@use '@nextrap/style-reset' as *;
+@use '@nextrap/style-reset' as reset;
+
+@include reset.reset();
 
 :host {
   --height: auto;

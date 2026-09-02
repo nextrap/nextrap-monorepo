@@ -33,8 +33,14 @@
 
   ::slotted(*) {
     box-sizing: border-box;
-    flex: 0 1 calc(100% / 12 * var(--cols, 12) - var(--gutter-x, 0px));
-    width: calc(100% / 12 * var(--cols, 12) - var(--gutter-x, 0px));
+    flex: 0 1 calc(
+      100% / 12 * var(--cols, 12)
+      - var(--gutter-x, 0px) * (12 - var(--cols, 12)) / 12
+    );
+    width: calc(
+      100% / 12 * var(--cols, 12)
+      - var(--gutter-x, 0px) * (12 - var(--cols, 12)) / 12
+    );
     min-width: var(--min-width);
     max-width: var(--max-width);
     overflow: hidden;
@@ -54,8 +60,6 @@
 
 :host([mode='desktop']) {
   #main {
-    margin-left: calc(var(--gutter-x, 0px) / -2);
-    width: calc(100% + var(--gutter-x, 0px));
     flex-direction: row;
   }
 }
