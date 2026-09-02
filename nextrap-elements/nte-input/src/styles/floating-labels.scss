@@ -1,62 +1,37 @@
+// Positioniert das Hover-Label unabhängig von der aktiven Theme-Geometrie, ohne die Control-Abstände oder Eingabehöhe zu verändern.
 @mixin floating-labels(
-  $minHeight: 3.75rem,
   $labelScale: 0.82,
   $restOffsetY: 50%,
-  $labelRestColor: var(--nt-dark-subtle, var(--nt-dark, #212529)),
-  $labelActiveColor: var(--nt-dark, #212529),
-  $labelBackground: var(--nt-body, #fff),
+  $labelPaddingX: 0.25rem,
+  $labelPaddingY: 0.125rem,
   $labelRadius: 999px,
   $labelShadow: none
 ) {
   $spacing-scale: var(--nte-input-scale-spacing, 1);
-  $innerMinHeight: $minHeight * 0.4;
-  $inlinePadding: $minHeight * 0.2;
-  $topPadding: $minHeight * 0.3333333333;
-  $bottomPadding: $minHeight * 0.12;
-  $labelPaddingX: $minHeight * 0.0666666667;
-  $labelPaddingY: $minHeight * 0.0333333333;
-  $activeTop: $minHeight * 0.08;
+  $controlPaddingX: var(--nte-input-control-padding-x, 0.75rem);
 
-  &:not([type='checkbox'])::part(control) {
-    min-height: calc(#{$minHeight} * #{$spacing-scale});
-  }
-
+  // Stellt ausschließlich den Positionierungskontext bereit; die Theme-Geometrie von control-inner bleibt unangetastet.
   &:not([type='checkbox'])::part(control-inner) {
     position: relative;
-    min-height: 100%;
-    padding-top: calc(#{$topPadding} * #{$spacing-scale});
-    padding-bottom: calc(#{$bottomPadding} * #{$spacing-scale});
-    align-items: flex-end;
   }
 
-  &:not([type='checkbox'])::part(input),
-  &:not([type='checkbox'])::part(select),
-  &:not([type='checkbox'])::part(textarea),
-  &:not([type='checkbox'])::part(token-input) {
-    min-height: calc(#{$innerMinHeight} * #{$spacing-scale});
-  }
-
-  &:not([type='checkbox'])::part(token-list) {
-    min-height: calc(#{$innerMinHeight} * #{$spacing-scale});
-  }
-
+  // Legt das ruhende Label über den unveränderten Eingabebereich und übernimmt Hintergrund/Farben aus dem aktiven Theme.
   &::part(label) {
     position: absolute;
     inset-block-start: $restOffsetY;
-    inset-inline-start: calc((#{$inlinePadding} - #{$labelPaddingX}) * #{$spacing-scale});
+    inset-inline-start: calc(#{$controlPaddingX} - (#{$labelPaddingX} * #{$spacing-scale}));
     z-index: 1;
-    max-inline-size: calc(100% - ((#{$inlinePadding} * 2) - (#{$labelPaddingX} * 2)) * #{$spacing-scale});
+    max-inline-size: calc(100% - (#{$controlPaddingX} * 2) + (#{$labelPaddingX} * 2 * #{$spacing-scale}));
     padding: calc(#{$labelPaddingY} * #{$spacing-scale}) calc(#{$labelPaddingX} * #{$spacing-scale});
     overflow: hidden;
-    color: $labelRestColor;
     text-overflow: ellipsis;
     white-space: nowrap;
     line-height: 1.2;
-    background: var(--nte-input-hoverlabel-background, #{$labelBackground});
+    background: var(--nte-input-hoverlabel-background, var(--nt-body, #fff));
     border-radius: $labelRadius;
     box-shadow: $labelShadow;
     transform: translateY(-50%);
-    transform-origin: left top;
+    transform-origin: left center;
     transition:
       inset-block-start 0.18s ease,
       transform 0.18s ease,
@@ -64,13 +39,13 @@
       opacity 0.18s ease;
   }
 
+  // Hebt das Label auf die obere Control-Kante, ohne den eigentlichen Input vertikal zu verschieben.
   &:focus-within::part(label),
   &[has-value]::part(label),
   &[placeholder]::part(label),
   &[has-placeholder]::part(label),
   &[hoverlabel-active]::part(label) {
-    inset-block-start: calc(#{$activeTop} * #{$spacing-scale});
-    color: $labelActiveColor;
-    transform: scale($labelScale);
+    inset-block-start: 0;
+    transform: translateY(-50%) scale($labelScale);
   }
 }
