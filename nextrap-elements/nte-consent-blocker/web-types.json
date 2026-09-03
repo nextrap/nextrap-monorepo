@@ -25,11 +25,11 @@
                     "slots": [
                         {
                             "name": "background",
-                            "description": "Preview/background layer. Direct .background children and direct p:has(img:not(.keep)) children are assigned automatically."
+                            "description": "Preview/background layer. Direct content has priority, followed by --default-background-selector and the built-in Maps preview."
                         },
                         {
                             "name": "pre-consent",
-                            "description": "Visible consent UI before approval. Use an element with data-action=\"consent\" to trigger loading."
+                            "description": "Visible consent UI before approval. Direct content has priority, followed by --default-pre-consent-selector and the built-in prompt."
                         },
                         {
                             "name": "consented-content",
@@ -79,13 +79,13 @@
                     "value": { "type": "string" }
                 },
                 {
-                    "name": "--default-bg",
-                    "description": "HTML string used as default background content when no background slot content is provided.",
+                    "name": "--default-background-selector",
+                    "description": "CSS selector for a reusable document template copied into the background slot when no direct background content is provided.",
                     "value": { "type": "string" }
                 },
                 {
-                    "name": "--default-pre-consent",
-                    "description": "HTML string used as default pre-consent content when no pre-consent slot content is provided.",
+                    "name": "--default-pre-consent-selector",
+                    "description": "CSS selector for a reusable document template copied into the pre-consent slot when no direct pre-consent content is provided.",
                     "value": { "type": "string" }
                 },
                 {

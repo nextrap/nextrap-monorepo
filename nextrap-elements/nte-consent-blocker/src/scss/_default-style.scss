@@ -1,28 +1,36 @@
+// Materialisiert die optionale globale Selector-Konfiguration und die visuelle Standardvariante am aufrufenden Element.
 @mixin default-style(
-  $default-bg:
-    '<img loading="lazy" alt="Karte noch nicht geladen" src="https://cdn.leuffen.de/hyperpage-components/v1.0/google-maps/maps-preview.jpg">',
-  $default-pre-consent:
-    '<button class="btn btn-primary" data-action="consent">Daten von Google laden</button><p>Mit Klick auf Daten von Google laden, wird die Karte geladen und die Datenschutzerklärung von Google akzeptiert.</p>',
+  $default-background-selector: null,
+  $default-pre-consent-selector: null,
   $border-radius: var(--nt-border-radius),
   $overlay-background: rgba(255, 255, 255, 0.82),
   $pre-consent-padding: var(--nt-space-3)
 ) {
-  --default-bg: #{$default-bg};
-  --default-pre-consent: #{$default-pre-consent};
+  // Setzt Selector nur bei expliziter Theme-Konfiguration, damit sonst die eingebauten Slot-Inhalte greifen.
+  @if $default-background-selector != null {
+    --default-background-selector: #{$default-background-selector};
+  }
+  @if $default-pre-consent-selector != null {
+    --default-pre-consent-selector: #{$default-pre-consent-selector};
+  }
+
   --border-radius: #{$border-radius};
   --overlay-background: #{$overlay-background};
   --pre-consent-padding: #{$pre-consent-padding};
 
+  // Begrenzt Vorschau und Overlays auf die Form des äußeren Komponentenrahmens.
   &::part(wrapper) {
     border-radius: var(--border-radius);
     overflow: hidden;
   }
 
+  // Gestaltet den austauschbaren Consent-Hinweis über seine öffentliche Part-Fläche.
   &::part(pre-consent) {
     padding: var(--pre-consent-padding);
     background: var(--overlay-background);
   }
 
+  // Skaliert direkte und automatisch erzeugte Vorschau-Inhalte flächendeckend in den Background-Slot.
   img[slot='background'],
   p[slot='background'] {
     display: block;
