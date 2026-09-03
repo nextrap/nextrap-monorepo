@@ -13,7 +13,7 @@ const features: NteFeatures = {
 };
 
 function stripQuotes(str: string) {
-  return str.replace(/^['\"]|['\"]$/g, '');
+  return str.replace(/^['"]|['"]$/g, '');
 }
 
 @customElement('nte-consent-blocker')
