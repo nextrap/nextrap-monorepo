@@ -62,7 +62,7 @@ describe('nte-consent-blocker', () => {
     const consentDescription = element.shadowRoot?.querySelector<HTMLParagraphElement>('slot[name="pre-consent"] p');
 
     expect(background?.src).toContain('/google-maps/maps-preview.jpg');
-    expect(background?.loading).toBe('lazy');
+    expect(background?.getAttribute('loading')).toBe('lazy');
     expect(consentButton?.textContent).toBe('Daten von Google laden');
     expect(consentDescription?.textContent).toContain('wird der externe Inhalt geladen');
   });
