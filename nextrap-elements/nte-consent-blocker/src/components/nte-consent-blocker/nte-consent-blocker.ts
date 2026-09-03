@@ -58,62 +58,68 @@ export class NteConsentBlockerElement extends SubLayoutApplyMixin(nextrap_elemen
   override firstUpdated(changedProperties: PropertyValues) {
     super.firstUpdated(changedProperties);
     if (this.querySelector(':scope > template') === null) {
-      const defaultTemplateSelector = stripQuotes(
-        getComputedStyle(this).getPropertyValue('--default-template-selector').trim(),
-      );
+      const defaultTemplateSelector = this.#readSelector('--default-template-selector');
       if (defaultTemplateSelector) this.#copyTemplateFromSelector(defaultTemplateSelector);
     }
 
     if (this.querySelector(':scope > [slot="background"]') === null) {
-      const defaultBg = getComputedStyle(this).getPropertyValue('--default-bg');
-      if (defaultBg) this.#copyElementFromString(defaultBg, 'background');
+      const selector = this.#readSelector('--default-background-selector');
+      if (selector) this.#copyTemplateFromSelector(selector, 'background');
     }
-
     if (this.querySelector(':scope > [slot="pre-consent"]') === null) {
-      const defaultPreConsent = getComputedStyle(this).getPropertyValue('--default-pre-consent');
-      if (defaultPreConsent) this.#copyElementFromString(defaultPreConsent, 'pre-consent');
+      const selector = this.#readSelector('--default-pre-consent-selector');
+      if (selector) this.#copyTemplateFromSelector(selector, 'pre-consent');
     }
   }
 
-  // Kopiert nur den Inhalt des referenzierten Templates, damit die Quelle wiederverwendbar bleibt und keine ID dupliziert wird.
-  #copyTemplateFromSelector(selector: string) {
+  // Normalisiert einen CSS-Selector, damit unquotierte und aus Sass übergebene Werte gleich behandelt werden.
+  #readSelector(propertyName: string) {
+    return stripQuotes(getComputedStyle(this).getPropertyValue(propertyName).trim());
+  }
+
+  // Kopiert Template-Inhalte wahlweise als Consent-Template oder als direkt zugewiesene Slot-Elemente.
+  #copyTemplateFromSelector(selector: string, slotName: string | null = null) {
     let source: Element | null;
     try {
       source = this.ownerDocument.querySelector(selector);
     } catch {
       this.warn(`Invalid default template selector: ${selector}`);
-      return;
+      return false;
     }
 
     if (!(source instanceof HTMLTemplateElement)) {
       this.warn(`Default template selector does not reference a <template>: ${selector}`);
-      return;
+      return false;
     }
 
-    const template = this.ownerDocument.createElement('template');
-    template.content.appendChild(source.content.cloneNode(true));
-    this.appendChild(template);
-  }
+    if (slotName) {
+      Array.from(source.content.children).forEach((element) => {
+        const clone = element.cloneNode(true) as Element;
+        clone.setAttribute('slot', slotName);
+        this.appendChild(clone);
+      });
+    } else {
+      const template = this.ownerDocument.createElement('template');
+      template.content.appendChild(source.content.cloneNode(true));
+      this.appendChild(template);
+    }
 
-  // Überführt die bestehenden HTML-String-Defaults für Hintergrund und Consent-Hinweis in ihren Ziel-Slot.
-  #copyElementFromString(htmlString: string, slotName: string | null) {
-    const template = document.createElement('template');
-    template.innerHTML = stripQuotes(htmlString);
-    Array.from(template.content.children).forEach((element) => {
-      const clone = element.cloneNode(true);
-      if (slotName && clone instanceof HTMLElement) clone.setAttribute('slot', slotName);
-      this.appendChild(clone);
-    });
+    return true;
   }
 
   override render() {
     return html`
       <div id="wrapper" part="wrapper">
         <div id="background" part="background">
-          <slot name="background" data-query=":scope > .background | :scope > p:has(img:not(.keep))"></slot>
+          <slot name="background" data-query=":scope > .background | :scope > p:has(img:not(.keep))">
+            <img loading="lazy" fetchpriority="low" alt="Karte noch nicht geladen" src="https://cdn.leuffen.de/hyperpage-components/v1.0/google-maps/maps-preview.jpg" />
+          </slot>
         </div>
         <div id="consented-content" part="consented-content"><slot name="consented-content"></slot></div>
-        <div id="pre-consent" part="pre-consent"><slot name="pre-consent"></slot></div>
+        <div id="pre-consent" part="pre-consent"><slot name="pre-consent">
+          <button type="button" class="btn btn-primary" data-action="consent">Daten von Google laden</button>
+          <p>Mit Klick auf Daten von Google laden, wird der externe Inhalt geladen und die zugehörige Datenschutzerklärung akzeptiert.</p>
+        </slot></div>
         <div id="loading-text" part="loading-text">Bitte warten...</div>
       </div>
     `;

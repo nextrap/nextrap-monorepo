@@ -1,10 +1,8 @@
-/* The ShadowDOM Styles */
+/* Hält im Shadow DOM nur das funktionale Layering und die Zustandswechsel des Consent Blockers. */
 
 :host {
   --aspect-ratio: 16 / 9;
   --breakpoint: lg;
-  --default-bg: '<img loading="lazy" fetchpriority="low" alt="Karte noch nicht geladen" src="https://cdn.leuffen.de/hyperpage-components/v1.0/google-maps/maps-preview.jpg">';
-  --default-pre-consent: '<button class="btn btn-primary" data-action="consent">Daten von Google laden</button><p>Mit Klick auf Daten von Google laden, wird der externe Inhalt geladen und die zugehörige Datenschutzerklärung akzeptiert.</p>';
   aspect-ratio: var(--aspect-ratio);
   width: 100%;
   display: block;
