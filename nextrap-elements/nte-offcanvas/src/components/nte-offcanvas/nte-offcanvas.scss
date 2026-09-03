@@ -31,7 +31,8 @@
   max-height: none;
   color: inherit;
   z-index: var(--z-index, 2000);
-  background: var(--nte-offcanvas-background);
+  // Set the panel color explicitly because iOS Safari may ignore the background shorthand on dialog surfaces.
+  background-color: var(--nte-offcanvas-background);
   box-shadow: var(--nte-offcanvas-shadow);
   flex-direction: column;
   opacity: 1;
