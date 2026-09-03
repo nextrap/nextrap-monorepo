@@ -63,17 +63,12 @@ export class NteConsentBlockerElement extends SubLayoutApplyMixin(nextrap_elemen
     }
 
     if (this.querySelector(':scope > [slot="background"]') === null) {
-      const defaultBackgroundSelector = this.#readSelector('--default-background-selector');
-      if (!defaultBackgroundSelector || !this.#copyTemplateFromSelector(defaultBackgroundSelector, 'background')) {
-        this.#appendDefaultBackground();
-      }
+      const selector = this.#readSelector('--default-background-selector');
+      if (selector) this.#copyTemplateFromSelector(selector, 'background');
     }
-
     if (this.querySelector(':scope > [slot="pre-consent"]') === null) {
-      const defaultPreConsentSelector = this.#readSelector('--default-pre-consent-selector');
-      if (!defaultPreConsentSelector || !this.#copyTemplateFromSelector(defaultPreConsentSelector, 'pre-consent')) {
-        this.#appendDefaultPreConsent();
-      }
+      const selector = this.#readSelector('--default-pre-consent-selector');
+      if (selector) this.#copyTemplateFromSelector(selector, 'pre-consent');
     }
   }
 
@@ -112,42 +107,19 @@ export class NteConsentBlockerElement extends SubLayoutApplyMixin(nextrap_elemen
     return true;
   }
 
-  // Baut die bisherige Maps-Vorschau ohne HTML in CSS als echten Light-DOM-Slot-Inhalt auf.
-  #appendDefaultBackground() {
-    const image = this.ownerDocument.createElement('img');
-    image.loading = 'lazy';
-    image.setAttribute('fetchpriority', 'low');
-    image.alt = 'Karte noch nicht geladen';
-    image.src = 'https://cdn.leuffen.de/hyperpage-components/v1.0/google-maps/maps-preview.jpg';
-    image.slot = 'background';
-    this.appendChild(image);
-  }
-
-  // Stellt den bisherigen Consent-Hinweis als direkt überschreibbare Light-DOM-Slot-Inhalte bereit.
-  #appendDefaultPreConsent() {
-    const button = this.ownerDocument.createElement('button');
-    button.type = 'button';
-    button.className = 'btn btn-primary';
-    button.dataset['action'] = 'consent';
-    button.slot = 'pre-consent';
-    button.textContent = 'Daten von Google laden';
-
-    const description = this.ownerDocument.createElement('p');
-    description.slot = 'pre-consent';
-    description.textContent =
-      'Mit Klick auf Daten von Google laden, wird der externe Inhalt geladen und die zugehörige Datenschutzerklärung akzeptiert.';
-
-    this.append(button, description);
-  }
-
   override render() {
     return html`
       <div id="wrapper" part="wrapper">
         <div id="background" part="background">
-          <slot name="background" data-query=":scope > .background | :scope > p:has(img:not(.keep))"></slot>
+          <slot name="background" data-query=":scope > .background | :scope > p:has(img:not(.keep))">
+            <img loading="lazy" fetchpriority="low" alt="Karte noch nicht geladen" src="https://cdn.leuffen.de/hyperpage-components/v1.0/google-maps/maps-preview.jpg" />
+          </slot>
         </div>
         <div id="consented-content" part="consented-content"><slot name="consented-content"></slot></div>
-        <div id="pre-consent" part="pre-consent"><slot name="pre-consent"></slot></div>
+        <div id="pre-consent" part="pre-consent"><slot name="pre-consent">
+          <button type="button" class="btn btn-primary" data-action="consent">Daten von Google laden</button>
+          <p>Mit Klick auf Daten von Google laden, wird der externe Inhalt geladen und die zugehörige Datenschutzerklärung akzeptiert.</p>
+        </slot></div>
         <div id="loading-text" part="loading-text">Bitte warten...</div>
       </div>
     `;
