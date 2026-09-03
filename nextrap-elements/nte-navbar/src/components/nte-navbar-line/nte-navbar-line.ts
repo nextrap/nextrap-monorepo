@@ -20,6 +20,8 @@ export class NteNavbarLine extends nextrap_element({ slotVisibility: true }) {
           <div id="end" class="region" part="end"><slot name="end"></slot></div>
         </div>
       </div>
+      <!-- Der Default-Slot bleibt als sichtbarer Diagnose-Fallback bestehen; Inhalte darin zeigen einen falschen Slot-Namen an. -->
+      <slot NO-DEFAULT-SLOT></slot>
     `;
   }
 }
