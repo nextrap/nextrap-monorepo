@@ -9,8 +9,8 @@
   },
   "files": [
     "README.md",
-    "CHANGELOG.md",
-    "skills/**/*"
+    "skills/**/*",
+    "resources/**/*"
   ],
   "license": "MIT",
   "type": "module"
