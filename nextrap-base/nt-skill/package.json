@@ -1,0 +1,17 @@
+{
+  "name": "@nextrap/nt-skill",
+  "version": "0.0.1",
+  "description": "Code-free AI skill package for the public Nextrap monorepo API and package routing.",
+  "repository": {
+    "directory": "nextrap-base/nt-skill",
+    "type": "git",
+    "url": "https://github.com/nextrap/nextrap-monorepo"
+  },
+  "files": [
+    "README.md",
+    "CHANGELOG.md",
+    "skills/**/*"
+  ],
+  "license": "MIT",
+  "type": "module"
+}
