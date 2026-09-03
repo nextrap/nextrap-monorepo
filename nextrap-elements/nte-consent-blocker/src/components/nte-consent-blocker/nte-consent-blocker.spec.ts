@@ -51,15 +51,15 @@ describe('nte-consent-blocker', () => {
     expect(directTemplate.content.textContent).toBe('Direct');
   });
 
-  // Stellt die Maps-Vorschau und den Consent-Hinweis als Slot-Fallback bereit, wenn kein Selector gesetzt ist.
-  it('provides built-in slot fallbacks without selectors', async () => {
+  // Stellt die Maps-Vorschau und den Consent-Hinweis als Light-DOM-Fallback bereit, wenn kein Selector gesetzt ist.
+  it('adds built-in background and pre-consent content without selectors', async () => {
     const element = new NteConsentBlockerElement();
     document.body.appendChild(element);
     await element.updateComplete;
 
-    const background = element.shadowRoot?.querySelector<HTMLImageElement>('slot[name="background"] img');
-    const consentButton = element.shadowRoot?.querySelector<HTMLButtonElement>('slot[name="pre-consent"] button');
-    const consentDescription = element.shadowRoot?.querySelector<HTMLParagraphElement>('slot[name="pre-consent"] p');
+    const background = element.querySelector<HTMLImageElement>(':scope > img[slot="background"]');
+    const consentButton = element.querySelector<HTMLButtonElement>(':scope > button[slot="pre-consent"]');
+    const consentDescription = element.querySelector<HTMLParagraphElement>(':scope > p[slot="pre-consent"]');
 
     expect(background?.src).toContain('/google-maps/maps-preview.jpg');
     expect(background?.getAttribute('loading')).toBe('lazy');
