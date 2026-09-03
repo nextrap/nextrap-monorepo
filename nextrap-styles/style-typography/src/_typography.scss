@@ -66,6 +66,10 @@
   font-size: var(--nt-font-size-small, 0.875em);
 }
 
+@mixin text-body-secondary() {
+  color: var(--nt-text-muted, currentColor) !important;
+}
+
 @mixin link() {
   color: var(--nt-link, currentColor);
   text-decoration: underline;

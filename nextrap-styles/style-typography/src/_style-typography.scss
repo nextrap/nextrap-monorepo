@@ -15,7 +15,7 @@
   p { @include t.p(); }
   b, strong { @include t.strong(); }
   em { @include t.em(); }
-  small { @include t.small(); }
+  small, .small { @include t.small(); }
   a { @include t.link(); }
   mark { @include t.mark(); }
   ul { @include t.ul(); }
@@ -31,4 +31,5 @@
   figcaption, .figure-caption { @include t.figure-caption(); }
   .lead { @include t.lead(); }
   .muted, .text-muted { @include t.text-muted(); }
+  .text-body-secondary { @include t.text-body-secondary(); }
 }

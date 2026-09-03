@@ -225,12 +225,14 @@
   --nt-font-family-base: var(--nt-font-family);
   --nt-font-size-base: var(--nt-font-size);
   --nt-line-height-base: var(--nt-line-height);
-  --nt-fs-1: calc(var(--nt-font-size-base) * 1.2);
-  --nt-fs-2: calc(var(--nt-font-size-base) * 1.1);
-  --nt-fs-3: var(--nt-font-size-base);
-  --nt-fs-4: calc(var(--nt-font-size-base) * 0.9);
-  --nt-fs-5: calc(var(--nt-font-size-base) * 0.85);
-  --nt-fs-6: calc(var(--nt-font-size-base) * 0.75);
+  // Bootstrap-kompatible Font-Size-Utilities: fs-1 ist die größte und
+  // fs-6 die kleinste Stufe. Die rem-Werte entsprechen Bootstrap 5.
+  --nt-fs-1: 2.5rem;
+  --nt-fs-2: 2rem;
+  --nt-fs-3: 1.75rem;
+  --nt-fs-4: 1.5rem;
+  --nt-fs-5: 1.25rem;
+  --nt-fs-6: 1rem;
   --nt-fs-h1: var(--nt-font-size-header);
   --nt-fs-h2: calc(var(--nt-font-size-base) + (var(--nt-font-size-header) - var(--nt-font-size-base)) * 0.8);
   --nt-fs-h3: calc(var(--nt-font-size-base) + (var(--nt-font-size-header) - var(--nt-font-size-base)) * 0.6);

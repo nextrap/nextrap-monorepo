@@ -6,95 +6,92 @@
   @include btn-compat.with-btn-compat();
   // Animates optional navbar-line size and position changes from public light-DOM state classes.
   nte-navbar-line.with-collapse-on-scroll,
-nte-navbar-line.hide-on-scroll {
-  transition:
-    block-size 0.2s ease-in-out,
+  nte-navbar-line.hide-on-scroll {
+    transition: block-size 0.2s ease-in-out,
     max-block-size 0.2s ease-in-out,
     opacity 0.2s ease-in-out,
     transform 0.2s ease-in-out;
-}
+  }
 
-// Slides and collapses the opt-in top line when the parent navbar is scrolled.
-nte-navbar.is-scrolled > nte-navbar-line.with-collapse-on-scroll {
-  block-size: 0;
-  max-block-size: 0;
-  opacity: 0;
-  transform: translateY(-100%);
-}
+  // Slides and collapses the opt-in top line when the parent navbar is scrolled.
+  nte-navbar.is-scrolled > nte-navbar-line.with-collapse-on-scroll {
+    block-size: 0;
+    max-block-size: 0;
+    opacity: 0;
+    transform: translateY(-100%);
+  }
 
-// Hides compatibility lines after the configured navbar threshold.
-nte-navbar.is-below-threshold > nte-navbar-line.hide-on-scroll {
-  block-size: 0;
-  max-block-size: 0;
-  opacity: 0;
-}
+  // Hides compatibility lines after the configured navbar threshold.
+  nte-navbar.is-below-threshold > nte-navbar-line.hide-on-scroll {
+    block-size: 0;
+    max-block-size: 0;
+    opacity: 0;
+  }
 
-// Aligns the brand logo and its dimensions within a navbar line.
-.brand-logo {
-  --nt-navbar-brand-logo-aspect-ratio: 3 / 1;
+  // Aligns the brand logo and its dimensions within a navbar line.
+  .brand-logo {
+    --nt-navbar-brand-logo-aspect-ratio: 3 / 1;
 
-  position: relative;
-  z-index: var(--nt-navbar-content-z-index, 1);
-  display: flex;
-  align-items: center;
-  block-size: 100%;
-  inline-size: auto;
-  max-inline-size: 100%;
-  aspect-ratio: var(--nt-navbar-brand-logo-aspect-ratio);
-  transition:
-    inline-size 0.2s ease-in-out,
+    position: relative;
+    z-index: var(--nt-navbar-content-z-index, 1);
+    display: flex;
+    align-items: center;
+    block-size: 100%;
+    inline-size: auto;
+    max-inline-size: 100%;
+    aspect-ratio: var(--nt-navbar-brand-logo-aspect-ratio);
+    transition: inline-size 0.2s ease-in-out,
     block-size 0.2s ease-in-out,
     max-inline-size 0.2s ease-in-out;
-}
+  }
 
-.brand-logo[slot='start'] {
-  justify-content: flex-start;
-  margin-inline-end: auto;
-}
+  .brand-logo[slot='start'] {
+    justify-content: flex-start;
+    margin-inline-end: auto;
+  }
 
-.brand-logo[slot='center'] {
-  justify-content: center;
-  margin-inline: auto;
-}
+  .brand-logo[slot='center'] {
+    justify-content: center;
+    margin-inline: auto;
+  }
 
-.brand-logo[slot='end'] {
-  justify-content: flex-end;
-  margin-inline-start: auto;
-}
+  .brand-logo[slot='end'] {
+    justify-content: flex-end;
+    margin-inline-start: auto;
+  }
 
-// Reserves an inner focus frame so the indicator remains visible at clipped container edges.
-.brand-logo {
-  box-sizing: border-box;
-  border: 2px solid transparent;
-}
+  // Reserves an inner focus frame so the indicator remains visible at clipped container edges.
+  .brand-logo {
+    box-sizing: border-box;
+    border: 2px solid transparent;
+  }
 
-.brand-logo:focus-visible {
-  border-color: var(--nt-primary, #0d6efd);
-  outline: 0;
-}
+  .brand-logo:focus-visible {
+    border-color: var(--nt-primary, #0d6efd);
+    outline: 0;
+  }
 
-.brand-logo > img {
-  display: block;
-  inline-size: 100%;
-  block-size: 100%;
-  max-inline-size: 100%;
-  max-block-size: 100%;
-  object-fit: contain;
-  object-position: center;
-  transition:
-    inline-size 0.2s ease-in-out,
+  .brand-logo > img {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    max-inline-size: 100%;
+    max-block-size: 100%;
+    object-fit: contain;
+    object-position: center;
+    transition: inline-size 0.2s ease-in-out,
     block-size 0.2s ease-in-out;
-}
+  }
 
-.brand-logo[slot='start'] > img {
-  object-position: left center;
-}
+  .brand-logo[slot='start'] > img {
+    object-position: left center;
+  }
 
-.brand-logo[slot='end'] > img {
-  object-position: right center;
-}
+  .brand-logo[slot='end'] > img {
+    object-position: right center;
+  }
 
-.navbar-control {
+  .navbar-control {
     position: relative;
     z-index: var(--nt-navbar-control-z-index, 2);
     min-inline-size: 0;
