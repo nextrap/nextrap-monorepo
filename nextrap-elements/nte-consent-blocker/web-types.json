@@ -25,11 +25,11 @@
                     "slots": [
                         {
                             "name": "background",
-                            "description": "Preview/background layer. Direct content has priority, followed by --default-background-selector and the built-in slot fallback."
+                            "description": "Preview/background layer. Direct content has priority, followed by --default-background-selector and built-in Light-DOM content."
                         },
                         {
                             "name": "pre-consent",
-                            "description": "Visible consent UI before approval. Direct content has priority, followed by --default-pre-consent-selector and the built-in slot fallback."
+                            "description": "Visible consent UI before approval. Direct content has priority, followed by --default-pre-consent-selector and built-in Light-DOM content."
                         },
                         {
                             "name": "consented-content",
