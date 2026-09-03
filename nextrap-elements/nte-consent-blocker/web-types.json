@@ -74,8 +74,8 @@
                     "value": { "type": "string" }
                 },
                 {
-                    "name": "--default-template",
-                    "description": "HTML string used to create the direct template when no template is provided.",
+                    "name": "--default-template-selector",
+                    "description": "CSS selector for a reusable document template copied when no direct template is provided.",
                     "value": { "type": "string" }
                 },
                 {
