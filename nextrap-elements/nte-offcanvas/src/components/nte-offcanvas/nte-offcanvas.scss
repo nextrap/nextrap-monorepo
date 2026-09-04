@@ -11,7 +11,7 @@
   --nte-offcanvas-max-height: 100dvh;
   --nte-offcanvas-transition-duration: var(--transition-duration, 240ms);
   --nte-offcanvas-transition-easing: cubic-bezier(0.2, 0.8, 0.2, 1);
-  --nte-offcanvas-background: var(--background-color, Canvas);
+  --nte-offcanvas-background: var(--background-color, transparent);
   --nte-offcanvas-shadow: 0 0 18px var(--shadow-color, rgb(0 0 0 / 18%));
   --nte-offcanvas-backdrop: var(--backdrop, rgb(0 0 0 / 36%));
   --nte-offcanvas-backdrop-blur: 4px;

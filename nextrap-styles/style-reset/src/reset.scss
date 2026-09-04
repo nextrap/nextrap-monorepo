@@ -37,6 +37,13 @@
     outline: none;
   }
 
+  // Entfernt nur die visuelle Browser-Fläche; Dialogzustand, Positionierung und Backdrop bleiben nativ.
+  dialog {
+    color: inherit;
+    background: transparent;
+    border: none;
+  }
+
   a,
   i {
     color: inherit;
