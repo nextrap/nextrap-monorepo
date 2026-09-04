@@ -14,7 +14,10 @@ oder die Komponente.
 
 ## Auswirkungen
 
-- `@nextrap/nte-dialog` und `@nextrap/nte-offcanvas` setzen Hintergrund, Textfarbe und Rahmen bereits explizit.
+- `@nextrap/nte-dialog` hält seine ungestylte Dialog- und Section-Fläche transparent; `style-default()` setzt die Fläche
+  über `--nt-surface-raised` und die Textfarbe über `--nt-text`.
+- `@nextrap/nte-offcanvas` ersetzt den systemfarbenen `Canvas`-Fallback durch Transparenz; `default-style()` setzt die
+  sichtbare Fläche über `--nt-primary-subtle`.
 - Rohe `dialog`-Elemente werden nach Einbindung des Resets transparent und übernehmen die umgebende Textfarbe.
 - Verbraucher mit rohen `dialog`-Elementen müssen ihre Fläche und bei Bedarf ihren Rahmen explizit stylen.
 
@@ -22,4 +25,5 @@ oder die Komponente.
 
 - Das kompilierte Reset-CSS enthält für `dialog` `background: transparent`, `color: inherit` und `border: none`.
 - Der Reset verändert weder `display` noch `position`, `inset`, Größen, `open`/`:open` oder `::backdrop`.
-- Die bestehenden Nextrap-Dialogkomponenten behalten ihre explizit definierten Oberflächen.
+- Die Default-Varianten von `@nextrap/nte-dialog` und `@nextrap/nte-offcanvas` beziehen ihre sichtbaren Oberflächen aus
+  den Theme-Tokens; ohne Variante bleiben die Komponentenflächen transparent.
