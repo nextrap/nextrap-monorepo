@@ -16,8 +16,8 @@ dialog {
   padding: 0;
   border: var(--nte-dialog-border, 0);
   border-radius: var(--nte-dialog-border-radius, var(--nt-border-radius, 0.5rem));
-  background: var(--nte-dialog-background, #fff);
-  color: var(--nte-dialog-color, #212529);
+  background: var(--nte-dialog-background, transparent);
+  color: var(--nte-dialog-color, inherit);
   display: flex;
   flex-direction: column;
   box-shadow: var(--nte-dialog-box-shadow, 0 0.5rem 1rem rgba(0, 0, 0, 0.15), 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075));
@@ -71,7 +71,7 @@ dialog.closing::backdrop {
   display: flex;
   align-items: center;
   padding: var(--nte-dialog-section-padding, 1rem);
-  background: var(--nte-dialog-section-background, var(--nte-dialog-background, #fff));
+  background: var(--nte-dialog-section-background, var(--nte-dialog-background, transparent));
 }
 #header:has(slot[name='title'].slot-empty) {
   display: none;
