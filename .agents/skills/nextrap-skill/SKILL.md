@@ -18,6 +18,7 @@ Die nextrap elemente werden als einzelne packages auf npmjs veröffentlicht. Es 
 - Wenn du Theme-Styles für ein konkretes `ntl-*`- oder `nte-*`-Package entwickelst oder änderst, lies zuerst dessen lokalen `.agents/skills/<component>-theming/SKILL.md` und nutze ihn als verbindlichen Komponenten-Contract.
 - Wenn du Markup oder Component-API eines Packages verwendest, lies dessen lokalen `.agents/skills/<component>-usage/SKILL.md`.
 - Falls mehrere Komponenten betroffen sind, lies die jeweils relevanten lokalen Skills. Gibt es noch keinen lokalen Skill, gelten dieses Dokument und die bestehende `.ai-usage-info.md` als Fallback.
+- Referenzen, Architekturhinweise, Usage-Dokumentation und vergleichbare erklärende Skill-Inhalte werden auf Deutsch formuliert; englische Fachbegriffe, API-Namen, Code, Klassen, Properties und Bezeichner bleiben unverändert, wenn ihre Übersetzung technisch unpassend wäre.
 - Lies so wenig wie möglich andere Packages ein.
 - So wenig styling wie nötig: Die Webcomponents sollen später von außen gestyled werden. Daher soll im shadow dom nur die nötigsten styles enthalten sein. Es sollten immer parts definiert sein, damit diese von außen gestyled werden können.
 - Das default styling erfolgt in den mixins jedes packages, das nachher in den theme importiert wird.
