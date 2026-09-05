@@ -44,6 +44,27 @@ Text
 
 Text
 
+## Mobiler Horizontal-Flow
+{: layout="ntl-card-row.with-horizontal-flow" section-style="--cols: 3; --visible-cols-mobile: 1.2; --horizontal-flow-gap: 16px;"}
+
+Auf kleinen Viewports bleibt die nächste Karte angeschnitten sichtbar. Die Reihe lässt sich nativ per Touch oder Trackpad horizontal scrollen; im Desktop-Modus gilt weiterhin `--cols`.
+
+### Schritt 1
+
+Analyse und gemeinsames Zielbild.
+
+### Schritt 2
+
+Prototyp und frühes Nutzerfeedback.
+
+### Schritt 3
+
+Umsetzung und messbare Ergebnisse.
+
+### Schritt 4
+
+Iteration auf Basis der Erkenntnisse.
+
 ## Borderless Cards
 {: layout="ntl-card-row.with-borderless-cards" section-style="--cols: 4;"}
 

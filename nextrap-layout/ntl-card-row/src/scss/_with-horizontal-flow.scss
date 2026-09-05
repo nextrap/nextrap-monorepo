@@ -1,0 +1,42 @@
+// Aktiviert im mobilen Responsive-Modus eine horizontal scrollbare Kartenreihe,
+// ohne den bestehenden Desktop-Contract oder die mobile Einzelspalte zu verändern.
+@mixin with-horizontal-flow(
+  $visible-cols-mobile: 1.15,
+  $gap: var(--gutter-x, var(--nt-spacing-layout)),
+  $snap: proximity
+) {
+  --visible-cols-mobile: #{$visible-cols-mobile};
+  --horizontal-flow-gap: #{$gap};
+  --horizontal-flow-snap: #{$snap};
+
+  // Der vorhandene main-Part wird zur nativen Scrollfläche; zusätzliche Controls
+  // oder ein eigener Slider-Lifecycle sind für den Basis-Flow nicht erforderlich.
+  &[mode='mobile']::part(main) {
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    gap: 0 var(--horizontal-flow-gap, var(--gutter-x, 0px));
+    overflow-x: auto;
+    overflow-y: visible;
+    overscroll-behavior-inline: contain;
+    scroll-padding-inline: var(--horizontal-flow-gap, var(--gutter-x, 0px));
+    scroll-snap-type: x var(--horizontal-flow-snap, proximity);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  // Die Kartenbasis berücksichtigt die sichtbare Kartenzahl und alle Zwischenräume.
+  // max(1, ...) verhindert bei Werten unter eins eine überbreite Scroll-Karte.
+  &[mode='mobile'] > nte-card {
+    flex: 0 0 calc(
+      (100% - (max(1, var(--visible-cols-mobile, 1.15)) - 1) * var(--horizontal-flow-gap, var(--gutter-x, 0px))) /
+        max(1, var(--visible-cols-mobile, 1.15))
+    );
+    width: calc(
+      (100% - (max(1, var(--visible-cols-mobile, 1.15)) - 1) * var(--horizontal-flow-gap, var(--gutter-x, 0px))) /
+        max(1, var(--visible-cols-mobile, 1.15))
+    );
+    min-width: 0;
+    max-width: none;
+    overflow: visible;
+    scroll-snap-align: start;
+  }
+}
