@@ -53,7 +53,26 @@ Nutze immer die `trunkjs/content-pane`-Notation `{: layout="..."}`. Die Default-
 - Desktop verwendet feste Breiten von `--cols: 1` bis `--cols: 12`.
 - Ohne `--cols` an Row oder Card nutzt die Card die volle verfügbare Zeile.
 - Eine Card-Breite wächst oder schrumpft nicht; überbreiter Inhalt wird abgeschnitten.
-- Im Mobile-Modus stehen Cards immer untereinander in voller Breite.
+- Im Mobile-Modus stehen Cards standardmäßig untereinander in voller Breite.
+- `.with-horizontal-flow` aktiviert opt-in eine nativ horizontal scrollbare mobile Reihe; Desktop verwendet weiterhin `--cols`.
+- `--visible-cols-mobile` bestimmt dabei die sichtbare Kartenanzahl (Default `1.15`), `--horizontal-flow-gap` den Inline-Abstand und `--horizontal-flow-snap` die Snap-Stärke.
 - `--min-width` und `--max-width` sind standardmäßig `unset`.
 - `--gutter-x` und `--gutter-y` benötigen immer Längeneinheiten und dürfen nie als einheitsloses `0` gesetzt werden; verwende `0px`, `16px` oder andere echte Längenwerte.
 - Verwende keine `cols`-Attribut-API.
+
+## Horizontaler Mobile-Flow
+
+```markdown
+## Meilensteine
+{: layout="ntl-card-row.with-horizontal-flow" section-style="--cols: 3; --visible-cols-mobile: 1.2; --horizontal-flow-gap: 16px;"}
+
+### Analyse
+
+Gemeinsames Zielbild definieren.
+
+### Umsetzung
+
+Lösung ausliefern und messen.
+```
+
+Der Modifier ändert weder die DOM-Reihenfolge noch den Desktop-Contract. Native Touch- und Trackpad-Interaktion funktioniert ohne zusätzliche Slider-Controls.
