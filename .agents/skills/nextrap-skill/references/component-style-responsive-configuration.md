@@ -1,53 +1,70 @@
-# Component Style & Responsive Configuration
+# Komponenten-Style- und Responsive-Konfiguration
 
-## Goal
+## Ziel
 
-Keep presentation, layout and responsive configuration themeable without duplicating it as HTML or JavaScript API. Components consume the effective style produced by Nextrap themes and the TrunkJS Responsive Framework.
+Nextrap arbeitet bei Responsiveness immer mit dem TrunkJS Responsive Framework zusammen. Breakpoint-Logik wird deshalb nicht innerhalb einzelner Nextrap-Komponenten neu implementiert. Insbesondere sind komponentenlokale CSS-Media-Queries und parallele `matchMedia`-/Breakpoint-Listener in Nextrap verboten.
 
-The intended flow is:
+Für `nte-*`-Elemente wird Responsiveness von außen über TrunkJS Responsive gesteuert. Das Framework setzt breakpointabhängig Klassen und/oder Styles direkt am Element; diese ändern die wirksamen CSS-Variablen beziehungsweise Styles, die das Element anschließend konsumiert. Ein Element soll also nicht selbst wissen müssen, welcher Projekt-Breakpoint gerade aktiv ist.
 
-`TrunkJS Responsive -> classes/styles -> CSS custom properties -> computed component style -> component logic`
+**So nicht:**
 
-## Attribute/property vs. CSS configuration
+```css
+@media (min-width: 1200px) {
+  nte-example {
+    --width: 33.333%;
+  }
+}
+```
 
-Use HTML attributes and component properties for semantic, functional and application state, for example `disabled`, `open`, `aria-*`, IDs, target references and domain values.
+oder eine eigene Breakpoint-Auswertung mit `matchMedia(...)` im Element.
 
-Prefer public CSS custom properties for presentation, layout, positioning, animation and responsive presentation. Typical examples are sticky/fixed placement, scroll thresholds, sizes, spacing, overlay behavior and collapse/shrink values.
+**So:** TrunkJS Responsive steuert die Klasse beziehungsweise den Style am Element, zum Beispiel über responsive Klassen nach dem Muster `-xl:col-12 xl:col-4`, oder setzt bei `xl` direkt die für das Element relevanten CSS-Variablen im `style`. Das `nte-*`-Element liest nur den daraus resultierenden wirksamen Style.
 
-Do not expose the same presentation value as both an HTML/property API and a CSS custom property. Avoid parallel sources of truth.
+Der beabsichtigte Datenfluss ist:
 
-## Reading style configuration in JavaScript
+`TrunkJS Responsive -> class/style am Element -> CSS-Variablen / wirksamer Style -> Komponentenlogik`
 
-When JavaScript needs a presentation value for behavior or calculations, read the effective value from the component's computed style using the project-standard component-style helper where available, otherwise `getComputedStyle(...)`.
+### Ausnahme für Layout-Elemente
 
-Do not mirror the same setting into an independent JavaScript configuration object merely for convenience. The computed style is the effective source of truth.
+`ntl-*`-Layout-Elemente dürfen einen eigenen Layout-Umschaltpunkt als öffentliche CSS-Variable `--breakpoint` anbieten. Diese Variable beschreibt ausschließlich den Layout-Contract des jeweiligen Layout-Elements. Sie ist keine Erlaubnis, beliebige Media Queries in Nextrap-Komponenten einzuführen.
 
-Parse and validate CSS values defensively and provide a safe component default for missing or invalid values.
+## Attribute/Properties gegenüber CSS-Konfiguration
 
-## Runtime style changes
+HTML-Attribute und Component-Properties sind für semantischen, funktionalen und Anwendungszustand vorgesehen, zum Beispiel `disabled`, `open`, `aria-*`, IDs, Zielreferenzen und Domain-Werte.
 
-If JavaScript behavior depends on computed CSS configuration, the component must observe changes to its own `class` and `style` attributes. After either changes, re-read the effective component-style configuration and update all dependent internal calculations/state.
+Darstellungs-, Layout-, Positionierungs-, Animations- und responsive Konfiguration soll bevorzugt über öffentliche CSS-Variablen erfolgen. Typische Beispiele sind Größen, Abstände, Sticky-/Fixed-Positionierung, Scroll-Schwellen, Overlay-Verhalten oder Collapse-/Shrink-Werte.
 
-This allows theme classes and responsive classes/styles to alter component behavior without recreating the element.
+Derselbe Darstellungswert soll nicht parallel als HTML-/Property-API und als CSS-Variable angeboten werden. Es gibt genau eine wirksame Quelle.
 
-Changes to inherited CSS custom properties on an ancestor do not necessarily mutate `class` or `style` on the component host. If a component must react immediately to such inherited changes, use the project-standard theme/style refresh mechanism or expose an explicit style refresh entry point. Do not pretend that a host-only MutationObserver can detect arbitrary ancestor style changes.
+## Style-Konfiguration in JavaScript lesen
 
-## Responsive behavior
+Wenn JavaScript einen Darstellungswert für Verhalten oder Berechnungen benötigt, wird der wirksame Wert aus dem berechneten Style der Komponente gelesen, bevorzugt über den projektüblichen Component-Style-Helper, andernfalls über `getComputedStyle(...)`.
 
-Do not implement component-local CSS media queries or `matchMedia`/parallel breakpoint listeners for behavior that can be expressed through the TrunkJS Responsive Framework.
+Ein CSS-basierter Wert darf nicht nur aus Bequemlichkeit in ein separates JavaScript-Konfigurationsobjekt gespiegelt werden. Der berechnete Style bleibt die wirksame Quelle.
 
-The TrunkJS Responsive Framework owns the decision of *when* a breakpoint-dependent change applies. It sets the corresponding classes and/or styles. Those rules change the component's CSS custom properties or other effective styles, and the component consumes the resulting computed style.
+CSS-Werte müssen defensiv geparst und validiert werden. Für fehlende oder ungültige Werte ist ein sicherer Komponenten-Default vorzusehen.
 
-Components therefore do not independently interpret project breakpoints. They react to the effective classes/styles supplied by the responsive layer.
+## Änderungen zur Laufzeit
 
-For DOM relocation, orientation changes, visibility, presentation values and similar responsive composition, prefer the appropriate TrunkJS responsive classes and components (for example Element Relocator) rather than creating a second responsive implementation inside the component.
+Wenn JavaScript-Verhalten von berechneter CSS-Konfiguration abhängt, muss die Komponente Änderungen ihrer eigenen Attribute `class` und `style` beobachten. Nach einer Änderung wird die wirksame Style-Konfiguration neu gelesen und alle davon abhängigen internen Berechnungen beziehungsweise Zustände werden aktualisiert.
 
-## Review checklist
+Damit können Theme-Klassen sowie TrunkJS-Responsive-Klassen und -Styles das Komponentenverhalten ändern, ohne das Element neu zu erzeugen.
 
-- Is this value semantic/functional state? Use an attribute/property when appropriate.
-- Is this value presentation/layout/responsive configuration? Prefer a CSS custom property.
-- Does JavaScript need the value? Read the effective computed component style.
-- Can the value change through responsive/theme classes? Observe host `class` and `style` and refresh dependent calculations.
-- Can it change only through inherited ancestor variables? Use the project style/theme refresh contract when immediate synchronization is required.
-- Is breakpoint logic involved? Let TrunkJS Responsive own breakpoint evaluation; do not add component media queries or `matchMedia`.
-- Is the same presentation value exposed twice? Remove the duplicate API.
+Geerbte CSS-Variablen auf Vorfahren ändern nicht zwingend `class` oder `style` am Host-Element. Muss eine Komponente auf solche Änderungen sofort reagieren, ist der projektweite Theme-/Style-Refresh-Contract oder ein expliziter Style-Refresh-Einstieg zu verwenden. Ein reiner Host-`MutationObserver` erkennt keine beliebigen Style-Änderungen auf Vorfahren.
+
+## Responsive-Verhalten
+
+Für `nte-*`-Elemente gehört die Entscheidung, **wann** eine breakpointabhängige Änderung gilt, ausschließlich in das TrunkJS Responsive Framework. Das Framework setzt die passende Klasse oder den passenden Style; die Komponente reagiert nur auf den daraus entstehenden wirksamen Zustand.
+
+Für DOM-Verschiebung, Orientierung, Sichtbarkeit, Darstellungswerte und ähnliche responsive Komposition sind die vorgesehenen TrunkJS-Responsive-Mechanismen und -Komponenten zu verwenden, zum Beispiel Element Relocator, statt eine zweite Responsive-Implementierung innerhalb der Nextrap-Komponente aufzubauen.
+
+## Review-Checkliste
+
+- Ist der Wert semantischer oder funktionaler Zustand? Dann ist ein Attribut beziehungsweise eine Property passend.
+- Ist der Wert Darstellung, Layout oder responsive Konfiguration? Dann ist eine CSS-Variable beziehungsweise der wirksame Style zu bevorzugen.
+- Ist ein `nte-*`-Element breakpointabhängig? Dann steuert TrunkJS Responsive dessen `class`/`style`; keine Media Query und kein `matchMedia` in der Komponente.
+- Ist es ein `ntl-*`-Layout mit eigenem Layout-Umschaltpunkt? Dann darf der Layout-Contract `--breakpoint` verwenden.
+- Benötigt JavaScript den Wert? Dann den wirksamen berechneten Style lesen.
+- Kann der Wert über responsive oder Theme-Klassen wechseln? Dann Host-`class` und `style` beobachten und abhängige Berechnungen aktualisieren.
+- Kann der Wert nur über geerbte Variablen auf Vorfahren wechseln? Dann bei notwendiger Sofortsynchronisierung den Projekt-Refresh-Contract verwenden.
+- Wird derselbe Darstellungswert doppelt exponiert? Dann die parallele API entfernen.
