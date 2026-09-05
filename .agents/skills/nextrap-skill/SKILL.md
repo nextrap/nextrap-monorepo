@@ -18,7 +18,7 @@ Die nextrap elemente werden als einzelne packages auf npmjs veröffentlicht. Es 
 - Wenn du Theme-Styles für ein konkretes `ntl-*`- oder `nte-*`-Package entwickelst oder änderst, lies zuerst dessen lokalen `.agents/skills/<component>-theming/SKILL.md` und nutze ihn als verbindlichen Komponenten-Contract.
 - Wenn du Markup oder Component-API eines Packages verwendest, lies dessen lokalen `.agents/skills/<component>-usage/SKILL.md`.
 - Falls mehrere Komponenten betroffen sind, lies die jeweils relevanten lokalen Skills. Gibt es noch keinen lokalen Skill, gelten dieses Dokument und die bestehende `.ai-usage-info.md` als Fallback.
-- Code und alle programmatischen Bezeichner werden grundsätzlich auf Englisch formuliert, insbesondere Klassen, Funktionen, Methoden, Variablen, Properties, Attribute, Events, Typen und API-Namen. Kommentare im Code sowie Entwicklungspapiere, Referenzen, Architekturhinweise, Usage-Dokumentation und vergleichbare erklärende Dokumentation werden auf Deutsch formuliert; technische Namen und Codebeispiele bleiben dabei unverändert Englisch.
+- Referenzen, Architekturhinweise, Usage-Dokumentation und vergleichbare erklärende Skill-Inhalte werden auf Deutsch formuliert; englische Fachbegriffe, API-Namen, Code, Klassen, Properties und Bezeichner bleiben unverändert, wenn ihre Übersetzung technisch unpassend wäre.
 - Lies so wenig wie möglich andere Packages ein.
 - So wenig styling wie nötig: Die Webcomponents sollen später von außen gestyled werden. Daher soll im shadow dom nur die nötigsten styles enthalten sein. Es sollten immer parts definiert sein, damit diese von außen gestyled werden können.
 - Das default styling erfolgt in den mixins jedes packages, das nachher in den theme importiert wird.
@@ -261,3 +261,118 @@ Public style mixins apply declarations and child/state selectors relative to whe
 
   .special-box {
     @include u.d-flex();
+    @include u.gap-3();
+    @include u.mt-2();
+  }
+}
+```
+
+Do not use `@at-root` inside public mixins without an explicitly documented exceptional reason.
+
+### Typography owns element rhythm, not content layout
+
+`style-typography` may style native text elements and corresponding typography helper classes. Its job is typography and the spacing of the **individual typographic elements**, following a Bootstrap-like document rhythm.
+
+It may define, for example, heading/paragraph/list/blockquote/pre/figure margins and internal padding where that padding belongs to the element itself.
+
+It must **not** set padding/margins on `section`, page wrappers, content containers, article layout wrappers, or other structural layout selectors. Content/section/page spacing belongs to layout/theme composition, not typography.
+
+### `style-base` is token-only and visually side-effect free
+
+`@nextrap/style-base` and `@nextrap/style-base/default` must be safe to load on **any page**, including pages using Bootstrap, Tailwind, Material, or legacy CSS.
+
+Allowed: CSS custom properties (`--nt-*`). Not allowed: resets, `body` rules, native typography, component styles, or other visual host-page changes.
+
+Important runtime rule: `@nextrap/style-base` must **not** be imported by shipped `nte-*` or `ntl-*` component runtime code (`.ts` / `.js`). The project/theme/app owns `style-base` and includes it exactly once at app/theme level. Only demos or explicit dev-only demo setups may import `@nextrap/style-base` directly.
+
+### Shadow DOM: Tokens erben, benötigte Styles gezielt materialisieren
+
+Normale CSS Custom Properties (einschließlich der von `style-base` am Hauptdokument definierten `--nt-*` Tokens) werden über den Shadow Host in den Shadow DOM und auch durch weitere verschachtelte Shadow-DOM-Grenzen vererbt. Eine Komponente darf diese Tokens deshalb direkt mit `var(--nt-...)` verwenden. Sie darf Theme-Werte wie Farben, Border, Border-Radius oder Abstände nicht an jeder Shadow-DOM-Grenze erneut deklarieren, kopieren oder per JavaScript weiterreichen.
+
+Die Vererbung der Tokens bedeutet nicht, dass Selektorregeln aus dem Hauptdokument in den Shadow DOM hineinwirken. Nutzt eine Komponente im Shadow DOM ein visuelles Element wie einen Button, muss sie die dafür benötigten Styles aus dem zuständigen Style-Package innerhalb ihres Shadow-DOM-SCSS materialisieren. Verwende dazu die öffentlichen, selektorspezifischen Mixins und nur die tatsächlich benötigte Basis und Modifier:
+
+```scss
+@use '@nextrap/style-button' as button;
+
+button {
+  @include button.btn();
+  @include button.btn-primary();
+}
+```
+
+Diese Mixins beziehen Farbe, Border, Radius, Spacing und weitere Theme-Werte selbst aus den geerbten `--nt-*` Tokens. Solche Werte dürfen in der Web Component nicht nochmals nachgebaut oder als lokale Kopien der globalen Tokens definiert werden. Lokale Custom Properties sind nur für eine echte, dokumentierte Komponenten-API oder einen internen komponentenspezifischen Wert zulässig, nicht als Weiterleitungsmechanismus für `style-base`.
+
+Interne Custom Properties sollen durch einen internen Namen wie `--_<component>-<property>` als nicht öffentliche API erkennbar sein. Wenn ein Wert auch nicht an Nachfahren oder einen darin verschachtelten Shadow DOM vererbt werden soll, kann die Property zusätzlich typisiert und mit `inherits: false` registriert werden:
+
+```css
+@property --_dialog-animation-offset {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+```
+
+`inherits: false` bedeutet „nicht vererbbar“, nicht „privat“ oder sicher verborgen: CSS kann den Namen weiterhin referenzieren oder überschreiben. Die Registrierung stoppt außerdem die Vererbung an **alle** Nachfahren innerhalb desselben Shadow Trees. Verwende sie daher nur für Werte, die direkt auf dem Element gesetzt und dort konsumiert werden. Muss ein interner Wert zwischen mehreren Shadow-DOM-internen Nachfahren vererbt werden, bleibt er vererbbar und wird lediglich über die interne Namenskonvention als nicht öffentliche Komponenten-API markiert.
+
+Für Shadow-DOM-SCSS gilt:
+
+- Bevorzuge einzelne öffentliche Mixins wie `btn()`, `btn-primary()`, `table()` oder gezielte Utility-Mixins.
+- Binde ein kleines spezialisiertes Aggregat wie `buttons()` nur ein, wenn die Komponente dessen vollständige Selektor-API tatsächlich nutzt.
+- Binde keine vollständigen Aggregate wie `utils()`, `elements()` oder `typography()` vorsorglich ein. Wenn ein Aggregat ausnahmsweise erforderlich ist, muss im SCSS am Include explizit dokumentiert werden, welche enthaltenen Komponenten beziehungsweise Selektoren im Shadow DOM benötigt werden und weshalb Einzel-Mixins nicht ausreichen.
+- Importiere weder `style-base` noch dessen Default-Ausgabe in den Komponenten-Runtime-Code. Das Hauptdokument beziehungsweise Theme stellt die Tokens einmal bereit; die Komponente konsumiert sie über die normale CSS-Vererbung.
+- Berücksichtige Fallbacks nur dort, wo ein Style-Package sie in seinem öffentlichen Mixin-/Token-Contract vorsieht. Erfinde in der Komponente keine abweichenden Theme-Defaults.
+
+### Cross-package interoperability via `--nt-*` tokens
+
+Style packages communicate through `--nt-*` CSS custom properties, not private Sass imports from sibling packages:
+
+```scss
+color: var(--nt-text, currentColor);
+padding: var(--nt-space-3, .75rem);
+```
+
+Avoid private coupling such as `@use '../../../style-base/variables';`.
+
+### Derived themes compose individual and aggregate mixins
+
+A theme may either map individual mixins to semantic selectors or register whole package APIs:
+
+```scss
+.theme-corporate {
+  table {
+    @include e.table();
+    @include e.table-striped();
+  }
+
+  @include u.utils();
+  @include e.elements();
+  @include type.typography();
+  @include b.buttons();
+}
+```
+
+### Naming conventions summary
+
+| Kind | Pattern | Examples |
+|---|---|---|
+| Token (CSS var) | `--nt-<token>` | `--nt-primary`, `--nt-space-3`, `--nt-border-radius` |
+| Local element var | `--<element>-<prop>` | `--prose-max-w`, `--table-stripe-bg` |
+| Base class/mixin | lowercase, hyphenated | `.table` / `table()`, `.prose` / `prose()` |
+| Modifier class/mixin | `<base>-<modifier>` | `.table-striped` / `table-striped()`, `.btn-primary` / `btn-primary()` |
+| Utility class/mixin | short atomic name | `.d-flex` / `d-flex()`, `.mt-2` / `mt-2()`, `.gap-3` / `gap-3()` |
+| Package aggregate mixin | package-specific noun; never `all()` | `utils()`, `elements()`, `typography()`, `buttons()` |
+| Component style variant | `style-<name>` | `style-default`, `style-testimonial` |
+| Feature modifier (web components) | `with-<feature>` | `with-background-and-divider` |
+
+## Do's
+
+- Erfordert ein Prompt änderungen an mehr als 3 Dateien, frag den User, ob das so gewünscht ist. Gib einen kurzen Abriss, was Du ändern willst.
+- Versuche css styling zunächst mit purem CSS (Selektoren) zu machen. Frag nach, wenn du typescript code ändern musst.
+- Frag nach, wenn Du andere Packages ändern musst.
+- Benutze die `trunkjs/content-pane` notation `{: layout="..."}` in den Demo-Dateien, um die Layouts zu rendern. Frage nach, bevor du HTML in Markdown dateien anlegst.
+
+## Dont`s
+
+- Ändere keine Dateien außerhalb der `nextrap-base/`, `nextrap-layout/` und `nextrap-elements/` Verzeichnisse außer es wird explizit im Prompt verlangt.
+- Füge keine Css Variablen in den shadow dom hinzu ohne vorher den User zu fragen.
+- Führe nie Git Befehle dirket aus ohne zu fragen.
