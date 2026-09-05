@@ -18,6 +18,34 @@ Der vorgesehene Integrationsweg ist:
 
 `optionaler Responsive-Layer -> class/style am Element -> CSS-Variablen / wirksamer Style -> Komponentenlogik`
 
+## Demos und Beispiele
+
+Responsive Klassen und Styles werden in Demos und Beispielen exakt so verwendet, wie sie später auch im realen Markup eingesetzt werden. Eine Demo darf für Responsiveness keine abweichende Sonderlogik, keine Media Query und keine eigene Breakpoint-Auswertung einführen.
+
+Damit die responsive Syntax in einer Demo tatsächlich ausgewertet wird, muss die Demo `@trunkjs/responsive` importieren und den responsiv gesteuerten Inhalt mit `<tj-responsive>` umschließen. Das entspricht dem bestehenden Demo-Muster im Repository.
+
+Beispiel:
+
+```ts
+import '@trunkjs/responsive';
+
+root.innerHTML = `
+  <tj-responsive>
+    <nte-example class="xl:wide" style="--cols: 3" style-xl="--cols: 5"></nte-example>
+  </tj-responsive>
+`;
+```
+
+Auch bei reinen HTML-Demos gilt dasselbe Wrapper-Muster:
+
+```html
+<tj-responsive>
+  <nte-example class="xl:wide"></nte-example>
+</tj-responsive>
+```
+
+Der Wrapper gehört nur zur Demo- beziehungsweise Seitenintegration des Responsive Frameworks. Die `nte-*`-Komponente selbst darf weder `<tj-responsive>` voraussetzen noch TrunkJS Responsive direkt importieren.
+
 ## Layout-Ausnahme
 
 Nur `ntl-*`-Layout-Elemente dürfen eigene Breakpoint-Logik enthalten. Der Umschaltpunkt wird über die öffentliche CSS-Variable `--breakpoint` gesteuert. Für die Auswertung ist der vorhandene `BreakPointMixin` aus `@trunkjs/browser-utils` zu verwenden; Nextrap bindet ihn über die `breakpoints`-Feature-Option von `nextrap_element(...)` ein. Der Mixin reflektiert den ausgewerteten Zustand als `mode="mobile"` beziehungsweise `mode="desktop"`. Diese Ausnahme ist ausschließlich für Layout-Komponenten vorgesehen und darf nicht auf normale `nte-*`-Elemente übertragen werden.
@@ -41,6 +69,7 @@ Wenn JavaScript-Verhalten von berechneter CSS-Konfiguration abhängt, muss die K
 - Ist der Wert semantischer, funktionaler oder zugänglichkeitsrelevanter Zustand? Dann Attribut beziehungsweise Property verwenden, zum Beispiel `disabled`, `open` oder `aria-expanded`.
 - Ist der Wert reine Darstellung oder Layoutkonfiguration? Dann CSS beziehungsweise eine CSS-Variable verwenden, zum Beispiel `style="--cols: 5"` statt einer Styling-Property oder eines Styling-Attributs.
 - Soll ein `nte-*`-Element responsiv reagieren? Dann die Änderung über externe `class`-/`style`-Steuerung ermöglichen, zum Beispiel `class="xl:wide"`; das Element selbst wertet keinen Breakpoint aus.
+- Zeigt eine Demo responsives Verhalten? Dann dieselbe responsive `class`-/`style`-Syntax wie im realen Markup verwenden, `@trunkjs/responsive` importieren und den Demo-Inhalt mit `<tj-responsive>` umschließen.
 - Enthält das Shadow DOM oder ein Default-Design einer `nte-*`-Komponente eine responsive Media Query? Dann entfernen; Media Queries sind dort nicht zulässig.
 - Enthält ein `nte-*`-Element `matchMedia`, einen Breakpoint-Listener oder sonstige eigene Breakpoint-Logik? Dann entfernen und den Zustand über die externe Responsive-Steuerungsoberfläche ausdrücken.
 - Ist es ein `ntl-*`-Layout mit eigenem Layout-Umschaltpunkt? Dann `--breakpoint` zusammen mit dem vorhandenen `BreakPointMixin` verwenden; keine eigene parallele Breakpoint-Auswertung bauen.
