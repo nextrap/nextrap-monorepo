@@ -2,69 +2,47 @@
 
 ## Ziel
 
-Nextrap-Komponenten sollen so aufgebaut sein, dass sie mit dem TrunkJS Responsive Framework zusammenarbeiten können, ohne das Framework direkt vorauszusetzen oder selbst Breakpoint-Logik zu implementieren. Die Komponenten müssen also responsiv steuerbar sein, dürfen aber nicht davon abhängen, dass TrunkJS Responsive zwingend verwendet wird.
+Nextrap-Komponenten sollen so aufgebaut sein, dass sie mit dem TrunkJS Responsive Framework zusammenarbeiten können, ohne das Framework direkt vorauszusetzen. Normale `nte-*`-Elemente enthalten keine eigene Breakpoint-Logik. Responsive Änderungen müssen von außen über `class` und `style` steuerbar sein, sodass TrunkJS Responsive oder ein anderer externer Layer den wirksamen Style verändern kann.
 
-Breakpoint-Logik gehört nicht in einzelne `nte-*`-Elemente. Insbesondere sind komponentenlokale CSS-Media-Queries sowie eigene `matchMedia`-/Breakpoint-Listener in `nte-*` verboten. Stattdessen muss ein `nte-*`-Element so gestaltet sein, dass externe responsive Steuerung über `class` und `style` seine wirksamen CSS-Variablen beziehungsweise Styles verändern kann.
+Dieser Contract gilt ausdrücklich auch innerhalb des Shadow DOM und für die Default-Designs beziehungsweise Default-Styles von Komponenten: Dort dürfen keine Media Queries zur responsiven Umschaltung eingebaut werden. Ebenso gehören `matchMedia` oder eigene Breakpoint-Listener nicht in `nte-*`-Elemente.
 
-**So nicht:**
+Ein responsiver Zustand wird stattdessen über Klassen oder Styles ausgedrückt. Beispiel mit einer responsiven Klasse:
 
-```css
-@media (min-width: 1200px) {
-  nte-example {
-    --width: 33.333%;
-  }
-}
+```html
+<nte-example class="xl:wide"></nte-example>
 ```
 
-oder eine eigene Breakpoint-Auswertung mit `matchMedia(...)` im Element.
-
-**So:** Ein externer Responsive-Layer kann bei Bedarf die Klasse beziehungsweise den Style am Element verändern, zum Beispiel mit TrunkJS Responsive über Klassen nach dem Muster `-xl:col-12 xl:col-4`, oder indem bei `xl` direkt die relevanten CSS-Variablen im `style` des Elements gesetzt werden. Das `nte-*`-Element kennt den Breakpoint nicht selbst, sondern liest nur den daraus resultierenden wirksamen Style.
+Die Klasse verändert den wirksamen Style beziehungsweise die dafür vorgesehenen CSS-Variablen; das Element selbst wertet `xl` nicht aus. Alternativ kann der externe Responsive-Layer breakpointabhängig CSS-Variablen direkt über `style` setzen.
 
 Der vorgesehene Integrationsweg ist:
 
 `optionaler Responsive-Layer -> class/style am Element -> CSS-Variablen / wirksamer Style -> Komponentenlogik`
 
-### Ausnahme für Layout-Elemente
+## Layout-Ausnahme
 
-Nur `ntl-*`-Layout-Elemente dürfen eigene Breakpoint-Logik enthalten. Der Umschaltpunkt wird dabei über die öffentliche CSS-Variable `--breakpoint` gesteuert. Die Breakpoint-Logik bleibt damit Bestandteil des Layout-Contracts und darf nicht auf normale `nte-*`-Elemente übertragen werden.
+Nur `ntl-*`-Layout-Elemente dürfen eigene Breakpoint-Logik enthalten. Der Umschaltpunkt wird über die öffentliche CSS-Variable `--breakpoint` gesteuert. Für die Auswertung ist der vorhandene `BreakPointMixin` aus `@trunkjs/browser-utils` zu verwenden; Nextrap bindet ihn über die `breakpoints`-Feature-Option von `nextrap_element(...)` ein. Der Mixin reflektiert den ausgewerteten Zustand als `mode="mobile"` beziehungsweise `mode="desktop"`. Diese Ausnahme ist ausschließlich für Layout-Komponenten vorgesehen und darf nicht auf normale `nte-*`-Elemente übertragen werden.
 
-## Attribute/Properties gegenüber CSS-Konfiguration
+## Styling-Konfiguration
 
-HTML-Attribute und Component-Properties sind für semantischen, funktionalen und Anwendungszustand vorgesehen, zum Beispiel `disabled`, `open`, `aria-*`, IDs, Zielreferenzen und Domain-Werte.
+Properties und Attribute sind nicht für Styling oder reine Darstellungskonfiguration vorgesehen. Darstellungswerte werden über CSS, insbesondere öffentliche CSS-Variablen, konfiguriert. Statt beispielsweise eine rein visuelle Spaltenzahl als `rows="5"` oder Property zu modellieren, wird der Darstellungswert als CSS-Variable gesetzt:
 
-Darstellungs-, Layout-, Positionierungs-, Animations- und responsive Konfiguration soll bevorzugt über öffentliche CSS-Variablen erfolgen. Typische Beispiele sind Größen, Abstände, Sticky-/Fixed-Positionierung, Scroll-Schwellen, Overlay-Verhalten oder Collapse-/Shrink-Werte.
+```html
+<nte-example style="--cols: 5"></nte-example>
+```
 
-Derselbe Darstellungswert soll nicht parallel als HTML-/Property-API und als CSS-Variable angeboten werden. Es gibt genau eine wirksame Quelle.
+Semantischer, funktionaler oder zugänglichkeitsrelevanter Zustand bleibt dagegen eine gültige Aufgabe von Attributen und Properties. Dazu gehören beispielsweise `disabled`, `open`, `aria-*`, IDs, Zielreferenzen und Domain-Werte; solche Werte können von einer Komponente bei Bedarf an interne Elemente weitergereicht werden.
 
-## Style-Konfiguration in JavaScript lesen
+Wenn JavaScript einen Darstellungswert für Verhalten oder Berechnungen benötigt, wird der wirksame Wert aus dem berechneten Style gelesen, bevorzugt über den projektüblichen Component-Style-Helper, andernfalls über `getComputedStyle(...)`. Ein CSS-basierter Darstellungswert wird nicht zusätzlich als parallele Property- oder JavaScript-Konfiguration geführt.
 
-Wenn JavaScript einen Darstellungswert für Verhalten oder Berechnungen benötigt, wird der wirksame Wert aus dem berechneten Style der Komponente gelesen, bevorzugt über den projektüblichen Component-Style-Helper, andernfalls über `getComputedStyle(...)`.
-
-Ein CSS-basierter Wert darf nicht nur aus Bequemlichkeit in ein separates JavaScript-Konfigurationsobjekt gespiegelt werden. Der berechnete Style bleibt die wirksame Quelle.
-
-CSS-Werte müssen defensiv geparst und validiert werden. Für fehlende oder ungültige Werte ist ein sicherer Komponenten-Default vorzusehen.
-
-## Änderungen zur Laufzeit
-
-Wenn JavaScript-Verhalten von berechneter CSS-Konfiguration abhängt, muss die Komponente Änderungen ihrer eigenen Attribute `class` und `style` beobachten. Nach einer Änderung wird die wirksame Style-Konfiguration neu gelesen und alle davon abhängigen internen Berechnungen beziehungsweise Zustände werden aktualisiert.
-
-Damit können Theme-Klassen sowie ein optional eingesetzter Responsive-Layer das Komponentenverhalten ändern, ohne das Element neu zu erzeugen.
-
-Geerbte CSS-Variablen auf Vorfahren ändern nicht zwingend `class` oder `style` am Host-Element. Muss eine Komponente auf solche Änderungen sofort reagieren, ist der projektweite Theme-/Style-Refresh-Contract oder ein expliziter Style-Refresh-Einstieg zu verwenden. Ein reiner Host-`MutationObserver` erkennt keine beliebigen Style-Änderungen auf Vorfahren.
-
-## Responsive-Verhalten
-
-`nte-*`-Elemente dürfen keine eigene Breakpoint-Auswertung besitzen. Sie stellen nur die responsive Steuerungsoberfläche über `class`, `style`, öffentliche CSS-Variablen und den daraus resultierenden wirksamen Style bereit. Welcher externe Mechanismus diese Werte ändert, ist nicht Bestandteil des Elements; TrunkJS Responsive ist der vorgesehene kompatible Responsive-Layer, aber keine zwingende Laufzeitabhängigkeit.
-
-Für DOM-Verschiebung, Orientierung, Sichtbarkeit, Darstellungswerte und ähnliche responsive Komposition kann TrunkJS Responsive beziehungsweise ein dazugehöriger Mechanismus wie Element Relocator verwendet werden. Die Nextrap-Komponente implementiert dafür keine zweite Breakpoint-Logik.
+Wenn JavaScript-Verhalten von berechneter CSS-Konfiguration abhängt, muss die Komponente Änderungen ihrer eigenen Attribute `class` und `style` beobachten und danach die abhängigen Werte neu lesen. Geerbte CSS-Variablen auf Vorfahren erfordern bei notwendiger Sofortsynchronisierung den projektweiten Theme-/Style-Refresh-Contract beziehungsweise einen expliziten Style-Refresh-Einstieg.
 
 ## Review-Checkliste
 
-- Ist der Wert semantischer oder funktionaler Zustand? Dann ist ein Attribut beziehungsweise eine Property passend.
-- Ist der Wert Darstellung, Layout oder responsive Konfiguration? Dann ist eine CSS-Variable beziehungsweise der wirksame Style zu bevorzugen.
-- Ist ein `nte-*`-Element breakpointabhängig? Dann muss es über externe `class`-/`style`-Änderungen steuerbar sein; keine Media Query, kein `matchMedia` und keine eigene Breakpoint-Logik in der Komponente.
-- Ist es ein `ntl-*`-Layout mit eigenem Layout-Umschaltpunkt? Dann darf dessen Breakpoint-Logik über `--breakpoint` gesteuert werden.
-- Benötigt JavaScript den Wert? Dann den wirksamen berechneten Style lesen.
-- Kann der Wert über responsive oder Theme-Klassen wechseln? Dann Host-`class` und `style` beobachten und abhängige Berechnungen aktualisieren.
-- Kann der Wert nur über geerbte Variablen auf Vorfahren wechseln? Dann bei notwendiger Sofortsynchronisierung den Projekt-Refresh-Contract verwenden.
-- Wird derselbe Darstellungswert doppelt exponiert? Dann die parallele API entfernen.
+- Ist der Wert semantischer, funktionaler oder zugänglichkeitsrelevanter Zustand? Dann Attribut beziehungsweise Property verwenden, zum Beispiel `disabled`, `open` oder `aria-expanded`.
+- Ist der Wert reine Darstellung oder Layoutkonfiguration? Dann CSS beziehungsweise eine CSS-Variable verwenden, zum Beispiel `style="--cols: 5"` statt einer Styling-Property oder eines Styling-Attributs.
+- Soll ein `nte-*`-Element responsiv reagieren? Dann die Änderung über externe `class`-/`style`-Steuerung ermöglichen, zum Beispiel `class="xl:wide"`; das Element selbst wertet keinen Breakpoint aus.
+- Enthält das Shadow DOM oder ein Default-Design einer `nte-*`-Komponente eine responsive Media Query? Dann entfernen; Media Queries sind dort nicht zulässig.
+- Enthält ein `nte-*`-Element `matchMedia`, einen Breakpoint-Listener oder sonstige eigene Breakpoint-Logik? Dann entfernen und den Zustand über die externe Responsive-Steuerungsoberfläche ausdrücken.
+- Ist es ein `ntl-*`-Layout mit eigenem Layout-Umschaltpunkt? Dann `--breakpoint` zusammen mit dem vorhandenen `BreakPointMixin` verwenden; keine eigene parallele Breakpoint-Auswertung bauen.
+- Benötigt JavaScript einen Darstellungswert? Dann den wirksamen berechneten Style lesen und keine parallele Property-/JS-Konfiguration anlegen.
+- Kann ein JS-relevanter Style über `class` oder `style` wechseln? Dann Änderungen beobachten und abhängige Berechnungen aktualisieren.
