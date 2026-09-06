@@ -80,7 +80,9 @@ Für wiederverwendbare Karten in Reihen, Grids und freien Inhaltsbereichen.
 ### @nextrap/nte-consent-blocker – Consent-Blocker für eingebettete Inhalte
 Verhindert das Laden oder Anzeigen zustimmungspflichtiger Inhalte bis zur Freigabe.
 
-- `<nte-consent-blocker>` — kapselt consent-abhängige Inhalte; Konfiguration und Zustände dem Package-Vertrag entnehmen.
+- `<nte-consent-blocker>` — kapselt consent-abhängige Inhalte; direkte Templates und explizite Slot-Inhalte haben Vorrang.
+- `--default-template-selector` — referenziert ein wiederverwendbares Dokument-Template, wenn kein direktes Consent-Template vorhanden ist.
+- `--default-background-selector` / `--default-pre-consent-selector` — liefern optionale Theme-Defaults für die beiden Slots; fehlen sie, erzeugt die Komponente Light-DOM-Fallbacks.
 
 ### @nextrap/nte-data-table – Datengetriebene Tabelle mit View-State
 Rendert Objektarrays anhand einer Tabellendefinition und serialisierbarem Ansichtsstatus.
