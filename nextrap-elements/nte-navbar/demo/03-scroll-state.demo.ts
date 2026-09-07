@@ -39,35 +39,18 @@ export default defineDemo({
   controls: {
     items: [
       {
-        id: 'style-static',
-        type: 'button',
-        label: 'Static',
-        onClick(_, env) {
-          setStylePreset(env, 'static');
-        },
-      },
-      {
-        id: 'style-sticky',
-        type: 'button',
-        label: 'Sticky',
-        onClick(_, env) {
-          setStylePreset(env, 'sticky');
-        },
-      },
-      {
-        id: 'style-transparent',
-        type: 'button',
-        label: 'Sticky transparent',
-        onClick(_, env) {
-          setStylePreset(env, 'transparent');
-        },
-      },
-      {
-        id: 'style-overlay',
-        type: 'button',
-        label: 'Fixed overlay',
-        onClick(_, env) {
-          setStylePreset(env, 'fixed-overlay');
+        id: 'style-preset',
+        type: 'select',
+        label: 'Style',
+        value: 'transparent',
+        options: [
+          { label: 'Static', value: 'static' },
+          { label: 'Sticky', value: 'sticky' },
+          { label: 'Sticky transparent', value: 'transparent' },
+          { label: 'Fixed overlay', value: 'fixed-overlay' },
+        ],
+        onChange(event, env) {
+          setStylePreset(env, String(event.value) as 'static' | 'sticky' | 'transparent' | 'fixed-overlay');
         },
       },
       {
@@ -82,18 +65,20 @@ export default defineDemo({
       },
       {
         id: 'toggle-top-line',
-        type: 'button',
-        label: 'Top-Line collapse an/aus',
-        onClick(_, env) {
-          env.query<HTMLElement>('#service-line').classList.toggle('with-collapse-on-scroll');
+        type: 'checkbox',
+        label: 'Top-Line collapse',
+        value: true,
+        onChange(event, env) {
+          env.query<HTMLElement>('#service-line').classList.toggle('with-collapse-on-scroll', Boolean(event.value));
         },
       },
       {
         id: 'toggle-shrink',
-        type: 'button',
-        label: 'Hauptleiste shrink an/aus',
-        onClick(_, env) {
-          env.query<HTMLElement>('#main-line').classList.toggle('with-shrink-on-scroll');
+        type: 'checkbox',
+        label: 'Hauptleiste shrink',
+        value: true,
+        onChange(event, env) {
+          env.query<HTMLElement>('#main-line').classList.toggle('with-shrink-on-scroll', Boolean(event.value));
         },
       },
     ],

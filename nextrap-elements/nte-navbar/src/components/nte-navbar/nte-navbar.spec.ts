@@ -120,4 +120,22 @@ describe('nte-navbar', () => {
     expect(navbar.classList.contains('is-scrolled')).toBe(false);
     expect(navbar.classList.contains('is-below-threshold')).toBe(false);
   });
+
+  it('propagates scroll state classes to navbar lines', () => {
+    const navbar = document.createElement('nte-navbar') as NteNavbar;
+    const line = document.createElement('nte-navbar-line');
+    navbar.style.setProperty('--nte-navbar-scroll-threshold', '12');
+    navbar.append(line);
+    document.body.append(navbar);
+
+    setScrollY(20);
+    window.dispatchEvent(new Event('scroll'));
+    expect(line.classList.contains('is-navbar-scrolled')).toBe(true);
+    expect(line.classList.contains('is-navbar-below-threshold')).toBe(true);
+
+    setScrollY(0);
+    window.dispatchEvent(new Event('scroll'));
+    expect(line.classList.contains('is-navbar-scrolled')).toBe(false);
+    expect(line.classList.contains('is-navbar-below-threshold')).toBe(false);
+  });
 });
