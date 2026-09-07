@@ -31,7 +31,7 @@ export default defineConfig(() => ({
     nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss', 'skills/**/*']),
     tjDemoViewerPlugin({ include: ['demo/**/*.demo.ts'] }),
     dts({
-      entryRoot: 'src',
+      entryRoot: '.',
       aliasesExclude: [/@nextrap\/.*/],
       tsconfigPath: path.join(__dirname, 'tsconfig.lib.json'),
     }),

@@ -49,32 +49,6 @@ Explicit slots are also supported:
 </nte-dialog>
 ```
 
-## Remote content
-
-A dialog with `src` loads its fragment lazily when the dialog becomes visible. The include unwraps after loading, so remote headings and footers become normal direct dialog content.
-
-```html
-<nte-dialog src="/dialogs/privacy.html">
-  <button class="launcher">Privacy</button>
-</nte-dialog>
-```
-
-`/dialogs/privacy.html`:
-
-```html
-<h2>Privacy</h2>
-<p>This body was loaded only when the dialog opened.</p>
-<div class="footer">Remote footer</div>
-```
-
-The default loading text is inherited from `tj-include` and can be configured through CSS:
-
-```css
-nte-dialog {
-  --tj-include-loader-text: 'Loading dialog…';
-}
-```
-
 ## Anchor opener using the element id
 
 ```html
@@ -97,13 +71,6 @@ An explicit anchor string takes precedence over `id`.
   <h2>Pricing</h2>
   <p>The public URL uses <code>#modal:pricing</code>, not the element id.</p>
 </nte-dialog>
-```
-
-Remote content and anchors can be combined:
-
-```html
-<a href="#modal:privacy">Privacy</a>
-<nte-dialog anchor="privacy" src="/dialogs/privacy.html"></nte-dialog>
 ```
 
 ## Dismiss behavior

@@ -25,7 +25,7 @@ export default defineConfig(() => ({
       },
     },
     dts({
-      entryRoot: 'src',
+      entryRoot: '.',
       aliasesExclude: [/@nextrap\/.*/],
       tsconfigPath: path.join(__dirname, 'tsconfig.lib.json'),
     }),
@@ -38,7 +38,7 @@ export default defineConfig(() => ({
       transformMixedEsModules: true,
     },
     lib: {
-      entry: 'src/index.ts',
+      entry: 'index.ts',
       name: 'style-elements',
       fileName: 'index',
       formats: ['es' as const],

@@ -1,6 +1,6 @@
 {
     "name": "@nextrap/ntl-card-grid",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "main": "./index.js",
     "repository": {
         "directory": "nextrap-layout/ntl-card-grid",

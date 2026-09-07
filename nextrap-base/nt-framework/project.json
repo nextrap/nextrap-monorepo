@@ -1,7 +1,7 @@
 {
     "name": "nt-framework",
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
-    "sourceRoot": "nextrap-base/nt-framework/src",
+    "sourceRoot": "{projectRoot}/src",
     "projectType": "library",
     "release": {
         "version": {
@@ -13,8 +13,25 @@
     "tags": [],
     "targets": {
         "nx-release-publish": {
+            "executor": "@nx/js:release-publish",
             "options": {
                 "packageRoot": "dist/{projectRoot}"
+            }
+        },
+        "build": {
+            "executor": "@nx/vite:build",
+            "outputs": ["{options.outputPath}"],
+            "defaultConfiguration": "production",
+            "options": {
+                "outputPath": "dist/{projectRoot}"
+            },
+            "configurations": {
+                "development": {
+                    "mode": "development"
+                },
+                "production": {
+                    "mode": "production"
+                }
             }
         }
     }

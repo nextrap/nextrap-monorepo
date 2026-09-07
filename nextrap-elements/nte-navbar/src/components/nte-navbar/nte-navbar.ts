@@ -18,6 +18,7 @@ export class NteNavbar extends nextrap_element({}) {
   private scrollThreshold = 1;
   private readonly styleObserver = new MutationObserver(() => this.refreshComponentStyle());
   private readonly _onScroll = () => this.updateScrollState();
+  private readonly _onSlotChange = () => this.updateScrollState();
 
   override connectedCallback() {
     super.connectedCallback();
@@ -50,12 +51,23 @@ export class NteNavbar extends nextrap_element({}) {
 
   private updateScrollState() {
     const scrollY = Math.max(0, window.scrollY);
-    this.classList.toggle('is-scrolled', scrollY > 0);
-    this.classList.toggle('is-below-threshold', scrollY > this.scrollThreshold);
+    const isScrolled = scrollY > 0;
+    const isBelowThreshold = scrollY > this.scrollThreshold;
+    this.classList.toggle('is-scrolled', isScrolled);
+    this.classList.toggle('is-below-threshold', isBelowThreshold);
+    this.syncLineScrollState(isScrolled, isBelowThreshold);
+  }
+
+  private syncLineScrollState(isScrolled: boolean, isBelowThreshold: boolean): void {
+    // Mirror the navbar state to line hosts so line Shadow DOM does not depend on ancestor selectors.
+    for (const line of Array.from(this.querySelectorAll<HTMLElement>('nte-navbar-line'))) {
+      line.classList.toggle('is-navbar-scrolled', isScrolled);
+      line.classList.toggle('is-navbar-below-threshold', isBelowThreshold);
+    }
   }
 
   override render() {
-    return html`<div id="navbar" part="navbar"><slot></slot></div>`;
+    return html`<div id="navbar" part="navbar"><slot @slotchange=${this._onSlotChange}></slot></div>`;
   }
 }
 

@@ -18,8 +18,9 @@ export default defineConfig(() => ({
   cacheDir: `../../node_modules/.vite/${dirName}`,
   plugins: [
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md']),
-    dts({ entryRoot: 'src', tsconfigPath: path.join(__dirname, 'tsconfig.lib.json') }),
+    // Übernimmt Dokumentation und die öffentliche Sass-API vollständig in das npm-Artefakt.
+    nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss']),
+    dts({ entryRoot: '.', tsconfigPath: path.join(__dirname, 'tsconfig.lib.json') }),
   ],
   // Uncomment this if you are using workers.
   // worker: {

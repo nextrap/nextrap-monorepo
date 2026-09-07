@@ -17,14 +17,17 @@
   overflow: clip;
   color: var(--text-color);
   background: var(--background);
-  transition: block-size 0.2s ease-in-out, max-block-size 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  transition:
+    block-size 0.2s ease-in-out,
+    max-block-size 0.2s ease-in-out,
+    opacity 0.2s ease-in-out;
 }
 
 :host(.with-shrink-on-scroll) {
   max-block-size: var(--height);
 }
 
-:host-context(nte-navbar.is-below-threshold):host(.with-shrink-on-scroll) {
+:host(.is-navbar-below-threshold.with-shrink-on-scroll) {
   block-size: var(--height-scrolled);
   max-block-size: var(--height-scrolled);
 }
@@ -34,6 +37,13 @@
   max-block-size: var(--height);
 }
 
+// Collapses opt-in lines when the navbar propagates its configured scroll threshold state.
+:host(.is-navbar-below-threshold.with-collapse-on-scroll),
+:host(.is-navbar-below-threshold.hide-on-scroll) {
+  block-size: 0;
+  max-block-size: 0;
+  opacity: 0;
+}
 
 #line {
   width: 100%;

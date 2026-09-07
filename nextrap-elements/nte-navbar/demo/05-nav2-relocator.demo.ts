@@ -1,7 +1,7 @@
-import { defineDemo } from '@trunkjs/demo-viewer';
 import '@nextrap/nte-burger';
 import '@nextrap/nte-nav';
 import '@nextrap/nte-offcanvas';
+import { defineDemo } from '@trunkjs/demo-viewer';
 import '@trunkjs/element-relocator';
 import '@trunkjs/responsive';
 
@@ -12,11 +12,37 @@ export default defineDemo({
   title: 'Nav 2 + Element Relocator',
   description: 'TrunkJS Responsive verschiebt eine verschachtelte NTE Nav 2 zwischen Navbar und Offcanvas',
   iframe: true,
+  controls: {
+    items: [
+      {
+        id: 'navbar-shadow-on-scroll',
+        type: 'checkbox',
+        label: 'Shadow on scroll',
+        value: true,
+        onChange(event, env) {
+          env.query<HTMLElement>('#responsive-navbar').classList.toggle('with-shadow-on-scroll', Boolean(event.value));
+        },
+      },
+      {
+        id: 'navbar-position',
+        type: 'select',
+        label: 'Position',
+        value: 'sticky',
+        options: [
+          { label: 'Static', value: 'static' },
+          { label: 'Sticky', value: 'sticky' },
+        ],
+        onChange(event, env) {
+          env.query<HTMLElement>('#responsive-navbar').style.setProperty('--nte-navbar-position', String(event.value));
+        },
+      },
+    ],
+  },
   render(root) {
     root.innerHTML = `
       <tj-responsive class="demo-responsive-shell">
         <section class="nte-navbar-demo">
-          <nte-navbar class="with-shadow-on-scroll" style="--container-width: 72rem; --nte-navbar-position: sticky">
+          <nte-navbar id="responsive-navbar" class="with-shadow-on-scroll" style="--container-width: 72rem; --nte-navbar-position: sticky">
             <nte-navbar-line style="--height: 4.75rem">
               <a slot="start" class="brand-logo" href="/" aria-label="Nextrap Startseite"><img src="${logoUrl}" alt="" /></a>
               <nte-nav

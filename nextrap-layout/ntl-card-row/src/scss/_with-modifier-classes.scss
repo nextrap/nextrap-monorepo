@@ -1,12 +1,21 @@
 @use 'with-footer-separators' as footer-separators;
+@use 'with-horizontal-flow' as horizontal-flow;
 @use 'with-raised-card' as raised-card;
 
+// Registriert die mit der Default-Style-Baseline ausgelieferten Modifier-Klassen.
 @mixin with-modifier-classes {
+  // Der horizontale Flow bleibt ein explizites Opt-in am Row-Element.
+  &.with-horizontal-flow {
+    @include horizontal-flow.with-horizontal-flow();
+  }
+
+  // Bestehende Footer-Varianten bleiben als aktuelle und Legacy-Klasse verfügbar.
   &.footer-separators,
   &.style-footer {
     @include footer-separators.with-footer-separators();
   }
 
+  // Einzelne hervorgehobene Cards erhalten weiterhin das bestehende Raised-Mixin.
   > nte-card.highlight {
     @include raised-card.with-raised-card();
   }

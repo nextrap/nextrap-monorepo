@@ -1,6 +1,6 @@
-import { defineDemo } from '@trunkjs/demo-viewer';
 import '@nextrap/nte-burger';
 import '@nextrap/nte-offcanvas';
+import { defineDemo } from '@trunkjs/demo-viewer';
 
 import logoUrl from './assets/nextrap-logo.svg?url';
 import './main';
@@ -13,20 +13,24 @@ export default defineDemo({
     items: [
       {
         id: 'navbar-shadow',
-        type: 'button',
-        label: 'Schatten an/aus',
-        onClick(_, env) {
-          env.query<HTMLElement>('#burger-navbar').classList.toggle('with-shadow');
+        type: 'checkbox',
+        label: 'Schatten',
+        value: true,
+        onChange(event, env) {
+          env.query<HTMLElement>('#burger-navbar').classList.toggle('with-shadow', Boolean(event.value));
         },
       },
       {
         id: 'navbar-position',
-        type: 'button',
-        label: 'Static / Sticky',
-        onClick(_, env) {
-          const navbar = env.query<HTMLElement>('#burger-navbar');
-          const current = getComputedStyle(navbar).getPropertyValue('--nte-navbar-position').trim();
-          navbar.style.setProperty('--nte-navbar-position', current === 'sticky' ? 'static' : 'sticky');
+        type: 'select',
+        label: 'Position',
+        value: 'sticky',
+        options: [
+          { label: 'Static', value: 'static' },
+          { label: 'Sticky', value: 'sticky' },
+        ],
+        onChange(event, env) {
+          env.query<HTMLElement>('#burger-navbar').style.setProperty('--nte-navbar-position', String(event.value));
         },
       },
     ],

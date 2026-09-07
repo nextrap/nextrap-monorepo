@@ -1,8 +1,8 @@
-// This is styling for the stepper container shadow DOM
+@use '@nextrap/style-elements' as elements;
 @use '@nextrap/style-reset' as reset;
 
+// Stellt Reset und funktionale Container-Styles innerhalb des Stepper-Shadow-DOM bereit.
 @include reset.reset();
-@use '@nextrap/style-elements' as elements;
 :host {
   position: relative;
   display: flex;
