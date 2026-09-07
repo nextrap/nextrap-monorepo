@@ -41,12 +41,33 @@
                     "description": "Demo/theme modifier: adds separator pseudo-elements between direct nte-card children via with-item-separators()."
                 },
                 {
+                    "name": "with-horizontal-flow",
+                    "description": "Enables the opt-in native horizontal card flow in mobile mode; desktop keeps the 12-column layout."
+                },
+                {
                     "name": "footer-separators",
                     "description": "Adds desktop separators between direct nte-card children."
                 },
                 {
                     "name": "style-footer",
                     "description": "Legacy alias for footer-separators."
+                }
+            ],
+            "properties": [
+                {
+                    "name": "--visible-cols-mobile",
+                    "description": "Number of cards visible in the mobile horizontal flow. Default: 1.15; values below 1 are clamped to 1.",
+                    "value": { "type": "number" }
+                },
+                {
+                    "name": "--horizontal-flow-gap",
+                    "description": "Inline gap between cards in the mobile horizontal flow. Default: var(--gutter-x).",
+                    "value": { "type": "string" }
+                },
+                {
+                    "name": "--horizontal-flow-snap",
+                    "description": "Native horizontal scroll-snap strength. Default: proximity.",
+                    "value": { "type": "string" }
                 }
             ],
             "parts": [

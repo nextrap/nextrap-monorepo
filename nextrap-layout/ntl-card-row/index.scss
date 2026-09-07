@@ -1,6 +1,8 @@
+// Veröffentlicht die selektorunabhängigen Styling- und Feature-Mixins des Packages.
 @forward 'src/scss/default-style';
 @forward 'src/scss/with-borderless-cards';
 @forward 'src/scss/with-footer-separators';
+@forward 'src/scss/with-horizontal-flow';
 @forward 'src/scss/with-item-separators';
 @forward 'src/scss/with-modifier-classes';
 @forward 'src/scss/with-raised-card';
