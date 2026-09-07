@@ -18,7 +18,8 @@ export default defineConfig(() => ({
   cacheDir: `../../node_modules/.vite/${dirName}`,
   plugins: [
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md']),
+    // Übernimmt Dokumentation und die öffentliche Sass-API vollständig in das npm-Artefakt.
+    nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss']),
     {
       name: 'watch-md-reload',
       handleHotUpdate({ file, server }) {
