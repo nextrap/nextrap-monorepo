@@ -5,10 +5,11 @@
 - integrate demo controls and component UX updates ([82000ba](https://github.com/nextrap/nextrap-monorepo/commit/82000ba))
 - integrate demo controls and component UX updates ([9b9b3c3](https://github.com/nextrap/nextrap-monorepo/commit/9b9b3c3))
 
+### 🩹 Fixes
+
+- use aliasesExclude to avoid internal relative paths ([6b8123e](https://github.com/nextrap/nextrap-monorepo/commit/6b8123e))
+
 ### ❤️ Thank You
 
+- Enzo Volkmann @evolkmann
 - Matthias @dermatthes
-
-## 1.0.1 (2026-02-13)
-
-This was a version bump only for nte-demo-viewer to align it with other projects, there were no code changes.
