@@ -2,7 +2,7 @@ import '@nextrap/style-base/default';
 import '@nextrap/style-typography/default';
 import { defineDemo } from '@trunkjs/demo-viewer';
 
-import '../src';
+import '../index';
 import style from './main.css?inline';
 
 export default defineDemo({

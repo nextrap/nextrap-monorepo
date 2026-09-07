@@ -3,7 +3,7 @@ import '@nextrap/style-typography/default';
 import '@trunkjs/content-pane';
 import { defineDemo } from '@trunkjs/demo-viewer';
 
-import '../src';
+import '../index';
 import markdown from './01-overview.md?raw';
 import './main.scss';
 
