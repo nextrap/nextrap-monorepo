@@ -99,6 +99,8 @@ Bindet Nextrap-spezifische Demo-Darstellung in die Dokumentationsumgebung ein.
 Für modale oder dialogartige Interaktionen mit Nextrap-Styling und Content-Pane-Integration.
 
 - `<nte-dialog>` und exportierte Dialogklasse — öffentlicher Dialog-Entrypoint; konkrete Steuerungs-API im package-lokalen Vertrag prüfen.
+- Ohne `style-*`-Variante bleiben native Dialogfläche und Sections transparent und übernehmen die Textfarbe; sichtbare Oberfläche, Farbe und Rahmen gehören der gewählten Variante beziehungsweise dem Theme.
+- `style-default()` bezieht die Standardfläche aus `--nt-surface-raised` mit weißem Fallback und die Textfarbe aus `--nt-text`; für gezieltes Theme-Styling stehen `dialog`, `header`, `content`, `footer` und `close-button` als Parts bereit.
 
 ### @nextrap/nte-dialog-component – Basis für Dialog-Inhaltskomponenten
 Für wiederverwendbare Komponenten, die innerhalb von Nextrap-Dialogen ausgeführt werden.
@@ -160,6 +162,8 @@ Für Header mit Start-, Center- und End-Bereichen sowie Sticky/Fixed- und Collap
 Für seitlich ein-/ausblendbare Inhalte, häufig als mobile Navigation.
 
 - `<nte-offcanvas>` und Exporte aus `src/index.ts` — Drawer-Oberfläche; Zustände/Events im Usage-Vertrag prüfen.
+- Ohne `style-*`-Variante oder explizites `--background-color` bleibt die native Dialogfläche transparent; `default-style()` liefert die sichtbare Theme-Fläche aus `--nt-primary-subtle`.
+- Theme-Anpassungen erfolgen über die Parts `offcanvas`, `dialog`, `header`, `main`, `footer`, `close` und `close-button`; `nte-offcanvas-pane` stellt zusätzlich `pane` bereit.
 
 ### @nextrap/nte-parallax-bg – Parallax-Hintergrund
 Für dekorative Hintergrundbewegung relativ zum Scrollverlauf.
@@ -280,6 +284,8 @@ Bündelt visuelle Muster wie Prose, Tabellen, Listen und Container.
 Setzt Elemente auf eine konsistente Basis zurück, besonders in Web Components.
 
 - Reset-Sass/CSS-Entrypoint — als funktionale Basis in Komponenten verwenden, ohne Theme-Regeln zu ersetzen.
+- Der Reset neutralisiert bei nativen `dialog`-Elementen nur `background`, `color` und `border`; Plattformverhalten, Top Layer, Positionierung, Größe, `open`/`:open` und `::backdrop` bleiben unberührt.
+- Verbraucher roher `dialog`-Elemente definieren ihre sichtbare Fläche und gegebenenfalls den Rahmen selbst; bei Nextrap-Komponenten übernehmen dies die jeweilige `style-*`-Variante oder das konsumierende Theme.
 
 ### @nextrap/style-switch – Zugängliche Switch-Styles
 Stellt Styling-Mixins für Schalter-/Toggle-Oberflächen bereit.
