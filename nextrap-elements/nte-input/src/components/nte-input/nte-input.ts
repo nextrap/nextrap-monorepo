@@ -1,16 +1,6 @@
-import {
-  Listen,
-  customElement,
-  html,
-  nextrap_element,
-  nothing,
-  property,
-  state,
-  unsafeCSS,
-} from '@nextrap/nt-core';
-import { waitForPreVisual } from '@trunkjs/browser-utils';
-import '@nextrap/style-base';
+import { Listen, customElement, html, nextrap_element, nothing, property, state, unsafeCSS } from '@nextrap/nt-core';
 import { resetStyle } from '@nextrap/style-reset';
+import { waitForPreVisual } from '@trunkjs/browser-utils';
 
 import { PropertyValues } from 'lit';
 import { parseInputOptions, serializeInputOptions } from '../../lib/options';
