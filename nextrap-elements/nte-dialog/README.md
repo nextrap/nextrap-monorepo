@@ -28,34 +28,6 @@ Automatic slot assignment:
 
 Explicit `slot="launcher"`, `slot="title"`, and `slot="footer"` assignments also work.
 
-## Remote content with `src`
-
-`src` loads an external HTML fragment through `tj-include`. Dialog remote content is always lazy: `NteDialog` creates an internal light-DOM `<tj-include lazy unwrap>` so the request starts only when the dialog content becomes visible. After loading, `unwrap` makes the fetched nodes direct light-DOM children of `NteDialog`, allowing the normal title/body/footer classification to apply.
-
-```html
-<nte-dialog src="/dialogs/privacy.html">
-  <button class="launcher">Privacy</button>
-</nte-dialog>
-```
-
-The remote fragment can use the same declarative conventions:
-
-```html
-<h2>Privacy</h2>
-<p>Remote dialog content.</p>
-<div class="footer">Remote footer</div>
-```
-
-The default include loader inherits `--tj-include-loader-text`, so it can be configured on the dialog:
-
-```css
-nte-dialog {
-  --tj-include-loader-text: 'Loading dialog…';
-}
-```
-
-`src` deliberately implies lazy loading; there is no separate `lazy` option on `NteDialog`.
-
 ## Anchor / hash opener
 
 `anchor` enables hash routing. A boolean anchor uses the element `id`:

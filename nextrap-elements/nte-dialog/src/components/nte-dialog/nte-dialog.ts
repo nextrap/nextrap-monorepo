@@ -1,7 +1,6 @@
 import { nextrap_element } from '@nextrap/nt-core';
 import { resetStyle } from '@nextrap/style-reset';
 import { SubLayoutApplyMixin } from '@trunkjs/content-pane';
-import '@trunkjs/prolit-elements';
 import { html, PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import style from './nte-dialog.scss?inline';
@@ -39,10 +38,6 @@ export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibil
   @property({ attribute: 'anchor', reflect: true, converter: anchorConverter })
   accessor anchor: boolean | string = false;
 
-  /** Remote HTML fragment. Dialog src is always loaded lazily on first visibility. */
-  @property({ type: String, reflect: true })
-  accessor src = '';
-
   @property({ type: Boolean, attribute: 'no-dismiss', reflect: true })
   accessor noDismiss = false;
 
@@ -57,7 +52,6 @@ export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibil
 
   private _isClosing = false;
   private _openedByAnchor = false;
-  private _srcInclude: HTMLElement | null = null;
   private _scrollLockActive = false;
 
   private readonly onHashChange = () => void this.syncWithAnchor();
@@ -65,7 +59,6 @@ export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibil
   override connectedCallback(): void {
     super.connectedCallback();
     window.addEventListener('hashchange', this.onHashChange);
-    this.syncSrcInclude();
     void this.updateComplete.then(() => this.syncWithAnchor());
   }
 
@@ -79,9 +72,6 @@ export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibil
     super.updated(changedProperties);
     if (changedProperties.has('anchor') || changedProperties.has('id')) {
       void this.syncWithAnchor();
-    }
-    if (changedProperties.has('src')) {
-      this.syncSrcInclude();
     }
   }
 
@@ -160,25 +150,6 @@ export class NteDialog extends SubLayoutApplyMixin(nextrap_element({ slotVisibil
     await this.waitForCloseTransition(el);
     if (el.open) el.close();
     this._isClosing = false;
-  }
-
-  private syncSrcInclude(): void {
-    if (!this.src) {
-      this._srcInclude?.remove();
-      this._srcInclude = null;
-      return;
-    }
-
-    if (!this._srcInclude?.isConnected) {
-      const include = document.createElement('tj-include');
-      include.setAttribute('data-nte-dialog-src', '');
-      include.setAttribute('lazy', '');
-      include.setAttribute('unwrap', '');
-      this._srcInclude = include;
-      this.append(include);
-    }
-
-    this._srcInclude.setAttribute('src', this.src);
   }
 
   private async waitForCloseTransition(el: HTMLDialogElement): Promise<void> {

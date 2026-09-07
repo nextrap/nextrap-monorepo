@@ -21,7 +21,7 @@ export default defineConfig(() => ({
     nxViteTsPaths(),
     nxCopyAssetsPlugin(['*.md']),
     dts({
-      entryRoot: 'src',
+      entryRoot: '.',
       aliasesExclude: [/@nextrap\/.*/],
       tsconfigPath: path.join(__dirname, 'tsconfig.lib.json'),
     }),
@@ -41,9 +41,9 @@ export default defineConfig(() => ({
     },
     lib: {
       // Could also be a dictionary or array of multiple entry points.
-      entry: resolve(__dirname, 'src/index.ts'),
+      entry: 'index.ts',
       name: 'NteMultiselect',
-      fileName: 'nte-multiselect',
+      fileName: 'index',
       // Change this to the formats you want to support.
       // Don't forget to update your package.json as well.
       formats: ['es'],

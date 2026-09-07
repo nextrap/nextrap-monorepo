@@ -1,7 +1,7 @@
 {
     "name": "@nextrap/nte-multiselect",
     "version": "2.0.0",
-    "main": "./src/index.ts",
+    "main": "./index.js",
     "repository": {
         "directory": "nextrap-elements/nte-multiselect",
         "type": "git",
@@ -16,9 +16,9 @@
     "type": "module",
     "exports": {
         ".": {
-            "import": "./src/index.ts",
-            "types": "./src/index.ts"
+            "import": "./index.js",
+            "types": "./index.d.ts"
         }
     },
-    "types": "./src/index.ts"
+    "types": "./index.d.ts"
 }

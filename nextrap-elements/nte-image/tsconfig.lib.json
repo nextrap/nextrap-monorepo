@@ -5,7 +5,7 @@
         "declaration": true,
         "types": ["node", "vite/client"]
     },
-    "include": ["src/**/*.ts", "src/components/nte-image/nte-image.spec.js"],
+    "include": ["index.ts", "src/**/*.ts", "src/components/nte-image/nte-image.spec.js"],
     "exclude": [
         "vite.config.ts",
         "vite.config.mts",

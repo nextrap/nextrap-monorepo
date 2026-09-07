@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { describe, expect, it, vi } from 'vitest';
 
-import '../../index';
+import '../../../index';
 import { AbstractNteInputPlugin } from '../../lib/plugin';
 import { NTE_INPUT_CONTROL_ID, NTE_INPUT_VALIDATION_ID, type NteInputValue } from '../../lib/types';
 import { NteInput } from './nte-input';

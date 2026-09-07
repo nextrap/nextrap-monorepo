@@ -20,7 +20,7 @@ export default defineConfig(() => ({
     nxViteTsPaths(),
     nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss', 'skills/**/*', 'web-types.json']),
     dts({
-      entryRoot: 'src',
+      entryRoot: '.',
       aliasesExclude: [/@nextrap\/.*/],
       tsconfigPath: path.join(__dirname, 'tsconfig.lib.json'),
     }),

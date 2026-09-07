@@ -28,7 +28,7 @@ export default defineConfig(() => ({
       },
     },
     dts({
-      entryRoot: 'src',
+      entryRoot: '.',
       aliasesExclude: [/@nextrap\/.*/],
       tsconfigPath: path.join(__dirname, 'tsconfig.lib.json'),
     }),

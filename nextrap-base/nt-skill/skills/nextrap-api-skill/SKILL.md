@@ -15,7 +15,9 @@ Dieser Skill ist der zentrale Einstieg für die Verwendung des gesamten Nextrap-
 
 § 1.2 Cross-Package-Imports erfolgen über `@nextrap/<package>` und nicht über relative Pfade in andere Packages. Aus `dist/`, `node_modules/` oder generierten Artefakten wird keine öffentliche API abgeleitet, wenn Quell-Entrypoints verfügbar sind.
 
-§ 1.3 Layouts werden für Markdown/Kramdown-Inhalte grundsätzlich zusammen mit `@trunkjs/content-pane` gedacht. Responsive Zustände werden über die vorhandene `@trunkjs/responsive`-Integration genutzt; Komponenten registrieren diese Infrastruktur nicht selbst.
+§ 1.3 Jedes veröffentlichbare Nextrap-Package besitzt seinen öffentlichen TypeScript-Entrypoint als `index.ts` direkt in der Package-Wurzel neben `package.json`. Vite verwendet immer `entry: 'index.ts'`, und die Declaration-Erzeugung verwendet `entryRoot: '.'`. `src/index.ts` ist kein öffentlicher Package-Entrypoint; Implementierungen unter `src/` werden ausschließlich vom Root-Entrypoint re-exportiert.
+
+§ 1.4 Layouts werden für Markdown/Kramdown-Inhalte grundsätzlich zusammen mit `@trunkjs/content-pane` gedacht. Responsive Zustände werden über die vorhandene `@trunkjs/responsive`-Integration genutzt; Komponenten registrieren diese Infrastruktur nicht selbst.
 
 ### § 2 Styling
 
@@ -39,7 +41,7 @@ Stellt Factory, Mixins und re-exportierte Browser-/Lit-Grundlagen für Nextrap-K
 ### @nextrap/nt-framework – Framework- und Integrationsgrundlagen
 Bündelt gemeinsame Integrationshilfen; direkte Nutzung nur über den öffentlichen Entrypoint.
 
-- Öffentlicher Entrypoint `src/index.ts` — exportiert die stabilen Framework-Hilfen; vor direkter Nutzung aktuellen Entrypoint prüfen.
+- Öffentlicher Entrypoint `index.ts` in der Package-Wurzel — exportiert die stabilen Framework-Hilfen; vor direkter Nutzung aktuellen Entrypoint prüfen.
 
 ### @nextrap/nt-meta – Metadaten für Organisation und Pakettypen
 Stellt kleine Metadaten-Konstanten und Typinformationen für Nextrap-Pakete bereit.
@@ -51,12 +53,12 @@ Stellt kleine Metadaten-Konstanten und Typinformationen für Nextrap-Pakete bere
 ### @nextrap/nt-nx-generators – Nx-Generatoren für Nextrap-Packages
 Erzeugt und migriert Package-Strukturen nach den aktuellen Nextrap-Konventionen.
 
-- Generator-Entrypoints aus `src/index.ts` — für neue Packages und definierte Migrationen; Generator-Templates sind Strukturreferenz.
+- Generator-Entrypoints aus `index.ts` in der Package-Wurzel — für neue Packages und definierte Migrationen; Generator-Templates sind Strukturreferenz.
 
 ### @nextrap/nt-scope – Scope- und Laufzeithilfen
 Kapselt Nextrap-spezifische Scope-Funktionen für Komponenten und Integrationen.
 
-- Öffentliche Exporte aus `src/index.ts`/`src/lib/nt-scope.ts` — Scope-Hilfen; nur über den Package-Entrypoint importieren.
+- Öffentliche Exporte aus `index.ts` in der Package-Wurzel/`src/lib/nt-scope.ts` — Scope-Hilfen; nur über den Package-Entrypoint importieren.
 
 ### @nextrap/nte-accordion – Accordion- und Disclosure-Komponenten
 Für auf- und zuklappbare Inhaltsgruppen mit einzelnen Accordion-Einträgen.
@@ -108,7 +110,7 @@ Für wiederverwendbare Komponenten, die innerhalb von Nextrap-Dialogen ausgefüh
 ### @nextrap/nte-element-highlighter – Hervorhebung von DOM-Elementen
 Für visuelles Markieren oder Fokussieren ausgewählter Elemente in Werkzeug- und UI-Flows.
 
-- Öffentliche Exporte aus `src/index.ts` — Highlighter-Komponente/-Hilfen; Entrypoint für konkrete API prüfen.
+- Öffentliche Exporte aus `index.ts` in der Package-Wurzel — Highlighter-Komponente/-Hilfen; Entrypoint für konkrete API prüfen.
 
 ### @nextrap/nte-feedback – Zentraler Feedback-Kanal für Anwendungen
 Für Alerts, Rückfragen, Loading-/Progress-Zustände sowie Erfolgs- und Fehlermeldungen.
@@ -120,12 +122,12 @@ Für Alerts, Rückfragen, Loading-/Progress-Zustände sowie Erfolgs- und Fehlerm
 ### @nextrap/nte-image – Bildkomponente für Nextrap-Inhalte
 Für Bilder mit Nextrap-spezifischer Darstellung und Integrationsverhalten.
 
-- `<nte-image>` beziehungsweise Exporte aus `src/index.ts` — öffentliche Bildoberfläche; Attribute und Parts im Package prüfen.
+- `<nte-image>` beziehungsweise Exporte aus `index.ts` in der Package-Wurzel — öffentliche Bildoberfläche; Attribute und Parts im Package prüfen.
 
 ### @nextrap/nte-infiniscroll – Infinite-Scroll-Komponente
 Für schrittweises Nachladen bei fortschreitendem Scrollen.
 
-- `<nte-infiniscroll>` beziehungsweise Exporte aus `src/index.ts` — Scroll-/Load-Oberfläche; konkrete Events und Optionen aus Entrypoint/README beziehen.
+- `<nte-infiniscroll>` beziehungsweise Exporte aus `index.ts` in der Package-Wurzel — Scroll-/Load-Oberfläche; konkrete Events und Optionen aus Entrypoint/README beziehen.
 
 ### @nextrap/nte-input – Aktuelle Eingabe- und Formular-Komponente
 Für neue Formularfelder; gegenüber `nte-input-old` die bevorzugte Implementierung.
@@ -136,7 +138,7 @@ Für neue Formularfelder; gegenüber `nte-input-old` die bevorzugte Implementier
 ### @nextrap/nte-input-old – Legacy-Eingabekomponente
 Nur für bestehende Kompatibilität oder Migration; nicht als Standard für neue Formulare.
 
-- Legacy-Exporte aus `src/index.ts` — nur verwenden, wenn bestehender Code dies erfordert.
+- Legacy-Exporte aus `index.ts` in der Package-Wurzel — nur verwenden, wenn bestehender Code dies erfordert.
 
 ### @nextrap/nte-multiselect – Mehrfachauswahl für Formulare
 Für Auswahl mehrerer Werte in einer einzelnen Eingabekomponente.
@@ -159,7 +161,7 @@ Für Header mit Start-, Center- und End-Bereichen sowie Sticky/Fixed- und Collap
 ### @nextrap/nte-offcanvas – Offcanvas- und Drawer-Komponente
 Für seitlich ein-/ausblendbare Inhalte, häufig als mobile Navigation.
 
-- `<nte-offcanvas>` und Exporte aus `src/index.ts` — Drawer-Oberfläche; Zustände/Events im Usage-Vertrag prüfen.
+- `<nte-offcanvas>` und Exporte aus `index.ts` in der Package-Wurzel — Drawer-Oberfläche; Zustände/Events im Usage-Vertrag prüfen.
 
 ### @nextrap/nte-parallax-bg – Parallax-Hintergrund
 Für dekorative Hintergrundbewegung relativ zum Scrollverlauf.
@@ -187,7 +189,7 @@ Für einen zugänglichen Rücksprung zum Anfang langer Seiten.
 ### @nextrap/nte-scrollspy – Aktive Sektion anhand des Scrollstands
 Für Navigationen oder Anzeigen, die der aktuell sichtbaren Inhaltssektion folgen.
 
-- `<nte-scrollspy>` beziehungsweise Exporte aus `src/index.ts` — Scrollspy-Oberfläche; Events/Target-Vertrag im Package prüfen.
+- `<nte-scrollspy>` beziehungsweise Exporte aus `index.ts` in der Package-Wurzel — Scrollspy-Oberfläche; Events/Target-Vertrag im Package prüfen.
 
 ### @nextrap/nte-slider – Slider- und Carousel-Komponente
 Für horizontal oder sequenziell dargestellte Inhaltsgruppen.
@@ -202,12 +204,12 @@ Für kompakte visuelle Anzeige laufender, nicht determiniert fortschreitender Ar
 ### @nextrap/nte-split-view – Geteilte Ansichten
 Für zwei oder mehr Bereiche mit einer Split-View-Interaktion.
 
-- `<nte-split-view>` beziehungsweise Exporte aus `src/index.ts` — Split-View-Oberfläche; Größen-/Interaktionsvertrag im Package prüfen.
+- `<nte-split-view>` beziehungsweise Exporte aus `index.ts` in der Package-Wurzel — Split-View-Oberfläche; Größen-/Interaktionsvertrag im Package prüfen.
 
 ### @nextrap/nte-stepper – Schrittweiser Wizard-/Prozessablauf
 Für mehrstufige Abläufe mit aktuellem Schritt und Navigation zwischen Schritten.
 
-- `<nte-stepper>` beziehungsweise Exporte aus `src/index.ts` — Stepper-Oberfläche; Schrittmodell und Events im Package prüfen.
+- `<nte-stepper>` beziehungsweise Exporte aus `index.ts` in der Package-Wurzel — Stepper-Oberfläche; Schrittmodell und Events im Package prüfen.
 
 ### @nextrap/nte-table – Native Tabellenbasis mit Spaltenzuständen
 Für native Light-DOM-Tabellen mit scrollbarem Body, fixierten Bereichen und Auswahl.
@@ -224,7 +226,7 @@ Für Benutzerwahl zwischen verfügbaren Themes oder Farbschemata.
 ### @nextrap/nte-tree-node – Knoten für hierarchische Baumdarstellung
 Für verschachtelte Tree-/Node-Strukturen mit expandierbaren Hierarchien.
 
-- `<nte-tree-node>` beziehungsweise Exporte aus `src/index.ts` — öffentlicher Knoten; Child-/State-Vertrag im Package prüfen.
+- `<nte-tree-node>` beziehungsweise Exporte aus `index.ts` in der Package-Wurzel — öffentlicher Knoten; Child-/State-Vertrag im Package prüfen.
 
 ### @nextrap/ntl-2col – Zwei-Spalten-Layout und Layout-Referenz
 Für zweispaltige Content-Pane-Seiten mit responsiver Anordnung.
@@ -240,7 +242,7 @@ Für mehrere Cards in einem responsiven Raster.
 ### @nextrap/ntl-card-row – Reihenlayout für Karten
 Für Cards in einer horizontalen/ responsiv umbrechenden Reihe.
 
-- `<ntl-card-row>` / Exporte aus `src/index.ts` — Card-Row-Layout.
+- `<ntl-card-row>` / Exporte aus `index.ts` in der Package-Wurzel — Card-Row-Layout.
 - `@nextrap/nte-card` — vorgesehene Kartenkomponente innerhalb des Layouts.
 
 ### @nextrap/ntl-footer – Footer-Layout

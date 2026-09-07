@@ -30,7 +30,7 @@ export default defineConfig((command) => ({
     nxViteTsPaths(),
     nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss']),
     dts({
-      entryRoot: 'src',
+      entryRoot: '.',
       aliasesExclude: [/@nextrap\/.*/],
       tsconfigPath: path.join(__dirname, 'tsconfig.lib.json'),
     }),
@@ -51,7 +51,7 @@ export default defineConfig((command) => ({
     },
     lib: {
       // Could also be a dictionary or array of multiple entry points.
-      entry: 'src/index.ts',
+      entry: 'index.ts',
       name: 'style-base',
       fileName: 'index',
       // Change this to the formats you want to support.
