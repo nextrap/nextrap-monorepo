@@ -14,8 +14,11 @@
             "projectChangelogs": true
         },
         "version": {
-            "preVersionCommand": "npx nx run-many -t build",
-            "updateDependents": "never"
+            "updateDependents": "never",
+            "versionActionsOptions": {
+                "installIgnoreScripts": true,
+                "installArgs": "--no-audit --no-fund"
+            }
         }
     },
     "plugins": [
