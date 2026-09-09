@@ -1,4 +1,10 @@
+@use '@nextrap/style-base';
 @use '../index' as navbar;
+@use '@nextrap/nte-offcanvas' as offcanvas;
+
+nte-offcanvas.style-default {
+  @include offcanvas.default-style();
+}
 
 .nte-navbar-demo {
   @include navbar.default-style();

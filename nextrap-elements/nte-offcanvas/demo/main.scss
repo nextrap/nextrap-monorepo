@@ -1,3 +1,9 @@
+@use '@nextrap/nte-offcanvas' as offcanvas;
+
+nte-offcanvas.style-default {
+  @include offcanvas.default-style();
+}
+
 .nte-offcanvas-demo {
   display: grid;
   gap: var(--nt-space-3);
