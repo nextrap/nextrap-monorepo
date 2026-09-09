@@ -1,10 +1,11 @@
+// Bezieht die Standardfläche aus Style Base; visuelle Overrides haben genau eine Komponentenvariable.
 @mixin default-style(
   $width: 33%,
   $min-width: 250px,
   $max-width: 400px,
   $z-index: 2000,
   $backdrop: rgb(from var(--nt-dark) r g b / 0.5),
-  $background-color: var(--nt-primary-subtle),
+  $background-color: var(--nt-surface),
   $header-background: transparent,
   $shadow-color: rgb(from var(--nt-dark) r g b / 0.5),
   $header-padding: var(--nt-space-4),
@@ -17,10 +18,10 @@
   --min-width: #{$min-width};
   --max-width: #{$max-width};
   --z-index: #{$z-index};
-  --backdrop: #{$backdrop};
-  --background-color: #{$background-color};
+  --nte-offcanvas-backdrop: #{$backdrop};
+  --nte-offcanvas-background: #{$background-color};
   --header-background: #{$header-background};
-  --shadow-color: #{$shadow-color};
+  --nte-offcanvas-shadow: 0 0 18px #{$shadow-color};
   --header-padding: #{$header-padding};
   --main-padding: #{$main-padding};
   --footer-padding: #{$footer-padding};
