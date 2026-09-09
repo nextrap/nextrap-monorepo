@@ -1,6 +1,7 @@
 /// <reference types='vitest' />
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
+import { tjDemoViewerPlugin } from '@trunkjs/vite-demo-viewer';
 import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
@@ -16,14 +17,12 @@ export default defineConfig(() => ({
   plugins: [
     nxViteTsPaths(),
     nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss']),
-    {
-      name: 'watch-md-reload',
-      handleHotUpdate({ file, server }) {
-        if (file.endsWith('.md')) {
-          server.ws.send({ type: 'full-reload' });
-        }
-      },
-    },
+    // Stellt die Paket-Demos über denselben Viewer wie die zentrale Übersicht bereit.
+    tjDemoViewerPlugin({
+      include: ['demo/**/*.demo.ts'],
+      route: '/',
+      title: 'style-elements Demos',
+    }),
     dts({
       entryRoot: '.',
       aliasesExclude: [/@nextrap\/.*/],
