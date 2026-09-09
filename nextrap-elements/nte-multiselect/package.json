@@ -7,11 +7,10 @@
         "type": "git",
         "url": "https://github.com/nextrap/nextrap-monorepo"
     },
-    "dependencies": {
-        "lit": "^3.0.0"
-    },
+    "dependencies": {},
     "peerDependencies": {
-        "@nextrap/style-reset": "^2.0.0"
+        "@nextrap/style-reset": "^2.0.0",
+        "lit": "^3.0.0"
     },
     "type": "module",
     "exports": {

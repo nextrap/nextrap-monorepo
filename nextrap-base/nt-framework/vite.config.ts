@@ -52,8 +52,8 @@ export default defineConfig(() => ({
       formats: ['es' as const],
     },
     rollupOptions: {
-      // External packages that should not be bundled into your library.
-      external: [],
+      // Peer-Libraries einschließlich Subpfaden bleiben extern und werden vom Host bereitgestellt.
+      external: (id) => !id.startsWith('.') && !path.isAbsolute(id),
     },
   },
 }));

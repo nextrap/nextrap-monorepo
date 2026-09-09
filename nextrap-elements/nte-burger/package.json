@@ -14,13 +14,16 @@
     },
     "dependencies": {
         "@nextrap/nt-core": "^2.0.0",
-        "@nextrap/nt-framework": "^2.0.0",
-        "@trunkjs/browser-utils": "^1.0.12"
+        "@nextrap/nt-framework": "^2.0.0"
     },
     "devDependencies": {
         "@nextrap/style-base": "^2.0.0",
         "@nextrap/style-typography": "^2.0.0"
     },
     "type": "module",
-    "types": "./index.d.ts"
+    "types": "./index.d.ts",
+    "peerDependencies": {
+        "@trunkjs/browser-utils": "^1.0.12",
+        "lit": "^3.3.2"
+    }
 }

@@ -7,11 +7,13 @@
         "type": "git",
         "url": "https://github.com/nextrap/nextrap-monorepo"
     },
-    "dependencies": {
-        "@nx/devkit": "^22.6.5"
-    },
+    "dependencies": {},
     "private": true,
     "type": "commonjs",
     "generators": "./generators.json",
-    "types": "./src/index.d.ts"
+    "types": "./src/index.d.ts",
+    "peerDependencies": {
+        "@nx/devkit": "^22.6.5",
+        "@nx/js": "^22.7.8"
+    }
 }

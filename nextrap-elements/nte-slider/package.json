@@ -8,10 +8,7 @@
         "url": "https://github.com/nextrap/nextrap-monorepo"
     },
     "dependencies": {
-        "@nextrap/style-reset": "^2.0.0",
-        "@trunkjs/browser-utils": "^1.0.12",
-        "@trunkjs/content-pane": "^1.0.12",
-        "lit": "^3.3.1"
+        "@nextrap/style-reset": "^2.0.0"
     },
     "devDependencies": {
         "@nextrap/nte-demo-viewer": "^2.0.0",
@@ -20,5 +17,10 @@
     },
     "type": "module",
     "types": "./index.d.ts",
-    "web-types": "./web-types.json"
+    "web-types": "./web-types.json",
+    "peerDependencies": {
+        "@trunkjs/browser-utils": "^1.0.12",
+        "@trunkjs/content-pane": "^1.0.12",
+        "lit": "^3.3.1"
+    }
 }

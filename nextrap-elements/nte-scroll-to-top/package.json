@@ -14,13 +14,15 @@
     },
     "dependencies": {
         "@nextrap/nt-core": "^2.0.0",
-        "@nextrap/style-reset": "^2.0.0",
-        "lit": "^3.3.1"
+        "@nextrap/style-reset": "^2.0.0"
     },
     "devDependencies": {
         "@nextrap/style-base": "^2.0.0",
         "@nextrap/style-typography": "^2.0.0"
     },
     "type": "module",
-    "types": "./index.d.ts"
+    "types": "./index.d.ts",
+    "peerDependencies": {
+        "lit": "^3.3.1"
+    }
 }

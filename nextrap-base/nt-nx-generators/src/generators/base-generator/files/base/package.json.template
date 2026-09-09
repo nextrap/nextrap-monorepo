@@ -13,8 +13,10 @@
         "url": "https://github.com/nextrap/nextrap-monorepo"
     },
     "dependencies": {
+        "@nextrap/style-reset": "^1.0.0"
+    },
+    "peerDependencies": {
         "@trunkjs/browser-utils": "^1.0.12",
-        "@nextrap/style-reset": "^1.0.0",
         "lit": "^3.3.1"
     },
     "devDependencies": {

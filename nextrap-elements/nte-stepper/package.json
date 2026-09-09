@@ -11,5 +11,8 @@
         "@nextrap/style-elements": "^2.0.0"
     },
     "type": "module",
-    "types": "./index.d.ts"
+    "types": "./index.d.ts",
+    "peerDependencies": {
+        "lit": "^3.3.2"
+    }
 }

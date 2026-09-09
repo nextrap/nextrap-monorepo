@@ -9,9 +9,7 @@
     },
     "dependencies": {
         "@nextrap/nte-input": "^2.0.0",
-        "@nextrap/style-reset": "^2.0.0",
-        "@trunkjs/browser-utils": "^1.0.12",
-        "lit": "^3.3.1"
+        "@nextrap/style-reset": "^2.0.0"
     },
     "devDependencies": {
         "@nextrap/nte-demo-viewer": "^2.0.0",
@@ -20,5 +18,10 @@
     },
     "type": "module",
     "types": "./index.d.ts",
-    "web-types": "./web-types.json"
+    "web-types": "./web-types.json",
+    "peerDependencies": {
+        "@lit/reactive-element": "^2.1.2",
+        "@trunkjs/browser-utils": "^1.0.12",
+        "lit": "^3.3.1"
+    }
 }
