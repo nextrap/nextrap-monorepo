@@ -28,6 +28,7 @@ export class DefaultSelectPlugin extends AbstractNteInputPlugin {
     return this.select;
   }
 
+  // Native Auswahlfelder kennen kein readonly; die interne Sperre erhält den Formularwert des Hosts.
   override render(context: NteInputRenderContext) {
     const { element } = context;
     const options = resolveInputOptions(element);
@@ -39,7 +40,7 @@ export class DefaultSelectPlugin extends AbstractNteInputPlugin {
         part="select"
         name=${element.getAttribute('name') ?? ''}
         aria-describedby=${NTE_INPUT_VALIDATION_ID}
-        ?disabled=${element.hasAttribute('disabled')}
+        ?disabled=${element.hasAttribute('disabled') || element.hasAttribute('readonly')}
         ?required=${element.hasAttribute('required')}
       >
         ${options.map(

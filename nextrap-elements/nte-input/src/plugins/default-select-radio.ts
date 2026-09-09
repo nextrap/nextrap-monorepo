@@ -33,6 +33,7 @@ export class DefaultSelectRadioPlugin extends AbstractNteInputPlugin {
     return this.normalizeSelectedValues(this.host.getAttribute('value'));
   }
 
+  // Native Auswahlfelder kennen kein readonly; die interne Sperre erhält den Formularwert des Hosts.
   override render(context: NteInputRenderContext) {
     const { element } = context;
     const options = resolveInputOptions(element);
@@ -61,7 +62,7 @@ export class DefaultSelectRadioPlugin extends AbstractNteInputPlugin {
                 value=${option.value}
                 aria-describedby=${NTE_INPUT_VALIDATION_ID}
                 ?checked=${selectedValues.has(option.value)}
-                ?disabled=${Boolean(option.disabled) || element.hasAttribute('disabled')}
+                ?disabled=${Boolean(option.disabled) || element.hasAttribute('disabled') || element.hasAttribute('readonly')}
                 ?required=${!element.multiple && element.hasAttribute('required')}
               />
               <span part="option-text">${this.renderOptionLabel(option) ?? nothing}</span>

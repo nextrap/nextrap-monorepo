@@ -35,6 +35,9 @@ export class NteInput extends nextrap_element({
   })
   accessor options: InputOptionsType | null = null;
   @property({ type: Boolean }) accessor multiple = false;
+  // Beobachtet Sperrzustände, damit auch nachträgliche Attributänderungen die Plugins neu rendern.
+  @property({ type: Boolean, reflect: true }) accessor disabled = false;
+  @property({ type: Boolean, attribute: 'readonly', reflect: true }) accessor readOnly = false;
   @property({ type: String, attribute: 'validation-message', reflect: true }) accessor validationMessage = '';
   @property({ type: Boolean, reflect: true }) accessor invalid = false;
   @property({ type: Boolean, reflect: true }) accessor valid = false;
@@ -112,11 +115,13 @@ export class NteInput extends nextrap_element({
 
   // Exposes the form-associated validity contract so tj-form can validate this custom control before submit.
   checkValidity(): boolean {
+    if (this.disabled || this.readOnly) return true;
     return this.#internals?.checkValidity() ?? this.#plugin?.isValid() ?? true;
   }
 
   // Reports the native validation state and lets the browser display the control's validation feedback.
   reportValidity(): boolean {
+    if (this.disabled || this.readOnly) return true;
     return this.#internals?.reportValidity() ?? this.#plugin?.isValid() ?? true;
   }
 
@@ -129,6 +134,17 @@ export class NteInput extends nextrap_element({
     super.updated(changedProperties);
     this.#plugin?.updated(changedProperties);
     this.syncPluginState();
+
+    // Entfernt veraltete Fehler beim Sperren und prüft entsperrte Pflichtfelder erneut.
+    if (changedProperties.has('disabled') || changedProperties.has('readOnly')) {
+      if (this.disabled || this.readOnly) {
+        this.#internals?.setValidity?.({});
+        this.invalid = false;
+        this.valid = false;
+      } else if (changedProperties.get('disabled') === true || changedProperties.get('readOnly') === true) {
+        this.onMustRevalidateInternal();
+      }
+    }
   }
 
   override render() {
@@ -270,26 +286,29 @@ export class NteInput extends nextrap_element({
 
   @Listen('click')
   onClick(e: Event) {
-    this.#plugin?.onClick(e);
-
     if (this.hasAttribute('disabled')) {
       return;
     }
+    this.#plugin?.onClick(e);
     this.#plugin?.getFormElement()?.focus();
   }
 
   @Listen('change')
   onChange(e: Event) {
+    // Gesperrte Controls dürfen ihren Formularwert nicht durch UI-Ereignisse ändern.
+    if (this.disabled || this.readOnly) return;
     this.#plugin?.onChange(e);
   }
 
   @Listen('input')
   onInput(e: Event) {
+    // Programmatische value-Zuweisungen bleiben auch bei gesperrter Benutzereingabe möglich.
+    if (this.disabled || this.readOnly) return;
     this.#plugin?.onInput(e);
   }
 
   #willValidate() {
-    if (this.hasAttribute('required') && !this.hasAttribute('disabled')) {
+    if (this.hasAttribute('required') && !this.hasAttribute('disabled') && !this.hasAttribute('readonly')) {
       return true;
     }
     return false;
