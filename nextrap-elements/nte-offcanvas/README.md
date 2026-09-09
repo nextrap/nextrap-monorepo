@@ -77,7 +77,7 @@ Use `::part(offcanvas)`, `::part(dialog)`, `::part(header)`, `::part(main)`, `::
   $max-width: 400px,
   $z-index: 2000,
   $backdrop: rgb(from var(--nt-dark) r g b / 0.5),
-  $background-color: var(--nt-primary-subtle),
+  $background-color: var(--nt-surface),
   $header-background: transparent,
   $shadow-color: rgb(from var(--nt-dark) r g b / 0.5),
   $header-padding: var(--nt-space-4),
@@ -89,3 +89,15 @@ Use `::part(offcanvas)`, `::part(dialog)`, `::part(header)`, `::part(main)`, `::
 ```
 
 Keep Shadow DOM styles functional only; visual defaults belong in the package SCSS mixin and are bound to `nte-offcanvas.style-default`.
+
+Die Standardfläche verwendet direkt `--nt-surface` aus Style Base. Dessen `light-dark()`-Wert folgt dem geerbten `color-scheme`: automatisch der Gerätepräferenz oder der expliziten Auswahl über `data-nt-scheme`. Das Theme bindet Style Base einmal auf Dokumentebene ein. Dialog verwendet dagegen die erhöhte Fläche `--nt-surface-raised`.
+
+Hintergrund, Backdrop und Schatten werden ausschließlich im Mixin über `--nte-offcanvas-background`, `--nte-offcanvas-backdrop` und `--nte-offcanvas-shadow` gesetzt. Es gibt keine zusätzlichen Farb-Aliase im Shadow DOM. Die Sass-Parameter bleiben unverändert nutzbar; ohne visuelle Style-Variante bleiben Fläche und Backdrop transparent und der Schatten entfällt.
+
+### Migration
+
+| Old | New |
+| --- | --- |
+| `--background-color` | `--nte-offcanvas-background` |
+| `--backdrop` | `--nte-offcanvas-backdrop` |
+| `--shadow-color: <color>` | `--nte-offcanvas-shadow: 0 0 18px <color>` |

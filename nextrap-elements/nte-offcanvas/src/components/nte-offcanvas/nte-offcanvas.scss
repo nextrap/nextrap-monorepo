@@ -1,5 +1,6 @@
 @use '@nextrap/style-elements' as elements;
 
+// Stellt die funktionale Konfiguration bereit; Theme-Farben setzt ausschließlich das äußere Style-Mixin.
 :host {
   --nte-offcanvas-placement: right;
   --nte-offcanvas-mode: overlay;
@@ -11,9 +12,6 @@
   --nte-offcanvas-max-height: 100dvh;
   --nte-offcanvas-transition-duration: var(--transition-duration, 240ms);
   --nte-offcanvas-transition-easing: cubic-bezier(0.2, 0.8, 0.2, 1);
-  --nte-offcanvas-background: var(--background-color, transparent);
-  --nte-offcanvas-shadow: 0 0 18px var(--shadow-color, rgb(0 0 0 / 18%));
-  --nte-offcanvas-backdrop: var(--backdrop, rgb(0 0 0 / 36%));
   --nte-offcanvas-backdrop-blur: 4px;
   --nte-offcanvas-close-display: flex;
   display: contents;
@@ -31,9 +29,9 @@
   max-height: none;
   color: inherit;
   z-index: var(--z-index, 2000);
-  // Set the panel color explicitly because iOS Safari may ignore the background shorthand on dialog surfaces.
-  background-color: var(--nte-offcanvas-background);
-  box-shadow: var(--nte-offcanvas-shadow);
+  // Setzt die Fläche explizit für iOS Safari; ohne Style-Variante bleibt sie transparent.
+  background-color: var(--nte-offcanvas-background, transparent);
+  box-shadow: var(--nte-offcanvas-shadow, none);
   flex-direction: column;
   opacity: 1;
   transition:
@@ -43,8 +41,9 @@
 #dialog[open] {
   display: flex;
 }
+// Konsumiert den Backdrop direkt aus der Style-Variante, ohne lokale Farbkopie.
 #dialog::backdrop {
-  background: var(--nte-offcanvas-backdrop);
+  background: var(--nte-offcanvas-backdrop, transparent);
   backdrop-filter: blur(var(--nte-offcanvas-backdrop-blur));
   opacity: 1;
   transition:
@@ -74,18 +73,18 @@
   max-width: var(--nte-offcanvas-max-width);
   height: 100dvh;
 }
-// Extend the panel background beyond the viewport edge so the 5% overshoot animation does not reveal the backdrop.
+// Verlängert dieselbe Fläche über den Viewport, damit der Overshoot keinen Backdrop-Spalt zeigt.
 #dialog[data-placement='left'] {
   left: 0;
   box-shadow:
-    -2.5vw 0 0 2.5vw var(--nte-offcanvas-background),
-    var(--nte-offcanvas-shadow);
+    -2.5vw 0 0 2.5vw var(--nte-offcanvas-background, transparent),
+    var(--nte-offcanvas-shadow, 0 0 transparent);
 }
 #dialog[data-placement='right'] {
   right: 0;
   box-shadow:
-    2.5vw 0 0 2.5vw var(--nte-offcanvas-background),
-    var(--nte-offcanvas-shadow);
+    2.5vw 0 0 2.5vw var(--nte-offcanvas-background, transparent),
+    var(--nte-offcanvas-shadow, 0 0 transparent);
 }
 #dialog[data-placement='left'][data-state='closed'] {
   transform: translateX(-100%);
