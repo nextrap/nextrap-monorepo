@@ -1,3 +1,9 @@
+## 2.0.3 (2026-09-09)
+
+### 🧱 Updated Dependencies
+
+- Updated nte-nav to 2.0.1
+
 ## 2.0.2 (2026-09-07)
 
 This was a version bump only for nte-navbar to align it with other projects, there were no code changes.
