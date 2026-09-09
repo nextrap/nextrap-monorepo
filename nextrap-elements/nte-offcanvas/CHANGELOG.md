@@ -1,3 +1,23 @@
+## 2.0.1 (2026-09-09)
+
+### 🚀 Features
+
+- integrate demo controls and component UX updates ([82000ba](https://github.com/nextrap/nextrap-monorepo/commit/82000ba))
+- integrate demo controls and component UX updates ([9b9b3c3](https://github.com/nextrap/nextrap-monorepo/commit/9b9b3c3))
+- **nte-offcanvas:** add offcanvas-aware pane ([31ebe5a](https://github.com/nextrap/nextrap-monorepo/commit/31ebe5a))
+
+### 🩹 Fixes
+
+- **nte-offcanvas:** remove system canvas fallback ([345a47a](https://github.com/nextrap/nextrap-monorepo/commit/345a47a))
+- **nte-offcanvas-demo:** use explicit action bar handlers ([d475101](https://github.com/nextrap/nextrap-monorepo/commit/d475101))
+- **nte-offcanvas:** clear pane inset when mode becomes overlay ([0785d98](https://github.com/nextrap/nextrap-monorepo/commit/0785d98))
+- **nte-offcanvas:** use valid fullscreen keyframes ([dd02817](https://github.com/nextrap/nextrap-monorepo/commit/dd02817))
+
+### ❤️ Thank You
+
+- Matthias @dermatthes
+- Matthias Leuffen
+
 ## 1.0.20 (2026-08-04)
 
 ### 🩹 Fixes
