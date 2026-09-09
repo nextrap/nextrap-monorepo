@@ -18,6 +18,7 @@ describe('styleTypography', () => {
     expect(result.css).toContain('var(--nt-header');
     expect(result.css).toContain('var(--nt-spacing-text');
     expect(result.css).toContain('var(--nt-text');
+    expect(result.css).toMatch(/ul\s*\{[^}]*padding-left:\s*1\.25em/s);
     expect(result.css).not.toContain('--nt-surface-');
     expect(result.css).not.toMatch(/(?:^|[},]\s*)(?:section|article)(?:\s|,|\{)/m);
   });

@@ -96,12 +96,15 @@
   background-color: var(--typography-mark-bg, var(--nt-warning-subtle, #fff3cd));
 }
 
+// Stellt nach globalen Resets den vollständigen Standardstil ungeordneter Listen wieder her; der Marker beginnt im normalen Textfluss, abweichende UL-Komponenten überschreiben diese Basis gezielt.
 @mixin ul() {
   margin-top: 0;
   margin-bottom: var(--typography-list-margin-bottom, var(--nt-spacing-text, 1rem));
+  padding-left: 1.25em;
   list-style: disc;
 }
 
+// Stellt nach globalen Resets den vollständigen Standardstil geordneter Listen wieder her; abweichende OL-Komponenten müssen diese Basis gezielt überschreiben.
 @mixin ol() {
   margin-top: 0;
   margin-bottom: var(--typography-list-margin-bottom, var(--nt-spacing-text, 1rem));
