@@ -29,8 +29,8 @@
   max-height: none;
   color: inherit;
   z-index: var(--z-index, 2000);
-  // Setzt die Fläche explizit für iOS Safari; ohne Style-Variante bleibt sie transparent.
-  background-color: var(--nte-offcanvas-background, transparent);
+  // Setzt die Fläche explizit für iOS Safari; ohne Farb-Override greift der geerbte Style-Base-Hintergrund.
+  background-color: var(--nte-offcanvas-background, var(--nt-surface));
   box-shadow: var(--nte-offcanvas-shadow, none);
   flex-direction: column;
   opacity: 1;
@@ -77,13 +77,13 @@
 #dialog[data-placement='left'] {
   left: 0;
   box-shadow:
-    -2.5vw 0 0 2.5vw var(--nte-offcanvas-background, transparent),
+    -2.5vw 0 0 2.5vw var(--nte-offcanvas-background, var(--nt-surface)),
     var(--nte-offcanvas-shadow, 0 0 transparent);
 }
 #dialog[data-placement='right'] {
   right: 0;
   box-shadow:
-    2.5vw 0 0 2.5vw var(--nte-offcanvas-background, transparent),
+    2.5vw 0 0 2.5vw var(--nte-offcanvas-background, var(--nt-surface)),
     var(--nte-offcanvas-shadow, 0 0 transparent);
 }
 #dialog[data-placement='left'][data-state='closed'] {

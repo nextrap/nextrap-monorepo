@@ -92,7 +92,7 @@ Keep Shadow DOM styles functional only; visual defaults belong in the package SC
 
 Die Standardfläche verwendet direkt `--nt-surface` aus Style Base. Dessen `light-dark()`-Wert folgt dem geerbten `color-scheme`: automatisch der Gerätepräferenz oder der expliziten Auswahl über `data-nt-scheme`. Das Theme bindet Style Base einmal auf Dokumentebene ein. Dialog verwendet dagegen die erhöhte Fläche `--nt-surface-raised`.
 
-Hintergrund, Backdrop und Schatten werden ausschließlich im Mixin über `--nte-offcanvas-background`, `--nte-offcanvas-backdrop` und `--nte-offcanvas-shadow` gesetzt. Es gibt keine zusätzlichen Farb-Aliase im Shadow DOM. Die Sass-Parameter bleiben unverändert nutzbar; ohne visuelle Style-Variante bleiben Fläche und Backdrop transparent und der Schatten entfällt.
+Hintergrund, Backdrop und Schatten werden ausschließlich im Mixin über `--nte-offcanvas-background`, `--nte-offcanvas-backdrop` und `--nte-offcanvas-shadow` gesetzt. Es gibt keine zusätzlichen Farb-Aliase im Shadow DOM. Die Sass-Parameter bleiben unverändert nutzbar; auch ohne visuelle Style-Variante fällt die Fläche direkt auf das geerbte `--nt-surface` zurück. Das gilt ebenfalls für die seitliche Flächenverlängerung während der Animation. Explizite Hintergrund-Overrides haben Vorrang; Backdrop und Schatten bleiben ohne Style-Variante transparent beziehungsweise ausgeschaltet.
 
 ### Migration
 
