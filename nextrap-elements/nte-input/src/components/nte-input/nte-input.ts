@@ -199,6 +199,14 @@ export class NteInput extends nextrap_element({
   }
 
   protected override update(changedProperties: PropertyValues) {
+    // Plugins lesen Host-Attribute im render(); Lit reflektiert Properties erst danach.
+    // Synchronisiert deshalb Sperrzustände vorab, auch beim Entsperren per JavaScript.
+    if (changedProperties.has('disabled')) {
+      this.toggleAttribute('disabled', this.disabled);
+    }
+    if (changedProperties.has('readOnly')) {
+      this.toggleAttribute('readonly', this.readOnly);
+    }
     super.update(changedProperties);
   }
 
