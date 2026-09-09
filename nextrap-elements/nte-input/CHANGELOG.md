@@ -1,3 +1,14 @@
+## 2.0.2 (2026-09-09)
+
+### 🩹 Fixes
+
+- **nte-input:** synchronize lock attributes before plugin rendering ([d67e386](https://github.com/nextrap/nextrap-monorepo/commit/d67e386))
+- **nte-input:** react to disabled and readonly state changes ([807d6a3](https://github.com/nextrap/nextrap-monorepo/commit/807d6a3))
+
+### ❤️ Thank You
+
+- Matthias Leuffen
+
 ## 2.0.1 (2026-09-07)
 
 ### 🚀 Features
