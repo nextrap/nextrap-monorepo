@@ -34,6 +34,7 @@ export class DefaultCheckboxPlugin extends AbstractNteInputPlugin {
     this.host.value = this.checkbox?.checked;
   }
 
+  // Native Auswahlfelder kennen kein readonly; die interne Sperre erhält den Formularwert des Hosts.
   override render(context: NteInputRenderContext) {
     const { element } = context;
 
@@ -47,7 +48,7 @@ export class DefaultCheckboxPlugin extends AbstractNteInputPlugin {
           name=${element.getAttribute('name') ?? ''}
           value=${element.getAttribute('value') ?? 'on'}
           ?checked=${this.host.value === true}
-          ?disabled=${element.hasAttribute('disabled')}
+          ?disabled=${element.hasAttribute('disabled') || element.hasAttribute('readonly')}
           ?required=${element.hasAttribute('required')}
         />
         <span part="checkbox-text">${element.label}</span>

@@ -670,3 +670,109 @@ describe('NteInput', () => {
     element.remove();
   });
 });
+
+// Prüft den gesamten Attribut-Lebenszyklus über alle eingebauten Control-Typen.
+describe('NteInput disabled and readonly', () => {
+  const types = ['text', 'email', 'password', 'textarea', 'checkbox', 'select', 'select-radio', 'token-input'];
+
+  it.each(types)('reacts to initial and dynamic lock attributes for %s', async (type) => {
+    const element = document.createElement('nte-input') as NteInput;
+    element.type = type;
+    element.options = [{ value: 'one', label: 'One' }, { value: 'two', label: 'Two', disabled: true }];
+    element.value = type === 'checkbox' ? true : ['select-radio', 'token-input'].includes(type) ? ['one'] : 'one';
+    element.setAttribute('disabled', '');
+    element.setAttribute('readonly', '');
+    document.body.appendChild(element);
+
+    try {
+      // Zwei Update-Zyklen berücksichtigen die vom Plugin reflektierten Host-Zustände.
+      const settle = async () => {
+        await element.updateComplete;
+        await element.updateComplete;
+      };
+      await settle();
+      const control = element.shadowRoot!.getElementById(NTE_INPUT_CONTROL_ID) as HTMLInputElement;
+      expect(control.disabled).toBe(true);
+
+      element.removeAttribute('disabled');
+      await settle();
+      const nativeReadonly = ['text', 'email', 'password', 'textarea', 'token-input'].includes(type);
+      expect(control.disabled).toBe(!nativeReadonly);
+      if (nativeReadonly) expect(control.readOnly).toBe(true);
+      if (type === 'token-input') {
+        expect(element.shadowRoot!.querySelector<HTMLButtonElement>('button')!.disabled).toBe(true);
+      }
+
+      element.removeAttribute('readonly');
+      await settle();
+      expect(control.disabled).toBe(false);
+      if (nativeReadonly) expect(control.readOnly).toBe(false);
+
+      element.setAttribute('disabled', '');
+      await settle();
+      expect(control.disabled).toBe(true);
+      element.disabled = false;
+      element.readOnly = true;
+      await settle();
+      expect(element.hasAttribute('disabled')).toBe(false);
+      expect(element.hasAttribute('readonly')).toBe(true);
+      expect(control.disabled).toBe(!nativeReadonly);
+      if (nativeReadonly) expect(control.readOnly).toBe(true);
+
+      element.readOnly = false;
+      await settle();
+      expect(control.disabled).toBe(false);
+      if (type === 'select-radio') {
+        expect(element.shadowRoot!.querySelectorAll<HTMLInputElement>('input')[1].disabled).toBe(true);
+      }
+      if (type === 'select') {
+        expect(element.shadowRoot!.querySelectorAll<HTMLOptionElement>('option')[1].disabled).toBe(true);
+      }
+    } finally {
+      element.remove();
+    }
+  });
+
+  // Simuliert ausschließlich die in jsdom fehlende native Formular-Assoziation.
+  it('keeps readonly form values and restores disabled values and required validation', async () => {
+    const setFormValue = vi.fn();
+    const setValidity = vi.fn();
+    const internals = vi.spyOn(HTMLElement.prototype, 'attachInternals').mockReturnValue({
+      setFormValue,
+      setValidity,
+      checkValidity: () => true,
+      reportValidity: () => true,
+    } as unknown as ElementInternals);
+    const element = document.createElement('nte-input') as NteInput;
+    element.setAttribute('name', 'title');
+    element.setAttribute('required', '');
+    element.value = 'saved';
+    document.body.appendChild(element);
+    try {
+      await element.updateComplete;
+      await element.updateComplete;
+      element.readOnly = true;
+      await element.updateComplete;
+      expect(setFormValue).toHaveBeenLastCalledWith('saved');
+      expect(setValidity).toHaveBeenLastCalledWith({});
+      expect(element.checkValidity()).toBe(true);
+
+      element.disabled = true;
+      await element.updateComplete;
+      expect(setFormValue).toHaveBeenLastCalledWith(null);
+      element.disabled = false;
+      await element.updateComplete;
+      expect(setFormValue).toHaveBeenLastCalledWith('saved');
+
+      element.value = '';
+      await element.updateComplete;
+      element.readOnly = false;
+      await element.updateComplete;
+      expect(setValidity).toHaveBeenLastCalledWith({ customError: true, badInput: true }, 'Invalid value');
+      expect(element.invalid).toBe(true);
+    } finally {
+      element.remove();
+      internals.mockRestore();
+    }
+  });
+});
