@@ -80,15 +80,17 @@ Use `::part(offcanvas)`, `::part(dialog)`, `::part(header)`, `::part(main)`, `::
   $background-color: var(--nt-surface),
   $header-background: transparent,
   $shadow-color: rgb(from var(--nt-dark) r g b / 0.5),
-  $header-padding: var(--nt-space-4),
-  $main-padding: 1rem,
-  $footer-padding: var(--nt-space-4),
+  $header-padding: var(--nt-space-4, 1rem),
+  $main-padding: 0,
+  $footer-padding: var(--nt-space-4, 1rem),
   $main-min-height: 200px,
   $transition-duration: 0.2s
 );
 ```
 
 Keep Shadow DOM styles functional only; visual defaults belong in the package SCSS mixin and are bound to `nte-offcanvas.style-default`.
+
+Der Hauptbereich ist standardmäßig ohne Padding, damit die Hover- und Aktivflächen einer vertikalen `nte-nav` bis an beide Offcanvas-Ränder reichen. Text- und Formularinhalte erhalten ihre Abstände über einen eigenen Inhaltswrapper oder explizit über `$main-padding` beziehungsweise `--main-padding`. Header, Close-Control und Footer verwenden `--nt-space-4` (Fallback `1rem`); direkt in den Header geslottete Elemente haben keine zusätzlichen Außenabstände. `$header-padding`/`--header-padding` und `$footer-padding`/`--footer-padding` bleiben überschreibbar.
 
 Die Standardfläche verwendet direkt `--nt-surface` aus Style Base. Dessen `light-dark()`-Wert folgt dem geerbten `color-scheme`: automatisch der Gerätepräferenz oder der expliziten Auswahl über `data-nt-scheme`. Das Theme bindet Style Base einmal auf Dokumentebene ein. Dialog verwendet dagegen die erhöhte Fläche `--nt-surface-raised`.
 

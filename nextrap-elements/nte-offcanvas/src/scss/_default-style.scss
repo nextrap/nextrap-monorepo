@@ -8,9 +8,9 @@
   $background-color: var(--nt-surface),
   $header-background: transparent,
   $shadow-color: rgb(from var(--nt-dark) r g b / 0.5),
-  $header-padding: var(--nt-space-4),
-  $main-padding: 1rem,
-  $footer-padding: var(--nt-space-4),
+  $header-padding: var(--nt-space-4, 1rem),
+  $main-padding: 0,
+  $footer-padding: var(--nt-space-4, 1rem),
   $main-min-height: 200px,
   $transition-duration: 0.2s
 ) {
@@ -22,9 +22,15 @@
   --nte-offcanvas-background: #{$background-color};
   --header-background: #{$header-background};
   --nte-offcanvas-shadow: 0 0 18px #{$shadow-color};
+  // Header und Close-Control teilen denselben Abstand; Hauptinhalte besitzen ihre eigenen Insets.
   --header-padding: #{$header-padding};
   --main-padding: #{$main-padding};
   --footer-padding: #{$footer-padding};
   --main-min-height: #{$main-min-height};
   --transition-duration: #{$transition-duration};
+
+  // Verhindert zusätzliche Überschriften-Margins neben dem konfigurierten Header-Padding.
+  > [slot='header'] {
+    margin: 0;
+  }
 }
