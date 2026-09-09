@@ -4,5 +4,5 @@ export * from './src/components/<%= name %>/<%= name %>';
 // export * from './src/mixins/<%= className %>Mixin';
 
 
-/* this bundles light dom styles by default */
-import './src/styles/index.scss';
+// Light-DOM-SCSS/-CSS niemals importieren oder (re-)exportieren, auch nicht indirekt.
+// Nur Theme/App bindet Light-DOM-Styles über die öffentliche Sass-Mixin-API ein.

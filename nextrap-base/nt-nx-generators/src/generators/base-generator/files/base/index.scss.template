@@ -1,1 +1,2 @@
-@use 'src/styles/index' as *;
+// Stellt nur die Mixin-API bereit; CSS entsteht erst beim @include im Theme.
+@forward './mixins';
