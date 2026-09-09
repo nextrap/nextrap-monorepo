@@ -1,0 +1,6 @@
+@use '../index' as reset;
+
+// Materialisiert die öffentliche Sass-API nur im Demo-Bereich, nicht in der Viewer-Oberfläche.
+.reset-demo {
+  @include reset.reset();
+}
