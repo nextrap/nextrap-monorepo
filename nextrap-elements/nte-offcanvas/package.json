@@ -1,6 +1,6 @@
 {
     "name": "@nextrap/nte-offcanvas",
-    "version": "2.0.3",
+    "version": "2.0.4",
     "main": "./index.js",
     "repository": {
         "directory": "nextrap-elements/nte-offcanvas",
@@ -16,11 +16,11 @@
         "@nextrap/style-base": "^2.0.0",
         "@nextrap/style-typography": "^2.0.0"
     },
-    "type": "module",
-    "types": "./index.d.ts",
-    "web-types": "./web-types.json",
     "peerDependencies": {
         "@trunkjs/browser-utils": "^1.0.47",
         "lit": "^3.3.1"
-    }
+    },
+    "type": "module",
+    "types": "./index.d.ts",
+    "web-types": "./web-types.json"
 }

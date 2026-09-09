@@ -1,3 +1,14 @@
+## 2.0.4 (2026-09-09)
+
+### 🩹 Fixes
+
+- **nte-offcanvas:** restore edge-to-edge content and consistent header spacing ([1981695](https://github.com/nextrap/nextrap-monorepo/commit/1981695))
+- declare external libraries as peers and retain test dependencies ([67c6ffa](https://github.com/nextrap/nextrap-monorepo/commit/67c6ffa))
+
+### ❤️ Thank You
+
+- Matthias Leuffen
+
 ## 2.0.3 (2026-09-09)
 
 This was a version bump only for nte-offcanvas to align it with other projects, there were no code changes.
