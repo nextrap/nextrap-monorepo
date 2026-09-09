@@ -1,0 +1,40 @@
+// Visualisiert Tokens ausschließlich im Demo-Container; style-base bleibt token-only.
+.token-demo {
+  font-family: var(--nt-font-family);
+  color: var(--nt-text);
+  background: var(--nt-surface);
+  padding: var(--nt-spacing-component);
+
+  h1,
+  h2 {
+    font-family: var(--nt-font-family-header);
+    margin-block: var(--nt-spacing-text);
+  }
+}
+
+// Lässt Farbmuster auch in schmalen Viewer-Panels umbrechen.
+.token-demo__colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--nt-space-2);
+
+  > div {
+    padding: var(--nt-space-4);
+    border: 1px solid var(--nt-border);
+    border-radius: var(--nt-border-radius);
+  }
+}
+
+// Macht jeden Abstand als Balken mit seiner tatsächlichen Token-Breite sichtbar.
+.token-demo__spacing {
+  display: flex;
+  align-items: center;
+  gap: var(--nt-space-3);
+  margin-block: var(--nt-space-2);
+
+  span {
+    display: block;
+    height: var(--nt-space-4);
+    background: var(--nt-primary);
+  }
+}
