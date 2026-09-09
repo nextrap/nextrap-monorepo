@@ -13,6 +13,7 @@ Diese Datei bleibt absichtlich kurz. Detaillierter Repository-Kontext steht in `
 ## Repo-spezifische Kurzregeln
 
 - Nicht aus `node_modules/`, `dist/` oder generierten Artefakten implementieren. Änderungen unter `workspaces/` sind nur nach ausdrücklicher Zustimmung des Users erlaubt; vorher den geplanten Umfang kurz erläutern.
+- Komponenten-`index.ts` dürfen niemals Light-DOM-SCSS/-CSS importieren, exportieren oder re-exportieren, auch nicht indirekt über Runtime-Module; Komponenten dürfen keine Light-DOM-Styles ausgeben oder injizieren. Die Einbindung erfolgt ausschließlich über öffentliche Sass-Mixins durch Theme/App; `index.scss` bleibt ohne CSS-Ausgabe. Verbindlicher Vertrag: `ARCHITECTURE.md`.
 - Cross-Package-Imports immer über `@nextrap/<package-name>`.
 - Externe npm-Abhängigkeiten nur im Root-`package.json` pflegen.
 
