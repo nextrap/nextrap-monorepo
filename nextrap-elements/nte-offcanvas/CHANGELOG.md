@@ -1,3 +1,14 @@
+## 2.0.2 (2026-09-09)
+
+### 🩹 Fixes
+
+- **nte-offcanvas:** fall back to inherited surface without style override ([9e7e6f8](https://github.com/nextrap/nextrap-monorepo/commit/9e7e6f8))
+- **nte-offcanvas:** use standard theme surface and remove color aliases ([51f90df](https://github.com/nextrap/nextrap-monorepo/commit/51f90df))
+
+### ❤️ Thank You
+
+- Matthias Leuffen
+
 ## 2.0.1 (2026-09-09)
 
 ### 🚀 Features
