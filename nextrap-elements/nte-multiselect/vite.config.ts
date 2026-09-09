@@ -50,8 +50,8 @@ export default defineConfig(() => ({
       formats: ['es'],
     },
     rollupOptions: {
-      // External packages that should not be bundled into your library. IMPORTANT!
-      external: (id) => !id.startsWith('.') && !path.isAbsolute(id) && !['lit', '@nextrap/style-reset'].includes(id),
+      // Lit einschließlich Subpfaden bleibt extern; der bestehende Style-Reset wird weiter eingebunden.
+      external: (id) => !id.startsWith('.') && !path.isAbsolute(id) && id !== '@nextrap/style-reset',
       output: {
         globals: {
           lit: 'Lit',

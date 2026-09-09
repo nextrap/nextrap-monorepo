@@ -19,10 +19,12 @@
   ],
   "dependencies": {
     "@nextrap/nt-core": "^2.0.0",
-    "@nextrap/nte-dialog": "^2.0.0",
-    "lit": "^3.0.0"
+    "@nextrap/nte-dialog": "^2.0.0"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "peerDependencies": {
+    "lit": "^3.0.0"
   }
 }

@@ -13,6 +13,12 @@ Layouts sind webcomponents, die auf Websites zusammen mit trunkjs/content-pane u
 
 Die nextrap elemente werden als einzelne packages auf npmjs veröffentlicht. Es darf daher keine direkten urls zwischen den packages geben. Diese müssen untereinander über @nextap/package-name importiert werden.
 
+## Externe Libraries und Test-Abhängigkeiten
+
+Jedes veröffentlichte Nextrap-Package deklariert alle direkt verwendeten externen Libraries (einschließlich Lit, Lit-Unterpaketen, TrunkJS und Libraries für veröffentlichte Generatoren) ausschließlich als `peerDependencies` mit einem kompatiblen Semver-Bereich. Bestehende erforderliche Mindestversionen dürfen nicht abgesenkt werden; neue Mindestversionen müssen durch verwendete APIs und Prüfungen begründet sein. Externe Libraries dürfen nicht zusätzlich in `dependencies` stehen und müssen beim Library-Build einschließlich ihrer Subpfade extern bleiben, damit die konsumierende Anwendung eine gemeinsame kompatible Instanz bereitstellt. Interne `@nextrap/*`-Abhängigkeiten bleiben von dieser Regel unberührt.
+
+Die lokale Installation für Unit-Tests, Demos, Typprüfung und Builds wird zentral durch passende `devDependencies` im Root-`package.json` sichergestellt; deren Versionen müssen alle Peer-Bereiche der Workspace-Packages erfüllen. Reine Test- und Buildwerkzeuge wie Vitest und jsdom gehören ausschließlich zu den Entwicklungsabhängigkeiten, nicht zu den Laufzeit- oder Peer-Abhängigkeiten der UI-Packages. Bei Änderungen sind `package-lock.json`, Package-Generatoren und betroffene Build-Konfigurationen konsistent zu halten und die Auflösung der Libraries in Unit-Tests sowie ihre Externalisierung im Library-Build zu prüfen.
+
 ## Basic rules
 
 - Wenn du Theme-Styles für ein konkretes `ntl-*`- oder `nte-*`-Package entwickelst oder änderst, lies zuerst dessen lokalen `.agents/skills/<component>-theming/SKILL.md` und nutze ihn als verbindlichen Komponenten-Contract.

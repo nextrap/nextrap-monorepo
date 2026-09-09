@@ -17,5 +17,8 @@
     },
     "type": "module",
     "types": "./index.d.ts",
-    "web-types": "./web-types.json"
+    "web-types": "./web-types.json",
+    "peerDependencies": {
+        "lit": "^3.3.2"
+    }
 }

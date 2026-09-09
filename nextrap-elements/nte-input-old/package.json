@@ -9,5 +9,8 @@
     },
     "dependencies": {},
     "type": "module",
-    "types": "./index.d.ts"
+    "types": "./index.d.ts",
+    "peerDependencies": {
+        "lit": "^3.3.2"
+    }
 }
