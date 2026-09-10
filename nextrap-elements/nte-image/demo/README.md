@@ -64,9 +64,9 @@ Mobile-optimized demonstrations:
 - ✅ **Event Handling** - Custom events and callbacks
 - ✅ **Error Handling** - Graceful degradation
 
-### Supported Attributes
+### CSS-Konfiguration und Datenattribute
 
-#### data-features
+#### --nte-image-features
 
 Space-separated list of features:
 
@@ -79,7 +79,7 @@ Space-separated list of features:
 
 #### Other Attributes
 
-- `interval` - Slideshow interval in milliseconds
+- `--nte-image-interval` (CSS) - Wechselintervall, z. B. `2s` oder `2000ms`
 - `data-crop` - Global crop settings
 - `debug` - Enable debug mode
 - `data-caption` - Individual image captions (on img elements)
@@ -90,7 +90,7 @@ Space-separated list of features:
 ### Basic Image
 
 ```html
-<nte-image data-features="fullsize round-borders">
+<nte-image style="--nte-image-features: fullsize round-borders;">
     <img src="image.jpg" alt="Description" />
 </nte-image>
 ```
@@ -98,7 +98,7 @@ Space-separated list of features:
 ### Full Slideshow
 
 ```html
-<nte-image data-features="slideshow arrows indicators fullsize" interval="4000">
+<nte-image style="--nte-image-features: slideshow arrows indicators fullsize; --nte-image-interval: 4000ms;">
     <img src="slide1.jpg" alt="Slide 1" data-caption="First slide" />
     <img src="slide2.jpg" alt="Slide 2" data-caption="Second slide" />
     <img src="slide3.jpg" alt="Slide 3" data-caption="Third slide" />
@@ -108,7 +108,7 @@ Space-separated list of features:
 ### Cropped Image
 
 ```html
-<nte-image data-features="fullsize" data-crop="top: 10%; bottom: 10%">
+<nte-image style="--nte-image-features: fullsize;" data-crop="top: 10%; bottom: 10%">
     <img src="image.jpg" alt="Cropped" style="object-position: center top" />
 </nte-image>
 ```

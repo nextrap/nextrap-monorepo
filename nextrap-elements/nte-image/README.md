@@ -17,7 +17,7 @@ nx dev nte-image
 Simple image with fullscreen capability:
 
 ```html
-<nte-image data-features="fullsize">
+<nte-image style="--nte-image-features: fullsize;">
     <img src="image.jpg" alt="Description" />
 </nte-image>
 ```
@@ -25,17 +25,17 @@ Simple image with fullscreen capability:
 Image with rounded corners:
 
 ```html
-<nte-image data-features="fullsize round-borders">
+<nte-image style="--nte-image-features: fullsize round-borders;">
     <img src="image.jpg" alt="Description" />
 </nte-image>
 ```
 
 ## Slideshow Features
 
-Auto-detected slideshow (multiple images automatically enable slideshow):
+Auto-detected slideshow (`auto` enables slideshow, arrows and indicators for multiple images):
 
 ```html
-<nte-image data-features="fullsize">
+<nte-image style="--nte-image-features: auto fullsize;">
     <img src="slide1.jpg" alt="Slide 1" />
     <img src="slide2.jpg" alt="Slide 2" />
     <img src="slide3.jpg" alt="Slide 3" />
@@ -45,7 +45,7 @@ Auto-detected slideshow (multiple images automatically enable slideshow):
 Full-featured slideshow with navigation and captions:
 
 ```html
-<nte-image data-features="slideshow arrows indicators fullsize round-borders" interval="4000">
+<nte-image style="--nte-image-features: slideshow arrows indicators fullsize round-borders; --nte-image-interval: 4000ms;">
     <img src="slide1.jpg" alt="Slide 1" data-caption="First slide caption" />
     <img src="slide2.jpg" alt="Slide 2" data-caption="Second slide caption" />
     <img src="slide3.jpg" alt="Slide 3" data-caption="Third slide caption" />
@@ -55,7 +55,7 @@ Full-featured slideshow with navigation and captions:
 Fast slideshow with custom interval:
 
 ```html
-<nte-image data-features="slideshow arrows indicators" interval="2000">
+<nte-image style="--nte-image-features: slideshow arrows indicators; --nte-image-interval: 2000ms;">
     <img src="image1.jpg" alt="Fast slide 1" />
     <img src="image2.jpg" alt="Fast slide 2" />
 </nte-image>
@@ -66,7 +66,7 @@ Fast slideshow with custom interval:
 Global crop applied to all images:
 
 ```html
-<nte-image data-features="fullsize" data-crop="top: 10%; bottom: 10%; left: 5%; right: 5%">
+<nte-image style="--nte-image-features: fullsize;" data-crop="top: 10%; bottom: 10%; left: 5%; right: 5%">
     <img src="image.jpg" alt="Cropped image" />
 </nte-image>
 ```
@@ -74,7 +74,7 @@ Global crop applied to all images:
 Individual crop settings per image:
 
 ```html
-<nte-image data-features="slideshow arrows">
+<nte-image style="--nte-image-features: slideshow arrows;">
     <img src="image1.jpg" alt="Portrait" data-crop="top: 20%; bottom: 20%" />
     <img src="image2.jpg" alt="Landscape" data-crop="left: 15%; right: 15%" />
 </nte-image>
@@ -83,7 +83,7 @@ Individual crop settings per image:
 Focus point control with object-position:
 
 ```html
-<nte-image data-features="slideshow indicators">
+<nte-image style="--nte-image-features: slideshow indicators;">
     <img src="image1.jpg" alt="Focus top" style="object-position: center top" data-caption="Top focus" />
     <img src="image2.jpg" alt="Focus center" style="object-position: center center" data-caption="Center focus" />
     <img src="image3.jpg" alt="Focus bottom" style="object-position: center bottom" data-caption="Bottom focus" />
@@ -103,7 +103,7 @@ Mixed units (pixels and percentages):
 Debug mode for development:
 
 ```html
-<nte-image data-features="slideshow indicators" debug>
+<nte-image style="--nte-image-features: slideshow indicators;" debug>
     <img src="image1.jpg" alt="Debug slide 1" />
     <img src="image2.jpg" alt="Debug slide 2" />
 </nte-image>
@@ -112,27 +112,25 @@ Debug mode for development:
 Slideshow that doesn't pause on hover:
 
 ```html
-<nte-image data-features="slideshow arrows dont-pause-on-hover">
+<nte-image style="--nte-image-features: slideshow arrows dont-pause-on-hover;">
     <img src="image1.jpg" alt="Continuous slide 1" />
     <img src="image2.jpg" alt="Continuous slide 2" />
 </nte-image>
 ```
 
-## Features (data-features attribute)
+## Features (`--nte-image-features`)
 
-- **slideshow** - Enables slideshow functionality (auto-enabled with multiple images)
+- **slideshow** - Enables slideshow functionality
 - **fullsize** - Enables fullscreen view on click
 - **arrows** - Shows navigation arrows for slideshow
 - **indicators** - Shows indicator dots for slideshow
 - **round-borders** - Applies rounded corners to the component
-- **blend** - Uses blend transition effect for slideshow (TODO: Not implemented yet)
+- **blend** - Uses the blend animation for the active slide
 - **dont-pause-on-hover** - Prevents slideshow from pausing on hover
 
 ## Attributes
 
-- **data-features** (string): Space-separated list of features to enable
 - **data-crop** (string): Global crop settings in CSS format (e.g., "top: 10%; left: 5%")
-- **interval** (number): Custom interval for slideshow transitions in milliseconds (default: 5000)
 - **debug** (boolean): Enables debug mode with detailed console logging
 
 ## Image Attributes
@@ -150,7 +148,34 @@ Each `<img>` element can have:
 - **indicators** - The container for the slideshow indicators
 - **navigation-arrows** - The container for the navigation arrows
 
+## CSS-Konfiguration und dynamische Änderungen
+
+`--nte-image-features` enthält unquotierte, durch Leerzeichen getrennte Feature-Namen. Ohne Wert oder mit `auto` werden bei mehreren Bildern Slideshow, Pfeile und Indikatoren aktiviert. Eine explizite Liste aktiviert nur die genannten Features; `none` deaktiviert alle und zeigt das erste Bild. `--nte-image-interval` akzeptiert positive Millisekundenwerte oder CSS-Zeiten wie `2s` und `2000ms`; fehlende oder ungültige Werte ergeben `5000ms`.
+
+```css
+/* Das Theme steuert dieselbe API wie ein Inline-Style. */
+nte-image.gallery {
+  --nte-image-features: slideshow arrows indicators fullsize;
+  --nte-image-interval: 4s;
+}
+```
+
+Änderungen an `class` und `style` des Hosts werden automatisch ausgewertet, einschließlich Navigation, Timer und Hover-Pause. Bei nachträglich geänderten geerbten Variablen oder Stylesheets ruft die Anwendung `element.refreshStyles()` auf. Es gibt keine parallele Feature-/Intervall-Konfiguration als Attribut oder JavaScript-Property. Datenbezogene Bildausschnitte (`data-crop`), Beschriftungen und Debug-Zustand bleiben erhalten.
+
+### Migration
+
+| Old | New |
+|---|---|
+| `data-features="slideshow arrows"` / `dataFeatures` | `style="--nte-image-features: slideshow arrows;"` |
+| `interval="2000"` / `interval` | `style="--nte-image-interval: 2s;"` |
+| `fullSize` / `roundBorders` als Konfiguration | `fullsize` / `round-borders` in `--nte-image-features` |
+
+Die alten Feature- und Intervall-Attribute werden nicht mehr ausgewertet. Die Demos verwenden ausschließlich die CSS-API.
+
 ## CSS Custom Properties
+
+- **--nte-image-features** - Feature-Liste, `auto` oder `none`
+- **--nte-image-interval** - Wechselintervall (Standard: `5000ms`)
 
 - **--nte-image-border-radius** - Border radius for rounded corners (default: 12px)
 
@@ -179,7 +204,7 @@ nte-image.banner {
 }
 ```
 
-Mit `data-features="slideshow arrows"` sind Vor-/Zurück-Buttons dauerhaft sichtbar, auch auf Touch-Geräten. Sie sind per Tastatur erreichbar und lösen in Formularen kein Submit aus. Über `::part(previous-button)` und `::part(next-button)` können Themes die Buttons anpassen; die übrigen dokumentierten Parts sind ebenfalls verfügbar.
+Mit `style="--nte-image-features: slideshow arrows;"` sind Vor-/Zurück-Buttons dauerhaft sichtbar, auch auf Touch-Geräten. Sie sind per Tastatur erreichbar und lösen in Formularen kein Submit aus. Über `::part(previous-button)` und `::part(next-button)` können Themes die Buttons anpassen; die übrigen dokumentierten Parts sind ebenfalls verfügbar.
 
 `import '@nextrap/nte-image'` benötigt keinen Default-Style-Import und exportiert kein Light-DOM-SCSS. Die Slideshow verwendet ihre funktionalen Shadow-DOM-Regeln und injiziert keine globalen Styles. Die separate bestehende Vollbildansicht bleibt unverändert.
 

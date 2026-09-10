@@ -3,7 +3,7 @@ import type { PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import componentStyles from './nte-image.scss?inline';
 import type { SlideShowConfig } from './nte-image.types';
-import { defaultSlideshowInterval, SlideShowTransitions } from './nte-image.types';
+import { defaultSlideshowInterval } from './nte-image.types';
 import { createFullsizeView, cropImage, cssToJson, detectMobileDevice } from './nte-image.utils';
 
 /**
@@ -11,19 +11,19 @@ import { createFullsizeView, cropImage, cssToJson, detectMobileDevice } from './
  *
  * @element nte-image
  *
- * @attr {string} data-features - Space-separated list of features to enable. Supported values:
+ * @cssprop --nte-image-features - Space-separated list of features to enable; none disables features. Supported values:
  *   - "slideshow" - Enables slideshow functionality
  *   - "fullsize" - Enables fullscreen view on click
  *   - "arrows" - Shows navigation arrows for slideshow
  *   - "indicators" - Shows indicator dots for slideshow
  *   - "round-borders" - Applies rounded corners to the component
- *   - "blend" - Uses blend transition effect for slideshow TODO: Not implemented yet
+ *   - "blend" - Uses blend animation for the active slide
  *   - "dont-pause-on-hover" - Prevents slideshow from pausing on hover
  *
  * @attr {string} data-crop - Global crop settings applied to all images. Format: "top: value; right: value; bottom: value; left: value"
  *   Values can be in pixels (e.g., "10px") or percentages (e.g., "10%")
  *
- * @attr {number} interval - Custom interval for slideshow transitions in milliseconds (default: 5000)
+ * @cssprop --nte-image-interval - Slideshow interval as milliseconds or CSS time (default: 5000ms)
  *
  * @attr {boolean} debug - Enables debug mode with detailed console logging for troubleshooting
  *
@@ -59,48 +59,13 @@ export class NteImage extends LitElement {
    */
   @property({ type: Array }) childDataCrop: Record<string, string>[] = [];
 
-  /**
-   * List of enabled features for the component.
-   * Features are specified in the data-features attribute as space-separated values.
-   */
-  @property({
-    type: Array,
-    attribute: 'data-features',
-    converter: {
-      fromAttribute: (value: string | null) => {
-        const result = value?.split(' ').filter(Boolean) || [];
-        return result;
-      },
-      toAttribute: (value: string[]) => {
-        return value.join(' ');
-      },
-    },
-  })
-  dataFeatures: string[] = [];
-
-  /**
-   * Configuration object for slideshow functionality.
-   * Contains settings like interval, transition effects, and UI elements visibility.
-   */
-  @property({ type: Object }) slidesShowConfig: SlideShowConfig = {};
-
-  /**
-   * Whether the component supports fullscreen view of images.
-   * Enabled when 'fullsize' is included in data-features.
-   */
-  @property({ type: Boolean }) fullSize = false;
-
-  /**
-   * Whether the component has rounded corners.
-   * Enabled when 'round-borders' is included in data-features.
-   */
-  @property({ type: Boolean }) roundBorders = false;
-
-  /**
-   * Custom interval duration for slideshow transitions in milliseconds.
-   * If not specified, defaults to defaultSlideshowInterval.
-   */
-  @property({ type: Number }) interval = 0;
+  // Ausschließlich aus dem berechneten CSS abgeleiteter Zustand, keine parallele Attribut-/Property-Konfiguration.
+  private _features: string[] = [];
+  private _styleSignature = '';
+  private _styleObserver: MutationObserver | null = null;
+  @state() slidesShowConfig: SlideShowConfig = {};
+  @state() fullSize = false;
+  @state() roundBorders = false;
 
   /**
    * Callback function called when the active slide changes.
@@ -277,7 +242,6 @@ export class NteImage extends LitElement {
 
     // Initialize arrays and objects to ensure they exist
     this.childDataCrop = [];
-    // Don't manually initialize dataFeatures - let the reactive property system handle it
     this.slidesShowConfig = {};
     this.globalDataCrop = {};
 
@@ -289,28 +253,11 @@ export class NteImage extends LitElement {
       this.childDataCrop[index] = cssToJson(child?.getAttribute('data-crop') || '');
     });
 
-    // Initialize slideshow config (dataFeatures is now handled by reactive property)
-    this.initSlidesShowConfig();
-
-    // Check for captions
-    const children = Array.from(this.children) as HTMLElement[];
-    this.slidesShowConfig.showCaptions = children.some((child) => child.getAttribute('data-caption') !== null);
-
-    this.fullSize = this.dataFeatures.includes('fullsize');
-    this.debugLog('Fullsize property set', {
-      fullSize: this.fullSize,
-      dataFeatures: this.dataFeatures,
-    });
-
-    // Set roundBorders based on data-features
-    this.roundBorders = this.dataFeatures.includes('round-borders');
-
-    // Apply round-borders class if needed
-    if (this.roundBorders && !this.currentCaption) {
-      this.classList.add('round-borders');
-    } else {
-      this.classList.remove('round-borders');
-    }
+    // Beobachtet externe Klassen-/Inline-Style-Wechsel und liest die tatsächliche CSS-Kaskade.
+    this._styleSignature = '';
+    this.refreshStyles();
+    this._styleObserver = new MutationObserver(() => this.refreshStyles());
+    this._styleObserver.observe(this, { attributes: true, attributeFilter: ['class', 'style'] });
 
     // Set initial caption
     this.updateCurrentCaption();
@@ -359,6 +306,8 @@ export class NteImage extends LitElement {
   override disconnectedCallback() {
     super.disconnectedCallback();
     this.clearInterval();
+    this._styleObserver?.disconnect();
+    this._styleObserver = null;
 
     if (this._resizeObserver) {
       this._resizeObserver.disconnect();
@@ -398,55 +347,58 @@ export class NteImage extends LitElement {
     }
   }
 
-  /**
-   * Lifecycle method called before each update
-   * Handles changes to reactive properties
-   */
-  override willUpdate(changedProperties: Map<string, unknown>) {
-    super.willUpdate(changedProperties);
+  /** Liest auch geerbte Theme-Werte erneut; nach Änderungen an Vorfahren explizit aufrufen. */
+  refreshStyles() {
+    if (!this.isConnected) return;
+    const style = getComputedStyle(this);
+    const featureValue = style.getPropertyValue('--nte-image-features').trim();
+    const intervalValue = style.getPropertyValue('--nte-image-interval').trim();
+    const imageCount = this.querySelectorAll(':scope > img').length;
+    const signature = JSON.stringify([featureValue, intervalValue, imageCount]);
+    if (signature === this._styleSignature) return;
+    this._styleSignature = signature;
 
-    if (changedProperties.has('dataFeatures')) {
-      this.debugLog('dataFeatures changed', {
-        oldValue: changedProperties.get('dataFeatures'),
-        newValue: this.dataFeatures,
-      });
+    // Leerer Wert bzw. auto aktiviert bei mehreren Bildern die bisherige Standard-Slideshow; none schaltet sie aus.
+    this._features = featureValue.split(/\s+/).filter(Boolean);
+    const automatic = !featureValue || this._features.includes('auto');
+    const disabled = this._features.includes('none');
+    const enabled = !disabled && (this._features.includes('slideshow') || (automatic && imageCount > 1));
+    const time = /^(\d+(?:\.\d+)?)(ms|s)?$/.exec(intervalValue);
+    const milliseconds = time ? Number(time[1]) * (time[2] === 's' ? 1000 : 1) : 0;
+    const wasFullSize = this.fullSize;
+    this.fullSize = !disabled && this._features.includes('fullsize');
+    this.roundBorders = !disabled && this._features.includes('round-borders');
+    this.slidesShowConfig = {
+      enabled,
+      interval: Number.isFinite(milliseconds) && milliseconds > 0 ? milliseconds : defaultSlideshowInterval,
+      pauseOnHover: !this._features.includes('dont-pause-on-hover'),
+      showArrows: !disabled && (this._features.includes('arrows') || automatic),
+      showIndicators: !disabled && (this._features.includes('indicators') || automatic),
+      transition: this._features.includes('blend') ? 'blend' : 'fade',
+    };
 
-      this.debugLog('dataFeatures updated', {
-        dataFeatures: this.dataFeatures,
-        includesFullsize: this.dataFeatures.includes('fullsize'),
-      });
-
-      // Update fullSize property
-      const wasFullSize = this.fullSize;
-      this.fullSize = this.dataFeatures.includes('fullsize');
-
-      this.debugLog('Fullsize state changed', {
-        wasFullSize,
-        newFullSize: this.fullSize,
-      });
-
-      // Handle fullsize feature changes
-      if (wasFullSize !== this.fullSize) {
-        if (this.fullSize) {
-          this.initFullSize();
-          this.debugLog('Fullsize feature enabled');
-        } else {
-          this.removeFullsizeClickHandlers();
-          this.debugLog('Fullsize feature disabled');
-        }
-      }
-
-      // Reinitialize slideshow config
-      this.initSlidesShowConfig();
-
-      // Update roundBorders
-      this.roundBorders = this.dataFeatures.includes('round-borders');
-      if (this.roundBorders && !this.currentCaption) {
-        this.classList.add('round-borders');
-      } else {
-        this.classList.remove('round-borders');
-      }
+    // Interne Zustandsklassen steuern das Shadow-CSS; der Signaturvergleich verhindert Beobachterschleifen.
+    this.classList.toggle('round-borders', this.roundBorders);
+    this.classList.toggle('fullsize', this.fullSize);
+    this.classList.toggle('blend', !disabled && this._features.includes('blend'));
+    this.classList.toggle('slideshow', enabled);
+    this.classList.toggle('single-image', !enabled);
+    this.clearInterval();
+    if (this._boundPauseSlideshow) this.removeEventListener('mouseenter', this._boundPauseSlideshow);
+    if (this._boundResumeSlideshow) this.removeEventListener('mouseleave', this._boundResumeSlideshow);
+    this._boundPauseSlideshow = null;
+    this._boundResumeSlideshow = null;
+    this.isPaused = this.isFullSizeActive || (this.slidesShowConfig.pauseOnHover === true && this.matches(':hover'));
+    if (enabled) {
+      this.attachSlideshowStyles();
+      this.initSlideshowInterval();
     }
+    if (wasFullSize !== this.fullSize) {
+      if (this.fullSize) this.initFullSize();
+      else this.removeFullsizeClickHandlers();
+    }
+    this.updateCurrentCaption();
+    this.requestUpdate();
   }
 
   /**
@@ -511,6 +463,7 @@ export class NteImage extends LitElement {
    * Updates crop data, captions, and reinitializes features
    */
   handleSlotChange = () => {
+    this.refreshStyles();
     this.childDataCrop = [];
     Array.from(this.children).forEach((child, index) => {
       this.childDataCrop[index] = cssToJson(child?.getAttribute('data-crop') || '');
@@ -552,45 +505,6 @@ export class NteImage extends LitElement {
   }
 
   /**
-   * Initializes slideshow configuration based on data-features
-   */
-  initSlidesShowConfig() {
-    // Check if slideshow is enabled
-    this.slidesShowConfig.enabled = this.dataFeatures.includes('slideshow');
-
-    if (!this.slidesShowConfig.enabled) {
-      // Check if there are multiple images and auto-enable slideshow
-      const imageCount = Array.from(this.children).filter(
-        (child) => child instanceof HTMLImageElement || child.tagName.toLowerCase() === 'img',
-      ).length;
-
-      if (imageCount > 1) {
-        this.slidesShowConfig.enabled = true;
-        this.dataFeatures.push('slideshow');
-        this.dataFeatures.push('arrows');
-        this.dataFeatures.push('indicators');
-      } else {
-        return;
-      }
-    }
-
-    // Set default values
-    this.slidesShowConfig.interval = this.interval || defaultSlideshowInterval;
-    this.slidesShowConfig.pauseOnHover = !this.dataFeatures.includes('dont-pause-on-hover');
-
-    // Set transition effect TODO: Right now it looks always the same - it does not change with different values.
-    const transition = SlideShowTransitions.find((t) => this.dataFeatures.includes(t));
-    this.slidesShowConfig.transition = transition || 'fade';
-
-    // Set UI options
-    this.slidesShowConfig.showArrows = this.dataFeatures.includes('arrows');
-    this.slidesShowConfig.showIndicators = this.dataFeatures.includes('indicators');
-
-    // Set roundBorders based on data-features
-    this.roundBorders = this.dataFeatures.includes('round-borders');
-  }
-
-  /**
    * Initializes the fullsize view functionality for images
    */
   initFullSize() {
@@ -610,11 +524,12 @@ export class NteImage extends LitElement {
    * Adds click handlers to all images for fullsize functionality
    */
   private addFullsizeClickHandlers() {
+    if (!this.isConnected || !this.fullSize) return;
     const images = Array.from(this.querySelectorAll('img'));
     this.debugLog('Adding click handlers to images', {
       imageCount: images.length,
       fullSize: this.fullSize,
-      dataFeatures: this.dataFeatures,
+      features: this._features,
     });
 
     if (images.length === 0) {
@@ -634,6 +549,7 @@ export class NteImage extends LitElement {
     });
 
     Promise.all(imagePromises).then(() => {
+      if (!this.isConnected || !this.fullSize) return;
       this.debugLog('All images loaded, adding click handlers');
 
       images.forEach((img, index) => {
@@ -686,6 +602,7 @@ export class NteImage extends LitElement {
    * Handles click events for fullsize view
    */
   private handleFullsizeClick = (event: MouseEvent) => {
+    if (!this.fullSize) return;
     // The target should always be an image since we're adding the listener directly to images
     const target = event.target as HTMLImageElement;
 

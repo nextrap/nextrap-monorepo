@@ -23,8 +23,8 @@ afterEach(() => {
 // Erzeugt bewusst unterschiedliche Bildformate und konfiguriert die öffentliche Feature-API.
 async function mount(style = '', features = 'slideshow arrows'): Promise<NteImage> {
   const element = document.createElement('nte-image');
-  element.setAttribute('data-features', features);
   element.setAttribute('style', style);
+  element.style.setProperty('--nte-image-features', features);
   for (const [width, height] of [[1200, 600], [400, 900]]) {
     const image = document.createElement('img');
     image.width = width;
@@ -89,5 +89,83 @@ describe('nte-image layout and navigation', () => {
       expect(image.style.width).toBe('100%');
       expect(image.style.height).toBe('100%');
     }
+  });
+});
+
+// Sichert die CSS-Kaskade und das Umschalten laufender Features ohne alte Konfigurationsattribute ab.
+describe('nte-image CSS configuration', () => {
+  it('updates navigation and stops autoplay after an inline style change', async () => {
+    const element = await mount('--nte-image-interval: 100ms;');
+    await vi.advanceTimersByTimeAsync(150);
+    expect(element.getCurrentSlideIndex()).toBe(1);
+    element.style.setProperty('--nte-image-features', 'none');
+    await Promise.resolve();
+    await element.updateComplete;
+    expect(element.shadowRoot!.querySelector('.navigation-arrows')).toBeNull();
+    expect(element.classList.contains('single-image')).toBe(true);
+    const index = element.getCurrentSlideIndex();
+    await vi.advanceTimersByTimeAsync(500);
+    expect(element.getCurrentSlideIndex()).toBe(index);
+  });
+
+  it('reads stylesheet configuration and reacts to class changes', async () => {
+    const sheet = document.createElement('style');
+    sheet.textContent = '.image-test-gallery { --nte-image-features: slideshow arrows; --nte-image-interval: 2s; } .image-test-static { --nte-image-features: none; }';
+    document.body.append(sheet);
+    const element = await mount();
+    element.style.removeProperty('--nte-image-features');
+    element.classList.add('image-test-gallery');
+    await Promise.resolve();
+    await element.updateComplete;
+    expect(element.shadowRoot!.querySelector('.next')).not.toBeNull();
+    expect(element.slidesShowConfig.interval).toBe(2000);
+    element.classList.replace('image-test-gallery', 'image-test-static');
+    await Promise.resolve();
+    await element.updateComplete;
+    expect(element.shadowRoot!.querySelector('.next')).toBeNull();
+  });
+
+  it('refreshes changed stylesheet values and rejects invalid intervals', async () => {
+    const sheet = document.createElement('style');
+    sheet.textContent = '.image-test-refresh { --nte-image-features: slideshow; --nte-image-interval: 3s; }';
+    document.body.append(sheet);
+    const element = await mount();
+    element.style.removeProperty('--nte-image-features');
+    element.classList.add('image-test-refresh');
+    element.refreshStyles();
+    expect(element.slidesShowConfig.interval).toBe(3000);
+    sheet.textContent = '.image-test-refresh { --nte-image-features: slideshow arrows; --nte-image-interval: -2s; }';
+    element.refreshStyles();
+    await element.updateComplete;
+    expect(element.slidesShowConfig.interval).toBe(5000);
+    expect(element.shadowRoot!.querySelector('.next')).not.toBeNull();
+  });
+
+  it('removes hover pause and fullscreen handlers when the CSS feature selection changes', async () => {
+    const element = await mount('', 'slideshow fullsize');
+    element.dispatchEvent(new MouseEvent('mouseenter'));
+    expect(element.isPaused).toBe(true);
+    element.style.setProperty('--nte-image-features', 'slideshow dont-pause-on-hover');
+    await Promise.resolve();
+    await element.updateComplete;
+    element.dispatchEvent(new MouseEvent('mouseenter'));
+    expect(element.isPaused).toBe(false);
+    expect(element.fullSize).toBe(false);
+    expect(element.classList.contains('fullsize')).toBe(false);
+  });
+
+  it('ignores legacy attributes and discovers images added after connection', async () => {
+    const element = document.createElement('nte-image');
+    element.setAttribute('data-features', 'fullsize');
+    element.setAttribute('interval', '1');
+    document.body.append(element);
+    await element.updateComplete;
+    expect(element.fullSize).toBe(false);
+    element.append(document.createElement('img'), document.createElement('img'));
+    await Promise.resolve();
+    await element.updateComplete;
+    expect(element.slidesShowConfig.enabled).toBe(true);
+    expect(element.slidesShowConfig.interval).toBe(5000);
+    expect(element.shadowRoot!.querySelector('.next')).not.toBeNull();
   });
 });

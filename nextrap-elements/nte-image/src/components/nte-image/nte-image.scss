@@ -303,12 +303,12 @@
 }
 
 /* Fullsize feature visual indicator */
-:host([data-features*='fullsize']) ::slotted(img) {
+:host(.fullsize) ::slotted(img) {
   cursor: zoom-in;
   transition: transform 0.2s ease;
 }
 
-:host([data-features*='fullsize']) ::slotted(img:hover) {
+:host(.fullsize) ::slotted(img:hover) {
   transform: scale(1.02);
 }
 
@@ -336,7 +336,7 @@
 }
 
 /* Blend transition animation for slideshow */
-:host(.slideshow[data-features*='blend']) ::slotted(img.active) {
+:host(.slideshow.blend) ::slotted(img.active) {
   animation: blendTransition 0.5s ease;
 }
 
@@ -357,4 +357,10 @@
 /* Fix for slideshow images to maintain proper sizing */
 :host(.slideshow) ::slotted(img) {
   object-fit: cover;
+}
+
+// Ohne Slideshow bleibt genau das erste Bild sichtbar, auch nach dem Abschalten per CSS.
+:host(.single-image) ::slotted(img:not(:first-of-type)) {
+  visibility: hidden;
+  pointer-events: none;
 }

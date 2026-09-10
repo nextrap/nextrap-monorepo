@@ -303,7 +303,7 @@
           <div class="demo-item">
             <div class="demo-title">Standard Image</div>
             <div class="demo-subtitle">Basic image with fullscreen feature</div>
-            <nte-image data-features="fullsize">
+            <nte-image style="--nte-image-features: fullsize;">
               <img src="https://picsum.photos/400/250?random=1" alt="Sample landscape" />
             </nte-image>
             <ul class="feature-list">
@@ -314,7 +314,7 @@
           <div class="demo-item">
             <div class="demo-title">Rounded Borders</div>
             <div class="demo-subtitle">Image with rounded corners</div>
-            <nte-image data-features="fullsize round-borders">
+            <nte-image style="--nte-image-features: fullsize round-borders;">
               <img src="https://picsum.photos/400/250?random=2" alt="Sample architecture" />
             </nte-image>
             <ul class="feature-list">
@@ -339,7 +339,7 @@
           <div class="demo-item">
             <div class="demo-title">Full Feature Slideshow</div>
             <div class="demo-subtitle">Auto-play with navigation and indicators</div>
-            <nte-image data-features="slideshow arrows indicators fullsize round-borders" interval="3000">
+            <nte-image style="--nte-image-features: slideshow arrows indicators fullsize round-borders; --nte-image-interval: 3000ms;">
               <img
                 src="https://picsum.photos/600/300?random=10"
                 alt="Nature scene 1"
@@ -370,7 +370,7 @@
           <div class="demo-item">
             <div class="demo-title">Minimal Slideshow</div>
             <div class="demo-subtitle">Simple auto-play slideshow</div>
-            <nte-image data-features="slideshow fullsize" interval="4000">
+            <nte-image style="--nte-image-features: slideshow fullsize; --nte-image-interval: 4000ms;">
               <img src="https://picsum.photos/600/300?random=20" alt="City scene 1" />
               <img src="https://picsum.photos/600/300?random=21" alt="City scene 2" />
               <img src="https://picsum.photos/600/300?random=22" alt="City scene 3" />
@@ -397,7 +397,7 @@
           <div class="demo-item">
             <div class="demo-title">Global Crop</div>
             <div class="demo-subtitle">Crop applied to all images</div>
-            <nte-image data-features="fullsize round-borders" data-crop="top: 10%; bottom: 10%; left: 5%; right: 5%">
+            <nte-image style="--nte-image-features: fullsize round-borders;" data-crop="top: 10%; bottom: 10%; left: 5%; right: 5%">
               <img src="https://picsum.photos/500/400?random=30" alt="Cropped image" />
             </nte-image>
             <ul class="feature-list">
@@ -411,7 +411,7 @@
           <div class="demo-item">
             <div class="demo-title">Individual Crop</div>
             <div class="demo-subtitle">Different crop for each image</div>
-            <nte-image data-features="slideshow arrows fullsize" interval="5000">
+            <nte-image style="--nte-image-features: slideshow arrows fullsize; --nte-image-interval: 5000ms;">
               <img
                 src="https://picsum.photos/500/400?random=31"
                 alt="Portrait crop"
@@ -442,7 +442,7 @@
           <div class="demo-item">
             <div class="demo-title">Focus Point Control</div>
             <div class="demo-subtitle">Using object-position for image focus</div>
-            <nte-image data-features="slideshow indicators fullsize round-borders" interval="4000">
+            <nte-image style="--nte-image-features: slideshow indicators fullsize round-borders; --nte-image-interval: 4000ms;">
               <img
                 src="https://picsum.photos/600/400?random=40"
                 alt="Focus top"
@@ -483,7 +483,7 @@
           <div class="demo-item">
             <div class="demo-title">Fast Slideshow</div>
             <div class="demo-subtitle">Quick transitions (2 seconds)</div>
-            <nte-image data-features="slideshow arrows indicators fullsize" interval="2000">
+            <nte-image style="--nte-image-features: slideshow arrows indicators fullsize; --nte-image-interval: 2000ms;">
               <img
                 src="https://picsum.photos/400/250?random=50"
                 alt="Fast slide 1"
@@ -503,7 +503,7 @@
           <div class="demo-item">
             <div class="demo-title">No Pause on Hover</div>
             <div class="demo-subtitle">Continuous slideshow</div>
-            <nte-image data-features="slideshow arrows dont-pause-on-hover round-borders" interval="3500">
+            <nte-image style="--nte-image-features: slideshow arrows dont-pause-on-hover round-borders; --nte-image-interval: 3500ms;">
               <img
                 src="https://picsum.photos/400/250?random=60"
                 alt="Continuous 1"
@@ -523,7 +523,7 @@
           <div class="demo-item">
             <div class="demo-title">Debug Mode</div>
             <div class="demo-subtitle">Check browser console for debug info</div>
-            <nte-image data-features="slideshow indicators fullsize" debug interval="6000">
+            <nte-image style="--nte-image-features: slideshow indicators fullsize; --nte-image-interval: 6000ms;" debug>
               <img
                 src="https://picsum.photos/400/250?random=70"
                 alt="Debug image 1"
@@ -554,7 +554,7 @@
         <div class="demo-item">
           <div class="demo-title">Basic Implementation</div>
           <div class="code-snippet">
-            &lt;nte-image data-features="fullsize round-borders"&gt; &lt;img src="image.jpg" alt="Description" /&gt;
+            &lt;nte-image style="--nte-image-features: fullsize round-borders;"&gt; &lt;img src="image.jpg" alt="Description" /&gt;
             &lt;/nte-image&gt;
           </div>
         </div>
@@ -562,7 +562,7 @@
         <div class="demo-item">
           <div class="demo-title">Full-Featured Slideshow</div>
           <div class="code-snippet">
-            &lt;nte-image data-features="slideshow arrows indicators fullsize round-borders" interval="4000"&gt; &lt;img
+            &lt;nte-image style="--nte-image-features: slideshow arrows indicators fullsize round-borders; --nte-image-interval: 4000ms;"&gt; &lt;img
             src="slide1.jpg" alt="Slide 1" data-caption="First slide" /&gt; &lt;img src="slide2.jpg" alt="Slide 2"
             data-caption="Second slide" /&gt; &lt;img src="slide3.jpg" alt="Slide 3" data-caption="Third slide" /&gt;
             &lt;/nte-image&gt;
@@ -572,7 +572,7 @@
         <div class="demo-item">
           <div class="demo-title">Image Cropping</div>
           <div class="code-snippet">
-            &lt;nte-image data-features="fullsize" data-crop="top: 10%; bottom: 10%"&gt; &lt;img src="image.jpg"
+            &lt;nte-image style="--nte-image-features: fullsize;" data-crop="top: 10%; bottom: 10%"&gt; &lt;img src="image.jpg"
             alt="Cropped image" style="object-position: center top" /&gt; &lt;/nte-image&gt;
           </div>
         </div>

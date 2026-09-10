@@ -337,7 +337,7 @@
           <div class="demo-item">
             <div class="demo-title">High-Speed Slideshow</div>
             <div class="demo-subtitle">Stress test with 500ms intervals</div>
-            <nte-image data-features="slideshow arrows indicators fullsize" interval="500" debug>
+            <nte-image style="--nte-image-features: slideshow arrows indicators fullsize; --nte-image-interval: 500ms;" debug>
               <img
                 src="https://picsum.photos/400/200?random=300"
                 alt="Speed test 1"
@@ -365,7 +365,7 @@
           <div class="demo-item">
             <div class="demo-title">Large Image Set</div>
             <div class="demo-subtitle">Memory management with 10 images</div>
-            <nte-image data-features="slideshow indicators fullsize round-borders" interval="2000" debug>
+            <nte-image style="--nte-image-features: slideshow indicators fullsize round-borders; --nte-image-interval: 2000ms;" debug>
               <img src="https://picsum.photos/400/200?random=310" alt="Large set 1" data-caption="Image 1 of 10" />
               <img src="https://picsum.photos/400/200?random=311" alt="Large set 2" data-caption="Image 2 of 10" />
               <img src="https://picsum.photos/400/200?random=312" alt="Large set 3" data-caption="Image 3 of 10" />
@@ -401,7 +401,7 @@
             <div class="demo-title">Pixel-Perfect Cropping</div>
             <div class="demo-subtitle">Mix of percentage and pixel values</div>
             <nte-image
-              data-features="fullsize round-borders"
+              style="--nte-image-features: fullsize round-borders;"
               data-crop="top: 30px; bottom: 20%; left: 10%; right: 50px"
             >
               <img src="https://picsum.photos/600/400?random=400" alt="Precise crop" style="object-position: 30% 70%" />
@@ -419,7 +419,7 @@
           <div class="demo-item">
             <div class="demo-title">Dynamic Crop Slideshow</div>
             <div class="demo-subtitle">Each image has different crop settings</div>
-            <nte-image data-features="slideshow arrows indicators fullsize" interval="4000" debug>
+            <nte-image style="--nte-image-features: slideshow arrows indicators fullsize; --nte-image-interval: 4000ms;" debug>
               <img
                 src="https://picsum.photos/500/400?random=410"
                 alt="Crop 1"
@@ -460,7 +460,7 @@
           <div class="demo-item">
             <div class="demo-title">Extreme Cropping</div>
             <div class="demo-subtitle">Heavy cropping with scaling compensation</div>
-            <nte-image data-features="fullsize" data-crop="top: 40%; bottom: 40%; left: 30%; right: 30%">
+            <nte-image style="--nte-image-features: fullsize;" data-crop="top: 40%; bottom: 40%; left: 30%; right: 30%">
               <img
                 src="https://picsum.photos/800/600?random=420"
                 alt="Extreme crop"
@@ -492,8 +492,7 @@
             <div class="demo-subtitle">All events logged to console and displayed</div>
             <nte-image
               id="eventDemo"
-              data-features="slideshow arrows indicators fullsize round-borders"
-              interval="3000"
+              style="--nte-image-features: slideshow arrows indicators fullsize round-borders; --nte-image-interval: 3000ms;"
               debug
             >
               <img
@@ -525,7 +524,7 @@
           <div class="demo-item">
             <div class="demo-title">Performance Metrics</div>
             <div class="demo-subtitle">Real-time performance monitoring</div>
-            <nte-image id="metricsDemo" data-features="slideshow indicators fullsize" interval="2000" debug>
+            <nte-image id="metricsDemo" style="--nte-image-features: slideshow indicators fullsize; --nte-image-interval: 2000ms;" debug>
               <img
                 src="https://picsum.photos/400/250?random=510"
                 alt="Metrics 1"
@@ -564,7 +563,7 @@
           <div class="demo-item">
             <div class="demo-title">Invalid Crop Values</div>
             <div class="demo-subtitle">Component handles malformed crop data gracefully</div>
-            <nte-image data-features="fullsize debug" data-crop="top: invalid; bottom: 200%; left: -50px; right: abc">
+            <nte-image style="--nte-image-features: fullsize debug;" data-crop="top: invalid; bottom: 200%; left: -50px; right: abc">
               <img src="https://picsum.photos/400/250?random=600" alt="Invalid crop test" />
             </nte-image>
             <ul class="feature-list">
@@ -581,7 +580,7 @@
           <div class="demo-item">
             <div class="demo-title">Missing Images</div>
             <div class="demo-subtitle">Slideshow with some broken image URLs</div>
-            <nte-image data-features="slideshow arrows indicators debug" interval="3000">
+            <nte-image style="--nte-image-features: slideshow arrows indicators debug; --nte-image-interval: 3000ms;">
               <img src="https://picsum.photos/400/250?random=610" alt="Valid image 1" data-caption="This image loads" />
               <img src="https://invalid-url.com/missing.jpg" alt="Broken image" data-caption="This image fails" />
               <img src="https://picsum.photos/400/250?random=611" alt="Valid image 2" data-caption="This image loads" />
@@ -596,7 +595,7 @@
           <div class="demo-item">
             <div class="demo-title">Extreme Intervals</div>
             <div class="demo-subtitle">Very fast and very slow slideshow intervals</div>
-            <nte-image data-features="slideshow indicators fullsize debug" interval="100">
+            <nte-image style="--nte-image-features: slideshow indicators fullsize debug; --nte-image-interval: 100ms;">
               <img src="https://picsum.photos/400/250?random=620" alt="Ultra fast 1" data-caption="100ms interval!" />
               <img
                 src="https://picsum.photos/400/250?random=621"
