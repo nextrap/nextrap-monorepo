@@ -1,46 +1,36 @@
 @use 'with-reverse' as reverse;
-@use 'with-mobile-reverse' as mobile;
-@use 'with-desktop-reverse' as desktop;
+@use 'with-mobile-reverse' as mobile-reverse;
+@use 'with-desktop-reverse' as desktop-reverse;
+@use 'with-alternating' as alternating;
 @use 'with-breakout-end' as breakout-end;
 @use 'with-breakout-start' as breakout-start;
 @use 'with-justify' as justify;
 @use 'with-main-sticky-top' as main-sticky-top;
+@use 'with-background-and-divider' as background-and-divider;
+@use 'with-image-auto-objectfit' as image-auto-objectfit;
+@use 'with-wrapper-bg-color' as wrapper-bg-color;
+@use 'with-main-align' as main-align;
 
+// Alle Helper bleiben unter dem Selektor des aufrufenden Styles.
 @mixin with-modifier-classes {
-  // Die öffentlichen Klassen verwenden dieselbe API wie direkte Theme-Mixin-Aufrufe.
-  &.reverse {
-    @include reverse.with-reverse();
-  }
+  &.with-reverse, &.reverse { @include reverse.with-reverse(); }
+  &.with-mobile-reverse, &.reverse-mobile, &.mobile-reverse { @include mobile-reverse.with-mobile-reverse(); }
+  &.with-desktop-reverse, &.reverse-desktop, &.desktop-reverse { @include desktop-reverse.with-desktop-reverse(); }
+  &.with-alternating { @include alternating.with-alternating(); }
+  &.with-breakout-start, &.breakout-start { @include breakout-start.with-breakout-start(); }
+  &.with-breakout-end, &.breakout-end { @include breakout-end.with-breakout-end(); }
+  &.with-background-and-divider { @include background-and-divider.with-background-and-divider(); }
+  &.with-image-auto-objectfit { @include image-auto-objectfit.with-image-auto-objectfit(); }
+  &.with-wrapper-bg-color { @include wrapper-bg-color.with-wrapper-bg-color(); }
+  &.with-justify, &.with-justify-center { @include justify.with-justify(center); }
+  &.with-justify-top { @include justify.with-justify(flex-start); }
+  &.with-justify-bottom { @include justify.with-justify(flex-end); }
+  &.with-main-sticky-top { @include main-sticky-top.with-main-sticky-top(); }
 
-  &.reverse-mobile {
-    @include mobile.with-mobile-reverse();
+  @each $align in (left, center, right, justify, start, end) {
+    &.with-main-text-#{$align} { @include main-align.with-main-text-align($align); }
   }
-
-  &.reverse-desktop {
-    @include desktop.with-desktop-reverse();
-  }
-
-  &.breakout-start {
-    @include breakout-start.with-breakout-start;
-  }
-
-  &.breakout-end {
-    @include breakout-end.with-breakout-end;
-  }
-
-  &.with-justify-top {
-    @include justify.with-justify(flex-start);
-  }
-
-  &.with-justify-center {
-    @include justify.with-justify(center);
-  }
-
-  &.with-justify-bottom {
-    @include justify.with-justify(flex-end);
-  }
-
-  &.with-main-sticky-top {
-    @include main-sticky-top.with-main-sticky-top();
-  }
+  &.with-main-top { @include main-align.with-main-justify(flex-start); }
+  &.with-main-center { @include main-align.with-main-justify(center); }
+  &.with-main-bottom { @include main-align.with-main-justify(flex-end); }
 }

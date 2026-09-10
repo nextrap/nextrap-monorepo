@@ -12,6 +12,21 @@ const sass = await import(process.env.NTL_TEST_SASS || 'sass-embedded');
 const compile = (text) => sass.compileString(text, { loadPaths: [root, resolve(root, 'node_modules')] }).css;
 const api = `${packageRoot}/index.scss`;
 assert.equal(compile(`@use '${api}';`).trim(), '', 'Der Sass-Entrypoint darf kein CSS ausgeben');
+// Registrierung ist vollständig, am aktuellen Style gescoped und explizit abschaltbar.
+const helperNames = [
+  'with-reverse', 'with-mobile-reverse', 'with-desktop-reverse', 'with-alternating',
+  'with-breakout-start', 'with-breakout-end', 'with-background-and-divider',
+  'with-image-auto-objectfit', 'with-wrapper-bg-color', 'with-justify',
+  'with-justify-top', 'with-justify-center', 'with-justify-bottom', 'with-main-sticky-top',
+  ...['left', 'center', 'right', 'justify', 'start', 'end'].map(x => `with-main-text-${x}`),
+  'with-main-top', 'with-main-center', 'with-main-bottom',
+];
+const scoped = compile(`@use '${api}' as two; .theme-custom ntl-2col.style-custom { @include two.default-style(); }`);
+for (const name of helperNames) assert.ok(scoped.includes(`.theme-custom ntl-2col.style-custom.${name}`), name);
+for (const setting of ['false', 'none']) {
+  const disabled = compile(`@use '${api}' as two; .style-custom { @include two.default-style($modifierClasses: ${setting}); }`);
+  assert.doesNotMatch(disabled, /\.(?:with-|reverse|mobile-reverse|desktop-reverse|breakout-)/);
+}
 const css = compile(`
   @use '${api}' as two;
   ntl-2col.style-default { @include two.default-style($innerPadding: 24px, $gap: 16px, $border: 1px solid black, $objectFit: none, $justify: none); }
@@ -97,6 +112,9 @@ try {
       'reverse-mixin',
       'mobile-reverse',
       'desktop-reverse',
+      'with-reverse',
+      'with-mobile-reverse',
+      'with-desktop-reverse',
     ];
     for (const mode of ['mobile', 'desktop']) {
       document.body.style.width = mode === 'mobile' ? '390px' : '1000px';
@@ -105,11 +123,11 @@ try {
           for (const alternating of [false, true])
             for (const mask of Array.from({ length: 16 }, (_, i) => i)) {
               const parent = document.createElement('div');
-              parent.className = alternating ? 'alternating' : '';
+              parent.className = alternating && mask % 2 ? 'alternating' : '';
               const odd = document.createElement('ntl-2col');
               parent.append(odd);
               const el = document.createElement('ntl-2col');
-              el.className = `style-default divider ${variant}`;
+              el.className = `style-default divider ${variant} ${alternating && !(mask % 2) ? 'with-alternating' : ''}`;
               el.style.setProperty('--gap', `${gap}px`);
               el.style.setProperty('--cols', '6');
               for (const slot of ['header', 'footer']) {
@@ -197,10 +215,10 @@ try {
                     aside = rects.find((x) => x.id === 'aside').rect;
                   const reversed =
                     mode === 'mobile'
-                      ? ['reverse', 'reverse-mobile', 'mobile-mixin', 'reverse-mixin', 'mobile-reverse'].includes(
+                      ? ['reverse', 'reverse-mobile', 'mobile-mixin', 'reverse-mixin', 'mobile-reverse', 'with-reverse', 'with-mobile-reverse'].includes(
                           variant,
                         )
-                      : ['reverse', 'reverse-desktop', 'desktop-mixin', 'reverse-mixin', 'desktop-reverse'].includes(
+                      : ['reverse', 'reverse-desktop', 'desktop-mixin', 'reverse-mixin', 'desktop-reverse', 'with-reverse', 'with-desktop-reverse'].includes(
                           variant,
                         ) !== alternating;
                   if ((mode === 'mobile' ? aside.top < main.top : aside.left < main.left) !== reversed)
@@ -229,6 +247,35 @@ try {
               parent.remove();
               cases++;
             }
+    }
+
+    // Text- und vertikale Ausrichtung bleiben kombinierbar und lassen Aside unverändert.
+    for (const mode of ['mobile', 'desktop']) {
+      document.body.style.width = mode === 'mobile' ? '390px' : '1000px';
+      for (const align of ['left', 'center', 'right', 'justify', 'start', 'end']) {
+        for (const [position, justify] of [['top', 'flex-start'], ['center', 'center'], ['bottom', 'flex-end']]) {
+          const el = document.createElement('ntl-2col');
+          el.className = 'style-default';
+          el.innerHTML = '<div>Main</div><div slot="aside" style="height:180px">Aside</div>';
+          document.body.append(el);
+          await settle(el, mode);
+          const asideBefore = getComputedStyle(el.shadowRoot.getElementById('aside')).justifyContent;
+          el.classList.add(`with-main-text-${align}`, `with-main-${position}`);
+          const main = el.shadowRoot.getElementById('main');
+          main.style.minHeight = '180px';
+          const cs = getComputedStyle(main);
+          if (cs.textAlign !== align || cs.justifyContent !== justify)
+            issues.push(`${mode}/${align}/${position}: Main-Ausrichtung falsch`);
+          const mr = main.getBoundingClientRect();
+          const cr = el.firstElementChild.getBoundingClientRect();
+          const expected = position === 'top' ? mr.top : position === 'bottom' ? mr.bottom - cr.height : mr.top + (mr.height - cr.height) / 2;
+          close(cr.top, expected, `${mode}/${align}/${position}: Main-Inhaltsposition`);
+          if (getComputedStyle(el.shadowRoot.getElementById('aside')).justifyContent !== asideBefore)
+            issues.push(`${mode}/${align}/${position}: Aside verändert`);
+          el.remove();
+          cases++;
+        }
+      }
     }
 
     // Dynamisches Entfernen und Wiederbelegen aktualisiert den realen Slot-Leerzustand.

@@ -5,6 +5,8 @@
 | 2026-09-10 | dermatthes | §§ 1–9: Proposal mit Bestandsanalyse, Styling-Entwurf, Theme-Migration und Abnahmekriterien angelegt |
 | 2026-09-10 | dermatthes | §§ 1, 4–9: Direkte Endfassung ohne Transition beauftragt, Reverse-Mixins ergänzt und Umsetzung konkretisiert |
 
+| 2026-09-10 | dermatthes | §§ 1, 7–9: Automatische Helper, Main-Ausrichtung und Raven in ThemeJS2 ergänzt |
+
 ## § 1 Ziel und Scope
 
 Status: Direkte Endfassung beauftragt und im PR implementiert. Keine Transition und kein Opt-in-Mixin; ThemeJS2 erhält die passenden Änderungen in einem separaten PR. [geändert]
@@ -13,7 +15,7 @@ Der gemeinsame Rand um `top`, `main`, `aside` und `bottom` erhält genau einen I
 
 Empfehlung: Das Layout-Padding vollständig an `::part(wrapper)` verlagern. Die vier inneren Parts erhalten kein eigenes Layout-Padding. Das erfüllt die gewünschte mobile Geometrie — Abstand oberhalb der ersten sichtbaren Region, seitlich entlang aller Regionen und unterhalb der letzten — ohne die jeweils erste oder letzte Region per Selektor ermitteln zu müssen.
 
-Slot-Zuordnung, TypeScript, Shadow-DOM-Struktur, Registrierung von `tj-responsive`, Dependencies, Section-Rhythmus und vertikale Inhaltsausrichtung bleiben unverändert. Das interne CSS blendet einen vollständig leeren Wrapper und einen verwaisten Spaltentrenner aus. [geändert]
+Slot-Zuordnung, TypeScript, Shadow-DOM-Struktur, Registrierung von `tj-responsive`, Dependencies, Section-Rhythmus bleiben unverändert. Zusätzliche optionale Main-Helper ergänzen die Text- und vertikale Inhaltsausrichtung. Das interne CSS blendet einen vollständig leeren Wrapper und einen verwaisten Spaltentrenner aus. [geändert]
 
 ## § 2 Geprüfter Bestand und Ursache
 
@@ -148,6 +150,10 @@ Nextrap ändert die Default-Baseline, die funktionalen Leerzustände, Reverse-/A
 
 ThemeJS2 passt die fünf vorhandenen Osman-/Müller-Dateien `_style-default.scss`, `_reverse.scss`, `_with-bg-primary.scss` beziehungsweise `_style-default.scss` und `_style-testimonial.scss` direkt an. Kein Opt-in-Mixin wird angelegt. [geändert]
 
+`default-style()` registriert alle öffentlichen Feature-Helper unter dem aktuellen Style-Selektor; `$modifierClasses: false` oder `none` schaltet diese Registrierung ab. `.with-alternating` und beide `.with-*-reverse` sind ohne zusätzliche Theme-Bindung verfügbar. `_with-main-align.scss` exportiert `with-main-text-align($align: start)` und `with-main-justify($justify: center)`; ihre Klassen decken links/mitte/rechts/Blocksatz/start/end sowie oben/mitte/unten ab. [neu]
+
+Raven in ThemeJS2 übernimmt den Wrapper-Vertrag in Default, Form, Card und Hero. Hero-Regions-Padding wandert in den Wrapper; Card nutzt den gemeinsamen Padding-Token statt lokaler Padding-Regeln. Die automatische Helper-Registrierung gilt in jedem dieser Styles. [neu]
+
 ## § 8 Akzeptanz- und Prüfkriterien
 
 1. Alle 15 nichtleeren Belegungen der vier inneren Regionen in Mobile und Desktop prüfen. Dazu den vollständig leeren Wrapper mit Header/Footer-only separat prüfen.
@@ -161,7 +167,7 @@ ThemeJS2 passt die fünf vorhandenen Osman-/Müller-Dateien `_style-default.scss
 
 ## § 9 Prüfstand und Veröffentlichung
 
-Die Ursachenanalyse wurde gegen die Quellen aus § 2 abgeglichen. Default, Divider, Reverse-API sowie Osman-/Müller-SCSS lassen sich mit dem JavaScript-Sass-Compiler kompilieren; der reine API-Import erzeugt kein CSS. Der Browser-Regressionstest prüft 1.728 Kombinationen sowie dynamische Slot-Belegung und ist zusätzlich in der CI registriert. Der tatsächliche Laufstatus wird in den PRs dokumentiert. [geändert]
+Die Ursachenanalyse wurde gegen die Quellen aus § 2 abgeglichen. Default, Divider, Reverse-API sowie Osman-/Müller-/Raven-SCSS lassen sich mit dem JavaScript-Sass-Compiler kompilieren; der reine API-Import erzeugt kein CSS. Der Browser-Regressionstest prüft 2.304 Layoutkombinationen und 36 Main-Ausrichtungen sowie dynamische Slot-Belegung und ist zusätzlich in der CI registriert. Der tatsächliche Laufstatus wird in den PRs dokumentiert. [geändert]
 
 Der Package-Build einschließlich TypeScript-Deklarationen ist mit Vite und JavaScript-Sass erfolgreich. Die reguläre Nx-/Dart-Sass-Ausführung und der Chromium-Start sind in der lokalen Laufzeit blockiert. ThemeJS2s vollständiger Standard-Build ist zusätzlich durch die nicht veröffentlichte konfigurierte Abhängigkeit `@leuffen/vite-jekyll-hmr-manager@^1.0.1` blockiert. Diese bestehenden Infrastruktur-/Dependency-Probleme werden nicht durch einen lokalen Theme-Hack oder eine Übergangslösung umgangen. [geändert]
 

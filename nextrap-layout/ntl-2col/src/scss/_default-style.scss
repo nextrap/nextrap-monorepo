@@ -29,11 +29,6 @@
   }
   --gap: #{$gap};
 
-  // Der interne Desktop-Modifier kehrt die Zeile um; der Divider folgt derselben Richtung.
-  &[mode='desktop'].desktop-reverse::part(wrapper) {
-    --_ntl-2col-row-direction: -1;
-  }
-
   @include wrapper-bg.with-wrapper-bg-color($wrapper-bg-color);
 
   @if ($justify != none) {

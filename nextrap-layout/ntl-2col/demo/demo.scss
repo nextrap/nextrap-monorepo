@@ -12,15 +12,6 @@ ntl-2col {
     @include ntl2col.default-style();
   }
 
-  // Beide neuen Mixins lassen den jeweils anderen Modus unverändert.
-  &.with-mobile-reverse {
-    @include ntl2col.with-mobile-reverse();
-  }
-
-  &.with-desktop-reverse {
-    @include ntl2col.with-desktop-reverse();
-  }
-
   &.with-feature1 {
     @include ntl2col.with-background-and-divider();
   }

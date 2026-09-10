@@ -222,3 +222,11 @@ Mobil bleibt Main zuerst. Auf Desktop steht Aside links; der Randabstand bleibt 
 {: layout=".aside"}
 
 Diese zweite Region wird ausschließlich im Desktop-Modus vor Main angezeigt.
+
+
+### Automatische Helper: Main-Ausrichtung
+
+<ntl-2col class="style-default with-alternating with-main-text-center with-main-bottom" style="--inner-padding:24px; --gap:16px">
+  <p>Mittiger Text, vertikal unten. Alle Helper kommen aus default-style().</p>
+  <div slot="aside" style="min-height:220px">Aside bleibt unabhängig ausgerichtet.</div>
+</ntl-2col>
