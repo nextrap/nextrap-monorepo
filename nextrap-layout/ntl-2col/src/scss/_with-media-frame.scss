@@ -50,6 +50,8 @@
         } @else {
           // Auf Desktop folgt die Außenkante den bestehenden Reverse-/Alternating-Faktoren.
           &[mode='desktop']::part(aside) {
+            // Trotz negativer Außenränder bleibt die äußere Flex-Basis positiv: Top belegt eine eigene Zeile.
+            flex-basis: calc(1px + 2 * var(--inner-padding));
             margin-inline-start: calc(-1 * var(--inner-padding) * (1 - var(--_ntl-2col-row-direction, 1) * var(--_ntl-2col-column-order, 1)) / 2);
             margin-inline-end: calc(-1 * var(--inner-padding) * (1 + var(--_ntl-2col-row-direction, 1) * var(--_ntl-2col-column-order, 1)) / 2);
           }
