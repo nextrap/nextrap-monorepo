@@ -7,10 +7,6 @@
         "type": "git",
         "url": "https://github.com/nextrap/nextrap-monorepo"
     },
-    "dependencies": {
-        "@nextrap/nte-input": "^2.0.0",
-        "@nextrap/style-reset": "^2.0.0"
-    },
     "devDependencies": {
         "@nextrap/nte-demo-viewer": "^2.0.0",
         "@nextrap/style-base": "^2.0.0",
@@ -21,6 +17,8 @@
     "web-types": "./web-types.json",
     "peerDependencies": {
         "@lit/reactive-element": "^2.1.2",
+        "@nextrap/nte-input": "^2.0.0",
+        "@nextrap/style-reset": "^2.0.0",
         "@trunkjs/browser-utils": "^1.0.12",
         "lit": "^3.3.1"
     }

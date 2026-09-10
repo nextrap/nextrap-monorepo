@@ -7,9 +7,6 @@
         "type": "git",
         "url": "https://github.com/nextrap/nextrap-monorepo"
     },
-    "dependencies": {
-        "@nextrap/style-reset": "^2.0.0"
-    },
     "devDependencies": {
         "@nextrap/style-base": "^2.0.0"
     },
@@ -17,6 +14,7 @@
     "types": "./index.d.ts",
     "web-types": "./web-types.json",
     "peerDependencies": {
+        "@nextrap/style-reset": "^2.0.0",
         "@trunkjs/browser-utils": "^1.0.12",
         "lit": "^3.3.1"
     }
