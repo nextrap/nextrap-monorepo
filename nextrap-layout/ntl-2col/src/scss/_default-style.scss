@@ -52,9 +52,9 @@
     gap: var(--inner-padding);
   }
 
-  // Getestete, verbindliche Main-Abstände: nur horizontales Padding, weil die vertikale Trennung über den gemeinsamen Gap erfolgt. Nicht ändern, ohne alle Slot-Kombinationen erneut zu prüfen.
+  // Getestete, verbindliche Main-Abstände: Gap wird nicht mit beachtet, da wenn nur ein slot, kein Gap gesetzt.
   &::part(main) {
-    padding-inline: var(--inner-padding);
+    padding: var(--inner-padding);
   }
 
   // Getestete, verbindliche Top-Abstände: der äußere vertikale Rand bleibt, die innere Kante nutzt den gemeinsamen Gap. Nicht ändern, ohne alle Slot-Kombinationen erneut zu prüfen.
@@ -72,7 +72,7 @@
   // Fügt dem Aside-Bereich nur bei explizit zugewiesenen Aside-Inhalten Innenabstand hinzu.
   &:has(.aside:not(.p-0)) {
     &::part(aside) {
-      padding-inline: var(--inner-padding);
+      padding: var(--inner-padding);
     }
   }
 }

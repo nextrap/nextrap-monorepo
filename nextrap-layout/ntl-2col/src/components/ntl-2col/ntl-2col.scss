@@ -31,7 +31,7 @@
 
 // Alle slots, die keine Inhalte enthalten, werden ausgeblendet. Dies verhindert das Rendern leerer Container und sorgt für eine saubere Darstellung.
 *:has(> .slot-empty) {
-  display: none;
+  display: none !important; // Important is necessary to make it easier for styling
 }
 
 #header,
