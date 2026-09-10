@@ -21,10 +21,11 @@
         margin-#{$side}: calc(-1 * var(--inner-padding));
       }
     }
-    @each $side, $flag in (block-start: first, block-end: last) {
-      @if list.index($edges, all) or list.index($edges, block) or list.index($edges, $side) {
-        margin-#{$side}: calc(-1 * var(--inner-padding) * var(--_nte-card-#{$flag}, 0));
-      }
+  }
+  // Block-Bleed wird am Wrapper verrechnet; auch Zellen kleiner als 2P bleiben exakt randlos.
+  @each $side, $flag in (block-start: start, block-end: end) {
+    @if list.index($edges, all) or list.index($edges, block) or list.index($edges, $side) {
+      &::part(wrapper) { --_nte-card-bleed-#{$region}-#{$flag}: 1; }
     }
   }
 }

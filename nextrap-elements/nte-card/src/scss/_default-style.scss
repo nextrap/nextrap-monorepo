@@ -27,7 +27,15 @@
     border-radius: var(--border-radius);
     background-color: var(--background-color);
     overflow: hidden;
+    // Pro Wrapper zurücksetzen, damit verschachtelte Cards keine Bleed-Zustände erben.
+    @each $region in (image, header, content, footer) {
+      --_nte-card-bleed-#{$region}-start: 0;
+      --_nte-card-bleed-#{$region}-end: 0;
+    }
     padding: var(--inner-padding);
+    // Am äußeren Bleed-Rand entfällt Padding statt die Mindesthöhe der Padding-Box zu behalten.
+    padding-block-start: calc(var(--inner-padding) * (1 - var(--_nte-card-first-bleed, 0)));
+    padding-block-end: calc(var(--inner-padding) * (1 - var(--_nte-card-last-bleed, 0)));
     gap: var(--gap);
   }
 

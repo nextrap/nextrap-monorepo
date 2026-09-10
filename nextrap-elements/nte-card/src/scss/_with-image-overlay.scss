@@ -16,9 +16,6 @@
       grid-column: 1;
       min-width: 0;
       min-height: 0;
-      // Beide Parts teilen dieselbe erste visuelle Region.
-      --_nte-card-first: 1;
-      --_nte-card-last: 0;
     }
     &::part(image) { height: auto; }
     &::part(content) {
@@ -27,12 +24,15 @@
       justify-content: end;
       padding: var(--inner-padding);
     }
+    // Die gemeinsame Medienfläche steht zuerst; Header/Footer folgen danach.
+    &::part(wrapper) { --_nte-card-first-bleed: 1; --_nte-card-last-bleed: var(--_nte-card-bleed-footer-end, 0); }
+    &[data-card-regions~='header']:not([data-card-regions~='footer'])::part(wrapper) {
+      --_nte-card-last-bleed: var(--_nte-card-bleed-header-end, 0);
+    }
     // Nur ohne weitere Regionen reicht die gemeinsame Medienfläche auch bis unten.
     &:not([data-card-regions~='header']):not([data-card-regions~='footer']) {
-      &::part(image), &::part(content) { --_nte-card-last: 1; }
+      &::part(wrapper) { --_nte-card-last-bleed: 1; }
     }
-    // Header folgt der Medienfläche und ist daher nie die erste Region.
-    &::part(header) { --_nte-card-first: 0; }
     &::part(gradient) { background: var(--overlay-background); }
   }
 }
