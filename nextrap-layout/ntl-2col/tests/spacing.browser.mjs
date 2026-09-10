@@ -27,9 +27,12 @@ for (const setting of ['false', 'none']) {
   const disabled = compile(`@use '${api}' as two; .style-custom { @include two.default-style($modifierClasses: ${setting}); }`);
   assert.doesNotMatch(disabled, /\.(?:with-|reverse|mobile-reverse|desktop-reverse|breakout-)/);
 }
+assert.equal(compile(`@use '${api}' as two; .framed { @include two.with-media-frame(true); }`).trim(), '', 'Aktivierter Medienrahmen behält die Baseline');
 const css = compile(`
   @use '${api}' as two;
   ntl-2col.style-default { @include two.default-style($innerPadding: 24px, $gap: 16px, $border: 1px solid black, $objectFit: none, $justify: none); }
+  ntl-2col.style-media { @include two.default-style($innerPadding: 24px, $gap: 16px, $border: 1px solid black, $justify: none); @include two.with-media-frame(); }
+  ntl-2col.style-framed { @include two.default-style($innerPadding: 24px, $gap: 16px, $border: 1px solid black, $justify: none); @include two.with-media-frame(true); }
   .mobile-mixin { @include two.with-mobile-reverse(); }
   .desktop-mixin { @include two.with-desktop-reverse(); }
   .reverse-mixin { @include two.with-reverse(); }
@@ -45,6 +48,8 @@ const server = await createServer({
   resolve: {
     alias: {
       '@nextrap/nt-core': resolve(root, 'nextrap-base/nt-core/index.ts'),
+      '@nextrap/nte-image': resolve(root, 'nextrap-elements/nte-image/index.ts'),
+      '@nextrap/nte-consent-blocker': resolve(root, 'nextrap-elements/nte-consent-blocker/index.ts'),
       '@nextrap/style-reset': resolve(root, 'nextrap-styles/style-reset/index.ts'),
     },
   },
@@ -68,7 +73,7 @@ const server = await createServer({
         vite.middlewares.use('/__spacing', (_request, response) => {
           response.setHeader('Content-Type', 'text/html');
           response.end(
-            `<!doctype html><html><head><style>body{margin:0} ntl-2col{--container-width:100%;--breakpoint:initial} ntl-2col > *{margin:0;min-height:20px;box-sizing:border-box} ${css}</style></head><body><script type="module">import '/nextrap-layout/ntl-2col/index.ts'; window.ready = customElements.whenDefined('ntl-2col');</script></body></html>`,
+            `<!doctype html><html><head><style>body{margin:0} ntl-2col{--container-width:100%;--breakpoint:initial} ntl-2col > *{margin:0;min-height:20px;box-sizing:border-box} ${css}</style></head><body><script type="module">import '/nextrap-layout/ntl-2col/index.ts'; import '@nextrap/nte-image'; import '@nextrap/nte-consent-blocker'; window.ready = customElements.whenDefined('ntl-2col');</script></body></html>`,
           );
         });
       },
@@ -276,6 +281,93 @@ try {
           cases++;
         }
       }
+    }
+
+    // Misst reale Medienhosts und Bildflächen statt nur das Vorhandensein von CSS-Selektoren.
+    const mediaSource = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="600" height="400"%3E%3Crect width="600" height="400" fill="teal"/%3E%3C/svg%3E';
+    for (const mode of ['mobile', 'desktop']) {
+      document.body.style.width = mode === 'mobile' ? '390px' : '1000px';
+      for (const slot of ['aside', 'top'])
+        for (const kind of ['img', 'paragraph', 'nte-image', 'nte-consent-blocker'])
+          for (const variant of ['', 'reverse', 'reverse-mobile', 'reverse-desktop', 'with-alternating'])
+            for (const extra of ['none', 'top', 'bottom', 'both', 'mixed', 'alone', 'framed']) {
+              const parent = document.createElement('div');
+              parent.append(document.createElement('ntl-2col'));
+              const el = document.createElement('ntl-2col');
+              el.className = `${extra === 'framed' ? 'style-framed' : 'style-media'} ${variant}`;
+              const main = document.createElement('div');
+              main.textContent = 'Main';
+              main.style.height = '260px';
+              if (extra !== 'alone') el.append(main);
+              const media = document.createElement(kind === 'paragraph' ? 'p' : kind);
+              media.slot = slot;
+              if (kind === 'paragraph') media.className = 'auto';
+              const img = kind === 'img' ? media : document.createElement('img');
+              img.src = mediaSource;
+              img.alt = 'Testbild';
+              if (img !== media) media.append(img);
+              if (kind === 'nte-consent-blocker') img.slot = 'background';
+              el.append(media);
+              for (const region of ['top', 'bottom']) {
+                if (region !== slot && (extra === region || extra === 'both')) {
+                  const child = document.createElement('div');
+                  child.slot = region;
+                  child.textContent = region;
+                  el.append(child);
+                }
+              }
+              if (extra === 'mixed') {
+                const text = document.createElement('p');
+                text.slot = slot;
+                text.textContent = 'Zusätzlicher Text';
+                el.append(text);
+              }
+              parent.append(el);
+              document.body.append(parent);
+              await settle(el, mode);
+              await img.decode();
+              await settle(el, mode);
+              const sr = el.shadowRoot;
+              const wr = sr.getElementById('wrapper').getBoundingClientRect();
+              const mr = (extra === 'framed' || extra === 'mixed' ? sr.getElementById(slot) : media).getBoundingClientRect();
+              const mainRect = sr.getElementById('main').getBoundingClientRect();
+              const label = `media/${mode}/${slot}/${kind}/${variant}/${extra}`;
+              const framed = extra === 'framed' || extra === 'mixed';
+              const inset = framed ? 24 : 0;
+              const left = wr.left + 1, right = wr.right - 1, top = wr.top + 1, bottom = wr.bottom - 1;
+              if (slot === 'top' || mode === 'mobile' || extra === 'alone') {
+                close(mr.left - left, inset, `${label}/links`);
+                close(right - mr.right, inset, `${label}/rechts`);
+              } else {
+                const reversed = mr.left < mainRect.left;
+                close(reversed ? mr.left - left : right - mr.right, inset, `${label}/Außenkante`);
+                if (!framed) close(reversed ? mainRect.left - mr.right : mr.left - mainRect.right, 16, `${label}/Text-Gap`);
+              }
+              if (!framed) {
+                const part = sr.getElementById(slot).getBoundingClientRect();
+                close(mr.width, part.width, `${label}/Medienbreite`);
+                close(mr.height, part.height, `${label}/Medienhöhe`);
+                if (kind === 'paragraph') {
+                  const ir = img.getBoundingClientRect();
+                  close(ir.width, mr.width, `${label}/Bildbreite`);
+                  close(ir.height, mr.height, `${label}/Bildhöhe`);
+                }
+                if (slot === 'top') {
+                  close(mr.top - top, 0, `${label}/oben`);
+                  if (extra !== 'alone') close(mainRect.top - mr.bottom, 16, `${label}/Text-Gap`);
+                  else close(bottom - mr.bottom, 0, `${label}/unten`);
+                } else {
+                  const first = mode === 'desktop' || extra === 'alone' || mr.top < mainRect.top;
+                  const last = mode === 'desktop' || extra === 'alone' || mr.top > mainRect.top;
+                  if (first && !['top', 'both'].includes(extra)) close(mr.top - top, 0, `${label}/oben`);
+                  if (last && !['bottom', 'both'].includes(extra)) close(bottom - mr.bottom, 0, `${label}/unten`);
+                  if (mode === 'mobile' && extra !== 'alone') close(first ? mainRect.top - mr.bottom : mr.top - mainRect.bottom, 16, `${label}/Text-Gap`);
+                }
+              }
+              if (el.scrollWidth > el.clientWidth + 1) issues.push(`${label}/horizontaler Overflow`);
+              parent.remove();
+              cases++;
+            }
     }
 
     // Dynamisches Entfernen und Wiederbelegen aktualisiert den realen Slot-Leerzustand.

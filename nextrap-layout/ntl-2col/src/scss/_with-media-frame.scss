@@ -1,0 +1,96 @@
+// Lässt einzelne Medien bis an die Wrapper-Innenkante reichen; true behält den bisherigen Abstand.
+// Nach default-style() einbinden. Border und Radius des Wrappers bleiben dessen Verantwortung.
+@mixin with-media-frame($enabled: false) {
+  @if $enabled == false {
+    @each $slot in (aside, top) {
+      // Getrennte :has()-Alternativen vermeiden verschachtelte :has()-Selektoren.
+      // Mehrere Slot-Kinder oder ein Absatz mit weiteren Elementen bleiben normaler Inhalt.
+      $media: ":is(:has(> :is(img, nte-image, nte-consent-blocker)[slot='#{$slot}']), :has(> p.auto[slot='#{$slot}'] > img:only-child)):not(:has(> [slot='#{$slot}'] ~ [slot='#{$slot}']))";
+
+      &#{$media} {
+        // Grid streckt das Medium auch bei einer vom benachbarten Text bestimmten Höhe.
+        &::part(#{$slot}) {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr);
+          align-items: stretch;
+          padding: 0;
+        }
+
+        // Das direkte Medium füllt seinen Part; Consent-Inhalt und Bildbedienung bleiben unverändert.
+        > [slot='#{$slot}'] {
+          display: block;
+          margin: 0;
+          padding: 0;
+          width: 100%;
+          height: 100%;
+          min-width: 0;
+          min-height: 0;
+          object-fit: cover;
+        }
+
+        // Markdown-Bilder benötigen dieselbe Fläche wie ihr automatisch zugeordneter Absatz.
+        > p.auto[slot='#{$slot}'] > img:only-child {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        @if $slot == top {
+          // Top berührt immer die obere und beide seitlichen Wrapper-Kanten, nie den Text-Gap.
+          &::part(top) {
+            margin-block-start: calc(-1 * var(--inner-padding));
+            margin-inline: calc(-1 * var(--inner-padding));
+            width: calc(100% + 2 * var(--inner-padding));
+          }
+          // Ohne weitere innere Regionen berührt ein Top-Medium auch die untere Wrapper-Kante.
+          &:not(:has(> :not([slot]), > [slot=''], > [slot='aside'], > [slot='bottom']))::part(top) {
+            margin-block-end: calc(-1 * var(--inner-padding));
+          }
+        } @else {
+          // Auf Desktop folgt die Außenkante den bestehenden Reverse-/Alternating-Faktoren.
+          &[mode='desktop']::part(aside) {
+            margin-inline-start: calc(-1 * var(--inner-padding) * (1 - var(--_ntl-2col-row-direction, 1) * var(--_ntl-2col-column-order, 1)) / 2);
+            margin-inline-end: calc(-1 * var(--inner-padding) * (1 + var(--_ntl-2col-row-direction, 1) * var(--_ntl-2col-column-order, 1)) / 2);
+          }
+
+          // Top und Bottom begrenzen die Bildzeile; dort bleibt ausschließlich der normale Gap.
+          &[mode='desktop']:not(:has(> [slot='top']))::part(aside) {
+            margin-block-start: calc(-1 * var(--inner-padding));
+          }
+          &[mode='desktop']:not(:has(> [slot='bottom']))::part(aside) {
+            margin-block-end: calc(-1 * var(--inner-padding));
+          }
+
+          // Mobil reicht Aside immer über die volle Breite; seine Lesereihenfolge bleibt erhalten.
+          &[mode='mobile']::part(aside) {
+            width: calc(100% + 2 * var(--inner-padding));
+            margin-inline: calc(-1 * var(--inner-padding));
+          }
+
+          // Standardmäßig steht Aside nach Main; Auto-Bilder und öffentliche Reverse-Klassen stehen davor.
+          $first: ":is(.reverse, .reverse-mobile, .mobile-reverse, .with-reverse, .with-mobile-reverse, :has(> p.auto[slot='aside']))";
+          &[mode='mobile']:not(#{$first}):not(:has(> [slot='bottom']))::part(aside) {
+            margin-block-end: calc(-1 * var(--inner-padding));
+          }
+          &[mode='mobile']#{$first}:not(:has(> [slot='top']))::part(aside) {
+            margin-block-start: calc(-1 * var(--inner-padding));
+          }
+
+          // Ein alleiniger Aside-Inhalt berührt beide äußeren Zeilenkanten.
+          &:not(:has(> :not([slot]), > [slot=''])) {
+            &:not(:has(> [slot='top']))::part(aside) {
+              margin-block-start: calc(-1 * var(--inner-padding));
+            }
+            &:not(:has(> [slot='bottom']))::part(aside) {
+              margin-block-end: calc(-1 * var(--inner-padding));
+            }
+            &[mode='desktop']::part(aside) {
+              margin-inline: calc(-1 * var(--inner-padding));
+            }
+          }
+        }
+      }
+    }
+  }
+}
