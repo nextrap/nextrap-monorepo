@@ -1,5 +1,8 @@
+@use 'with-mobile-reverse' as mobile;
+@use 'with-desktop-reverse' as desktop;
+
+// Kombiniert die modusspezifischen Umkehrungen ohne abweichende zweite Implementierung.
 @mixin with-reverse {
-  &::part(wrapper) {
-    flex-direction: row-reverse;
-  }
+  @include mobile.with-mobile-reverse();
+  @include desktop.with-desktop-reverse();
 }

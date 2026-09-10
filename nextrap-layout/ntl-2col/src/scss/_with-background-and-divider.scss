@@ -1,6 +1,13 @@
+// Zeichnet den Trenner im Gap; ein null-Hintergrund lässt die bestehende Section-Fläche unverändert.
 @mixin with-background-and-divider($gap: 2rem, $background: var(--nt-primary), $divider-color: var(--nt-light)) {
-  --section-bg: #{$background};
+  @if $background != null {
+    --section-bg: #{$background};
+  }
   --border: none;
+  // Null bleibt auch in den Längenberechnungen des Dividers gültig.
+  @if $gap == 0 {
+    $gap: 0px;
+  }
   --gap: #{$gap};
 
   &[mode='desktop'] {
@@ -8,18 +15,19 @@
       position: relative;
     }
 
+    // Die dekorative Box überdeckt Aside plus Gap, beansprucht aber keinen Layout-Platz.
+    // Zwei Umkehrungen (Flex-Richtung und Alternating-Order) ergeben wieder die Ausgangsseite.
     &::part(aside)::after {
       content: '';
       position: absolute;
+      pointer-events: none;
+      box-sizing: border-box;
       top: 25%;
       bottom: 25%;
       left: calc(var(--gap) / -2);
-      border-left: 1px solid #{$divider-color};
-    }
-
-    &.desktop-reverse::part(aside)::after {
-      right: calc(var(--gap) / -2);
-      left: auto;
+      width: calc(100% + var(--gap));
+      border-left: min(1px, var(--gap)) solid #{$divider-color};
+      transform: scaleX(calc(var(--_ntl-2col-row-direction, 1) * var(--_ntl-2col-column-order, 1)));
     }
   }
 }

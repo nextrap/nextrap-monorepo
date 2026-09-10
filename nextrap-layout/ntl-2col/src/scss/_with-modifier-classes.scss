@@ -1,29 +1,23 @@
+@use 'with-reverse' as reverse;
+@use 'with-mobile-reverse' as mobile;
+@use 'with-desktop-reverse' as desktop;
 @use 'with-breakout-end' as breakout-end;
 @use 'with-breakout-start' as breakout-start;
 @use 'with-justify' as justify;
 @use 'with-main-sticky-top' as main-sticky-top;
 
 @mixin with-modifier-classes {
+  // Die öffentlichen Klassen verwenden dieselbe API wie direkte Theme-Mixin-Aufrufe.
   &.reverse {
-    &[mode='mobile'] {
-      &::part(aside) {
-        order: 1;
-      }
+    @include reverse.with-reverse();
+  }
 
-      &::part(main) {
-        order: 2;
-      }
-    }
-
-    &[mode='desktop']::part(wrapper) {
-      flex-direction: row-reverse;
-    }
+  &.reverse-mobile {
+    @include mobile.with-mobile-reverse();
   }
 
   &.reverse-desktop {
-    &[mode='desktop']::part(wrapper) {
-      flex-direction: row-reverse;
-    }
+    @include desktop.with-desktop-reverse();
   }
 
   &.breakout-start {

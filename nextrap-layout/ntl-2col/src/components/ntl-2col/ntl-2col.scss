@@ -29,6 +29,16 @@
   align-items: stretch;
 }
 
+// Ohne innere Inhalte entfällt auch der gerahmte Wrapper; Header und Footer bleiben eigenständig.
+#wrapper:has(#top > .slot-empty):has(#main > .slot-empty):has(#aside > .slot-empty):has(#bottom > .slot-empty) {
+  display: none !important;
+}
+
+// Ein Spaltentrenner hat ohne Main keinen Nachbarn und darf am einzelnen Aside nicht erscheinen.
+#wrapper:has(#main > .slot-empty) #aside::after {
+  content: none !important;
+}
+
 // Alle slots, die keine Inhalte enthalten, werden ausgeblendet. Dies verhindert das Rendern leerer Container und sorgt für eine saubere Darstellung.
 *:has(> .slot-empty) {
   display: none !important; // Important is necessary to make it easier for styling

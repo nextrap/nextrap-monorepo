@@ -3,16 +3,17 @@
 | Datum | Benutzername | Kurzbeschreibung |
 |---|---|---|
 | 2026-09-10 | dermatthes | §§ 1–9: Proposal mit Bestandsanalyse, Styling-Entwurf, Theme-Migration und Abnahmekriterien angelegt |
+| 2026-09-10 | dermatthes | §§ 1, 4–9: Direkte Endfassung ohne Transition beauftragt, Reverse-Mixins ergänzt und Umsetzung konkretisiert |
 
 ## § 1 Ziel und Scope
 
-Status: Vorschlag zur Prüfung; dieser PR enthält ausschließlich dieses Konzept. Die unten genannten SCSS-Änderungen sind noch nicht implementiert.
+Status: Direkte Endfassung beauftragt und im PR implementiert. Keine Transition und kein Opt-in-Mixin; ThemeJS2 erhält die passenden Änderungen in einem separaten PR. [geändert]
 
 Der gemeinsame Rand um `top`, `main`, `aside` und `bottom` erhält genau einen Innenabstand. Zwischen benachbarten Regionen wirkt ausschließlich das konfigurierte Gap. `header` und `footer` bleiben außerhalb dieses Wrappers. Leere Slots erzeugen weder Regionen noch zusätzliche Gaps. Reverse, mobile Bildpriorisierung und Alternating dürfen den Außenabstand nicht beeinflussen.
 
 Empfehlung: Das Layout-Padding vollständig an `::part(wrapper)` verlagern. Die vier inneren Parts erhalten kein eigenes Layout-Padding. Das erfüllt die gewünschte mobile Geometrie — Abstand oberhalb der ersten sichtbaren Region, seitlich entlang aller Regionen und unterhalb der letzten — ohne die jeweils erste oder letzte Region per Selektor ermitteln zu müssen.
 
-Keine Änderung an Slot-Zuordnung, TypeScript, Shadow-DOM-Struktur, Registrierung von `tj-responsive`, Dependencies, Section-Rhythmus oder vertikaler Inhaltsausrichtung. ThemeJS2 wird in diesem PR nur analysiert; seine Migration erfolgt separat.
+Slot-Zuordnung, TypeScript, Shadow-DOM-Struktur, Registrierung von `tj-responsive`, Dependencies, Section-Rhythmus und vertikale Inhaltsausrichtung bleiben unverändert. Das interne CSS blendet einen vollständig leeren Wrapper und einen verwaisten Spaltentrenner aus. [geändert]
 
 ## § 2 Geprüfter Bestand und Ursache
 
@@ -67,50 +68,25 @@ Messbeispiel ohne Inhalts-Margins, Border separat gerechnet: Bei `P = 24px` und 
 
 ## § 4 Vorgeschlagene SCSS-Änderung und Einführung
 
-### § 4.1 Zunächst explizit aktivierbares Mixin
+### § 4.1 Zunächst explizit aktivierbares Mixin [gelöscht]
 
-Da die Korrektur bestehende Theme-Geometrien verändert, zunächst ein öffentliches Feature-Mixin `with-wrapper-spacing()` bereitstellen. Es verbraucht die vorhandenen Variablen und wird nach `default-style()` innerhalb der jeweiligen `style-*`-Baseline eingebunden. So können Osman und Müller Default gezielt migrieren, während Testimonial und andere Themes zunächst ihre bestehende Komposition behalten.
+### § 4.2 Direkte Default-Umstellung
 
-Vorgesehene neue Datei: `nextrap-layout/ntl-2col/src/scss/_with-wrapper-spacing.scss`; Export über `nextrap-layout/ntl-2col/index.scss`. Der folgende Code ist ein Entwurf, kein bereits verfügbarer API-Aufruf:
+`default-style()` setzt unmittelbar `padding: var(--inner-padding)` und `gap: var(--gap)` am Wrapper. Die bisherigen Main-/Top-/Bottom-/Aside-Paddings einschließlich des spezifischen `.aside`-Selektors entfallen. Die vier Regions-Parts erhalten `padding: 0`. Die Parameter `$innerPadding` und `$gap` bleiben erhalten und wirken unabhängig; andere Baseline-Parameter bleiben unverändert. [geändert]
 
-```scss
-// Trennt den einmaligen Abstand zum Rahmen von den Zwischenräumen der Regionen.
-@mixin with-wrapper-spacing() {
-  &::part(wrapper) {
-    padding: var(--inner-padding);
-    gap: var(--gap);
-  }
-
-  // Die Regionen tragen keinen zweiten Layout-Abstand zum Wrapper oder zueinander.
-  &::part(top),
-  &::part(main),
-  &::part(aside),
-  &::part(bottom) {
-    padding: 0;
-  }
-
-  // Neutralisiert auch die spezifischere Aside-Regel der bestehenden Baseline.
-  &:has(.aside:not(.p-0))::part(aside) {
-    padding: 0;
-  }
-}
-```
-
-Die letzte Regel ist für die Übergangsphase nötig: Das bestehende `:has(.aside:not(.p-0))` hat höhere Spezifität als ein einfacher Part-Selektor. Ein späteres generisches `padding: 0` allein würde daher nicht ausreichen. Nach Entfernung der alten Padding-Logik aus der Baseline entfällt dieser Kompatibilitätsselektor.
-
-Das Mixin erzeugt nur am Aufrufort CSS, besitzt keinen eigenen Root-Selektor und inkludiert keine Baseline. `index.scss` exportiert nur die API. Kein Style-Import in `index.ts`, kein `!important`, keine neuen Shadow-DOM-Variablen und keine zusätzlichen Breakpoints. Eine Klassenregistrierung `.with-wrapper-spacing` ist für die Theme-Migration nicht erforderlich; bei späterer Bereitstellung gilt dieselbe Mixin-Implementierung.
-
-### § 4.2 Spätere Default-Umstellung
-
-Nach Prüfung und Migration der Verbraucher kann `default-style()` dieselbe Wrapper-Geometrie direkt verwenden. Dabei die bisherigen Main-/Top-/Bottom-/Aside-Paddings entfernen und den Wrapper-Gap auf `var(--gap)` umstellen. Den Übergang entsprechend der Release-Policy als sichtbare Verhaltensänderung dokumentieren.
-
-`$innerPadding` und `$gap` behalten ihre Namen; sie steuern künftig tatsächlich Außen-Innenabstand und Zwischenabstand. Im ersten Schritt bleiben alle anderen Parameter und insbesondere Justify unverändert. Die derzeit voneinander abweichenden Ausrichtungsempfehlungen in Usage-/Theming-Dokumentation werden nicht nebenbei als Runtime-Änderung aufgelöst.
+Es gibt keinen Kompatibilitätsmodus, keinen Übergangs-Export und keine zweite Spacing-Implementierung. ThemeJS2 wird direkt auf diesen Contract angepasst. [geändert]
 
 ### § 4.3 Kein Positionsalgorithmus für Padding
 
 Kein `:first-child`, `:last-child` oder Light-DOM-`:has(.top)` zur Ermittlung der Außenkanten: DOM-Reihenfolge, visuelle Order, automatische Slot-Zuordnung und Slot-Leerzustand sind verschiedene Dinge. Ein Theme kann den internen Slot-Leerzustand außerdem nicht durch Verkettung von `::part(...)` mit beliebigen Shadow-DOM-Nachfahren abfragen. Der Wrapper funktioniert unabhängig davon.
 
 Das bestehende Flex-Layout zunächst beibehalten. Ein Wechsel auf Grid oder eine neue Auslegung von `--cols` gehört nicht in den Spacing-Fix. Desktop-Main verwendet aktuell einen Anteil der verfügbaren Breite, Aside den Rest nach Gap; das bedeutet nicht automatisch zwei gleich breite Spalten bei `--cols: 6`. Bei großen Gaps und extremen Spaltenwerten ist verbleibender Platz zu prüfen, ohne diesen API-Vertrag stillschweigend neu zu definieren.
+
+### § 4.4 Modusspezifische Reverse-Mixins
+
+`with-mobile-reverse()` ändert nur unter `[mode='mobile']` die Main-/Aside-Order. `with-desktop-reverse()` setzt nur unter `[mode='desktop']` die umgekehrte Flex-Richtung. `with-reverse()` kombiniert beide. Die vorhandenen Modifier-Klassen verwenden diese Mixins; `.reverse-mobile` ergänzt `.reverse-desktop` und `.reverse`. Beide neuen Mixins werden über `index.scss` exportiert, ohne CSS beim Import auszugeben. [neu]
+
+Der dekorative Divider nutzt pro Instanz zurückgesetzte interne Richtungsfaktoren aus den äußeren Mixins. Flex-Umkehr und Alternating multiplizieren sich; zwei Umkehrungen ergeben wieder die Ausgangsseite. Der Divider liegt absolut im Gap, beansprucht keinen Platz und hat bei Gap null keine sichtbare Border. [neu]
 
 ## § 5 Reverse, Alternating und Slot-Verfügbarkeit
 
@@ -128,21 +104,21 @@ Das bestehende Flex-Layout zunächst beibehalten. Ein Wechsel auf Grid oder eine
 
 Die bestehenden zusätzlichen Klassen `mobile-reverse` und `desktop-reverse` aus dem internen Layout sind ebenfalls als Regression abzudecken. Sie nicht ungeprüft mit den öffentlichen Modifier-Namen `reverse-desktop` beziehungsweise `reverse` gleichsetzen.
 
-Wenn alle vier inneren Slots leer sind, verhindern ausgeblendete Regionen zwar Phantom-Gaps, nicht aber automatisch einen sichtbaren Wrapper-Rahmen samt Padding. Für Header-/Footer-only-Fälle muss vor der späteren Default-Umstellung entschieden und geprüft werden, ob der ganze leere Wrapper funktional ausgeblendet wird. Das Beispiel-Mixin behauptet keine solche Erkennung; eine gegebenenfalls nötige Erweiterung gehört in die vorhandene interne Slot-Sichtbarkeitslogik und erhält eine eigene Prüfung.
+Sind alle vier inneren Slots leer, wird der gesamte Wrapper über den vorhandenen `.slot-empty`-Zustand ausgeblendet. Header/Footer bleiben sichtbar. Ohne Main wird der Aside-Spaltentrenner ausgeblendet. Änderungen der Slot-Belegung werden durch die vorhandene SlotVisibility-Logik berücksichtigt. [geändert]
 
 ## § 6 Konkrete Theme-Migration
 
 ### § 6.1 Osman
 
-`theme/osman/elements/ntl-2col/_style-default.scss`: Nach dem Default-Mixin `with-wrapper-spacing()` einbinden. Das bisherige zusätzliche Wrapper-`padding-block` entfernen beziehungsweise in den einen Wrapper-Padding-Wert integrieren. `--inner-padding: var(--nt-spacing-text)` und die vorhandenen responsiven Gap-Werte getrennt belassen; erstmals bestimmen `clamp(...)` beziehungsweise mobil `1.25rem` den tatsächlichen Gap.
+`theme/osman/elements/ntl-2col/_style-default.scss`: Das bisherige zusätzliche Wrapper-`padding-block` entfällt. `--inner-padding: var(--nt-spacing-text)` und die vorhandenen responsiven Gap-Werte bleiben getrennt; erstmals bestimmen `clamp(...)` beziehungsweise mobil `1.25rem` den tatsächlichen Gap. [geändert]
 
 Die seitlichen Padding-Zugaben für Text-Aside aus Default, Reverse und `_with-bg-primary.scss` entfernen. Automatische Bildreihenfolge, Bildformat und Min-Height bleiben erhalten. Das eigenständige Footer-Padding liegt außerhalb dieses Vertrags und bleibt separat.
 
-Trennlinien sind Dekoration innerhalb des Gaps. Wenn sie weiter benötigt werden, als absolut positionierten Pseudo-Divider ohne zusätzlichen Layout-Padding-/Border-Anteil im Gap zeichnen. Seine Seite muss mit derselben Logik wie die visuelle Main-/Aside-Position wechseln: Standard, `.reverse`, `.reverse-desktop`, bestehendes `.desktop-reverse`, Alternating und kombinierte Umkehrungen. Die aktuelle Korrektur nur für `.reverse` ist dafür unvollständig. Bei Gap 0 oder fehlender Partnerregion keinen Divider zeichnen; die verlässliche Erkennung belegter Regionen ist vor Umsetzung festzulegen, nicht durch bloßes `:has(.aside)` zu ersetzen.
+Der vorhandene gemeinsame Divider wird auch für den Text-Aside verwendet, mit `$background: null` zur Erhaltung der Section-Fläche. Er liegt ohne zusätzlichen Padding-Anteil im Gap und folgt derselben Richtungslogik wie die Spalten. Die bisherigen lokalen Reverse-/Divider-Korrekturen entfallen. [geändert]
 
 ### § 6.2 Müller Default
 
-`theme/mueller/elements/ntl-2col/_style-default.scss`: Neues Mixin nach Default aktivieren. Die bestehenden Padding-Tokens `--nt-space-4` mobil und `--nt-space-6` Desktop werden zu den einmaligen Wrapper-Abständen.
+`theme/mueller/elements/ntl-2col/_style-default.scss`: Die bestehenden Padding-Tokens `--nt-space-4` mobil und `--nt-space-6` Desktop werden zu den einmaligen Wrapper-Abständen. Der gewünschte sichtbare Zwischenraum wird direkt mit `$gap: var(--nt-spacing-layout)` gesetzt. [geändert]
 
 Die aktuelle Angabe `$gap: 0` wird nach der Korrektur tatsächlich null. Für den hier gewünschten sichtbaren Zwischenraum lautet der Vorschlag deshalb ausdrücklich `$gap: var(--nt-spacing-layout)`. Das ist eine bewusste Theme-Entscheidung; bei einer gewünschten nahtlosen Komposition ist `0` weiterhin korrekt. Nicht versuchen, einen gewünschten Gap durch Slot-Padding zu simulieren.
 
@@ -150,7 +126,7 @@ Auto-Bilder erhalten durch das Wrapper-Padding nun auch einen Abstand zum Rahmen
 
 ### § 6.3 Müller Testimonial und Breakouts
 
-Das Testimonial zunächst nicht auf das neue Mixin umstellen: Bildüberstand, negative Margin, Transform und eigenes Wrapper-Padding bilden eine gezielte Komposition. Eine spätere Migration muss jeden dieser Abstände funktional zuordnen; sichtbarer Bildüberstand kann nicht gleichzeitig der allgemeinen Regel „alle Regionen bleiben innerhalb des Randabstands“ entsprechen.
+Auch das Testimonial nutzt sofort die neue Baseline. Zusätzliches Aside-Padding und redundantes Wrapper-Block-Padding entfallen. Der ausdrücklich komponierte mobile Bildüberstand einschließlich Transform, negativer Margin und offenem oberen Wrapper bleibt erhalten; er ist eine visuelle Sonderkomposition und keine Transition. [geändert]
 
 `with-breakout-start()` und `with-breakout-end()` verwenden eigene Desktop-Breitenberechnungen. Für sie Wrapper-Padding, verfügbare Restbreite, Viewport-Überstand und Gegenkante gesondert messen. Die normale eingerückte Baseline ist keine implizite Zusage für randlose Breakout-Medien.
 
@@ -166,21 +142,11 @@ Das Testimonial zunächst nicht auf das neue Mixin umstellen: Bildüberstand, ne
 | Müller `$gap: 0` mit dennoch sichtbarem Zwischenraum | Expliziter Gap-Token oder bewusst echter Null-Gap |
 | Implizit randlose Auto-Bilder | Normal eingerückt; randlose Komposition separat |
 
-## § 7 Vorgesehene Umsetzungsdateien
+## § 7 Umsetzungsdateien
 
-Dieser Konzept-PR ändert nur die vorliegende Datei. Nach Review sind folgende Änderungen vorgesehen; ThemeJS2 benötigt dafür einen separaten PR.
+Nextrap ändert die Default-Baseline, die funktionalen Leerzustände, Reverse-/Alternating-/Divider-Mixins, den Sass-Export, Demo und API-Dokumentation. Die neuen Dateien `_with-mobile-reverse.scss` und `_with-desktop-reverse.scss` kapseln die beiden Modi. Der Browser-Test `tests/spacing.browser.mjs` und `.github/workflows/ntl-2col-spacing.yml` sichern den Abstandsvertrag ab. [geändert]
 
-| Phase | Repository / Pfad | Änderung |
-|---|---|---|
-| Opt-in | Nextrap: `nextrap-layout/ntl-2col/src/scss/_with-wrapper-spacing.scss` | Mixin aus § 4.1 |
-| Opt-in | Nextrap: `nextrap-layout/ntl-2col/index.scss` | Öffentlicher Sass-Export |
-| Validierung | Nextrap: `nextrap-layout/ntl-2col/demo/base.md` und `demo/demo.scss` | Slot-/Order-Vergleichsfälle und explizite Mixin-Einbindung |
-| Dokumentation | Nextrap: `nextrap-layout/ntl-2col/README.md`, lokale Usage-/Theming-Dokumentation und `.ai-usage-info.md` | Opt-in-Vertrag, bestehende Variablen, Migration und Ausnahmen konsistent erklären |
-| Migration | ThemeJS2: `theme/osman/elements/ntl-2col/_style-default.scss`, `_reverse.scss`, `_with-bg-primary.scss` | Gemeinsamer Außenabstand, Gap und gesondert geprüfte Divider-Regeln |
-| Migration | ThemeJS2: `theme/mueller/elements/ntl-2col/_style-default.scss` | Neues Mixin, Gap bewusst konfigurieren |
-| Spätere Baseline | Nextrap: `nextrap-layout/ntl-2col/src/scss/_default-style.scss` | Legacy-Paddings durch Wrapper-Modell ersetzen, Zweckkommentare aktualisieren |
-
-Die Opt-in-Phase setzt keine Änderung in `ntl-2col.ts` oder internem Layout-SCSS voraus. Zusätzlicher funktionaler Änderungsbedarf, etwa das vollständige Ausblenden eines leeren Wrappers, wird nach Prüfung konkret abgegrenzt.
+ThemeJS2 passt die fünf vorhandenen Osman-/Müller-Dateien `_style-default.scss`, `_reverse.scss`, `_with-bg-primary.scss` beziehungsweise `_style-default.scss` und `_style-testimonial.scss` direkt an. Kein Opt-in-Mixin wird angelegt. [geändert]
 
 ## § 8 Akzeptanz- und Prüfkriterien
 
@@ -191,10 +157,12 @@ Die Opt-in-Phase setzt keine Änderung in `ntl-2col.ts` oder internem Layout-SCS
 5. Top/Bottom bleiben volle innere Breite; Header/Footer werden nicht eingerückt oder in die Spalten verschoben. Main-only erhält vier Außenabstände und keine Phantom-Gaps.
 6. Testinhalte ohne äußere Margins verwenden, damit Layout-Geometrie eindeutig messbar ist. Anschließend echte Theme-Inhalte mit Überschriften, Absätzen, Bildern und verschachtelten Komponenten prüfen: deren eigene Rand-Margins können sonst optisch zusätzliche Abstände erzeugen und müssen am jeweils zuständigen Inhalts-/Typografie-Vertrag bewertet werden.
 7. Große und kleine Gaps, `--cols`-Werte, lange untrennbare Inhalte und schmale Desktop-Container auf unerwünschtes Wrapping/Overflow prüfen. Breakout-/Sticky-/Divider-/Testimonial-Fälle separat vergleichen.
-8. Bei der Implementierung Sass-Compile mit und ohne explizites Mixin sowie im verschachtelten Theme-Scope prüfen; ein reiner `@use` des Entrypoints darf kein CSS ausgeben. Bestehende Demos und fokussierte Browser-Geometriemessungen verwenden; anschließend den relevanten Package-/Theme-Build ausführen.
+8. Sass-Compile der Default-Baseline und beider neuen Reverse-Mixins sowie im verschachtelten Theme-Scope prüfen; ein reiner `@use` des Entrypoints darf kein CSS ausgeben. Bestehende Demos und fokussierte Browser-Geometriemessungen verwenden; anschließend den relevanten Package-/Theme-Build ausführen.
 
-## § 9 Prüfung dieses Proposals und offene Entscheidungen
+## § 9 Prüfstand und Veröffentlichung
 
-Die Ursachenanalyse und der Entwurf wurden gegen die in § 2 verlinkten Quellen, die Slot-Struktur und die vorhandenen Reverse-/Alternating-Mixins abgeglichen. Die Bestandsquellen belegen die additive Padding-Logik und den unwirksamen Gap-Parameter. Es wurden keine Styles implementiert, keine Browser-Geometriemessungen und keine Builds ausgeführt; § 8 beschreibt die Abnahme für die spätere Umsetzung.
+Die Ursachenanalyse wurde gegen die Quellen aus § 2 abgeglichen. Default, Divider, Reverse-API sowie Osman-/Müller-SCSS lassen sich mit dem JavaScript-Sass-Compiler kompilieren; der reine API-Import erzeugt kein CSS. Der Browser-Regressionstest prüft 1.728 Kombinationen sowie dynamische Slot-Belegung und ist zusätzlich in der CI registriert. Der tatsächliche Laufstatus wird in den PRs dokumentiert. [geändert]
 
-Vor der Default-Umstellung zu entscheiden: Veröffentlichung der Opt-in-Phase, gewünschter Müller-Gap, explizite randlose Bild-/Breakout-Ausnahmen, Umgang mit vollständig leerem Wrapper und zuverlässige Divider-Sichtbarkeit bei fehlenden Partnerregionen. Die Empfehlung für die normale gerahmte Komposition bleibt eindeutig: ein Wrapper-Padding, ein unabhängiger Gap, kein zusätzliches Regions-Padding.
+Der Package-Build einschließlich TypeScript-Deklarationen ist mit Vite und JavaScript-Sass erfolgreich. Die reguläre Nx-/Dart-Sass-Ausführung und der Chromium-Start sind in der lokalen Laufzeit blockiert. ThemeJS2s vollständiger Standard-Build ist zusätzlich durch die nicht veröffentlichte konfigurierte Abhängigkeit `@leuffen/vite-jekyll-hmr-manager@^1.0.1` blockiert. Diese bestehenden Infrastruktur-/Dependency-Probleme werden nicht durch einen lokalen Theme-Hack oder eine Übergangslösung umgangen. [geändert]
+
+Der ThemeJS2-PR setzt die veröffentlichte Nextrap-Endfassung aus dem verknüpften PR voraus. Bis diese verfügbar ist, kann ein CI-Build mit der bisherigen npm-Version nicht als Prüfung der neuen gemeinsamen Baseline gewertet werden. Es werden keine Releases oder produktiven Deployments manuell ausgelöst. [geändert]
