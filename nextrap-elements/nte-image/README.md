@@ -2,15 +2,15 @@
 
 A versatile image display component built with Lit that supports slideshow functionality, fullscreen viewing, image cropping, and advanced positioning. Perfect for galleries, hero sections, and dynamic image displays.
 
-## Visual Demo
+## Demos
+
+Den zentralen Demo-Viewer im Repository starten:
 
 ```bash
-nx dev nte-image
-# Open http://localhost:4000/demo/base.html for basic features
-# Open http://localhost:4000/demo/advanced.html for advanced features
-# Open http://localhost:4000/demo/gallery.html for gallery examples
-# Open http://localhost:4000/demo/mobile.html for mobile-optimized demos
+npm run demo
 ```
+
+Unter **NTE Image** stehen [Stabile Bildfläche](demo/01-stable-frame.demo.ts) und [Navigation](demo/02-navigation.demo.ts) bereit. Beide verwenden Markdown mit Content Pane und die vorgegebenen Leuffen-CDN-Bilder.
 
 ## Basic Usage
 
