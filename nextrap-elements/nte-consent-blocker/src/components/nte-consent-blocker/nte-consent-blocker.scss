@@ -1,18 +1,11 @@
-/* Hält im Shadow DOM nur das funktionale Layering und die Zustandswechsel des Consent Blockers. */
-
+// Isoliert die funktionalen Ebenen; Größe und Gestaltung legt das Theme fest.
 :host {
-  --aspect-ratio: 16 / 9;
   --breakpoint: lg;
-  aspect-ratio: var(--aspect-ratio);
-  width: 100%;
   display: block;
   isolation: isolate;
 }
 
-:host([mode='mobile']) {
-  --aspect-ratio: 1 / 1;
-}
-
+// Schaltet nach der Freigabe von Vorschau und Hinweis auf den geladenen Inhalt um.
 :host([consentgiven='true']) {
   #pre-consent,
   #background {
@@ -30,6 +23,7 @@
   }
 }
 
+// Legt alle Zustandsflächen in dieselbe Zelle und erhält die vom Host vorgegebene Höhe.
 #wrapper {
   display: grid;
   height: 100%;
@@ -42,54 +36,25 @@
   }
 }
 
+// Hält die Freigabeaktion vor dem Laden über der Vorschau erreichbar.
 #pre-consent {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  transition: opacity 0.3s ease;
   opacity: 1;
   z-index: 99;
 }
 
+// Zeigt zunächst die Vorschau; deren Bildgestaltung gehört zum äußeren Mixin.
 #background {
-  height: 100%;
-  transition: opacity 3s ease;
   opacity: 1;
-
-  slot::slotted(img),
-  slot::slotted(p) {
-    display: block;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    object-fit: cover;
-  }
 }
 
+// Blendet den freigegebenen Bereich bis zum Zustandswechsel aus.
 #consented-content {
-  width: 100%;
-  height: 100%;
   z-index: 0;
   opacity: 0;
-  transition: opacity 0.5s ease;
-
-  slot::slotted(*) {
-    width: 100%;
-    height: 100%;
-    border: none;
-  }
 }
 
+// Hält den Ladehinweis hinter dem freigegebenen Inhalt bereit.
 #loading-text {
   opacity: 0;
-  transition: opacity 0.5s ease;
-  height: 100%;
-  width: 100%;
-  text-align: center;
   z-index: 5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }

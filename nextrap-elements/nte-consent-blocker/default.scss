@@ -1,5 +1,7 @@
+// Lädt ausschließlich die öffentliche Sass-API.
 @use './index' as consentBlocker;
 
-.default {
+// Materialisiert die Standardvariante nur für diesen Komponententyp.
+nte-consent-blocker.style-default {
   @include consentBlocker.default-style();
 }
