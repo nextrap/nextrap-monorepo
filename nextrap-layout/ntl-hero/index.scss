@@ -1,2 +1,2 @@
-@use 'src/styles/index' as *;
-@forward 'src/styles/mixins';
+// Veröffentlicht die Styling-API ohne eigene CSS-Ausgabe.
+@forward 'src/scss/default-style';

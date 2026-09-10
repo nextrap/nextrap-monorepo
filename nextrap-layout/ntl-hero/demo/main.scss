@@ -1,0 +1,6 @@
+@use '../index' as hero;
+
+// Materialisiert die Hero-Baseline ausschließlich für den automatisch gesetzten Default-Style.
+ntl-hero.style-default {
+  @include hero.default-style();
+}

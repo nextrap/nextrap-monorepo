@@ -5,5 +5,6 @@ import '@nextrap/nte-slider';
 import '@nextrap/style-base';
 import '@nextrap/style-typography';
 import '@nextrap/style-utils';
-import '../index.scss';
+// Bindet die visuelle Hero-Baseline explizit für diese Demo ein.
+import './main.scss';
 import '../index.ts';

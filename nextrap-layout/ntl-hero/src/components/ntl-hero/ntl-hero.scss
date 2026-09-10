@@ -1,76 +1,46 @@
-/* Shadow DOM Styles for hero */
-
+// Stellt den Layout-Host und den bestehenden Responsive-Breakpoint bereit.
 :host {
-  --bg-color: var(--nt-body-teritary, #e4e6ef);
-  --container-width: var(--nt-container-width, 100%);
   --height-offset: 0px;
-  --min-height: 600px;
-  --max-height: 1800px;
   --breakpoint: xl;
+
+  display: block;
 }
 
+// Stapelt Hintergrund und Inhalt in einem isolierten Positionierungskontext.
 #root {
   width: 100%;
   isolation: isolate;
-  min-height: var(--min-height);
   display: grid;
-
   position: relative;
-
-  height: calc(100vh - var(--height-offset, 0px));
-  max-height: var(--max-height);
-
-  //min-height: var(--min-height);
   grid-template-rows: 1fr;
   grid-template-columns: 1fr;
 }
 
+// Hält die Slot-Reihenfolge und den Inhalt oberhalb des Hintergrunds.
 #wrapper {
-  padding-top: var(--top-offset);
-  width: var(--container-width);
-  margin: 0 auto;
   grid-row: 1;
   grid-column: 1;
   z-index: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
 
-  #title,
-  #top-title {
-    text-align: center;
-  }
-
-  & > #title,
-  #content {
-    flex-grow: 1;
-    justify-content: center;
-  }
-
+  // Organisiert jeden Slot-Bereich als eigene Inhaltsspalte.
   & > * {
     display: flex;
     flex-direction: column;
-    align-items: center;
   }
 
+  // Entfernt leere Slot-Bereiche unabhängig von der aktiven visuellen Variante.
   & > :has(.slot-empty) {
     display: none !important;
   }
 }
 
+// Füllt die Hero-Fläche ohne Einfluss auf die Inhaltshöhe und schneidet überstehende Medien ab.
 #background {
-  position: absolute; // Important: This allows the background to fill the entire hero area without affecting the layout of the content.
-  left: 0;
-  right: 0;
-  bottom: 0;
-  top: 0;
+  position: absolute;
   overflow: hidden;
-  background-color: var(--bg-color);
   z-index: 0;
   height: 100%;
   inset: 0;
-}
-
-.background::slotted(*) {
-  pointer-events: auto;
 }

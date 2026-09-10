@@ -1,0 +1,69 @@
+// Bindet die vollständige Hero-Baseline an den vom Theme gewählten style-Selektor.
+@mixin default-style(
+  $background: var(--nt-body-teritary, #e4e6ef),
+  $container-width: var(--nt-container-width, 100%),
+  $min-height: 600px,
+  $max-height: 1800px,
+  $top-offset: 0px
+) {
+  --bg-color: #{$background};
+  --container-width: #{$container-width};
+  --min-height: #{$min-height};
+  --max-height: #{$max-height};
+  --top-offset: #{$top-offset};
+
+  // Hält die bisherige Viewport-Höhe mit dem von der Komponente ermittelten Offset.
+  &::part(root) {
+    min-height: var(--min-height);
+    height: calc(100vh - var(--height-offset, 0px));
+    max-height: var(--max-height);
+  }
+
+  // Zentriert den Inhaltsrahmen; Themes können Breite und oberen Abstand konfigurieren.
+  &::part(wrapper) {
+    width: var(--container-width);
+    margin: 0 auto;
+    padding-top: var(--top-offset);
+    align-items: center;
+  }
+
+  // Richtet die Slot-Inhalte aus, ohne ihre funktionale Reihenfolge zu verändern.
+  &::part(top-title),
+  &::part(title),
+  &::part(content),
+  &::part(footer) {
+    align-items: center;
+  }
+
+  // Zentriert die Überschriften unabhängig von der Typografie des umgebenden Themes.
+  &::part(top-title),
+  &::part(title) {
+    text-align: center;
+  }
+
+  // Verteilt Titel und Hauptinhalt wie bisher im verfügbaren vertikalen Raum.
+  &::part(title),
+  &::part(content) {
+    flex-grow: 1;
+    justify-content: center;
+  }
+
+  // Färbt die öffentliche Hintergrundfläche; deren Zuschnitt bleibt funktional im Shadow DOM.
+  &::part(background) {
+    background-color: var(--bg-color);
+  }
+
+  // Passt direkt zugewiesene Markdown-Hintergrundbilder innerhalb des aufrufenden Selektors ein.
+  > p[slot='bg'] {
+    width: 100%;
+    height: 100%;
+    display: block;
+
+    > img {
+      width: 100%;
+      height: 100%;
+      object-position: center;
+      object-fit: cover;
+    }
+  }
+}
