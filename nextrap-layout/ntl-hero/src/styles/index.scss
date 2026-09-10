@@ -1,20 +1,2 @@
-/**
- * This file contains LightDOM Styles
- */
-
-ntl-hero {
-  p[slot='bg'] {
-    width: 100%;
-    height: 100%;
-
-    display: block;
-
-    > img {
-      width: 100%;
-      height: 100%;
-
-      object-position: center;
-      object-fit: cover;
-    }
-  }
-}
+// Erhält den bisherigen Sass-Pfad als ausgabefreien Zugang zur Styling-API.
+@forward '../scss/default-style';
