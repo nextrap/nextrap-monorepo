@@ -1,38 +1,38 @@
+@use 'with-region-bleed' as bleed;
+
+// Überlagert Bild und Content als gemeinsame randlose Medienfläche mit geschütztem Text.
 @mixin with-image-overlay {
-  &::part(wrapper) {
-    display: grid;
-    grid-template-columns: 1fr;
-    overflow: hidden;
-  }
-
-  &::part(image) {
-    grid-row: 1;
-    grid-column: 1;
-    height: 100%;
-    min-width: 0;
-    min-height: 0;
-  }
-
-  &::part(content) {
-    grid-row: 1;
-    grid-column: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: end;
-    min-width: 0;
-    min-height: 0;
-  }
-
-  &::part(gradient) {
-    background: var(--overlay-background);
-  }
-
-  p[slot='image'] {
-    img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+  // Der abgeleitete Zustand folgt expliziten Slots, Bildautomatik und dynamischen Änderungen.
+  &[data-card-regions~='image'] {
+    @include bleed.with-region-bleed(image);
+    @include bleed.with-region-bleed(content);
+    &::part(wrapper) {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      overflow: hidden;
     }
+    &::part(image), &::part(content) {
+      grid-row: 1;
+      grid-column: 1;
+      min-width: 0;
+      min-height: 0;
+    }
+    &::part(image) { height: auto; }
+    &::part(content) {
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      padding: var(--inner-padding);
+    }
+    // Die gemeinsame Medienfläche steht zuerst; Header/Footer folgen danach.
+    &::part(wrapper) { --_nte-card-first-bleed: 1; --_nte-card-last-bleed: var(--_nte-card-bleed-footer-end, 0); }
+    &[data-card-regions~='header']:not([data-card-regions~='footer'])::part(wrapper) {
+      --_nte-card-last-bleed: var(--_nte-card-bleed-header-end, 0);
+    }
+    // Nur ohne weitere Regionen reicht die gemeinsame Medienfläche auch bis unten.
+    &:not([data-card-regions~='header']):not([data-card-regions~='footer']) {
+      &::part(wrapper) { --_nte-card-last-bleed: 1; }
+    }
+    &::part(gradient) { background: var(--overlay-background); }
   }
 }

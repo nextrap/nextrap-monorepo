@@ -1,8 +1,6 @@
 /* The ShadowDOM Styles */
 
 :host {
-  --border: 1px solid var(--nt-primary);
-  --background-color: unset;
   --image-aspect-ratio: var(--aspect-ratio, 16 / 9);
 
   display: block;
@@ -10,8 +8,6 @@
 
 #wrapper {
   box-sizing: border-box;
-  border: var(--border);
-  background-color: var(--background-color);
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -40,7 +36,6 @@
   z-index: 2;
   isolation: isolate;
   position: relative;
-  border-radius: var(--border-radius);
   #gradient {
     border-radius: inherit;
     left: 0;
@@ -61,3 +56,16 @@
 #footer {
   order: 999;
 }
+
+// Wählt den Bleed-Zustand der tatsächlich äußeren Regionen; innere leere Slots zählen nicht.
+#wrapper { --_nte-card-first-bleed: var(--_nte-card-bleed-image-start, 0); }
+#wrapper:has(#header > .slot-empty):has(#content > .slot-empty):has(#footer > .slot-empty) { --_nte-card-last-bleed: var(--_nte-card-bleed-image-end, 0); }
+#wrapper:has(#image > .slot-empty) { --_nte-card-first-bleed: var(--_nte-card-bleed-header-start, 0); }
+#wrapper:has(#content > .slot-empty):has(#footer > .slot-empty) { --_nte-card-last-bleed: var(--_nte-card-bleed-header-end, 0); }
+#wrapper:has(#image > .slot-empty):has(#header > .slot-empty) { --_nte-card-first-bleed: var(--_nte-card-bleed-content-start, 0); }
+#wrapper:has(#footer > .slot-empty) { --_nte-card-last-bleed: var(--_nte-card-bleed-content-end, 0); }
+#wrapper:has(#image > .slot-empty):has(#header > .slot-empty):has(#content > .slot-empty) { --_nte-card-first-bleed: var(--_nte-card-bleed-footer-start, 0); }
+#wrapper { --_nte-card-last-bleed: var(--_nte-card-bleed-footer-end, 0); }
+
+// Auch Link-Metadaten allein erzeugen keinen sichtbaren Kartenrahmen.
+#wrapper:has(#image > .slot-empty):has(#header > .slot-empty):has(#content > .slot-empty):has(#footer > .slot-empty) { display: none !important; }
