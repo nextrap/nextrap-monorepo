@@ -1,6 +1,6 @@
 {
     "name": "@nextrap/ntl-hero",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "main": "./index.js",
     "repository": {
         "directory": "nextrap-layout/ntl-hero",
@@ -14,11 +14,11 @@
         "@nextrap/style-base": "^2.0.0",
         "@nextrap/style-utils": "^2.0.0"
     },
-    "type": "module",
-    "types": "./index.d.ts",
-    "web-types": "./web-types.json",
     "peerDependencies": {
         "@trunkjs/browser-utils": "^1.0.28",
         "lit": "^3.3.1"
-    }
+    },
+    "type": "module",
+    "types": "./index.d.ts",
+    "web-types": "./web-types.json"
 }

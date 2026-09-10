@@ -1,3 +1,13 @@
+## 2.0.2 (2026-09-10)
+
+### 🩹 Fixes
+
+- declare external libraries as peers and retain test dependencies ([67c6ffa](https://github.com/nextrap/nextrap-monorepo/commit/67c6ffa))
+
+### ❤️ Thank You
+
+- Matthias Leuffen
+
 ## 2.0.1 (2026-09-07)
 
 ### 🩹 Fixes
