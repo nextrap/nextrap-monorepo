@@ -29,16 +29,17 @@
   align-items: stretch;
 }
 
+// Alle slots, die keine Inhalte enthalten, werden ausgeblendet. Dies verhindert das Rendern leerer Container und sorgt für eine saubere Darstellung.
+*:has(> .slot-empty) {
+  display: none;
+}
+
 #header,
 #footer,
 #top,
 #bottom {
   width: 100%;
   box-sizing: border-box;
-
-  &:has(.slot-empty) {
-    display: none;
-  }
 }
 
 #top {
