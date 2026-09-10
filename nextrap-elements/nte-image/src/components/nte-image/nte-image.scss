@@ -15,8 +15,12 @@
   --nte-image-arrow-bg-hover: rgba(0, 0, 0, 0.5);
   --nte-image-progress-bg: var(--nt-text-on-primary, #ffffff);
 
-  width: inherit;
-  height: inherit;
+  // Reserviert die Bildfläche vor dem Laden; explizite CSS-Maße haben Vorrang vor dem Seitenverhältnis.
+  width: var(--nte-image-width, 100%);
+  height: var(--nte-image-height, auto);
+  aspect-ratio: var(--nte-image-aspect-ratio, 16 / 9);
+  min-width: 0;
+  min-height: 0;
   overflow: hidden;
   position: relative;
   display: flex;
@@ -29,19 +33,23 @@
 }
 
 ::slotted(img) {
+  // Alle Bilder belegen denselben Rahmen und beeinflussen dessen Größe beim Wechsel nicht.
   display: block;
   max-width: 100%;
   max-height: 100%;
-  width: inherit;
-  height: inherit;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   user-select: none;
   -webkit-user-drag: none;
   cursor: pointer;
-  position: relative;
+  position: absolute;
+  inset: 0;
   z-index: 1;
 }
 
 .navigation-arrows {
+  // Hält die aktivierten Bedienelemente auch ohne Hover sichtbar, etwa auf Touch-Geräten.
   display: flex;
   pointer-events: none;
   position: absolute;
@@ -50,7 +58,7 @@
   height: 100%;
   justify-content: space-between;
   z-index: 2;
-  opacity: 0;
+  opacity: 1;
   transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -89,9 +97,18 @@
   width: 50px;
 }
 
+// Macht die Tastaturposition unabhängig von Bildfarbe und Hover erkennbar.
+.arrow-button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: -4px;
+}
+
 .nte-image-root {
+  // Entkoppelt intrinsische Bildmaße vollständig von der vom Host reservierten Fläche.
   height: 100%;
-  position: relative;
+  width: 100%;
+  position: absolute;
+  inset: 0;
   overflow: hidden;
 }
 
@@ -286,12 +303,12 @@
 }
 
 /* Fullsize feature visual indicator */
-:host([data-features*='fullsize']) ::slotted(img) {
+:host(.fullsize) ::slotted(img) {
   cursor: zoom-in;
   transition: transform 0.2s ease;
 }
 
-:host([data-features*='fullsize']) ::slotted(img:hover) {
+:host(.fullsize) ::slotted(img:hover) {
   transform: scale(1.02);
 }
 
@@ -314,11 +331,12 @@
   opacity: 1;
   z-index: 1;
   pointer-events: auto;
-  position: relative;
+  // Auch der aktive Slide bleibt aus dem Größenfluss des Rahmens herausgenommen.
+  position: absolute;
 }
 
 /* Blend transition animation for slideshow */
-:host(.slideshow[data-features*='blend']) ::slotted(img.active) {
+:host(.slideshow.blend) ::slotted(img.active) {
   animation: blendTransition 0.5s ease;
 }
 
@@ -339,4 +357,10 @@
 /* Fix for slideshow images to maintain proper sizing */
 :host(.slideshow) ::slotted(img) {
   object-fit: cover;
+}
+
+// Ohne Slideshow bleibt genau das erste Bild sichtbar, auch nach dem Abschalten per CSS.
+:host(.single-image) ::slotted(img:not(:first-of-type)) {
+  visibility: hidden;
+  pointer-events: none;
 }
