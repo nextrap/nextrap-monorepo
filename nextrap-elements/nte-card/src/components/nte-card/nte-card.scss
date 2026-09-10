@@ -16,16 +16,13 @@
   flex-direction: column;
   width: 100%;
 
-  > :has(.slot-empty) {
-    display: none;
-  }
-}
 
+}
+*:has(> .slot-empty) {
+  display: none !important; // Important: Do not render empty slots.
+}
 #header {
   order: 2;
-  &:has(.slot-empty) {
-    display: none;
-  }
 }
 
 #image {
