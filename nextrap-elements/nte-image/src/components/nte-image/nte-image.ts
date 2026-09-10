@@ -1,9 +1,10 @@
 import { html, LitElement, nothing, unsafeCSS } from 'lit';
+import type { PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import componentStyles from './nte-image.scss?inline';
 import type { SlideShowConfig } from './nte-image.types';
 import { defaultSlideshowInterval, SlideShowTransitions } from './nte-image.types';
-import { createFullsizeView, cropImage, cssToJson, detectMobileDevice, getSlideshowStyles } from './nte-image.utils';
+import { createFullsizeView, cropImage, cssToJson, detectMobileDevice } from './nte-image.utils';
 
 /**
  * NteImage component - A versatile image display component with slideshow, fullscreen, and cropping capabilities.
@@ -272,13 +273,7 @@ export class NteImage extends LitElement {
     super.connectedCallback();
     this.debugLog('Component connected to DOM');
 
-    // Set default styles if not specified
-    if (!this.style.width) {
-      this.style.width = '100%';
-    }
-    if (!this.style.height) {
-      this.style.height = '100%';
-    }
+    // Die Größenkonfiguration bleibt im CSS; keine Inline-Werte überschreiben Theme oder Aspect Ratio.
 
     // Initialize arrays and objects to ensure they exist
     this.childDataCrop = [];
@@ -458,7 +453,8 @@ export class NteImage extends LitElement {
    * Lifecycle method called after the element's first render
    * Initializes features that require the DOM to be rendered
    */
-  override firstUpdated() {
+  override firstUpdated(changedProperties: PropertyValues) {
+    super.firstUpdated(changedProperties);
     this.isMobileDevice = detectMobileDevice();
 
     if (this.slidesShowConfig.enabled) {
@@ -479,20 +475,21 @@ export class NteImage extends LitElement {
    * @returns The component's HTML template
    */
   override render() {
+    super.render();
     return html`
       <div class="nte-image-root" part="root">
-        ${this.slidesShowConfig.showArrows && this.slidesShowConfig.enabled && !this.isMobileDevice
+        ${this.slidesShowConfig.showArrows && this.slidesShowConfig.enabled
           ? html`
-              <div class="navigation-arrows">
-                <button class="arrow-button prev" @click=${this.prevSlide}>&lt;</button>
-                <button class="arrow-button next" @click=${this.nextSlide}>&gt;</button>
+              <div class="navigation-arrows" part="navigation-arrows">
+                <button type="button" class="arrow-button prev" part="previous-button" aria-label="Vorheriges Bild" @click=${this.prevSlide}>&lt;</button>
+                <button type="button" class="arrow-button next" part="next-button" aria-label="Nächstes Bild" @click=${this.nextSlide}>&gt;</button>
               </div>
             `
           : nothing}
         ${this.slidesShowConfig.showIndicators && this.slidesShowConfig.enabled
-          ? html` <div class="indicators">${this.renderIndicators()}</div> `
+          ? html` <div class="indicators" part="indicators">${this.renderIndicators()}</div> `
           : nothing}
-        <div class="image-container">
+        <div class="image-container" part="image-container">
           <slot @slotchange=${this.handleSlotChange}></slot>
           ${this.slidesShowConfig.enabled && this.isPaused
             ? html`
@@ -502,7 +499,7 @@ export class NteImage extends LitElement {
               `
             : nothing}
         </div>
-        <div class="caption-container">
+        <div class="caption-container" part="caption-container">
           <div class="caption">${this.currentCaption || ''}</div>
         </div>
       </div>
@@ -773,7 +770,7 @@ export class NteImage extends LitElement {
   };
 
   /**
-   * Attaches slideshow styles to the document and initializes the first slide
+   * Initialisiert den aktiven Slide; die funktionalen Slideshow-Regeln bleiben im Shadow DOM.
    */
   attachSlideshowStyles() {
     // Add active class to first image
@@ -781,17 +778,9 @@ export class NteImage extends LitElement {
       | HTMLImageElement
       | undefined;
 
-    if (firstImg) {
+    // Ein erneuter Slot-Abgleich darf den gewählten Slide nicht durch einen zweiten aktiven Slide überlagern.
+    if (firstImg && !this.querySelector('img.active')) {
       firstImg.classList.add('active');
-    }
-
-    // For slideshow styles, we need to add global styles
-    const styleId = `${this._instanceId}-slideshow-styles`;
-    if (!document.getElementById(styleId)) {
-      const globalStyle = document.createElement('style');
-      globalStyle.id = styleId;
-      globalStyle.textContent = getSlideshowStyles(this.slidesShowConfig.transition);
-      document.head.appendChild(globalStyle);
     }
 
     // Add slideshow class to host

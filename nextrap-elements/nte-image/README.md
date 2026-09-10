@@ -154,6 +154,37 @@ Each `<img>` element can have:
 
 - **--nte-image-border-radius** - Border radius for rounded corners (default: 12px)
 
+## Stabile Bildfläche und Navigation
+
+Die Komponente reserviert ihre Fläche vor dem Laden der Bilder. Standardmäßig gilt eine Breite von `100%` und ein Seitenverhältnis von `16 / 9`; wechselnde Bildformate verändern die Rahmenhöhe nicht. Alle direkten Bilder füllen diese Fläche mit `object-fit: cover`. `object-position` steuert den sichtbaren Ausschnitt.
+
+| Variable | Standard | Zweck |
+|---|---|---|
+| `--nte-image-width` | `100%` | Breite des Rahmens |
+| `--nte-image-height` | `auto` | Explizite Höhe; bei `auto` aus dem Seitenverhältnis |
+| `--nte-image-aspect-ratio` | `16 / 9` | Verhältnis bei automatisch berechneter Höhe |
+
+Direkte CSS-Werte für `width`, `height` und `aspect-ratio` sind ebenfalls möglich. Die Komponente schreibt keine Inline-Standardmaße mehr. Für `height: 100%` muss der Elterncontainer eine definierte Höhe besitzen.
+
+```scss
+// Reserviert eine quadratische Fläche unabhängig von den geladenen Bildformaten.
+nte-image.square {
+  --nte-image-aspect-ratio: 1 / 1;
+}
+
+// Begrenzt die Breite und setzt eine feste Höhe für einen Banner.
+nte-image.banner {
+  width: min(100%, 640px);
+  height: 320px;
+}
+```
+
+Mit `data-features="slideshow arrows"` sind Vor-/Zurück-Buttons dauerhaft sichtbar, auch auf Touch-Geräten. Sie sind per Tastatur erreichbar und lösen in Formularen kein Submit aus. Über `::part(previous-button)` und `::part(next-button)` können Themes die Buttons anpassen; die übrigen dokumentierten Parts sind ebenfalls verfügbar.
+
+`import '@nextrap/nte-image'` benötigt keinen Default-Style-Import und exportiert kein Light-DOM-SCSS. Die Slideshow verwendet ihre funktionalen Shadow-DOM-Regeln und injiziert keine globalen Styles. Die separate bestehende Vollbildansicht bleibt unverändert.
+
+Die neuen Demos `demo/01-stable-frame.demo.ts` und `demo/02-navigation.demo.ts` zeigen wechselnde Hoch-/Querformate, Seitenverhältnisse, feste Maße und Navigation im zentralen Demo-Viewer.
+
 ## Events
 
 - **nte-image-fullsize-open** - Fired when fullsize view is opened
