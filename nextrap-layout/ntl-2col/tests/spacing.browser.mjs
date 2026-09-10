@@ -19,7 +19,7 @@ const css = compile(`
   .desktop-mixin { @include two.with-desktop-reverse(); }
   .reverse-mixin { @include two.with-reverse(); }
   .alternating ntl-2col { @include two.with-alternating(); }
-  .divider { @include two.with-background-and-divider($gap: 16px); }
+  .divider { @include two.with-background-and-divider($gap: 16px, $divider-color: black); }
 `);
 
 // Vite lädt die echten TS-Quellen. Der Inline-Sass-Adapter erlaubt dieselben Prüfungen mit Dart oder JS Sass.

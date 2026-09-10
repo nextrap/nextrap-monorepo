@@ -126,7 +126,8 @@
       justify-content: flex-start;
     }
     #aside {
-      flex: 1 1 0;
+      // Eine positive Basis verhindert, dass Aside bei Gap null neben einer vollen Top-Zeile kollabiert.
+      flex: 1 1 1px;
       box-sizing: border-box;
     }
   }
@@ -134,7 +135,8 @@
   #aside {
     width: auto;
     min-width: 0;
-    flex: 1 1 0;
+    // Eine positive Basis verhindert, dass Aside bei Gap null neben einer vollen Top-Zeile kollabiert.
+    flex: 1 1 1px;
     box-sizing: border-box;
 
     &:has(.slot-empty) {
