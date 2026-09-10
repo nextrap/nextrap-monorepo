@@ -18,6 +18,10 @@ assert.throws(() => compile(`@use '${api}' as card; .scope { @include card.with-
 assert.throws(() => compile(`@use '${api}' as card; .scope { @include card.with-region-bleed(image, unknown); }`));
 const css = compile(`
   @use '${api}' as card;
+  @use '${root}/nextrap-layout/ntl-card-row/index.scss' as row;
+  .theme-test { --nt-spacing-text: 16px; }
+  .theme-test nte-card.style-token-gap { @include card.default-style($innerPadding: 24px, $border: 2px solid black, $border-radius: 0); }
+  .theme-test ntl-card-row { @include row.default-style($container-width: 100%); }
   .theme-test nte-card.style-default { @include card.default-style($innerPadding: 24px, $gap: 16px, $border: 2px solid black, $border-radius: 0); }
   .theme-test nte-card.all-bleed { @each $region in (image, header, content, footer) { @include card.with-region-bleed($region); } }
   .theme-test nte-card.header-inline { @include card.with-region-bleed(header, inline); }
@@ -33,6 +37,7 @@ const server = await createServer({
   optimizeDeps: { noDiscovery: true, include: ['lit', '@trunkjs/browser-utils', '@trunkjs/content-pane'] },
   resolve: {
     alias: {
+      '@nextrap/nte-card': resolve(root, 'nextrap-elements/nte-card/index.ts'),
       '@nextrap/nt-core': resolve(root, 'nextrap-base/nt-core/index.ts'),
       '@nextrap/style-reset': resolve(root, 'nextrap-styles/style-reset/index.ts'),
     },
@@ -57,7 +62,7 @@ const server = await createServer({
         vite.middlewares.use('/__spacing', (_request, response) => {
           response.setHeader('Content-Type', 'text/html');
           response.end(
-            `<!doctype html><html><head><style>body{margin:0} nte-card{--breakpoint:initial} nte-card > *{margin:0;min-height:20px;box-sizing:border-box} ${css}</style></head><body><script type="module">import '/nextrap-elements/nte-card/index.ts'; window.ready = customElements.whenDefined('nte-card');</script></body></html>`,
+            `<!doctype html><html><head><style>body{margin:0} nte-card{--breakpoint:initial} nte-card > *{margin:0;min-height:20px;box-sizing:border-box} ${css}</style></head><body><script type="module">import '/nextrap-elements/nte-card/index.ts'; import '/nextrap-layout/ntl-card-row/index.ts'; window.ready = customElements.whenDefined('nte-card');</script></body></html>`,
           );
         });
       },
@@ -76,7 +81,7 @@ try {
   const page = await browser.newPage();
   page.on('pageerror', (error) => console.error(error.message));
   await page.goto(server.resolvedUrls.local[0] + '__spacing');
-  await page.waitForFunction(() => customElements.get('nte-card'));
+  await page.waitForFunction(() => customElements.get('nte-card') && customElements.get('ntl-card-row'));
 
   // Alle Slot-Belegungen werden nach dem echten SlotVisibilityMixin ausgewertet, nicht per CSS simuliert.
   const result = await page.evaluate(async () => {
@@ -84,7 +89,7 @@ try {
     let cases = 0;
     const parts = ['image', 'header', 'content', 'footer'];
     document.body.className = 'theme-test';
-    const near = (actual, expected, label) => { if (Math.abs(actual - expected) > 0.8) issues.push(`${label}: ${actual} != ${expected}`); };
+    const near = (actual, expected, label) => { if (!Number.isFinite(actual) || Math.abs(actual - expected) > 0.8) issues.push(`${label}: ${actual} != ${expected}`); };
     const settle = async el => {
       await el.updateComplete;
       await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
@@ -152,6 +157,40 @@ try {
           } else if(mask && getComputedStyle(sr.getElementById('wrapper')).display !== 'flex') issues.push('Overlay ohne Bild bleibt Grid');
           el.remove();cases++;
         }
+      }
+    }
+    // Realer Layout-Elternknoten: Card-Default ohne --nt-text-gap und ohne lokalen --gap.
+    for (const mode of ['mobile', 'desktop']) for (const gutter of [0,16,40]) {
+      document.body.style.width = mode === 'mobile' ? '360px' : '1000px';
+      for (const mask of [1,5]) for (const linked of [false,true]) {
+        const row = document.createElement('ntl-card-row');
+        row.style.cssText = `--breakpoint:initial;--cols:6;--gutter-x:${gutter}px;--gutter-y:${gutter}px;--gap:99px`;
+        document.body.append(row);
+        const cards = [0,1].map(() => {
+          const card = make(mask,'with-image-bleed',16,linked);
+          card.classList.replace('style-default','style-token-gap');
+          card.style.removeProperty('--gap');
+          row.append(card);
+          return card;
+        });
+        await settle(row);
+        row.setAttribute('mode',mode);
+        for (const card of cards) await settle(card);
+        const label = `Row/${mode}/${gutter}/${mask}/${linked}`;
+        const [a,b] = cards.map(card => card.getBoundingClientRect());
+        near(mode === 'mobile' ? b.top-a.bottom : b.left-a.right,gutter,`${label}/Card-Gap`);
+        for (const card of cards) {
+          const sr = card.shadowRoot;
+          const wr = sr.getElementById('wrapper').getBoundingClientRect();
+          const im = sr.getElementById('image').getBoundingClientRect();
+          near(im.top,wr.top+2,`${label}/Bild oben`);
+          near(im.left,wr.left+2,`${label}/Bild links`);
+          near(im.right,wr.right-2,`${label}/Bild rechts`);
+          near(parseFloat(getComputedStyle(sr.getElementById('wrapper')).rowGap),16,`${label}/Token-Gap`);
+          if (mask&4) near(sr.getElementById('content').getBoundingClientRect().top-im.bottom,16,`${label}/Bild-Content-Gap`);
+          if (im.bottom > wr.bottom-2+0.8) issues.push(`${label}/Bild überschreitet Rahmen`);
+        }
+        row.remove(); cases++;
       }
     }
     // Dynamische Textknoten sowie verschachtelte leere Slots dürfen äußeren Content nicht ausblenden.

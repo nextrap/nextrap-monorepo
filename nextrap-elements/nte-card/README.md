@@ -27,7 +27,7 @@ nte-card {
 }
 ```
 
-`default-style()` sets border, background, border radius, inner padding and image aspect-ratio variables. It does not set a wrapper gap.
+`default-style()` sets border, background, border radius, inner padding and image aspect-ratio variables. It sets an independent wrapper `$gap`, defaulting to `var(--nt-spacing-text)`. Region bleed removes only outer padding; gaps between regions and between sibling cards remain intact.
 
 Available mixins:
 
