@@ -21,7 +21,7 @@ seinen inerten Inhalt, damit das Embed erst nach der Freigabe geladen wird.
 
 Ohne explizite Slot-Inhalte ergänzt die Komponente die eingebaute Maps-Vorschau und den Consent-Hinweis
 als Light-DOM-Elemente. Das Vorschaubild selbst wird bereits vor der Freigabe von `cdn.leuffen.de` geladen;
-die Sperre betrifft den Embed-Inhalt. Ein vollständiges Theme-Setup steht in [index.html](index.html),
+die Sperre betrifft den Embed-Inhalt. Ein vollständiges Theme-Setup steht in [demo/setup.ts](demo/setup.ts),
 die Content-Beispiele in [demo/base.md](demo/base.md).
 
 ## Wiederverwendbare Inhalte und Slots
@@ -98,4 +98,16 @@ Siehe [demo/pairing-ntl-2col.md](demo/pairing-ntl-2col.md) für beide Markdown-A
 | Theme-Selektor `nte-consent-blocker.default` | `nte-consent-blocker.style-default` |
 | Explizite `.default` in Content-Beispielen | Entfällt; `.style-default` wird automatisch ergänzt |
 | Visuelle Vorgaben aus dem Shadow DOM | `default-style()` im Theme einbinden |
-| Duplizierte HTML-Embeds und Inline-Styles in Markdown-Demos | Gemeinsame Templates in `index.html`, Konfiguration in `demo/main.scss` |
+| Duplizierte HTML-Embeds und Inline-Styles in Markdown-Demos | Gemeinsame Templates in `demo/setup.ts`, Konfiguration in `demo/main.scss` |
+
+## Demos im Demo Viewer
+
+Aus dem Repository-Root startet `npm run demo` den gemeinsamen `@trunkjs/demo-viewer`.
+Der vorhandene Vite-Plugin-Glob erkennt [base.demo.ts](demo/base.demo.ts) und
+[pairing-ntl-2col.demo.ts](demo/pairing-ntl-2col.demo.ts) automatisch.
+
+Beide Definitionen laden ihr Markdown mit `?raw` und rendern es über `wrapper_html` in
+`<tj-content-pane>`. [demo/setup.ts](demo/setup.ts) liefert vorher die gemeinsamen inerten Templates,
+sodass jede Demo direkt und nach einem Wechsel funktioniert. `demo/main.scss?inline` bindet die
+Styles über `css` ein und macht die Sass-Quelle im **Show code**-Tab sichtbar.
+Der bisherige Package-Einstieg über `index.html` und `demo/main.ts` entfällt.

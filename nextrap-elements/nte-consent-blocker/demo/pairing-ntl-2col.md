@@ -1,7 +1,7 @@
 # nte-consent-blocker in ntl-2col
 
 Das Demo-Theme kombiniert `default-style()` mit `pairing-ntl-2col-in-nte-consent-blocker()`.
-Alle Instanzen verwenden die gemeinsamen Templates aus `index.html`; `.style-default` wird automatisch ergänzt.
+Alle Instanzen verwenden die gemeinsamen Templates aus `demo/setup.ts`; `.style-default` wird automatisch ergänzt.
 
 ## Consent Blocker als Aside
 {: layout="ntl-2col" section-style="--cols: 6;"}

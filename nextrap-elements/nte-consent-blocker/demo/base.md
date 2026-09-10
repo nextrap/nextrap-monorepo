@@ -1,7 +1,7 @@
 # nte-consent-blocker
 
 Die Beispiele verwenden Markdown und die automatisch ergänzte Style-Klasse. Das Demo-Theme bindet
-`default-style()` in `demo/main.scss` ein; gemeinsame Templates stehen einmalig in `index.html`.
+`default-style()` in `demo/main.scss` ein; gemeinsame Templates stehen einmalig in `demo/setup.ts`.
 
 ## Eingebauter Hinweis und Vorschau
 
