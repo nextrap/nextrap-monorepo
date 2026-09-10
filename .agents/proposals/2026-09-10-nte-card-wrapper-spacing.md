@@ -4,10 +4,11 @@
 |---|---|---|
 | 2026-09-10 | dermatthes | §§ 1–8: Entwurf mit Quellenanalyse, Abstandsvertrag, Bildvarianten, Theme-Abgleich und Abnahmekriterien angelegt |
 | 2026-09-10 | dermatthes | §§ 1–8: Direkte Umsetzung freigegeben, regionsbezogenes Bleed ergänzt und Theme-Verwendungen angepasst |
+| 2026-09-10 | dermatthes | Gap-Default auf das zentrale --nt-spacing-text korrigiert; Bleed darf weder innere noch äußere Gaps aufheben |
 
 ## § 1 Ziel und Umfang
 
-Status: Die direkte Umsetzung ist beauftragt und in diesem PR enthalten, einschließlich `with-region-bleed()` für Image, Header, Content und Footer. Das zugehörige ThemeJS2-Gegenstück ist PR #58. [geändert]
+Status: Die direkte Umsetzung ist beauftragt und in diesem PR enthalten, einschließlich `with-region-bleed()` für Image, Header, Content und Footer. Das zugehörige ThemeJS2-Gegenstück ist PR #58.
 
 Die Card erhält genau einen Abstand innerhalb ihres Rahmens. Zwischen benachbarten, sichtbaren Card-Regionen wirkt ausschließlich ein unabhängiger Gap. Das gilt für einzelne Karten, Listen, Kartenraster, fehlende Slots und veränderte visuelle Reihenfolgen.
 
@@ -65,7 +66,7 @@ Geänderte Order oder Flex-Richtung ändert nicht den Randabstand. Horizontale T
 
 ### § 4.1 Default und Sass-API
 
-`default-style()` erhält **am Ende** der bestehenden Parameterliste `$gap: var(--nt-text-gap)`. Damit bleiben bestehende positionale Argumente zu Border, Bildformat, Overlay und Modifier-Registrierung korrekt zugeordnet. `--inner-padding` bleibt erhalten; `--gap` wird als unabhängige Card-API dokumentiert.
+`default-style()` erhält **am Ende** der bestehenden Parameterliste `$gap: var(--nt-spacing-text)`. Damit bleiben bestehende positionale Argumente zu Border, Bildformat, Overlay und Modifier-Registrierung korrekt zugeordnet. `--inner-padding` bleibt erhalten; `--gap` wird als unabhängige Card-API dokumentiert.
 
 Schematischer Kern der Änderung innerhalb des vorhandenen Mixins:
 
@@ -97,7 +98,7 @@ Border, Radius, Background und vorhandenes Clipping bleiben Teil der visuellen B
 
 Die vorhandene SlotVisibility-Auswertung bleibt maßgeblich. Eine ergänzende interne CSS-Regel blendet `#wrapper` genau dann aus, wenn die Slots in `#image`, `#header`, `#content` und `#footer` jeweils leer sind. Der versteckte Link-Slot zählt nicht mit. Direkte Kind-/Slot-Prüfungen verwenden; ein leerer Slot einer verschachtelten Komponente darf seine äußere Card nicht ausblenden.
 
-Keine Änderung am Shadow-DOM-Aufbau und keine neuen Slots sind für die normale Baseline notwendig. Den leeren verlinkten Host zusätzlich auf eine Phantom-Klickfläche prüfen. Der belegungsabhängige Zustand wird für Overlay- und horizontale Theme-Kompositionen aus den tatsächlichen Slots abgeleitet. [geändert]
+Keine Änderung am Shadow-DOM-Aufbau und keine neuen Slots sind für die normale Baseline notwendig. Den leeren verlinkten Host zusätzlich auf eine Phantom-Klickfläche prüfen. Der belegungsabhängige Zustand wird für Overlay- und horizontale Theme-Kompositionen aus den tatsächlichen Slots abgeleitet.
 
 ### § 4.3 Automatische Helper
 
@@ -114,15 +115,15 @@ Die Klassenregistrierung bindet dieselben Mixins ein und dupliziert keine Implem
 
 ### § 5.1 Normale und natürliche Bilder
 
-Normale Regionen werden durch ein Wrapper-Padding eingerückt. `with-region-bleed($region: image, $edges: all)` erweitert gezielt Image, Header, Content oder Footer bis zur inneren Rahmenkante; Klassen `.with-image-bleed`, `.with-header-bleed`, `.with-content-bleed` und `.with-footer-bleed` stehen automatisch bereit. Ein einzelnes Bild kann dadurch alle vier Rahmenkanten erreichen. [geändert]
+Normale Regionen werden durch ein Wrapper-Padding eingerückt. `with-region-bleed($region: image, $edges: all)` erweitert gezielt Image, Header, Content oder Footer bis zur inneren Rahmenkante; Klassen `.with-image-bleed`, `.with-header-bleed`, `.with-content-bleed` und `.with-footer-bleed` stehen automatisch bereit. Ein einzelnes Bild kann dadurch alle vier Rahmenkanten erreichen.
 
-Die Kantenwahl unterstützt `all`, `inline`, `block` sowie einzelne logische Kanten und Listen. `--inner-padding` muss für Bleed ein einzelner Längenwert sein. Seitliches Bleed wirkt unmittelbar; Block-Bleed nur bei einer tatsächlich äußeren Region. Funktionale Flags folgen der Slot-Belegung und verhindern, dass innere Gaps durch negative Margins verändert werden. Fullsize bleibt unabhängig davon. [neu]
+Die Kantenwahl unterstützt `all`, `inline`, `block` sowie einzelne logische Kanten und Listen. `--inner-padding` muss für Bleed ein einzelner Längenwert sein. Seitliches Bleed wirkt unmittelbar; Block-Bleed nur bei einer tatsächlich äußeren Region. Funktionale Flags folgen der Slot-Belegung und verhindern, dass innere Gaps durch negative Margins verändert werden. Fullsize bleibt unabhängig davon.
 
 ### § 5.2 Overlay
 
-Image und Content teilen eine randlose Grid-Fläche. Beide erhalten korrespondierendes Bleed; Content trägt innerhalb dieser Fläche `--inner-padding` als Textschutz. Header/Footer bleiben weitere Regionen innerhalb des Kartenrahmens und erhalten nur den gemeinsamen Gap. Ohne Bild wird das Overlay nicht aktiviert. [geändert]
+Image und Content teilen eine randlose Grid-Fläche. Beide erhalten korrespondierendes Bleed; Content trägt innerhalb dieser Fläche `--inner-padding` als Textschutz. Header/Footer bleiben weitere Regionen innerhalb des Kartenrahmens und erhalten nur den gemeinsamen Gap. Ohne Bild wird das Overlay nicht aktiviert.
 
-Der abgeleitete Zustand `data-card-regions` spiegelt belegte Slots einschließlich reiner Textknoten. Die vorhandenen Slotchange-Callbacks aktualisieren diesen Zustand; zusätzliche Callback-Bindungen an Header/Content/Footer decken dynamische Änderungen ab. Theme-Grids können damit fehlende Tracks vermeiden. Autoren setzen diesen Zustand nicht selbst. [neu]
+Der abgeleitete Zustand `data-card-regions` spiegelt belegte Slots einschließlich reiner Textknoten. Die vorhandenen Slotchange-Callbacks aktualisieren diesen Zustand; zusätzliche Callback-Bindungen an Header/Content/Footer decken dynamische Änderungen ab. Theme-Grids können damit fehlende Tracks vermeiden. Autoren setzen diesen Zustand nicht selbst.
 
 ### § 5.3 Horizontale Stories, Avatare und Footer-Aktionen
 
@@ -146,7 +147,7 @@ Gleiche Kartenhöhen und Footer-Aktionen bleiben möglich: vorzugsweise Content 
 
 ThemeJS2 erhält einen eigenen Proposal-PR unter demselben relativen Proposal-Pfad. Er benennt die tatsächlichen Osman-, Müller-, Raven-, Unify-, ePraxis- und Medic-Verwendungen. Kein globales Suchen/Ersetzen aller `padding`- oder `margin`-Deklarationen.
 
-Die spätere Theme-Implementierung benötigt eine veröffentlichte kompatible NTE-Card-Version. Beide PRs enthalten jetzt die konkrete Implementierung; Paket-Releases werden damit nicht ausgelöst. [geändert]
+Die spätere Theme-Implementierung benötigt eine veröffentlichte kompatible NTE-Card-Version. Beide PRs enthalten jetzt die konkrete Implementierung; Paket-Releases werden damit nicht ausgelöst.
 
 ## § 7 Abnahmeplan
 
@@ -163,6 +164,8 @@ Die spätere Theme-Implementierung benötigt eine veröffentlichte kompatible NT
 
 ## § 8 Entscheidungen und Prüfstand
 
-Die Umsetzung folgt der Freigabe: Wrapper-Padding, eigener Gap, regionsbezogenes Bleed und automatisch registrierte Helper. ThemeJS2 erhält dieselbe API und verwendet Image-Bleed für bisher randlose Titelbilder. Avatare bleiben eingerückt. [geändert]
+Die Umsetzung folgt der Freigabe: Wrapper-Padding, eigener Gap, regionsbezogenes Bleed und automatisch registrierte Helper. ThemeJS2 erhält dieselbe API und verwendet Image-Bleed für bisher randlose Titelbilder. Avatare bleiben eingerückt.
 
-Sass- und Package-Prüfungen sowie die Browser-CI sind in der PR-Beschreibung dokumentiert. Der Browser-Test prüft explizite Slots, verlinkte Karten, dynamische Inhalte und Bleed-/Overlay-Geometrie. Ein blockierter Theme-Gesamtbuild wird nicht als erfolgreiche visuelle Abnahme ausgegeben. [geändert]
+Sass- und Package-Prüfungen sowie die Browser-CI sind in der PR-Beschreibung dokumentiert. Der Browser-Test prüft explizite Slots, verlinkte Karten, dynamische Inhalte und Bleed-/Overlay-Geometrie. Ein blockierter Theme-Gesamtbuild wird nicht als erfolgreiche visuelle Abnahme ausgegeben.
+
+Der Gap verwendet das zentrale `--nt-spacing-text`; das bisherige `--nt-text-gap` ist ausschließlich in Unify definiert. Randlose Medien verändern nur Außen-Padding, niemals den Abstand zum nächsten Inhalt oder zur nächsten Card. [geändert]
