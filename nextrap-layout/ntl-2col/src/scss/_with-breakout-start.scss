@@ -15,6 +15,8 @@
 
     &::part(wrapper) {
       flex-direction: row-reverse;
+      // Spiegelt den dekorativen Divider gemeinsam mit der Zeile.
+      --_ntl-2col-row-direction: -1;
     }
 
     &::part(main) {
@@ -24,7 +26,8 @@
 
     &::part(aside) {
       width: auto;
-      flex: 1 1 0;
+      // Auch bei Gap null eine eigene Zeile nach vollbreitem Top sicherstellen.
+      flex: 1 1 1px;
     }
   }
 }
