@@ -39,7 +39,7 @@ const server = await createServer({
       enforce: 'pre',
       resolveId(id, importer) {
         if (id.endsWith('.scss?inline') || id.endsWith('.scss')) {
-          return '\0spacing-scss:' + resolve(importer ? dirname(importer) : root, id) + '.js';
+          return '\0spacing-scss:' + resolve(importer ? dirname(importer) : root, id.replace(/\?inline$/, '')) + '.js';
         }
       },
       async load(id) {
@@ -70,6 +70,7 @@ try {
     args: process.env.NTL_CHROME_ARGS ? JSON.parse(process.env.NTL_CHROME_ARGS) : [],
   });
   const page = await browser.newPage();
+  page.on('pageerror', (error) => console.error(error.message));
   await page.goto(server.resolvedUrls.local[0] + '__spacing');
   await page.waitForFunction(() => customElements.get('ntl-2col'));
 
