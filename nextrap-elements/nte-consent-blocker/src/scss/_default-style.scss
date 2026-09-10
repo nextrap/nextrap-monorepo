@@ -14,9 +14,19 @@
     --default-pre-consent-selector: #{$default-pre-consent-selector};
   }
 
+  // Definiert die äußere Größe; Instanzen und Pairings können das Seitenverhältnis überschreiben.
+  --aspect-ratio: 16 / 9;
+  width: 100%;
+  aspect-ratio: var(--aspect-ratio);
+
   --border-radius: #{$border-radius};
   --overlay-background: #{$overlay-background};
   --pre-consent-padding: #{$pre-consent-padding};
+
+  // Verwendet den vorhandenen Responsive-Zustand ohne eigene Media-Queries.
+  &[mode='mobile'] {
+    --aspect-ratio: 1 / 1;
+  }
 
   // Begrenzt Vorschau und Overlays auf die Form des äußeren Komponentenrahmens.
   &::part(wrapper) {
@@ -26,13 +36,44 @@
 
   // Gestaltet den austauschbaren Consent-Hinweis über seine öffentliche Part-Fläche.
   &::part(pre-consent) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: opacity 0.3s ease;
     padding: var(--pre-consent-padding);
     background: var(--overlay-background);
   }
 
+  // Übergänge sind Teil der visuellen Variante, nicht der funktionalen Zustandssteuerung.
+  &::part(background) {
+    transition: opacity 3s ease;
+  }
+
+  &::part(consented-content) {
+    transition: opacity 0.5s ease;
+  }
+
+  // Positioniert den Ladehinweis innerhalb der bereits funktional überlagerten Fläche.
+  &::part(loading-text) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: opacity 0.5s ease;
+  }
+
+  // Füllt den freigegebenen Bereich ohne feste Browser-Rahmen am Embed.
+  > [slot='consented-content'] {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
   // Skaliert direkte und automatisch erzeugte Vorschau-Inhalte flächendeckend in den Background-Slot.
-  img[slot='background'],
-  p[slot='background'] {
+  > img[slot='background'],
+  > p[slot='background'] {
     display: block;
     width: 100%;
     height: 100%;
@@ -40,7 +81,8 @@
     object-fit: cover;
   }
 
-  p[slot='background'] > img {
+  // Erfasst das Bild innerhalb eines automatisch zugewiesenen Markdown-Bildabsatzes.
+  > p[slot='background'] > img {
     display: block;
     width: 100%;
     height: 100%;

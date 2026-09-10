@@ -1,11 +1,22 @@
+// Das Demo-Theme stellt Tokens und die öffentlichen Komponenten-Mixins bereit.
+@use '@nextrap/style-base/default';
 @use '../index' as consentBlocker;
 @use '@nextrap/ntl-2col' as twoCol;
 
-nte-consent-blocker.default {
+// Bindet die komplette Baseline und das Pairing an die automatisch ergänzte Style-Klasse.
+nte-consent-blocker.style-default {
   @include consentBlocker.default-style();
   @include consentBlocker.pairing-ntl-2col-in-nte-consent-blocker();
 }
 
-ntl-2col.default {
+// Materialisiert das äußere Layout ausschließlich in seiner Standardvariante.
+ntl-2col.style-default {
   @include twoCol.default-style();
+}
+
+// Konfiguriert wiederverwendbare Inhalte unabhängig von der visuellen Style-Variante.
+nte-consent-blocker.maps-global {
+  --default-template-selector: #google-maps-template;
+  --default-background-selector: #google-maps-background;
+  --default-pre-consent-selector: #google-maps-pre-consent;
 }
