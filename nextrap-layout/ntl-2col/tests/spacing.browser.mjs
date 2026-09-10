@@ -73,7 +73,7 @@ const server = await createServer({
         vite.middlewares.use('/__spacing', (_request, response) => {
           response.setHeader('Content-Type', 'text/html');
           response.end(
-            `<!doctype html><html><head><style>body{margin:0} ntl-2col{--container-width:100%;--breakpoint:initial} ntl-2col > *{margin:0;min-height:20px;box-sizing:border-box} ${css}</style></head><body><script type="module">import '/nextrap-layout/ntl-2col/index.ts'; import '@nextrap/nte-image'; import '@nextrap/nte-consent-blocker'; window.ready = customElements.whenDefined('ntl-2col');</script></body></html>`,
+            `<!doctype html><html><head><style>body{margin:0} ntl-2col{--container-width:100%;--breakpoint:initial} ntl-2col > *{margin:0;min-height:20px;box-sizing:border-box} ${css}</style></head><body><script type="module">import '/nextrap-layout/ntl-2col/index.ts'; import '/nextrap-elements/nte-image/index.ts'; import '/nextrap-elements/nte-consent-blocker/index.ts'; window.ready = customElements.whenDefined('ntl-2col');</script></body></html>`,
           );
         });
       },
