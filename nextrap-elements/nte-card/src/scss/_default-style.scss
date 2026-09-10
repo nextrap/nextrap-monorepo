@@ -1,6 +1,7 @@
 @use 'sass:string';
 @use 'with-modifier-classes' as modifier-classes;
 
+// Stellt Rahmenabstand und Regionsabstand als unabhängige Card-Baseline bereit.
 @mixin default-style(
   $innerPadding: var(--nt-space-3),
   $border: 1px solid var(--nt-primary),
@@ -8,7 +9,8 @@
   $border-radius: var(--nt-border-radius),
   $image-aspect-ratio: string.unquote('16 / 9'),
   $overlay-background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent),
-  $modifierClasses: true
+  $modifierClasses: true,
+  $gap: var(--nt-text-gap)
 ) {
   --background-color: #{$background-color};
   --border: #{$border};
@@ -16,22 +18,26 @@
   --image-aspect-ratio: var(--aspect-ratio, #{$image-aspect-ratio});
   --inner-padding: #{$innerPadding};
   --overlay-background: #{$overlay-background};
-
-  @if ($modifierClasses != false and $modifierClasses != none) {
-    @include modifier-classes.with-modifier-classes();
-  }
+  // Jede Card initialisiert den Regions-Gap unabhängig vom Elternlayout.
+  @if $gap == 0 { $gap: 0px; }
+  --gap: #{$gap};
 
   &::part(wrapper) {
     border: var(--border);
     border-radius: var(--border-radius);
     background-color: var(--background-color);
     overflow: hidden;
+    padding: var(--inner-padding);
+    gap: var(--gap);
   }
 
+  // Nur der Wrapper trägt Layout-Padding; Bleed wird anschließend komponiert.
+  &::part(image),
   &::part(header),
   &::part(content),
   &::part(footer) {
-    padding: var(--inner-padding);
+    padding: 0;
+    margin: 0;
   }
 
   img[slot='image'],
@@ -41,4 +47,10 @@
     height: 100%;
     object-fit: cover;
   }
+
+  // Modifier folgen dem Baseline-Reset, auch bei direkter Mixin-Komposition.
+  @if ($modifierClasses != false and $modifierClasses != none) {
+    @include modifier-classes.with-modifier-classes();
+  }
+
 }

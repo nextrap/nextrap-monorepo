@@ -3,10 +3,11 @@
 | Datum | Benutzername | Kurzbeschreibung |
 |---|---|---|
 | 2026-09-10 | dermatthes | §§ 1–8: Entwurf mit Quellenanalyse, Abstandsvertrag, Bildvarianten, Theme-Abgleich und Abnahmekriterien angelegt |
+| 2026-09-10 | dermatthes | §§ 1–8: Direkte Umsetzung freigegeben, regionsbezogenes Bleed ergänzt und Theme-Verwendungen angepasst |
 
 ## § 1 Ziel und Umfang
 
-Status: Entwurf zur fachlichen Prüfung; dieser PR ändert ausschließlich dieses Proposal. Die beschriebene Implementierung ist noch nicht enthalten. Der Auftrag betrifft NTE-Card im Nextrap-Monorepo sowie einen separaten Anpassungsentwurf in ThemeJS2. Die vorhandenen 2COL-PRs bleiben eigenständig.
+Status: Die direkte Umsetzung ist beauftragt und in diesem PR enthalten, einschließlich `with-region-bleed()` für Image, Header, Content und Footer. Das zugehörige ThemeJS2-Gegenstück ist PR #58. [geändert]
 
 Die Card erhält genau einen Abstand innerhalb ihres Rahmens. Zwischen benachbarten, sichtbaren Card-Regionen wirkt ausschließlich ein unabhängiger Gap. Das gilt für einzelne Karten, Listen, Kartenraster, fehlende Slots und veränderte visuelle Reihenfolgen.
 
@@ -96,7 +97,7 @@ Border, Radius, Background und vorhandenes Clipping bleiben Teil der visuellen B
 
 Die vorhandene SlotVisibility-Auswertung bleibt maßgeblich. Eine ergänzende interne CSS-Regel blendet `#wrapper` genau dann aus, wenn die Slots in `#image`, `#header`, `#content` und `#footer` jeweils leer sind. Der versteckte Link-Slot zählt nicht mit. Direkte Kind-/Slot-Prüfungen verwenden; ein leerer Slot einer verschachtelten Komponente darf seine äußere Card nicht ausblenden.
 
-Keine Änderung am Shadow-DOM-Aufbau und keine neuen Slots sind für die normale Baseline notwendig. Den leeren verlinkten Host zusätzlich auf eine Phantom-Klickfläche prüfen. JavaScript-Änderungen sind zunächst nicht vorgesehen.
+Keine Änderung am Shadow-DOM-Aufbau und keine neuen Slots sind für die normale Baseline notwendig. Den leeren verlinkten Host zusätzlich auf eine Phantom-Klickfläche prüfen. Der belegungsabhängige Zustand wird für Overlay- und horizontale Theme-Kompositionen aus den tatsächlichen Slots abgeleitet. [geändert]
 
 ### § 4.3 Automatische Helper
 
@@ -113,17 +114,15 @@ Die Klassenregistrierung bindet dieselben Mixins ein und dupliziert keine Implem
 
 ### § 5.1 Normale und natürliche Bilder
 
-Im neuen Default liegt auch die Bildregion innerhalb des gemeinsamen Paddings. Das ändert bewusst die bisher randlose Standarddarstellung und muss in den Theme-Vergleichen sichtbar geprüft werden. Die Bildbreite bezieht sich auf die innere Wrapperbreite; Aspect-Ratio und Object-Fit bleiben Aufgabe der vorhandenen Bild-API.
+Normale Regionen werden durch ein Wrapper-Padding eingerückt. `with-region-bleed($region: image, $edges: all)` erweitert gezielt Image, Header, Content oder Footer bis zur inneren Rahmenkante; Klassen `.with-image-bleed`, `.with-header-bleed`, `.with-content-bleed` und `.with-footer-bleed` stehen automatisch bereit. Ein einzelnes Bild kann dadurch alle vier Rahmenkanten erreichen. [geändert]
 
-`with-image-fullsize()` bleibt orthogonal zum Abstandsvertrag. Kein implizites Entfernen des Paddings aufgrund eines Bild-Slots oder der automatischen Bildzuordnung. Ein bewusst randloses Bild wäre ein eigenständiges, explizit zu beauftragendes Bleed-Feature; keine negativen Theme-Margins als versteckte Rückkehr zur alten Baseline.
+Die Kantenwahl unterstützt `all`, `inline`, `block` sowie einzelne logische Kanten und Listen. `--inner-padding` muss für Bleed ein einzelner Längenwert sein. Seitliches Bleed wirkt unmittelbar; Block-Bleed nur bei einer tatsächlich äußeren Region. Funktionale Flags folgen der Slot-Belegung und verhindern, dass innere Gaps durch negative Margins verändert werden. Fullsize bleibt unabhängig davon. [neu]
 
 ### § 5.2 Overlay
 
-Ein bloßes Entfernen des Content-Paddings würde Text im Overlay direkt an die Bildkante setzen. Deshalb bleibt bei `with-image-overlay()` ein **Overlay-interner Textabstand** ausdrücklich erhalten: Wrapper-Padding bildet weiterhin den Abstand zum Kartenrahmen, und Content erhält innerhalb seiner mit Image geteilten Grid-Fläche `padding: var(--inner-padding)`.
+Image und Content teilen eine randlose Grid-Fläche. Beide erhalten korrespondierendes Bleed; Content trägt innerhalb dieser Fläche `--inner-padding` als Textschutz. Header/Footer bleiben weitere Regionen innerhalb des Kartenrahmens und erhalten nur den gemeinsamen Gap. Ohne Bild wird das Overlay nicht aktiviert. [geändert]
 
-Image und Content teilen weiterhin dieselbe Grid-Zelle. Zwischen diesen überlagerten Flächen gibt es keinen Gap; G wirkt nur zwischen dieser gemeinsamen Fläche und weiteren sichtbaren Header-/Footer-Regionen. Die bestehende visuelle Reihenfolge erhalten. Keine festen leeren Header-/Footer-Tracks hinzufügen, die bei fehlenden Slots Phantom-Gaps hinterlassen.
-
-Die Modifier-Regeln müssen nach dem Baseline-Padding-Reset wirksam sein. Das betrifft sowohl direkte Mixin-Komposition als auch die automatische Klassenregistrierung und ist ausdrücklich zu testen. Ohne belegten Image-Slot muss die Overlay-Komposition auf die normale Card-Darstellung zurückfallen. Text, Gradient, Bild und Link bleiben in ihrer vorgesehenen Stapelreihenfolge bedienbar.
+Der abgeleitete Zustand `data-card-regions` spiegelt belegte Slots einschließlich reiner Textknoten. Die vorhandenen Slotchange-Callbacks aktualisieren diesen Zustand; zusätzliche Callback-Bindungen an Header/Content/Footer decken dynamische Änderungen ab. Theme-Grids können damit fehlende Tracks vermeiden. Autoren setzen diesen Zustand nicht selbst. [neu]
 
 ### § 5.3 Horizontale Stories, Avatare und Footer-Aktionen
 
@@ -147,7 +146,7 @@ Gleiche Kartenhöhen und Footer-Aktionen bleiben möglich: vorzugsweise Content 
 
 ThemeJS2 erhält einen eigenen Proposal-PR unter demselben relativen Proposal-Pfad. Er benennt die tatsächlichen Osman-, Müller-, Raven-, Unify-, ePraxis- und Medic-Verwendungen. Kein globales Suchen/Ersetzen aller `padding`- oder `margin`-Deklarationen.
 
-Die spätere Theme-Implementierung benötigt eine veröffentlichte kompatible NTE-Card-Version. Die beiden Entwurfs-PRs selbst ändern keine Paketversionen, Lockfiles, gebauten Assets oder Releases und benötigen keine neue 2COL-Version.
+Die spätere Theme-Implementierung benötigt eine veröffentlichte kompatible NTE-Card-Version. Beide PRs enthalten jetzt die konkrete Implementierung; Paket-Releases werden damit nicht ausgelöst. [geändert]
 
 ## § 7 Abnahmeplan
 
@@ -164,6 +163,6 @@ Die spätere Theme-Implementierung benötigt eine veröffentlichte kompatible NT
 
 ## § 8 Entscheidungen und Prüfstand
 
-Empfohlen sind: alle normalen Regionen einschließlich Image eingerückt, ein unabhängiger Card-Gap mit `--nt-text-gap` als Default, unveränderte Slots und ausdrückliche Overlay-Ausnahme. Genau diese sichtbaren Änderungen sind beim Review zu bestätigen; eine pixelidentische Erhaltung aller alten Theme-Abstände ist nicht Ziel des Entwurfs.
+Die Umsetzung folgt der Freigabe: Wrapper-Padding, eigener Gap, regionsbezogenes Bleed und automatisch registrierte Helper. ThemeJS2 erhält dieselbe API und verwendet Image-Bleed für bisher randlose Titelbilder. Avatare bleiben eingerückt. [geändert]
 
-Quellen und bestehende Theme-Verwendungen wurden gelesen und die vorgesehenen Pfade abgeglichen. Dieses Proposal enthält keinen ausgeführten Card-Code und keine Behauptung über bestandene Card-Geometrietests. Lokale Laufzeit-/Build-Blocker aus der vorherigen 2COL-Arbeit ersetzen nicht die später notwendige Prüfung dieser Komponente.
+Sass- und Package-Prüfungen sowie die Browser-CI sind in der PR-Beschreibung dokumentiert. Der Browser-Test prüft explizite Slots, verlinkte Karten, dynamische Inhalte und Bleed-/Overlay-Geometrie. Ein blockierter Theme-Gesamtbuild wird nicht als erfolgreiche visuelle Abnahme ausgegeben. [geändert]

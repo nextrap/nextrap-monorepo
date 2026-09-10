@@ -1,0 +1,7 @@
+// Tauscht nur auf Desktop die Spalten und spiegelt den Divider mit derselben Zeile.
+@mixin with-desktop-reverse {
+  &[mode='desktop']::part(wrapper) {
+    flex-direction: row-reverse;
+    --_ntl-2col-row-direction: -1;
+  }
+}

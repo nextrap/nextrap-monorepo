@@ -55,6 +55,7 @@ export class NteCardElement extends nextrap_element({
     super.firstUpdated(_changedProperties);
     this.updateClickableFromLinkSlot();
     this.applyImageSlotDefaults();
+    this.updateRegionState();
   }
 
   private onLinkSlotChange = (e: Event) => {
@@ -63,7 +64,23 @@ export class NteCardElement extends nextrap_element({
 
   private onImageSlotChange = (e: Event) => {
     this.applyImageSlotDefaults(e.target as HTMLSlotElement);
+    this.updateRegionState();
   };
+
+  // Spiegelt die tatsächliche Slot-Belegung für Theme-Grids, auch bei reinen Textknoten.
+  // Das Attribut ist ein abgeleiteter Zustand und wird nicht von Autoren gesetzt.
+  private updateRegionState() {
+    const regions = ['image', 'header', 'content', 'footer'].filter((region) => {
+      const slot = this.shadowRoot?.querySelector(`#${region} > slot`) as HTMLSlotElement | null;
+      return slot?.assignedNodes({ flatten: true }).some((node) =>
+        node.nodeType === Node.ELEMENT_NODE ||
+        (node.nodeType === Node.TEXT_NODE && !!node.textContent?.trim()),
+      );
+    });
+    this.setAttribute('data-card-regions', regions.join(' '));
+  }
+
+  private onRegionSlotChange = () => this.updateRegionState();
 
   private applyImageSlotDefaults(slot?: HTMLSlotElement | null) {
     const imageSlot = slot ?? this.getImageSlot();
@@ -83,7 +100,7 @@ export class NteCardElement extends nextrap_element({
   override render() {
     const wrapper = html`
       <div part="wrapper" id="wrapper">
-        <div part="header" id="header"><slot name="header" data-query=":scope > .header"></slot></div>
+        <div part="header" id="header"><slot name="header" @slotchange=${this.onRegionSlotChange} data-query=":scope > .header"></slot></div>
         <div part="image" id="image">
           <slot
             id="image-slot"
@@ -93,8 +110,8 @@ export class NteCardElement extends nextrap_element({
           ></slot>
           <div part="gradient" id="gradient"></div>
         </div>
-        <div part="content" id="content"><slot></slot></div>
-        <div part="footer" id="footer"><slot name="footer" data-query=":scope > .footer"></slot></div>
+        <div part="content" id="content"><slot @slotchange=${this.onRegionSlotChange}></slot></div>
+        <div part="footer" id="footer"><slot name="footer" @slotchange=${this.onRegionSlotChange} data-query=":scope > .footer"></slot></div>
         <div hidden>
           <slot
             name="link"

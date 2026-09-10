@@ -1,0 +1,28 @@
+name: NTE-Card spacing
+
+# Prüft die echte Browser-Geometrie bei Änderungen am Layout oder seinem Regressionstest.
+on:
+  pull_request:
+    paths:
+      - 'nextrap-elements/nte-card/**'
+      - '.github/workflows/nte-card-spacing.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  spacing:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      # Installations-Hooks sind für diesen isolierten Layout-Test nicht erforderlich.
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      # Der Runner stellt Chrome bereit; der Test verändert weder Browser noch Systemkonfiguration.
+      - name: Check spacing, bleed and overlay mixins in Chrome
+        env:
+          NTL_CHROME_ARGS: '["--no-sandbox", "--disable-dev-shm-usage"]'
+        run: CHROME_BIN="$(command -v google-chrome)" node nextrap-elements/nte-card/tests/spacing.browser.mjs

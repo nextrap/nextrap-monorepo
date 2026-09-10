@@ -1,0 +1,14 @@
+// Richtet ausschließlich den Text im Main aus; logische Werte unterstützen RTL.
+@mixin with-main-text-align($align: start) {
+  &::part(main) { text-align: $align; }
+}
+
+// Positioniert den Main-Inhalt vertikal, ohne Aside oder die äußeren Abstände zu ändern.
+@mixin with-main-justify($justify: center) {
+  &::part(main) {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    justify-content: $justify;
+  }
+}

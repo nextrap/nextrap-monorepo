@@ -201,3 +201,32 @@ Der Text bleibt im normalen Container. Nur das Bild erweitert die linke Spalte b
 ![alt](https://placehold.co/900x500?text=Breakout+Left)
 
 <div class="footer">Footer: bleibt ebenfalls auf der angegebenen Container-Breite.</div>
+
+
+## Nur mobil umkehren
+{: layout="ntl-2col.with-mobile-reverse" section-style="--inner-padding: 24px; --gap: 16px;"}
+
+Main bleibt auf Desktop links. Mobil steht Aside zuerst; außen bleiben 24px und dazwischen 16px.
+
+### Aside
+{: layout=".aside"}
+
+Diese zweite Region wird ausschließlich im Mobile-Modus vor Main angezeigt.
+
+## Nur auf Desktop umkehren
+{: layout="ntl-2col.with-desktop-reverse" section-style="--inner-padding: 24px; --gap: 16px;"}
+
+Mobil bleibt Main zuerst. Auf Desktop steht Aside links; der Randabstand bleibt unabhängig von der Reihenfolge.
+
+### Aside
+{: layout=".aside"}
+
+Diese zweite Region wird ausschließlich im Desktop-Modus vor Main angezeigt.
+
+
+### Automatische Helper: Main-Ausrichtung
+
+<ntl-2col class="style-default with-alternating with-main-text-center with-main-bottom" style="--inner-padding:24px; --gap:16px">
+  <p>Mittiger Text, vertikal unten. Alle Helper kommen aus default-style().</p>
+  <div slot="aside" style="min-height:220px">Aside bleibt unabhängig ausgerichtet.</div>
+</ntl-2col>

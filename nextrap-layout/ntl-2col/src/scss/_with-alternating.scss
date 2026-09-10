@@ -5,6 +5,8 @@
     }
     &::part(aside) {
       order: 1;
+      // Eine zusätzliche Order-Umkehr hebt eine Zeilenumkehr für den Divider wieder auf.
+      --_ntl-2col-column-order: -1;
     }
   }
 }

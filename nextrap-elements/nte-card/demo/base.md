@@ -41,3 +41,34 @@ The `.img-overlay` variant renders image and content on the same grid layer. The
 {: layout="nte-card.col-3"}
 
 A card without an image. Empty header/image/footer areas are hidden by slot visibility handling.
+
+
+## Randlose Regionen und unabhängiger Gap
+{: layout=".row"}
+
+### Titelbild bis zum Rahmen
+{: layout="nte-card.col-4.with-image-bleed" section-style="--inner-padding: 24px; --gap: 16px" }
+
+![Randloses Titelbild](https://picsum.photos/640/360)
+
+Der Text bleibt eingerückt; zum Bild wirkt nur der Gap.
+
+### Reine Bildkarte ohne Randabstand
+{: layout="nte-card.col-4.with-image-bleed" section-style="--inner-padding: 24px; --gap: 16px" }
+
+![Bild an allen vier Rahmenkanten](https://picsum.photos/640/480)
+
+### Randloser Header
+{: layout="nte-card.col-4.with-header-bleed" section-style="--inner-padding: 24px; --gap: 16px" }
+
+Dieser Header reicht oben und seitlich bis zum Rahmen.
+{: slot="header" .bg-primary }
+
+Der normale Inhalt behält den Seitenabstand.
+
+### Overlay mit Textschutz
+{: layout="nte-card.col-4.with-image-overlay" section-style="--inner-padding: 24px; --gap: 16px" }
+
+![Overlay-Bild](https://picsum.photos/640/400)
+
+Randloses Bild mit innen geschütztem Overlay-Text.

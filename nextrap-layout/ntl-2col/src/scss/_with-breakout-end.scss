@@ -22,7 +22,8 @@
 
     &::part(aside) {
       width: auto;
-      flex: 1 1 0;
+      // Auch bei Gap null eine eigene Zeile nach vollbreitem Top sicherstellen.
+      flex: 1 1 1px;
     }
   }
 }
