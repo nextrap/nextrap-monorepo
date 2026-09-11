@@ -7,10 +7,11 @@
 
 | 2026-09-10 | dermatthes | §§ 1, 7–9: Automatische Helper, Main-Ausrichtung und Raven in ThemeJS2 ergänzt |
 | 2026-09-11 | dermatthes | § 1, § 10: Vereinfachung durch positive Insets, aktuelle Risiken, Rundungen und Prüfplan ergänzt; Revisionsmarkierungen zurückgesetzt |
+| 2026-09-11 | dermatthes | § 1, § 10: Umsetzung, Sonderabstands-API, Dokumentation und Grafik ergänzt |
 
 ## § 1 Ziel und Scope
 
-Historischer Umsetzungsstand vom 2026-09-10: Die direkte Endfassung wurde ohne Transition und Opt-in-Mixin beauftragt und implementiert; ThemeJS2 wurde in einem separaten PR behandelt. Der aktuelle Proposal-PR ergänzt ausschließlich den noch offenen Vereinfachungsvorschlag in § 10. [geändert]
+Historischer Umsetzungsstand vom 2026-09-10: Die direkte Endfassung wurde ohne Transition und Opt-in-Mixin beauftragt und implementiert; ThemeJS2 wurde in einem separaten PR behandelt. Der aktuelle PR implementiert den freigegebenen Vereinfachungsvorschlag; aktueller Stand und Prüfgrenzen stehen in § 10.10. [geändert]
 
 Der gemeinsame Rand um `top`, `main`, `aside` und `bottom` erhält genau einen Innenabstand. Zwischen benachbarten Regionen wirkt ausschließlich das konfigurierte Gap. `header` und `footer` bleiben außerhalb dieses Wrappers. Leere Slots erzeugen weder Regionen noch zusätzliche Gaps. Reverse, mobile Bildpriorisierung und Alternating dürfen den Außenabstand nicht beeinflussen.
 
@@ -178,13 +179,13 @@ Der ThemeJS2-PR setzt die veröffentlichte Nextrap-Endfassung aus dem verknüpft
 
 ### § 10.1 Status und aktueller Stand
 
-Stand 2026-09-11: Neuer Alternativvorschlag zur Diskussion; keine implementierte Layout-Änderung. §§ 1–9 halten den bisherigen Wrapper-Vertrag und dessen Umsetzung fest. Dieser Abschnitt schlägt vor, seinen Padding-Eigentümer zu ändern und den visuellen Vertrag aus genau einem Außenabstand und genau einem Gap zu erhalten. Gemeinsames Prinzip und Card-Entwurf stehen in [NTE-Card § 9](2026-09-10-nte-card-wrapper-spacing.md#-9-vereinfachungsvorschlag-positive-einrückungen-statt-bleed-verrechnung). [neu]
+Stand 2026-09-11: Neuer Alternativvorschlag zur Diskussion; keine implementierte Layout-Änderung. §§ 1–9 halten den bisherigen Wrapper-Vertrag und dessen Umsetzung fest. Dieser Abschnitt schlägt vor, seinen Padding-Eigentümer zu ändern und den visuellen Vertrag aus genau einem Außenabstand und genau einem Gap zu erhalten. Gemeinsames Prinzip und Card-Entwurf stehen in [NTE-Card § 9](2026-09-10-nte-card-wrapper-spacing.md#-9-vereinfachungsvorschlag-positive-einrückungen-statt-bleed-verrechnung).
 
-Bezugsstand: [9596b3b31fed96b67177a38b1b7bab7caf33a739](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed96b67177a38b1b7bab7caf33a739/nextrap-layout/ntl-2col/src/scss/_default-style.scss). Der Default setzt `padding: var(--inner-padding)`, `gap: var(--gap)`, Border, Radius und `overflow: hidden` am Wrapper. Top/Main/Aside/Bottom haben kein eigenes Padding. Header/Footer stehen außerhalb dieses Rahmens. Das entspricht bereits der gewünschten normalen Abstandsgeometrie. [neu]
+Bezugsstand: [9596b3b31fed96b67177a38b1b7bab7caf33a739](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed96b67177a38b1b7bab7caf33a739/nextrap-layout/ntl-2col/src/scss/_default-style.scss). Der Default setzt `padding: var(--inner-padding)`, `gap: var(--gap)`, Border, Radius und `overflow: hidden` am Wrapper. Top/Main/Aside/Bottom haben kein eigenes Padding. Header/Footer stehen außerhalb dieses Rahmens. Das entspricht bereits der gewünschten normalen Abstandsgeometrie.
 
-`with-media-frame(false)` erkennt einzelne Medien in Top/Aside, setzt ihre Füllgeometrie und erweitert sie mit negativen Margins bis an den Rahmen. Top/Mobile erhalten zusätzlich `width: calc(100% + 2 * P)`; Aside erhält Desktop-Flexbasis-Korrekturen und berechnete Richtungsfaktoren. Ob Blockkanten außen liegen, wird über zusätzliche Light-DOM-Selektoren und eine Liste von Reverse-/Auto-Bild-Zuständen bestimmt. `with-media-frame(true)` erzeugt dagegen keine Regeln. Der Name mit invertiertem Default erschwert zusätzlich das Verständnis. [neu]
+`with-media-frame(false)` erkennt einzelne Medien in Top/Aside, setzt ihre Füllgeometrie und erweitert sie mit negativen Margins bis an den Rahmen. Top/Mobile erhalten zusätzlich `width: calc(100% + 2 * P)`; Aside erhält Desktop-Flexbasis-Korrekturen und berechnete Richtungsfaktoren. Ob Blockkanten außen liegen, wird über zusätzliche Light-DOM-Selektoren und eine Liste von Reverse-/Auto-Bild-Zuständen bestimmt. `with-media-frame(true)` erzeugt dagegen keine Regeln. Der Name mit invertiertem Default erschwert zusätzlich das Verständnis.
 
-Quellen: [Default](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed96b67177a38b1b7bab7caf33a739/nextrap-layout/ntl-2col/src/scss/_default-style.scss), [Medien-Mixin](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed96b67177a38b1b7bab7caf33a739/nextrap-layout/ntl-2col/src/scss/_with-media-frame.scss), [funktionales Layout](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed96b67177a38b1b7bab7caf33a739/nextrap-layout/ntl-2col/src/components/ntl-2col/ntl-2col.scss), [Auto-Bild/Order](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed96b67177a38b1b7bab7caf33a739/nextrap-layout/ntl-2col/src/scss/_with-image-auto-objectfit.scss), [Breakout](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed96b67177a38b1b7bab7caf33a739/nextrap-layout/ntl-2col/src/scss/_with-breakout-start.scss), [Sticky](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed96b67177a38b1b7bab7caf33a739/nextrap-layout/ntl-2col/src/scss/_with-main-sticky-top.scss), [Browser-Test](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed96b67177a38b1b7bab7caf33a739/nextrap-layout/ntl-2col/tests/spacing.browser.mjs). [neu]
+Quellen: [Default](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed96b67177a38b1b7bab7caf33a739/nextrap-layout/ntl-2col/src/scss/_default-style.scss), [Medien-Mixin](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed96b67177a38b1b7bab7caf33a739/nextrap-layout/ntl-2col/src/scss/_with-media-frame.scss), [funktionales Layout](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed96b67177a38b1b7bab7caf33a739/nextrap-layout/ntl-2col/src/components/ntl-2col/ntl-2col.scss), [Auto-Bild/Order](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed96b67177a38b1b7bab7caf33a739/nextrap-layout/ntl-2col/src/scss/_with-image-auto-objectfit.scss), [Breakout](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed96b67177a38b1b7bab7caf33a739/nextrap-layout/ntl-2col/src/scss/_with-breakout-start.scss), [Sticky](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed96b67177a38b1b7bab7caf33a739/nextrap-layout/ntl-2col/src/scss/_with-main-sticky-top.scss), [Browser-Test](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed96b67177a38b1b7bab7caf33a739/nextrap-layout/ntl-2col/tests/spacing.browser.mjs).
 
 ### § 10.2 Konkrete Schwachstellen und Prüflücken
 
@@ -197,11 +198,11 @@ Quellen: [Default](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed
 | Breakout + Media + Reverse | Richtungsfaktoren, zusätzliche Breite und Flexbasis hängen zusammen. Aus einem lokal plausiblen Margin-Fix folgt keine Zusage für alle Kombinationen. |
 | Rundungen und Bedienelemente | Rechteckmessungen prüfen weder sichtbare Ecken noch abgeschnittene Fokusumrisse oder Popup-Inhalte. |
 
-Der bestehende Browser-Test enthält echte Medienhosts, Slot-Kombinationen und Reverse-Varianten. Seine Medienfälle setzen Main jedoch als Element an; reine Textknoten werden separat nur in der normalen Baseline getestet. Direkt eingebundene Reverse-Mixins werden ebenfalls in der Baseline, nicht in der Medienmatrix geprüft. Ein Bildabsatz mit zusätzlichem Textknoten und die visuelle Radius-/Fokus-Abnahme fehlen als gezielte Fälle. Die Tabelle beschreibt deshalb Risiken und konkrete Testlücken, keine behauptete vollständige Fehlerreproduktion. [neu]
+Der bestehende Browser-Test enthält echte Medienhosts, Slot-Kombinationen und Reverse-Varianten. Seine Medienfälle setzen Main jedoch als Element an; reine Textknoten werden separat nur in der normalen Baseline getestet. Direkt eingebundene Reverse-Mixins werden ebenfalls in der Baseline, nicht in der Medienmatrix geprüft. Ein Bildabsatz mit zusätzlichem Textknoten und die visuelle Radius-/Fokus-Abnahme fehlen als gezielte Fälle. Die Tabelle beschreibt deshalb Risiken und konkrete Testlücken, keine behauptete vollständige Fehlerreproduktion.
 
 ### § 10.3 Empfehlung: Layout entscheidet die Kante, Region entscheidet den Abstand
 
-Der Wrapper bleibt Rahmen, Hintergrund, Radius und Gap-Eigentümer, trägt aber kein Padding. Die Regionsboxen erhalten positive Margins nur an ihren äußeren Rahmenkanten. Ein randloses Medium setzt seine gewünschten Insets auf null. Die inneren Main-/Aside-Kanten haben immer null Margin, damit zwischen ihnen exakt G verbleibt. Header/Footer werden nicht in dieses Modell einbezogen. [neu]
+Der Wrapper bleibt Rahmen, Hintergrund, Radius und Gap-Eigentümer, trägt aber kein Padding. Die Regionsboxen erhalten positive Margins nur an ihren äußeren Rahmenkanten. Ein randloses Medium setzt seine gewünschten Insets auf null. Die inneren Main-/Aside-Kanten haben immer null Margin, damit zwischen ihnen exakt G verbleibt. Header/Footer werden nicht in dieses Modell einbezogen.
 
 | Verantwortung | Ort |
 |---|---|
@@ -211,7 +212,7 @@ Der Wrapper bleibt Rahmen, Hintergrund, Radius und Gap-Eigentümer, trägt aber 
 | Bildfläche ausfüllen, Object-Fit, Consent-Inhalt | Medien-/Komponenten-Styling |
 | Radius, Border, gemeinsames Clipping | Äußerer Wrapper |
 
-Das Medium kennt weder Nachbar-Slots noch Reverse-Klassennamen, Flexbasis oder Wrapper-Padding. Es wählt lediglich seine Region und optional logische Kanten. Das Layout darf dafür weiterhin Zustandsregeln haben; sie werden gemeinsam mit seiner Order gepflegt. Weniger Zeilen allein wären kein Gewinn, wenn dieselbe Positionsmatrix nur in JavaScript oder ein universelles Meta-Mixin verschoben würde. [neu]
+Das Medium kennt weder Nachbar-Slots noch Reverse-Klassennamen, Flexbasis oder Wrapper-Padding. Es wählt lediglich seine Region und optional logische Kanten. Das Layout darf dafür weiterhin Zustandsregeln haben; sie werden gemeinsam mit seiner Order gepflegt. Weniger Zeilen allein wären kein Gewinn, wenn dieselbe Positionsmatrix nur in JavaScript oder ein universelles Meta-Mixin verschoben würde.
 
 ### § 10.4 Außenkanten als überprüfbare Tabelle
 
@@ -225,17 +226,17 @@ Das Medium kennt weder Nachbar-Slots noch Reverse-Klassennamen, Flexbasis oder W
 | Nur eine Region | Alle vier Kanten |
 | Keine innere Region | Wrapper ausgeblendet |
 
-Die Tabelle wird aus tatsächlicher Belegung und derselben Anordnung wie das Layout ausgewertet, nicht aus dem Namen der Klasse, die einen Reverse-Mixin zufällig eingebunden hat. Nicht jedes CSS-`order` eines fremden Themes kann automatisch erkannt werden. Eine eigene Anordnung braucht einen eigenen Layout-Adapter; DOM-Reihenfolge und visuelle Reihenfolge sind ausdrücklich verschieden. [neu]
+Die Tabelle wird aus tatsächlicher Belegung und derselben Anordnung wie das Layout ausgewertet, nicht aus dem Namen der Klasse, die einen Reverse-Mixin zufällig eingebunden hat. Nicht jedes CSS-`order` eines fremden Themes kann automatisch erkannt werden. Eine eigene Anordnung braucht einen eigenen Layout-Adapter; DOM-Reihenfolge und visuelle Reihenfolge sind ausdrücklich verschieden.
 
 ### § 10.5 Umsetzungsskizze und Breitenvertrag
 
-Als erster Prototyp sollte das vorhandene Flex-Layout erhalten bleiben. Positive Regions-Margins verlangen eine gezielte Anpassung seiner Breiten: Die jetzigen `width: 100%` und prozentualen Flexbasen dürfen nicht unverändert plus Margins weiterlaufen. Ein Wechsel auf Grid ist für diese Vereinfachung nicht zwingend erforderlich und würde weitere Verträge berühren. [neu]
+Als erster Prototyp sollte das vorhandene Flex-Layout erhalten bleiben. Positive Regions-Margins verlangen eine gezielte Anpassung seiner Breiten: Die jetzigen `width: 100%` und prozentualen Flexbasen dürfen nicht unverändert plus Margins weiterlaufen. Ein Wechsel auf Grid ist für diese Vereinfachung nicht zwingend erforderlich und würde weitere Verträge berühren.
 
-Mit W als Wrapper-Innenbreite ohne Border, P als normalem Inset und c = `--cols / 12` bleibt die normale Main-Inhaltsbreite `(W - 2P) * c`. Im ungepolsterten Wrapper muss die entsprechende Flexbasis daher auf `calc((100% - 2 * var(--inner-padding)) * var(--cols) / 12)` bezogen werden. Aside erhält den Rest nach Main, G und den tatsächlich gesetzten Außen-Margins. Fällt allein die äußere Aside-Margin weg, wächst Aside um P; Main und seine innere Gap-Kante bleiben an derselben Stelle. Main-only benötigt weiterhin den vorhandenen gesonderten Vollbreitenfall. [neu]
+Mit W als Wrapper-Innenbreite ohne Border, P als normalem Inset und c = `--cols / 12` bleibt die normale Main-Inhaltsbreite `(W - 2P) * c`. Im ungepolsterten Wrapper muss die entsprechende Flexbasis daher auf `calc((100% - 2 * var(--inner-padding)) * var(--cols) / 12)` bezogen werden. Aside erhält den Rest nach Main, G und den tatsächlich gesetzten Außen-Margins. Fällt allein die äußere Aside-Margin weg, wächst Aside um P; Main und seine innere Gap-Kante bleiben an derselben Stelle. Main-only benötigt weiterhin den vorhandenen gesonderten Vollbreitenfall.
 
-Top/Bottom und mobile Vollbreitenregionen verwenden die verbleibende Breite nach ihren positiven Inline-Margins, etwa `calc(100% - var(--_inset-inline-start) - var(--_inset-inline-end))`, statt zunächst 100% festzulegen und danach über negative Ränder zu vergrößern. Die konkreten internen Namen sind Entwurfsnamen, keine neue freigegebene API. Für kleine W und extreme `--cols` muss der Prototyp bestehendes Wrapping und Mindestbreiten prüfen; diese Rechnung ersetzt keine Browserabnahme. [neu]
+Top/Bottom und mobile Vollbreitenregionen verwenden die verbleibende Breite nach ihren positiven Inline-Margins, etwa `calc(100% - var(--_inset-inline-start) - var(--_inset-inline-end))`, statt zunächst 100% festzulegen und danach über negative Ränder zu vergrößern. Die konkreten internen Namen sind Entwurfsnamen, keine neue freigegebene API. Für kleine W und extreme `--cols` muss der Prototyp bestehendes Wrapping und Mindestbreiten prüfen; diese Rechnung ersetzt keine Browserabnahme.
 
-Der Theme-Helper soll im Ziel nur Werte auf dem ausgewählten Part setzen. Schematischer Kern, der die vollständige Layout-Baseline und deren Kantenkarte voraussetzt: [neu]
+Der Theme-Helper soll im Ziel nur Werte auf dem ausgewählten Part setzen. Schematischer Kern, der die vollständige Layout-Baseline und deren Kantenkarte voraussetzt:
 
 ```scss
 // Konfiguriert randlosen Aside; nur vom Layout als außen bestimmte Kanten konsumieren diese Werte.
@@ -249,19 +250,19 @@ Der Theme-Helper soll im Ziel nur Werte auf dem ausgewählten Part setzen. Schem
 }
 ```
 
-Die Baseline initialisiert diese Werte pro Region/Instanz; Default-Inset ist P, innere Margins bleiben unabhängig davon null. Dadurch ist der Modifier klein, ohne dass er nachträglich Width/Flexbasis oder den Wrapper korrigieren muss. Eine vollständige Implementierung muss zwischen konfigurierten Insets und tatsächlich äußeren Kanten unterscheiden; der Ausschnitt allein ist nicht ausführbar als Ersatz für `with-media-frame()`. [neu]
+Die Baseline initialisiert diese Werte pro Region/Instanz; Default-Inset ist P, innere Margins bleiben unabhängig davon null. Dadurch ist der Modifier klein, ohne dass er nachträglich Width/Flexbasis oder den Wrapper korrigieren muss. Eine vollständige Implementierung muss zwischen konfigurierten Insets und tatsächlich äußeren Kanten unterscheiden; der Ausschnitt allein ist nicht ausführbar als Ersatz für `with-media-frame()`.
 
-Der vorhandene Media-Helper kann als kompatible Komposition erhalten bleiben: Medienzuordnung, Füllverhalten und Inset-Konfiguration werden getrennt. Neue Verwendung sollte ausdrücklich eine Region wählen, beispielsweise ein vorgeschlagenes `with-region-bleed(aside)` oder eine `with-aside-bleed`-Klasse. Namen und Exporte sind noch zu entscheiden. Keine öffentliche API ersatzlos entfernen und keine automatische Medienerkennung stillschweigend abschalten. [neu]
+Der vorhandene Media-Helper kann als kompatible Komposition erhalten bleiben: Medienzuordnung, Füllverhalten und Inset-Konfiguration werden getrennt. Neue Verwendung sollte ausdrücklich eine Region wählen, beispielsweise ein vorgeschlagenes `with-region-bleed(aside)` oder eine `with-aside-bleed`-Klasse. Namen und Exporte sind noch zu entscheiden. Keine öffentliche API ersatzlos entfernen und keine automatische Medienerkennung stillschweigend abschalten.
 
-Für belastbare Belegung gibt es zwei Wege: intern den vorhandenen Slot-Leerzustand direkt verwenden oder wie bei der Card einen abgeleiteten Host-Zustand anbieten. Letzteres benötigt eine separat zu prüfende TypeScript-/API-Änderung; im Proposal wird kein solcher Zustand implementiert. Ein Textknoten darf in beiden Fällen nicht durch einen Elementselektor ersetzt werden. [neu]
+Für belastbare Belegung gibt es zwei Wege: intern den vorhandenen Slot-Leerzustand direkt verwenden oder wie bei der Card einen abgeleiteten Host-Zustand anbieten. Letzteres benötigt eine separat zu prüfende TypeScript-/API-Änderung; im Proposal wird kein solcher Zustand implementiert. Ein Textknoten darf in beiden Fällen nicht durch einen Elementselektor ersetzt werden.
 
 ### § 10.6 Border-Radius, Bilder und Sonderkomponenten
 
-Randlose Medien reichen bis zur inneren Rahmenkante; der Wrapper beschneidet die gemeinsame Außenkontur. Bei einem rechten Aside sind nur dessen äußere rechte Ecken Karten-/Layout-Ecken, bei Reverse die linken. Das Wrapper-Clipping erledigt diese Geometrie ohne Radius-Kopie und ohne spezielle Border-Radius-Regeln pro Reverse-Zustand. Ein innen liegendes Top-/Aside-Ende bekommt dadurch keine künstliche Rundung zum Gap. [neu]
+Randlose Medien reichen bis zur inneren Rahmenkante; der Wrapper beschneidet die gemeinsame Außenkontur. Bei einem rechten Aside sind nur dessen äußere rechte Ecken Karten-/Layout-Ecken, bei Reverse die linken. Das Wrapper-Clipping erledigt diese Geometrie ohne Radius-Kopie und ohne spezielle Border-Radius-Regeln pro Reverse-Zustand. Ein innen liegendes Top-/Aside-Ende bekommt dadurch keine künstliche Rundung zum Gap.
 
-`nte-image`, `nte-consent-blocker`, Avatare und sonstige gerundete Kindkomponenten können eigene Rahmen, Radien und Overflow-Regeln besitzen. Ein äußerer Wrapper kann eine bereits im Kind abgeschnittene Fläche nicht wieder auffüllen. Deshalb beim Pairing entscheiden, ob ein Medium eine eigene Karte oder Teil der gemeinsamen Fläche ist; innere Parts nur über deren öffentliche Styling-Oberfläche konfigurieren. Randlose Textflächen behalten gegebenenfalls eigenes Inhaltspadding, damit große Ecken keine Inhalte abschneiden. [neu]
+`nte-image`, `nte-consent-blocker`, Avatare und sonstige gerundete Kindkomponenten können eigene Rahmen, Radien und Overflow-Regeln besitzen. Ein äußerer Wrapper kann eine bereits im Kind abgeschnittene Fläche nicht wieder auffüllen. Deshalb beim Pairing entscheiden, ob ein Medium eine eigene Karte oder Teil der gemeinsamen Fläche ist; innere Parts nur über deren öffentliche Styling-Oberfläche konfigurieren. Randlose Textflächen behalten gegebenenfalls eigenes Inhaltspadding, damit große Ecken keine Inhalte abschneiden.
 
-`overflow: hidden` kann Fokusumrisse und Menüs abschneiden und beeinflusst Scrollcontainer-/Sticky-Verhalten. Das bestehende Sticky-Mixin setzt bereits `overflow: clip` am Wrapper. Diese gezielte Entscheidung erhalten und testen; kein pauschaler globaler Overflow-Wechsel als Teil des Spacing-Vorschlags. Breakouts und bewusst überstehende Testimonial-Bilder benötigen weiterhin eine explizite Clipping-Komposition. [neu]
+`overflow: hidden` kann Fokusumrisse und Menüs abschneiden und beeinflusst Scrollcontainer-/Sticky-Verhalten. Das bestehende Sticky-Mixin setzt bereits `overflow: clip` am Wrapper. Diese gezielte Entscheidung erhalten und testen; kein pauschaler globaler Overflow-Wechsel als Teil des Spacing-Vorschlags. Breakouts und bewusst überstehende Testimonial-Bilder benötigen weiterhin eine explizite Clipping-Komposition.
 
 ### § 10.7 Alternativen und Entscheidungskriterium
 
@@ -272,7 +273,7 @@ Randlose Medien reichen bis zur inneren Rahmenkante; der Wrapper beschneidet die
 | Ein einziges Grid für alle Layouts, Slots und Medienvarianten | Kann Außen-/Inhaltstracks explizit ausdrücken; ändert jedoch Spalten-, Flexgrow-, Overlay- und Theme-Verträge; kein kostenloser Ersatz |
 | Positive Insets ausschließlich an Außenkanten | Empfohlen: erklärt den Zielabstand direkt; Positionslogik bleibt im zuständigen Layout |
 
-Eine absolute Zusage „alle Mixins werden kürzer“ wäre vor dem Prototyp nicht seriös. Erfolgsmaßstab: Der Medien-Modifier enthält keine Breiten-/Flexkorrektur, keine negative Margin und keine eigene Reverse-/Belegungsabfrage mehr; die gesamte CSS-/Zustandsmenge samt Layout-Adapter wird vor/nach verglichen. Bleibt die Gesamtkomplexität gleich oder wächst sie deutlich, sollte der bestehende Wrapper-Ansatz erhalten und nur die nachgewiesene Doppelung der Zustandserkennung korrigiert werden. [neu]
+Eine absolute Zusage „alle Mixins werden kürzer“ wäre vor dem Prototyp nicht seriös. Erfolgsmaßstab: Der Medien-Modifier enthält keine Breiten-/Flexkorrektur, keine negative Margin und keine eigene Reverse-/Belegungsabfrage mehr; die gesamte CSS-/Zustandsmenge samt Layout-Adapter wird vor/nach verglichen. Bleibt die Gesamtkomplexität gleich oder wächst sie deutlich, sollte der bestehende Wrapper-Ansatz erhalten und nur die nachgewiesene Doppelung der Zustandserkennung korrigiert werden.
 
 ### § 10.8 Migration und Prüfplan
 
@@ -283,11 +284,11 @@ Eine absolute Zusage „alle Mixins werden kürzer“ wäre vor dem Prototyp nic
 | Reverse-Klassenliste im Medien-Mixin | Kantenkarte zusammen mit der tatsächlichen Layout-Anordnung |
 | Media-Helper mit Object-Fit, Erkennung und Geometriekorrektur | Komposition separater Verantwortlichkeiten; bestehende API bleibt erreichbar |
 
-Ein späterer Implementierungs-PR betrifft im Package mindestens Default, Medien-Helper, funktionales Layout, Order-/Reverse-Komposition, Browser-Test und Usage-/Theming-Dokumentation. Neue Part-Properties, mögliche TS-Zustandsänderungen und direkte Theme-Zugriffe auf Wrapper-Padding benötigen dann eine konkrete Entscheidung. ThemeJS2 oder andere Repositories werden durch diesen Proposal-PR nicht geändert. [neu]
+Ein späterer Implementierungs-PR betrifft im Package mindestens Default, Medien-Helper, funktionales Layout, Order-/Reverse-Komposition, Browser-Test und Usage-/Theming-Dokumentation. Neue Part-Properties, mögliche TS-Zustandsänderungen und direkte Theme-Zugriffe auf Wrapper-Padding benötigen dann eine konkrete Entscheidung. ThemeJS2 oder andere Repositories werden durch diesen Proposal-PR nicht geändert.
 
-Die vorhandene Matrix bleibt Ausgangspunkt. Ergänzungen: Medien + Main als reiner Textknoten; Absatz mit Bild und Text; Reverse über direktes Mixin unter eigener Klasse; kombinierte Reverse-/Alternating-/Breakout-Zustände; dynamisch entfernte Slots; P=0/24/48px, G=0/16/40px, sehr kurze Medien und extreme Spaltenwerte. Sichtbare Regionskanten gegen innere Borderkante messen, nicht nur Margin-/Padding-Werte vergleichen. Radius=0/12/48px und Border=0/1/8px separat als Screenshots beurteilen; LTR/RTL, Consent-Bedienung, Bild-Overlays und Sticky mit Tastatur prüfen. [neu]
+Die vorhandene Matrix bleibt Ausgangspunkt. Ergänzungen: Medien + Main als reiner Textknoten; Absatz mit Bild und Text; Reverse über direktes Mixin unter eigener Klasse; kombinierte Reverse-/Alternating-/Breakout-Zustände; dynamisch entfernte Slots; P=0/24/48px, G=0/16/40px, sehr kurze Medien und extreme Spaltenwerte. Sichtbare Regionskanten gegen innere Borderkante messen, nicht nur Margin-/Padding-Werte vergleichen. Radius=0/12/48px und Border=0/1/8px separat als Screenshots beurteilen; LTR/RTL, Consent-Bedienung, Bild-Overlays und Sticky mit Tastatur prüfen.
 
-Prüfstand: Statischer Quellen- und Testabgleich durchgeführt. Keine Sass-Kompilierung, kein Package-Build und keine Browser-Geometrieprüfung dieses Alternativentwurfs: Sass fehlt in der lokalen Laufzeit, Playwright-Chromium ist nicht installiert. Die historischen Ergebnisse aus § 9 sind kein Nachweis für diesen Vorschlag. [neu]
+Prüfstand: Statischer Quellen- und Testabgleich durchgeführt. Keine Sass-Kompilierung, kein Package-Build und keine Browser-Geometrieprüfung dieses Alternativentwurfs: Sass fehlt in der lokalen Laufzeit, Playwright-Chromium ist nicht installiert. Die historischen Ergebnisse aus § 9 sind kein Nachweis für diesen Vorschlag.
 
 ### § 10.9 Externe Belege
 
@@ -296,4 +297,12 @@ Prüfstand: Statischer Quellen- und Testabgleich durchgeführt. Keine Sass-Kompi
 - [CSS Overflow](https://www.w3.org/TR/css-overflow-3/#corner-clipping) beschreibt Clipping und die Interaktion mit Border-Radius.
 - [CSS Backgrounds: Corner Shaping](https://www.w3.org/TR/css-backgrounds-3/#corner-shaping) definiert die innere Rahmenkurve. Bei gleichmäßigem Radius R und Border B gilt dort `max(0, R - B)`.
 
-Das sind CSS-Grundlagen; die Empfehlung für Nextrap und die benannten Risiken wurden daraus und aus den verlinkten Repository-Quellen abgeleitet. [neu]
+Das sind CSS-Grundlagen; die Empfehlung für Nextrap und die benannten Risiken wurden daraus und aus den verlinkten Repository-Quellen abgeleitet.
+
+## § 10.10 Beauftragte Umsetzung im PR #200
+
+2COL verwendet positive Insets mit dimensionslosen Außenkanten-Masken aus den vorhandenen internen Slot-Leerzuständen. Reverse, Alternating und Auto-Bilder teilen ihre Richtungsinformation mit dieser Kantenkarte. Der Media-Helper konfiguriert Insets und Medienfüllung, ohne eigene Belegungs-/Reverse-Kantenheuristik oder negative Margin. Die Element-/Medienauswahl bleibt kompatibel; zusätzliche Textknoten im Bildabsatz werden von dieser CSS-Auswahl weiterhin nicht sicher erkannt. TypeScript und die Slot-Zuordnung bleiben unverändert. [neu]
+
+Die neue öffentliche API `with-region-inset($region, $space, $edges: all)` setzt normale, große oder einseitige Zielabstände; randlos ist `0px`. Regionen und logische Kantennamen werden geprüft. Die Baseline behält `--inner-padding` und den unabhängigen `--gap`. AI Usage Info und die SVG-Abstandsgrafik dokumentieren Instanz-/Theme-Konfiguration und Migration; für 2COL wurde außerdem der bestehende Theming-Skill ergänzt. [neu]
+
+JavaScript-Sass kompiliert beide Baselines, die Inset-Kantenvarianten und nebenwirkungsfreien Entrypoints. Die Browser-Tests wurden um Sonderabstände, ungepolsterte Wrapper und bei 2COL Main-Textknoten plus direkt komponierte Reverse-Mixins erweitert. Der lokale native Chromium-Prozess startet in dieser Laufzeit nicht; die vorhandenen GitHub-Browser-Workflows prüfen den Commit. Ihr tatsächlicher Ergebnisstand wird in der PR-Beschreibung nachgetragen. Ein erfolgreiches Sass-Ergebnis ersetzt keine visuelle Browser-Abnahme. [neu]

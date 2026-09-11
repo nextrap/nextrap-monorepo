@@ -99,3 +99,17 @@ Wichtige Layoutvariablen: `--breakpoint`, `--cols`, `--container-width`, `--gap`
 | `with-background-and-divider()` | Hintergrund und Spaltentrenner |
 | `with-wrapper-bg-color()` | Wrapper-Hintergrund setzen |
 | `with-modifier-classes()` | Vorbereitete Modifier-Klassen registrieren |
+
+
+## Rahmenabstand, große Abstände und Ausnahmen
+
+Der Wrapper besitzt Rahmen, Radius, Hintergrund und `gap`, aber kein Padding. Die Baseline setzt positive Margins nur an äußeren Regionskanten. Das Layout leitet diese Kanten aus Slot-Leerzuständen und derselben Anordnung wie Reverse/Alternating ab. Innere Kanten zwischen Regionen erhalten keine Inset-Margin; dort bleibt ausschließlich Gap.
+
+- Für normalen oder großen Rahmenabstand `--inner-padding` verwenden; für den unabhängigen Zwischenraum `--gap`. Ein nichtnegativer einzelner CSS-Längenwert ist erforderlich, etwa `24px`, `0px` oder `clamp(1rem, 3vw, 3rem)`, keine Padding-Kurzform. Große Werte auf schmalen Containern begrenzen.
+- Wiederverwendbare großzügige Abstände als kombinierbaren `with-*`-Modifier an die vorhandene Baseline binden. Eine einzelne Instanz nutzt `section-style="--inner-padding: 3rem; --gap: 2rem;"`; eine zusätzliche `style-*`-Variante ist dafür unnötig.
+- Für regionale Sonderabstände `with-region-inset($region, $space, $edges: all)` nach `default-style()` einbinden. Regionen: `top`, `main`, `aside`, `bottom`; Kanten: `all`, `inline`, `block`, einzelne logische Kanten oder Listen. `$space` ist der absolute Zielwert. Der Wert wirkt nur an tatsächlichen Außenkanten; die innere Main-/Aside-Kante bleibt immer null.
+- Randloses Aside explizit mit `with-aside-bleed()` bzw. `.with-aside-bleed` konfigurieren. Andere Regionen mit `with-region-inset(region, 0px)`. `with-media-frame(false)` bleibt die Komposition für automatisch erkannte Einzelmedien; deren CSS-Heuristik kann Textknoten im Bildabsatz nicht sicher ausschließen.
+- Kein zusätzliches Wrapper-Padding und keine privaten `--_2col-*` Properties im Theme setzen. Keine pauschalen Regions-Margins, die sich zum Gap addieren. Abstände innerhalb eines Slots gehören zur Typografie/Inhaltskomponente; Abstand zur nächsten Section bleibt beim Content-Flow.
+- Der Wrapper clippt randlose Medien an seiner Außenkontur. Kein pauschales `border-radius: inherit` auf Medien: Innenkanten sollen nicht mitgerundet werden. Eigene Kindradien, Fokusumrisse, Consent-Inhalt und Sticky/Breakout-Kompositionen separat prüfen.
+
+Konkrete Theme- und Instanzbeispiele sowie Migration: [AI Usage Info](../../../.ai-usage-info.md#abstandskonfiguration-und-sonderabstände). Die [Abstandsgrafik](../../../docs/spacing.svg) zeigt P, G und randlose Kanten. Die Beispiele verwenden die öffentliche API; strukturelle Sonderanordnungen brauchen zusätzlich eine passende Außenkantenzuordnung.
