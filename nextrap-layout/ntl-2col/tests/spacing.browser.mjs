@@ -14,7 +14,7 @@ const api = `${packageRoot}/index.scss`;
 assert.equal(compile(`@use '${api}';`).trim(), '', 'Der Sass-Entrypoint darf kein CSS ausgeben');
 // Registrierung ist vollständig, am aktuellen Style gescoped und explizit abschaltbar.
 const helperNames = [
-  'with-reverse', 'with-mobile-reverse', 'with-desktop-reverse', 'with-alternating',
+  'with-aside-bleed', 'with-reverse', 'with-mobile-reverse', 'with-desktop-reverse', 'with-alternating',
   'with-breakout-start', 'with-breakout-end', 'with-background-and-divider',
   'with-image-auto-objectfit', 'with-wrapper-bg-color', 'with-justify',
   'with-justify-top', 'with-justify-center', 'with-justify-bottom', 'with-main-sticky-top',
@@ -33,6 +33,7 @@ const css = compile(`
   ntl-2col.style-default { @include two.default-style($innerPadding: 24px, $gap: 16px, $border: 1px solid black, $objectFit: none, $justify: none); }
   ntl-2col.style-media { @include two.default-style($innerPadding: 24px, $gap: 16px, $border: 1px solid black, $justify: none); @include two.with-media-frame(); }
   ntl-2col.style-framed { @include two.default-style($innerPadding: 24px, $gap: 16px, $border: 1px solid black, $justify: none); @include two.with-media-frame(true); }
+  ntl-2col.special-insets { @include two.with-region-inset(main, 48px, inline); @include two.with-region-inset(bottom, 40px, block-end); }
   .mobile-mixin { @include two.with-mobile-reverse(); }
   .desktop-mixin { @include two.with-desktop-reverse(); }
   .reverse-mixin { @include two.with-reverse(); }
@@ -289,7 +290,7 @@ try {
       document.body.style.width = mode === 'mobile' ? '390px' : '1000px';
       for (const slot of ['aside', 'top'])
         for (const kind of ['img', 'paragraph', 'nte-image', 'nte-consent-blocker'])
-          for (const variant of ['', 'reverse', 'reverse-mobile', 'reverse-desktop', 'with-alternating'])
+          for (const variant of ['', 'reverse', 'reverse-mobile', 'reverse-desktop', 'with-alternating', 'mobile-mixin', 'reverse-mixin'])
             for (const extra of ['none', 'top', 'bottom', 'both', 'mixed', 'alone', 'framed']) {
               const parent = document.createElement('div');
               parent.append(document.createElement('ntl-2col'));
@@ -368,6 +369,45 @@ try {
               parent.remove();
               cases++;
             }
+    }
+
+    // Explizites randloses Aside funktioniert auch ohne Medienheuristik und mit reinem Main-Text.
+    for (const mode of ['mobile', 'desktop']) for (const variant of ['', 'mobile-mixin', 'reverse-mixin']) {
+      document.body.style.width = mode === 'mobile' ? '390px' : '1000px';
+      const el = document.createElement('ntl-2col');
+      el.className = `style-default with-aside-bleed ${variant}`;
+      el.append(document.createTextNode('Main als reiner Textknoten'));
+      const aside = document.createElement('div');
+      aside.slot = 'aside'; aside.style.height = '60px'; aside.textContent = 'Randlos'; el.append(aside);
+      document.body.append(el); await settle(el, mode);
+      const wr = el.shadowRoot.getElementById('wrapper').getBoundingClientRect();
+      const main = el.shadowRoot.getElementById('main').getBoundingClientRect();
+      const ar = el.shadowRoot.getElementById('aside').getBoundingClientRect();
+      if (mode === 'mobile') {
+        close(ar.left - wr.left, 1, 'Textknoten: Aside links');
+        close(wr.right - ar.right, 1, 'Textknoten: Aside rechts');
+        close(ar.top < main.top ? main.top - ar.bottom : ar.top - main.bottom, 16, 'Textknoten: innerer Gap');
+      } else {
+        close(ar.left < main.left ? main.left - ar.right : ar.left - main.right, 16, 'Textknoten: Spalten-Gap');
+      }
+      el.remove(); cases++;
+    }
+    // Sonderabstände wirken ausschließlich außen; die Baseline bleibt ungepolstert.
+    for (const mode of ['mobile', 'desktop']) for (const padding of [0, 24, 48]) {
+      document.body.style.width = mode === 'mobile' ? '390px' : '1000px';
+      const el = document.createElement('ntl-2col'); el.className = 'style-default special-insets';
+      el.style.setProperty('--inner-padding', `${padding}px`);
+      el.innerHTML = '<div>Main</div><div slot="aside">Aside</div><div slot="bottom">Bottom</div>';
+      document.body.append(el); await settle(el, mode);
+      const sr = el.shadowRoot, wr = sr.getElementById('wrapper').getBoundingClientRect();
+      const main = sr.getElementById('main').getBoundingClientRect();
+      const aside = sr.getElementById('aside').getBoundingClientRect();
+      const bottom = sr.getElementById('bottom').getBoundingClientRect();
+      close(main.left - wr.left - 1, 48, 'Main: großer äußerer Inset');
+      close(wr.bottom - bottom.bottom - 1, 40, 'Bottom: einseitiger Inset');
+      close(mode === 'mobile' ? aside.top - main.bottom : aside.left - main.right, 16, 'Sonderabstand: Gap');
+      close(parseFloat(getComputedStyle(sr.getElementById('wrapper')).paddingTop), 0, 'Kein Wrapper-Padding');
+      el.remove(); cases++;
     }
 
     // Dynamisches Entfernen und Wiederbelegen aktualisiert den realen Slot-Leerzustand.

@@ -22,6 +22,7 @@
   --background: #{$background};
   --border: #{$border};
   --border-radius: #{$border-radius};
+  @if $innerPadding == 0 { $innerPadding: 0px; }
   --inner-padding: #{$innerPadding};
   // Null bleibt auch in den Längenberechnungen des Dividers gültig.
   @if $gap == 0 {
@@ -42,6 +43,29 @@
     }
   }
 
+  // Der Wrapper trägt Rahmen und Gap; die Außenabstände liegen positiv auf den Regionen.
+  &::part(wrapper) {
+    border: var(--border);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    padding: 0;
+    --_2col-mobile-reverse: 0;
+    gap: var(--gap);
+  }
+
+  // Positive Insets wirken nur an den vom funktionalen Layout bestimmten Außenkanten.
+  &::part(top),
+  &::part(main),
+  &::part(aside),
+  &::part(bottom) {
+    padding: 0;
+    @each $side in (inline-start, inline-end, block-start, block-end) {
+      --_2col-inset-#{$side}: var(--inner-padding);
+      --_2col-margin-#{$side}: calc(var(--_2col-inset-#{$side}) * var(--_2col-edge-#{$side}, 0));
+      margin-#{$side}: var(--_2col-margin-#{$side});
+    }
+  }
+
   @if ($objectFit != none) {
     // Object-Fit für Bilder, die automatisch in den Aside Bereich geladen werden
 
@@ -52,20 +76,4 @@
     @include modifier-classes.with-modifier-classes();
   }
 
-  // Der Wrapper trägt den Randabstand genau einmal; zwischen sichtbaren Regionen wirkt nur der Gap.
-  &::part(wrapper) {
-    border: var(--border);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    padding: var(--inner-padding);
-    gap: var(--gap);
-  }
-
-  // Regionsabstände bleiben unabhängig von Belegung, Bildautomatik und visueller Reihenfolge.
-  &::part(top),
-  &::part(main),
-  &::part(aside),
-  &::part(bottom) {
-    padding: 0;
-  }
 }

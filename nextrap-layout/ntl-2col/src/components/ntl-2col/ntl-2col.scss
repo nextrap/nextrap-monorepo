@@ -52,6 +52,11 @@
   box-sizing: border-box;
 }
 
+// Vollbreite Regionen berücksichtigen positive Außen-Margins ohne übergroße Boxen.
+#top, #bottom {
+  width: calc(100% - var(--_2col-margin-inline-start, 0px) - var(--_2col-margin-inline-end, 0px));
+}
+
 #top {
   order: 0;
   flex: 0 0 auto;
@@ -84,8 +89,8 @@
   // Ensures both mobile content regions always span the complete available width.
   #main,
   #aside {
-    width: 100%;
-    flex: 0 0 100%;
+    width: calc(100% - var(--_2col-margin-inline-start, 0px) - var(--_2col-margin-inline-end, 0px));
+    flex: 0 0 auto;
   }
 }
 
@@ -108,13 +113,12 @@
 :host([mode='desktop']) {
   #wrapper {
     flex-direction: row;
-    --main-width: calc(100% * var(--cols, 1) / 12);
+    --main-width: calc((100% - 2 * var(--inner-padding)) * var(--cols, 1) / 12);
     &:has(#aside > .slot-empty) {
       flex-direction: column;
 
       #main {
-        width: 100%;
-        flex-basis: 100%;
+        --main-width: calc(100% - var(--_2col-margin-inline-start, 0px) - var(--_2col-margin-inline-end, 0px));
       }
     }
     #main {
@@ -143,4 +147,60 @@
       display: none;
     }
   }
+}
+
+// Die Außenkanten folgen belegten Slots und derselben Richtungsinformation wie die Anordnung.
+// Diese dimensionslosen Masken enthalten keine Theme-Abstände und erkennen auch Main-Textknoten.
+#top, #main, #aside, #bottom {
+  --_2col-edge-inline-start: 1;
+  --_2col-edge-inline-end: 1;
+  --_2col-edge-block-start: 0;
+  --_2col-edge-block-end: 0;
+}
+#top { --_2col-edge-block-start: 1; }
+#bottom { --_2col-edge-block-end: 1; }
+
+// Mobil entscheiden erste und letzte belegte Region; Top/Bottom bleiben immer außen.
+#wrapper:has(#top > .slot-empty) {
+  #main { --_2col-edge-block-start: calc(1 - var(--_2col-mobile-reverse, 0)); }
+  #aside { --_2col-edge-block-start: var(--_2col-mobile-reverse, 0); }
+}
+#wrapper:has(#bottom > .slot-empty) {
+  #main { --_2col-edge-block-end: var(--_2col-mobile-reverse, 0); }
+  #aside { --_2col-edge-block-end: calc(1 - var(--_2col-mobile-reverse, 0)); }
+}
+
+// Desktop-Spalten teilen die obere/untere Zeilenkante; ihre innere Spaltenkante bleibt frei.
+:host([mode='desktop']) {
+  #main {
+    --_2col-edge-inline-start: calc((1 + var(--_ntl-2col-row-direction, 1) * var(--_ntl-2col-column-order, 1)) / 2);
+    --_2col-edge-inline-end: calc(1 - var(--_2col-edge-inline-start));
+  }
+  #aside {
+    --_2col-edge-inline-end: calc((1 + var(--_ntl-2col-row-direction, 1) * var(--_ntl-2col-column-order, 1)) / 2);
+    --_2col-edge-inline-start: calc(1 - var(--_2col-edge-inline-end));
+  }
+  #wrapper:has(#top > .slot-empty) {
+    #main, #aside { --_2col-edge-block-start: 1; }
+  }
+  #wrapper:has(#bottom > .slot-empty) {
+    #main, #aside { --_2col-edge-block-end: 1; }
+  }
+}
+
+// Einzelspalten und einzelne Top-/Bottom-Zeilen haben beide jeweils äußeren Kanten.
+#wrapper:has(#aside > .slot-empty) #main,
+#wrapper:has(#main > .slot-empty) #aside {
+  --_2col-edge-inline-start: 1;
+  --_2col-edge-inline-end: 1;
+}
+#wrapper:has(#top > .slot-empty):has(#aside > .slot-empty) #main,
+#wrapper:has(#top > .slot-empty):has(#main > .slot-empty) #aside,
+#wrapper:has(#top > .slot-empty):has(#main > .slot-empty):has(#aside > .slot-empty) #bottom {
+  --_2col-edge-block-start: 1;
+}
+#wrapper:has(#bottom > .slot-empty):has(#aside > .slot-empty) #main,
+#wrapper:has(#bottom > .slot-empty):has(#main > .slot-empty) #aside,
+#wrapper:has(#bottom > .slot-empty):has(#main > .slot-empty):has(#aside > .slot-empty) #top {
+  --_2col-edge-block-end: 1;
 }

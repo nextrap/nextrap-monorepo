@@ -16,6 +16,8 @@
   }
 
   &[mode='mobile']:has(> p[slot='aside'].auto) {
+    // Anordnung und Außenkanten nutzen denselben Zustand.
+    &::part(wrapper) { --_2col-mobile-reverse: 1; }
     // Always set the image top
     &::part(main) {
       order: 2;

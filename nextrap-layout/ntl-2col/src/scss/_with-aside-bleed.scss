@@ -1,0 +1,6 @@
+@use 'with-region-inset' as inset;
+
+// Das Layout entscheidet die Außenkante; Aside benötigt dort keinen Rahmenabstand.
+@mixin with-aside-bleed() {
+  @include inset.with-region-inset(aside, 0px);
+}
