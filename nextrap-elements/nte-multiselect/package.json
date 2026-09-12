@@ -1,23 +1,43 @@
 {
-    "name": "@nextrap/nte-multiselect",
-    "version": "2.0.2",
-    "main": "./index.js",
-    "repository": {
-        "directory": "nextrap-elements/nte-multiselect",
-        "type": "git",
-        "url": "https://github.com/nextrap/nextrap-monorepo"
+  "name": "@nextrap/nte-multiselect",
+  "version": "2.0.2",
+  "main": "./index.js",
+  "repository": {
+    "directory": "nextrap-elements/nte-multiselect",
+    "type": "git",
+    "url": "https://github.com/nextrap/nextrap-monorepo"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "@nextrap/style-reset": "^2.0.0",
+    "lit": "^3.0.0"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "sass": "./index.scss",
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
     },
-    "dependencies": {},
-    "peerDependencies": {
-        "@nextrap/style-reset": "^2.0.0",
-        "lit": "^3.0.0"
+    "./unstyled": {
+      "types": "./unstyled.d.ts",
+      "import": "./unstyled.js",
+      "default": "./unstyled.js"
     },
-    "type": "module",
-    "exports": {
-        ".": {
-            "import": "./index.js",
-            "types": "./index.d.ts"
-        }
+    "./default": {
+      "sass": "./default.scss",
+      "default": "./default.scss"
     },
-    "types": "./index.d.ts"
+    "./*": "./*"
+  },
+  "types": "./index.d.ts",
+  "sideEffects": true,
+  "typesVersions": {
+    "*": {
+      "unstyled": [
+        "unstyled.d.ts"
+      ]
+    }
+  }
 }

@@ -16,3 +16,7 @@ description: "Use NteDataTableElement, TableDefinition, TableColumnDefinition, T
 - Editing belongs to the future editable package.
 
 See `README.md`, `demo/01-data.demo.ts`, `demo/02-pinned-footer.demo.ts`, and `demo/03-view-state.demo.ts`.
+
+## JavaScript und Theme-Styling
+
+`@nextrap/nte-data-table` lädt die Default-Light-DOM-Styles automatisch. Für Seaming/Themes `@nextrap/nte-data-table/unstyled` verwenden: Dieser Import lädt auch transitiv kein Light-DOM-CSS, damit das Theme die Darstellung selbst über die Sass-Mixins bestimmen kann. Sass-Imports behalten den Paketnamen ohne `/unstyled`.

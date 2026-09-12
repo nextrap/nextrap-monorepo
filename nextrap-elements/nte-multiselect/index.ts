@@ -1,13 +1,13 @@
-export { NteMultiselectItemElement } from './src/components/nte-multiselect-item/nte-multiselect-item';
-export { NteMultiselectElement } from './src/components/nte-multiselect/nte-multiselect';
-export type { MultiselectChangeDetail } from './src/components/nte-multiselect/nte-multiselect';
+// Teilt Registrierung und API mit /unstyled; nur dieser SPA-Einstieg lädt die Defaults.
+export * from './unstyled';
 
-// Auto-register components when imported
-import './src/components/nte-multiselect-item/nte-multiselect-item';
-import './src/components/nte-multiselect/nte-multiselect';
+// Inline-Kompilierung erhält die automatische Einbindung auch im veröffentlichten ESM-Build.
+import defaultStyles from './default.scss?inline';
 
-// If mixin exisists, export it
-// export * from './src/mixins/NteMultiselectMixin';
-
-/* this bundles light dom styles by default */
-export * from './src/styles/index.scss';
+// Ein Stylesheet pro Package und Dokument; /unstyled erreicht diesen Block niemals.
+if (typeof document !== 'undefined' && defaultStyles.trim() && !document.getElementById('nextrap-default-nte-multiselect')) {
+  const stylesheet = document.createElement('style');
+  stylesheet.id = 'nextrap-default-nte-multiselect';
+  stylesheet.textContent = defaultStyles;
+  document.head.appendChild(stylesheet);
+}

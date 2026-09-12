@@ -1,24 +1,50 @@
 {
-    "name": "@nextrap/nte-slider",
-    "version": "2.0.1",
-    "main": "./index.js",
-    "repository": {
-        "directory": "nextrap-elements/nte-slider",
-        "type": "git",
-        "url": "https://github.com/nextrap/nextrap-monorepo"
+  "name": "@nextrap/nte-slider",
+  "version": "2.0.1",
+  "main": "./index.js",
+  "repository": {
+    "directory": "nextrap-elements/nte-slider",
+    "type": "git",
+    "url": "https://github.com/nextrap/nextrap-monorepo"
+  },
+  "devDependencies": {
+    "@nextrap/nte-demo-viewer": "^2.0.0",
+    "@nextrap/style-base": "^2.0.0",
+    "@nextrap/style-utils": "^2.0.0"
+  },
+  "type": "module",
+  "types": "./index.d.ts",
+  "web-types": "./web-types.json",
+  "peerDependencies": {
+    "@nextrap/style-reset": "^2.0.0",
+    "@trunkjs/browser-utils": "^1.0.12",
+    "@trunkjs/content-pane": "^1.0.12",
+    "lit": "^3.3.1"
+  },
+  "exports": {
+    ".": {
+      "sass": "./index.scss",
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
     },
-    "devDependencies": {
-        "@nextrap/nte-demo-viewer": "^2.0.0",
-        "@nextrap/style-base": "^2.0.0",
-        "@nextrap/style-utils": "^2.0.0"
+    "./unstyled": {
+      "types": "./unstyled.d.ts",
+      "import": "./unstyled.js",
+      "default": "./unstyled.js"
     },
-    "type": "module",
-    "types": "./index.d.ts",
-    "web-types": "./web-types.json",
-    "peerDependencies": {
-        "@nextrap/style-reset": "^2.0.0",
-        "@trunkjs/browser-utils": "^1.0.12",
-        "@trunkjs/content-pane": "^1.0.12",
-        "lit": "^3.3.1"
+    "./default": {
+      "sass": "./default.scss",
+      "default": "./default.scss"
+    },
+    "./*": "./*"
+  },
+  "sideEffects": true,
+  "typesVersions": {
+    "*": {
+      "unstyled": [
+        "unstyled.d.ts"
+      ]
     }
+  }
 }

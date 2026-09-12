@@ -1,0 +1,6 @@
+// Materialisiert nur die komponentenspezifische Standardvariante.
+@use './index' as component;
+
+nte-multiselect.style-default {
+  @include component.default-style();
+}

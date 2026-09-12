@@ -12,3 +12,7 @@ Use this skill only for theme SCSS. For markup and behavior, use `nte-accordion-
 - `with-marker-start()` — Places the marker before the title. See the [Markdown accordion demo](../../demo/01-accordion.md).
 - `with-marker-plus()` — Uses plus/minus marker icons. See the [Markdown accordion demo](../../demo/01-accordion.md).
 - `with-modifier-classes()` — Maps the shipped `.details-end`, `.marker-start`, and `.marker-plus` modifier classes to their mixins. Compose the baseline on one `style-*` class and keep functional layout behavior intact.
+
+## JavaScript und Theme-Styling
+
+`@nextrap/nte-accordion` lädt die Default-Light-DOM-Styles automatisch. Für Seaming/Themes `@nextrap/nte-accordion/unstyled` verwenden: Dieser Import lädt auch transitiv kein Light-DOM-CSS, damit das Theme die Darstellung selbst über die Sass-Mixins bestimmen kann. Sass-Imports behalten den Paketnamen ohne `/unstyled`.

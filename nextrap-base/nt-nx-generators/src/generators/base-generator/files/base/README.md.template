@@ -22,3 +22,13 @@ Description of attr1.
 Description of attr2.
 
 ## Example Usage
+
+## JavaScript und Theme-Styling
+
+`index.ts` exportiert dieselbe API wie `unstyled.ts` und injiziert die kompilierten
+Default-Light-DOM-Styles für SPAs. Themes importieren stattdessen
+`@nextrap/<%= name %>/unstyled`, damit sie ihre Light-DOM-Styles selbst über die
+öffentliche Sass-API gestalten können. Inline-Shadow-DOM-Styles bleiben erhalten.
+Interne Komponentenimporte verwenden ebenfalls `/unstyled`, um keine Defaults
+indirekt einzuschleusen. `index.scss` bleibt ausgabefrei, `default.scss`
+materialisiert die Standardvariante.

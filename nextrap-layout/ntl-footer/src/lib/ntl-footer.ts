@@ -4,7 +4,8 @@ import { customElement, property } from 'lit/decorators.js';
 import style from './ntl-footer-shadow.scss?inline';
 
 // Styles for the light DOM
-import { resetStyle } from '@nextrap/style-reset';
+// /unstyled lädt kein Light-DOM-CSS: Die konsumierende Theme-/App-Schicht gestaltet es selbst über Sass-Mixins.
+import { resetStyle } from '@nextrap/style-reset/unstyled';
 
 @customElement('ntl-footer')
 export class NtlFooter extends LitElement {

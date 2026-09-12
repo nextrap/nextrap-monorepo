@@ -6,8 +6,8 @@ Erst nach dem Klick wird der Inhalt eines inerten Templates in den Slot `consent
 ## Einbindung
 
 ```ts
-// Registriert die Komponente ohne Light-DOM-Styles.
-import '@nextrap/nte-consent-blocker';
+// /unstyled lädt kein Light-DOM-CSS, damit das Theme die Sass-Mixins selbst komponiert.
+import '@nextrap/nte-consent-blocker/unstyled';
 ```
 
 Das Theme stellt ein dokumentweites `<template id="map-template">` mit dem gewünschten Embed bereit.

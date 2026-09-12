@@ -7,3 +7,7 @@ description: "Use @nextrap/nte-spinner: NteSpinnerElement (programmatic API and 
 
 - `NteSpinnerElement` — Registers and implements the spinner custom element for programmatic imports. See the [interactive demo](../../demo/02-interactive.demo.ts).
 - `<nte-spinner>` — Displays loading, determinate progress, success, error, info, and warning states. See the [overview demo](../../demo/01-overview.md).
+
+## JavaScript und Theme-Styling
+
+`@nextrap/nte-spinner` lädt die Default-Light-DOM-Styles automatisch. Für Seaming/Themes `@nextrap/nte-spinner/unstyled` verwenden: Dieser Import lädt auch transitiv kein Light-DOM-CSS, damit das Theme die Darstellung selbst über die Sass-Mixins bestimmen kann. Sass-Imports behalten den Paketnamen ohne `/unstyled`.

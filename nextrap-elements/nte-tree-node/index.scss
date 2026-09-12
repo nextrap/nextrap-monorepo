@@ -1,1 +1,2 @@
-@use 'src/styles/index' as *;
+// Sass-API ohne CSS-Ausgabe; das Theme bestimmt den Zielselektor.
+@forward './src/scss/default-style';

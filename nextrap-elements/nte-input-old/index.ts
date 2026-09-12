@@ -1,5 +1,13 @@
-export * from './src/components/nte-input-control/nte-input-control';
-export * from './src/components/nte-input-group/nte-input-group';
-export * from './src/components/nte-input-signature/nte-input-signature';
-export * from './src/components/nte-input-tags/nte-input-tags';
-export * from './src/components/nte-input/nte-input';
+// Teilt Registrierung und API mit /unstyled; nur dieser SPA-Einstieg lädt die Defaults.
+export * from './unstyled';
+
+// Inline-Kompilierung erhält die automatische Einbindung auch im veröffentlichten ESM-Build.
+import defaultStyles from './default.scss?inline';
+
+// Ein Stylesheet pro Package und Dokument; /unstyled erreicht diesen Block niemals.
+if (typeof document !== 'undefined' && defaultStyles.trim() && !document.getElementById('nextrap-default-nte-input-old')) {
+  const stylesheet = document.createElement('style');
+  stylesheet.id = 'nextrap-default-nte-input-old';
+  stylesheet.textContent = defaultStyles;
+  document.head.appendChild(stylesheet);
+}

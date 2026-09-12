@@ -1,6 +1,7 @@
 import { nextrap_element } from '@nextrap/nt-core';
-import '@nextrap/nte-dialog';
-import { NteDialog, NteDialogBackdropAction } from '@nextrap/nte-dialog';
+// /unstyled lädt kein Light-DOM-CSS: Die konsumierende Theme-/App-Schicht gestaltet es selbst über Sass-Mixins.
+import '@nextrap/nte-dialog/unstyled';
+import { NteDialog, NteDialogBackdropAction } from '@nextrap/nte-dialog/unstyled';
 import { html, nothing, TemplateResult } from 'lit';
 import { query } from 'lit/decorators.js';
 

@@ -26,3 +26,7 @@ nte-table.style-brand {
 - The host owns the only outer border and border radius. Use `::part(viewport)` only for inner viewport color/layout and keep its border/radius at zero; native table descendants must remain radius-free.
 - Preserve the component's zero table margin/padding, single-line header/footer cells, section-colored `tr::after` filler cells, their non-sizing inline-start separator when remainder space exists, and the final body-row separator.
 - Treat `data-nte-table-*` as read-only state hooks. Preserve tbody-only scrolling, functional widths, visibility, sticky positioning and opaque pinned-cell backgrounds.
+
+## JavaScript und Theme-Styling
+
+`@nextrap/nte-table` lädt die Default-Light-DOM-Styles automatisch. Für Seaming/Themes `@nextrap/nte-table/unstyled` verwenden: Dieser Import lädt auch transitiv kein Light-DOM-CSS, damit das Theme die Darstellung selbst über die Sass-Mixins bestimmen kann. Sass-Imports behalten den Paketnamen ohne `/unstyled`.

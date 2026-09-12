@@ -98,3 +98,7 @@ Damit animiert der erste Haupt-Lead-Button beim Eintritt in den Viewport und ern
 Verwende Lead und Glow auf `<a>` oder `<button>`, nicht auf `<input>`, da Pseudoelemente benötigt werden. Kombiniere `.btn-lead` nicht mit `.dropdown-toggle`.
 
 Passe den Effekt bei Bedarf über `--btn-glow-color`, `--btn-glow-duration`, `--btn-glow-easing`, `--btn-glow-width`, `--btn-lead-gap` und `--btn-lead-offset` an.
+
+## JavaScript und Theme-Styling
+
+`@nextrap/style-button` lädt die Default-Light-DOM-Styles automatisch. Für Seaming/Themes `@nextrap/style-button/unstyled` verwenden: Dieser Import lädt auch transitiv kein Light-DOM-CSS, damit das Theme die Darstellung selbst über die Sass-Mixins bestimmen kann. Sass-Imports behalten den Paketnamen ohne `/unstyled`.

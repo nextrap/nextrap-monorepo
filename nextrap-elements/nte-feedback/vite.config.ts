@@ -25,7 +25,7 @@ export default defineConfig(() => ({
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: { transformMixedEsModules: true },
-    lib: { entry: 'index.ts', name: projectName, fileName: 'index', formats: ['es' as const] },
+    lib: { entry: { index: 'index.ts', unstyled: 'unstyled.ts' }, name: projectName, fileName: (_format, entryName) => `${entryName}.js`, formats: ['es' as const] },
     rollupOptions: { external: (id) => !id.startsWith('.') && !path.isAbsolute(id) },
   },
   test: {

@@ -1,7 +1,2 @@
-/**
- * This file contains LightDOM Styles
- */
-
-<%= name %> {
-  /* Put styles here */
-}
+// Kompatibler expliziter Output-Einstieg; keine Verwendung durch /unstyled.
+@use '../../default';

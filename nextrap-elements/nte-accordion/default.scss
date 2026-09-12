@@ -1,17 +1,6 @@
-@use './index' as accordion;
+// Materialisiert die öffentliche Baseline einschließlich ihrer Modifier nur für nte-accordion.
+@use './index' as component;
 
-.default {
-  @include accordion.default-style();
-}
-
-.details-end {
-  @include accordion.with-details-end;
-}
-
-.marker-plus {
-  @include accordion.with-marker-plus;
-}
-
-.marker-start {
-  @include accordion.with-marker-start;
+nte-accordion.style-default {
+  @include component.default-style();
 }

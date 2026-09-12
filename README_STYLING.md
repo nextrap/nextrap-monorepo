@@ -61,14 +61,14 @@ baseline for your styling:
 ```
 
 In your component's class file (where you define the component), make sure to also import the
-[@nextrap/style-base](nextrap-base/style-base) styles. These will be added to the component's Light DOM
+[@nextrap/style-base](nextrap-styles/style-base) tokens. Load these once in the application or theme; component implementations must remain free of Light DOM stylesheet imports
 and provide default variables for theming etc.
 (see [@nextrap/nte-dialog](./nextrap-elements/nte-dialog/src/lib/nte-dialog.ts))
 
 ```ts
 import { LitElement, unsafeCSS } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import '@nextrap/nt-style-base'; // These will be added to the Light DOM
+// Global style-base tokens belong to the application/theme stylesheet, never the component implementation.
 import style from './nte-my-component.scss?inline';
 
 @customElement('nte-my-component')
@@ -147,7 +147,7 @@ You can also use the following syntax to define a public API in terms of CSS cla
 </div>
 ```
 
-- Always add `part` attributes to the main elements inside your shadow DOM. 
+- Always add `part` attributes to the main elements inside your shadow DOM.
 - Reference elements by ID in shadow DOM styles.
 - Do not prefix shadow DOM IDs with the component name.
 
@@ -181,17 +181,17 @@ slot[name="header"]::slotted() {
 
 nte-my-component {
     --styling-variables: default-values;
-    
+
     &.variant1 {
         --styling-variables: variant1-values;
     }
-    
+
     &.img-fullsize {
         &::part(partname) {
             ... styles ...
         }
     }
-    
+
 }
 
 
@@ -211,4 +211,15 @@ Do not use ::part() inside shadow DOM styles! It will not work as expected.
 Use only to style elmeents from the light DOM:
 
 
-### 
+###
+## JavaScript-Entrypoints mit Unstyled-Entrypoints
+
+| Verwendung | Import | Light-DOM-CSS |
+|---|---|---|
+| SPA mit Defaults | `import '@nextrap/nte-card'` | Automatisch aus `default.scss` injiziert |
+| Theme/Seaming | `import '@nextrap/nte-card/unstyled'` | Niemals direkt oder transitiv geladen; Theme komponiert Sass-Mixins selbst |
+| Sass-API | `@use '@nextrap/nte-card' as card;` | Keine Ausgabe ohne `@include` |
+
+`unstyled.ts` und `index.ts` teilen dieselbe Komponentenimplementierung und Registrierung. Inline-Shadow-DOM-Styles bleiben im Unstyled-Einstieg. Komponenten importieren andere Komponenten und `style-reset` intern ebenfalls über `/unstyled`, damit ein Theme keine ungewollten Standardstyles erhält. Der normale Einstieg ergänzt die Default-Imports benötigter Komponenten. `style-base` wird nur einmal durch die Anwendung beziehungsweise das Theme geladen.
+
+Die Default-Injektion nutzt kompiliertes Inline-SCSS, da ein gewöhnlicher SCSS-Side-Effect-Import beim Library-Build nur eine separate CSS-Datei erzeugen kann. Eine restriktive CSP kann inline Style-Elemente sperren; in diesem Fall `/unstyled` verwenden und Sass/CSS als freigegebene externe Datei ausliefern. `/unstyled` garantiert Stylesheet-Freiheit im Light DOM, aber keine allgemeine SSR-Kompatibilität der bestehenden Browser-Komponenten.

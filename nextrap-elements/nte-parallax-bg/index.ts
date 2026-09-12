@@ -1,7 +1,13 @@
-export * from './src/components/nte-parallax-bg/nte-parallax-bg';
+// Teilt Registrierung und API mit /unstyled; nur dieser SPA-Einstieg lädt die Defaults.
+export * from './unstyled';
 
-// If mixin exisists, export it
-// export * from './src/mixins/NteParallaxBgMixin';
+// Inline-Kompilierung erhält die automatische Einbindung auch im veröffentlichten ESM-Build.
+import defaultStyles from './default.scss?inline';
 
-/* this bundles light dom styles by default */
-export * from './src/styles/index.scss';
+// Ein Stylesheet pro Package und Dokument; /unstyled erreicht diesen Block niemals.
+if (typeof document !== 'undefined' && defaultStyles.trim() && !document.getElementById('nextrap-default-nte-parallax-bg')) {
+  const stylesheet = document.createElement('style');
+  stylesheet.id = 'nextrap-default-nte-parallax-bg';
+  stylesheet.textContent = defaultStyles;
+  document.head.appendChild(stylesheet);
+}

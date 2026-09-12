@@ -99,3 +99,7 @@ Wichtige Layoutvariablen: `--breakpoint`, `--cols`, `--container-width`, `--gap`
 | `with-background-and-divider()` | Hintergrund und Spaltentrenner |
 | `with-wrapper-bg-color()` | Wrapper-Hintergrund setzen |
 | `with-modifier-classes()` | Vorbereitete Modifier-Klassen registrieren |
+
+## JavaScript und Theme-Styling
+
+`@nextrap/ntl-2col` lädt die Default-Light-DOM-Styles automatisch. Für Seaming/Themes `@nextrap/ntl-2col/unstyled` verwenden: Dieser Import lädt auch transitiv kein Light-DOM-CSS, damit das Theme die Darstellung selbst über die Sass-Mixins bestimmen kann. Sass-Imports behalten den Paketnamen ohne `/unstyled`.

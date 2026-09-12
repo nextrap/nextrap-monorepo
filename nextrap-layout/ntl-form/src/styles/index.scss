@@ -1,4 +1,2 @@
-/**
- * This file contains LightDOM Styles
- */
-@use "ntl-form-format.scss";
+// Kompatibler expliziter Output-Einstieg; die Sass-API liegt in index.scss am Package-Root.
+@use '../../default';

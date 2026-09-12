@@ -1,4 +1,13 @@
-export * from './src/components/nte-spinner/nte-spinner';
+// Teilt Registrierung und API mit /unstyled; nur dieser SPA-Einstieg lädt die Defaults.
+export * from './unstyled';
 
-/* this bundles light dom styles by default */
-import './src/styles/index.scss';
+// Inline-Kompilierung erhält die automatische Einbindung auch im veröffentlichten ESM-Build.
+import defaultStyles from './default.scss?inline';
+
+// Ein Stylesheet pro Package und Dokument; /unstyled erreicht diesen Block niemals.
+if (typeof document !== 'undefined' && defaultStyles.trim() && !document.getElementById('nextrap-default-nte-spinner')) {
+  const stylesheet = document.createElement('style');
+  stylesheet.id = 'nextrap-default-nte-spinner';
+  stylesheet.textContent = defaultStyles;
+  document.head.appendChild(stylesheet);
+}

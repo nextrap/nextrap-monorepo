@@ -44,3 +44,7 @@ Passe Farben und Timing über `--btn-glow-color`, `--btn-glow-duration`, `--btn-
 ```
 
 Lead und Glow sind für Elemente mit Pseudoelementen gedacht. Kombiniere `btn-lead()` nicht mit `dropdown-toggle()`, weil beide `::after` belegen.
+
+## JavaScript und Theme-Styling
+
+`@nextrap/style-button` lädt die Default-Light-DOM-Styles automatisch. Für Seaming/Themes `@nextrap/style-button/unstyled` verwenden: Dieser Import lädt auch transitiv kein Light-DOM-CSS, damit das Theme die Darstellung selbst über die Sass-Mixins bestimmen kann. Sass-Imports behalten den Paketnamen ohne `/unstyled`.

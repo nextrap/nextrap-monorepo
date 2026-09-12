@@ -1,28 +1,47 @@
 {
-    "name": "@nextrap/nte-dialog-component",
-    "version": "2.0.0",
-    "type": "module",
-    "main": "./index.js",
-    "module": "./index.js",
-    "types": "./index.d.ts",
-    "exports": {
-        ".": {
-            "types": "./index.d.ts",
-            "import": "./index.js",
-            "default": "./index.js"
-        }
+  "name": "@nextrap/nte-dialog-component",
+  "version": "2.0.0",
+  "type": "module",
+  "main": "./index.js",
+  "module": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "sass": "./index.scss",
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
     },
-    "files": [
-        "*.js",
-        "*.d.ts",
-        "*.md"
-    ],
-    "publishConfig": {
-        "access": "public"
+    "./unstyled": {
+      "types": "./unstyled.d.ts",
+      "import": "./unstyled.js",
+      "default": "./unstyled.js"
     },
-    "peerDependencies": {
-        "@nextrap/nt-core": "^2.0.0",
-        "@nextrap/nte-dialog": "^2.0.0",
-        "lit": "^3.0.0"
+    "./default": {
+      "sass": "./default.scss",
+      "default": "./default.scss"
+    },
+    "./*": "./*"
+  },
+  "files": [
+    "*.js",
+    "*.d.ts",
+    "*.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@nextrap/nt-core": "^2.0.0",
+    "@nextrap/nte-dialog": "^2.0.0",
+    "lit": "^3.0.0"
+  },
+  "sideEffects": true,
+  "typesVersions": {
+    "*": {
+      "unstyled": [
+        "unstyled.d.ts"
+      ]
     }
+  }
 }

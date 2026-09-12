@@ -22,3 +22,7 @@ Public parts are `dialog`, `header`, `content`, `footer`, `title`, `body`, `intr
 ```
 
 Use tokens and parts only. Do not target nodes inside the Shadow DOM. For markup and behavior, use `nte-privacy-consent-usage`.
+
+## JavaScript und Theme-Styling
+
+`@nextrap/nte-privacy-consent` lädt die Default-Light-DOM-Styles automatisch. Für Seaming/Themes `@nextrap/nte-privacy-consent/unstyled` verwenden: Dieser Import lädt auch transitiv kein Light-DOM-CSS, damit das Theme die Darstellung selbst über die Sass-Mixins bestimmen kann. Sass-Imports behalten den Paketnamen ohne `/unstyled`.
