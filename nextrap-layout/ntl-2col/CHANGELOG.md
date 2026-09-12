@@ -1,3 +1,21 @@
+## 2.0.2 (2026-09-12)
+
+### 🚀 Features
+
+- **ntl-2col:** add optional edge-to-edge media in aside and top ([acd569d](https://github.com/nextrap/nextrap-monorepo/commit/acd569d))
+- **ntl-2col:** register scoped helpers and independent main alignment ([52238de](https://github.com/nextrap/nextrap-monorepo/commit/52238de))
+
+### 🩹 Fixes
+
+- **ntl-2col:** keep alternating media below a full top row ([dc1865a](https://github.com/nextrap/nextrap-monorepo/commit/dc1865a))
+- **ntl-2col:** prevent zero-gap aside collapse after full-width regions ([c67423e](https://github.com/nextrap/nextrap-monorepo/commit/c67423e))
+- **ntl-2col:** apply wrapper spacing and add mode-specific reverse mixins ([39228d3](https://github.com/nextrap/nextrap-monorepo/commit/39228d3))
+- use peer dependencies between Nextrap packages ([d783bb5](https://github.com/nextrap/nextrap-monorepo/commit/d783bb5))
+
+### ❤️ Thank You
+
+- Matthias Leuffen
+
 ## 2.0.1 (2026-09-10)
 
 ### 🚀 Features
