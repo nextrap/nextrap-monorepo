@@ -24,25 +24,40 @@ for (const p of packages) {
   const pkg = JSON.parse(readFileSync(resolve(root, p, 'package.json')));
   assert.equal(pkg.exports['./unstyled'].import, './unstyled.js', p);
   assert.ok(existsSync(resolve(root, 'dist', p, 'unstyled.d.ts')), `${p}: missing declarations`);
+  // Ein Consumer-Build nur mit /unstyled darf auch transitiv keine CSS-Datei erzeugen.
+  const unstyledBuild = await build({
+    stdin: { contents: `import ${JSON.stringify(aliases[pkg.name + '/unstyled'])};`, resolveDir: root },
+    bundle: true, format: 'iife', write: false, alias: aliases, logLevel: 'silent',
+    outdir: resolve(root, 'dist/.unstyled-check'),
+  });
+  assert.ok(!unstyledBuild.outputFiles.some(file => file.path.endsWith('.css')), `${p}: unstyled bundles CSS`);
   const result = await build({
     stdin: { contents: `import * as plain from ${JSON.stringify(aliases[pkg.name + '/unstyled'])}; globalThis.plain = plain; globalThis.loadStyled = () => import(${JSON.stringify(aliases[pkg.name])});`, resolveDir: root },
     bundle: true, format: 'iife', write: false, alias: aliases, logLevel: 'silent',
+    outdir: resolve(root, 'dist/.unstyled-check'),
   });
+  // Nichtleere Defaults müssen durch den veröffentlichten JS-Import im App-CSS ankommen.
+  const defaultCss = resolve(root, 'dist', p, 'default.css');
+  if (existsSync(defaultCss) && readFileSync(defaultCss, 'utf8').trim()) {
+    assert.match(readFileSync(aliases[pkg.name], 'utf8'), /import ["']\.\/default\.css["']/);
+    assert.ok(result.outputFiles.some(file => file.path.endsWith('.css') && file.text.trim()), `${p}: defaults missing from consumer CSS`);
+  }
   const dom = new JSDOM('<!doctype html><html><head></head><body></body></html>', { url: 'https://example.org', runScripts: 'outside-only', pretendToBeVisual: true });
   try {
     const w = dom.window;
     w.matchMedia = () => ({ matches: false, addEventListener() {}, removeEventListener() {} });
     w.ResizeObserver = class { observe() {} unobserve() {} disconnect() {} };
     w.IntersectionObserver = w.ResizeObserver;
-    w.eval(result.outputFiles[0].text);
+    w.eval(result.outputFiles.find(file => file.path.endsWith('.js')).text);
     assert.equal(w.document.querySelectorAll('style,link[rel=stylesheet]').length, 0, `${p}: unstyled injects CSS`);
     const styled = await w.loadStyled();
     assert.deepEqual(Object.keys(styled).sort(), Object.keys(w.plain).sort(), `${p}: different exports`);
     for (const key of Object.keys(w.plain)) assert.equal(styled[key], w.plain[key], `${p}: duplicate implementation`);
     const count = w.document.querySelectorAll('head style').length;
+    assert.equal(count, 0, `${p}: default entry manually injects styles`);
     await w.loadStyled();
     assert.equal(w.document.querySelectorAll('head style').length, count, `${p}: duplicate stylesheet`);
-    console.log(`${pkg.name}: unstyled clean, API shared, ${count} default stylesheet(s)`);
+    console.log(`${pkg.name}: unstyled clean, API shared, defaults in consumer CSS, no DOM injection`);
   } finally { dom.window.close(); }
 }
 // A later API call must also remain free of global stylesheets (body portal).

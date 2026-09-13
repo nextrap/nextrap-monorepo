@@ -216,10 +216,10 @@ Use only to style elmeents from the light DOM:
 
 | Verwendung | Import | Light-DOM-CSS |
 |---|---|---|
-| SPA mit Defaults | `import '@nextrap/nte-card'` | Automatisch aus `default.scss` injiziert |
+| SPA mit Defaults | `import '@nextrap/nte-card'` | Automatisch aus `default.scss` durch den App-Bundler geladen |
 | Theme/Seaming | `import '@nextrap/nte-card/unstyled'` | Niemals direkt oder transitiv geladen; Theme komponiert Sass-Mixins selbst |
 | Sass-API | `@use '@nextrap/nte-card' as card;` | Keine Ausgabe ohne `@include` |
 
 `unstyled.ts` und `index.ts` teilen dieselbe Komponentenimplementierung und Registrierung. Inline-Shadow-DOM-Styles bleiben im Unstyled-Einstieg. Komponenten importieren andere Komponenten und `style-reset` intern ebenfalls über `/unstyled`, damit ein Theme keine ungewollten Standardstyles erhält. Der normale Einstieg ergänzt die Default-Imports benötigter Komponenten. `style-base` wird nur einmal durch die Anwendung beziehungsweise das Theme geladen.
 
-Die Default-Injektion nutzt kompiliertes Inline-SCSS, da ein gewöhnlicher SCSS-Side-Effect-Import beim Library-Build nur eine separate CSS-Datei erzeugen kann. Eine restriktive CSP kann inline Style-Elemente sperren; in diesem Fall `/unstyled` verwenden und Sass/CSS als freigegebene externe Datei ausliefern. `/unstyled` garantiert Stylesheet-Freiheit im Light DOM, aber keine allgemeine SSR-Kompatibilität der bestehenden Browser-Komponenten.
+Der Default-Einstieg verwendet `import './default.scss'`. Der Library-Build erhält den Import der erzeugten CSS-Datei in `index.js`; der App-Bundler verarbeitet sie. Das Package fügt selbst keine Style-Elemente ein. Direkte Browser-ESM-Nutzung ohne CSS-fähigen Bundler ist damit nicht der Default-Vertrag. `/unstyled` garantiert Stylesheet-Freiheit im Light DOM, aber keine allgemeine SSR-Kompatibilität der bestehenden Browser-Komponenten.

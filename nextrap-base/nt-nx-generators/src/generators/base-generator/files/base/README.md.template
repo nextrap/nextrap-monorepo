@@ -25,7 +25,7 @@ Description of attr2.
 
 ## JavaScript und Theme-Styling
 
-`index.ts` exportiert dieselbe API wie `unstyled.ts` und injiziert die kompilierten
+`index.ts` exportiert dieselbe API wie `unstyled.ts` und importiert `default.scss` regulär; der App-Bundler lädt die
 Default-Light-DOM-Styles für SPAs. Themes importieren stattdessen
 `@nextrap/<%= name %>/unstyled`, damit sie ihre Light-DOM-Styles selbst über die
 öffentliche Sass-API gestalten können. Inline-Shadow-DOM-Styles bleiben erhalten.

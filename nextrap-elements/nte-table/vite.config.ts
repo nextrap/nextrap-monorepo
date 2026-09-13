@@ -1,4 +1,5 @@
 /// <reference types='vitest' />
+import { defaultStylesPlugin } from '../../tools/default-styles-plugin';
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import * as path from 'path';
@@ -15,6 +16,7 @@ export default defineConfig(() => ({
     devSourcemap: true,
   },
   plugins: [
+    defaultStylesPlugin(),
     nxViteTsPaths(),
     nxCopyAssetsPlugin(['*.md', '.ai-usage-info.md', '*.scss', '**/*.scss', 'skills/**/*', 'web-types.json']),
     dts({
@@ -32,6 +34,7 @@ export default defineConfig(() => ({
     },
     lib: {
       entry: { index: 'index.ts', unstyled: 'unstyled.ts' },
+      cssFileName: 'default',
       name: projectName,
       fileName: (_format, entryName) => `${entryName}.js`,
       formats: ['es' as const],

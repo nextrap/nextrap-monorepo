@@ -26,7 +26,10 @@
   "files": [
     "*.js",
     "*.d.ts",
-    "*.md"
+    "*.md",
+    "*.css",
+    "*.scss",
+    "src/**/*.scss"
   ],
   "publishConfig": {
     "access": "public"

@@ -1,4 +1,5 @@
 /// <reference types='vitest' />
+import { defaultStylesPlugin } from '../../tools/default-styles-plugin';
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import * as path from 'path';
@@ -17,6 +18,7 @@ export default defineConfig(() => ({
   root: __dirname,
   cacheDir: `../../node_modules/.vite/${dirName}`,
   plugins: [
+    defaultStylesPlugin(),
     nxViteTsPaths(),
     // Übernimmt Dokumentation und die öffentliche Sass-API vollständig in das npm-Artefakt.
     nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss']),
@@ -42,6 +44,7 @@ export default defineConfig(() => ({
     lib: {
       // Could also be a dictionary or array of multiple entry points.
       entry: { index: 'index.ts', unstyled: 'unstyled.ts' },
+      cssFileName: 'default',
       name: projectName,
       fileName: (_format, entryName) => `${entryName}.js`,
       // Change this to the formats you want to support.

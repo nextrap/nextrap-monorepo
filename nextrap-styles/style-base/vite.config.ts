@@ -1,4 +1,5 @@
 /// <reference types='vitest' />
+import { defaultStylesPlugin } from '../../tools/default-styles-plugin';
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import { tjDemoViewerPlugin } from '@trunkjs/vite-demo-viewer';
@@ -28,6 +29,7 @@ export default defineConfig((command) => ({
   root: __dirname,
   cacheDir: '../../node_modules/.vite/nextrap-base/style-base',
   plugins: [
+    defaultStylesPlugin(),
     nxViteTsPaths(),
     nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss']),
     // Stellt die Paket-Demos über denselben Viewer wie die zentrale Übersicht bereit.
@@ -59,6 +61,7 @@ export default defineConfig((command) => ({
     lib: {
       // Could also be a dictionary or array of multiple entry points.
       entry: { index: 'index.ts', unstyled: 'unstyled.ts' },
+      cssFileName: 'default',
       name: 'style-base',
       fileName: (_format, entryName) => `${entryName}.js`,
       // Change this to the formats you want to support.

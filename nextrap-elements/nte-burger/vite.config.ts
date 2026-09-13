@@ -1,4 +1,5 @@
 /// <reference types='vitest' />
+import { defaultStylesPlugin } from '../../tools/default-styles-plugin';
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import { tjDemoViewerPlugin } from '@trunkjs/vite-demo-viewer';
@@ -27,6 +28,7 @@ export default defineConfig(() => ({
   root: __dirname,
   cacheDir: '../../node_modules/.vite/nextrap-elements/nte-burger',
   plugins: [
+    defaultStylesPlugin(),
     nxViteTsPaths(),
     nxCopyAssetsPlugin(['*.md', 'skills/**/*']),
     tjDemoViewerPlugin({
@@ -54,6 +56,7 @@ export default defineConfig(() => ({
     },
     lib: {
       entry: { index: 'index.ts', unstyled: 'unstyled.ts' },
+      cssFileName: 'default',
       name: 'nte-burger',
       fileName: (_format, entryName) => `${entryName}.js`,
       formats: ['es' as const],

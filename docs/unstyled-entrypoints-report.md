@@ -2,61 +2,59 @@
 
 ## Vertrag und Entscheidung
 
-Der normale JavaScript-Import injiziert die aus `default.scss` kompilierten Light-DOM-Defaults. `/unstyled` enthält dieselbe Logik, Registrierung und inline Shadow-DOM-Styles, aber niemals direkte oder transitive Light-DOM-Stylesheets. Themes komponieren die öffentliche, ausgabefreie Sass-API selbst. Der Name ist ausschließlich `unstyled`; es gibt keinen alternativen `/core`-Einstieg oder eine Übergangslogik. Das bestehende Logikpaket `@nextrap/nt-core` behält seinen Namen.
+Der normale JavaScript-Import bindet `default.scss` ohne `?inline` ein. Der Library-Build liefert `default.css` und erhält dessen Import in `index.js`; der App-Bundler lädt die Light-DOM-Defaults. `/unstyled` enthält dieselbe Logik, Registrierung und inline Shadow-DOM-Styles, aber niemals direkte oder transitive Light-DOM-Stylesheets. Themes komponieren die öffentliche, ausgabefreie Sass-API selbst. Der Name ist ausschließlich `unstyled`; es gibt keinen alternativen `/core`-Einstieg oder eine Übergangslogik. Das bestehende Logikpaket `@nextrap/nt-core` behält seinen Namen.
 
-Die explizite Injektion ist erforderlich, weil Vite im Library-Build einen gewöhnlichen SCSS-Import sonst als separate CSS-Datei ausgeben kann. Beide ESM-Einstiege teilen ihre Implementierung; `sideEffects` erhält Registrierung und Default-Injektion. Interne Komponentenimporte verwenden `/unstyled`; der Default-Einstieg ergänzt benötigte Default-Pakete.
+Vite extrahiert Library-CSS. `defaultStylesPlugin` ergänzt deshalb ausschließlich im gebauten Default-Einstieg den Import der erzeugten CSS-Datei. Die Quellen verwenden einfach `import './default.scss'`; DOM-Injektionscode entfällt. Beide ESM-Einstiege teilen ihre Implementierung; `sideEffects` erhält Registrierung und CSS-Imports. Interne Komponentenimporte verwenden `/unstyled`; der Default-Einstieg ergänzt benötigte Default-Pakete.
 
 ## Bearbeitete Pakete
 
 Alle 30 NTE-, 6 NTL- und 7 Style-Pakete wurden umgestellt. Hinzu kommen Generatorvorlagen in `nt-nx-generators`, Regeln in `nt-skill`, zentrale Architektur-/Styling-Dokumentation, TypeScript-Pfade und CI. Reine Logikpakete erhalten keine künstlichen Stylesheet-Einstiege.
 
-Die letzte Spalte zählt Stylesheets beim isolierten Default-Import einschließlich Abhängigkeiten. Null bedeutet, dass derzeit keine zusätzliche Light-DOM-Baseline vorhanden ist; vorhandene Shadow-DOM-Styles bleiben wirksam.
-
-| Paketpfad | Default-Stylesheets im Laufzeittest |
-|---|---:|
-| `nextrap-elements/nte-accordion` | 1 |
-| `nextrap-elements/nte-burger` | 0 |
-| `nextrap-elements/nte-card` | 1 |
-| `nextrap-elements/nte-consent-blocker` | 1 |
-| `nextrap-elements/nte-data-table` | 2 |
-| `nextrap-elements/nte-demo-viewer` | 0 |
-| `nextrap-elements/nte-dialog` | 1 |
-| `nextrap-elements/nte-dialog-component` | 1 |
-| `nextrap-elements/nte-element-highlighter` | 0 |
-| `nextrap-elements/nte-feedback` | 2 |
-| `nextrap-elements/nte-image` | 1 |
-| `nextrap-elements/nte-infiniscroll` | 0 |
-| `nextrap-elements/nte-input` | 1 |
-| `nextrap-elements/nte-input-old` | 0 |
-| `nextrap-elements/nte-multiselect` | 0 |
-| `nextrap-elements/nte-nav` | 1 |
-| `nextrap-elements/nte-navbar` | 1 |
-| `nextrap-elements/nte-offcanvas` | 1 |
-| `nextrap-elements/nte-parallax-bg` | 0 |
-| `nextrap-elements/nte-privacy-consent` | 2 |
-| `nextrap-elements/nte-progress` | 0 |
-| `nextrap-elements/nte-scroll-to-top` | 1 |
-| `nextrap-elements/nte-scrollspy` | 0 |
-| `nextrap-elements/nte-slider` | 0 |
-| `nextrap-elements/nte-spinner` | 1 |
-| `nextrap-elements/nte-split-view` | 0 |
-| `nextrap-elements/nte-stepper` | 0 |
-| `nextrap-elements/nte-table` | 1 |
-| `nextrap-elements/nte-theme-switcher` | 0 |
-| `nextrap-elements/nte-tree-node` | 0 |
-| `nextrap-layout/ntl-2col` | 1 |
-| `nextrap-layout/ntl-card-grid` | 0 |
-| `nextrap-layout/ntl-card-row` | 2 |
-| `nextrap-layout/ntl-footer` | 0 |
-| `nextrap-layout/ntl-form` | 1 |
-| `nextrap-layout/ntl-hero` | 1 |
-| `nextrap-styles/style-base` | 1 |
-| `nextrap-styles/style-button` | 1 |
-| `nextrap-styles/style-elements` | 1 |
-| `nextrap-styles/style-reset` | 1 |
-| `nextrap-styles/style-switch` | 1 |
-| `nextrap-styles/style-typography` | 1 |
-| `nextrap-styles/style-utils` | 1 |
+| Paketpfad |
+|---|
+| `nextrap-elements/nte-accordion` |
+| `nextrap-elements/nte-burger` |
+| `nextrap-elements/nte-card` |
+| `nextrap-elements/nte-consent-blocker` |
+| `nextrap-elements/nte-data-table` |
+| `nextrap-elements/nte-demo-viewer` |
+| `nextrap-elements/nte-dialog` |
+| `nextrap-elements/nte-dialog-component` |
+| `nextrap-elements/nte-element-highlighter` |
+| `nextrap-elements/nte-feedback` |
+| `nextrap-elements/nte-image` |
+| `nextrap-elements/nte-infiniscroll` |
+| `nextrap-elements/nte-input` |
+| `nextrap-elements/nte-input-old` |
+| `nextrap-elements/nte-multiselect` |
+| `nextrap-elements/nte-nav` |
+| `nextrap-elements/nte-navbar` |
+| `nextrap-elements/nte-offcanvas` |
+| `nextrap-elements/nte-parallax-bg` |
+| `nextrap-elements/nte-privacy-consent` |
+| `nextrap-elements/nte-progress` |
+| `nextrap-elements/nte-scroll-to-top` |
+| `nextrap-elements/nte-scrollspy` |
+| `nextrap-elements/nte-slider` |
+| `nextrap-elements/nte-spinner` |
+| `nextrap-elements/nte-split-view` |
+| `nextrap-elements/nte-stepper` |
+| `nextrap-elements/nte-table` |
+| `nextrap-elements/nte-theme-switcher` |
+| `nextrap-elements/nte-tree-node` |
+| `nextrap-layout/ntl-2col` |
+| `nextrap-layout/ntl-card-grid` |
+| `nextrap-layout/ntl-card-row` |
+| `nextrap-layout/ntl-footer` |
+| `nextrap-layout/ntl-form` |
+| `nextrap-layout/ntl-hero` |
+| `nextrap-styles/style-base` |
+| `nextrap-styles/style-button` |
+| `nextrap-styles/style-elements` |
+| `nextrap-styles/style-reset` |
+| `nextrap-styles/style-switch` |
+| `nextrap-styles/style-typography` |
+| `nextrap-styles/style-utils` |
 
 ## Reparierte Sonderfälle
 
@@ -71,23 +69,25 @@ Die letzte Spalte zählt Stylesheets beim isolierten Default-Import einschließl
 
 - 43/43 Vite-Library-Builds einschließlich beider JavaScript-Einstiege und TypeScript-Deklarationen erfolgreich, ohne TypeScript-Diagnosen. Zusätzlich `nt-core` gebaut.
 - 43/43 Sass-APIs erzeugen kein CSS; alle 43 `default.scss` kompilieren erfolgreich.
-- `node tools/check-unstyled.mjs`: alle 43 gebauten Unstyled-Importgraphen in isoliertem jsdom ohne globale Stylesheets; gleiche Exportmenge und Exportidentität nach Default-Import; wiederholter Import erzeugt keine zusätzlichen Stylesheets.
+- `node tools/check-unstyled.mjs`: Consumer-Builds aller 43 Unstyled-Importgraphen ohne CSS-Ausgabe; nichtleere Defaults im CSS des Default-Consumer-Builds enthalten. Isoliertes jsdom bestätigt gleiche Exportmenge/-identität und keine manuelle Light-DOM-Injektion beider Einstiege.
 - Bild-Vollansicht per API geöffnet: Portal vorhanden, kein globales Stylesheet injiziert.
 - Echte Nx-Generatorvorlagen im In-Memory-Tree gerendert: `unstyled.ts`, Root-Reexport und Package-Export vorhanden. Der vollständige Nx-Library-Generator wurde nicht end-to-end ausgeführt.
 - ThemeJS2-Sass für alle sechs Themes kompiliert; Vite-Site-Build gegen diese neuen Nextrap-Artefakte erfolgreich.
 
-Die native Dart-Runtime von `sass-embedded` startet in dieser Arbeitsumgebung nicht (Stack-Bounds-Fehler). Für die lokale Library-Validierung wurde dasselbe SCSS mit der JavaScript-Ausgabe von Dart Sass kompiliert und Vite als Inline-CSS übergeben. Die regulären Build-Konfigurationen enthalten keinen Umgebungs-Workaround. CI führt den normalen Build und den eingecheckten Vertragstest aus.
+Die native Dart-Runtime von `sass-embedded` startet in dieser Arbeitsumgebung nicht (Stack-Bounds-Fehler). Für die lokale Library-Validierung wurde dasselbe SCSS mit der JavaScript-Ausgabe von Dart Sass kompiliert: Light-DOM-Styles als CSS an Vite übergeben, Shadow-DOM-Styles weiterhin inline. Die regulären Build-Konfigurationen enthalten keinen Umgebungs-Workaround. CI führt den normalen Build und den eingecheckten Vertragstest aus.
 
 Die bestehenden Chrome-Spacing-Fixtures für `nte-card` und `ntl-2col` verwenden ebenfalls `/unstyled`: Ihre Sass-Regeln gehören dem Test-Theme und dürfen nicht von automatisch geladenen Defaults überlagert werden.
+
+Die Dependency-Felder sämtlicher Paketmanifeste und der Generatorvorlage entsprechen unverändert dem Ausgangsstand des PRs. `nte-dialog-component` erhält ausschließlich zusätzliche CSS-/SCSS-Muster in seiner Publish-Dateiliste, damit erzeugte Styles und die Sass-API mitgeliefert werden.
 
 ## Noch zu beachten
 
 - ThemeJS2 muss die neuen Nextrap-Artefakte beziehen. Ein Merge veröffentlicht keine npm-Pakete; die vorhandene Veröffentlichung läuft über Release-Tags. Veröffentlichungen, Versionsanhebungen und Registry-Lockfile-Updates sind in diesen PRs nicht vorweggenommen. Mit alten installierten Paketen fehlt `/unstyled`.
 - Visuelle Desktop-/Mobil-Prüfung aller Komponenten und sechs Themes steht aus. Besonders Vollbild-Portal, Navbar, Dialog-Modifier und Formularformatierung überprüfen. Ein erfolgreicher Build ersetzt diese Prüfung nicht.
-- Leere Defaults in der Tabelle sind absichtlich keine erfundenen Designs. Bei gewünschter visueller SPA-Baseline diese Pakete gesondert gestalten.
+- Pakete mit leeren Defaults sind absichtlich keine erfundenen Designs. Bei gewünschter visueller SPA-Baseline diese Pakete gesondert gestalten.
 - `nte-input-old` und `nte-input` bleiben alternative Implementierungen mit bestehenden Registrierungsüberschneidungen; sie wurden isoliert geprüft.
 - Ein Default-Import von `nte-data-table` bindet Tabellen-CSS auch über seine Sass-Zusammenstellung ein; bei gleichzeitiger Nutzung des Tabellen-Defaults sind identische Regeln möglich.
-- Inline-Style-Injektion benötigt eine passende CSP. `/unstyled` plus externes Theme-CSS ist der Weg für CSP ohne Inline-Styles. SSR-Kompatibilität ist durch die Styling-Trennung nicht zugesichert.
+- Die Default-Entrypoints benötigen einen CSS-fähigen App-Bundler. CSS-Auslieferung und CSP liegen bei der Anwendung; es gibt keine manuelle Style-Injektion im Package. SSR-Kompatibilität ist durch die Styling-Trennung nicht zugesichert.
 
 ## Geänderte Dateien
 
@@ -520,3 +520,6 @@ Die bestehenden Chrome-Spacing-Fixtures für `nte-card` und `ntl-2col` verwenden
 
 - `nextrap-elements/nte-card/tests/spacing.browser.mjs`
 - `nextrap-layout/ntl-2col/tests/spacing.browser.mjs`
+
+- `tools/default-styles-plugin.ts`
+- `nextrap-base/nt-nx-generators/src/generators/base-generator/files/base/default-styles-plugin.ts.template`
