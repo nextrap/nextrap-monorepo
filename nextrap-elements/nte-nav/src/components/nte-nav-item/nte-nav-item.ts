@@ -18,6 +18,8 @@ export class NteNavItem extends nextrap_element({ slotVisibility: true }) {
   @property({ type: String }) public accessor download = '';
   @property({ type: String, reflect: true }) public accessor current: NteNavItemCurrent = '';
   @property({ type: Boolean, reflect: true, attribute: 'submenu-popover' }) public accessor submenuPopover = false;
+  // Bildet den nativen Disclosure-Zustand für Modell und äußere Baum-Styles ab.
+  @property({ type: Boolean, reflect: true }) public accessor expanded = false;
 
   /** Accessible name prefix for a submenu disclosure control. */
   @property({ type: String, attribute: 'submenu-label' })
@@ -25,6 +27,9 @@ export class NteNavItem extends nextrap_element({ slotVisibility: true }) {
 
   @state() private accessor _hasSubmenu = false;
   @state() private accessor _labelText = '';
+
+  // Erkennt auch das erste nachträglich eingefügte Kind mit explizitem submenu-Slot.
+  private readonly _childrenObserver = new MutationObserver(() => this._assignNestedItems());
 
   override connectedCallback() {
     super.connectedCallback();
@@ -34,9 +39,11 @@ export class NteNavItem extends nextrap_element({ slotVisibility: true }) {
     }
 
     this._assignNestedItems();
+    this._childrenObserver.observe(this, { childList: true });
   }
 
   override disconnectedCallback() {
+    this._childrenObserver.disconnect();
     super.disconnectedCallback();
   }
 
@@ -57,7 +64,7 @@ export class NteNavItem extends nextrap_element({ slotVisibility: true }) {
                 `
               : html`
                   ${this.href ? this._renderLink(label) : nothing}
-                  <details id="details" part="details">
+                  <details id="details" part="details" .open=${this.expanded} @toggle=${this._onDisclosureToggle}>
                     ${this.href ? this._renderIconOnlyDisclosure() : this._renderLabelDisclosure(label)}
                     ${this._renderSubmenu()}
                   </details>
@@ -68,6 +75,14 @@ export class NteNavItem extends nextrap_element({ slotVisibility: true }) {
         }
       </div>
     `;
+  }
+
+  /** Übernimmt natives Öffnen, ohne Linkklicks oder den Popover-Mechanismus abzufangen. */
+  private _onDisclosureToggle(event: Event): void {
+    const open = (event.currentTarget as HTMLDetailsElement).open;
+    if (this.expanded === open) return;
+    this.expanded = open;
+    this.dispatchEvent(new CustomEvent<boolean>('expanded-change', { detail: open }));
   }
 
   private _renderLink(label: unknown) {

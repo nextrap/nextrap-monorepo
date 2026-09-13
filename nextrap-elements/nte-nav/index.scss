@@ -6,3 +6,5 @@
 @forward 'src/scss/sizes';
 @forward 'src/scss/sub-navigation';
 @forward 'src/scss/vertical';
+// Exportiert nur die Sass-API; Theme oder App aktiviert die Baumdarstellung.
+@forward 'src/scss/with-tree';
