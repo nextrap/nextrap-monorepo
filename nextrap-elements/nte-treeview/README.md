@@ -12,6 +12,13 @@ und schließt ausschließlich den Unterbaum; Link und Zellaktionen bleiben unabh
 - `index.ts` und `index.scss` liegen im Paketwurzelverzeichnis. Das Sass-Mixin
   `default-style()` bindet die Anwendung ausdrücklich ein.
 
+`TreeNode` verwendet den verschachtelten Objektbaum `{ id, label, children, data }`.
+`data` bündelt `href`, `expanded` und weitere Darstellungsoptionen sowie individuelle
+primitive Werte wie `icon`, Dateigröße oder CMS-Status. Änderungen daran sind reaktiv.
+Serverseitige Bäume mit dieser Datenkonvention können direkt als Wurzelknoten-Array
+an `TreeModel` übergeben werden. Andere Formate benötigen gegebenenfalls einen
+Adapter; ein universeller Baumstandard wird damit nicht vorausgesetzt.
+
 [Beispiele und API-Vertrag](examples/README.md) · Interaktive Demo: `demo/01-tree.demo.ts`.
 
 Das Paket hängt nicht von `nte-nav` oder dem älteren `nte-tree-node` ab.

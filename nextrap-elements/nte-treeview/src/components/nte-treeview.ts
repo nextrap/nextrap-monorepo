@@ -80,13 +80,13 @@ export class NteTreeView extends nextrap_element() {
         <nte-treeview-item
           data-tree-id=${item.id}
           slot=${ifDefined(nested ? 'children' : undefined)}
-          .href=${item.href ?? ''}
-          .target=${item.target ?? ''}
-          .rel=${item.rel ?? ''}
-          .current=${item.current ?? ''}
-          .expanded=${item.expanded ?? false}
+          .href=${item.data?.href ?? ''}
+          .target=${item.data?.target ?? ''}
+          .rel=${item.data?.rel ?? ''}
+          .current=${item.data?.current ?? ''}
+          .expanded=${item.data?.expanded ?? false}
           @expanded-change=${(event: CustomEvent<boolean>) => {
-            item.expanded = event.detail;
+            (item.data ??= {}).expanded = event.detail;
           }}
           >${item.label} ${this.renderCenter ? html`<span slot="center">${this.renderCenter(item)}</span>` : undefined}
           ${this.renderEnd ? html`<span slot="end">${this.renderEnd(item)}</span>` : undefined}

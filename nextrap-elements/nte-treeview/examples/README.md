@@ -4,7 +4,7 @@
 
 Dieses vollständige Beispiel zeigt eine klickbare Handbuchseite mit Unterseiten.
 Der Pfeil klappt ausschließlich den Unterbaum auf und zu. Der Link bleibt dabei
-bedienbar. Ein Knoten ohne `href` ist eine reine Beschriftung, etwa ein Verzeichnis;
+bedienbar. Ein Knoten ohne `data.href` ist eine reine Beschriftung, etwa ein Verzeichnis;
 auch dort bedient ausschließlich der Pfeil den Unterbaum.
 
 ```ts
@@ -12,8 +12,9 @@ import { NteTreeView, TreeModel } from '@nextrap/nte-treeview';
 
 const tree = new TreeModel([
   {
-    id: 'handbook', label: 'Handbuch', href: '/handbuch', expanded: true,
-    children: [{ id: 'start', label: 'Einstieg', href: '/handbuch/einstieg' }],
+    id: 'handbook', label: 'Handbuch',
+    data: { href: '/handbuch', expanded: true },
+    children: [{ id: 'start', label: 'Einstieg', data: { href: '/handbuch/einstieg' } }],
   },
   { id: 'drafts', label: 'Entwürfe', children: [] },
 ]);
@@ -35,7 +36,8 @@ nte-treeview.style-default {
 ```
 
 `TreeModel.children` enthält die Wurzelknoten. `TreeNode` benötigt `id` und `label`;
-`href`, `children`, `expanded`, `target`, `rel`, `current` und `meta` sind optional.
+`children` und `data` sind optional. `data` bündelt `href`, `expanded`, `target`,
+`rel`, `current` und individuelle primitive Zusatzwerte.
 IDs sind unter Geschwistern eindeutig und bleiben stabil. Daten bilden einen
 azyklischen Baum; jeder Knoten gehört genau einem Elternpunkt.
 
@@ -46,14 +48,14 @@ Ergänzt Beispiel 01. Die folgenden Änderungen verwenden das beobachtbare `tree
 ```ts
 tree.children[0].label = 'Entwicklerhandbuch';
 tree.children[1].children!.push({
-  id: 'notes', label: 'Notizen.md', href: '/dateien/notizen.md',
-  meta: { size: '4 KB', status: 'Entwurf' },
+  id: 'notes', label: 'Notizen.md',
+  data: { href: '/dateien/notizen.md', size: '4 KB', status: 'Entwurf' },
 });
-tree.children[1].expanded = true;
+tree.children[1].data = { ...tree.children[1].data, expanded: true };
 ```
 
 Das bisher leere Verzeichnis zeigt jetzt einen Pfeil und die Datei `Notizen.md`.
-`expanded = false` blendet nur den Unterbaum aus, ohne Knoten zu löschen.
+`data.expanded = false` blendet nur den Unterbaum aus, ohne Knoten zu löschen.
 
 ```ts
 // Ergänzt den Ablauf: Die Datei wechselt in das Handbuch.
@@ -79,13 +81,13 @@ kommen aus Lit, einer Peer-Abhängigkeit des Pakets.
 ```ts
 import { html, nothing } from 'lit';
 
-tree.children[0].meta = { size: '12 KB', status: 'Entwurf' };
-view.renderCenter = (node) => node.meta?.['size'] ?? '';
-view.renderEnd = (node) => node.meta?.['status'] == null ? nothing : html`
+tree.children[0].data = { ...tree.children[0].data, size: '12 KB', status: 'Entwurf' };
+view.renderCenter = (node) => node.data?.['size'] ?? '';
+view.renderEnd = (node) => node.data?.['status'] == null ? nothing : html`
   <select aria-label=${`Status für ${node.label}`}
-    .value=${String(node.meta['status'])}
+    .value=${String(node.data['status'])}
     @change=${(event: Event) => {
-      node.meta!['status'] = (event.target as HTMLSelectElement).value;
+      node.data!['status'] = (event.target as HTMLSelectElement).value;
     }}>
     <option>Entwurf</option>
     <option>Veröffentlicht</option>
@@ -93,8 +95,8 @@ view.renderEnd = (node) => node.meta?.['status'] == null ? nothing : html`
 ```
 
 „12 KB“ erscheint zentriert in der mittleren Zusatzspalte, das Dropdown rechts.
-Die Auswahl verändert nur `meta.status`. Weder Link noch Aufklappzustand ändern
-sich. Änderungen an `meta` werden wie andere Modelldaten beobachtet.
+Die Auswahl verändert nur `data.status`. Weder Link noch Aufklappzustand ändern
+sich. Änderungen an `data` werden wie andere Modelldaten beobachtet.
 
 Gemeinsame Breiten richten Zellen über alle Ebenen aus, auch bei leeren Zellen.
 Die Default-Baseline reserviert Spalten nur, wenn entsprechende Slots existieren.
@@ -152,7 +154,7 @@ aktualisieren den Pfeil. `expanded` lässt sich als Property oder Attribut setze
 Alternative zur bisherigen Datenbindung; ersetzt den Baum aus Beispiel 01.
 
 ```ts
-view.setData(new TreeModel([{ id: 'home', label: 'Startseite', href: '/' }]));
+view.setData(new TreeModel([{ id: 'home', label: 'Startseite', data: { href: '/' } }]));
 await view.updateComplete;
 ```
 
@@ -166,10 +168,45 @@ verwaltet der Renderer diese Kinder; keine manuellen DOM-Änderungen oder Reloca
 Ohne `setData` bleibt das eigene Markup erhalten. Abgemeldete TreeViews lösen ihren
 Modell-Listener und holen Änderungen beim erneuten Einhängen nach.
 
-Der Konstruktor kopiert Ausgangsknoten und `meta`. Änderungen erfolgen danach
+Der Konstruktor kopiert Ausgangsknoten und `data`. Änderungen erfolgen danach
 über `tree.children`, auch bei neu eingefügten Rohobjekten. Normale Zuweisungen,
 Array-Operationen und `delete` sind beobachtbar, `Object.defineProperty` nicht.
-`meta` enthält ausschließlich primitive Zusatzwerte; Templates gehören in die
+`data` enthält Darstellungsoptionen und primitive Zusatzwerte; Templates gehören in die
 Zellrenderer. Dasselbe Modell darf mehrere TreeViews versorgen; sie teilen auch
-`expanded`. `expanded-change` wird direkt am Knoten mit Boolean-Detail ausgelöst,
+`data.expanded`. `expanded-change` wird direkt am Knoten mit Boolean-Detail ausgelöst,
 bubbelt nicht und wird im Datenbetrieb automatisch ins Modell zurückgeschrieben.
+
+## 06 – Serverseitige Bäume und individuelle Daten verwenden
+
+Das Austauschformat ist ein verschachtelter Objektbaum mit `children`: `id`, `label` und `children` beschreiben die Struktur; `data` enthält
+individuelle Angaben. Serverseitige Modelle und andere Komponenten mit genau
+diesem Vertrag können dieselben Knoten ohne strukturellen Umbau austauschen.
+Dies ist eine gemeinsame Datenkonvention, kein universell normiertes Baumformat;
+abweichende Feldnamen oder Datentypen anderer APIs benötigen einen Adapter.
+Der Server liefert ein Array der Wurzelknoten an `new TreeModel(nodes)`.
+
+Ergänzt Beispiel 01. Eine Icon-Kennung lässt sich wie ein Status hinzufügen,
+ändern oder entfernen. Der Zellrenderer bestimmt ihre Darstellung:
+
+```ts
+tree.children[0].data = { ...tree.children[0].data, icon: '📖' };
+view.renderCenter = (node) => node.data?.['icon'] ?? '';
+tree.children[0].data['icon'] = '📚';
+```
+
+Die mittlere Zelle zeigt nun „📚“. `data.icon` wird nicht automatisch als HTML,
+Bild-URL oder Icon-Bibliothek interpretiert. Für deklaratives Markup bleibt der
+`icon`-Slot verfügbar. Alle Angaben in `data` werden reaktiv beobachtet, auch beim
+Austauschen oder Löschen des gesamten `data`-Objekts. Ohne `data` bleibt ein Knoten
+eine Beschriftung und sein Unterbaum zunächst geschlossen; Aufklappen legt bei
+Bedarf `data` an und schreibt `data.expanded` zurück. Für JSON ausschließlich
+Strings, Zahlen, Booleans und `null` verwenden; optionale Werte dürfen fehlen.
+
+Migration gegenüber dem bisherigen PR-Entwurf:
+
+| Old | New |
+|---|---|
+| `node.href`, `node.expanded` | `node.data?.href`, `node.data?.expanded` |
+| `node.target`, `node.rel`, `node.current` | `node.data?.target`, `node.data?.rel`, `node.data?.current` |
+| `node.meta.size`, `node.meta.status` | `node.data?.['size']`, `node.data?.['status']` |
+| `id`, `label`, `children` | unverändert auf Knotenebene |

@@ -31,19 +31,15 @@ export default defineDemo({
       {
         id: 'handbook',
         label: 'Handbuch',
-        href: '#handbuch',
-        expanded: true,
-        meta: { size: '12 KB', status: 'Entwurf' },
+        data: { href: '#handbuch', expanded: true, size: '12 KB', status: 'Entwurf' },
         children: [
-          { id: 'start', label: 'Einstieg', href: '#einstieg', meta: { size: '4 KB', status: 'Veröffentlicht' } },
+          { id: 'start', label: 'Einstieg', data: { href: '#einstieg', size: '4 KB', status: 'Veröffentlicht' } },
           {
             id: 'api',
             label: 'API',
-            href: '#api',
-            expanded: true,
-            meta: { size: '8 KB', status: 'Entwurf' },
+            data: { href: '#api', expanded: true, size: '8 KB', status: 'Entwurf' },
             children: [
-              { id: 'methods', label: 'Methoden', href: '#methoden', meta: { size: '2 KB', status: 'Entwurf' } },
+              { id: 'methods', label: 'Methoden', data: { href: '#methoden', size: '2 KB', status: 'Entwurf' } },
             ],
           },
         ],
@@ -51,20 +47,20 @@ export default defineDemo({
       {
         id: 'files',
         label: 'Dateien',
-        expanded: true,
-        children: [{ id: 'notes', label: 'Notizen.md', href: '#notizen', meta: { size: '1 KB' } }],
+        data: { expanded: true },
+        children: [{ id: 'notes', label: 'Notizen.md', data: { href: '#notizen', size: '1 KB' } }],
       },
     ]);
     const view = root.querySelector('nte-treeview')!;
-    view.renderCenter = (node) => node.meta?.['size'] ?? '';
+    view.renderCenter = (node) => node.data?.['size'] ?? '';
     view.renderEnd = (node) =>
-      node.meta?.['status'] == null
+      node.data?.['status'] == null
         ? nothing
         : html` <select
             aria-label=${`Status für ${node.label}`}
-            .value=${String(node.meta['status'])}
+            .value=${String(node.data['status'])}
             @change=${(event: Event) => {
-          node.meta!['status'] = (event.target as HTMLSelectElement).value;
+          node.data!['status'] = (event.target as HTMLSelectElement).value;
         }}
           >
             <option>Entwurf</option>
@@ -82,16 +78,15 @@ export default defineDemo({
       tree.children[1].children!.push({
         id: `file-${id}`,
         label: `Datei-${id}.md`,
-        href: `#datei-${id}`,
-        meta: { size: '3 KB' },
+        data: { href: `#datei-${id}`, size: '3 KB' },
       });
-      tree.children[1].expanded = true;
+      tree.children[1].data!.expanded = true;
     });
     root.querySelector('[data-action="remove"]')!.addEventListener('click', () => {
       tree.children[1].children!.pop();
     });
     root.querySelector('[data-action="toggle"]')!.addEventListener('click', () => {
-      tree.children[0].expanded = !tree.children[0].expanded;
+      tree.children[0].data!.expanded = !tree.children[0].data!.expanded;
     });
   },
 });

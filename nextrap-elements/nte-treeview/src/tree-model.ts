@@ -1,19 +1,24 @@
 import type { TreeItemCurrent } from './components/nte-treeview-item';
 
-/** Beschreibt einen Link, einen Ordner oder einen verlinkten Elternpunkt. */
-export interface TreeNode {
-  /** Unter Geschwistern eindeutiger, während der Lebensdauer stabiler Schlüssel. */
-  readonly id: string;
-  label: string;
+/** Hält Darstellungsoptionen und individuelle, serialisierbare Zusatzwerte zusammen. */
+export interface TreeNodeData {
   href?: string;
   target?: string;
   rel?: string;
   current?: TreeItemCurrent;
   /** Steuert ausschließlich den Unterbaum unabhängig vom Link. */
   expanded?: boolean;
-  /** Reaktive Zusatzwerte für die optionalen Center-/End-Renderer. */
-  meta?: Record<string, string | number | boolean | null>;
+  /** Beispielsweise Icon-Kennung, Dateigröße oder CMS-Status; keine Templates. */
+  [key: string]: string | number | boolean | null | undefined;
+}
+
+/** Trennt die allgemeine Baumstruktur von den anwendungsspezifischen Daten. */
+export interface TreeNode {
+  /** Unter Geschwistern eindeutiger, während der Lebensdauer stabiler Schlüssel. */
+  readonly id: string;
+  label: string;
   children?: TreeNode[];
+  data?: TreeNodeData;
 }
 
 /** Verwendung und Änderungsvertrag: siehe ../examples/README.md.
@@ -38,7 +43,7 @@ export class TreeModel {
   private _copyNodes(nodes: TreeNode[]): TreeNode[] {
     return nodes.map((node) => ({
       ...node,
-      ...(node.meta ? { meta: { ...node.meta } } : {}),
+      ...(node.data ? { data: { ...node.data } } : {}),
       ...(node.children ? { children: this._copyNodes(node.children) } : {}),
     }));
   }
