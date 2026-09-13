@@ -1,3 +1,9 @@
+## 2.0.2 (2026-09-13)
+
+### 🧱 Updated Dependencies
+
+- Updated style-elements to 2.0.1
+
 ## 2.0.1 (2026-09-09)
 
 ### 🩹 Fixes

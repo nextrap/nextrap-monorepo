@@ -1,3 +1,13 @@
+## 2.0.1 (2026-09-13)
+
+### 🩹 Fixes
+
+- **style-reset:** neutralize native dialog surface ([eabfa69](https://github.com/nextrap/nextrap-monorepo/commit/eabfa69))
+
+### ❤️ Thank You
+
+- Matthias Leuffen
+
 # 1.0.0 (2025-08-24)
 
 This was a version bump only for style-reset to align it with other projects, there were no code changes.
