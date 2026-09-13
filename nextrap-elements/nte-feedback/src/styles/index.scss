@@ -1,5 +1,2 @@
-@use '../../mixins' as feedback;
-
-nte-feedback.style-default {
-  @include feedback.feedback-default;
-}
+// Kompatibler expliziter Output-Einstieg; die Sass-API liegt in index.scss am Package-Root.
+@use '../../default';

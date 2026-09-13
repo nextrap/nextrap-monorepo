@@ -1,8 +1,5 @@
-export * from './src/components/nte-slide/nte-slide';
-export * from './src/components/nte-slider/nte-slider';
+// Teilt Registrierung und API mit /unstyled; dieser SPA-Einstieg lädt die Defaults.
+export * from './unstyled';
 
-// If mixin exisists, export it
-// export * from './src/mixins/NteSliderMixin';
-
-/* this bundles light dom styles by default */
-import './src/styles/index.scss';
+// Light-DOM-Defaults verarbeitet der App-Bundler; Themes verwenden /unstyled.
+import './default.scss';

@@ -1,3 +1,6 @@
-export * from './src/definitions/table-definition';
-export * from './src/rendering/cell-renderer-registry';
-export * from './src/components/nte-data-table/nte-data-table';
+// Teilt Registrierung und API mit /unstyled; dieser SPA-Einstieg lädt die Defaults.
+export * from './unstyled';
+import '@nextrap/nte-table';
+
+// Light-DOM-Defaults verarbeitet der App-Bundler; Themes verwenden /unstyled.
+import './default.scss';

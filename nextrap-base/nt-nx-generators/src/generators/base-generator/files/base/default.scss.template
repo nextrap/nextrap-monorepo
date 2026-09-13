@@ -1,0 +1,6 @@
+// Der normale Paketimport materialisiert diese Baseline; /unstyled überlässt sie dem Theme.
+@use './index' as component;
+
+<%= name %>.style-default {
+  @include component.default-style();
+}

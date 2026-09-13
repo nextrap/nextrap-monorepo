@@ -76,3 +76,7 @@ Lösung ausliefern und messen.
 ```
 
 Der Modifier ändert weder die DOM-Reihenfolge noch den Desktop-Contract. Native Touch- und Trackpad-Interaktion funktioniert ohne zusätzliche Slider-Controls.
+
+## JavaScript und Theme-Styling
+
+`@nextrap/ntl-card-row` lädt die Default-Light-DOM-Styles automatisch. Für Seaming/Themes `@nextrap/ntl-card-row/unstyled` verwenden: Dieser Import lädt auch transitiv kein Light-DOM-CSS, damit das Theme die Darstellung selbst über die Sass-Mixins bestimmen kann. Sass-Imports behalten den Paketnamen ohne `/unstyled`.

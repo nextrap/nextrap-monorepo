@@ -1,7 +1,5 @@
-export * from './src/components/nte-split-view/nte-split-view';
+// Teilt Registrierung und API mit /unstyled; dieser SPA-Einstieg lädt die Defaults.
+export * from './unstyled';
 
-// If mixin exisists, export it
-// export * from './src/mixins/NteSplitViewMixin';
-
-/* this bundles light dom styles by default */
-export * from './src/styles/index.scss';
+// Light-DOM-Defaults verarbeitet der App-Bundler; Themes verwenden /unstyled.
+import './default.scss';

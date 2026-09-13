@@ -4,7 +4,7 @@ Hero-Layout mit einer Hintergrundebene und vier vertikal angeordneten Inhaltsber
 
 ## Einbindung und Styling
 
-Die Registrierung erfolgt über `import '@nextrap/ntl-hero'` und lädt keine Hero-Light-DOM-Styles. Wie bei `ntl-2col` und `ntl-card-row` stellt `index.scss` ausschließlich eine Sass-API bereit. Das Theme bindet die vollständige visuelle Baseline explizit ein:
+Die Registrierung erfolgt über `import '@nextrap/ntl-hero/unstyled'` und lädt keine Hero-Light-DOM-Styles. Wie bei `ntl-2col` und `ntl-card-row` stellt `index.scss` ausschließlich eine Sass-API bereit. Das Theme bindet die vollständige visuelle Baseline explizit ein:
 
 ```scss
 @use '@nextrap/ntl-hero' as hero;

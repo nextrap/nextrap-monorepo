@@ -1,6 +1,7 @@
 import { nextrap_element, type NteFeatures } from '@nextrap/nt-core';
-import '@nextrap/nte-spinner';
-import { resetStyle } from '@nextrap/style-reset';
+// /unstyled lädt kein Light-DOM-CSS: Die konsumierende Theme-/App-Schicht gestaltet es selbst über Sass-Mixins.
+import '@nextrap/nte-spinner/unstyled';
+import { resetStyle } from '@nextrap/style-reset/unstyled';
 import { Listen } from '@trunkjs/browser-utils';
 import type { PropertyValues } from 'lit';
 import { html, nothing, unsafeCSS } from 'lit';

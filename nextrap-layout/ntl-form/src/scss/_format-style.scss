@@ -1,0 +1,9 @@
+// Erhält die bestehende Darstellung des Light-DOM-Formularformats.
+@mixin format-style() {
+  li { display: contents; }
+  input {
+    border: 1px solid var(--nt-dark);
+    border-radius: 4px;
+    padding: 0.5em;
+  }
+}

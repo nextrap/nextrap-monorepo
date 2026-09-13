@@ -1,22 +1,48 @@
 {
-    "name": "@nextrap/ntl-2col",
-    "version": "2.0.2",
-    "files": [
-        "*.*",
-        ".agents",
-        "src"
-    ],
-    "main": "./index.js",
-    "repository": {
-        "directory": "nextrap-layout/ntl-2col",
-        "type": "git",
-        "url": "https://github.com/nextrap/nextrap-monorepo"
+  "name": "@nextrap/ntl-2col",
+  "version": "2.0.2",
+  "files": [
+    "*.*",
+    ".agents",
+    "src"
+  ],
+  "main": "./index.js",
+  "repository": {
+    "directory": "nextrap-layout/ntl-2col",
+    "type": "git",
+    "url": "https://github.com/nextrap/nextrap-monorepo"
+  },
+  "peerDependencies": {
+    "@nextrap/nt-core": "^2.0.0",
+    "lit": "^3.3.2"
+  },
+  "type": "module",
+  "types": "./index.d.ts",
+  "web-types": "./web-types.json",
+  "exports": {
+    ".": {
+      "sass": "./index.scss",
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
     },
-    "peerDependencies": {
-        "@nextrap/nt-core": "^2.0.0",
-        "lit": "^3.3.2"
+    "./unstyled": {
+      "types": "./unstyled.d.ts",
+      "import": "./unstyled.js",
+      "default": "./unstyled.js"
     },
-    "type": "module",
-    "types": "./index.d.ts",
-    "web-types": "./web-types.json"
+    "./default": {
+      "sass": "./default.scss",
+      "default": "./default.scss"
+    },
+    "./*": "./*"
+  },
+  "sideEffects": true,
+  "typesVersions": {
+    "*": {
+      "unstyled": [
+        "unstyled.d.ts"
+      ]
+    }
+  }
 }

@@ -1,7 +1,2 @@
-/**
- * This file contains LightDOM Styles
- */
-
-nte-image {
-  /* Put styles here */
-}
+// Kompatibler expliziter Output-Einstieg; die Sass-API liegt in index.scss am Package-Root.
+@use '../../default';

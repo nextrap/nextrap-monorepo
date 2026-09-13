@@ -34,3 +34,7 @@ Nutze diesen Skill für Theme-SCSS und visuelle Switch-Varianten. Für Markup un
 ```
 
 Theme-Werte werden bevorzugt über die lokalen `--switch-*` Variablen oder bestehende `--nt-*` Tokens angepasst. Größenmodifier verändern Track und Thumb, nicht die Label-Schriftgröße. `switch-icon()` ist rein dekorativ; der zugängliche Name bleibt Aufgabe des Inputs und Labels.
+
+## JavaScript und Theme-Styling
+
+`@nextrap/style-switch` lädt die Default-Light-DOM-Styles automatisch. Für Seaming/Themes `@nextrap/style-switch/unstyled` verwenden: Dieser Import lädt auch transitiv kein Light-DOM-CSS, damit das Theme die Darstellung selbst über die Sass-Mixins bestimmen kann. Sass-Imports behalten den Paketnamen ohne `/unstyled`.

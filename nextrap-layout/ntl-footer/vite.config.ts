@@ -27,7 +27,7 @@ export default defineConfig(() => ({
   cacheDir: '../../node_modules/.vite/nextrap-layout/ntl-footer',
   plugins: [
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md']),
+    nxCopyAssetsPlugin(['**/*.scss', '*.scss', '*.md']),
     dts({
       entryRoot: '.',
       aliasesExclude: [/@nextrap\/.*/],
@@ -49,16 +49,18 @@ export default defineConfig(() => ({
     },
     lib: {
       // Could also be a dictionary or array of multiple entry points.
-      entry: 'index.ts',
+      entry: { index: 'index.ts', unstyled: 'unstyled.ts' },
       name: 'ntl-footer',
-      fileName: 'index',
+      fileName: (_format, entryName) => `${entryName}.js`,
       // Change this to the formats you want to support.
       // Don't forget to update your package.json as well.
       formats: ['es' as const],
     },
     rollupOptions: {
       // Peer-Libraries einschließlich Subpfaden bleiben extern und werden vom Host bereitgestellt.
-      external: (id) => !id.startsWith('.') && !path.isAbsolute(id),
+      // Keep the stylesheet import in index.js; the consuming app compiles SCSS.
+      // /unstyled skips these defaults so themes can supply their own Light DOM CSS.
+      external: (id) => id === './default.scss' || (!id.startsWith('.') && !path.isAbsolute(id)),
     },
   },
 }));

@@ -1,5 +1,5 @@
-export * from './src/components/nte-input-control/nte-input-control';
-export * from './src/components/nte-input-group/nte-input-group';
-export * from './src/components/nte-input-signature/nte-input-signature';
-export * from './src/components/nte-input-tags/nte-input-tags';
-export * from './src/components/nte-input/nte-input';
+// Teilt Registrierung und API mit /unstyled; dieser SPA-Einstieg lädt die Defaults.
+export * from './unstyled';
+
+// Light-DOM-Defaults verarbeitet der App-Bundler; Themes verwenden /unstyled.
+import './default.scss';

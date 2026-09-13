@@ -156,7 +156,7 @@ npx vite build
 
 ## Package authoring reminders
 
-- Package entrypoint: root `index.ts` next to `package.json`; implementation lives under `src/`.
+- Komponenten-/Style-Entrypoints: `index.ts` mit SPA-Defaults und `unstyled.ts` ohne direkte oder transitive Light-DOM-Styles; Implementierung unter `src/`. Themes importieren `/unstyled` und komponieren Sass selbst.
 - New package structure should follow generator templates.
 - Keep package `.ai-usage-info.md` short and current when working on that package.
 - Published packages should include package-local usage/theming skills where available.

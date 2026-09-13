@@ -1,16 +1,42 @@
 {
-    "name": "@nextrap/nte-progress",
-    "version": "2.0.0",
-    "main": "./index.js",
-    "repository": {
-        "directory": "nextrap-elements/nte-progress",
-        "type": "git",
-        "url": "https://github.com/nextrap/nextrap-monorepo"
+  "name": "@nextrap/nte-progress",
+  "version": "2.0.0",
+  "main": "./index.js",
+  "repository": {
+    "directory": "nextrap-elements/nte-progress",
+    "type": "git",
+    "url": "https://github.com/nextrap/nextrap-monorepo"
+  },
+  "dependencies": {},
+  "type": "module",
+  "types": "./index.d.ts",
+  "peerDependencies": {
+    "lit": "^3.3.2"
+  },
+  "exports": {
+    ".": {
+      "sass": "./index.scss",
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
     },
-    "dependencies": {},
-    "type": "module",
-    "types": "./index.d.ts",
-    "peerDependencies": {
-        "lit": "^3.3.2"
+    "./unstyled": {
+      "types": "./unstyled.d.ts",
+      "import": "./unstyled.js",
+      "default": "./unstyled.js"
+    },
+    "./default": {
+      "sass": "./default.scss",
+      "default": "./default.scss"
+    },
+    "./*": "./*"
+  },
+  "sideEffects": true,
+  "typesVersions": {
+    "*": {
+      "unstyled": [
+        "unstyled.d.ts"
+      ]
     }
+  }
 }

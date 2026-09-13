@@ -46,13 +46,13 @@ export default defineConfig(() => ({
       transformMixedEsModules: true,
     },
     lib: {
-      entry: 'index.ts',
+      entry: { index: 'index.ts', unstyled: 'unstyled.ts' },
       name: projectName,
-      fileName: 'index',
+      fileName: (_format, entryName) => `${entryName}.js`,
       formats: ['es' as const],
     },
     rollupOptions: {
-      external: (id) => !id.startsWith('.') && !path.isAbsolute(id),
+      /* Preserve SCSS in index.js for the app build; /unstyled lets themes own Light DOM CSS. */ external: (id) => id === './default.scss' || (!id.startsWith('.') && !path.isAbsolute(id)),
     },
   },
   test: {

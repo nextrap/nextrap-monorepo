@@ -28,7 +28,7 @@ export default defineConfig(() => ({
   cacheDir: '../../node_modules/.vite/nextrap-elements/nte-burger',
   plugins: [
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md', 'skills/**/*']),
+    nxCopyAssetsPlugin(['**/*.scss', '*.scss', '*.md', 'skills/**/*']),
     tjDemoViewerPlugin({
       include: ['demo/**/*.demo.ts'],
       route: '/',
@@ -53,13 +53,15 @@ export default defineConfig(() => ({
       transformMixedEsModules: true,
     },
     lib: {
-      entry: 'index.ts',
+      entry: { index: 'index.ts', unstyled: 'unstyled.ts' },
       name: 'nte-burger',
-      fileName: 'index',
+      fileName: (_format, entryName) => `${entryName}.js`,
       formats: ['es' as const],
     },
     rollupOptions: {
-      external: (id) => !id.startsWith('.') && !path.isAbsolute(id),
+      // Keep the stylesheet import in index.js; the consuming app compiles SCSS.
+      // /unstyled skips these defaults so themes can supply their own Light DOM CSS.
+      external: (id) => id === './default.scss' || (!id.startsWith('.') && !path.isAbsolute(id)),
     },
   },
 }));

@@ -1,2 +1,5 @@
-export * from './src/lib/nte-burger';
-import './src/lib/nte-burger';
+// Teilt Registrierung und API mit /unstyled; dieser SPA-Einstieg lädt die Defaults.
+export * from './unstyled';
+
+// Light-DOM-Defaults verarbeitet der App-Bundler; Themes verwenden /unstyled.
+import './default.scss';

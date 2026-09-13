@@ -1,4 +1,5 @@
-import { resetStyle } from '@nextrap/style-reset';
+// /unstyled lädt kein Light-DOM-CSS: Die konsumierende Theme-/App-Schicht gestaltet es selbst über Sass-Mixins.
+import { resetStyle } from '@nextrap/style-reset/unstyled';
 import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import style from './nte-theme-switcher.scss?inline';

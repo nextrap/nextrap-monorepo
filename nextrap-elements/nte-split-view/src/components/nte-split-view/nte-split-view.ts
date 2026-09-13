@@ -1,7 +1,8 @@
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 
-import { resetStyle } from '@nextrap/style-reset';
+// /unstyled lädt kein Light-DOM-CSS: Die konsumierende Theme-/App-Schicht gestaltet es selbst über Sass-Mixins.
+import { resetStyle } from '@nextrap/style-reset/unstyled';
 import style from './nte-split-view.scss?inline';
 
 @customElement('nte-split-view')

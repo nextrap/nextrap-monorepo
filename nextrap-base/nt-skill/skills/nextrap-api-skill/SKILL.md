@@ -15,7 +15,7 @@ Dieser Skill ist der zentrale Einstieg für die Verwendung des gesamten Nextrap-
 
 § 1.2 Cross-Package-Imports erfolgen über `@nextrap/<package>` und nicht über relative Pfade in andere Packages. Aus `dist/`, `node_modules/` oder generierten Artefakten wird keine öffentliche API abgeleitet, wenn Quell-Entrypoints verfügbar sind.
 
-§ 1.3 Jedes veröffentlichbare Nextrap-Package besitzt seinen öffentlichen TypeScript-Entrypoint als `index.ts` direkt in der Package-Wurzel neben `package.json`. Vite verwendet immer `entry: 'index.ts'`, und die Declaration-Erzeugung verwendet `entryRoot: '.'`. `src/index.ts` ist kein öffentlicher Package-Entrypoint; Implementierungen unter `src/` werden ausschließlich vom Root-Entrypoint re-exportiert.
+§ 1.3 Komponenten- und Style-Packages besitzen `index.ts` und `unstyled.ts` in der Package-Wurzel. Vite baut beide Entrypoints mit gemeinsamer Implementierung und `entryRoot: '.'`. `/unstyled` lädt, exportiert und injiziert niemals Light-DOM-CSS, auch nicht transitiv; Themes verwenden diesen Einstieg, um die Sass-Mixins selbst zu komponieren. Der normale JavaScript-Import ergänzt Default-Light-DOM-Styles automatisch für SPAs. Reine Logik-Packages behalten ihren bisherigen Root-Entrypoint.
 
 § 1.4 Layouts werden für Markdown/Kramdown-Inhalte grundsätzlich zusammen mit `@trunkjs/content-pane` gedacht. Responsive Zustände werden über die vorhandene `@trunkjs/responsive`-Integration genutzt; Komponenten registrieren diese Infrastruktur nicht selbst.
 

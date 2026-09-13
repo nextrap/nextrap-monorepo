@@ -4,7 +4,8 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 
 // Styles for the light DOM
-import { resetStyle } from '@nextrap/style-reset';
+// /unstyled lädt kein Light-DOM-CSS: Die konsumierende Theme-/App-Schicht gestaltet es selbst über Sass-Mixins.
+import { resetStyle } from '@nextrap/style-reset/unstyled';
 
 // Styles for your component's shadow DOM
 import style from './nte-tree-node.scss?inline';

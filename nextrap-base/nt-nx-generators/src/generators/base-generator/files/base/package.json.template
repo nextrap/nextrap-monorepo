@@ -25,5 +25,31 @@
     },
     "type": "module",
     "types": "./index.d.ts",
-    "web-types": "./web-types.json"
+    "web-types": "./web-types.json",
+    "exports": {
+        ".": {
+            "sass": "./index.scss",
+            "types": "./index.d.ts",
+            "import": "./index.js",
+            "default": "./index.js"
+        },
+        "./unstyled": {
+            "types": "./unstyled.d.ts",
+            "import": "./unstyled.js",
+            "default": "./unstyled.js"
+        },
+        "./default": {
+            "sass": "./default.scss",
+            "default": "./default.scss"
+        },
+        "./*": "./*"
+    },
+    "sideEffects": true,
+    "typesVersions": {
+        "*": {
+            "unstyled": [
+                "unstyled.d.ts"
+            ]
+        }
+    }
 }

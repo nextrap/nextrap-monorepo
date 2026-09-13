@@ -1,7 +1,8 @@
 import { html, LitElement, TemplateResult, unsafeCSS } from 'lit';
 import { customElement, property, queryAssignedElements } from 'lit/decorators.js';
 
-import { resetStyle } from '@nextrap/style-reset';
+// /unstyled lädt kein Light-DOM-CSS: Die konsumierende Theme-/App-Schicht gestaltet es selbst über Sass-Mixins.
+import { resetStyle } from '@nextrap/style-reset/unstyled';
 import style from './nte-multiselect.scss?inline';
 
 import '../nte-multiselect-item/nte-multiselect-item';

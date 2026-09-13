@@ -1,3 +1,5 @@
-// JavaScript package consumers keep the historical ready-to-use CSS behavior.
-// Sass consumers can choose the API-only `index.scss` or explicit `default.scss`.
+// Teilt Registrierung und API mit /unstyled; dieser SPA-Einstieg lädt die Defaults.
+export * from './unstyled';
+
+// Light-DOM-Defaults verarbeitet der App-Bundler; Themes verwenden /unstyled.
 import './default.scss';

@@ -43,3 +43,7 @@ ntl-card-row.timeline {
 ```
 
 `default-style()` registriert zusätzlich `.with-horizontal-flow` mit den Defaults. Öffentliche Instanzwerte sind `--visible-cols-mobile`, `--horizontal-flow-gap` und `--horizontal-flow-snap`; der vorhandene `main`-Part bleibt die Scrollfläche.
+
+## JavaScript und Theme-Styling
+
+`@nextrap/ntl-card-row` lädt die Default-Light-DOM-Styles automatisch. Für Seaming/Themes `@nextrap/ntl-card-row/unstyled` verwenden: Dieser Import lädt auch transitiv kein Light-DOM-CSS, damit das Theme die Darstellung selbst über die Sass-Mixins bestimmen kann. Sass-Imports behalten den Paketnamen ohne `/unstyled`.

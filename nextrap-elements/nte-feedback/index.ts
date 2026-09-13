@@ -1,28 +1,6 @@
-export * from './src/components/nte-feedback/nte-feedback';
-export * from './src/lib/feedback';
-export * from './src/lib/types';
+// Teilt Registrierung und API mit /unstyled; dieser SPA-Einstieg lädt die Defaults.
+export * from './unstyled';
+import '@nextrap/nte-spinner';
 
-/* this bundles light dom styles by default */
-import './src/styles/index.scss';
-
-import type {
-  NextrapConfirmDetail,
-  NextrapFailDetail,
-  NextrapInfoDetail,
-  NextrapLoadingDetail,
-  NextrapProgressDetail,
-  NextrapSuccessDetail,
-} from './src/lib/types';
-
-declare global {
-  interface WindowEventMap {
-    'nextrap:loading': CustomEvent<NextrapLoadingDetail>;
-    'nextrap:progress': CustomEvent<NextrapProgressDetail>;
-    'nextrap:success': CustomEvent<NextrapSuccessDetail>;
-    'nextrap:fail': CustomEvent<NextrapFailDetail>;
-    'nextrap:info': CustomEvent<NextrapInfoDetail>;
-    'nextrap:confirm': CustomEvent<NextrapConfirmDetail>;
-    'nextrap:feedback-close': CustomEvent<void>;
-    'nextrap:feedback-closed': CustomEvent<void>;
-  }
-}
+// Light-DOM-Defaults verarbeitet der App-Bundler; Themes verwenden /unstyled.
+import './default.scss';

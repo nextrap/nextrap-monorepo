@@ -1,7 +1,8 @@
 import { nextrap_element } from '@nextrap/nt-core';
-import '@nextrap/nte-table';
-import type { NteTableElement } from '@nextrap/nte-table';
-import { resetStyle } from '@nextrap/style-reset';
+// /unstyled lädt kein Light-DOM-CSS: Die konsumierende Theme-/App-Schicht gestaltet es selbst über Sass-Mixins.
+import '@nextrap/nte-table/unstyled';
+import type { NteTableElement } from '@nextrap/nte-table/unstyled';
+import { resetStyle } from '@nextrap/style-reset/unstyled';
 import { html, nothing, type PropertyValues, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 

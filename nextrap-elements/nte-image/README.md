@@ -206,7 +206,7 @@ nte-image.banner {
 
 Mit `style="--nte-image-features: slideshow arrows;"` sind Vor-/Zurück-Buttons dauerhaft sichtbar, auch auf Touch-Geräten. Sie sind per Tastatur erreichbar und lösen in Formularen kein Submit aus. Über `::part(previous-button)` und `::part(next-button)` können Themes die Buttons anpassen; die übrigen dokumentierten Parts sind ebenfalls verfügbar.
 
-`import '@nextrap/nte-image'` benötigt keinen Default-Style-Import und exportiert kein Light-DOM-SCSS. Die Slideshow verwendet ihre funktionalen Shadow-DOM-Regeln und injiziert keine globalen Styles. Die separate bestehende Vollbildansicht bleibt unverändert.
+`import '@nextrap/nte-image/unstyled'` lädt kein Light-DOM-CSS; der normale Import injiziert die Defaults einschließlich der Vollbildansicht. Die Slideshow verwendet ihre funktionalen Shadow-DOM-Regeln und injiziert keine globalen Styles. Die Vollbildansicht verwendet das öffentliche `fullsize-style()`-Mixin; Themes binden es im Scope des Dokument-Portals ausdrücklich ein.
 
 Die neuen Demos `demo/01-stable-frame.demo.ts` und `demo/02-navigation.demo.ts` zeigen wechselnde Hoch-/Querformate, Seitenverhältnisse, feste Maße und Navigation im zentralen Demo-Viewer.
 

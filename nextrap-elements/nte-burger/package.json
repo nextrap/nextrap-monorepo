@@ -1,27 +1,53 @@
 {
-    "name": "@nextrap/nte-burger",
-    "version": "2.0.0",
-    "files": [
-        "*.*",
-        "skills",
-        "src"
-    ],
-    "main": "./index.js",
-    "repository": {
-        "directory": "nextrap-elements/nte-burger",
-        "type": "git",
-        "url": "https://github.com/nextrap/nextrap-monorepo"
+  "name": "@nextrap/nte-burger",
+  "version": "2.0.0",
+  "files": [
+    "*.*",
+    "skills",
+    "src"
+  ],
+  "main": "./index.js",
+  "repository": {
+    "directory": "nextrap-elements/nte-burger",
+    "type": "git",
+    "url": "https://github.com/nextrap/nextrap-monorepo"
+  },
+  "devDependencies": {
+    "@nextrap/style-base": "^2.0.0",
+    "@nextrap/style-typography": "^2.0.0"
+  },
+  "type": "module",
+  "types": "./index.d.ts",
+  "peerDependencies": {
+    "@nextrap/nt-core": "^2.0.0",
+    "@nextrap/nt-framework": "^2.0.0",
+    "@trunkjs/browser-utils": "^1.0.12",
+    "lit": "^3.3.2"
+  },
+  "exports": {
+    ".": {
+      "sass": "./index.scss",
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
     },
-    "devDependencies": {
-        "@nextrap/style-base": "^2.0.0",
-        "@nextrap/style-typography": "^2.0.0"
+    "./unstyled": {
+      "types": "./unstyled.d.ts",
+      "import": "./unstyled.js",
+      "default": "./unstyled.js"
     },
-    "type": "module",
-    "types": "./index.d.ts",
-    "peerDependencies": {
-        "@nextrap/nt-core": "^2.0.0",
-        "@nextrap/nt-framework": "^2.0.0",
-        "@trunkjs/browser-utils": "^1.0.12",
-        "lit": "^3.3.2"
+    "./default": {
+      "sass": "./default.scss",
+      "default": "./default.scss"
+    },
+    "./*": "./*"
+  },
+  "sideEffects": true,
+  "typesVersions": {
+    "*": {
+      "unstyled": [
+        "unstyled.d.ts"
+      ]
     }
+  }
 }

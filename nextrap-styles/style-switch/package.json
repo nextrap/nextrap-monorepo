@@ -12,12 +12,19 @@
     ".": {
       "sass": "./index.scss",
       "types": "./index.d.ts",
+      "import": "./index.js",
       "default": "./index.js"
     },
     "./default": {
       "sass": "./default.scss",
       "default": "./default.scss"
-    }
+    },
+    "./unstyled": {
+      "types": "./unstyled.d.ts",
+      "import": "./unstyled.js",
+      "default": "./unstyled.js"
+    },
+    "./*": "./*"
   },
   "repository": {
     "directory": "nextrap-styles/style-switch",
@@ -27,5 +34,13 @@
   "dependencies": {},
   "devDependencies": {},
   "type": "module",
-  "types": "./index.d.ts"
+  "types": "./index.d.ts",
+  "sideEffects": true,
+  "typesVersions": {
+    "*": {
+      "unstyled": [
+        "unstyled.d.ts"
+      ]
+    }
+  }
 }

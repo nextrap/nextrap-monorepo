@@ -1,0 +1,3 @@
+// Root imports load the existing defaults; /unstyled leaves Light DOM styling to the theme.
+@use './index' as navbar;
+@include navbar.default-style();

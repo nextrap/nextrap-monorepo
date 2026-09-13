@@ -1,7 +1,2 @@
-/**
- * This file contains Light DOM styles.
- */
-
-nte-spinner {
-  color: var(--nt-text-color, inherit);
-}
+// Kompatibler expliziter Output-Einstieg; die Sass-API liegt in index.scss am Package-Root.
+@use '../../default';

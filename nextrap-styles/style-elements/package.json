@@ -1,26 +1,48 @@
 {
-    "name": "@nextrap/style-elements",
-    "version": "2.0.0",
-    "description": "Nextrap reusable element styles: prose, tables, lists, containers, close buttons",
-    "files": [
-        "*.*",
-        "src"
-    ],
-    "main": "./index.js",
-    "repository": {
-        "directory": "nextrap-base/style-elements",
-        "type": "git",
-        "url": "https://github.com/nextrap/nextrap-monorepo"
+  "name": "@nextrap/style-elements",
+  "version": "2.0.0",
+  "description": "Nextrap reusable element styles: prose, tables, lists, containers, close buttons",
+  "files": [
+    "*.*",
+    "src"
+  ],
+  "main": "./index.js",
+  "repository": {
+    "directory": "nextrap-base/style-elements",
+    "type": "git",
+    "url": "https://github.com/nextrap/nextrap-monorepo"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@nextrap/style-base": "^2.0.0",
+    "@nextrap/style-typography": "^2.0.0"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "sass": "./index.scss",
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
     },
-    "dependencies": {},
-    "devDependencies": {
-        "@nextrap/style-base": "^2.0.0",
-        "@nextrap/style-typography": "^2.0.0"
+    "./default": {
+      "sass": "./default.scss",
+      "default": "./default.scss"
     },
-    "type": "module",
-    "exports": {
-        ".": "./index.scss",
-        "./default": "./default.scss"
+    "./unstyled": {
+      "types": "./unstyled.d.ts",
+      "import": "./unstyled.js",
+      "default": "./unstyled.js"
     },
-    "types": "./index.d.ts"
+    "./*": "./*"
+  },
+  "types": "./index.d.ts",
+  "sideEffects": true,
+  "typesVersions": {
+    "*": {
+      "unstyled": [
+        "unstyled.d.ts"
+      ]
+    }
+  }
 }

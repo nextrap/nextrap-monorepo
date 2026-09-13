@@ -31,3 +31,9 @@ jobs:
       - run: npm ci
       - uses: nrwl/nx-set-shas@v4
       - run: npx nx affected -t test build
+
+      # Unstyled must remain CSS-free even through dependencies; build all entry pairs for this contract check.
+      - name: Build styled and unstyled package entries
+        run: npx nx run-many -t build --projects='nte-*,ntl-*,style-*,nt-core'
+      - name: Verify unstyled runtime and generator contract
+        run: node tools/check-unstyled.mjs

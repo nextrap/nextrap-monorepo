@@ -3,7 +3,8 @@ import { html, unsafeCSS } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
 // Styles for the light DOM
-import { resetStyle } from '@nextrap/style-reset';
+// /unstyled lädt kein Light-DOM-CSS: Die konsumierende Theme-/App-Schicht gestaltet es selbst über Sass-Mixins.
+import { resetStyle } from '@nextrap/style-reset/unstyled';
 
 // Styles for your component's shadow DOM
 import style from './ntl-card-row.scss?inline';

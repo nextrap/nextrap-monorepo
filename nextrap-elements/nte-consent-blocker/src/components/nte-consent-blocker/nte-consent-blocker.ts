@@ -1,5 +1,6 @@
 import { nextrap_element, NteFeatures } from '@nextrap/nt-core';
-import { resetStyle } from '@nextrap/style-reset';
+// /unstyled lädt kein Light-DOM-CSS: Die konsumierende Theme-/App-Schicht gestaltet es selbst über Sass-Mixins.
+import { resetStyle } from '@nextrap/style-reset/unstyled';
 import { Listen, waitForDomContentLoaded } from '@trunkjs/browser-utils';
 import { SubLayoutApplyMixin } from '@trunkjs/content-pane';
 import { html, PropertyValues, unsafeCSS } from 'lit';

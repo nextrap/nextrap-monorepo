@@ -59,7 +59,8 @@ Package `exports` in `package.json` must consistently expose both entry points:
 ```json
 {
   "exports": {
-    ".": "./index.scss",
+    ".": { "sass": "./index.scss", "types": "./index.d.ts", "import": "./index.js", "default": "./index.js" },
+    "./unstyled": { "types": "./unstyled.d.ts", "import": "./unstyled.js", "default": "./unstyled.js" },
     "./default": "./default.scss"
   }
 }
@@ -296,3 +297,15 @@ The exact same mixins that generate the default classes are reused here — no s
 - [ ] No private Sass imports from sibling packages (use `--nt-*` vars instead).
 - [ ] `style-base` is not modified to add visual rules.
 - [ ] Package SCSS compiles cleanly with `sass`.
+
+## JavaScript-Entrypoints mit Unstyled-Entrypoints
+
+| Verwendung | Import | Light-DOM-CSS |
+|---|---|---|
+| SPA mit Defaults | `import '@nextrap/nte-card'` | Automatisch aus `default.scss` durch den App-Bundler geladen |
+| Theme/Seaming | `import '@nextrap/nte-card/unstyled'` | Niemals direkt oder transitiv geladen; Theme komponiert Sass-Mixins selbst |
+| Sass-API | `@use '@nextrap/nte-card' as card;` | Keine Ausgabe ohne `@include` |
+
+`unstyled.ts` und `index.ts` teilen dieselbe Komponentenimplementierung und Registrierung. Inline-Shadow-DOM-Styles bleiben im Unstyled-Einstieg. Komponenten importieren andere Komponenten und `style-reset` intern ebenfalls über `/unstyled`, damit ein Theme keine ungewollten Standardstyles erhält. Der normale Einstieg ergänzt die Default-Imports benötigter Komponenten. `style-base` wird nur einmal durch die Anwendung beziehungsweise das Theme geladen.
+
+Der Default-Einstieg verwendet `import './default.scss'`. Der Library-Build erhält den externen Import von `default.scss` in `index.js`; der App-Bundler übersetzt die mitgelieferten SCSS-Dateien. Ein zusätzliches Library-Plugin ist nicht nötig. Das Package fügt selbst keine Style-Elemente ein. Direkte Browser-ESM-Nutzung ohne CSS-fähigen Bundler ist damit nicht der Default-Vertrag. `/unstyled` garantiert Stylesheet-Freiheit im Light DOM, aber keine allgemeine SSR-Kompatibilität der bestehenden Browser-Komponenten.

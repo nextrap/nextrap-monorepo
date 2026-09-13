@@ -41,16 +41,16 @@ export default defineConfig(() => ({
     },
     lib: {
       // Could also be a dictionary or array of multiple entry points.
-      entry: 'index.ts',
+      entry: { index: 'index.ts', unstyled: 'unstyled.ts' },
       name: projectName,
-      fileName: 'index',
+      fileName: (_format, entryName) => `${entryName}.js`,
       // Change this to the formats you want to support.
       // Don't forget to update your package.json as well.
       formats: ['es' as const],
     },
     rollupOptions: {
       // External packages that should not be bundled into your library. IMPORTANT!
-      external: (id) => !id.startsWith('.') && !path.isAbsolute(id),
+      /* Preserve SCSS in index.js for the app build; /unstyled lets themes own Light DOM CSS. */ external: (id) => id === './default.scss' || (!id.startsWith('.') && !path.isAbsolute(id)),
     },
   },
   test: {

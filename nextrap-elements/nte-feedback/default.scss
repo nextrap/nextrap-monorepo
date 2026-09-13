@@ -1,0 +1,6 @@
+// Materialisiert dieselbe Feedback-Baseline wie das Theme.
+@use './index' as feedback;
+
+nte-feedback.style-default {
+  @include feedback.feedback-default();
+}

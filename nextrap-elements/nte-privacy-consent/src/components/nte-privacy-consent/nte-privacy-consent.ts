@@ -1,6 +1,7 @@
 import { nextrap_element } from '@nextrap/nt-core';
-import '@nextrap/nte-dialog';
-import { resetStyle } from '@nextrap/style-reset';
+// /unstyled lädt kein Light-DOM-CSS: Die konsumierende Theme-/App-Schicht gestaltet es selbst über Sass-Mixins.
+import '@nextrap/nte-dialog/unstyled';
+import { resetStyle } from '@nextrap/style-reset/unstyled';
 import { local_storage, session_storage, waitForDomContentLoaded } from '@trunkjs/browser-utils';
 import { html, nothing, PropertyValues, unsafeCSS } from 'lit';
 import style from './nte-privacy-consent.scss?inline';

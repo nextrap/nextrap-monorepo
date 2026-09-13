@@ -1,5 +1,5 @@
-import './src/plugins/built-in-plugins';
+// Teilt Registrierung und API mit /unstyled; dieser SPA-Einstieg lädt die Defaults.
+export * from './unstyled';
 
-export * from './src/components/nte-table/nte-table';
-export * from './src/plugins/built-in-plugins';
-export * from './src/plugins/plugin-registry';
+// Light-DOM-Defaults verarbeitet der App-Bundler; Themes verwenden /unstyled.
+import './default.scss';

@@ -1,0 +1,3 @@
+// Theme-Einstieg: Registrierung und inline Shadow-DOM-Styles bleiben erhalten.
+// Niemals Light-DOM-CSS laden: Themes gestalten die Oberfläche selbst über Sass-Mixins.
+export * from './src/components/<%= name %>/<%= name %>';

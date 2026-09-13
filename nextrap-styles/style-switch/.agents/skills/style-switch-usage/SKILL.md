@@ -36,3 +36,7 @@ Ein Switch steht für eine binäre Einstellung, die unmittelbar wirksam wird. F�
 - Labelposition: `.switch-label-start`
 
 Style- und Größenmodifier werden zusätzlich zu `.switch` am umschließenden Label gesetzt. `.switch-control` bleibt dekorativ und erhält `aria-hidden="true"`.
+
+## JavaScript und Theme-Styling
+
+`@nextrap/style-switch` lädt die Default-Light-DOM-Styles automatisch. Für Seaming/Themes `@nextrap/style-switch/unstyled` verwenden: Dieser Import lädt auch transitiv kein Light-DOM-CSS, damit das Theme die Darstellung selbst über die Sass-Mixins bestimmen kann. Sass-Imports behalten den Paketnamen ohne `/unstyled`.

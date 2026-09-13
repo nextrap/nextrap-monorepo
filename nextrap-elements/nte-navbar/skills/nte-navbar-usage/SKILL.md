@@ -134,3 +134,7 @@ This separation is intentional:
 - The off-canvas component owns overlay/disclosure behavior.
 
 Render separate horizontal and vertical navigation instances for this composition. The relocator keeps their item trees synchronized; it does not preserve submenu state between the independent copies.
+
+## JavaScript und Theme-Styling
+
+`@nextrap/nte-navbar` lädt die Default-Light-DOM-Styles automatisch. Für Seaming/Themes `@nextrap/nte-navbar/unstyled` verwenden: Dieser Import lädt auch transitiv kein Light-DOM-CSS, damit das Theme die Darstellung selbst über die Sass-Mixins bestimmen kann. Sass-Imports behalten den Paketnamen ohne `/unstyled`.

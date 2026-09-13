@@ -4,7 +4,8 @@ import { customElement } from 'lit/decorators.js';
 import style from './ntl-2col.scss?inline';
 
 // Styles for the light DOM
-import { resetStyle } from '@nextrap/style-reset';
+// /unstyled lädt kein Light-DOM-CSS: Die konsumierende Theme-/App-Schicht gestaltet es selbst über Sass-Mixins.
+import { resetStyle } from '@nextrap/style-reset/unstyled';
 
 @customElement('ntl-2col')
 export class Ntl2Col extends nextrap_element({

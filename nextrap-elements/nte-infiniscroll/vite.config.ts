@@ -22,7 +22,7 @@ export default defineConfig(() => ({
   cacheDir: '../../node_modules/.vite/nextrap-elements/nte-infiniscroll',
   plugins: [
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md']),
+    nxCopyAssetsPlugin(['**/*.scss', '*.scss', '*.md']),
     dts({
       entryRoot: '.',
       aliasesExclude: [/@nextrap\/.*/],
@@ -44,16 +44,18 @@ export default defineConfig(() => ({
     },
     lib: {
       // Could also be a dictionary or array of multiple entry points.
-      entry: 'index.ts',
+      entry: { index: 'index.ts', unstyled: 'unstyled.ts' },
       name: 'nte-infiniscroll',
-      fileName: 'index',
+      fileName: (_format, entryName) => `${entryName}.js`,
       // Change this to the formats you want to support.
       // Don't forget to update your package.json as well.
       formats: ['es' as const],
     },
     rollupOptions: {
       // External packages that should not be bundled into your library.
-      external: [],
+      // Keep the stylesheet import in index.js; the consuming app compiles SCSS.
+      // /unstyled skips these defaults so themes can supply their own Light DOM CSS.
+      external: (id) => id === './default.scss',
     },
   },
 }));

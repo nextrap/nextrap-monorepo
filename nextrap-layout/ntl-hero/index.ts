@@ -1,2 +1,5 @@
-// Registriert die Komponente; die Anwendung bindet Light-DOM-Styles über Sass ein.
-export * from './src/components/ntl-hero/ntl-hero';
+// Teilt Registrierung und API mit /unstyled; dieser SPA-Einstieg lädt die Defaults.
+export * from './unstyled';
+
+// Light-DOM-Defaults verarbeitet der App-Bundler; Themes verwenden /unstyled.
+import './default.scss';

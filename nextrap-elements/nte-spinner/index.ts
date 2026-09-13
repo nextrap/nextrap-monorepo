@@ -1,4 +1,5 @@
-export * from './src/components/nte-spinner/nte-spinner';
+// Teilt Registrierung und API mit /unstyled; dieser SPA-Einstieg lädt die Defaults.
+export * from './unstyled';
 
-/* this bundles light dom styles by default */
-import './src/styles/index.scss';
+// Light-DOM-Defaults verarbeitet der App-Bundler; Themes verwenden /unstyled.
+import './default.scss';
