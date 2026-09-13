@@ -1,5 +1,4 @@
 /// <reference types='vitest' />
-import { defaultStylesPlugin } from '../../tools/default-styles-plugin';
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import * as path from 'path';
@@ -19,7 +18,6 @@ export default defineConfig(() => ({
   root: __dirname,
   cacheDir: `../../node_modules/.vite/${dirName}`,
   plugins: [
-    defaultStylesPlugin(),
     nxViteTsPaths(),
     // Übernimmt Dokumentation und die öffentliche Sass-API vollständig in das npm-Artefakt.
     nxCopyAssetsPlugin(['*.md', '*.scss', '**/*.scss']),
@@ -45,7 +43,6 @@ export default defineConfig(() => ({
     lib: {
       // Could also be a dictionary or array of multiple entry points.
       entry: { index: 'index.ts', unstyled: 'unstyled.ts' },
-      cssFileName: 'default',
       name: 'NteMultiselect',
       fileName: (_format, entryName) => `${entryName}.js`,
       // Change this to the formats you want to support.
@@ -54,7 +51,9 @@ export default defineConfig(() => ({
     },
     rollupOptions: {
       // Lit einschließlich Subpfaden bleibt extern; der bestehende Style-Reset wird weiter eingebunden.
-      external: (id) => !id.startsWith('.') && !path.isAbsolute(id) && id !== '@nextrap/style-reset',
+      // Keep the stylesheet import in index.js; the consuming app compiles SCSS.
+      // /unstyled skips these defaults so themes can supply their own Light DOM CSS.
+      external: (id) => id === './default.scss' || (!id.startsWith('.') && !path.isAbsolute(id)) && id !== '@nextrap/style-reset',
       output: {
         globals: {
           lit: 'Lit',

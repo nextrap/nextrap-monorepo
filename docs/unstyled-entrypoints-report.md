@@ -2,9 +2,9 @@
 
 ## Vertrag und Entscheidung
 
-Der normale JavaScript-Import bindet `default.scss` ohne `?inline` ein. Der Library-Build liefert `default.css` und erhält dessen Import in `index.js`; der App-Bundler lädt die Light-DOM-Defaults. `/unstyled` enthält dieselbe Logik, Registrierung und inline Shadow-DOM-Styles, aber niemals direkte oder transitive Light-DOM-Stylesheets. Themes komponieren die öffentliche, ausgabefreie Sass-API selbst. Der Name ist ausschließlich `unstyled`; es gibt keinen alternativen `/core`-Einstieg oder eine Übergangslogik. Das bestehende Logikpaket `@nextrap/nt-core` behält seinen Namen.
+Der normale JavaScript-Import bindet `default.scss` ohne `?inline` ein. Der Library-Build erhält `import './default.scss'` in `index.js`; der App-Bundler übersetzt die mitgelieferten SCSS-Quellen und übernimmt die Light-DOM-Defaults. `/unstyled` enthält dieselbe Logik, Registrierung und inline Shadow-DOM-Styles, aber niemals direkte oder transitive Light-DOM-Stylesheets. Themes komponieren die öffentliche, ausgabefreie Sass-API selbst. Der Name ist ausschließlich `unstyled`; es gibt keinen alternativen `/core`-Einstieg oder eine Übergangslogik. Das bestehende Logikpaket `@nextrap/nt-core` behält seinen Namen.
 
-Vite extrahiert Library-CSS. `defaultStylesPlugin` ergänzt deshalb ausschließlich im gebauten Default-Einstieg den Import der erzeugten CSS-Datei. Die Quellen verwenden einfach `import './default.scss'`; DOM-Injektionscode entfällt. Beide ESM-Einstiege teilen ihre Implementierung; `sideEffects` erhält Registrierung und CSS-Imports. Interne Komponentenimporte verwenden `/unstyled`; der Default-Einstieg ergänzt benötigte Default-Pakete.
+`./default.scss` ist im Library-Build extern, damit Vite den Import nicht durch eine separate, unverknüpfte CSS-Datei ersetzt. Ein zusätzliches Plugin ist nicht enthalten. Beide ESM-Einstiege teilen ihre Implementierung; `sideEffects` erhält Registrierung und Stylesheet-Imports. Interne Komponentenimporte verwenden `/unstyled`, soweit dies für die transitive Stylesheet-Freiheit nötig ist; der Default-Einstieg ergänzt deren Default-Pakete.
 
 ## Bearbeitete Pakete
 
@@ -60,9 +60,10 @@ Alle 30 NTE-, 6 NTL- und 7 Style-Pakete wurden umgestellt. Hinzu kommen Generato
 
 - `nte-image`: bisher beim Öffnen injiziertes Vollbild-CSS in die öffentliche `fullsize-style()`-Mixin verschoben. Der Default-Import bindet sie ein; Themes übernehmen sie in ihrem Scope. Die aktuelle Bild-URL bleibt Instanzzustand.
 - `nte-feedback`: defekten Sass-Forward repariert; vorhandene `feedback-default()`-Mixin wiederverwendet.
-- `nte-spinner`: Light-DOM-Baseline in Sass-API überführt und automatische `style-default`-Klasse ergänzt.
+- `nte-spinner`: Light-DOM-Baseline in Sass-API überführt; die ursprünglichen Host-Selektoren bleiben erhalten.
 - `ntl-form`: bestehende Formatierungsregeln in eine ausgabefreie Mixin-API überführt.
-- `nte-accordion`, `nte-card`, `ntl-2col`, `ntl-card-row`, `nte-dialog`, `nte-navbar`: Default-Selektoren auf die jeweilige Komponente begrenzt; globale `.default`-/`.style-default`-Kollisionen vermieden.
+- Zusätzliche Selektoränderungen an Accordion, Card, 2col, Card-Row, Dialog und Navbar sind zurückgenommen. Bestehende globale Default-/Modifier-Selektoren bleiben unverändert und sollten bei der SPA-Prüfung auf Wechselwirkungen geprüft werden.
+- Fehlende SCSS-Kopiermuster in zehn Library-Konfigurationen ergänzt, damit der externe Default-Import im veröffentlichten Paket aufgelöst wird.
 - Fehlende oder leere Sass-APIs/Defaults vereinheitlicht; vorhandene historische Sass-Unterpfade bleiben auf dieselbe Default-Quelle bezogen.
 
 ## Validierung
@@ -72,13 +73,13 @@ Alle 30 NTE-, 6 NTL- und 7 Style-Pakete wurden umgestellt. Hinzu kommen Generato
 - `node tools/check-unstyled.mjs`: Consumer-Builds aller 43 Unstyled-Importgraphen ohne CSS-Ausgabe; nichtleere Defaults im CSS des Default-Consumer-Builds enthalten. Isoliertes jsdom bestätigt gleiche Exportmenge/-identität und keine manuelle Light-DOM-Injektion beider Einstiege.
 - Bild-Vollansicht per API geöffnet: Portal vorhanden, kein globales Stylesheet injiziert.
 - Echte Nx-Generatorvorlagen im In-Memory-Tree gerendert: `unstyled.ts`, Root-Reexport und Package-Export vorhanden. Der vollständige Nx-Library-Generator wurde nicht end-to-end ausgeführt.
-- ThemeJS2-Sass für alle sechs Themes kompiliert; Vite-Site-Build gegen diese neuen Nextrap-Artefakte erfolgreich.
+- Alle sechs ThemeJS2-Sass-Einstiege sowie der Vite-Site-Build gegen die neuen Nextrap-Unstyled-Artefakte erfolgreich.
 
-Die native Dart-Runtime von `sass-embedded` startet in dieser Arbeitsumgebung nicht (Stack-Bounds-Fehler). Für die lokale Library-Validierung wurde dasselbe SCSS mit der JavaScript-Ausgabe von Dart Sass kompiliert: Light-DOM-Styles als CSS an Vite übergeben, Shadow-DOM-Styles weiterhin inline. Die regulären Build-Konfigurationen enthalten keinen Umgebungs-Workaround. CI führt den normalen Build und den eingecheckten Vertragstest aus.
+Die native Dart-Runtime von `sass-embedded` startet in dieser Arbeitsumgebung nicht (Stack-Bounds-Fehler). Für die lokale Library-Validierung wurde dasselbe SCSS mit der JavaScript-Ausgabe von Dart Sass kompiliert: Shadow-DOM-Styles weiterhin inline; externe Light-DOM-SCSS-Quellen erst im Consumer-Test übersetzt. Die regulären Build-Konfigurationen enthalten keinen Umgebungs-Workaround. CI führt den normalen Build und den eingecheckten Vertragstest aus.
 
 Die bestehenden Chrome-Spacing-Fixtures für `nte-card` und `ntl-2col` verwenden ebenfalls `/unstyled`: Ihre Sass-Regeln gehören dem Test-Theme und dürfen nicht von automatisch geladenen Defaults überlagert werden.
 
-Die Dependency-Felder sämtlicher Paketmanifeste und der Generatorvorlage entsprechen unverändert dem Ausgangsstand des PRs. `nte-dialog-component` erhält ausschließlich zusätzliche CSS-/SCSS-Muster in seiner Publish-Dateiliste, damit erzeugte Styles und die Sass-API mitgeliefert werden.
+Die Dependency-Felder sämtlicher Paketmanifeste und der Generatorvorlage entsprechen unverändert dem Ausgangsstand des PRs. `nte-dialog-component` erhält ausschließlich zusätzliche CSS-/SCSS-Muster in seiner Publish-Dateiliste, damit Stylesheet-Quellen und die Sass-API mitgeliefert werden.
 
 ## Noch zu beachten
 
@@ -87,7 +88,7 @@ Die Dependency-Felder sämtlicher Paketmanifeste und der Generatorvorlage entspr
 - Pakete mit leeren Defaults sind absichtlich keine erfundenen Designs. Bei gewünschter visueller SPA-Baseline diese Pakete gesondert gestalten.
 - `nte-input-old` und `nte-input` bleiben alternative Implementierungen mit bestehenden Registrierungsüberschneidungen; sie wurden isoliert geprüft.
 - Ein Default-Import von `nte-data-table` bindet Tabellen-CSS auch über seine Sass-Zusammenstellung ein; bei gleichzeitiger Nutzung des Tabellen-Defaults sind identische Regeln möglich.
-- Die Default-Entrypoints benötigen einen CSS-fähigen App-Bundler. CSS-Auslieferung und CSP liegen bei der Anwendung; es gibt keine manuelle Style-Injektion im Package. SSR-Kompatibilität ist durch die Styling-Trennung nicht zugesichert.
+- Die Default-Entrypoints benötigen einen SCSS-fähigen App-Bundler mit Sass-Compiler. CSS-Auslieferung und CSP liegen bei der Anwendung; es gibt keine manuelle Style-Injektion im Package. SSR-Kompatibilität ist durch die Styling-Trennung nicht zugesichert.
 
 ## Geänderte Dateien
 
@@ -99,6 +100,7 @@ Die Dependency-Felder sämtlicher Paketmanifeste und der Generatorvorlage entspr
 - `README_STYLING.md`
 - `docs/nextrap-elements-concept.md`
 - `docs/style-packages-architecture.md`
+- `docs/unstyled-entrypoints-report.md`
 - `nextrap-base/nt-nx-generators/src/generators/base-generator/files/base/README.md.template`
 - `nextrap-base/nt-nx-generators/src/generators/base-generator/files/base/default.scss.template`
 - `nextrap-base/nt-nx-generators/src/generators/base-generator/files/base/index.ts.template`
@@ -110,7 +112,6 @@ Die Dependency-Felder sämtlicher Paketmanifeste und der Generatorvorlage entspr
 - `nextrap-base/nt-nx-generators/src/generators/base-generator/files/base/vite.config.ts.template`
 - `nextrap-base/nt-skill/skills/nextrap-api-skill/SKILL.md`
 - `nextrap-elements/nte-accordion/.ai-usage-info.md`
-- `nextrap-elements/nte-accordion/default.scss`
 - `nextrap-elements/nte-accordion/index.ts`
 - `nextrap-elements/nte-accordion/package.json`
 - `nextrap-elements/nte-accordion/skills/nte-accordion-theming/SKILL.md`
@@ -131,10 +132,10 @@ Die Dependency-Felder sämtlicher Paketmanifeste und der Generatorvorlage entspr
 - `nextrap-elements/nte-burger/unstyled.ts`
 - `nextrap-elements/nte-burger/vite.config.ts`
 - `nextrap-elements/nte-card/.ai-usage-info.md`
-- `nextrap-elements/nte-card/default.scss`
 - `nextrap-elements/nte-card/index.ts`
 - `nextrap-elements/nte-card/package.json`
 - `nextrap-elements/nte-card/src/components/nte-card/nte-card.ts`
+- `nextrap-elements/nte-card/tests/spacing.browser.mjs`
 - `nextrap-elements/nte-card/tsconfig.lib.json`
 - `nextrap-elements/nte-card/unstyled.ts`
 - `nextrap-elements/nte-card/vite.config.ts`
@@ -178,11 +179,9 @@ Die Dependency-Felder sämtlicher Paketmanifeste und der Generatorvorlage entspr
 - `nextrap-elements/nte-dialog-component/unstyled.ts`
 - `nextrap-elements/nte-dialog-component/vite.config.ts`
 - `nextrap-elements/nte-dialog/.ai-usage-info.md`
-- `nextrap-elements/nte-dialog/default.scss`
 - `nextrap-elements/nte-dialog/index.ts`
 - `nextrap-elements/nte-dialog/package.json`
 - `nextrap-elements/nte-dialog/src/components/nte-dialog/nte-dialog.ts`
-- `nextrap-elements/nte-dialog/src/scss/_with-modifier-classes.scss`
 - `nextrap-elements/nte-dialog/tsconfig.lib.json`
 - `nextrap-elements/nte-dialog/unstyled.ts`
 - `nextrap-elements/nte-dialog/vite.config.ts`
@@ -269,7 +268,6 @@ Die Dependency-Felder sämtlicher Paketmanifeste und der Generatorvorlage entspr
 - `nextrap-elements/nte-navbar/index.ts`
 - `nextrap-elements/nte-navbar/package.json`
 - `nextrap-elements/nte-navbar/skills/nte-navbar-usage/SKILL.md`
-- `nextrap-elements/nte-navbar/src/scss/default-style.scss`
 - `nextrap-elements/nte-navbar/tsconfig.lib.json`
 - `nextrap-elements/nte-navbar/unstyled.ts`
 - `nextrap-elements/nte-navbar/vite.config.ts`
@@ -347,7 +345,6 @@ Die Dependency-Felder sämtlicher Paketmanifeste und der Generatorvorlage entspr
 - `nextrap-elements/nte-spinner/index.ts`
 - `nextrap-elements/nte-spinner/package.json`
 - `nextrap-elements/nte-spinner/skills/nte-spinner-usage/SKILL.md`
-- `nextrap-elements/nte-spinner/src/components/nte-spinner/nte-spinner.ts`
 - `nextrap-elements/nte-spinner/src/scss/_default-style.scss`
 - `nextrap-elements/nte-spinner/src/styles/index.scss`
 - `nextrap-elements/nte-spinner/tsconfig.lib.json`
@@ -408,10 +405,10 @@ Die Dependency-Felder sämtlicher Paketmanifeste und der Generatorvorlage entspr
 - `nextrap-layout/ntl-2col/.agents/skills/ntl-2col-theming/SKILL.md`
 - `nextrap-layout/ntl-2col/.agents/skills/ntl-2col-usage/SKILL.md`
 - `nextrap-layout/ntl-2col/.ai-usage-info.md`
-- `nextrap-layout/ntl-2col/default.scss`
 - `nextrap-layout/ntl-2col/index.ts`
 - `nextrap-layout/ntl-2col/package.json`
 - `nextrap-layout/ntl-2col/src/components/ntl-2col/ntl-2col.ts`
+- `nextrap-layout/ntl-2col/tests/spacing.browser.mjs`
 - `nextrap-layout/ntl-2col/tsconfig.lib.json`
 - `nextrap-layout/ntl-2col/unstyled.ts`
 - `nextrap-layout/ntl-2col/vite.config.ts`
@@ -429,7 +426,6 @@ Die Dependency-Felder sämtlicher Paketmanifeste und der Generatorvorlage entspr
 - `nextrap-layout/ntl-card-row/.agents/skills/ntl-card-row-theming/SKILL.md`
 - `nextrap-layout/ntl-card-row/.agents/skills/ntl-card-row-usage/SKILL.md`
 - `nextrap-layout/ntl-card-row/.ai-usage-info.md`
-- `nextrap-layout/ntl-card-row/default.scss`
 - `nextrap-layout/ntl-card-row/index.ts`
 - `nextrap-layout/ntl-card-row/package.json`
 - `nextrap-layout/ntl-card-row/src/components/ntl-card-row/ntl-card-row.ts`
@@ -517,9 +513,3 @@ Die Dependency-Felder sämtlicher Paketmanifeste und der Generatorvorlage entspr
 - `nextrap-styles/style-utils/vite.config.ts`
 - `tools/check-unstyled.mjs`
 - `tsconfig.base.json`
-
-- `nextrap-elements/nte-card/tests/spacing.browser.mjs`
-- `nextrap-layout/ntl-2col/tests/spacing.browser.mjs`
-
-- `tools/default-styles-plugin.ts`
-- `nextrap-base/nt-nx-generators/src/generators/base-generator/files/base/default-styles-plugin.ts.template`

@@ -13,6 +13,14 @@ const require = createRequire(import.meta.url);
 // Use the bundler installed with Vite, matching the repository's build toolchain.
 const { build } = createRequire(require.resolve('vite/package.json'))('esbuild');
 const { JSDOM } = require('jsdom');
+const sass = require('sass-embedded');
+// Model the consuming app: compile shipped SCSS, without a library-build plugin.
+const consumerSass = { name: 'consumer-sass', setup(builder) {
+  builder.onLoad({ filter: /\.scss$/ }, async ({ path }) => ({
+    contents: (await sass.compileAsync(path, { loadPaths: [resolve(root, 'node_modules')], logger: sass.Logger.silent })).css,
+    loader: 'css',
+  }));
+} };
 const packages = ['nextrap-elements', 'nextrap-layout', 'nextrap-styles'].flatMap(group =>
   readdirSync(resolve(root, group)).filter(name => existsSync(resolve(root, group, name, 'package.json'))).map(name => `${group}/${name}`));
 const aliases = Object.fromEntries(packages.flatMap(p => [
@@ -28,18 +36,20 @@ for (const p of packages) {
   const unstyledBuild = await build({
     stdin: { contents: `import ${JSON.stringify(aliases[pkg.name + '/unstyled'])};`, resolveDir: root },
     bundle: true, format: 'iife', write: false, alias: aliases, logLevel: 'silent',
-    outdir: resolve(root, 'dist/.unstyled-check'),
+    outdir: resolve(root, 'dist/.unstyled-check'), plugins: [consumerSass],
   });
   assert.ok(!unstyledBuild.outputFiles.some(file => file.path.endsWith('.css')), `${p}: unstyled bundles CSS`);
   const result = await build({
     stdin: { contents: `import * as plain from ${JSON.stringify(aliases[pkg.name + '/unstyled'])}; globalThis.plain = plain; globalThis.loadStyled = () => import(${JSON.stringify(aliases[pkg.name])});`, resolveDir: root },
     bundle: true, format: 'iife', write: false, alias: aliases, logLevel: 'silent',
-    outdir: resolve(root, 'dist/.unstyled-check'),
+    outdir: resolve(root, 'dist/.unstyled-check'), plugins: [consumerSass],
   });
   // Nichtleere Defaults müssen durch den veröffentlichten JS-Import im App-CSS ankommen.
-  const defaultCss = resolve(root, 'dist', p, 'default.css');
-  if (existsSync(defaultCss) && readFileSync(defaultCss, 'utf8').trim()) {
-    assert.match(readFileSync(aliases[pkg.name], 'utf8'), /import ["']\.\/default\.css["']/);
+  const defaultScss = resolve(root, 'dist', p, 'default.scss');
+  assert.ok(existsSync(defaultScss), `${p}: missing published SCSS`);
+  assert.match(readFileSync(aliases[pkg.name], 'utf8'), /import ["']\.\/default\.scss["']/);
+  const { css } = await sass.compileAsync(defaultScss, { loadPaths: [resolve(root, 'node_modules')], logger: sass.Logger.silent });
+  if (css.trim()) {
     assert.ok(result.outputFiles.some(file => file.path.endsWith('.css') && file.text.trim()), `${p}: defaults missing from consumer CSS`);
   }
   const dom = new JSDOM('<!doctype html><html><head></head><body></body></html>', { url: 'https://example.org', runScripts: 'outside-only', pretendToBeVisual: true });

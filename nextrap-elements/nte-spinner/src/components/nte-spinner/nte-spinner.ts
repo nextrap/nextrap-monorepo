@@ -23,13 +23,6 @@ const template = `
 </div>`;
 
 export class NteSpinnerElement extends HTMLElement {
-  // Nur ohne explizite Theme-Variante die automatisch geladene Baseline auswählen.
-  connectedCallback() {
-    if (!Array.from(this.classList).some((name) => name.startsWith('style-'))) {
-      this.classList.add('style-default');
-    }
-  }
-
   constructor() {
     super();
 

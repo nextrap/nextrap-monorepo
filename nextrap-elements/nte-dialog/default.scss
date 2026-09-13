@@ -1,6 +1,6 @@
 @use './index' as dialog;
 
-nte-dialog.style-default {
+nte-dialog {
   @include dialog.style-default();
 }
 

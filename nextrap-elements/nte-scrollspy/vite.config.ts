@@ -1,5 +1,4 @@
 /// <reference types='vitest' />
-import { defaultStylesPlugin } from '../../tools/default-styles-plugin';
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import { tjDemoViewerPlugin } from '@trunkjs/vite-demo-viewer';
@@ -19,9 +18,8 @@ export default defineConfig(() => ({
   root: __dirname,
   cacheDir: `../../node_modules/.vite/${dirName}`,
   plugins: [
-    defaultStylesPlugin(),
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md']),
+    nxCopyAssetsPlugin(['**/*.scss', '*.scss', '*.md']),
     tjDemoViewerPlugin({
       include: ['demo/**/*.demo.ts'],
       route: '/',
@@ -49,7 +47,6 @@ export default defineConfig(() => ({
     lib: {
       // Could also be a dictionary or array of multiple entry points.
       entry: { index: 'index.ts', unstyled: 'unstyled.ts' },
-      cssFileName: 'default',
       name: projectName,
       fileName: (_format, entryName) => `${entryName}.js`,
       // Change this to the formats you want to support.
@@ -58,7 +55,7 @@ export default defineConfig(() => ({
     },
     rollupOptions: {
       // External packages that should not be bundled into your library. IMPORTANT!
-      external: (id) => !id.startsWith('.') && !path.isAbsolute(id),
+      /* Preserve SCSS in index.js for the app build; /unstyled lets themes own Light DOM CSS. */ external: (id) => id === './default.scss' || (!id.startsWith('.') && !path.isAbsolute(id)),
     },
   },
   test: {

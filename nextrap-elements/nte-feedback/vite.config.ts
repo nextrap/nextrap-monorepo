@@ -1,5 +1,4 @@
 /// <reference types='vitest' />
-import { defaultStylesPlugin } from '../../tools/default-styles-plugin';
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import { tjDemoViewerPlugin } from '@trunkjs/vite-demo-viewer';
@@ -15,9 +14,8 @@ export default defineConfig(() => ({
   root: __dirname,
   cacheDir: `../../node_modules/.vite/${dirName}`,
   plugins: [
-    defaultStylesPlugin(),
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md', '*.scss', 'src/scss/**/*.scss', 'skills/**/*', 'web-types.json']),
+    nxCopyAssetsPlugin(['**/*.scss', '*.md', '*.scss', 'src/scss/**/*.scss', 'skills/**/*', 'web-types.json']),
     { name: 'watch-md-reload', handleHotUpdate({ file, server }) { if (file.endsWith('.md')) server.ws.send({ type: 'full-reload' }); } },
     tjDemoViewerPlugin({ include: ['demo/**/*.demo.ts'] }),
     dts({ entryRoot: '.', aliasesExclude: [/@nextrap\/.*/], tsconfigPath: path.join(__dirname, 'tsconfig.lib.json') }),
@@ -28,8 +26,10 @@ export default defineConfig(() => ({
     reportCompressedSize: true,
     commonjsOptions: { transformMixedEsModules: true },
     lib: { entry: { index: 'index.ts', unstyled: 'unstyled.ts' },
-      cssFileName: 'default', name: projectName, fileName: (_format, entryName) => `${entryName}.js`, formats: ['es' as const] },
-    rollupOptions: { external: (id) => !id.startsWith('.') && !path.isAbsolute(id) },
+      name: projectName, fileName: (_format, entryName) => `${entryName}.js`, formats: ['es' as const] },
+    rollupOptions: { // Keep the stylesheet import in index.js; the consuming app compiles SCSS.
+      // /unstyled skips these defaults so themes can supply their own Light DOM CSS.
+      external: (id) => id === './default.scss' || (!id.startsWith('.') && !path.isAbsolute(id)) },
   },
   test: {
     passWithNoTests: true,

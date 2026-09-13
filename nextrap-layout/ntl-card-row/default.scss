@@ -1,6 +1,10 @@
-// Materialisiert die öffentliche Baseline einschließlich ihrer Modifier nur für ntl-card-row.
-@use './index' as component;
+@use './index' as mixin;
 
-ntl-card-row.style-default {
-  @include component.default-style();
+.style-default {
+  @include mixin.default-style();
+}
+
+.footer-separators,
+.style-footer {
+  @include mixin.with-footer-separators();
 }
