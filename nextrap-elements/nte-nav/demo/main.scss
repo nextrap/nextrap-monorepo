@@ -1,12 +1,5 @@
 @use '../index' as nav;
 
-// Die App kombiniert die bestehende Baseline mit dem optionalen Baum-Feature.
-.nte-nav-demo nte-nav.style-default.with-tree {
-  @include nav.default-style();
-  @include nav.with-tree();
-  max-inline-size: 28rem;
-}
-
 .nte-nav-demo {
   min-block-size: 22rem;
   padding: 2rem;

@@ -1,29 +1,30 @@
-import type { NteNavItemCurrent } from './components/nte-nav-item/nte-nav-item';
+import type { TreeItemCurrent } from './components/nte-treeview-item';
 
 /** Beschreibt einen Link, einen Ordner oder einen verlinkten Elternpunkt. */
-export interface NavigationTreeElement {
+export interface TreeNode {
   /** Unter Geschwistern eindeutiger, während der Lebensdauer stabiler Schlüssel. */
   readonly id: string;
   label: string;
   href?: string;
   target?: string;
   rel?: string;
-  current?: NteNavItemCurrent;
-  /** Steuert ausschließlich native Inline-Untermenüs, keine Popover. */
+  current?: TreeItemCurrent;
+  /** Steuert ausschließlich den Unterbaum unabhängig vom Link. */
   expanded?: boolean;
-  /** Nur für horizontale Navigation ausdrücklich aktivieren. */
-  submenuPopover?: boolean;
-  children?: NavigationTreeElement[];
+  /** Reaktive Zusatzwerte für die optionalen Center-/End-Renderer. */
+  meta?: Record<string, string | number | boolean | null>;
+  children?: TreeNode[];
 }
 
-/** Teilt einen beobachtbaren Navigationsbaum zwischen Anwendung und Navigation. */
-export class NavigationTree {
-  public readonly children: NavigationTreeElement[];
+/** Verwendung und Änderungsvertrag: siehe ../examples/README.md.
+ * Teilt einen beobachtbaren Baum zwischen Anwendung und TreeView. */
+export class TreeModel {
+  public readonly children: TreeNode[];
   private readonly _listeners = new Set<() => void>();
   private readonly _proxies = new WeakMap<object, object>();
 
   /** Übernimmt eine Kopie; spätere Änderungen erfolgen an tree.children. */
-  constructor(children: NavigationTreeElement[] = []) {
+  constructor(children: TreeNode[] = []) {
     this.children = this._observe(this._copyNodes(children));
   }
 
@@ -34,9 +35,10 @@ export class NavigationTree {
   }
 
   /** Kopiert ausschließlich die öffentlichen Daten ohne fremde Objektprototypen. */
-  private _copyNodes(nodes: NavigationTreeElement[]): NavigationTreeElement[] {
+  private _copyNodes(nodes: TreeNode[]): TreeNode[] {
     return nodes.map((node) => ({
       ...node,
+      ...(node.meta ? { meta: { ...node.meta } } : {}),
       ...(node.children ? { children: this._copyNodes(node.children) } : {}),
     }));
   }
