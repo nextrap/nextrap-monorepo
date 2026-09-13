@@ -1,13 +1,13 @@
 @use 'with-btn-compat' as btn-compat;
 
-// Provides the reusable public default styling mixin for navbar state and utility classes.
-@mixin default-style() {
+// Das Theme kann den Host-Selektor bestimmen; der SPA-Default beschränkt alle Regeln auf .style-default.
+@mixin default-style($host: 'nte-navbar') {
   // Keeps legacy button controls from touching the navbar line edges.
-  @include btn-compat.with-btn-compat();
+  #{ $host } { @include btn-compat.with-btn-compat(); }
 
   // Animates optional navbar-line size and position changes from public light-DOM state classes.
-  nte-navbar-line.with-collapse-on-scroll,
-  nte-navbar-line.hide-on-scroll {
+  #{$host} nte-navbar-line.with-collapse-on-scroll,
+  #{$host} nte-navbar-line.hide-on-scroll {
     transition:
       block-size 0.2s ease-in-out,
       max-block-size 0.2s ease-in-out,
@@ -16,7 +16,7 @@
   }
 
   // Slides and collapses the opt-in top line when the parent navbar is scrolled.
-  nte-navbar.is-scrolled > nte-navbar-line.with-collapse-on-scroll {
+  #{$host}.is-scrolled > nte-navbar-line.with-collapse-on-scroll {
     block-size: 0;
     max-block-size: 0;
     opacity: 0;
@@ -24,14 +24,14 @@
   }
 
   // Hides compatibility lines after the configured navbar threshold.
-  nte-navbar.is-below-threshold > nte-navbar-line.hide-on-scroll {
+  #{$host}.is-below-threshold > nte-navbar-line.hide-on-scroll {
     block-size: 0;
     max-block-size: 0;
     opacity: 0;
   }
 
   // Aligns the brand logo and its dimensions within a navbar line.
-  .brand-logo {
+  #{$host} .brand-logo {
     --nt-navbar-brand-logo-aspect-ratio: 3 / 1;
 
     position: relative;
@@ -49,33 +49,33 @@
       max-inline-size 0.2s ease-in-out;
   }
 
-  .brand-logo[slot='start'] {
+  #{$host} .brand-logo[slot='start'] {
     justify-content: flex-start;
     margin-inline-end: auto;
   }
 
-  .brand-logo[slot='center'] {
+  #{$host} .brand-logo[slot='center'] {
     justify-content: center;
     margin-inline: auto;
   }
 
-  .brand-logo[slot='end'] {
+  #{$host} .brand-logo[slot='end'] {
     justify-content: flex-end;
     margin-inline-start: auto;
   }
 
   // Reserves an inner focus frame so the indicator remains visible at clipped container edges.
-  .brand-logo {
+  #{$host} .brand-logo {
     box-sizing: border-box;
     border: 2px solid transparent;
   }
 
-  .brand-logo:focus-visible {
+  #{$host} .brand-logo:focus-visible {
     border-color: var(--nt-primary, #0d6efd);
     outline: 0;
   }
 
-  .brand-logo > img {
+  #{$host} .brand-logo > img {
     display: block;
     inline-size: 100%;
     block-size: 100%;
@@ -88,15 +88,15 @@
       block-size 0.2s ease-in-out;
   }
 
-  .brand-logo[slot='start'] > img {
+  #{$host} .brand-logo[slot='start'] > img {
     object-position: left center;
   }
 
-  .brand-logo[slot='end'] > img {
+  #{$host} .brand-logo[slot='end'] > img {
     object-position: right center;
   }
 
-  .navbar-control {
+  #{$host} .navbar-control {
     position: relative;
     z-index: var(--nt-navbar-control-z-index, 2);
     min-inline-size: 0;

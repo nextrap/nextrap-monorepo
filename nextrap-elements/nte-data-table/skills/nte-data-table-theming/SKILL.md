@@ -11,3 +11,7 @@ description: "Theme @nextrap/nte-data-table through its composed nte-table and d
 - Data renderers may return deliberate Nodes for semantic content; instance-specific presentation belongs in renderer output or application classes.
 
 See `../nte-data-table-usage/SKILL.md` and `demo/01-data.demo.ts`.
+
+## JavaScript und Theme-Styling
+
+`@nextrap/nte-data-table` lädt die Default-Light-DOM-Styles automatisch. Für Seaming/Themes `@nextrap/nte-data-table/unstyled` verwenden: Dieser Import lädt auch transitiv kein Light-DOM-CSS, damit das Theme die Darstellung selbst über die Sass-Mixins bestimmen kann. Sass-Imports behalten den Paketnamen ohne `/unstyled`.

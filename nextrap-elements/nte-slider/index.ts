@@ -1,8 +1,13 @@
-export * from './src/components/nte-slide/nte-slide';
-export * from './src/components/nte-slider/nte-slider';
+// Teilt Registrierung und API mit /unstyled; nur dieser SPA-Einstieg lädt die Defaults.
+export * from './unstyled';
 
-// If mixin exisists, export it
-// export * from './src/mixins/NteSliderMixin';
+// Inline-Kompilierung erhält die automatische Einbindung auch im veröffentlichten ESM-Build.
+import defaultStyles from './default.scss?inline';
 
-/* this bundles light dom styles by default */
-import './src/styles/index.scss';
+// Ein Stylesheet pro Package und Dokument; /unstyled erreicht diesen Block niemals.
+if (typeof document !== 'undefined' && defaultStyles.trim() && !document.getElementById('nextrap-default-nte-slider')) {
+  const stylesheet = document.createElement('style');
+  stylesheet.id = 'nextrap-default-nte-slider';
+  stylesheet.textContent = defaultStyles;
+  document.head.appendChild(stylesheet);
+}

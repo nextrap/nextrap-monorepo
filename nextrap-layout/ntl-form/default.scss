@@ -1,0 +1,9 @@
+// Materialisiert nur die komponentenspezifische Standardvariante.
+@use './index' as component;
+
+ntl-form.style-default {
+  @include component.default-style();
+}
+
+// Das zweite Element des Packages erhält denselben expliziten Style-Vertrag.
+ntl-form-format.style-default { @include component.format-style(); }

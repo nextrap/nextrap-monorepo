@@ -1,26 +1,52 @@
 {
-    "name": "@nextrap/nte-scroll-to-top",
-    "version": "2.0.0",
-    "files": [
-        "*.*",
-        "skills",
-        "src"
-    ],
-    "main": "./index.js",
-    "repository": {
-        "directory": "nextrap-elements/nte-scroll-to-top",
-        "type": "git",
-        "url": "https://github.com/nextrap/nextrap-monorepo"
+  "name": "@nextrap/nte-scroll-to-top",
+  "version": "2.0.0",
+  "files": [
+    "*.*",
+    "skills",
+    "src"
+  ],
+  "main": "./index.js",
+  "repository": {
+    "directory": "nextrap-elements/nte-scroll-to-top",
+    "type": "git",
+    "url": "https://github.com/nextrap/nextrap-monorepo"
+  },
+  "devDependencies": {
+    "@nextrap/style-base": "^2.0.0",
+    "@nextrap/style-typography": "^2.0.0"
+  },
+  "type": "module",
+  "types": "./index.d.ts",
+  "peerDependencies": {
+    "@nextrap/nt-core": "^2.0.0",
+    "@nextrap/style-reset": "^2.0.0",
+    "lit": "^3.3.1"
+  },
+  "exports": {
+    ".": {
+      "sass": "./index.scss",
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
     },
-    "devDependencies": {
-        "@nextrap/style-base": "^2.0.0",
-        "@nextrap/style-typography": "^2.0.0"
+    "./unstyled": {
+      "types": "./unstyled.d.ts",
+      "import": "./unstyled.js",
+      "default": "./unstyled.js"
     },
-    "type": "module",
-    "types": "./index.d.ts",
-    "peerDependencies": {
-        "@nextrap/nt-core": "^2.0.0",
-        "@nextrap/style-reset": "^2.0.0",
-        "lit": "^3.3.1"
+    "./default": {
+      "sass": "./default.scss",
+      "default": "./default.scss"
+    },
+    "./*": "./*"
+  },
+  "sideEffects": true,
+  "typesVersions": {
+    "*": {
+      "unstyled": [
+        "unstyled.d.ts"
+      ]
     }
+  }
 }

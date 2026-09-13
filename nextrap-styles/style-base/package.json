@@ -1,26 +1,48 @@
 {
-    "name": "@nextrap/style-base",
-    "version": "2.0.0",
-    "files": [
-        "*.*",
-        "src"
-    ],
-    "main": "./index.js",
-    "repository": {
-        "directory": "nextrap-base/style-base",
-        "type": "git",
-        "url": "https://github.com/nextrap/nextrap-monorepo"
+  "name": "@nextrap/style-base",
+  "version": "2.0.0",
+  "files": [
+    "*.*",
+    "src"
+  ],
+  "main": "./index.js",
+  "repository": {
+    "directory": "nextrap-base/style-base",
+    "type": "git",
+    "url": "https://github.com/nextrap/nextrap-monorepo"
+  },
+  "exports": {
+    ".": {
+      "sass": "./index.scss",
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
     },
-    "exports": {
-        ".": "./index.scss",
-        "./default": "./default.scss",
-        "./module": "./module.scss"
+    "./default": {
+      "sass": "./default.scss",
+      "default": "./default.scss"
     },
-    "dependencies": {},
-    "devDependencies": {
-        "@trunkjs/prolit-elements": "^1.0.0"
+    "./module": "./module.scss",
+    "./unstyled": {
+      "types": "./unstyled.d.ts",
+      "import": "./unstyled.js",
+      "default": "./unstyled.js"
     },
-    "type": "module",
-    "types": "./index.d.ts",
-    "web-types": "./web-types.json"
+    "./*": "./*"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@trunkjs/prolit-elements": "^1.0.0"
+  },
+  "type": "module",
+  "types": "./index.d.ts",
+  "web-types": "./web-types.json",
+  "sideEffects": true,
+  "typesVersions": {
+    "*": {
+      "unstyled": [
+        "unstyled.d.ts"
+      ]
+    }
+  }
 }

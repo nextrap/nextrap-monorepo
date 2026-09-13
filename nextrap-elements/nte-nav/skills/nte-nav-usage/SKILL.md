@@ -43,3 +43,7 @@ The relocator is responsible only for moving the navigation items. Keep navigati
 - Do not add `menu`, `menubar` or `menuitem` roles to ordinary site navigation.
 - Give the navigation an `aria-label` when multiple navigation landmarks exist.
 - Test keyboard, touch, focus order and submenu state across relocation and restoration.
+
+## JavaScript und Theme-Styling
+
+`@nextrap/nte-nav` lädt die Default-Light-DOM-Styles automatisch. Für Seaming/Themes `@nextrap/nte-nav/unstyled` verwenden: Dieser Import lädt auch transitiv kein Light-DOM-CSS, damit das Theme die Darstellung selbst über die Sass-Mixins bestimmen kann. Sass-Imports behalten den Paketnamen ohne `/unstyled`.

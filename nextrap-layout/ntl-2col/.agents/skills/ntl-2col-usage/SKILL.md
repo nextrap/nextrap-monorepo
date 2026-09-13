@@ -106,3 +106,7 @@ Nutze immer die `trunkjs/content-pane`-Notation `{: layout="..."}`. Die Default-
 - `.reverse`: tauscht `main` und `aside`
 - `.reverse-desktop`: tauscht sie nur im Desktop-Modus
 - `.breakout-start` / `.breakout-end`: aktiviert Desktop-Breakouts
+
+## JavaScript und Theme-Styling
+
+`@nextrap/ntl-2col` lädt die Default-Light-DOM-Styles automatisch. Für Seaming/Themes `@nextrap/ntl-2col/unstyled` verwenden: Dieser Import lädt auch transitiv kein Light-DOM-CSS, damit das Theme die Darstellung selbst über die Sass-Mixins bestimmen kann. Sass-Imports behalten den Paketnamen ohne `/unstyled`.

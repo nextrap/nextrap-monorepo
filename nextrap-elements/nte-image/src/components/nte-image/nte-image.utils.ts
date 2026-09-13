@@ -1,4 +1,3 @@
-import fullsizeCloseButtonStyle from './nte-image-fullsize.scss?inline';
 
 /**
  * Converts a CSS-style string into a JSON object.
@@ -329,10 +328,6 @@ export const createFullsizeView = (
     return;
   }
 
-  // Create style element
-  const styleEl = document.createElement('style');
-  styleEl.id = 'nxa-fullsize-styles';
-  styleEl.textContent = getFullsizeStyles(img.src);
 
   // Create container with elements
   const container = document.createElement('div');
@@ -343,6 +338,8 @@ export const createFullsizeView = (
 
   const blurredBg = document.createElement('div');
   blurredBg.className = 'nxa-fullsize-bg';
+  // Das aktuelle Bild ist Instanzzustand; die Stylesheet-Regeln gehören dem Theme.
+  blurredBg.style.backgroundImage = `url(${JSON.stringify(img.src)})`;
 
   const fullSizeImg = document.createElement('img');
   fullSizeImg.src = img.src;
@@ -468,7 +465,6 @@ export const createFullsizeView = (
       container.remove();
       // Only remove styles if this is the last fullscreen view
       if (!document.querySelector('.nxa-fullsize-container')) {
-        document.getElementById('nxa-fullsize-styles')?.remove();
       }
       // Call onClose after everything is cleaned up
       onClose?.();
@@ -618,157 +614,5 @@ export const createFullsizeView = (
   document.addEventListener('keydown', keyHandler);
 
   // Add style and container to document
-  document.head.appendChild(styleEl);
   document.body.appendChild(container);
-};
-
-/**
- * Generates CSS styles for the fullsize view
- * @param imgSrc The source URL of the image
- * @returns CSS styles as a string
- */
-export const getFullsizeStyles = (imgSrc: string): string => {
-  return `
-        @keyframes nxa-fullsize-fade-in {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes nxa-fullsize-scale-in {
-            from {
-                transform: scale(0.85);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        @keyframes nxa-fullsize-blur-in {
-            from {
-                opacity: 0;
-                filter: blur(40px);
-            }
-            to {
-                opacity: 0.4;
-                filter: blur(25px);
-            }
-        }
-
-        .nxa-fullsize-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1000;
-            cursor: zoom-out;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: nxa-fullsize-fade-in 0.3s ease-out;
-        }
-
-        .nxa-fullsize-dark-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
-            z-index: 0;
-            animation: nxa-fullsize-fade-in 0.4s ease-out;
-        }
-
-        .nxa-fullsize-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url(${imgSrc});
-            background-size: cover;
-            background-position: center;
-            filter: blur(25px);
-            opacity: 0.4;
-            mix-blend-mode: overlay;
-            z-index: 0;
-            animation: nxa-fullsize-blur-in 0.8s ease-out;
-        }
-
-        .nxa-fullsize-image {
-            max-width: calc(100% - 2rem);
-            max-height: calc(100% - 2rem);
-            object-fit: contain;
-            position: relative;
-            z-index: 1;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-            animation: nxa-fullsize-scale-in 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-            will-change: transform, opacity;
-        }
-
-        /* Animation for closing */
-        .nxa-fullsize-container.closing {
-            animation: nxa-fullsize-fade-in 0.3s ease-in reverse;
-        }
-
-        .nxa-fullsize-container.closing .nxa-fullsize-image {
-            animation: nxa-fullsize-scale-in 0.3s ease-in reverse;
-        }
-
-        .nxa-fullsize-nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 40px;
-            height: 60px;
-            background: rgba(0, 0, 0, 0.2);
-            color: white;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: auto 0;
-            font-size: 18px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(4px);
-            z-index: 2;
-            animation: nxa-fullsize-fade-in 0.5s ease-out 0.2s backwards;
-        }
-
-        .nxa-fullsize-nav-btn.prev {
-            left: 0;
-            border-radius: 0 4px 4px 0;
-        }
-
-        .nxa-fullsize-nav-btn.next {
-            right: 0;
-            border-radius: 4px 0 0 4px;
-        }
-
-        .nxa-fullsize-nav-btn:hover {
-            background: rgba(0, 0, 0, 0.5);
-            width: 50px;
-        }
-
-        @media (max-width: 768px) {
-            .nxa-fullsize-nav-btn {
-                width: 35px;
-                height: 50px;
-                font-size: 16px;
-            }
-
-            .nxa-fullsize-nav-btn:hover {
-                width: 45px;
-            }
-        }
-
-        ${fullsizeCloseButtonStyle}
-    `;
 };

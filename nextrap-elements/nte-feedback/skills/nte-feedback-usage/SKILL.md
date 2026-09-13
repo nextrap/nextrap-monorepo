@@ -54,3 +54,7 @@ Do not use native browser `alert()` or `confirm()` in Nextrap application UI. Us
 The underlying `nextrap:*` events remain a low-level integration contract, but normal application code and demos should use `Feedback.*` rather than dispatching events manually.
 
 Demos follow the current `@trunkjs/demo-viewer` skill: use `controls: { items }`, handlers receive the demo environment, DOM access goes through `env.query*`, and viewer toast/log facilities replace custom demo logging UI.
+
+## JavaScript und Theme-Styling
+
+`@nextrap/nte-feedback` lädt die Default-Light-DOM-Styles automatisch. Für Seaming/Themes `@nextrap/nte-feedback/unstyled` verwenden: Dieser Import lädt auch transitiv kein Light-DOM-CSS, damit das Theme die Darstellung selbst über die Sass-Mixins bestimmen kann. Sass-Imports behalten den Paketnamen ohne `/unstyled`.

@@ -1,0 +1,9 @@
+// Materialisiert nur die komponentenspezifische Standardvariante.
+@use './index' as component;
+
+nte-image.style-default {
+  @include component.default-style();
+}
+
+// Das Vollbild-Portal liegt außerhalb des Hosts direkt im Dokument.
+@include component.fullsize-style();

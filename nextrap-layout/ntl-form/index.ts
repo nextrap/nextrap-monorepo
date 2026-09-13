@@ -1,15 +1,13 @@
-export * from './src/components/ntl-form/ntl-form';
-export * from './src/components/ntl-form-format/ntl-form-format';
+// Teilt Registrierung und API mit /unstyled; nur dieser SPA-Einstieg lädt die Defaults.
+export * from './unstyled';
 
-// If mixin exisists, export it
-// export * from './src/mixins/NtlFormMixin';
+// Inline-Kompilierung erhält die automatische Einbindung auch im veröffentlichten ESM-Build.
+import defaultStyles from './default.scss?inline';
 
-/* this bundles light dom styles by default */
-import './src/styles/index.scss';
-
-
-declare global {
-  interface Window {
-    formmail_callback: (data: object) => void;
-  }
+// Ein Stylesheet pro Package und Dokument; /unstyled erreicht diesen Block niemals.
+if (typeof document !== 'undefined' && defaultStyles.trim() && !document.getElementById('nextrap-default-ntl-form')) {
+  const stylesheet = document.createElement('style');
+  stylesheet.id = 'nextrap-default-ntl-form';
+  stylesheet.textContent = defaultStyles;
+  document.head.appendChild(stylesheet);
 }

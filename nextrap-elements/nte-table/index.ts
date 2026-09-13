@@ -1,5 +1,13 @@
-import './src/plugins/built-in-plugins';
+// Teilt Registrierung und API mit /unstyled; nur dieser SPA-Einstieg lädt die Defaults.
+export * from './unstyled';
 
-export * from './src/components/nte-table/nte-table';
-export * from './src/plugins/built-in-plugins';
-export * from './src/plugins/plugin-registry';
+// Inline-Kompilierung erhält die automatische Einbindung auch im veröffentlichten ESM-Build.
+import defaultStyles from './default.scss?inline';
+
+// Ein Stylesheet pro Package und Dokument; /unstyled erreicht diesen Block niemals.
+if (typeof document !== 'undefined' && defaultStyles.trim() && !document.getElementById('nextrap-default-nte-table')) {
+  const stylesheet = document.createElement('style');
+  stylesheet.id = 'nextrap-default-nte-table';
+  stylesheet.textContent = defaultStyles;
+  document.head.appendChild(stylesheet);
+}

@@ -8,5 +8,5 @@
         "types": []
     },
     "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts", "vite.config.ts", "node_modules"],
-    "include": ["index.ts", "src/**/*.ts"]
+    "include": ["index.ts", "unstyled.ts", "src/**/*.ts"]
 }

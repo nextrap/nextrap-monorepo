@@ -1,2 +1,2 @@
-// Erhält den bisherigen Sass-Pfad als ausgabefreien Zugang zur Styling-API.
-@forward '../scss/default-style';
+// Kompatibler expliziter Output-Einstieg; die Sass-API liegt in index.scss am Package-Root.
+@use '../../default';

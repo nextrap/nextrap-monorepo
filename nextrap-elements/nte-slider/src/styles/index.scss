@@ -1,3 +1,2 @@
-/**
- * This file contains LightDOM Styles
- */
+// Kompatibler expliziter Output-Einstieg; die Sass-API liegt in index.scss am Package-Root.
+@use '../../default';

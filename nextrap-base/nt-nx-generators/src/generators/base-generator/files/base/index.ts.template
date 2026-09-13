@@ -1,8 +1,13 @@
-export * from './src/components/<%= name %>/<%= name %>';
+// Teilt Registrierung und API mit /unstyled; nur dieser SPA-Einstieg lädt die Defaults.
+export * from './unstyled';
 
-// If mixin exisists, export it
-// export * from './src/mixins/<%= className %>Mixin';
+// Inline-Kompilierung erhält die automatische Einbindung auch im veröffentlichten ESM-Build.
+import defaultStyles from './default.scss?inline';
 
-
-// Light-DOM-SCSS/-CSS niemals importieren oder (re-)exportieren, auch nicht indirekt.
-// Nur Theme/App bindet Light-DOM-Styles über die öffentliche Sass-Mixin-API ein.
+// Ein Stylesheet pro Package und Dokument; /unstyled erreicht diesen Block niemals.
+if (typeof document !== 'undefined' && defaultStyles.trim() && !document.getElementById('nextrap-default-<%= name %>')) {
+  const stylesheet = document.createElement('style');
+  stylesheet.id = 'nextrap-default-<%= name %>';
+  stylesheet.textContent = defaultStyles;
+  document.head.appendChild(stylesheet);
+}

@@ -1,0 +1,3 @@
+// Das Aggregat besitzt Host-Zustandsselektoren und wird deshalb ohne zusätzlichen Wrapper aufgerufen.
+@use './index' as navbar;
+@include navbar.default-style('nte-navbar.style-default');

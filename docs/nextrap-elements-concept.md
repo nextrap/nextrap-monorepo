@@ -20,7 +20,7 @@ When working with web components you will often end up splitting your code into 
 </script>
 ```
 
-In this scenario the component is responsible for rendering the data, while the data itself is fed from the outside.  
+In this scenario the component is responsible for rendering the data, while the data itself is fed from the outside.
 This pattern is common when the component renders its content inside a _shadow DOM_, but it comes with a few drawbacks:
 
 - The `title` and `description` are defined far away from where they are rendered, making the code harder to reason about.
@@ -38,7 +38,7 @@ Many frameworks therefore push all rendering into the template:
 </my-component>
 ```
 
-While this gives you more flexibility (everything is plain HTML), it is still heavy-handed when all you want is to display some data.  
+While this gives you more flexibility (everything is plain HTML), it is still heavy-handed when all you want is to display some data.
 You now have to turn your data into HTML _before_ passing it to the component.
 
 ## Nextrap’s Mixed Approach
@@ -91,12 +91,12 @@ From a developer’s perspective you can start simple (declarative) and later sw
 
 ### Shadow DOM vs. Light DOM
 
-Each Nextrap element can expose styles in both the shadow DOM **and** the light DOM.  
+Each Nextrap element can expose styles in both the shadow DOM **and** the light DOM.
 In practice you will usually prefer shadow-DOM styles because they are encapsulated and cannot be accidentally overridden by the page.
 
 #### Limitations of Shadow-DOM Styling
 
-When styling _slotted_ content the shadow DOM has one big limitation:  
+When styling _slotted_ content the shadow DOM has one big limitation:
 You can only target the **first element** inside the slot. Nested selectors will not work.
 
 **Possible (styling top-level elements)**
@@ -130,7 +130,7 @@ my-component,
 
 ### CSS Variables
 
-All styling-relevant properties of a component should be exposed as **CSS variables**.  
+All styling-relevant properties of a component should be exposed as **CSS variables**.
 Define them in the `:host` selector inside the shadow DOM:
 
 ```scss
@@ -150,3 +150,15 @@ my-component {
 ---
 
 Happy hacking!
+
+## JavaScript-Entrypoints mit Unstyled-Entrypoints
+
+| Verwendung | Import | Light-DOM-CSS |
+|---|---|---|
+| SPA mit Defaults | `import '@nextrap/nte-card'` | Automatisch aus `default.scss` injiziert |
+| Theme/Seaming | `import '@nextrap/nte-card/unstyled'` | Niemals direkt oder transitiv geladen; Theme komponiert Sass-Mixins selbst |
+| Sass-API | `@use '@nextrap/nte-card' as card;` | Keine Ausgabe ohne `@include` |
+
+`unstyled.ts` und `index.ts` teilen dieselbe Komponentenimplementierung und Registrierung. Inline-Shadow-DOM-Styles bleiben im Unstyled-Einstieg. Komponenten importieren andere Komponenten und `style-reset` intern ebenfalls über `/unstyled`, damit ein Theme keine ungewollten Standardstyles erhält. Der normale Einstieg ergänzt die Default-Imports benötigter Komponenten. `style-base` wird nur einmal durch die Anwendung beziehungsweise das Theme geladen.
+
+Die Default-Injektion nutzt kompiliertes Inline-SCSS, da ein gewöhnlicher SCSS-Side-Effect-Import beim Library-Build nur eine separate CSS-Datei erzeugen kann. Eine restriktive CSP kann inline Style-Elemente sperren; in diesem Fall `/unstyled` verwenden und Sass/CSS als freigegebene externe Datei ausliefern. `/unstyled` garantiert Stylesheet-Freiheit im Light DOM, aber keine allgemeine SSR-Kompatibilität der bestehenden Browser-Komponenten.

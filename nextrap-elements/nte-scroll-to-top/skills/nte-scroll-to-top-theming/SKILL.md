@@ -9,3 +9,7 @@ description: "Theme @nextrap/nte-scroll-to-top and <nte-scroll-to-top> with defa
 - Style the public `button` and `icon` parts; do not target Shadow DOM internals.
 - Position instances with `--nte-scroll-to-top-offset-block`, `--nte-scroll-to-top-offset-inline`, and `--nte-scroll-to-top-z-index`; control motion with `--nte-scroll-to-top-transition-duration`.
 - Keep exactly one `style-*` class on the element. See the [usage skill](../nte-scroll-to-top-usage/SKILL.md).
+
+## JavaScript und Theme-Styling
+
+`@nextrap/nte-scroll-to-top` lädt die Default-Light-DOM-Styles automatisch. Für Seaming/Themes `@nextrap/nte-scroll-to-top/unstyled` verwenden: Dieser Import lädt auch transitiv kein Light-DOM-CSS, damit das Theme die Darstellung selbst über die Sass-Mixins bestimmen kann. Sass-Imports behalten den Paketnamen ohne `/unstyled`.

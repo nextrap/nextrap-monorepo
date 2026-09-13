@@ -1,13 +1,6 @@
-@use './index' as mixin;
+// Materialisiert die öffentliche Baseline einschließlich ihrer Modifier nur für ntl-2col.
+@use './index' as component;
 
-.default {
-  @include mixin.default-style(var(--nt-spacing-text), var(--nt-spacing-text));
-}
-
-.reverse {
-  @include mixin.with-reverse;
-}
-
-.alternating {
-  @include mixin.with-alternating;
+ntl-2col.style-default {
+  @include component.default-style();
 }

@@ -31,3 +31,7 @@ This is a package-specific exception to the general preference for attaching `la
 - `NteAccordionElement` / `<nte-accordion>` — Groups direct `section` children, propagates marker options and optionally keeps one item open. See the [Markdown accordion demo](../../demo/01-accordion.md).
 - `NteAccordionItemElement` / `<nte-accordion-item>` — Provides an individual animated disclosure with `open`, `marker-position`, `marker-icon` and the `accordion-toggle` event. It is normally created from a direct Markdown section by the parent layout. See the [Markdown accordion demo](../../demo/01-accordion.md).
 - Pair `<nte-accordion>` with layouts such as `<ntl-2col>` without adding outer component margins. See the [Markdown pairing demo](../../demo/02-ntl-2col-pairing.md).
+
+## JavaScript und Theme-Styling
+
+`@nextrap/nte-accordion` lädt die Default-Light-DOM-Styles automatisch. Für Seaming/Themes `@nextrap/nte-accordion/unstyled` verwenden: Dieser Import lädt auch transitiv kein Light-DOM-CSS, damit das Theme die Darstellung selbst über die Sass-Mixins bestimmen kann. Sass-Imports behalten den Paketnamen ohne `/unstyled`.

@@ -1,13 +1,6 @@
-@use './index' as mixin;
+// Materialisiert die öffentliche Baseline einschließlich ihrer Modifier nur für nte-card.
+@use './index' as component;
 
-.default {
-  @include mixin.default-style(var(--nt-spacing-text));
-}
-
-.img-fullsize {
-  @include mixin.with-image-fullsize;
-}
-
-.img-overlay {
-  @include mixin.with-image-overlay;
+nte-card.style-default {
+  @include component.default-style();
 }

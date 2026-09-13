@@ -36,10 +36,11 @@ const server = await createServer({
   root,
   optimizeDeps: { noDiscovery: true, include: ['lit', '@trunkjs/browser-utils', '@trunkjs/content-pane'] },
   resolve: {
+    // The fixture owns its Sass: unstyled prevents defaults from overriding measured theme rules.
     alias: {
-      '@nextrap/nte-card': resolve(root, 'nextrap-elements/nte-card/index.ts'),
+      '@nextrap/nte-card/unstyled': resolve(root, 'nextrap-elements/nte-card/unstyled.ts'),
       '@nextrap/nt-core': resolve(root, 'nextrap-base/nt-core/index.ts'),
-      '@nextrap/style-reset': resolve(root, 'nextrap-styles/style-reset/index.ts'),
+      '@nextrap/style-reset/unstyled': resolve(root, 'nextrap-styles/style-reset/unstyled.ts'),
     },
   },
   plugins: [
@@ -62,7 +63,7 @@ const server = await createServer({
         vite.middlewares.use('/__spacing', (_request, response) => {
           response.setHeader('Content-Type', 'text/html');
           response.end(
-            `<!doctype html><html><head><style>body{margin:0} nte-card{--breakpoint:initial} nte-card > *{margin:0;min-height:20px;box-sizing:border-box} ${css}</style></head><body><script type="module">import '/nextrap-elements/nte-card/index.ts'; import '/nextrap-layout/ntl-card-row/index.ts'; window.ready = customElements.whenDefined('nte-card');</script></body></html>`,
+            `<!doctype html><html><head><style>body{margin:0} nte-card{--breakpoint:initial} nte-card > *{margin:0;min-height:20px;box-sizing:border-box} ${css}</style></head><body><script type="module">import '/nextrap-elements/nte-card/unstyled.ts'; import '/nextrap-layout/ntl-card-row/unstyled.ts'; window.ready = customElements.whenDefined('nte-card');</script></body></html>`,
           );
         });
       },

@@ -1,19 +1,45 @@
 {
-    "name": "@nextrap/nte-element-highlighter",
-    "version": "2.0.0",
-    "main": "./index.js",
-    "repository": {
-        "directory": "nextrap-elements/nte-element-highlighter",
-        "type": "git",
-        "url": "https://github.com/nextrap/nextrap-monorepo"
+  "name": "@nextrap/nte-element-highlighter",
+  "version": "2.0.0",
+  "main": "./index.js",
+  "repository": {
+    "directory": "nextrap-elements/nte-element-highlighter",
+    "type": "git",
+    "url": "https://github.com/nextrap/nextrap-monorepo"
+  },
+  "scripts": {
+    "test:browser": "vitest --workspace=vitest.workspace.ts"
+  },
+  "dependencies": {},
+  "type": "module",
+  "types": "./index.d.ts",
+  "peerDependencies": {
+    "lit": "^3.3.2"
+  },
+  "exports": {
+    ".": {
+      "sass": "./index.scss",
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
     },
-    "scripts": {
-        "test:browser": "vitest --workspace=vitest.workspace.ts"
+    "./unstyled": {
+      "types": "./unstyled.d.ts",
+      "import": "./unstyled.js",
+      "default": "./unstyled.js"
     },
-    "dependencies": {},
-    "type": "module",
-    "types": "./index.d.ts",
-    "peerDependencies": {
-        "lit": "^3.3.2"
+    "./default": {
+      "sass": "./default.scss",
+      "default": "./default.scss"
+    },
+    "./*": "./*"
+  },
+  "sideEffects": true,
+  "typesVersions": {
+    "*": {
+      "unstyled": [
+        "unstyled.d.ts"
+      ]
     }
+  }
 }

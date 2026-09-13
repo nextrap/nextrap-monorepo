@@ -1,22 +1,48 @@
 {
-    "name": "@nextrap/ntl-hero",
-    "version": "2.0.3",
-    "main": "./index.js",
-    "repository": {
-        "directory": "nextrap-layout/ntl-hero",
-        "type": "git",
-        "url": "https://github.com/nextrap/nextrap-monorepo"
+  "name": "@nextrap/ntl-hero",
+  "version": "2.0.3",
+  "main": "./index.js",
+  "repository": {
+    "directory": "nextrap-layout/ntl-hero",
+    "type": "git",
+    "url": "https://github.com/nextrap/nextrap-monorepo"
+  },
+  "devDependencies": {
+    "@nextrap/style-base": "^2.0.0",
+    "@nextrap/style-utils": "^2.0.0"
+  },
+  "peerDependencies": {
+    "@nextrap/style-reset": "^2.0.0",
+    "@trunkjs/browser-utils": "^1.0.28",
+    "lit": "^3.3.1"
+  },
+  "type": "module",
+  "types": "./index.d.ts",
+  "web-types": "./web-types.json",
+  "exports": {
+    ".": {
+      "sass": "./index.scss",
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
     },
-    "devDependencies": {
-        "@nextrap/style-base": "^2.0.0",
-        "@nextrap/style-utils": "^2.0.0"
+    "./unstyled": {
+      "types": "./unstyled.d.ts",
+      "import": "./unstyled.js",
+      "default": "./unstyled.js"
     },
-    "peerDependencies": {
-        "@nextrap/style-reset": "^2.0.0",
-        "@trunkjs/browser-utils": "^1.0.28",
-        "lit": "^3.3.1"
+    "./default": {
+      "sass": "./default.scss",
+      "default": "./default.scss"
     },
-    "type": "module",
-    "types": "./index.d.ts",
-    "web-types": "./web-types.json"
+    "./*": "./*"
+  },
+  "sideEffects": true,
+  "typesVersions": {
+    "*": {
+      "unstyled": [
+        "unstyled.d.ts"
+      ]
+    }
+  }
 }

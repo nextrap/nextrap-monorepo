@@ -46,11 +46,12 @@ const server = await createServer({
   root,
   optimizeDeps: { noDiscovery: true, include: ['lit', '@trunkjs/browser-utils', '@trunkjs/content-pane'] },
   resolve: {
+    // The fixture owns its Sass: unstyled prevents defaults from overriding measured theme rules.
     alias: {
       '@nextrap/nt-core': resolve(root, 'nextrap-base/nt-core/index.ts'),
-      '@nextrap/nte-image': resolve(root, 'nextrap-elements/nte-image/index.ts'),
-      '@nextrap/nte-consent-blocker': resolve(root, 'nextrap-elements/nte-consent-blocker/index.ts'),
-      '@nextrap/style-reset': resolve(root, 'nextrap-styles/style-reset/index.ts'),
+      '@nextrap/nte-image/unstyled': resolve(root, 'nextrap-elements/nte-image/unstyled.ts'),
+      '@nextrap/nte-consent-blocker/unstyled': resolve(root, 'nextrap-elements/nte-consent-blocker/unstyled.ts'),
+      '@nextrap/style-reset/unstyled': resolve(root, 'nextrap-styles/style-reset/unstyled.ts'),
     },
   },
   plugins: [
@@ -73,7 +74,7 @@ const server = await createServer({
         vite.middlewares.use('/__spacing', (_request, response) => {
           response.setHeader('Content-Type', 'text/html');
           response.end(
-            `<!doctype html><html><head><style>body{margin:0} ntl-2col{--container-width:100%;--breakpoint:initial} ntl-2col > *{margin:0;min-height:20px;box-sizing:border-box} ${css}</style></head><body><script type="module">import '/nextrap-layout/ntl-2col/index.ts'; import '/nextrap-elements/nte-image/index.ts'; import '/nextrap-elements/nte-consent-blocker/index.ts'; window.ready = customElements.whenDefined('ntl-2col');</script></body></html>`,
+            `<!doctype html><html><head><style>body{margin:0} ntl-2col{--container-width:100%;--breakpoint:initial} ntl-2col > *{margin:0;min-height:20px;box-sizing:border-box} ${css}</style></head><body><script type="module">import '/nextrap-layout/ntl-2col/unstyled.ts'; import '/nextrap-elements/nte-image/unstyled.ts'; import '/nextrap-elements/nte-consent-blocker/unstyled.ts'; window.ready = customElements.whenDefined('ntl-2col');</script></body></html>`,
           );
         });
       },

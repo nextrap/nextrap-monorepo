@@ -23,3 +23,7 @@ Use this skill for markup and component API. For theme SCSS, use `nte-table-them
 - Use an optional native `caption` for a fixed title, description, or search control above `thead`.
 - Overflow defaults to ellipsis; override it with `overflow-ellipsis`, `overflow-clip`, `overflow-wrap`, or `overflow-visible` on the table, a row, or a cell.
 - The Light DOM table remains the interactive table and is never observed or cloned. Call `refresh()` after structural or layout-input changes so all columns are remeasured and fixed in pixels.
+
+## JavaScript und Theme-Styling
+
+`@nextrap/nte-table` lädt die Default-Light-DOM-Styles automatisch. Für Seaming/Themes `@nextrap/nte-table/unstyled` verwenden: Dieser Import lädt auch transitiv kein Light-DOM-CSS, damit das Theme die Darstellung selbst über die Sass-Mixins bestimmen kann. Sass-Imports behalten den Paketnamen ohne `/unstyled`.

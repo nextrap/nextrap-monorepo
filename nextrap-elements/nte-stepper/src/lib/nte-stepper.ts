@@ -2,7 +2,8 @@ import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import style from './nte-stepper-shadow.scss?inline';
 // Import the progress component
-import '@nextrap/nte-progress';
+// /unstyled lädt kein Light-DOM-CSS: Die konsumierende Theme-/App-Schicht gestaltet es selbst über Sass-Mixins.
+import '@nextrap/nte-progress/unstyled';
 // Import the step component
 import './nte-step';
 

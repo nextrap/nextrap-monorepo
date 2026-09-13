@@ -1,28 +1,14 @@
-export * from './src/components/nte-feedback/nte-feedback';
-export * from './src/lib/feedback';
-export * from './src/lib/types';
+// Teilt Registrierung und API mit /unstyled; nur dieser SPA-Einstieg lädt die Defaults.
+export * from './unstyled';
+import '@nextrap/nte-spinner';
 
-/* this bundles light dom styles by default */
-import './src/styles/index.scss';
+// Inline-Kompilierung erhält die automatische Einbindung auch im veröffentlichten ESM-Build.
+import defaultStyles from './default.scss?inline';
 
-import type {
-  NextrapConfirmDetail,
-  NextrapFailDetail,
-  NextrapInfoDetail,
-  NextrapLoadingDetail,
-  NextrapProgressDetail,
-  NextrapSuccessDetail,
-} from './src/lib/types';
-
-declare global {
-  interface WindowEventMap {
-    'nextrap:loading': CustomEvent<NextrapLoadingDetail>;
-    'nextrap:progress': CustomEvent<NextrapProgressDetail>;
-    'nextrap:success': CustomEvent<NextrapSuccessDetail>;
-    'nextrap:fail': CustomEvent<NextrapFailDetail>;
-    'nextrap:info': CustomEvent<NextrapInfoDetail>;
-    'nextrap:confirm': CustomEvent<NextrapConfirmDetail>;
-    'nextrap:feedback-close': CustomEvent<void>;
-    'nextrap:feedback-closed': CustomEvent<void>;
-  }
+// Ein Stylesheet pro Package und Dokument; /unstyled erreicht diesen Block niemals.
+if (typeof document !== 'undefined' && defaultStyles.trim() && !document.getElementById('nextrap-default-nte-feedback')) {
+  const stylesheet = document.createElement('style');
+  stylesheet.id = 'nextrap-default-nte-feedback';
+  stylesheet.textContent = defaultStyles;
+  document.head.appendChild(stylesheet);
 }
