@@ -78,6 +78,8 @@ Die letzte Spalte zählt Stylesheets beim isolierten Default-Import einschließl
 
 Die native Dart-Runtime von `sass-embedded` startet in dieser Arbeitsumgebung nicht (Stack-Bounds-Fehler). Für die lokale Library-Validierung wurde dasselbe SCSS mit der JavaScript-Ausgabe von Dart Sass kompiliert und Vite als Inline-CSS übergeben. Die regulären Build-Konfigurationen enthalten keinen Umgebungs-Workaround. CI führt den normalen Build und den eingecheckten Vertragstest aus.
 
+Die bestehenden Chrome-Spacing-Fixtures für `nte-card` und `ntl-2col` verwenden ebenfalls `/unstyled`: Ihre Sass-Regeln gehören dem Test-Theme und dürfen nicht von automatisch geladenen Defaults überlagert werden.
+
 ## Noch zu beachten
 
 - ThemeJS2 muss die neuen Nextrap-Artefakte beziehen. Ein Merge veröffentlicht keine npm-Pakete; die vorhandene Veröffentlichung läuft über Release-Tags. Veröffentlichungen, Versionsanhebungen und Registry-Lockfile-Updates sind in diesen PRs nicht vorweggenommen. Mit alten installierten Paketen fehlt `/unstyled`.
@@ -515,3 +517,6 @@ Die native Dart-Runtime von `sass-embedded` startet in dieser Arbeitsumgebung ni
 - `nextrap-styles/style-utils/vite.config.ts`
 - `tools/check-unstyled.mjs`
 - `tsconfig.base.json`
+
+- `nextrap-elements/nte-card/tests/spacing.browser.mjs`
+- `nextrap-layout/ntl-2col/tests/spacing.browser.mjs`
