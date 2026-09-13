@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
-# Baut den aktuellen Release-Commit vollständig und startet seine Tag-Publishes
+# Pusht die bereits erzeugten Release-Tags des aktuellen Commits manuell
 # in Dreiergruppen. Aufruf: ./publish-sequence.sh [--dry-run] [remote]
-# Nx-Versionierung/Changelog und lokale Release-Tags müssen vorher erstellt und
-# committed sein, ohne sie bereits zu pushen. Dieses Script erzeugt keine Tags.
+# Build, Nx-Versionierung/Changelog und lokale Release-Tags müssen zuvor im
+# Build-Container vorbereitet sein. Der Release-Stand muss bereits committed und
+# lokal getaggt sein. Dieses Script benötigt weder Node.js noch Nx und erzeugt keine Tags.
 # Nur Tags auf HEAD werden berücksichtigt: ältere Releases gehören nicht zum
-# gerade geprüften Build. Bereits identisch gepushte Tags werden übersprungen.
+# ausgewählten Commit. Bereits identisch gepushte Tags werden übersprungen.
 # Jeder Tag startet .github/workflows/publish-tags.yml; npm publiziert dort.
 set -euo pipefail
 
@@ -12,10 +13,10 @@ set -euo pipefail
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
 usage() {
   printf '%s\n' 'Aufruf: ./publish-sequence.sh [--dry-run] [remote]' \
-    'Standard-Remote: origin. Erst Voll-Rebuild, dann 3 einzelne Tag-Pushes parallel.' \
+    'Standard-Remote: origin. 3 einzelne Tag-Pushes parallel; kein Build.' \
     'Zwischen Gruppen: 60 Sekunden Pause; kein Warten auf fertige GitHub-Actions.' \
     'Nur vorhandene Release-Tags (*@*.*.*) auf HEAD; keine Versionierung.' \
-    '--dry-run zeigt den Plan ohne Build, Push oder Wartezeit.'
+    '--dry-run zeigt den Plan ohne Push oder Wartezeit.'
 }
 fail() { printf 'Fehler: %s\n' "$*" >&2; exit 1; }
 
@@ -28,11 +29,9 @@ if (( $# > 1 )); then usage >&2; exit 2; fi
 if (( $# == 1 )); then remote=$1; fi
 [[ $remote != -* ]] || fail 'Remote muss ein eingerichteter Git-Remote-Name sein.'
 git remote get-url "$remote" >/dev/null
-[[ -f nx.json && -f package.json ]] || fail 'Kein Nx-Repository im Script-Verzeichnis.'
-[[ -z $(git status --porcelain) ]] || fail 'Zuerst alle Änderungen committen oder entfernen.'
 release_commit=$(git rev-parse HEAD)
 
-# Namen und Objekt-IDs werden vor dem Build eingefroren. So kann ein währenddessen
+# Namen und Objekt-IDs werden vor den Pushes eingefroren. So kann ein währenddessen
 # verschobener lokaler Tag nicht unbemerkt einen anderen Release veröffentlichen.
 local_tags=$(git for-each-ref --points-at "$release_commit" --sort=refname \
   --format='%(objectname) %(refname:strip=2)' refs/tags)
@@ -52,21 +51,15 @@ while read -r object tag; do
 done <<< "$local_tags"
 count=${#tags[@]}
 if (( count == 0 )); then
-  printf '%s\n' 'Keine ausstehenden Release-Tags auf HEAD. Kein Build oder Push nötig.'
+  printf '%s\n' 'Keine ausstehenden Release-Tags auf HEAD. Kein Push nötig.'
   exit 0
 fi
 printf 'Release-Commit: %s; ausstehende Tags: %s\n' "$release_commit" "$count"
 printf '  %s\n' "${tags[@]}"
 if $dry_run; then
-  printf '%s\n' 'Plan: vollständiger Nx-Rebuild ohne Cache, dann Dreiergruppen mit jeweils 60 Sekunden Abstand.'
+  printf '%s\n' 'Plan: vorhandene Tags in Dreiergruppen mit jeweils 60 Sekunden Abstand pushen.'
   exit 0
 fi
-
-# Ohne erfolgreichen Voll-Rebuild darf keine Veröffentlichung gestartet werden.
-# --skip-nx-cache erzwingt echte Builds statt wiederverwendeter Cache-Ergebnisse.
-npx --no-install nx run-many --target=build --all --skip-nx-cache
-[[ $(git rev-parse HEAD) == "$release_commit" ]] || fail 'HEAD hat sich während des Builds geändert.'
-[[ -z $(git status --porcelain) ]] || fail 'Der Build hat uncommittete Änderungen hinterlassen.'
 
 # Einzelne explizite Ref-Pushes vermeiden GitHubs Grenze bei mehr als drei Tags
 # pro Push-Event. --no-follow-tags verhindert zusätzliche implizite Tag-Pushes.
