@@ -1,12 +1,13 @@
 @mixin with-alternating {
   &[mode='desktop']:nth-of-type(even) {
+    &::part(wrapper) { --_ntl-2col-column-order: -1; }
     &::part(main) {
       order: 2;
     }
     &::part(aside) {
       order: 1;
       // Eine zusätzliche Order-Umkehr hebt eine Zeilenumkehr für den Divider wieder auf.
-      --_ntl-2col-column-order: -1;
+
     }
   }
 }

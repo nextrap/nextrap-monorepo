@@ -1,31 +1,6 @@
-@use 'sass:list';
+@use 'with-region-inset' as inset;
 
-// Erweitert eine Region bis an ausgewählte äußere Rahmenkanten, ohne Nachbar-Gaps zu verändern.
-// Blockkanten folgen der tatsächlichen Slot-Belegung des normalen Card-Stacks.
+// Randlose Regionen setzen ihre Außenabstände auf null; innere Gaps bleiben unverändert.
 @mixin with-region-bleed($region: image, $edges: all) {
-  @if not list.index((image, header, content, footer), $region) {
-    @error 'Unbekannte Card-Region: #{$region}';
-  }
-  @each $edge in $edges {
-    @if not list.index((all, inline, block, inline-start, inline-end, block-start, block-end), $edge) {
-      @error 'Unbekannte Bleed-Kante: #{$edge}';
-    }
-  }
-  &::part(#{$region}) {
-    box-sizing: border-box;
-    // Auto-Breite berücksichtigt negative Seiten-Margins statt zusätzlich 100% zu addieren.
-    width: auto;
-    min-width: 0;
-    @each $side in (inline-start, inline-end) {
-      @if list.index($edges, all) or list.index($edges, inline) or list.index($edges, $side) {
-        margin-#{$side}: calc(-1 * var(--inner-padding));
-      }
-    }
-  }
-  // Block-Bleed wird am Wrapper verrechnet; auch Zellen kleiner als 2P bleiben exakt randlos.
-  @each $side, $flag in (block-start: start, block-end: end) {
-    @if list.index($edges, all) or list.index($edges, block) or list.index($edges, $side) {
-      &::part(wrapper) { --_nte-card-bleed-#{$region}-#{$flag}: 1; }
-    }
-  }
+  @include inset.with-region-inset($region, 0px, $edges);
 }
