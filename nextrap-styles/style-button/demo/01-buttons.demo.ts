@@ -44,7 +44,7 @@ const demoCss = `
 export default defineDemo({
   title: 'Buttons',
   group: 'style-button',
-  description: 'Standard-, Outline-, Größen-, Lead-, Glow- und Gruppen-Varianten',
+  description: 'Standard-, Text-, Link-, Outline-, Größen-, Lead-, Glow- und Gruppen-Varianten',
   css: ['default', demoCss],
   html: `
     <div class="style-button-demo">
@@ -74,6 +74,7 @@ export default defineDemo({
           <button class="btn btn-light" type="button">Light</button>
           <button class="btn btn-dark" type="button">Dark</button>
           <button class="btn btn-link" type="button">Link</button>
+          <a class="btn btn-text" href="#text-action">Text</a>
           <button class="btn btn-hover" type="button">Hover</button>
         </div>
       </section>
