@@ -1,3 +1,7 @@
+## 2.0.2 (2026-09-16)
+
+This was a version bump only for style-button to align it with other projects, there were no code changes.
+
 ## 2.0.1 (2026-09-16)
 
 ### 🚀 Features
