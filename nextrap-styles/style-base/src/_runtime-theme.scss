@@ -21,8 +21,8 @@
   --nt-danger: #dc3545; // Destructive actions, validation errors and critical states.
   --nt-light: #f8f9fa; // Explicit light utility color and light-surface compatibility token.
   --nt-dark: #212529; // Explicit dark utility color and dark-surface compatibility token.
-  --nt-white: #fff; // Absolute white for explicit white usage and contrast calculations.
-  --nt-black: #000; // Absolute black for explicit black usage and contrast calculations.
+  --nt-white: #fff; // Absolute white for explicit white usage and contrast fallbacks.
+  --nt-black: #000; // Absolute black for explicit black usage and contrast fallbacks.
 
   // === TYPOGRAPHY / SHAPE / CONTAINER INPUT TOKENS ===
   --nt-radius: 0.5rem; // Base corner radius; components derive small/large radii from this value.
@@ -174,21 +174,35 @@
   --nt-link-active: var(--nt-primary-active);
 
   // === CONTRAST TEXT ===
-  // These tokens are only for content rendered directly on arbitrary semantic
-  // color backgrounds. contrast-color() is part of the supported browser
-  // baseline here; normal body/headline colors above remain theme-controlled.
-  --nt-text-on-primary: contrast-color(var(--nt-primary));
-  --nt-text-on-secondary: contrast-color(var(--nt-secondary));
-  --nt-text-on-tertiary: contrast-color(var(--nt-tertiary));
-  --nt-text-on-accent: contrast-color(var(--nt-accent));
-  --nt-text-on-success: contrast-color(var(--nt-success));
-  --nt-text-on-info: contrast-color(var(--nt-info));
-  --nt-text-on-warning: contrast-color(var(--nt-warning));
-  --nt-text-on-danger: contrast-color(var(--nt-danger));
-  --nt-text-on-light: contrast-color(var(--nt-light));
-  --nt-text-on-dark: contrast-color(var(--nt-dark));
-  --nt-text-on-white: contrast-color(var(--nt-white));
-  --nt-text-on-black: contrast-color(var(--nt-black));
+  // Static fallbacks keep semantic foregrounds usable where contrast-color()
+  // is unavailable. Supporting browsers replace them from the real background.
+  --nt-text-on-primary: var(--nt-white);
+  --nt-text-on-secondary: var(--nt-white);
+  --nt-text-on-tertiary: var(--nt-white);
+  --nt-text-on-accent: var(--nt-black);
+  --nt-text-on-success: var(--nt-white);
+  --nt-text-on-info: var(--nt-white);
+  --nt-text-on-warning: var(--nt-black);
+  --nt-text-on-danger: var(--nt-white);
+  --nt-text-on-light: var(--nt-black);
+  --nt-text-on-dark: var(--nt-white);
+  --nt-text-on-white: var(--nt-black);
+  --nt-text-on-black: var(--nt-white);
+
+  @supports (color: contrast-color(red)) {
+    --nt-text-on-primary: contrast-color(var(--nt-primary));
+    --nt-text-on-secondary: contrast-color(var(--nt-secondary));
+    --nt-text-on-tertiary: contrast-color(var(--nt-tertiary));
+    --nt-text-on-accent: contrast-color(var(--nt-accent));
+    --nt-text-on-success: contrast-color(var(--nt-success));
+    --nt-text-on-info: contrast-color(var(--nt-info));
+    --nt-text-on-warning: contrast-color(var(--nt-warning));
+    --nt-text-on-danger: contrast-color(var(--nt-danger));
+    --nt-text-on-light: contrast-color(var(--nt-light));
+    --nt-text-on-dark: contrast-color(var(--nt-dark));
+    --nt-text-on-white: contrast-color(var(--nt-white));
+    --nt-text-on-black: contrast-color(var(--nt-black));
+  }
 
   // === GRAY SCALE ===
   --nt-gray: var(--nt-neutral);
