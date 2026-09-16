@@ -21,8 +21,8 @@
   --nt-danger: #dc3545; // Destructive actions, validation errors and critical states.
   --nt-light: #f8f9fa; // Explicit light utility color and light-surface compatibility token.
   --nt-dark: #212529; // Explicit dark utility color and dark-surface compatibility token.
-  --nt-white: #fff; // Absolute white for contrast fallbacks and explicit white usage.
-  --nt-black: #000; // Absolute black for contrast fallbacks and explicit black usage.
+  --nt-white: #fff; // Absolute white for explicit white usage and contrast fallbacks.
+  --nt-black: #000; // Absolute black for explicit black usage and contrast fallbacks.
 
   // === TYPOGRAPHY / SHAPE / CONTAINER INPUT TOKENS ===
   --nt-radius: 0.5rem; // Base corner radius; components derive small/large radii from this value.
@@ -145,9 +145,9 @@
   --nt-dark-emphasis: color-mix(in oklch, var(--nt-dark) 80%, black 20%);
 
   // === SURFACES / CONTENT ===
-  // Surface is the foreground contrast source of truth. The fallback text color
-  // remains scheme-aware for browsers without contrast-color(). Supporting
-  // browsers derive text directly from the actual computed surface.
+  // Normal text is a theme semantic rather than a contrast endpoint. Readable
+  // gray defaults keep light mode softer than black and dark mode softer than
+  // white; themes can override both schemes explicitly with light-dark().
   --nt-surface: light-dark(
     color-mix(in oklch, var(--nt-neutral) 2%, white),
     color-mix(in oklch, var(--nt-neutral) 12%, black)
@@ -157,10 +157,7 @@
     color-mix(in oklch, var(--nt-neutral) 18%, black)
   );
   --nt-surface-raised: light-dark(white, color-mix(in oklch, var(--nt-neutral) 25%, black));
-  --nt-text: light-dark(
-    color-mix(in oklch, var(--nt-neutral) 15%, black),
-    color-mix(in oklch, var(--nt-neutral) 3%, white)
-  ); // Fallback; overridden below when contrast-color() is supported.
+  --nt-text: light-dark(#4c4c4c, #d2d2d2); // Body/control text; override here when a theme needs different scheme values.
   --nt-text-muted: color-mix(
     in oklch,
     var(--nt-text) 70%,
@@ -170,15 +167,15 @@
     color-mix(in oklch, var(--nt-neutral) 28%, white),
     color-mix(in oklch, var(--nt-neutral) 45%, black)
   );
-  --nt-header: var(--nt-text); // Headings inherit the automatically contrasted standard foreground.
+  --nt-header: var(--nt-text); // Headings follow the normal text color unless a theme explicitly overrides them.
   --nt-focus: var(--nt-primary);
   --nt-link: var(--nt-primary);
   --nt-link-hover: var(--nt-primary-hover);
   --nt-link-active: var(--nt-primary-active);
 
   // === CONTRAST TEXT ===
-  // Static fallbacks first. Browsers with contrast-color() replace these values
-  // from the real background color rather than relying on assumptions about hue.
+  // Static fallbacks keep semantic foregrounds usable where contrast-color()
+  // is unavailable. Supporting browsers replace them from the real background.
   --nt-text-on-primary: var(--nt-white);
   --nt-text-on-secondary: var(--nt-white);
   --nt-text-on-tertiary: var(--nt-white);
@@ -193,7 +190,6 @@
   --nt-text-on-black: var(--nt-white);
 
   @supports (color: contrast-color(red)) {
-    --nt-text: contrast-color(var(--nt-surface)); // Automatic readable foreground for the current scheme/surface.
     --nt-text-on-primary: contrast-color(var(--nt-primary));
     --nt-text-on-secondary: contrast-color(var(--nt-secondary));
     --nt-text-on-tertiary: contrast-color(var(--nt-tertiary));

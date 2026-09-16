@@ -7,6 +7,7 @@
   --btn-bg-hover: var(--nt-primary-hover, var(--btn-bg));
   --btn-bg-active: var(--nt-primary-active, var(--btn-bg));
 
+  // Hebt Controls typografisch leicht vom normalen Fließtext ab, ohne sie semibold oder bold wirken zu lassen.
   display: inline-block;
   appearance: none;
   -webkit-appearance: none;
@@ -15,6 +16,7 @@
   color: var(--btn-txt) !important;
   border-radius: var(--nt-border-radius, var(--nt-radius, 0.375rem));
   border: var(--nt-border-width, 1px) solid var(--btn-bg);
+  font-weight: 500;
   text-decoration: none;
   text-align: center;
   cursor: pointer;
@@ -77,6 +79,38 @@
 
   &:active {
     color: var(--nt-link-active, var(--nt-link, currentColor)) !important;
+  }
+}
+
+// Stellt eine prominente Textaktion ohne Buttonfläche und ohne Link-/Primärfarbe bereit.
+@mixin btn-text() {
+  --btn-bg: transparent;
+  --btn-bg-hover: transparent;
+  --btn-bg-active: transparent;
+  --btn-txt: var(--nt-text, currentColor);
+  --btn-text-hover: color-mix(in oklch, var(--nt-text, currentColor) 85%, light-dark(black, white) 15%);
+  --btn-text-active: color-mix(in oklch, var(--nt-text, currentColor) 75%, light-dark(black, white) 25%);
+
+  background-color: transparent;
+  color: var(--btn-txt) !important;
+  border-color: transparent;
+  text-decoration: none;
+
+  &:link,
+  &:visited {
+    color: var(--btn-txt) !important;
+  }
+
+  &:hover {
+    background-color: transparent;
+    color: var(--btn-text-hover) !important;
+    border-color: transparent;
+    text-decoration: underline;
+  }
+
+  &:active {
+    background-color: transparent;
+    color: var(--btn-text-active) !important;
   }
 }
 
