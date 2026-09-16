@@ -7,6 +7,7 @@
   --btn-bg-hover: var(--nt-primary-hover, var(--btn-bg));
   --btn-bg-active: var(--nt-primary-active, var(--btn-bg));
 
+  // Hebt Controls typografisch leicht vom normalen Fließtext ab, ohne sie semibold oder bold wirken zu lassen.
   display: inline-block;
   appearance: none;
   -webkit-appearance: none;
@@ -15,6 +16,7 @@
   color: var(--btn-txt) !important;
   border-radius: var(--nt-border-radius, var(--nt-radius, 0.375rem));
   border: var(--nt-border-width, 1px) solid var(--btn-bg);
+  font-weight: 500;
   text-decoration: none;
   text-align: center;
   cursor: pointer;
