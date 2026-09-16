@@ -167,7 +167,7 @@
     color-mix(in oklch, var(--nt-neutral) 28%, white),
     color-mix(in oklch, var(--nt-neutral) 45%, black)
   );
-  --nt-header: light-dark(#3d3d3d, #dedede); // Headings keep slightly stronger contrast while remaining off black/white.
+  --nt-header: var(--nt-text); // Headings follow the normal text color unless a theme explicitly overrides them.
   --nt-focus: var(--nt-primary);
   --nt-link: var(--nt-primary);
   --nt-link-hover: var(--nt-primary-hover);
