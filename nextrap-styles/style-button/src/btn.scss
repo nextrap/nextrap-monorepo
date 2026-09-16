@@ -82,7 +82,7 @@
   }
 }
 
-// Stellt eine prominente Textaktion ohne Buttonfläche und ohne Link-/Primärfarbe bereit.
+// Stellt eine prominente Textaktion ohne Buttonfläche oder Button-Padding bereit und behält damit Text-Geometrie.
 @mixin btn-text() {
   --btn-bg: transparent;
   --btn-bg-hover: transparent;
@@ -91,6 +91,7 @@
   --btn-text-hover: color-mix(in oklch, var(--nt-text, currentColor) 85%, light-dark(black, white) 15%);
   --btn-text-active: color-mix(in oklch, var(--nt-text, currentColor) 75%, light-dark(black, white) 25%);
 
+  padding: 0;
   background-color: transparent;
   color: var(--btn-txt) !important;
   border-color: transparent;
