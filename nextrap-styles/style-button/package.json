@@ -1,12 +1,20 @@
 {
     "name": "@nextrap/style-button",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "files": [
         "*.*",
-        "src",
-        ".agents"
+        ".agents",
+        "src"
     ],
     "main": "./index.js",
+    "repository": {
+        "directory": "nextrap-base/style-button",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
+    "dependencies": {},
+    "devDependencies": {},
+    "type": "module",
     "exports": {
         ".": {
             "sass": "./index.scss",
@@ -18,13 +26,5 @@
             "default": "./default.scss"
         }
     },
-    "repository": {
-        "directory": "nextrap-base/style-button",
-        "type": "git",
-        "url": "https://github.com/nextrap/nextrap-monorepo"
-    },
-    "dependencies": {},
-    "devDependencies": {},
-    "type": "module",
     "types": "./index.d.ts"
 }
