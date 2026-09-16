@@ -82,6 +82,38 @@
   }
 }
 
+// Stellt eine prominente Textaktion ohne Buttonfläche und ohne Link-/Primärfarbe bereit.
+@mixin btn-text() {
+  --btn-bg: transparent;
+  --btn-bg-hover: transparent;
+  --btn-bg-active: transparent;
+  --btn-txt: var(--nt-text, currentColor);
+  --btn-text-hover: color-mix(in oklch, var(--nt-text, currentColor) 85%, light-dark(black, white) 15%);
+  --btn-text-active: color-mix(in oklch, var(--nt-text, currentColor) 75%, light-dark(black, white) 25%);
+
+  background-color: transparent;
+  color: var(--btn-txt) !important;
+  border-color: transparent;
+  text-decoration: none;
+
+  &:link,
+  &:visited {
+    color: var(--btn-txt) !important;
+  }
+
+  &:hover {
+    background-color: transparent;
+    color: var(--btn-text-hover) !important;
+    border-color: transparent;
+    text-decoration: underline;
+  }
+
+  &:active {
+    background-color: transparent;
+    color: var(--btn-text-active) !important;
+  }
+}
+
 // Renders a text-like button that reserves button space and gains a surface on hover.
 @mixin btn-hover() {
   --btn-bg: transparent;
