@@ -21,8 +21,8 @@
   --nt-danger: #dc3545; // Destructive actions, validation errors and critical states.
   --nt-light: #f8f9fa; // Explicit light utility color and light-surface compatibility token.
   --nt-dark: #212529; // Explicit dark utility color and dark-surface compatibility token.
-  --nt-white: #fff; // Absolute white for contrast fallbacks and explicit white usage.
-  --nt-black: #000; // Absolute black for contrast fallbacks and explicit black usage.
+  --nt-white: #fff; // Absolute white for explicit white usage and contrast calculations.
+  --nt-black: #000; // Absolute black for explicit black usage and contrast calculations.
 
   // === TYPOGRAPHY / SHAPE / CONTAINER INPUT TOKENS ===
   --nt-radius: 0.5rem; // Base corner radius; components derive small/large radii from this value.
@@ -145,9 +145,9 @@
   --nt-dark-emphasis: color-mix(in oklch, var(--nt-dark) 80%, black 20%);
 
   // === SURFACES / CONTENT ===
-  // Surface is the foreground contrast source of truth. The fallback text color
-  // remains scheme-aware for browsers without contrast-color(). Supporting
-  // browsers derive text directly from the actual computed surface.
+  // Normal text is a theme semantic rather than a contrast endpoint. Readable
+  // gray defaults keep light mode softer than black and dark mode softer than
+  // white; themes can override both schemes explicitly with light-dark().
   --nt-surface: light-dark(
     color-mix(in oklch, var(--nt-neutral) 2%, white),
     color-mix(in oklch, var(--nt-neutral) 12%, black)
@@ -157,10 +157,7 @@
     color-mix(in oklch, var(--nt-neutral) 18%, black)
   );
   --nt-surface-raised: light-dark(white, color-mix(in oklch, var(--nt-neutral) 25%, black));
-  --nt-text: light-dark(
-    color-mix(in oklch, var(--nt-neutral) 15%, black),
-    color-mix(in oklch, var(--nt-neutral) 3%, white)
-  ); // Fallback; overridden below when contrast-color() is supported.
+  --nt-text: light-dark(#4c4c4c, #d2d2d2); // Body/control text; override here when a theme needs different scheme values.
   --nt-text-muted: color-mix(
     in oklch,
     var(--nt-text) 70%,
@@ -170,43 +167,28 @@
     color-mix(in oklch, var(--nt-neutral) 28%, white),
     color-mix(in oklch, var(--nt-neutral) 45%, black)
   );
-  --nt-header: var(--nt-text); // Headings inherit the automatically contrasted standard foreground.
+  --nt-header: light-dark(#3d3d3d, #dedede); // Headings keep slightly stronger contrast while remaining off black/white.
   --nt-focus: var(--nt-primary);
   --nt-link: var(--nt-primary);
   --nt-link-hover: var(--nt-primary-hover);
   --nt-link-active: var(--nt-primary-active);
 
   // === CONTRAST TEXT ===
-  // Static fallbacks first. Browsers with contrast-color() replace these values
-  // from the real background color rather than relying on assumptions about hue.
-  --nt-text-on-primary: var(--nt-white);
-  --nt-text-on-secondary: var(--nt-white);
-  --nt-text-on-tertiary: var(--nt-white);
-  --nt-text-on-accent: var(--nt-black);
-  --nt-text-on-success: var(--nt-white);
-  --nt-text-on-info: var(--nt-white);
-  --nt-text-on-warning: var(--nt-black);
-  --nt-text-on-danger: var(--nt-white);
-  --nt-text-on-light: var(--nt-black);
-  --nt-text-on-dark: var(--nt-white);
-  --nt-text-on-white: var(--nt-black);
-  --nt-text-on-black: var(--nt-white);
-
-  @supports (color: contrast-color(red)) {
-    --nt-text: contrast-color(var(--nt-surface)); // Automatic readable foreground for the current scheme/surface.
-    --nt-text-on-primary: contrast-color(var(--nt-primary));
-    --nt-text-on-secondary: contrast-color(var(--nt-secondary));
-    --nt-text-on-tertiary: contrast-color(var(--nt-tertiary));
-    --nt-text-on-accent: contrast-color(var(--nt-accent));
-    --nt-text-on-success: contrast-color(var(--nt-success));
-    --nt-text-on-info: contrast-color(var(--nt-info));
-    --nt-text-on-warning: contrast-color(var(--nt-warning));
-    --nt-text-on-danger: contrast-color(var(--nt-danger));
-    --nt-text-on-light: contrast-color(var(--nt-light));
-    --nt-text-on-dark: contrast-color(var(--nt-dark));
-    --nt-text-on-white: contrast-color(var(--nt-white));
-    --nt-text-on-black: contrast-color(var(--nt-black));
-  }
+  // These tokens are only for content rendered directly on arbitrary semantic
+  // color backgrounds. contrast-color() is part of the supported browser
+  // baseline here; normal body/headline colors above remain theme-controlled.
+  --nt-text-on-primary: contrast-color(var(--nt-primary));
+  --nt-text-on-secondary: contrast-color(var(--nt-secondary));
+  --nt-text-on-tertiary: contrast-color(var(--nt-tertiary));
+  --nt-text-on-accent: contrast-color(var(--nt-accent));
+  --nt-text-on-success: contrast-color(var(--nt-success));
+  --nt-text-on-info: contrast-color(var(--nt-info));
+  --nt-text-on-warning: contrast-color(var(--nt-warning));
+  --nt-text-on-danger: contrast-color(var(--nt-danger));
+  --nt-text-on-light: contrast-color(var(--nt-light));
+  --nt-text-on-dark: contrast-color(var(--nt-dark));
+  --nt-text-on-white: contrast-color(var(--nt-white));
+  --nt-text-on-black: contrast-color(var(--nt-black));
 
   // === GRAY SCALE ===
   --nt-gray: var(--nt-neutral);
