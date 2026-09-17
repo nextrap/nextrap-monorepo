@@ -1,0 +1,6 @@
+@use '../index' as treeview;
+
+// Die Demo aktiviert dieselbe öffentliche Baseline wie eine konsumierende Anwendung.
+nte-treeview.style-default {
+  @include treeview.default-style($center-width: 7rem, $end-width: 10rem);
+}
