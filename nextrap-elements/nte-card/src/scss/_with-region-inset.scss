@@ -1,0 +1,24 @@
+@use 'sass:list';
+
+// Setzt normale, große oder einseitige Außenabstände direkt auf der Region.
+// Nur vom Layout als außen bestimmte Kanten konsumieren diese Werte; Nachbar-Gaps bleiben unverändert.
+@mixin with-region-inset($region, $space, $edges: all) {
+  @if not list.index((image, header, content, footer), $region) {
+    @error 'Unbekannte Region: #{$region}';
+  }
+  @each $edge in $edges {
+    @if not list.index((all, inline, block, inline-start, inline-end, block-start, block-end), $edge) {
+      @error 'Unbekannte Inset-Kante: #{$edge}';
+    }
+  }
+  @if $space == 0 { $space: 0px; }
+  &::part(#{$region}) {
+    @each $side in (inline-start, inline-end, block-start, block-end) {
+      $axis: inline;
+      @if list.index((block-start, block-end), $side) { $axis: block; }
+      @if list.index($edges, all) or list.index($edges, $axis) or list.index($edges, $side) {
+        --_card-inset-#{$side}: #{$space};
+      }
+    }
+  }
+}

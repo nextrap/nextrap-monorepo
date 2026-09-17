@@ -5,10 +5,12 @@
 | 2026-09-10 | dermatthes | §§ 1–8: Entwurf mit Quellenanalyse, Abstandsvertrag, Bildvarianten, Theme-Abgleich und Abnahmekriterien angelegt |
 | 2026-09-10 | dermatthes | §§ 1–8: Direkte Umsetzung freigegeben, regionsbezogenes Bleed ergänzt und Theme-Verwendungen angepasst |
 | 2026-09-10 | dermatthes | Gap-Default auf das zentrale --nt-spacing-text korrigiert; Bleed darf weder innere noch äußere Gaps aufheben |
+| 2026-09-11 | dermatthes | § 1, § 9: Vereinfachung durch positive Insets, aktuelle Risiken, Rundungen und Prüfplan ergänzt; Revisionsmarkierungen zurückgesetzt |
+| 2026-09-11 | dermatthes | § 1, § 9: Umsetzung, Sonderabstands-API, Dokumentation und Grafik ergänzt |
 
 ## § 1 Ziel und Umfang
 
-Status: Die direkte Umsetzung ist beauftragt und in diesem PR enthalten, einschließlich `with-region-bleed()` für Image, Header, Content und Footer. Das zugehörige ThemeJS2-Gegenstück ist PR #58.
+Historischer Umsetzungsstand vom 2026-09-10: Die direkte Umsetzung einschließlich `with-region-bleed()` für Image, Header, Content und Footer wurde beauftragt; das damalige ThemeJS2-Gegenstück ist PR #58. Der aktuelle PR implementiert den freigegebenen Vereinfachungsvorschlag; aktueller Stand und Prüfgrenzen stehen in § 9.8. [geändert]
 
 Die Card erhält genau einen Abstand innerhalb ihres Rahmens. Zwischen benachbarten, sichtbaren Card-Regionen wirkt ausschließlich ein unabhängiger Gap. Das gilt für einzelne Karten, Listen, Kartenraster, fehlende Slots und veränderte visuelle Reihenfolgen.
 
@@ -168,4 +170,126 @@ Die Umsetzung folgt der Freigabe: Wrapper-Padding, eigener Gap, regionsbezogenes
 
 Sass- und Package-Prüfungen sowie die Browser-CI sind in der PR-Beschreibung dokumentiert. Der Browser-Test prüft explizite Slots, verlinkte Karten, dynamische Inhalte und Bleed-/Overlay-Geometrie. Ein blockierter Theme-Gesamtbuild wird nicht als erfolgreiche visuelle Abnahme ausgegeben.
 
-Der Gap verwendet das zentrale `--nt-spacing-text`; das bisherige `--nt-text-gap` ist ausschließlich in Unify definiert. Randlose Medien verändern nur Außen-Padding, niemals den Abstand zum nächsten Inhalt oder zur nächsten Card. [geändert]
+Der Gap verwendet das zentrale `--nt-spacing-text`; das bisherige `--nt-text-gap` ist ausschließlich in Unify definiert. Randlose Medien verändern nur Außen-Padding, niemals den Abstand zum nächsten Inhalt oder zur nächsten Card.
+
+## § 9 Vereinfachungsvorschlag: positive Einrückungen statt Bleed-Verrechnung
+
+### § 9.1 Status und aktueller Ausgangspunkt
+
+Stand 2026-09-11: Dieser Abschnitt ist ein neuer Vorschlag zur Diskussion, keine implementierte Änderung und keine erneute Freigabe der früheren Umsetzung. §§ 1–8 dokumentieren den bisherigen Vertrag; die hier vorgeschlagene Änderung seines Padding-Eigentümers ist noch offen. Bezugsstand: [9596b3b31fed96b67177a38b1b7bab7caf33a739](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed96b67177a38b1b7bab7caf33a739/nextrap-elements/nte-card/src/scss/_default-style.scss).
+
+Heute setzt `default-style()` Padding, Gap, Rahmen, Radius und `overflow: hidden` am Wrapper. `with-region-bleed()` zieht seitlich `--inner-padding` als negative Margin ab, setzt `width: auto` und markiert Blockkanten über acht mögliche Regions-Flags. Intern wählt eine Slot-Belegungsmatrix die erste/letzte Region; der Default verrechnet die ausgewählten Flags mit dem Wrapper-Padding. Overlay überschreibt diese Auswahl für seine gemeinsame Bild-/Content-Fläche. Das Mixin allein zeigt daher nicht das vollständige Verhalten.
+
+Quellen: [Default](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed96b67177a38b1b7bab7caf33a739/nextrap-elements/nte-card/src/scss/_default-style.scss), [Bleed](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed96b67177a38b1b7bab7caf33a739/nextrap-elements/nte-card/src/scss/_with-region-bleed.scss), [interne Kantenwahl](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed96b67177a38b1b7bab7caf33a739/nextrap-elements/nte-card/src/components/nte-card/nte-card.scss), [Overlay](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed96b67177a38b1b7bab7caf33a739/nextrap-elements/nte-card/src/scss/_with-image-overlay.scss), [Slotzustand](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed96b67177a38b1b7bab7caf33a739/nextrap-elements/nte-card/src/components/nte-card/nte-card.ts), [Browser-Test](https://github.com/nextrap/nextrap-monorepo/blob/9596b3b31fed96b67177a38b1b7bab7caf33a739/nextrap-elements/nte-card/tests/spacing.browser.mjs).
+
+### § 9.2 Was funktioniert und wo die Komplexität herkommt
+
+Die bestehende Lösung schützt den inneren Gap bewusst: Ein mittlerer Header mit Bleed darf nicht seine Nachbarn überlappen. Der Blockabstand wird am Wrapper entfernt, damit auch ein einzelnes sehr kleines Medium keinen Rest einer gepolsterten Mindestbox hinterlässt. Das sind sinnvolle Anforderungen; bloß alle Margins auf `-P` zu setzen wäre ein Rückschritt.
+
+Die Kantenwahl folgt jedoch fest Image → Header → Content → Footer. Im Template steht Header vor Image; `order` erzeugt erst die normale visuelle Reihenfolge. Ein schlichtes `:first-child` wäre deshalb schon im Default falsch. Theme-eigene Order, eine horizontale Card und Overlay brauchen jeweils eine eigene Außenkantenzuordnung. Diese Grenze besteht auch nach einer Vereinfachung.
+
+Die vorhandenen Tests decken viele Belegungen und Bleed-Varianten ab, setzen den Card-Radius aber auf null und prüfen keine frei geänderte Regions-Order. Daraus folgt keine visuelle Abnahme von Rundungen, Fokus-Clipping oder beliebigen horizontalen Themes. Die Beispiele der Usage-Datei nennen außerdem noch `--nt-text-gap`, während der Default bereits `--nt-spacing-text` nutzt; das ist eine Dokumentationsabweichung, kein Gegenstand dieses reinen Proposal-PRs.
+
+### § 9.3 Empfehlung und genauer Abstandskontrakt
+
+Empfehlung: Den Wrapper ungepolstert lassen. Er behält Rahmen, Hintergrund, Radius, Clipping und Gap. Sichtbare Regionen erhalten positive Margins ausschließlich an den Kanten, die zum äußeren Rahmen zeigen. Randlos bedeutet an diesen Kanten `0px`. An inneren Nachbarkanten bleibt die Margin immer null; dort wirkt ausschließlich Gap. Die Insets werden vom äußeren Theme-Mixin auf die vorhandenen Parts gesetzt, nicht auf beliebige slottierte Kinder.
+
+Das ist keine Rückkehr zu `padding: P` auf jeder Region: Dieses würde zwischen zwei Inhalten erneut `2P + G` erzeugen. Ebenso wäre `margin: P` auf jedem Kind falsch. Ob eine Kante außen liegt, entscheidet der Layout-Adapter einmal; ob dort Abstand gewünscht ist, entscheidet das jeweilige Region-Mixin.
+
+| Fall bei P=24px, G=16px | Ziel |
+|---|---|
+| Nur Content | Content auf allen vier Seiten 24px eingerückt |
+| Nur randloses Image | Image auf allen vier Seiten 0px eingerückt |
+| Randloses Image, danach Content | Image oben/seitlich 0px; Content seitlich/unten 24px; dazwischen 16px |
+| Image, randloser Header, Content | Header seitlich 0px; beide inneren Gaps unverändert 16px |
+| Beliebige leere Regionen | Keine leeren Layoutboxen und keine Phantom-Gaps |
+
+Für den normalen Stack bleibt Flex-Column ausreichend. `width: auto`, `min-width: 0` und Stretch auf den Regionsboxen lassen positive Seiten-Margins die verfügbare Breite reduzieren; eine feste `width: 100%` würde zusammen mit diesen Margins überlaufen. Card-Content darf weiterhin wachsen.
+
+### § 9.4 Konkreter CSS-Entwurf
+
+Folgender Ausschnitt zeigt nur den normalen Stack mit vorhandenem Image und Content, ohne Header/Footer. Die Zustandsbegrenzung ist wesentlich: Dies ist kein vollständiger Ersatz für `default-style()`. Die lokalen Properties werden auf jedem Regions-Part neu initialisiert, damit verschachtelte Cards keine Konfiguration erben.
+
+```scss
+// Demonstriert positive Insets für genau den belegten Image/Content-Stack.
+nte-card.style-default[data-card-regions~='image'][data-card-regions~='content']:not([data-card-regions~='header']):not([data-card-regions~='footer']) {
+  // Rahmen und Gap bleiben beim Wrapper; negative Verrechnung entfällt.
+  &::part(wrapper) {
+    padding: 0;
+    gap: var(--gap);
+  }
+
+  // Initialisiert die Abstände direkt auf den beiden Regionsboxen.
+  &::part(image), &::part(content) {
+    --_card-inset-inline-start: var(--inner-padding);
+    --_card-inset-inline-end: var(--inner-padding);
+    --_card-inset-block-start: var(--inner-padding);
+    --_card-inset-block-end: var(--inner-padding);
+    box-sizing: border-box;
+    width: auto;
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    margin-inline-start: var(--_card-inset-inline-start);
+    margin-inline-end: var(--_card-inset-inline-end);
+  }
+
+  // Nur die tatsächlich äußeren Blockkanten erhalten einen Abstand.
+  &::part(image) { margin-block-start: var(--_card-inset-block-start); }
+  &::part(content) { margin-block-end: var(--_card-inset-block-end); }
+
+  // Der bestehende Helper setzt Werte auf null statt den Wrapper zu korrigieren.
+  &.with-image-bleed::part(image) {
+    --_card-inset-inline-start: 0px;
+    --_card-inset-inline-end: 0px;
+    --_card-inset-block-start: 0px;
+    --_card-inset-block-end: 0px;
+  }
+}
+```
+
+Die vollständige Stack-Baseline wählt jeweils die erste und letzte belegte Region anhand des bereits vorhandenen `data-card-regions`. Für die vier Regionen genügen je vier geordnete Start-/End-Fälle; die übrigen Block-Margins bleiben null. Diese Regeln gehören zusammen in die Baseline, nicht in jeden Bleed-Helper. `with-region-bleed($region, $edges)` behält Validierung und öffentliche Signatur, setzt auf dem gewählten Part lediglich die ausgewählten Insets auf null. Die acht Wrapper-Bleed-Flags, deren Resets, die interne First-/Last-Bleed-Auswahl und die Padding-Multiplikation können für diese Baseline entfallen.
+
+Das reduziert die Kopplung zwischen Dateien; eine kleinere gesamte kompilierte CSS-Ausgabe ist damit noch nicht nachgewiesen. Der spätere Prototyp muss auch die zusätzliche Initialisierung der vier Werte pro Region mitzählen. Ein einzelner Inset-Wert wäre kürzer, würde aber die bereits öffentliche Auswahl einzelner Kanten einschränken.
+
+### § 9.5 Overlay, Rundungen und interaktive Inhalte
+
+Overlay bleibt eine eigene Grid-Komposition: Image und Content liegen in derselben Zelle. Beide haben dort null Außen-Inset; Content behält echtes inneres Padding als Textschutz. Header/Footer sind weitere Zeilen. Die letzte sichtbare Zeile erhält bei Bedarf den unteren positiven Inset; kein Rückgriff auf Wrapper-Bleed-Flags. Ohne Bild bleibt die normale Stack-Baseline aktiv. Horizontale Cards brauchen eine explizite Kantenkarte wie 2COL, nicht die Stack-Regeln.
+
+Für randlose Medien bleibt der Wrapper die gemeinsame Schnittkante. `border-radius` allein beschneidet Nachfahren nicht allgemein; das vorhandene Clipping muss bewusst erhalten werden. Kein pauschales `border-radius: inherit` auf allen Kindern: Ein Image über Content hätte sonst auch innen abgerundete untere Ecken. Bei einheitlichem äußerem Radius R und Rahmen B liegt die innere Rahmenkurve bei `max(0, R - B)`; das Wrapper-Clipping berücksichtigt diese Geometrie.
+
+Ein eingerücktes, eigenständig gerundetes Bild darf seinen eigenen Radius behalten. Soll es konzentrisch zum Rahmen wirken, ergibt sich im einfachen gleichmäßigen Fall `max(0, R - B - P)`; elliptische Radien und ungleiche Borders brauchen getrennte Betrachtung. Avatare behalten ihre beabsichtigte runde Form. Große Radien können randlosen Text oder Bedienelemente abschneiden: Eine randlose Oberfläche benötigt gegebenenfalls eigenes Inhaltspadding.
+
+`overflow: hidden` kann innere Fokusumrisse, Menüs und Schatten abschneiden. `overflow: clip` vermeidet einen Scrollcontainer, ist aber kein allgemeiner Ersatz: Es clippt weiterhin und verändert Overflow-/Scrollverhalten. Der äußere Card-Link, innere interaktive Elemente, Overlays und Medien müssen separat mit Tastatur getestet werden. Ein solcher Wechsel ist nicht Teil dieser Empfehlung zur Abstandsvereinfachung.
+
+### § 9.6 Umsetzung und Abnahme nach Entscheidung
+
+| Old | New |
+|---|---|
+| Padding auf Wrapper plus negative Regions-Margins | Wrapper ohne Padding; positive Margins nur an Außenkanten |
+| Region-Flags am Wrapper plus interne Flag-Auswahl | Insets direkt am Part plus zusammenhängende Layout-Kantenwahl |
+| `with-region-bleed(region, edges)` | Öffentliche API bleibt; ausgewählte Inset-Werte werden null |
+| Separate Overlay-Bleed-Korrektur | Explizite gemeinsame Grid-Fläche mit innerem Textschutz |
+
+Spätere Umsetzung: `src/scss/_default-style.scss`, `_with-region-bleed.scss`, `_with-image-overlay.scss`, `src/components/nte-card/nte-card.scss` sowie bestehende Tests, Demo und Usage-Dokumentation im Package konsistent anpassen. Die TS-Slotzustände können für den normalen Stack weiterverwendet werden. Freie Theme-Reihenfolgen müssen ihren Adapter selbst definieren oder separat als API beauftragt werden; keine DOM-Messung oder Sortierung nach `getBoundingClientRect()` einführen.
+
+Abnahme: Bestehende Geometriefälle weiter ausführen, ergänzt um P=0/24/48px, G=0/16/40px, sehr kleine Einzelbilder, Radius=0/12/48px und Border=0/1/8px. Reihenfolge, Overlay mit fehlenden Regionen, reine Textknoten, dynamische Slots, verschachtelte Cards, verlinkte Cards und natürliche Bilder prüfen. Geometrie, Screenshot und Tastaturfokus getrennt bewerten. Theme-Verwendungen dieses veränderten Padding-Vertrags benötigen einen eigenen Vergleich; der Proposal-PR ändert sie nicht.
+
+Prüfstand dieses Vorschlags: Quellen und vorhandene Testabdeckung statisch geprüft; kein Package-Code geändert. Der lokale Browserstart scheiterte am fehlenden Playwright-Chromium, Sass ist hier ebenfalls nicht installiert. Der CSS-Entwurf wurde nicht kompiliert oder visuell ausgeführt; frühere Prüfberichte aus § 8 gelten nicht als Prüfung dieses Alternativentwurfs.
+
+### § 9.7 Externe Belege
+
+- [CSS Box Alignment, Gaps](https://www.w3.org/TR/css-align-3/#gaps): Gap und zusätzliche Boxabstände sind getrennt; daraus folgt die Beschränkung positiver Margins auf Außenkanten.
+- [CSS Shadow Parts](https://www.w3.org/TR/css-shadow-parts-1/#part): Parts öffnen keine beliebige interne DOM-Struktur; die Kantenwahl darf nicht auf `::part(content):first-child` als vermeintlichem ersten sichtbaren Kind beruhen.
+- [CSS Overflow, Corner Clipping](https://www.w3.org/TR/css-overflow-3/#corner-clipping): Unterschied zwischen Hidden/Clip und deren Rundungsgeometrie.
+- [CSS Backgrounds, Corner Shaping](https://www.w3.org/TR/css-backgrounds-3/#corner-shaping): Verhältnis von äußerem Radius, Border und innerer Kurve.
+
+Die Gestaltungsempfehlung ist eine aus Code und CSS-Verträgen abgeleitete Architekturentscheidung, keine durch diese Quellen bestätigte Nextrap-Implementierung.
+
+## § 9.8 Beauftragte Umsetzung im PR #200
+
+Die Card verwendet positive Insets direkt auf den Regions-Parts. Der vorhandene Host-Belegungszustand wählt die erste/letzte Stack-Region. Wrapper-Bleed-Flags und deren interne Auswahl entfallen. Overlay setzt beide gemeinsamen Medienregionen auf null Außen-Margin und behält Textschutz-Padding. TypeScript und die Slot-Zuordnung bleiben unverändert. [neu]
+
+Die neue öffentliche API `with-region-inset($region, $space, $edges: all)` setzt normale, große oder einseitige Zielabstände; randlos ist `0px`. Regionen und logische Kantennamen werden geprüft. Die Baseline behält `--inner-padding` und den unabhängigen `--gap`. AI Usage Info und die SVG-Abstandsgrafik dokumentieren Instanz-/Theme-Konfiguration und Migration; für 2COL wurde außerdem der bestehende Theming-Skill ergänzt. [neu]
+
+JavaScript-Sass kompiliert beide Baselines, die Inset-Kantenvarianten und nebenwirkungsfreien Entrypoints. Die Browser-Tests wurden um Sonderabstände, ungepolsterte Wrapper und bei 2COL Main-Textknoten plus direkt komponierte Reverse-Mixins erweitert. Der lokale native Chromium-Prozess startet in dieser Laufzeit nicht; die vorhandenen GitHub-Browser-Workflows prüfen den Commit. Ihr tatsächlicher Ergebnisstand wird in der PR-Beschreibung nachgetragen. Ein erfolgreiches Sass-Ergebnis ersetzt keine visuelle Browser-Abnahme. [neu]
