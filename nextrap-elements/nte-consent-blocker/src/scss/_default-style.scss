@@ -3,7 +3,6 @@
   $default-background-selector: null,
   $default-pre-consent-selector: null,
   $border-radius: var(--nt-border-radius),
-  $overlay-background: rgba(255, 255, 255, 0.82),
   $pre-consent-padding: var(--nt-space-3)
 ) {
   // Setzt Selector nur bei expliziter Theme-Konfiguration, damit sonst die eingebauten Slot-Inhalte greifen.
@@ -20,7 +19,6 @@
   aspect-ratio: var(--aspect-ratio);
 
   --border-radius: #{$border-radius};
-  --overlay-background: #{$overlay-background};
   --pre-consent-padding: #{$pre-consent-padding};
 
   // Verwendet den vorhandenen Responsive-Zustand ohne eigene Media-Queries.
@@ -43,7 +41,6 @@
     text-align: center;
     transition: opacity 0.3s ease;
     padding: var(--pre-consent-padding);
-    background: var(--overlay-background);
   }
 
   // Übergänge sind Teil der visuellen Variante, nicht der funktionalen Zustandssteuerung.

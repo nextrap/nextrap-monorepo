@@ -1,6 +1,7 @@
 /// <reference types='vitest' />
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
+import { tjDemoViewerPlugin } from '@trunkjs/vite-demo-viewer';
 import * as path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
@@ -12,6 +13,7 @@ export default defineConfig(() => ({
   server: {
     port: 4000,
     host: '0.0.0.0',
+    fixedPort: true,
     hmr: true,
   },
   root: __dirname,
@@ -28,6 +30,10 @@ export default defineConfig(() => ({
         }
       },
     },
+    // Stellt die package-lokalen Demos über den aktuellen Demo Viewer bereit.
+    tjDemoViewerPlugin({
+      include: ['demo/**/*.demo.ts'],
+    }),
     dts({
       entryRoot: '.',
       aliasesExclude: [/@nextrap\/.*/],
