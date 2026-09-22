@@ -9,9 +9,10 @@ nte-consent-blocker.style-default {
   @include consentBlocker.pairing-ntl-2col-in-nte-consent-blocker();
 }
 
-// Materialisiert das äußere Layout ausschließlich in seiner Standardvariante.
+// Materialisiert das äußere Layout und lässt den Blocker in Top und Aside bis an die Innenkanten reichen.
 ntl-2col.style-default {
   @include twoCol.default-style();
+  @include twoCol.with-media-frame();
 }
 
 // Konfiguriert wiederverwendbare Inhalte unabhängig von der visuellen Style-Variante.

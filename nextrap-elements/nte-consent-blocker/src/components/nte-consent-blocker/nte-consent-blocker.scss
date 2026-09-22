@@ -23,9 +23,10 @@
   }
 }
 
-// Legt alle Zustandsflächen in dieselbe Zelle und erhält die vom Host vorgegebene Höhe.
+// Legt alle Zustandsflächen in dieselbe Zelle und begrenzt ihren Track auf die vom Host vorgegebene Höhe.
 #wrapper {
   display: grid;
+  grid-template-rows: minmax(0, 1fr);
   height: 100%;
 
   > * {
