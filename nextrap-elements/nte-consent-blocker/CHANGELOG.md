@@ -1,3 +1,14 @@
+## 2.0.2 (2026-09-22)
+
+### 🩹 Fixes
+
+- use peer dependencies between Nextrap packages ([d783bb5](https://github.com/nextrap/nextrap-monorepo/commit/d783bb5))
+- declare external libraries as peers and retain test dependencies ([67c6ffa](https://github.com/nextrap/nextrap-monorepo/commit/67c6ffa))
+
+### ❤️ Thank You
+
+- Matthias Leuffen
+
 ## 2.0.1 (2026-09-07)
 
 ### 🚀 Features
