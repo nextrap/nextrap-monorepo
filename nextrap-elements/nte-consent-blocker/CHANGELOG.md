@@ -1,3 +1,7 @@
+## 2.0.3 (2026-09-22)
+
+This was a version bump only for nte-consent-blocker to align it with other projects, there were no code changes.
+
 ## 2.0.2 (2026-09-22)
 
 ### 🩹 Fixes
