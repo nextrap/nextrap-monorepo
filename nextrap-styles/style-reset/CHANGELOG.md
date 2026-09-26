@@ -1,3 +1,13 @@
+## 2.0.2 (2026-09-26)
+
+### 🩹 Fixes
+
+- **style-reset:** preserve native list markers ([4c9115e](https://github.com/nextrap/nextrap-monorepo/commit/4c9115e))
+
+### ❤️ Thank You
+
+- Matthias Leuffen
+
 ## 2.0.1 (2026-09-13)
 
 ### 🩹 Fixes

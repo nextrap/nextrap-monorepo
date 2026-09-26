@@ -1,3 +1,19 @@
+## 2.0.2 (2026-09-26)
+
+### 🩹 Fixes
+
+- **style-elements:** align wrapped list text ([e693c08](https://github.com/nextrap/nextrap-monorepo/commit/e693c08))
+- **style-elements:** keep nested list indentation ([e9330f9](https://github.com/nextrap/nextrap-monorepo/commit/e9330f9))
+- **style-elements:** preserve default list markers ([03bf396](https://github.com/nextrap/nextrap-monorepo/commit/03bf396))
+
+### 🧱 Updated Dependencies
+
+- Updated style-reset to 2.0.2
+
+### ❤️ Thank You
+
+- Matthias Leuffen
+
 ## 2.0.1 (2026-09-13)
 
 ### 🚀 Features
