@@ -4,6 +4,13 @@
   margin-block: 0 var(--nt-space-4, 1rem);
   padding-inline-start: 0;
   list-style-position: inside;
+
+  // Keep nested semantic lists visually hierarchical while the first level starts flush.
+  > li > ul,
+  > li > ol {
+    padding-inline-start: 1.5rem;
+    list-style-position: outside;
+  }
 }
 
 @mixin list-unstyled() {
@@ -59,7 +66,7 @@
     gap: var(--nt-space-2, .5rem);
 
     &::before {
-      content: var(--list-status-indicator-content, '\\2212');
+      content: var(--list-status-indicator-content, '\2212');
       flex: 0 0 1em;
       inline-size: 1em;
       block-size: 1em;
@@ -92,11 +99,11 @@
 }
 
 @mixin list-item-tick() {
-  --list-status-indicator-content: '\\2713';
+  --list-status-indicator-content: '\2713';
   --list-status-indicator-color: var(--nt-success, #198754);
 }
 
 @mixin list-item-cross() {
-  --list-status-indicator-content: '\\2715';
+  --list-status-indicator-content: '\2715';
   --list-status-indicator-color: var(--nt-danger, #dc3545);
 }
