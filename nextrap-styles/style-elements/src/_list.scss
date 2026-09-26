@@ -2,8 +2,15 @@
 
 @mixin list() {
   margin-block: 0 var(--nt-space-4, 1rem);
-  padding-inline-start: 1.5rem;
-  list-style: none;
+  padding-inline-start: 0;
+  list-style-position: inside;
+
+  // Keep nested semantic lists visually hierarchical while the first level starts flush.
+  > li > ul,
+  > li > ol {
+    padding-inline-start: 1.5rem;
+    list-style-position: outside;
+  }
 }
 
 @mixin list-unstyled() {
