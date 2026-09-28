@@ -1,0 +1,48 @@
+// Die App aktiviert die visuelle Baum-Baseline explizit an ihrer style-default-Klasse.
+@mixin default-style($indent: 1.25rem, $center-width: 8rem, $end-width: 10rem) {
+  color: var(--nt-text, currentColor);
+  font-family: var(--nt-font-family-base, inherit);
+  --nte-treeview-center-width: 0px;
+  --nte-treeview-end-width: 0px;
+
+  // Sobald ein Knoten Zellen nutzt, reservieren alle Ebenen dieselben rechten Spalten.
+  &:has([slot='center']) {
+    --nte-treeview-center-width: #{$center-width};
+  }
+  &:has([slot='end']) {
+    --nte-treeview-end-width: #{$end-width};
+  }
+
+  // Nur der Unterbaum wird schmaler; auto-Breite und Start-Margin erhalten die rechte Außenkante.
+  & nte-treeview-item::part(children) {
+    margin-inline-start: $indent;
+    border-inline-start: 1px solid var(--nt-border, currentColor);
+  }
+
+  // Blatt und Elternknoten reservieren denselben Pfeilbereich vor der Beschriftung.
+  & nte-treeview-item::part(toggle),
+  & nte-treeview-item::part(spacer) {
+    box-sizing: border-box;
+    inline-size: 2rem;
+    min-block-size: 2rem;
+  }
+  & nte-treeview-item::part(toggle) {
+    padding: 0.5rem;
+  }
+  & nte-treeview-item::part(label) {
+    padding-block: 0.25rem;
+  }
+  & nte-treeview-item::part(link) {
+    color: inherit;
+    text-decoration: none;
+  }
+  & nte-treeview-item::part(link):hover {
+    text-decoration: underline;
+  }
+
+  // Die Ausrichtung der Zellen ist von der Tiefe des Baumbereichs unabhängig.
+  & nte-treeview-item::part(center),
+  & nte-treeview-item::part(end) {
+    overflow-wrap: anywhere;
+  }
+}
