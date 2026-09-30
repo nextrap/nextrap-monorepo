@@ -25,6 +25,7 @@ const css = compile(`
   .theme-test nte-card.style-default { @include card.default-style($innerPadding: 24px, $gap: 16px, $border: 2px solid black, $border-radius: 0); }
   .theme-test nte-card.all-bleed { @each $region in (image, header, content, footer) { @include card.with-region-bleed($region); } }
   .theme-test nte-card.header-inline { @include card.with-region-bleed(header, inline); }
+  .theme-test nte-card.special-insets { @include card.with-region-inset(content, 48px, inline); @include card.with-region-inset(footer, 40px, block-end); }
   .theme-test nte-card.overlay-mixin { @include card.with-image-overlay(); }
 `);
 for (const name of ['with-image-overlay','with-image-fullsize','with-region-bleed','with-image-bleed','with-header-bleed','with-content-bleed','with-footer-bleed']) {
@@ -192,6 +193,30 @@ try {
         }
         row.remove(); cases++;
       }
+    }
+    // Große und einseitige Zielabstände ändern keine inneren Gaps; Radius bleibt beim Wrapper.
+    for (const padding of [0, 24, 48]) for (const gap of [0, 16, 40]) {
+      const el = make(15, 'special-insets', gap, true);
+      el.style.setProperty('--inner-padding', `${padding}px`);
+      el.style.setProperty('--border-radius', '48px');
+      await settle(el);
+      const sr = el.shadowRoot, wrapper = sr.getElementById('wrapper');
+      const wr = wrapper.getBoundingClientRect();
+      const image = sr.getElementById('image').getBoundingClientRect();
+      const header = sr.getElementById('header').getBoundingClientRect();
+      const content = sr.getElementById('content').getBoundingClientRect();
+      const footer = sr.getElementById('footer').getBoundingClientRect();
+      near(image.left - wr.left - 2, padding, 'Image: normaler Inset');
+      near(content.left - wr.left - 2, 48, 'Content: großer Inset');
+      near(wr.right - content.right - 2, 48, 'Content: beidseitiger Inset');
+      near(wr.bottom - footer.bottom - 2, 40, 'Footer: einseitiger Inset');
+      near(header.top - image.bottom, gap, 'Sonderabstand: erster Gap');
+      near(content.top - header.bottom, gap, 'Sonderabstand: zweiter Gap');
+      near(footer.top - content.bottom, gap, 'Sonderabstand: dritter Gap');
+      near(parseFloat(getComputedStyle(wrapper).paddingTop), 0, 'Kein Wrapper-Padding');
+      if (getComputedStyle(wrapper).borderTopLeftRadius !== '48px' || getComputedStyle(wrapper).overflow !== 'hidden')
+        issues.push('Gemeinsamer Radius-/Clipping-Vertrag verloren');
+      el.remove(); cases++;
     }
     // Dynamische Textknoten sowie verschachtelte leere Slots dürfen äußeren Content nicht ausblenden.
     const el=make(0,'with-content-bleed',16,false); await settle(el);

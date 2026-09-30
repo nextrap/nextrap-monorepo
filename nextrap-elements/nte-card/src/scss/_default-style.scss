@@ -16,6 +16,7 @@
   --border: #{$border};
   --border-radius: #{$border-radius};
   --image-aspect-ratio: var(--aspect-ratio, #{$image-aspect-ratio});
+  @if $innerPadding == 0 { $innerPadding: 0px; }
   --inner-padding: #{$innerPadding};
   --overlay-background: #{$overlay-background};
   // Jede Card initialisiert den Regions-Gap unabhängig vom Elternlayout.
@@ -27,25 +28,42 @@
     border-radius: var(--border-radius);
     background-color: var(--background-color);
     overflow: hidden;
-    // Pro Wrapper zurücksetzen, damit verschachtelte Cards keine Bleed-Zustände erben.
-    @each $region in (image, header, content, footer) {
-      --_nte-card-bleed-#{$region}-start: 0;
-      --_nte-card-bleed-#{$region}-end: 0;
-    }
-    padding: var(--inner-padding);
-    // Am äußeren Bleed-Rand entfällt Padding statt die Mindesthöhe der Padding-Box zu behalten.
-    padding-block-start: calc(var(--inner-padding) * (1 - var(--_nte-card-first-bleed, 0)));
-    padding-block-end: calc(var(--inner-padding) * (1 - var(--_nte-card-last-bleed, 0)));
+    padding: 0;
     gap: var(--gap);
   }
 
-  // Nur der Wrapper trägt Layout-Padding; Bleed wird anschließend komponiert.
+  // Jede Region besitzt ihre eigenen Insets; nur Außenkanten verwenden sie.
   &::part(image),
   &::part(header),
   &::part(content),
   &::part(footer) {
+    --_card-inset-inline-start: var(--inner-padding);
+    --_card-inset-inline-end: var(--inner-padding);
+    --_card-inset-block-start: var(--inner-padding);
+    --_card-inset-block-end: var(--inner-padding);
+    box-sizing: border-box;
+    width: auto;
+    min-width: 0;
     padding: 0;
     margin: 0;
+    margin-inline-start: var(--_card-inset-inline-start);
+    margin-inline-end: var(--_card-inset-inline-end);
+  }
+
+  // Die normalen Stack-Kanten folgen der tatsächlichen Slot-Belegung, nicht DOM-first-child.
+  $before: '';
+  @each $region in (image, header, content, footer) {
+    &:where([data-card-regions~='#{$region}']#{$before})::part(#{$region}) {
+      margin-block-start: var(--_card-inset-block-start);
+    }
+    $before: "#{$before}:not([data-card-regions~='#{$region}'])";
+  }
+  $after: '';
+  @each $region in (footer, content, header, image) {
+    &:where([data-card-regions~='#{$region}']#{$after})::part(#{$region}) {
+      margin-block-end: var(--_card-inset-block-end);
+    }
+    $after: "#{$after}:not([data-card-regions~='#{$region}'])";
   }
 
   img[slot='image'],

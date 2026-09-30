@@ -1,6 +1,7 @@
 // Tauscht nur mobil Main und Aside; Top und Bottom behalten ihre äußeren Positionen.
 @mixin with-mobile-reverse {
   &[mode='mobile'] {
+    &::part(wrapper) { --_2col-mobile-reverse: 1; }
     &::part(aside) {
       order: 1;
     }
