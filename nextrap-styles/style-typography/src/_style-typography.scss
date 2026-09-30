@@ -17,6 +17,14 @@
   em { @include t.em(); }
   small, .small { @include t.small(); }
   a { @include t.link(); }
+
+  // Begrenzt Links mit Bildern oder Picture-Elementen auf die Medienbreite, damit die klickbare Fläche nicht die gesamte Textzeile einnimmt.
+  a:has(img),
+  a:has(picture) {
+    display: inline-block;
+    max-width: 100%;
+  }
+
   mark { @include t.mark(); }
   ul { @include t.ul(); }
   ol { @include t.ol(); }

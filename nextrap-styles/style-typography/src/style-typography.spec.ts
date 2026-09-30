@@ -18,6 +18,7 @@ describe('styleTypography', () => {
     expect(result.css).toContain('var(--nt-header');
     expect(result.css).toContain('var(--nt-spacing-text');
     expect(result.css).toContain('var(--nt-text');
+    expect(result.css).toMatch(/a:has\(img\),\s*a:has\(picture\)\s*\{[^}]*display:\s*inline-block[^}]*max-width:\s*100%/s);
     expect(result.css).toMatch(/ul\s*\{[^}]*padding-left:\s*1\.25em/s);
     expect(result.css).not.toContain('--nt-surface-');
     expect(result.css).not.toMatch(/(?:^|[},]\s*)(?:section|article)(?:\s|,|\{)/m);
@@ -37,6 +38,8 @@ describe('styleTypography', () => {
 
     expect(result.css).toContain('.theme-test h1, .theme-test .h1');
     expect(result.css).toContain('.theme-test p');
+    expect(result.css).toContain('.theme-test a:has(img)');
+    expect(result.css).toContain('.theme-test a:has(picture)');
     expect(result.css).not.toMatch(/^h1/m);
   });
 });
