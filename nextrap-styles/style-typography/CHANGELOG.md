@@ -1,3 +1,14 @@
+## 2.0.3 (2026-09-30)
+
+### 🩹 Fixes
+
+- **style-typography:** include linked picture elements ([7fdaff7](https://github.com/nextrap/nextrap-monorepo/commit/7fdaff7))
+- **style-typography:** constrain image link width ([ef7ddd0](https://github.com/nextrap/nextrap-monorepo/commit/ef7ddd0))
+
+### ❤️ Thank You
+
+- Matthias Leuffen
+
 ## 2.0.2 (2026-09-13)
 
 ### 🧱 Updated Dependencies
