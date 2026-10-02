@@ -1,3 +1,15 @@
+## 2.0.4 (2026-10-02)
+
+### 🩹 Fixes
+
+- **style-elements:** restore positioned diamond marker ([7ce6044](https://github.com/nextrap/nextrap-monorepo/commit/7ce6044))
+- **style-elements:** inherit marker line metrics ([6abfde6](https://github.com/nextrap/nextrap-monorepo/commit/6abfde6))
+- **style-elements:** align diamond marker with first line ([39f006d](https://github.com/nextrap/nextrap-monorepo/commit/39f006d))
+
+### ❤️ Thank You
+
+- Matthias Leuffen
+
 ## 2.0.3 (2026-10-02)
 
 ### 🩹 Fixes
