@@ -1,3 +1,13 @@
+## 2.0.3 (2026-10-02)
+
+### 🩹 Fixes
+
+- **styles:** use native marker for diamond lists ([8aea672](https://github.com/nextrap/nextrap-monorepo/commit/8aea672))
+
+### ❤️ Thank You
+
+- Matthias Leuffen
+
 ## 2.0.2 (2026-09-26)
 
 ### 🩹 Fixes
