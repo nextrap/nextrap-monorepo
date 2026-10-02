@@ -25,14 +25,17 @@
   }
 }
 
-// Uses the native list marker so list-style overrides can suppress or replace it.
+// Nutzt den nativen Marker im festen linken Gutter; die Schriftgröße richtet
+// den Diamond optisch mittig an der ersten Textzeile aus und erhält den
+// bisherigen Abstand zwischen Marker und Text.
 @mixin list-diamond() {
   padding-inline-start: 1.25em;
+  list-style-position: outside;
   list-style-type: '◆';
 
   > li::marker {
     color: var(--nt-primary);
-    font-size: 0.65em;
+    font-size: 0.8em;
   }
 }
 
