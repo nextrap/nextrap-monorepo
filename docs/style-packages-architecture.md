@@ -22,6 +22,7 @@ The boundaries:
 - `style-elements` does NOT own atomic single-property utilities (→ `style-utils`).
 - `style-base` does NOT own visual rules of any kind.
 - Web component Shadow DOM does NOT use `@nextrap/style-base` or any non-reset global styles.
+- Semantic list bullets and markers use native `list-style` / `list-style-type` together with `::marker`; they must not be synthesized with `::before` or `::after`. This keeps markers replaceable and suppressible through the normal list-style cascade.
 
 ---
 
