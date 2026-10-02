@@ -22,7 +22,12 @@ The boundaries:
 - `style-elements` does NOT own atomic single-property utilities (→ `style-utils`).
 - `style-base` does NOT own visual rules of any kind.
 - Web component Shadow DOM does NOT use `@nextrap/style-base` or any non-reset global styles.
-- Semantic list bullets and markers use native `list-style` / `list-style-type` together with `::marker`; they must not be synthesized with `::before` or `::after`. This keeps markers replaceable and suppressible through the normal list-style cascade.
+- Native `list-style` / `::marker` is preferred when its browser-defined
+  geometry is sufficient. If a marker must be positioned precisely relative to
+  the first text line, a generated `::before` / `::after` marker is allowed
+  because `::marker` cannot be positioned reliably enough for that geometry.
+  Such a variant must suppress the native marker itself; resetting the variant
+  must also reset the generated marker's `content` to `none`.
 
 ---
 
