@@ -25,9 +25,9 @@
   }
 }
 
-// Nutzt den nativen Marker im festen linken Gutter; die Schriftgröße richtet
-// den Diamond optisch mittig an der ersten Textzeile aus und erhält den
-// bisherigen Abstand zwischen Marker und Text.
+// Nutzt den nativen Marker im festen linken Gutter und übernimmt die
+// Font- und Lineheight-Metrik der ersten Textzeile; nur der Diamond selbst
+// wird relativ zur geerbten Schriftgröße verkleinert.
 @mixin list-diamond() {
   padding-inline-start: 1.25em;
   list-style-position: outside;
@@ -35,7 +35,8 @@
 
   > li::marker {
     color: var(--nt-primary);
-    font-size: 0.8em;
+    font: inherit;
+    font-size: 0.65em;
   }
 }
 
