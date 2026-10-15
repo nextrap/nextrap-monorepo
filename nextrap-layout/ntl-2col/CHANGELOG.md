@@ -1,3 +1,15 @@
+## 2.0.4 (2026-10-15)
+
+### 🩹 Fixes
+
+- **ntl-2col:** exclude keep image paragraphs from automatic aside ([b878038](https://github.com/nextrap/nextrap-monorepo/commit/b878038))
+- **ntl-2col:** exclude keep image paragraphs from automatic aside ([b1b9c9d](https://github.com/nextrap/nextrap-monorepo/commit/b1b9c9d))
+- **ntl-2col:** exclude keep image paragraphs from automatic aside ([0b4ab4c](https://github.com/nextrap/nextrap-monorepo/commit/0b4ab4c))
+
+### ❤️ Thank You
+
+- Matthias Leuffen
+
 ## 2.0.3 (2026-09-27)
 
 This was a version bump only for ntl-2col to align it with other projects, there were no code changes.
