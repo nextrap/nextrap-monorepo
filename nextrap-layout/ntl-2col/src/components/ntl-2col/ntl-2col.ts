@@ -36,7 +36,7 @@ export class Ntl2Col extends nextrap_element({
           <div part="aside" id="aside">
             <slot
               name="aside"
-              data-query="@var(--ntl-2col-aside-selector) | :scope > .aside | :scope > p:has(img)"
+              data-query="@var(--ntl-2col-aside-selector) | :scope > .aside | :scope > p:has(img):not(.keep):not(:has(img.keep))"
               data-set-attribute-class="auto"
             ></slot>
           </div>
