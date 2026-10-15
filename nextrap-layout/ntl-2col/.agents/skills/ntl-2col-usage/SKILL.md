@@ -32,7 +32,7 @@ Ordne Inhalte zuerst nach ihrer Rolle zu. Eine gewünschte Position allein ist k
 
 ### Automatische Bildzuordnung
 
-Die Komponente ordnet jedes direkte `p:has(img)`-Kind automatisch dem `aside`-Slot zu und ergänzt daran die Klasse `.auto`. Ein normales Markdown-Bild wird als direkter Bildabsatz gerendert und landet deshalb standardmäßig in `aside`:
+Die Komponente ordnet direkte `p:has(img)`-Kinder automatisch dem `aside`-Slot zu und ergänzt daran die Klasse `.auto`, sofern weder der Absatz selbst noch eines seiner Bilder `.keep` trägt. Ein normales Markdown-Bild wird als direkter Bildabsatz gerendert und landet deshalb standardmäßig in `aside`:
 
 ```markdown
 ## Behandlungsschwerpunkt
