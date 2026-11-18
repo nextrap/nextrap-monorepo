@@ -294,7 +294,8 @@ export class NteTableColumnReorderPlugin extends PointerReorderPlugin {
     const context = this.context;
     Array.from(context?.table.tHead?.rows[0]?.cells ?? []).forEach((header, columnIndex) => {
       if (header.dataset['reorderable'] === 'false' || header.querySelector('[data-nte-table-column-handle]')) return;
-      const handle = createControl(context!.host.ownerDocument, 'nte-table-drag-handle', `Spalte ${columnIndex + 1} verschieben`, '⋮⋮');
+      // Ein einzelnes Griffsymbol vermeidet die optisch doppelte Darstellung zweier Ellipsen.
+      const handle = createControl(context!.host.ownerDocument, 'nte-table-drag-handle', `Spalte ${columnIndex + 1} verschieben`, '⠿');
       handle.dataset['nteTableColumnHandle'] = '';
       header.prepend(handle);
     });

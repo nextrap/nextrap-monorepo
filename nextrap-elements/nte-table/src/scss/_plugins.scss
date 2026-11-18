@@ -24,9 +24,33 @@
     outline: 0;
   }
 
+  // Header-Controls belegen reservierte Bereiche statt als Floats eine zweite Zeile zu erzeugen.
+  & > table thead :is(th, td):has(.nte-table-plugin-control) {
+    position: relative;
+  }
+
+  & > table thead :is(th, td):has([data-nte-table-sort-control]) {
+    padding-inline-end: 1.75rem;
+  }
+
+  & > table thead :is(th, td):has([data-nte-table-column-handle]) {
+    padding-inline-start: 1.75rem;
+  }
+
   & > table .nte-table-sort-control {
-    float: inline-end;
+    position: absolute;
+    inset-inline-end: 0.125rem;
+    inset-block-start: 50%;
+    transform: translateY(-50%);
     cursor: pointer;
+  }
+
+  & > table thead [data-nte-table-column-handle] {
+    position: absolute;
+    inset-inline-start: 0.125rem;
+    inset-block-start: 50%;
+    transform: translateY(-50%);
+    margin: 0;
   }
 
   & > table .nte-table-drag-handle {

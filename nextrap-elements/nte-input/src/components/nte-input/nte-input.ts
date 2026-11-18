@@ -301,6 +301,13 @@ export class NteInput extends nextrap_element({
     this.#plugin?.getFormElement()?.focus();
   }
 
+  // Native change-Events verlassen den Shadow DOM nicht; bereits composed Events bleiben unverändert.
+  @Listen('change', { target: 'shadowRoot' })
+  onShadowChange(e: Event) {
+    if (e.composed || this.disabled || this.readOnly) return;
+    this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
+  }
+
   @Listen('change')
   onChange(e: Event) {
     // Gesperrte Controls dürfen ihren Formularwert nicht durch UI-Ereignisse ändern.
@@ -308,7 +315,8 @@ export class NteInput extends nextrap_element({
     this.#plugin?.onChange(e);
   }
 
-  @Listen('input')
+  // Capture synchronisiert den Wert vor Validierung und externen Bubble-Listenern am Host.
+  @Listen('input', { options: { capture: true } })
   onInput(e: Event) {
     // Programmatische value-Zuweisungen bleiben auch bei gesperrter Benutzereingabe möglich.
     if (this.disabled || this.readOnly) return;

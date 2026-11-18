@@ -43,6 +43,8 @@ export class NteDataTableElement<T extends object = Record<string, unknown>> ext
   protected override updated(changed: PropertyValues): void {
     super.updated(changed);
     if (changed.has('definition')) this._validateDefinition();
+    // Neue Zellen benötigen nach dem Lit-Render die Breiten und Plugin-Controls der Basistabelle.
+    if (changed.has('data') || changed.has('definition') || changed.has('viewState')) this.refresh();
   }
 
   protected override render() {

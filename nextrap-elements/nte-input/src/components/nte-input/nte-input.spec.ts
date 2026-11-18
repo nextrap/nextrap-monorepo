@@ -13,6 +13,65 @@ describe('NteInput', () => {
     expect(element).toBeInstanceOf(NteInput);
   });
 
+  // Früh registrierte Verbraucher müssen bei jedem Event bereits den aktuellen Wert lesen.
+  it.each(['text', 'textarea'])('syncs %s values before external input listeners', async (type) => {
+    const element = document.createElement('nte-input') as NteInput;
+    element.type = type;
+    const values: NteInputValue[] = [];
+    element.addEventListener('input', () => values.push(element.value));
+    document.body.appendChild(element);
+
+    try {
+      await element.updateComplete;
+      await element.updateComplete;
+      const control = element.shadowRoot!.querySelector<HTMLInputElement | HTMLTextAreaElement>('input, textarea')!;
+
+      for (const value of ['a', 'ab', 'abc', 'ab', '']) {
+        control.value = value;
+        control.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
+      }
+
+      expect(values).toEqual(['a', 'ab', 'abc', 'ab', '']);
+      expect(element.value).toBe('');
+    } finally {
+      element.remove();
+    }
+  });
+
+  // Nicht-composed native Änderungen müssen den Host und dessen Eltern genau einmal erreichen.
+  it.each(['text', 'textarea'])('forwards native %s change events once with the current value', async (type) => {
+    const parent = document.createElement('div');
+    const element = document.createElement('nte-input') as NteInput;
+    element.type = type;
+    const values: NteInputValue[] = [];
+    const onParentChange = vi.fn();
+    element.addEventListener('change', () => values.push(element.value));
+    parent.addEventListener('change', onParentChange);
+    parent.appendChild(element);
+    document.body.appendChild(parent);
+
+    try {
+      await element.updateComplete;
+      await element.updateComplete;
+      const control = element.shadowRoot!.querySelector<HTMLInputElement | HTMLTextAreaElement>('input, textarea')!;
+      control.value = 'complete';
+      control.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
+      expect(values).toEqual([]);
+
+      control.dispatchEvent(new Event('change', { bubbles: true }));
+      expect(values).toEqual(['complete']);
+      expect(onParentChange).toHaveBeenCalledTimes(1);
+      expect(onParentChange.mock.calls[0][0].target).toBe(element);
+
+      // Bereits grenzüberschreitende Plugin-Events dürfen nicht erneut ausgesendet werden.
+      control.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
+      expect(values).toEqual(['complete', 'complete']);
+      expect(onParentChange).toHaveBeenCalledTimes(2);
+    } finally {
+      parent.remove();
+    }
+  });
+
   it('renders label and validation message box', async () => {
     const element = document.createElement('nte-input') as NteInput;
     element.label = 'E-Mail';
