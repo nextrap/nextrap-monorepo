@@ -1,3 +1,13 @@
+## 2.1.0 (2026-11-18)
+
+### 🩹 Fixes
+
+- **style-typography:** inherit base text styles from the theme scope ([5316e5b](https://github.com/nextrap/nextrap-monorepo/commit/5316e5b))
+
+### ❤️ Thank You
+
+- Matthias Leuffen
+
 ## 2.0.4 (2026-10-02)
 
 This was a version bump only for style-typography to align it with other projects, there were no code changes.
