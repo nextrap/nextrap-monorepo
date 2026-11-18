@@ -19,7 +19,9 @@ describe('styleTypography', () => {
     expect(result.css).toContain('var(--nt-spacing-text');
     expect(result.css).toContain('var(--nt-text');
     expect(result.css).toMatch(/body\s*\{[^}]*font-family:\s*var\(--nt-font-family-base/s);
-    expect(result.css).toMatch(/a:has\(img\),\s*a:has\(picture\)\s*\{[^}]*display:\s*inline-block[^}]*max-width:\s*100%/s);
+    expect(result.css).toMatch(
+      /body a:has\(img\),\s*body a:has\(picture\)\s*\{[^}]*display:\s*inline-block[^}]*max-width:\s*100%/s,
+    );
     expect(result.css).toMatch(/ul\s*\{[^}]*padding-left:\s*1\.25em/s);
     expect(result.css).not.toContain('--nt-surface-');
     expect(result.css).not.toMatch(/(?:^|[},]\s*)(?:section|article)(?:\s|,|\{)/m);
