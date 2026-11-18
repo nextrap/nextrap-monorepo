@@ -1,3 +1,6 @@
 @use './index' as type;
 
-@include type.style-typography();
+// The default stylesheet scopes inheritable typography and native elements to the body.
+body {
+  @include type.style-typography();
+}
