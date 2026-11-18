@@ -14,10 +14,11 @@ describe('styleTypography', () => {
   it('materializes native typography through the default entry point', () => {
     const result = compile(join(packageRoot, 'default.scss'));
 
-    expect(result.css).toContain('h1, .h1');
+    expect(result.css).toContain('body h1, body .h1');
     expect(result.css).toContain('var(--nt-header');
     expect(result.css).toContain('var(--nt-spacing-text');
     expect(result.css).toContain('var(--nt-text');
+    expect(result.css).toMatch(/body\s*\{[^}]*font-family:\s*var\(--nt-font-family-base/s);
     expect(result.css).toMatch(/a:has\(img\),\s*a:has\(picture\)\s*\{[^}]*display:\s*inline-block[^}]*max-width:\s*100%/s);
     expect(result.css).toMatch(/ul\s*\{[^}]*padding-left:\s*1\.25em/s);
     expect(result.css).not.toContain('--nt-surface-');
