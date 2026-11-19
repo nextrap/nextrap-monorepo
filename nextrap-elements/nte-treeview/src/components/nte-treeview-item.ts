@@ -28,6 +28,10 @@ export class NteTreeViewItem extends nextrap_element() {
     #details {
       display: contents;
     }
+    /* Der native Inhalts-Wrapper gibt den geöffneten Unterbaum an das Zeilenraster weiter. */
+    #details[open]::details-content {
+      display: contents;
+    }
     #toggle {
       grid-column: 1;
       grid-row: 1;
