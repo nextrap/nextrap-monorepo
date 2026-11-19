@@ -84,6 +84,7 @@ export class NteTreeViewItem extends nextrap_element() {
   @property({ reflect: true }) public accessor target = '';
   @property({ reflect: true }) public accessor rel = '';
   @property({ reflect: true }) public accessor current: TreeItemCurrent = '';
+  @property({ type: Boolean, reflect: true }) public accessor selected = false;
   @property({ type: Boolean, reflect: true }) public accessor expanded = false;
   @property({ attribute: 'toggle-label' }) public accessor toggleLabel = 'Unterbaum';
   @state() private accessor _hasChildren = false;
@@ -132,11 +133,33 @@ export class NteTreeViewItem extends nextrap_element() {
     this.dispatchEvent(new CustomEvent<boolean>('expanded-change', { detail: open }));
   }
 
+  /** Wählt nur die eigene Zeile; Unterbäume, Pfeile und eigenständige Zellaktionen bleiben unabhängig. */
+  private _onRowClick(event: MouseEvent): void {
+    if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
+    const path = event.composedPath();
+    const children = this.renderRoot.querySelector('#children');
+    const toggle = this.renderRoot.querySelector('#toggle');
+    if ((children && path.includes(children)) || (toggle && path.includes(toggle))) return;
+
+    // Eigener Link/Button darf auswählen; andere interaktive Slotelemente behalten ihren Klick.
+    const label = this.renderRoot.querySelector('#label');
+    const contentPath = path.slice(0, path.indexOf(event.currentTarget!));
+    if (contentPath.some((node) => node instanceof Element && node !== label && node.matches(
+      'a, button, input, select, textarea, summary, [contenteditable], [tabindex], [role="button"], [role="link"], [role="combobox"], [role="checkbox"], [role="switch"], [role="slider"]',
+    ))) return;
+
+    this.dispatchEvent(new CustomEvent<NteTreeViewItem>('selection-request', {
+      detail: this,
+      bubbles: true,
+      composed: true,
+    }));
+  }
+
   /** Link, Pfeil und Zellen sind Geschwister: Ein Dropdown-Klick kann den Unterbaum nicht umschalten. */
   protected override render() {
     super.render();
     const label = html`<slot name="icon"></slot><slot @slotchange=${this._onLabelChange}></slot>`;
-    return html`<div id="row" part="row">
+    return html`<div id="row" part="row" @click=${this._onRowClick}>
       ${
         this._hasChildren
           ? html`<details id="details" part="details" .open=${this.expanded} @toggle=${this._onToggle}>
@@ -164,9 +187,10 @@ export class NteTreeViewItem extends nextrap_element() {
               target=${ifDefined(this.target || undefined)}
               rel=${ifDefined(this.rel || undefined)}
               aria-current=${ifDefined(this.current || undefined)}
+              aria-description=${ifDefined(this.selected ? 'Ausgewählt' : undefined)}
               >${label}</a
             >`
-          : html`<span id="label" part="label text">${label}</span>`
+          : html`<button id="label" part="label text" type="button" aria-pressed=${this.selected}>${label}</button>`
       }
       <div id="center" part="center"><slot name="center"></slot></div>
       <div id="end" part="end"><slot name="end"></slot></div>

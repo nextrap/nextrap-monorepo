@@ -8,6 +8,8 @@ export interface TreeNodeData {
   current?: TreeItemCurrent;
   /** Steuert ausschließlich den Unterbaum unabhängig vom Link. */
   expanded?: boolean;
+  /** Markiert die Auswahl unabhängig von der aktuellen Navigationsseite. */
+  selected?: boolean;
   /** Beispielsweise Icon-Kennung, Dateigröße oder CMS-Status; keine Templates. */
   [key: string]: string | number | boolean | null | undefined;
 }
