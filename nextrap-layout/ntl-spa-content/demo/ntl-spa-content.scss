@@ -1,0 +1,120 @@
+// Tokens und visuelle Layout-Styles werden ausschließlich für die Demo materialisiert.
+@use '@nextrap/style-base' as nt;
+@use '../index' as spa;
+
+:root {
+  @include nt.runtime-theme-scoped();
+  color-scheme: light;
+  --nt-primary: #0969da;
+  --nt-font-family: system-ui, sans-serif;
+}
+
+// Der Dokument-Scrollport gehört der Seite; Content Pane bekommt keinen eigenen Overflow.
+body {
+  margin: 0;
+  color: var(--nt-text);
+  background: var(--nt-surface);
+  font-family: var(--nt-font-family);
+  line-height: 1.5;
+}
+
+tj-content-pane {
+  display: block;
+}
+
+// Die äußere Navbar ist absichtlich nicht sticky und verschwindet beim Seitenscrollen.
+.demo-navbar {
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 2rem;
+  min-block-size: 5rem;
+  padding: 1rem 1.5rem;
+  background: var(--nt-surface-raised);
+  border-block-end: 1px solid var(--nt-border);
+
+  p {
+    margin: 0;
+  }
+
+  strong {
+    color: var(--nt-primary);
+    letter-spacing: 0.08em;
+  }
+
+  .demo-hint {
+    flex: 1 1 28rem;
+    font-size: 0.8rem;
+    color: var(--nt-text-muted);
+  }
+}
+
+// Unterschiedliche Breiten demonstrieren die beiden öffentlichen Instanzvariablen.
+ntl-spa-content.style-default {
+  @include spa.default-style();
+  --sidebar-left-width: 15rem;
+  --sidebar-right-width: 18rem;
+
+  &::part(content) {
+    padding: 0;
+  }
+
+  // Feste Leisten bleiben kompakt; ihre Abstände stammen aus dem äußeren Theme.
+  > [slot='header'] h2,
+  > [slot='footer'] h2,
+  > [slot='sidebar-left-header'] h2,
+  > [slot='sidebar-right-header'] h2 {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  // Navigation und Inspector tragen Inhalt, aber keine eigene Scrollsteuerung.
+  > [slot='sidebar-left'],
+  > [slot='sidebar-right'] {
+    font-size: 0.8rem;
+    overflow-wrap: anywhere;
+
+    h2 {
+      margin-block: 0 1rem;
+      font-size: 0.7rem;
+      color: var(--nt-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    ul {
+      padding: 0;
+      list-style: none;
+    }
+
+    li {
+      padding-block: 0.45rem;
+      border-block-end: 1px solid var(--nt-border);
+    }
+  }
+
+  // Die Code-Vorschau behält lange Zeilen; der Default-Slot scrollt bei Bedarf zweiachsig.
+  .demo-editor {
+    padding: 1.5rem;
+
+    h2 {
+      margin-block-start: 0;
+      font-size: 1.15rem;
+    }
+
+    p {
+      font-size: 0.85rem;
+      color: var(--nt-text-muted);
+    }
+
+    pre {
+      margin: 1.5rem 0 0;
+      font-size: 0.8rem;
+      line-height: 1.8;
+      tab-size: 2;
+    }
+  }
+}

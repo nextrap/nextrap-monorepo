@@ -1,0 +1,62 @@
+// Nach dem äußeren Seitenscrollen füllt das Layout den sichtbaren Viewport.
+:host {
+  box-sizing: border-box;
+  display: flex;
+  position: sticky;
+  inset-block-start: 0;
+  inline-size: 100%;
+  block-size: 100vh;
+  block-size: 100dvh;
+  min-inline-size: 0;
+}
+
+// Jede Spalte verteilt die verfügbare Höhe zwischen festen und scrollenden Slots.
+#sidebar-left,
+#main,
+#sidebar-right {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  min-block-size: 0;
+}
+
+// Die Mitte erhält den gesamten Platz, den die vorhandenen Sidebars übriglassen.
+#main {
+  flex: 1 1 0;
+}
+
+// Die Breiten sind konfigurierbar; beide Sidebars lassen der Mitte mindestens 30%.
+#sidebar-left {
+  flex: 0 1 var(--sidebar-left-width, 16rem);
+  max-inline-size: 35%;
+}
+
+#sidebar-right {
+  flex: 0 1 var(--sidebar-right-width, 18rem);
+  max-inline-size: 35%;
+}
+
+// Slots bilden selbst die Boxen; zusätzliche Header- und Scroll-Wrapper entfallen.
+slot {
+  box-sizing: border-box;
+  display: block;
+  flex: 0 0 auto;
+  min-inline-size: 0;
+}
+
+// Native Scrollports lassen an ihren Grenzen das Scrollen der äußeren Seite zu.
+slot[name='sidebar-left'],
+slot:not([name]),
+slot[name='sidebar-right'] {
+  flex: 1 1 0;
+  min-block-size: 0;
+  overflow: auto;
+}
+
+// Ein Header allein öffnet keine Sidebar; unbesetzte feste Slots belegen keinen Platz.
+#sidebar-left:has(> slot[name='sidebar-left'].slot-empty),
+#sidebar-right:has(> slot[name='sidebar-right'].slot-empty),
+slot[name].slot-empty {
+  display: none !important;
+}
