@@ -102,7 +102,7 @@ describe('NteTreeViewItem explorer interactions', () => {
     expect(selection).not.toHaveBeenCalled();
   });
 
-  // Ein Blatt reserviert weder einen Pfeil noch einen leeren Ersatz für einen nicht vorhandenen Pfeil.
+  // Das Theme reserviert die Pfeilspalte per CSS; Blätter benötigen dafür keinen DOM-Platzhalter.
   it('renders iconless leaves without disclosure placeholders', async () => {
     const view = await mount(`
       <nte-treeview-item id="folder" expanded>
@@ -156,25 +156,48 @@ describe('NteTreeViewItem explorer interactions', () => {
     expect(expanded).toHaveBeenCalledTimes(2);
   });
 
-  // Ein Elternlink behält seine Navigation; nur der separate Pfeil verändert seinen Unterbaum.
-  it('keeps linked parent labels navigable without toggling their children', async () => {
+  // Verlinkte Ordner werden zuerst ausgewählt; Datei-Links bleiben sofort navigierbar.
+  it('selects linked folders before navigating while leaf links stay immediate', async () => {
     const view = await mount(`
       <nte-treeview-item id="page" href="#handbuch">
         Handbuch
         <nte-treeview-item>Einstieg</nte-treeview-item>
       </nte-treeview-item>
+      <nte-treeview-item id="file" href="#datei">Datei.md</nte-treeview-item>
     `);
     const page = view.querySelector<NteTreeViewItem>('#page')!;
+    const file = view.querySelector<NteTreeViewItem>('#file')!;
     const label = control<HTMLAnchorElement>(page, '#label');
     const expanded = vi.fn();
     page.addEventListener('expanded-change', expanded);
 
-    const click = pointerClick(label);
-
     expect(label.tagName).toBe('A');
     expect(label.getAttribute('href')).toBe('#handbuch');
-    expect(click.defaultPrevented).toBe(false);
+
+    // Modifizierte Linkklicks behalten die Browseraktion und ändern die Auswahl nicht.
+    const modified = new MouseEvent('click', { bubbles: true, composed: true, cancelable: true, ctrlKey: true });
+    label.dispatchEvent(modified);
+    expect(modified.defaultPrevented).toBe(false);
+    expect(page.selected).toBe(false);
+
+    const first = pointerClick(label);
+    expect(first.defaultPrevented).toBe(true);
     expect(page.selected).toBe(true);
+    expect(pointerClick(label).defaultPrevented).toBe(false);
+
+    // Ein anderer Eintrag setzt die Ordnerauswahl zurück, ohne Datei-Navigation zu verzögern.
+    expect(pointerClick(control(file, '#label')).defaultPrevented).toBe(false);
+    expect(file.selected).toBe(true);
+    expect(page.selected).toBe(false);
+
+    // Tastaturaktivierung startet nach dem Auswahlwechsel ebenfalls wieder bei der reinen Auswahl.
+    for (const prevented of [true, false]) {
+      const keyboard = new MouseEvent('click', { bubbles: true, composed: true, cancelable: true, detail: 0 });
+      label.dispatchEvent(keyboard);
+      expect(keyboard.defaultPrevented).toBe(prevented);
+      expect(page.selected).toBe(true);
+      expect(file.selected).toBe(false);
+    }
     expect(page.expanded).toBe(false);
     expect(expanded).not.toHaveBeenCalled();
   });

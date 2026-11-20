@@ -1,0 +1,22 @@
+<main class="treeview-zebra-demo">
+  <h1>Optionale Zebra-Streifen</h1>
+  <p>
+    Öffne und schließe Ordner über ihren Namen oder den Pfeil. Die Streifen wechseln über alle sichtbaren
+    Ebenen hinweg; Hover und Auswahl reichen immer über die gesamte Breite.
+  </p>
+  <p>
+    <label>
+      <input type="checkbox" checked data-action="zebra">
+      Zebra-Streifen anzeigen
+    </label>
+  </p>
+  <!-- Die Zusatzspalten bleiben ausgerichtet, ohne Trenner zwischen den Einträgen. -->
+  <div class="treeview-columns" aria-hidden="true">
+    <span>Name</span><span>Typ</span><span>Größe</span>
+  </div>
+  <nte-treeview class="with-zebra" aria-label="Projektdateien mit optionalen Zebra-Streifen"></nte-treeview>
+  <p>
+    <code>class="with-zebra"</code> aktiviert die Streifen. Ohne diese Klasse bleibt die Fläche einfarbig;
+    Auswahl und Hover funktionieren in beiden Varianten. Größen und freie Zeilenflächen lösen keine Aktion aus.
+  </p>
+</main>

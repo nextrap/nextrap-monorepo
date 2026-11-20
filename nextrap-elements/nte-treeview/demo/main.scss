@@ -49,7 +49,7 @@ main:has(> nte-treeview) {
     }
   }
 
-  // Die Aktionsdemo zeigt übernehmbare Listener neben den ausführbaren Einträgen.
+  // Die Aktionsdemo zeigt das ausgewählte Modellobjekt und den abgefragten Zustand.
   > pre {
     overflow: auto;
     padding: var(--nt-space-3);
@@ -76,4 +76,24 @@ nte-treeview.style-default {
     $center-width: $center-width,
     $end-width: $end-width
   );
+}
+
+// Die zusätzliche Klasse aktiviert Zebra, ohne eine zweite style-Variante zu benötigen.
+nte-treeview.style-default.with-zebra {
+  @include treeview.with-zebra();
+}
+
+// Explorer und Zebra brauchen Platz für Dateitypen, aber nur eine schmale Größenspalte statt Status-Dropdowns.
+main.treeview-zebra-demo,
+main.treeview-explorer-demo {
+  $type-width: 7rem;
+  $size-width: 4.5rem;
+
+  > .treeview-columns {
+    grid-template-columns: minmax(0, 1fr) $type-width $size-width;
+  }
+  > nte-treeview.style-default {
+    --nte-treeview-center-width: #{$type-width};
+    --nte-treeview-end-width: #{$size-width};
+  }
 }

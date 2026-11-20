@@ -1,0 +1,74 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+}
+/* Versteckte Knoten belegen weder eine Zeile noch eine Position in der Zebra-Abfolge. */
+:host([hidden]) {
+  display: none;
+}
+/* Der Einzug belegt nur die erste Spalte; Zeile und Unterbaum behalten ihre volle Breite. */
+#row {
+  display: grid;
+  grid-template-columns:
+    var(--_nte-treeview-indent, 0px)
+    var(--_nte-treeview-toggle-width, auto)
+    minmax(0, 1fr)
+    var(--nte-treeview-center-width, auto)
+    var(--nte-treeview-end-width, auto);
+  align-items: center;
+  min-inline-size: 0;
+}
+#details {
+  display: contents;
+}
+/* Der native Inhalts-Wrapper gibt den geöffneten Unterbaum an das Zeilenraster weiter. */
+#details[open]::details-content {
+  display: contents;
+}
+#toggle {
+  grid-column: 2;
+  grid-row: 1;
+  list-style: none;
+  cursor: pointer;
+}
+#toggle::-webkit-details-marker {
+  display: none;
+}
+#label {
+  grid-column: 3;
+  grid-row: 1;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  justify-self: start;
+  overflow-wrap: anywhere;
+}
+#center {
+  grid-column: 4;
+  grid-row: 1;
+  min-inline-size: 0;
+  text-align: center;
+}
+#end {
+  grid-column: 5;
+  grid-row: 1;
+  min-inline-size: 0;
+  text-align: end;
+}
+#children {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  min-inline-size: 0;
+}
+/* Explizites Ausblenden erhält native Disclosure auch bei display: contents am details. */
+#details:not([open]) > #children {
+  display: none;
+}
+#indicator {
+  display: block;
+  inline-size: 1em;
+  block-size: 1em;
+  transform: rotate(-90deg);
+}
+#details[open] #indicator {
+  transform: none;
+}

@@ -1,46 +1,33 @@
 import { defineDemo } from '@trunkjs/demo-viewer';
 import { html, nothing, render } from 'lit';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { TreeModel } from '../index';
-import './main.scss';
+import markup from './01-tree.demo.html?raw';
+import styles from './main.scss?inline';
 
 // Der Ablauf zeigt CMS-Seiten, Dateien, unabhängige Disclosure und ausgerichtete Zusatz-Zellen.
 export default defineDemo({
   title: 'TreeView: Seiten, Dateien und Zusatzspalten',
   description: 'Reaktiver Baum mit Ordner-Icons, Elternlinks, Dateigrößen und Status-Dropdowns',
   render(root) {
-    render(
-      html`<main>
-        <h1>Inhalte und Dateien</h1>
-        <p>
-          Verlinkte Namen öffnen ihre Seite; der Pfeil klappt unabhängig davon den Unterbaum auf. Ordner ohne Link
-          öffnen und schließen auch über ihren Namen oder ihr Icon. Freie Zeilenflächen und Größenangaben lösen
-          keine Aktion aus; das Dropdown ändert nur den Status.
-        </p>
-        <nte-treeview aria-label="Inhalte und Dateien"></nte-treeview>
-        <p>
-          <button data-action="rename">Handbuch umbenennen</button>
-          <button data-action="add">Datei hinzufügen</button>
-          <button data-action="remove">Letzte Datei entfernen</button>
-          <button data-action="toggle">Unterbaum umschalten</button>
-        </p>
-      </main>`,
-      root,
-    );
+    render(html`<style>${styles}</style>${unsafeHTML(markup)}`, root);
 
     // Ein CMS-Elternknoten ist selbst navigierbar; ein Verzeichnis braucht keinen Link.
     const tree = new TreeModel([
       {
         id: 'handbook',
         label: 'Handbuch',
-        data: { href: '#handbuch', expanded: true, size: '12 KB', status: 'Entwurf' },
+        src: '#handbuch',
+        data: { expanded: true, size: '12 KB', status: 'Entwurf' },
         children: [
-          { id: 'start', label: 'Einstieg', data: { href: '#einstieg', size: '4 KB', status: 'Veröffentlicht' } },
+          { id: 'start', label: 'Einstieg', src: '#einstieg', data: { size: '4 KB', status: 'Veröffentlicht' } },
           {
             id: 'api',
             label: 'API',
-            data: { href: '#api', expanded: true, size: '8 KB', status: 'Entwurf' },
+            src: '#api',
+            data: { expanded: true, size: '8 KB', status: 'Entwurf' },
             children: [
-              { id: 'methods', label: 'Methoden', data: { href: '#methoden', size: '2 KB', status: 'Entwurf' } },
+              { id: 'methods', label: 'Methoden', src: '#methoden', data: { size: '2 KB', status: 'Entwurf' } },
             ],
           },
         ],
@@ -49,24 +36,27 @@ export default defineDemo({
         id: 'files',
         label: 'Dateien',
         data: { expanded: true },
-        children: [{ id: 'notes', label: 'Notizen.md', data: { href: '#notizen', size: '1 KB' } }],
+        children: [{ id: 'notes', label: 'Notizen.md', src: '#notizen', data: { size: '1 KB' } }],
       },
     ]);
     const view = root.querySelector('nte-treeview')!;
-    view.renderCenter = (node) => node.data?.['size'] ?? '';
-    view.renderEnd = (node) =>
-      node.data?.['status'] == null
+    // Ein Renderer liefert das Label und bei Bedarf Inhalte für die vorhandenen Slots.
+    view.renderer = (node) => html`
+      ${node.label}
+      <span slot="center">${node.data?.['size'] ?? ''}</span>
+      ${node.data?.['status'] == null
         ? nothing
-        : html` <select
+        : html`<select slot="end"
             aria-label=${`Status für ${node.label}`}
             .value=${String(node.data['status'])}
             @change=${(event: Event) => {
-          node.data!['status'] = (event.target as HTMLSelectElement).value;
-        }}
+              node.data!['status'] = (event.target as HTMLSelectElement).value;
+            }}
           >
             <option>Entwurf</option>
             <option>Veröffentlicht</option>
-          </select>`;
+          </select>`}
+    `;
     view.setData(tree);
 
     // Alle Aktionen ändern ausschließlich das Modell, einschließlich des Aufklappzustands.
@@ -79,7 +69,8 @@ export default defineDemo({
       tree.children[1].children!.push({
         id: `file-${id}`,
         label: `Datei-${id}.md`,
-        data: { href: `#datei-${id}`, size: '3 KB' },
+        src: `#datei-${id}`,
+        data: { size: '3 KB' },
       });
       tree.children[1].data!.expanded = true;
     });
