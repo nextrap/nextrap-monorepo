@@ -1,0 +1,48 @@
+// Das Theme materialisiert die gesamte visuelle Baseline am gewählten Host-Selektor.
+@mixin default-style() {
+  --ntl-code-editor-keyword: #8250df;
+  --ntl-code-editor-string: #0a6b30;
+  --ntl-code-editor-number: #0550ae;
+  --ntl-code-editor-comment: #6e7781;
+  --ntl-code-editor-tag: #116329;
+  --ntl-code-editor-attribute: #953800;
+
+  // Die Editoren passen ohne Layout-JavaScript in schmale Container.
+  &::part(editor) {
+    min-height: 10rem;
+    max-height: 28rem;
+    color: var(--nt-text, #24292f);
+    background: var(--nt-bg, #fff);
+    border: 1px solid var(--nt-border-color, #d0d7de);
+    border-radius: var(--nt-border-radius, 0.375rem);
+  }
+
+  // Der Fokusrahmen bleibt außen über den öffentlichen Part konfigurierbar.
+  &:focus-within::part(editor) {
+    outline: 2px solid var(--nt-primary, #0969da);
+    outline-offset: 1px;
+  }
+
+  // Monospace und Padding gehören zur äußeren Darstellung des Textfeldes.
+  &::part(scroller) {
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  &::part(content) {
+    padding-block: 0.5rem;
+    caret-color: currentColor;
+  }
+
+  // Zeilennummern und Folding-Gutter teilen dieselbe Theme-Fläche.
+  &::part(gutters) {
+    color: var(--nt-text-muted, #57606a);
+    background: var(--nt-bg-secondary, #f6f8fa);
+    border-right: 1px solid var(--nt-border-color, #d0d7de);
+  }
+
+  &:disabled::part(editor) {
+    opacity: 0.6;
+  }
+}

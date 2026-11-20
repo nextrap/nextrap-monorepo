@@ -1,0 +1,22 @@
+// Die Anwendung materialisiert den visuellen Default über die öffentliche Sass-API.
+@use '../index' as editor;
+
+ntl-code-editor.style-default {
+  @include editor.default-style();
+}
+
+// Die Demo begrenzt die View selbst, damit der Inhalt innerhalb ihres Scrollports bleibt.
+ntl-code-editor {
+  display: block;
+  min-width: 0;
+
+  &::part(editor) {
+    max-height: 26rem;
+  }
+}
+
+// Der Markdown-Rahmen hält auf schmalen Viewports auch lange Quelltextzeilen im Layout.
+tj-content-pane {
+  display: block;
+  min-width: 0;
+}
