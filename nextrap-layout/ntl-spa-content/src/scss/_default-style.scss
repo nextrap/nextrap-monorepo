@@ -4,10 +4,10 @@
   background: var(--nt-surface);
   font-family: var(--nt-font-family);
 
-  // Dezente Flächen und Trennlinien gliedern die volle Höhe der Seitenbereiche.
+  // Die Sidebars erhalten im hellen Theme weiße Flächen über ihre gesamte Höhe.
   &::part(sidebar-left),
   &::part(sidebar-right) {
-    background: var(--nt-surface-muted);
+    background: var(--nt-surface-raised);
   }
 
   &::part(sidebar-left) {

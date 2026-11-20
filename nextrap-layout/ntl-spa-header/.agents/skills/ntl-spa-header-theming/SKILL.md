@@ -21,9 +21,13 @@ ntl-spa-header.style-default {
 ```
 
 `index.scss` exportiert nur `default-style()` und gibt beim Import kein CSS aus.
-Das Mixin gestaltet Text, Fläche, Schrift und untere Trennlinie mit `--nt-text`,
-`--nt-surface`, `--nt-font-family` und `--nt-border`. Die Fokusmarkierung der
-Scrollbereiche verwendet `--nt-primary`. Das Mixin setzt keine Abstände.
+Das Mixin gestaltet Text, hellgraue Fläche im hellen Theme, Schrift und untere
+Trennlinie mit `--nt-text`, `--nt-surface-muted`, `--nt-font-family` und
+`--nt-border`. Ein dezenter Schatten mit `--nt-black` trennt den Header vom
+Content. `position: relative` und `z-index: 1` halten den Schatten über dem
+folgenden sticky Workspace, ohne den Header aus dem Dokumentfluss zu nehmen.
+Die Fokusmarkierung der Scrollbereiche verwendet `--nt-primary`. Das Mixin
+setzt keine Abstände.
 Die Tokens kommen vom Anwendungstheme; der Header importiert `style-base` nicht.
 
 | Part | Verantwortung |

@@ -1,9 +1,14 @@
-// Das Anwendungstheme materialisiert die Optik ohne zusätzliche Innen- oder Außenabstände.
+// Die helle Header-Fläche und ihr Schatten grenzen die Navigation ohne zusätzliche Abstände ab.
 @mixin default-style() {
   color: var(--nt-text);
-  background: var(--nt-surface);
+  background: var(--nt-surface-muted);
   font-family: var(--nt-font-family);
   border-block-end: 1px solid var(--nt-border);
+
+  // Der Schatten bleibt über dem sticky Workspace sichtbar; die Navbar scrollt normal mit.
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--nt-black) 12%, transparent);
 
   // Die festen Scrollbereiche bleiben auch ohne fokussierbare Inhalte per Tastatur erreichbar.
   &::part(main-line):focus-visible,

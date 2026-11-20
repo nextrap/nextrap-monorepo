@@ -29,8 +29,10 @@ ntl-spa-content.style-default {
 `index.scss` exportiert ausschließlich `default-style()` und erzeugt beim
 Import kein CSS. Das Mixin materialisiert Farben, Flächen, Trennlinien,
 Innenabstände und Fokusmarkierungen am aufrufenden Selektor. Es verwendet
-`--nt-text`, `--nt-surface`, `--nt-surface-muted`, `--nt-border`, `--nt-primary`,
-`--nt-font-family` sowie `--nt-space-2/3/4` aus dem Anwendungstheme.
+`--nt-text`, `--nt-surface`, `--nt-surface-raised`, `--nt-border`, `--nt-primary`,
+`--nt-font-family` sowie `--nt-space-2/3/4` aus dem Anwendungstheme. Beide Sidebars
+nutzen `--nt-surface-raised`: im hellen Theme weiß, einschließlich ihrer festen
+Header. Die Fläche passt sich weiterhin dem gewählten Farbschema an.
 
 ## Öffentliche Oberfläche
 
