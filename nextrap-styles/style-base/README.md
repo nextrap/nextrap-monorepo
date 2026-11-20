@@ -4,8 +4,8 @@ Global Nextrap design tokens implemented entirely with CSS custom properties.
 
 `style-base` erzeugt ausschließlich Tokens, keine Resets, Element-Styles oder
 Utility-Klassen. Materialisiere die Theme-Tokens einmal auf Dokument-/Theme-Ebene,
-niemals erneut im Shadow DOM einer Komponente. Der reine Sass-API-Import für die
-Kontrastfunktion erzeugt keine Tokens oder visuellen Regeln.
+niemals erneut im Shadow DOM einer Komponente. Komponenten konsumieren die
+bereitgestellten CSS Custom Properties ohne Zugriff auf Sass-Interna.
 
 ## The theming model
 
@@ -178,11 +178,10 @@ Prefer semantic spacing in application/component code. The structural progressio
 ## Kontrastfarben
 
 Für Text auf einer Farbfamilie steht `--nt-text-on-<family>` bereit. Die zwölf
-Basis-Kontrasttokens bleiben die gemeinsame Theme-API. Zustandsabhängige Flächen
-verwenden die unten beschriebene Kontrastfunktion direkt im jeweiligen Selektor;
-dafür gibt es keine zusätzlichen globalen Hover-/Active-Text-Tokens.
-Die vollständige CSS-Berechnung bevorzugt Weiß, wenn es mindestens `4.5:1`
-erreicht, andernfalls Schwarz. Grundlage ist die ungerundete relative Luminanz
+Basis-Kontrasttokens bilden die gemeinsame Theme-API; zusätzliche globale
+Hover-/Active-Text-Tokens gibt es nicht. Die vollständige CSS-Berechnung dieser
+Basis-Tokens bevorzugt Weiß, wenn es mindestens `4.5:1` erreicht, andernfalls
+Schwarz. Grundlage ist die ungerundete relative Luminanz
 nach [WCAG 2.2](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html).
 
 Die Standard-Primary-Farbe `#0969da` erreicht mit Weiß etwa `5.19:1`. Die
@@ -204,53 +203,28 @@ allgemeine Barrierefreiheitsgarantie.
 
 ## Component contract
 
-Komponenten konsumieren die globalen Tokens über `var(--nt-*)`. Für eine andere
-Fläche stellt die öffentliche Sass-API ab Version `2.1.0` die Funktion
-`contrast-foreground($background)` bereit. Sie erzeugt nur den CSS-Farbausdruck;
-die Berechnung bleibt im Browser. Import und Funktionsaufruf materialisieren
-weder Tokens noch visuelle Regeln und benötigen keine privaten Sass-Imports.
+Komponenten konsumieren die globalen Tokens über `var(--nt-*)`. Die Berechnung
+der Basis-Kontrasttokens bleibt intern in `style-base`; es gibt dafür keine
+öffentliche Sass-Funktion. Komponenten benötigen weder einen Sass-Import dieses
+Packages noch eine Kopie seiner Kontrastformel.
 
-Der Aufrufer setzt einen Fallback und prüft den vollständigen Ausdruck mit
-`@supports`. Dieses Beispiel ergänzt eine Primary-Aktion um Hover-Kontrast:
-
-```scss
-// Die öffentliche Funktion teilt die Formel, ohne das Theme erneut auszugeben.
-@use '@nextrap/style-base' as nt;
-
-// Der Grundzustand berücksichtigt auch explizite Theme-Overrides der Textfarbe.
+```css
+/* Fläche und Text verwenden das vom Anwendungstheme bereitgestellte Farbpaar. */
 .action {
   background: var(--nt-primary);
   color: var(--nt-text-on-primary);
-
-  // Der Fallback passt zur Default-Palette; die Berechnung folgt der Hover-Fläche.
-  &:hover {
-    background: var(--nt-primary-hover);
-    color: light-dark(white, black);
-
-    @supports (color: contrast-color(red)) {
-      color: contrast-color(var(--nt-primary-hover));
-    }
-
-    @supports (color: #{nt.contrast-foreground('red')}) {
-      color: nt.contrast-foreground('var(--nt-primary-hover)');
-    }
-  }
 }
 ```
 
-Active verwendet entsprechend seine tatsächliche Hintergrundfarbe als Eingabe.
-Die Formel gehört in diesen Selektor, damit lokale Variablen dort ausgewertet
-werden. Prüfe statische Fallbacks erneut, wenn die Palette verändert wird.
+`style-button` verwendet dieselbe bereitgestellte Kontrastfarbe auch bei Hover
+und Active. Der Button berechnet keine eigene Textfarbe; das Theme muss ein
+passendes Farbpaar für die normale Fläche und beide Zustandsflächen bereitstellen.
 
 ## API summary
 
 `@nextrap/style-base` exports one theming mixin:
 
 - `runtime-theme()` — emits the complete runtime token graph and automatic/manual light-dark scheme support.
-
-Zusätzlich exportiert die Sass-API ab `2.1.0`
-`contrast-foreground($background)` für die direkte Laufzeit-Kontrastberechnung
-in Komponenten. Die Funktion allein erzeugt keine CSS-Ausgabe.
 
 `@nextrap/style-base/default` remains the ready-to-use standard theme and emits `runtime-theme()` on `:root`.
 

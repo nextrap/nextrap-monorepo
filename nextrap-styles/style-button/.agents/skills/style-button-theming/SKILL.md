@@ -14,8 +14,9 @@ Nutze diesen Skill für Theme-SCSS und visuelle Button-Varianten. Für Markup un
 - Basis- und Modifier-Mixins bleiben unabhängig. Ein Modifier schließt die Basis nicht implizit ein.
 - Kombiniere vorhandene Mixins, statt Varianten wie `btn-glow-primary` oder `btn-glow-secondary` anzulegen.
 - Der Standardradius kommt aus `--nt-border-radius`, das `style-base` aus der Theme-Eingabe `--nt-radius` ableitet. Lege im Button keinen festen Theme-Radius fest.
-- Die Sass-API benötigt `@nextrap/style-base` in Version `^2.1.0` als Peer für
-  die gemeinsame Kontrastfunktion. Der Import materialisiert keine Theme-Tokens.
+- `style-button` hat keinen Sass-Import und keine Package- oder Peer-Abhängigkeit
+  von `style-base`. Es konsumiert ausschließlich CSS Custom Properties aus der
+  Anwendung oder dem Theme und materialisiert keine globalen Theme-Tokens.
 
 ## Basis und neutrale Aktionen
 
@@ -43,36 +44,25 @@ ein. Er verwendet `--nt-surface` für die Fläche, `--nt-text` für den Text und
 
 ## Kontrast und Zustandsfarben
 
-Filled-Varianten beziehen ihren normalen Vordergrund über `--btn-txt` aus
-`--nt-text-on-<family>`. Explizite Overrides dieser Basisfarbe bleiben wirksam.
-Hover und Active berechnen die Textfarbe direkt aus `--btn-bg-hover`
-beziehungsweise `--btn-bg-active`. Die gemeinsame öffentliche Sass-Funktion
-`contrast-foreground()` aus `style-base` erzeugt dafür den Laufzeit-Ausdruck;
-zusätzliche globale oder lokale Textvariablen gibt es nicht.
+Filled-Varianten verwenden in Normal, Hover und Active denselben Vordergrund
+`--btn-txt` aus `--nt-text-on-<family>`, mit Weiß als einfachem Fallback.
+Eigene Werte für `--btn-txt` gelten damit in allen drei gefüllten Zuständen.
+Die Hintergründe bleiben über `--btn-bg`, `--btn-bg-hover` und `--btn-bg-active`
+steuerbar. Zusätzliche Textvariablen oder Kontrastberechnungen gibt es nicht.
 
-Outline-Hover füllt mit der Basisfarbe; Active verwendet die Active-Fläche auch
-ohne Hover. Beide gefüllten Zustände berechnen deren Kontrastfarbe.
-`btn-neutral()` verwendet weiterhin `--nt-text`. Link-, Text- und ungefüllte
-Outline-Zustände behalten ihre eigenen semantischen Textfarben. Der
-Dropdown-Pfeil folgt über `currentColor` der tatsächlichen Textfarbe.
+Outline-Buttons verwenden zunächst die Familienfarbe auf transparenter Fläche.
+Bei Hover und Active stammt die Textfarbe aus `--nt-text-on-<family>`, mit Weiß
+als Fallback. `btn-neutral()` verwendet `--nt-text`; Link- und Text-Varianten
+behalten ihre semantischen Farben. Der Dropdown-Pfeil folgt `currentColor`.
 
-Die Token-Engine bevorzugt bei vollständiger CSS-Unterstützung Weiß ab `4.5:1`
-nach [WCAG 2.2](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html),
-sonst Schwarz. Davor greifen lokale Fallbacks für die Default-Zustände und,
-sofern unterstützt, natives
-[contrast-color()](https://www.w3.org/TR/css-color-5/#contrast-color).
-Statische Fallbacks decken beliebige Theme-Overrides nicht zuverlässig ab.
-Die Berechnung gilt für deckende sRGB-Flächen; prüfe Transparenz gegen den
-tatsächlichen Backdrop und Wide-Gamut-Farben separat. Das ersetzt keine
-allgemeine Barrierefreiheitsprüfung.
-Prüfe die normalen Brand-/Linkfarben ungefüllter Outline- und Link-Buttons
-zusätzlich gegen ihren tatsächlichen Seitenuntergrund.
+Das Theme stellt die NT-Tokens bereit und muss die Kombination aus Vordergrund
+und Normal-/Hover-/Active-Fläche passend abstimmen. Die Eignung einer Textfarbe
+für die Basisfläche allein reicht dafür nicht aus. Prüfe ungefüllte Outline-
+und Link-Buttons gegen ihren tatsächlichen Untergrund.
 
-Setze eigene Zustandsflächen über die vorhandenen Hintergrundvariablen. Ein
-Override von `--btn-txt` gilt für den Grundzustand; eine bewusst abweichende
-Zustands-Textfarbe gehört als geprüfte `color`-Regel in den jeweiligen Selektor.
-Kopiere die Kontrastformel nicht in ein Theme und importiere keine privaten
-Sass-Dateien von `style-base`.
+Füge keine Kontrasthelper, Palette-Auswertung, Sass-Imports oder Abhängigkeiten
+von `style-base` in `style-button` ein. Die internen Regeln zur Erzeugung der
+Basis-Kontrasttokens bleiben ausschließlich bei `style-base`.
 
 Die Button-Basis verwendet `transition: none`, damit Vordergrund und Fläche
 ohne graue Zwischenfarben wechseln. Füge keine pauschale Farbtransition hinzu,

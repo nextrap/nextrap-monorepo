@@ -9,7 +9,7 @@
 // Bevorzugt Weiß ab WCAG-AA-Kontrast 4,5:1 auf einer deckenden sRGB-Fläche.
 // Die linearen Kanäle liefern die WCAG-Luminanz; round() trifft nur die binäre
 // Entscheidung nach dem Grenzvergleich und rundet keinen Kontrastwert auf.
-@function contrast-foreground($background) {
+@function _contrast-foreground($background) {
   $luminance: '(0.2126 * r + 0.7152 * g + 0.0722 * b)';
   $channel: 'clamp(0, 1 - round(up, #{$luminance} - (1.05 / 4.5 - 0.05), 1), 1)';
 
@@ -216,9 +216,9 @@
 
   // Der vollständige Ausdruck prüft relative Farben und die benötigte CSS-Mathematik.
   // Weiß gewinnt bereits bei ausreichendem Kontrast, nicht erst beim maximalen Kontrast.
-  @supports (color: #{contrast-foreground('red')}) {
+  @supports (color: #{_contrast-foreground('red')}) {
     @each $color in $contrast-colors {
-      --nt-text-on-#{$color}: #{contrast-foreground('var(--nt-#{$color})')};
+      --nt-text-on-#{$color}: #{_contrast-foreground('var(--nt-#{$color})')};
     }
   }
 
