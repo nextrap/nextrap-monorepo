@@ -23,6 +23,23 @@ Sass-Mixins ohne globale CSS-Ausgabe:
 
 Der Button übernimmt seine Roundness automatisch aus `--nt-border-radius`; Themes steuern sie zentral über die `style-base` Eingabe `--nt-radius`.
 
+## Neutrale Aktionen
+
+Verwende `.btn.btn-neutral` für zurückhaltende UI-Aktionen in Standardgröße.
+Der neutrale Modifier verwendet `--nt-surface` als Fläche, `--nt-text` als
+Textfarbe und `--nt-border` als Randfarbe. Hover und Active wechseln dezent
+auf `--nt-surface-muted`.
+
+```html
+<!-- Eine neutrale Navigation verwendet die gemeinsame Standardgröße. -->
+<a class="btn btn-neutral" href="/einstellungen">Einstellungen</a>
+```
+
+Die `.btn`-Basis verwendet standardmäßig die Primary-Farbe, den Theme-Radius
+und `font-weight: 500`. Sie übernimmt Schrift und Zeilenhöhe aus dem Kontext
+und zentriert den Inhalt mit Inline-Flex. `.btn-neutral` ergänzt diese Basis;
+der Modifier allein enthält keine vollständigen Button-Styles.
+
 ## Dropdowns
 
 Dropdowns verwenden die native Popover API. Der auslösende Button referenziert mit `popovertarget` die ID einer nachfolgenden `.dropdown-menu` mit `popover="auto"`. Der Browser verwaltet Offen-Zustand, Escape, Light Dismiss, Fokus-Rückgabe und die logische Tab-Reihenfolge. Die CSS Anchor Positioning API platziert und flippt das Menü relativ zu seinem jeweiligen Auslöser.
@@ -70,6 +87,11 @@ Ein Split-Button kombiniert eine direkte Hauptaktion mit einem separaten Dropdow
 ## Größen
 
 Die Größenmodifier `.btn-sm`, `.btn-lg`, `.btn-xl` und `.btn-xxl` werden immer zusätzlich zu `.btn` gesetzt. Ohne Größenmodifier gilt die Standardgröße.
+
+`.btn-sm` ändert nur das Padding, nicht die Schriftgröße. Die Fallbacks betragen
+`0.25rem` vertikal und `0.5rem` horizontal für kompakte UI-Aktionen.
+Bestehende Werte für `--nt-btn-sm-padding-y` und `--nt-btn-sm-padding-x` haben
+weiterhin Vorrang.
 
 ```markdown
 [Kompakte Aktion](/aktion-kompakt){: .btn .btn-secondary .btn-sm }

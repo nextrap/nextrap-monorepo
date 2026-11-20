@@ -2,7 +2,10 @@
 
 Global Nextrap design tokens implemented entirely with CSS custom properties.
 
-`style-base` is token-only: it emits no reset, native-element styling, utility classes or component styles. Include it once at document/theme level, never inside component shadow DOM.
+`style-base` erzeugt ausschließlich Tokens, keine Resets, Element-Styles oder
+Utility-Klassen. Materialisiere die Theme-Tokens einmal auf Dokument-/Theme-Ebene,
+niemals erneut im Shadow DOM einer Komponente. Komponenten konsumieren die
+bereitgestellten CSS Custom Properties ohne Zugriff auf Sass-Interna.
 
 ## The theming model
 
@@ -172,24 +175,50 @@ Prefer semantic spacing in application/component code. The structural progressio
 .page-section + .page-section { margin-block-start: var(--nt-spacing-section); }
 ```
 
+## Kontrastfarben
+
+Für Text auf einer Farbfamilie steht `--nt-text-on-<family>` bereit. Die zwölf
+Basis-Kontrasttokens bilden die gemeinsame Theme-API; zusätzliche globale
+Hover-/Active-Text-Tokens gibt es nicht. Die vollständige CSS-Berechnung dieser
+Basis-Tokens bevorzugt Weiß, wenn es mindestens `4.5:1` erreicht, andernfalls
+Schwarz. Grundlage ist die ungerundete relative Luminanz
+nach [WCAG 2.2](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html).
+
+Die Standard-Primary-Farbe `#0969da` erreicht mit Weiß etwa `5.19:1`. Die
+Basisflächen von Success, Tertiary, Info und Warning verwenden Schwarz, weil
+Weiß dort die Schwelle nicht erreicht.
+
+Die Engine ergänzt die Kontrastwahl abhängig von der Browser-Unterstützung:
+
+1. Statische Vordergründe zur Standardpalette.
+2. Natives [contrast-color()](https://www.w3.org/TR/css-color-5/#contrast-color),
+   sofern unterstützt, mit seiner eigenen Schwarz-/Weißauswahl.
+3. Die Weißpräferenz über relative `color(srgb-linear ...)`-Berechnung, sofern
+   `@supports` den vollständigen benötigten Ausdruck akzeptiert.
+
+Statische Fallbacks garantieren keinen Kontrast für frei veränderte Themes.
+Die Berechnung gilt für deckende sRGB-Flächen; Transparenz benötigt den realen
+Backdrop, Wide-Gamut-Farben eine eigene Prüfung. Die Tokens sind keine
+allgemeine Barrierefreiheitsgarantie.
+
 ## Component contract
 
-Components consume global tokens through `var(--nt-*)` and must not depend on private Sass theme state or recreate global theme calculations.
+Komponenten konsumieren die globalen Tokens über `var(--nt-*)`. Die Berechnung
+der Basis-Kontrasttokens bleibt intern in `style-base`; es gibt dafür keine
+öffentliche Sass-Funktion. Komponenten benötigen weder einen Sass-Import dieses
+Packages noch eine Kopie seiner Kontrastformel.
 
 ```css
-.btn {
-  --btn-bg: var(--nt-primary);
-  --btn-bg-hover: var(--nt-primary-hover);
-  --btn-text: var(--nt-text-on-primary);
-
-  background: var(--btn-bg);
-  color: var(--btn-text);
-}
-
-.btn:hover {
-  background: var(--btn-bg-hover);
+/* Fläche und Text verwenden das vom Anwendungstheme bereitgestellte Farbpaar. */
+.action {
+  background: var(--nt-primary);
+  color: var(--nt-text-on-primary);
 }
 ```
+
+`style-button` verwendet dieselbe bereitgestellte Kontrastfarbe auch bei Hover
+und Active. Der Button berechnet keine eigene Textfarbe; das Theme muss ein
+passendes Farbpaar für die normale Fläche und beide Zustandsflächen bereitstellen.
 
 ## API summary
 

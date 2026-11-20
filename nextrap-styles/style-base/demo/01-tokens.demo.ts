@@ -6,7 +6,7 @@ import css from './tokens.scss?inline';
 export default defineDemo({
   title: 'Farben, Typografie und Abstände',
   group: 'style-base',
-  description: 'Runtime-Tokens für Farben, Schriftgrößen und Spacing',
+  description: 'Runtime-Tokens für Farben, Textkontrast, Schriftgrößen und Spacing',
   css,
   html: `
     <div class="token-demo">

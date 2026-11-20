@@ -1,0 +1,30 @@
+{
+    "name": "@nextrap/ntl-spa-content",
+    "version": "0.0.0",
+    "type": "module",
+    "main": "./index.js",
+    "types": "./index.d.ts",
+    "files": [
+        "index.*",
+        "src",
+        ".agents",
+        ".ai-usage-info.md",
+        "README.md"
+    ],
+    "repository": {
+        "directory": "nextrap-layout/ntl-spa-content",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
+    "peerDependencies": {
+        "@nextrap/nt-core": "^2.0.2",
+        "lit": "^3.3.2"
+    },
+    "devDependencies": {
+        "@nextrap/style-base": "^2.0.0",
+        "@nextrap/style-button": "^2.0.2",
+        "@nextrap/style-elements": "^2.0.4",
+        "@nextrap/style-typography": "^2.1.1",
+        "@nextrap/style-utils": "^2.0.0"
+    }
+}

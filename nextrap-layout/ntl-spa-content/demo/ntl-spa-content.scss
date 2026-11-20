@@ -1,0 +1,48 @@
+// Die Demo verwendet öffentliche Nextrap-Styles für Typografie, Muster und Buttons.
+@use '@nextrap/style-base' as nt;
+@use '@nextrap/style-typography/default' as typography;
+@use '@nextrap/style-elements/default' as elements;
+@use '@nextrap/style-button/default' as buttons;
+@use '@nextrap/style-utils' as utils;
+@use '../index' as spa;
+
+// Utilities kommen nach den Mustern, damit Klassen gezielt deren Darstellung anpassen.
+@include utils.style-utils();
+
+// Tokens und Farbschema gelten auch im eigenen Viewport des Demo-Viewers.
+:root {
+  @include nt.runtime-theme-scoped();
+  @include utils.scheme-light();
+}
+
+// Der Viewer übernimmt Body-Knoten, aber keine Body-Klassen; deshalb hier öffentliche Mixins.
+body {
+  @include utils.m-0();
+  @include utils.surface-white();
+}
+
+// Das Anwendungstheme aktiviert die Komponente und konfiguriert lediglich ihre Sidebar-Breiten.
+ntl-spa-content.style-default {
+  @include spa.default-style();
+  --sidebar-left-width: 15rem;
+  --sidebar-right-width: 18rem;
+}
+
+// Für schrumpfbare Flex-Gruppen gibt es noch keine entsprechende Utility.
+.demo-toolbar-start {
+  min-inline-size: 0;
+}
+
+// Eingabefelder übernehmen die Schrift und bleiben einschließlich Padding innerhalb der Breite.
+input,
+textarea {
+  box-sizing: border-box;
+  min-inline-size: 0;
+  font: inherit;
+}
+
+// Der Beispiel-Editor darf nur vertikal wachsen; Einrückungen bleiben zweispaltig.
+textarea {
+  resize: vertical;
+  tab-size: 2;
+}

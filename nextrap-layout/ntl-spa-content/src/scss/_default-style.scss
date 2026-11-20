@@ -1,0 +1,48 @@
+// Die Anwendung bindet die visuelle Baseline explizit an genau eine style-* Klasse.
+@mixin default-style() {
+  color: var(--nt-text);
+  background: var(--nt-surface);
+  font-family: var(--nt-font-family);
+
+  // Dezente Flächen und Trennlinien gliedern die volle Höhe der Seitenbereiche.
+  &::part(sidebar-left),
+  &::part(sidebar-right) {
+    background: var(--nt-surface-muted);
+  }
+
+  &::part(sidebar-left) {
+    border-inline-end: 1px solid var(--nt-border);
+  }
+
+  &::part(sidebar-right) {
+    border-inline-start: 1px solid var(--nt-border);
+  }
+
+  // Feste Leisten werden ausschließlich in ihrer jeweiligen Spalte gestaltet.
+  &::part(header),
+  &::part(sidebar-left-header),
+  &::part(sidebar-right-header) {
+    padding: var(--nt-space-3) var(--nt-space-4);
+    border-block-end: 1px solid var(--nt-border);
+  }
+
+  &::part(footer) {
+    padding: var(--nt-space-2) var(--nt-space-4);
+    border-block-start: 1px solid var(--nt-border);
+  }
+
+  // Der Inhaltsabstand ist Theme-Verantwortung und kann über Parts ersetzt werden.
+  &::part(content),
+  &::part(sidebar-left-content),
+  &::part(sidebar-right-content) {
+    padding: var(--nt-space-4);
+  }
+
+  // Tastaturfokus bleibt auch im randlosen Editor-Layout erkennbar.
+  &::part(content):focus-visible,
+  &::part(sidebar-left-content):focus-visible,
+  &::part(sidebar-right-content):focus-visible {
+    outline: 2px solid var(--nt-primary);
+    outline-offset: -2px;
+  }
+}

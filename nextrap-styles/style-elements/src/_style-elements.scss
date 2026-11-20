@@ -8,6 +8,7 @@
 @use './list-group' as lg;
 @use './image' as i;
 @use './container' as c;
+@use './badge' as badge;
 @use './close-btn' as close;
 
 @mixin style-elements() {
@@ -91,6 +92,11 @@
   }
   .container-fluid {
     @include c.container-fluid();
+  }
+
+  // Die Badge-Klasse übernimmt dieselbe Basis wie eine direkte Mixin-Einbindung.
+  .badge {
+    @include badge.badge();
   }
 
   .close-btn {

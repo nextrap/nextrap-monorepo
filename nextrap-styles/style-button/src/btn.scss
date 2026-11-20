@@ -1,14 +1,18 @@
 // Button mixin API — each public mixin styles the current selector.
-// Default CSS classes are materialized by `all()`.
+// Default CSS classes are materialized by `style-button()`.
 
+// Die Basis verwendet Primary-Tokens und behält ihre Textfarbe in allen Zuständen.
 @mixin btn() {
   --btn-txt: var(--nt-text-on-primary, #fff);
   --btn-bg: var(--nt-primary, #0d6efd);
   --btn-bg-hover: var(--nt-primary-hover, var(--btn-bg));
   --btn-bg-active: var(--nt-primary-active, var(--btn-bg));
 
-  // Hebt Controls typografisch leicht vom normalen Fließtext ab, ohne sie semibold oder bold wirken zu lassen.
-  display: inline-block;
+  // Gleiche Geometrie und vererbte Schrift halten Links und native Controls konsistent.
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   appearance: none;
   -webkit-appearance: none;
   padding: var(--nt-btn-padding-y, 0.5rem) var(--nt-btn-padding-x, 1rem);
@@ -16,6 +20,8 @@
   color: var(--btn-txt) !important;
   border-radius: var(--nt-border-radius, var(--nt-radius, 0.375rem));
   border: var(--nt-border-width, 1px) solid var(--btn-bg);
+  font: inherit;
+  // Hebt Controls typografisch leicht vom normalen Fließtext ab, ohne sie semibold oder bold wirken zu lassen.
   font-weight: 500;
   text-decoration: none;
   text-align: center;
@@ -27,9 +33,8 @@
     outline-offset: 2px;
   }
 
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+  // Zustandswechsel werden ohne animierte Zwischenfarben angezeigt.
+  transition: none;
 
   &:link,
   &:visited {
@@ -54,6 +59,16 @@
     cursor: not-allowed;
     pointer-events: none;
   }
+}
+
+// Neutrale Aktionen erhalten eine dezente Fläche und einen Rahmen aus dem Theme.
+@mixin btn-neutral() {
+  --btn-bg: var(--nt-surface, transparent);
+  --btn-bg-hover: var(--nt-surface-muted, var(--btn-bg));
+  --btn-bg-active: var(--nt-surface-muted, var(--btn-bg));
+  --btn-txt: var(--nt-text, currentColor);
+
+  border-color: var(--nt-border, currentColor);
 }
 
 @mixin btn-link() {
@@ -139,7 +154,7 @@
   }
 }
 
-// Reduziert beim kleinen Button nur den Innenabstand und behält die normale Textgröße.
+// Die kleine Variante reduziert nur den Innenabstand und übernimmt die Textgröße der Basis.
 @mixin btn-sm() {
   padding: var(--nt-btn-sm-padding-y, 0.25rem) var(--nt-btn-sm-padding-x, 0.5rem);
 }
@@ -177,18 +192,20 @@
     transform: translateY(-50%);
     border-left: 0.25rem solid transparent;
     border-right: 0.25rem solid transparent;
-    border-top: 0.25rem solid var(--btn-txt);
+    border-top: 0.25rem solid currentColor;
   }
 }
 
+// Gefüllte Varianten verwenden eine Theme-Textfarbe für alle Zustände, mit Weiß als Fallback.
 @mixin _btn-variant($color) {
   --btn-bg: var(--nt-#{$color}) !important;
   --btn-bg-hover: var(--nt-#{$color}-hover, var(--nt-#{$color})) !important;
   --btn-bg-active: var(--nt-#{$color}-active, var(--nt-#{$color})) !important;
-  --btn-txt: var(--nt-text-on-#{$color}, var(--nt-text-on-primary, #fff)) !important;
+  --btn-txt: var(--nt-text-on-#{$color}, #fff) !important;
   border-color: var(--nt-#{$color}) !important;
 }
 
+// Outline verwendet auf gefüllten Zustandsflächen die vorhandene Theme-Textfarbe.
 @mixin _btn-outline-variant($color) {
   --btn-bg: transparent;
   --btn-bg-hover: var(--nt-#{$color});
@@ -199,10 +216,9 @@
   color: var(--btn-txt) !important;
   border-color: var(--nt-#{$color});
 
-  &:hover {
-    --btn-txt: var(--nt-text-on-#{$color}, var(--nt-text-on-primary, #fff));
-    background-color: var(--nt-#{$color});
-    color: var(--btn-txt) !important;
+  &:hover:where(:not(.disabled):not([disabled])),
+  &:active:where(:not(.disabled):not([disabled])) {
+    color: var(--nt-text-on-#{$color}, #fff) !important;
   }
 }
 

@@ -14,10 +14,72 @@ Nutze diesen Skill für Theme-SCSS und visuelle Button-Varianten. Für Markup un
 - Basis- und Modifier-Mixins bleiben unabhängig. Ein Modifier schließt die Basis nicht implizit ein.
 - Kombiniere vorhandene Mixins, statt Varianten wie `btn-glow-primary` oder `btn-glow-secondary` anzulegen.
 - Der Standardradius kommt aus `--nt-border-radius`, das `style-base` aus der Theme-Eingabe `--nt-radius` ableitet. Lege im Button keinen festen Theme-Radius fest.
+- `style-button` hat keinen Sass-Import und keine Package- oder Peer-Abhängigkeit
+  von `style-base`. Es konsumiert ausschließlich CSS Custom Properties aus der
+  Anwendung oder dem Theme und materialisiert keine globalen Theme-Tokens.
+
+## Basis und neutrale Aktionen
+
+`btn()` verwendet die Primary-Farbe, `font-weight: 500` und den zentralen
+Theme-Radius. Die Basis normalisiert `box-sizing: border-box` und
+`display: inline-flex`; `align-items: center` und `justify-content: center`
+zentrieren ihren Inhalt. `font: inherit` übernimmt die Kontextschrift mitsamt
+Zeilenhöhe, bevor `font-weight: 500` das Control-Gewicht festlegt.
+
+`btn-neutral()` ist ein unabhängiger Farbmodifier und schließt `btn()` nicht
+ein. Er verwendet `--nt-surface` für die Fläche, `--nt-text` für den Text und
+`--nt-border` für den Rand; Hover und Active nutzen `--nt-surface-muted`.
+`style-button()` erzeugt `.btn-neutral` ausschließlich aus diesem Mixin.
+
+```scss
+// Die öffentliche Sass-API stellt Basis und unabhängige Modifier bereit.
+@use '@nextrap/style-button' as button;
+
+// Zurückhaltende UI-Aktionen verwenden neutrale Farben in der normalen Größe.
+.workspace-action {
+  @include button.btn();
+  @include button.btn-neutral();
+}
+```
+
+## Kontrast und Zustandsfarben
+
+Filled-Varianten verwenden in Normal, Hover und Active denselben Vordergrund
+`--btn-txt` aus `--nt-text-on-<family>`, mit Weiß als einfachem Fallback.
+Eigene Werte für `--btn-txt` gelten damit in allen drei gefüllten Zuständen.
+Die Hintergründe bleiben über `--btn-bg`, `--btn-bg-hover` und `--btn-bg-active`
+steuerbar. Zusätzliche Textvariablen oder Kontrastberechnungen gibt es nicht.
+
+Outline-Buttons verwenden zunächst die Familienfarbe auf transparenter Fläche.
+Bei Hover und Active stammt die Textfarbe aus `--nt-text-on-<family>`, mit Weiß
+als Fallback. `btn-neutral()` verwendet `--nt-text`; Link- und Text-Varianten
+behalten ihre semantischen Farben. Der Dropdown-Pfeil folgt `currentColor`.
+
+Das Theme stellt die NT-Tokens bereit und muss die Kombination aus Vordergrund
+und Normal-/Hover-/Active-Fläche passend abstimmen. Die Eignung einer Textfarbe
+für die Basisfläche allein reicht dafür nicht aus. Prüfe ungefüllte Outline-
+und Link-Buttons gegen ihren tatsächlichen Untergrund.
+
+Füge keine Kontrasthelper, Palette-Auswertung, Sass-Imports oder Abhängigkeiten
+von `style-base` in `style-button` ein. Die internen Regeln zur Erzeugung der
+Basis-Kontrasttokens bleiben ausschließlich bei `style-base`.
+
+Die Button-Basis verwendet `transition: none`, damit Vordergrund und Fläche
+ohne graue Zwischenfarben wechseln. Füge keine pauschale Farbtransition hinzu,
+ohne die Zwischenzustände zu prüfen. Lead-/Glow-Effekte bleiben eigenständig.
 
 ## Größen
 
-`btn-sm()`, `btn-lg()`, `btn-xl()` und `btn-xxl()` sind unabhängige Modifier-Mixins und schließen `btn()` nicht ein. Passe die Größen zentral über `--nt-btn-<size>-padding-y`, `--nt-btn-<size>-padding-x` und `--nt-btn-<size>-font-size` an, statt weitere Größenklassen anzulegen.
+`btn-sm()`, `btn-lg()`, `btn-xl()` und `btn-xxl()` sind unabhängige Modifier-Mixins
+und schließen `btn()` nicht ein. Passe das Padding zentral über
+`--nt-btn-<size>-padding-y` und `--nt-btn-<size>-padding-x` an, statt weitere
+Größenklassen anzulegen. Die größeren Varianten verwenden außerdem
+`--nt-btn-<size>-font-size`.
+
+`btn-sm()` ändert ausschließlich das Padding mit Fallbacks von `0.25rem`
+vertikal und `0.5rem` horizontal. Overrides über `--nt-btn-sm-padding-y` und
+`--nt-btn-sm-padding-x` haben Vorrang. Der Modifier setzt keine eigene
+Schriftgröße oder Zeilenhöhe; ohne Größenmodifier gilt die normale Größe.
 
 ## Lead und Glow
 
