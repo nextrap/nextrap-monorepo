@@ -81,7 +81,7 @@ export class NteTreeView extends nextrap_element() {
   private _updateRows(): void {
     const visibility = new Map<NteTreeViewItem, boolean>();
     let visibleIndex = 0;
-    for (const item of this.querySelectorAll('nte-treeview-item')) {
+    for (const item of Array.from(this.querySelectorAll('nte-treeview-item'))) {
       if (item.closest('nte-treeview') !== this) continue;
 
       // Ein aus einem Unterbaum an die Wurzel verschobener Knoten nutzt wieder den Standard-Slot.
