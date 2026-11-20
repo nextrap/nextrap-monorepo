@@ -24,7 +24,7 @@ export default defineConfig(() => ({
   plugins: [
     nxViteTsPaths(),
     // Sass-API, Lizenz und Package-Skills müssen auch im npm-Package verfügbar sein.
-    nxCopyAssetsPlugin(['*.md', 'LICENSE', 'package.json', '*.scss', 'src/**/*.scss', '.agents/**/*']),
+    nxCopyAssetsPlugin(['*.md', 'LICENSE', 'package.json', '*.scss', 'src/**/*.scss', 'src/**/*.css', '.agents/**/*']),
     tjDemoViewerPlugin({ include: ['demo/**/*.demo.ts'] }),
     dts({
       entryRoot: '.',
@@ -48,14 +48,12 @@ export default defineConfig(() => ({
       external: (id) => !id.startsWith('.') && !path.isAbsolute(id),
     },
   },
-  // jsdom prüft Lifecycle und Ladezustände mit kontrollierten FontFace-Mocks.
+  // Ein kleiner jsdom-Test prüft Font-Registrierung und src-Wechsel.
   test: {
     passWithNoTests: false,
     watch: false,
     globals: true,
     environment: 'jsdom',
-    // Die Glyph-Regression prüft das kompilierte Sass statt Vitests leerem CSS-Stub.
-    css: true,
     include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     reporters: ['default'],
     coverage: {

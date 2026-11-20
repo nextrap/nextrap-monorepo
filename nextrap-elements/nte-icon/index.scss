@@ -1,2 +1,2 @@
-// Nur die öffentliche Sass-API; der Import selbst erzeugt keine CSS-Ausgabe.
-@forward './src/scss/default-style';
+// Die Sass-API enthält nur optionale Größenklassen und erzeugt selbst keine CSS-Ausgabe.
+@forward './src/scss/sizes';

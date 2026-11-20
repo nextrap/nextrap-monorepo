@@ -1,7 +1,6 @@
-// Nur die Demo materialisiert die öffentliche visuelle Baseline.
+// Die Demo materialisiert ausschließlich die optionalen Größenklassen im Light DOM.
 @use '../index' as icon;
-nte-icon.style-default { @include icon.default-style(); }
+nte-icon { @include icon.sizes(); }
 
-// Vergleichbare Icons stehen nebeneinander; diese Anordnung ist kein Komponenten-Style.
+// Die Beispiele bleiben bei verschiedenen Icon-Größen nebeneinander vergleichbar.
 .icon-demo-row { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
-.icon-demo-emphasis { font-size: 1.5rem; color: #315cd5; }

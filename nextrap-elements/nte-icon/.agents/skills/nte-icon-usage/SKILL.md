@@ -1,43 +1,23 @@
 ---
 name: nte-icon-usage
-description: Verwende diesen Skill für Markup, API und Auswahl von nte-icon als Bild oder Bootstrap-Icon in Websites, Links und Buttons. Nicht für Theme-Erstellung.
+description: Verwende diesen Skill für nte-icon-Markup mit src oder Bootstrap-Klassen in Websites und Buttons; nicht für Theme-Erstellung.
 ---
 
 # nte-icon verwenden
 
-Importiere `@nextrap/nte-icon`. Verwende `src` für eine Bild-URL oder genau eine
-Bootstrap-Klasse wie `bi-house`; die zusätzliche Klasse `bi` ist optional.
-`src` hat Vorrang. Verwende kein Inline-SVG als Inhalt und keinen Default-Slot;
-dieser ist ein Diagnose-Fallback für unerwartetes Markup.
+Importiere `@nextrap/nte-icon`. Setze `src` für Bilder oder Klassen wie
+`bi bi-house` für Font-Icons. `src` ist die einzige Property und hat Vorrang.
 
 ```html
-<nte-icon class="bi-house" label="Startseite"></nte-icon>
-<nte-icon src="/icons/logo.svg" height="2rem" label="Logo"></nte-icon>
-<button type="button"><nte-icon class="bi-download"></nte-icon> Download</button>
+<nte-icon class="bi bi-house" role="img" aria-label="Startseite"></nte-icon>
+<nte-icon src="/logo.svg" style="--nte-icon-size: 2rem" aria-hidden="true"></nte-icon>
 ```
 
-Lasse dekorative Icons ohne `label`; beschrifte Icon-only-Buttons am Button.
-Nutze `label`, `aria-label` oder `aria-labelledby` für eigenständig bedeutsame
-Icons. Autorenseitige ARIA-Attribute haben Vorrang vor internen Defaults.
+Nutze native ARIA-Attribute; beschrifte Icon-only-Buttons am Button und setze
+am dekorativen Icon `aria-hidden="true"`. Steuere Größe und Farbe ausschließlich
+per CSS; verwende keine Attribute für Größe, Höhe, Label oder Platzhalter.
+Füge keinen Inhalt in den Default-Slot ein; dieser dient nur der Diagnose.
 
-Nutze `size="xs|sm|md|lg|xl|xxl"` für `.75/.875/1/1.25/1.5/2em`. Aliase:
-`s/small`, `m/medium`, `l/large`, `2xl`. Die Standardgröße ist `1em × 1em`.
-Setze `height` für eine explizite CSS-Länge. Textfarbe wird vererbt.
-
-Überschreibe bei Bedarf vor der ersten verbundenen Font-Instanz
-`NTE_ICON_CONFIG.bootstrapIconsFontUrl`. Die voreingestellte Leuffen-CDN-URL,
-die 1.996 Bootstrap-Icons-Klassen einschließlich 43 auf kanonische Glyphen
-abgebildeter historischer Aliase und das Verhalten bei
-Font-Fehlern stehen im [README](../../../README.md). Import und reine
-Bild-Instanzen starten keinen Font-Download. Eine dokumentweite Promise
-speichert Erfolg oder Fehler; ein späterer Konfigurationswechsel startet
-keinen erneuten Versuch in demselben Dokument.
-
-Setze `placeholder` auf einen kurzen Text oder `""`. Während des Ladens und
-bei Fehlern bleibt die Box reserviert. Lies `loadingState` beziehungsweise
-`loading-state` (`empty`, `loading`, `loaded`, `error`) oder verwende
-`nte-icon-load`/`nte-icon-error`. Beide Events blubbern und sind composed;
-`detail.source` nennt `font` oder `image`, Fehler enthalten `detail.error`.
-
-Theme-SCSS, `--nte-icon-size` und öffentliche Parts sind im
-[Theming-Skill](../nte-icon-theming/SKILL.md) beschrieben.
+Überschreibe bei Bedarf `NTE_ICON_CONFIG.bootstrapIconsFontUrl` vor der ersten
+Instanz. CSS löst den Download der einmal registrierten Schrift aus.
+[Größenklassen und Styling](../nte-icon-theming/SKILL.md).
