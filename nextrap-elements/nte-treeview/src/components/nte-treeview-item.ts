@@ -3,6 +3,9 @@ import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
+import type { TreeNode } from '../tree-model';
+import type { TreeViewActionDetail } from './nte-treeview';
+
 /** Entspricht den nativen aria-current-Werten für verlinkte Knoten. */
 export type TreeItemCurrent = 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | '';
 
@@ -22,10 +25,12 @@ export class NteTreeViewItem extends nextrap_element() {
     /* Der Einzug belegt nur die erste Spalte; Zeile und Unterbaum behalten ihre volle Breite. */
     #row {
       display: grid;
-      grid-template-columns: var(--_nte-treeview-indent, 0px) auto minmax(0, 1fr) var(--nte-treeview-center-width, auto) var(
-          --nte-treeview-end-width,
-          auto
-        );
+      grid-template-columns:
+        var(--_nte-treeview-indent, 0px)
+        var(--_nte-treeview-toggle-width, auto)
+        minmax(0, 1fr)
+        var(--nte-treeview-center-width, auto)
+        var(--nte-treeview-end-width, auto);
       align-items: center;
       min-inline-size: 0;
     }
@@ -96,6 +101,9 @@ export class NteTreeViewItem extends nextrap_element() {
   @state() private accessor _hasChildren = false;
   @state() private accessor _labelText = '';
 
+  /** @internal Der Renderer bindet den beobachtbaren Knoten für typisierte Label-Aktionen. */
+  public _modelNode: TreeNode | null = null;
+
   // Erkennt den Wechsel zwischen Blatt und Elternknoten auch bei dynamischem Light DOM.
   private readonly _observer = new MutationObserver(() => this._assignChildren());
 
@@ -155,7 +163,7 @@ export class NteTreeViewItem extends nextrap_element() {
 
   /** Öffentliche Label-Events schließen Icon und Tastatur ein, ohne leere Zellen zu aktivieren. */
   private _dispatchLabelEvent(type: 'label-click' | 'label-dblclick', originalEvent: MouseEvent): boolean {
-    return this.dispatchEvent(new CustomEvent(type, {
+    return this.dispatchEvent(new CustomEvent<Omit<TreeViewActionDetail, 'node'>>(type, {
       detail: { item: this, originalEvent },
       bubbles: true,
       composed: true,
@@ -163,11 +171,13 @@ export class NteTreeViewItem extends nextrap_element() {
     }));
   }
 
-  /** Eigene Aktionen dürfen Öffnen oder Navigation ersetzen; die Auswahl bleibt unabhängig. */
+  /** Verlinkte Ordner werden im Baum zuerst ausgewählt; eigene Aktionen dürfen die Navigation ersetzen. */
   private _onLabelClick(event: MouseEvent): void {
     if (!this._isLabelAction(event)) return;
+    const selectOnly = this._hasChildren && Boolean(this.href) && !this.selected
+      && this.closest('nte-treeview') !== null;
     const activate = this._dispatchLabelEvent('label-click', event);
-    if (!activate || event.defaultPrevented) event.preventDefault();
+    if (!activate || event.defaultPrevented || selectOnly) event.preventDefault();
     else if (this._hasChildren && !this.href) this._setExpanded(!this.expanded);
 
     this.dispatchEvent(new CustomEvent<NteTreeViewItem>('selection-request', {

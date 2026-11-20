@@ -83,8 +83,9 @@ nte-treeview.style-default.with-zebra {
   @include treeview.with-zebra();
 }
 
-// Die Zebra-Demo braucht Platz für Dateitypen, aber nur eine schmale Größenspalte statt Status-Dropdowns.
-main.treeview-zebra-demo {
+// Explorer und Zebra brauchen Platz für Dateitypen, aber nur eine schmale Größenspalte statt Status-Dropdowns.
+main.treeview-zebra-demo,
+main.treeview-explorer-demo {
   $type-width: 7rem;
   $size-width: 4.5rem;
 

@@ -12,9 +12,10 @@ export default defineDemo({
       html`<main>
         <h1>Inhalte und Dateien</h1>
         <p>
-          Verlinkte Namen öffnen ihre Seite; der Pfeil klappt unabhängig davon den Unterbaum auf. Ordner ohne Link
-          öffnen und schließen auch über ihren Namen oder ihr Icon. Freie Zeilenflächen und Größenangaben lösen
-          keine Aktion aus; das Dropdown ändert nur den Status.
+          Bei verlinkten Ordnern wählt der erste Klick nur den Eintrag aus; ein weiterer Klick öffnet die Seite.
+          Dateilinks öffnen ihr Ziel direkt. Der Pfeil klappt unabhängig davon den Unterbaum auf. Ordner ohne Link
+          öffnen und schließen über ihren Namen oder ihr Icon. Freie Zeilenflächen und Größenangaben lösen keine
+          Aktion aus; das Dropdown ändert nur den Status.
         </p>
         <nte-treeview aria-label="Inhalte und Dateien"></nte-treeview>
         <p>
@@ -32,15 +33,17 @@ export default defineDemo({
       {
         id: 'handbook',
         label: 'Handbuch',
-        data: { href: '#handbuch', expanded: true, size: '12 KB', status: 'Entwurf' },
+        src: '#handbuch',
+        data: { expanded: true, size: '12 KB', status: 'Entwurf' },
         children: [
-          { id: 'start', label: 'Einstieg', data: { href: '#einstieg', size: '4 KB', status: 'Veröffentlicht' } },
+          { id: 'start', label: 'Einstieg', src: '#einstieg', data: { size: '4 KB', status: 'Veröffentlicht' } },
           {
             id: 'api',
             label: 'API',
-            data: { href: '#api', expanded: true, size: '8 KB', status: 'Entwurf' },
+            src: '#api',
+            data: { expanded: true, size: '8 KB', status: 'Entwurf' },
             children: [
-              { id: 'methods', label: 'Methoden', data: { href: '#methoden', size: '2 KB', status: 'Entwurf' } },
+              { id: 'methods', label: 'Methoden', src: '#methoden', data: { size: '2 KB', status: 'Entwurf' } },
             ],
           },
         ],
@@ -49,7 +52,7 @@ export default defineDemo({
         id: 'files',
         label: 'Dateien',
         data: { expanded: true },
-        children: [{ id: 'notes', label: 'Notizen.md', data: { href: '#notizen', size: '1 KB' } }],
+        children: [{ id: 'notes', label: 'Notizen.md', src: '#notizen', data: { size: '1 KB' } }],
       },
     ]);
     const view = root.querySelector('nte-treeview')!;
@@ -79,7 +82,8 @@ export default defineDemo({
       tree.children[1].children!.push({
         id: `file-${id}`,
         label: `Datei-${id}.md`,
-        data: { href: `#datei-${id}`, size: '3 KB' },
+        src: `#datei-${id}`,
+        data: { size: '3 KB' },
       });
       tree.children[1].data!.expanded = true;
     });

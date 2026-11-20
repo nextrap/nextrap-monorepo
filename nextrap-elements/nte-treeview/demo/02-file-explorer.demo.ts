@@ -6,15 +6,20 @@ import './main.scss';
 
 // Der Dateibaum zeigt automatische Ordnersymbole und optionale Dateisymbole im vorhandenen Icon-Slot.
 export default defineDemo({
-  title: 'TreeView: Datei-Explorer',
+  title: 'TreeView: Datei-Explorer direkt in HTML',
   description: 'Ordner öffnen, Dateien auswählen und Details über alle Ebenen ausrichten',
   render(root) {
     render(
-      html`<main>
-        <h1>Datei-Explorer</h1>
+      html`<main class="treeview-explorer-demo">
+        <h1>Datei-Explorer direkt in HTML</h1>
+        <p>
+          Diese zusätzliche Variante baut die Einträge von Hand in HTML auf. Für dynamische Anwendungen zeigen
+          die Modell- und Aktionsdemo den üblichen Weg über <code>TreeModel</code>.
+        </p>
         <p>
           Ordner öffnen und schließen über ihren Namen, ihr Symbol oder den Pfeil. Dateinamen und ihre Symbole
-          wählen den Eintrag aus; Typ, Größe und freie Zeilenflächen lösen keine Aktion aus.
+          wählen den Eintrag aus. Unterstrichene Dateinamen wie README.md öffnen zusätzlich ihren Link;
+          Typ, Größe und freie Zeilenflächen lösen keine Aktion aus.
         </p>
         <!-- Die Spaltenüberschriften gehören zur Demo; die Baumkomponente liefert die ausgerichteten Zellen. -->
         <div class="treeview-columns" aria-hidden="true">
@@ -25,7 +30,7 @@ export default defineDemo({
             Projekt
             <span slot="center">Ordner</span>
             <span slot="end">—</span>
-            <nte-treeview-item selected>
+            <nte-treeview-item selected href="#readme">
               <svg slot="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"
                 aria-hidden="true" focusable="false">
                 <path d="M3 1.5h6l4 4v9H3z M9 1.5v4h4 M5 8h6 M5 10.5h6" />
@@ -47,7 +52,7 @@ export default defineDemo({
                 <span slot="center">TypeScript</span>
                 <span slot="end">4 KB</span>
               </nte-treeview-item>
-              <!-- Ein Blatt ohne Icon braucht weder einen Pfeil noch einen unsichtbaren Platzhalter. -->
+              <!-- Die Pfeilspalte bleibt reserviert; ein Blatt ohne Icon braucht kein zusätzliches Symbol. -->
               <nte-treeview-item>
                 Methoden
                 <span slot="center">Referenz</span>
