@@ -45,6 +45,8 @@ export class NteTreeViewItem extends nextrap_element() {
       grid-column: 2;
       grid-row: 1;
       min-inline-size: 0;
+      max-inline-size: 100%;
+      justify-self: start;
       overflow-wrap: anywhere;
     }
     #center {
@@ -125,28 +127,44 @@ export class NteTreeViewItem extends nextrap_element() {
       .join(' ');
   }
 
-  /** Native Disclosure schreibt nur den Aufklappzustand zurück, niemals Navigation oder Zellaktionen. */
-  private _onToggle(event: Event): void {
-    const open = (event.currentTarget as HTMLDetailsElement).open;
+  /** Schreibt Disclosure synchron zurück, bevor eine Auswahl das Datenmodell neu rendert. */
+  private _setExpanded(open: boolean): void {
     if (this.expanded === open) return;
     this.expanded = open;
     this.dispatchEvent(new CustomEvent<boolean>('expanded-change', { detail: open }));
   }
 
-  /** Wählt nur die eigene Zeile; Unterbäume, Pfeile und eigenständige Zellaktionen bleiben unabhängig. */
-  private _onRowClick(event: MouseEvent): void {
-    if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
-    const path = event.composedPath();
-    const children = this.renderRoot.querySelector('#children');
-    const toggle = this.renderRoot.querySelector('#toggle');
-    if ((children && path.includes(children)) || (toggle && path.includes(toggle))) return;
+  /** Native Pfeilaktionen verwenden denselben Zustandswechsel wie ein unverlinkter Ordnername. */
+  private _onToggle(event: Event): void {
+    this._setExpanded((event.currentTarget as HTMLDetailsElement).open);
+  }
 
-    // Eigener Link/Button darf auswählen; andere interaktive Slotelemente behalten ihren Klick.
-    const label = this.renderRoot.querySelector('#label');
+  /** Nur die eigene Beschriftung reagiert; eigenständige Slot-Aktionen behalten ihre Events. */
+  private _isLabelAction(event: MouseEvent): boolean {
+    if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return false;
+    const path = event.composedPath();
     const contentPath = path.slice(0, path.indexOf(event.currentTarget!));
-    if (contentPath.some((node) => node instanceof Element && node !== label && node.matches(
+    return !contentPath.some((node) => node instanceof Element && node.matches(
       'a, button, input, select, textarea, summary, [contenteditable], [tabindex], [role="button"], [role="link"], [role="combobox"], [role="checkbox"], [role="switch"], [role="slider"]',
-    ))) return;
+    ));
+  }
+
+  /** Öffentliche Label-Events schließen Icon und Tastatur ein, ohne leere Zellen zu aktivieren. */
+  private _dispatchLabelEvent(type: 'label-click' | 'label-dblclick', originalEvent: MouseEvent): boolean {
+    return this.dispatchEvent(new CustomEvent(type, {
+      detail: { item: this, originalEvent },
+      bubbles: true,
+      composed: true,
+      cancelable: true,
+    }));
+  }
+
+  /** Eigene Aktionen dürfen Öffnen oder Navigation ersetzen; die Auswahl bleibt unabhängig. */
+  private _onLabelClick(event: MouseEvent): void {
+    if (!this._isLabelAction(event)) return;
+    const activate = this._dispatchLabelEvent('label-click', event);
+    if (!activate || event.defaultPrevented) event.preventDefault();
+    else if (this._hasChildren && !this.href) this._setExpanded(!this.expanded);
 
     this.dispatchEvent(new CustomEvent<NteTreeViewItem>('selection-request', {
       detail: this,
@@ -155,11 +173,20 @@ export class NteTreeViewItem extends nextrap_element() {
     }));
   }
 
+  /** Doppelklick bleibt ein natives Ereignis nach zwei Klicks; die Komponente verzögert nichts. */
+  private _onLabelDoubleClick(event: MouseEvent): void {
+    if (!this._isLabelAction(event)) return;
+    if (!this._dispatchLabelEvent('label-dblclick', event)) event.preventDefault();
+  }
+
   /** Link, Pfeil und Zellen sind Geschwister: Ein Dropdown-Klick kann den Unterbaum nicht umschalten. */
   protected override render() {
     super.render();
-    const label = html`<slot name="icon"></slot><slot @slotchange=${this._onLabelChange}></slot>`;
-    return html`<div id="row" part="row" @click=${this._onRowClick}>
+    // Ordner erhalten ein Theme-Icon als Slot-Fallback; Blätter reservieren keinen Symbolplatz.
+    const label = html`<slot name="icon">${this._hasChildren
+      ? html`<span part="folder-icon" aria-hidden="true"></span>`
+      : undefined}</slot><slot @slotchange=${this._onLabelChange}></slot>`;
+    return html`<div id="row" part="row">
       ${
         this._hasChildren
           ? html`<details id="details" part="details" .open=${this.expanded} @toggle=${this._onToggle}>
@@ -176,13 +203,15 @@ export class NteTreeViewItem extends nextrap_element() {
                 <slot name="children" @slotchange=${this._assignChildren}></slot>
               </div>
             </details>`
-          : html`<span part="spacer" aria-hidden="true"></span>`
+          : undefined
       }
       ${
         this.href
           ? html`<a
               id="label"
               part="label link"
+              @click=${this._onLabelClick}
+              @dblclick=${this._onLabelDoubleClick}
               href=${this.href}
               target=${ifDefined(this.target || undefined)}
               rel=${ifDefined(this.rel || undefined)}
@@ -190,7 +219,17 @@ export class NteTreeViewItem extends nextrap_element() {
               aria-description=${ifDefined(this.selected ? 'Ausgewählt' : undefined)}
               >${label}</a
             >`
-          : html`<button id="label" part="label text" type="button" aria-pressed=${this.selected}>${label}</button>`
+          : html`<button
+              id="label"
+              part="label text"
+              type="button"
+              aria-pressed=${this.selected}
+              aria-expanded=${ifDefined(this._hasChildren ? String(this.expanded) : undefined)}
+              aria-controls=${ifDefined(this._hasChildren ? 'children' : undefined)}
+              @click=${this._onLabelClick}
+              @dblclick=${this._onLabelDoubleClick}
+              >${label}</button
+            >`
       }
       <div id="center" part="center"><slot name="center"></slot></div>
       <div id="end" part="end"><slot name="end"></slot></div>

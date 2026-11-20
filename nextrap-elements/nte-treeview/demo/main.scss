@@ -2,6 +2,10 @@
 @use '@nextrap/style-button' as button;
 @use '../index' as treeview;
 
+// Überschriften und Baum verwenden dieselben responsiven Zusatzspalten.
+$center-width: clamp(4rem, 12vw, 7rem);
+$end-width: clamp(9rem, 24vw, 10rem);
+
 // Nur diese Demo stellt ihre Theme-Tokens bereit; andere Viewer-Beispiele bleiben unabhängig.
 main:has(> nte-treeview) {
   max-inline-size: 64rem;
@@ -25,6 +29,34 @@ main:has(> nte-treeview) {
     @include button.btn-sm();
   }
 
+  // Explorer-Überschriften orientieren sich an den rechten Zellen, unabhängig von der Baumtiefe.
+  > .treeview-columns {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) $center-width $end-width;
+    margin-inline: var(--nt-space-1);
+    padding-block: var(--nt-space-2);
+    border-block-end: 1px solid var(--nt-border);
+    font-weight: var(--nt-font-weight-bold, 600);
+
+    > span {
+      padding-inline: var(--nt-space-3);
+    }
+    > span:nth-child(2) {
+      text-align: center;
+    }
+    > span:last-child {
+      text-align: end;
+    }
+  }
+
+  // Die Aktionsdemo zeigt übernehmbare Listener neben den ausführbaren Einträgen.
+  > pre {
+    overflow: auto;
+    padding: var(--nt-space-3);
+    background: var(--nt-surface-muted);
+    border-radius: var(--nt-border-radius-sm);
+  }
+
   // Native Statusfelder bleiben in ihrer Spalte und übernehmen die Theme-Typografie.
   nte-treeview select {
     box-sizing: border-box;
@@ -41,7 +73,7 @@ main:has(> nte-treeview) {
 // Die Demo aktiviert dieselbe öffentliche Baseline wie eine konsumierende Anwendung.
 nte-treeview.style-default {
   @include treeview.default-style(
-    $center-width: clamp(4rem, 12vw, 7rem),
-    $end-width: clamp(9rem, 24vw, 10rem)
+    $center-width: $center-width,
+    $end-width: $end-width
   );
 }
