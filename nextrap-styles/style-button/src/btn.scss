@@ -212,6 +212,11 @@
   flex: 0 0 auto;
   padding-inline: calc(var(--btn-padding-x, var(--nt-btn-padding-x, 1rem)) * 0.75);
 
+  // Der vorhandene Innenrand trennt beide Aktionen auch bei gefüllten Farbvarianten.
+  &:not(:first-child) {
+    border-inline-start-color: color-mix(in srgb, currentColor 35%, transparent) !important;
+  }
+
   // Der Pfeil nimmt am Flex-Layout teil und sitzt ohne Textabstand in der Mitte.
   &::after {
     position: static;

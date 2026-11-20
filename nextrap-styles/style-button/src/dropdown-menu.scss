@@ -18,10 +18,6 @@
   max-inline-size: calc(100vi - 1rem);
   max-block-size: min(70vh, 24rem);
   overflow-y: auto;
-  padding-block: 0.5rem;
-  padding-inline: 0;
-  margin: 0.25rem 0 0;
-  list-style: none;
   background-color: var(--nt-body, #fff);
   border: var(--nt-border-width, 1px) solid rgb(from var(--nt-text) r g b / 0.15);
   border-radius: var(--nt-border-radius);
@@ -31,6 +27,22 @@
     transform 160ms ease,
     display 160ms allow-discrete,
     overlay 160ms allow-discrete;
+
+  // Native Menülisten behalten ihre Geometrie auch unter nachgeladenen Typografie-Regeln.
+  &,
+  &[popover] {
+    padding-block: 0.5rem;
+    padding-inline: 0;
+    margin: 0.25rem 0 0;
+    list-style: none;
+
+    // Stärkere li + li-Regeln dürfen zwischen Aktionszeilen keine Lücken erzeugen.
+    > li {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+  }
 
   &:popover-open {
     display: block;
@@ -45,11 +57,8 @@
     }
   }
 
-  // Eigene Listenabstände verhindern Einzüge vor den vollflächigen Hover- und Fokusbereichen.
+  // Aktionszeilen übernehmen die Theme-Farbe und enthalten den vollständigen Hover- und Fokusbereich.
   > li {
-    margin: 0;
-    padding: 0;
-    list-style: none;
     color: var(--nt-text);
 
     > hr {
