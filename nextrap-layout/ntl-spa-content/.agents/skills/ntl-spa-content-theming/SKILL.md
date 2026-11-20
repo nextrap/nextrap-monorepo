@@ -5,8 +5,8 @@ description: "Theme-SCSS für @nextrap/ntl-spa-content erstellen oder ändern: d
 
 # SPA Content gestalten
 
-Nutze diese API für das Theme des Workspaces. Für Import, Slots und
-Content-Pane-Markdown lies den [Usage-Skill](../ntl-spa-content-usage/SKILL.md).
+Nutze diese API für das Theme des Workspaces. Für Import, Slots und direkte
+HTML-Einbindung lies den [Usage-Skill](../ntl-spa-content-usage/SKILL.md).
 
 ## Einbindung
 

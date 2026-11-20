@@ -1,7 +1,8 @@
-// Tokens und visuelle Layout-Styles werden ausschließlich für die Demo materialisiert.
+// Das Demo-Theme aktiviert Tokens und die öffentliche Styling-API explizit.
 @use '@nextrap/style-base' as nt;
 @use '../index' as spa;
 
+// Gemeinsame Tokens halten die HTML-Seite und den isolierten Viewer konsistent.
 :root {
   @include nt.runtime-theme-scoped();
   color-scheme: light;
@@ -9,7 +10,7 @@
   --nt-font-family: system-ui, sans-serif;
 }
 
-// Der Dokument-Scrollport gehört der Seite; Content Pane bekommt keinen eigenen Overflow.
+// Die Seite selbst scrollt nur um die Höhe der vorangestellten Navbar.
 body {
   margin: 0;
   color: var(--nt-text);
@@ -18,103 +19,308 @@ body {
   line-height: 1.5;
 }
 
-tj-content-pane {
-  display: block;
-}
-
-// Die äußere Navbar ist absichtlich nicht sticky und verschwindet beim Seitenscrollen.
-.demo-navbar {
-  box-sizing: border-box;
+// Beide Header teilen dieselbe Links-/Rechtsaufteilung und können bei Platzmangel umbrechen.
+.demo-toolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.75rem 2rem;
-  min-block-size: 5rem;
+  gap: 0.75rem 1.5rem;
+}
+
+// Die linke Gruppe nimmt den verfügbaren Platz ein; lange Pfade dürfen umbrechen.
+.demo-toolbar-start {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.5rem;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+// Die Aktionsgruppe bleibt auch nach einem Zeilenumbruch am rechten Rand.
+.demo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-inline-start: auto;
+}
+
+// Die äußere Navigation bleibt im Dokumentfluss, damit der SPA-Host nach oben rücken kann.
+.demo-navbar {
+  box-sizing: border-box;
+  min-block-size: 6rem;
   padding: 1rem 1.5rem;
   background: var(--nt-surface-raised);
   border-block-end: 1px solid var(--nt-border);
+}
 
-  p {
-    margin: 0;
-  }
+// Marke und Navigation bilden die linke Gruppe der äußeren Kopfzeile.
+.demo-brand {
+  color: var(--nt-primary);
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+}
 
-  strong {
-    color: var(--nt-primary);
-    letter-spacing: 0.08em;
-  }
+.demo-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  font-size: 0.85rem;
 
-  .demo-hint {
-    flex: 1 1 28rem;
-    font-size: 0.8rem;
+  a {
     color: var(--nt-text-muted);
+    text-decoration: none;
+  }
+
+  a[aria-current='page'] {
+    color: var(--nt-text);
+    font-weight: 600;
   }
 }
 
-// Unterschiedliche Breiten demonstrieren die beiden öffentlichen Instanzvariablen.
+// Der Hinweis steht nur in der wegscrollenden Navbar und nimmt dort eine eigene Zeile ein.
+.demo-scroll-hint {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--nt-text-muted);
+  font-size: 0.8rem;
+}
+
+// Demo-Aktionen verwenden native Buttons und Links mit gut sichtbaren Fokuszuständen.
+.demo-actions button,
+.demo-button {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--nt-border);
+  border-radius: 0.375rem;
+  color: var(--nt-text);
+  background: var(--nt-surface);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.5;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--nt-surface-muted);
+  }
+
+  &.demo-button-primary {
+    color: #fff;
+    background: var(--nt-primary);
+    border-color: var(--nt-primary);
+  }
+}
+
+// Tastaturnavigation bleibt auch für die einfachen HTML-Steuerelemente sichtbar.
+:where(a, button, input, textarea, summary):focus-visible {
+  outline: 2px solid var(--nt-primary);
+  outline-offset: 3px;
+}
+
+// Nur die Style-Klasse aktiviert den visuellen Default; Breiten bleiben Instanzvariablen.
 ntl-spa-content.style-default {
   @include spa.default-style();
   --sidebar-left-width: 15rem;
   --sidebar-right-width: 18rem;
 
+  // Der Editor setzt seine Abstände selbst, ohne das interne Scrolllayout zu verändern.
   &::part(content) {
     padding: 0;
   }
+}
 
-  // Feste Leisten bleiben kompakt; ihre Abstände stammen aus dem äußeren Theme.
-  > [slot='header'] h2,
-  > [slot='footer'] h2,
-  > [slot='sidebar-left-header'] h2,
-  > [slot='sidebar-right-header'] h2 {
-    margin: 0;
-    font-size: 0.8rem;
+// Dateiname und feste Sidebar-Titel verwenden kompakte, umbrechende Kopfzeilen.
+.demo-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+
+  span {
+    color: var(--nt-text-muted);
+    font-weight: 400;
+  }
+}
+
+.demo-sidebar-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+
+// Kleine Kennzeichnungen bleiben zurückhaltend neben Dateiname und Sidebar-Titeln.
+.demo-badge {
+  padding: 0.125rem 0.5rem;
+  border: 1px solid var(--nt-border);
+  border-radius: 1rem;
+  color: var(--nt-text-muted);
+  font-size: 0.65rem;
+  font-weight: 500;
+}
+
+.demo-eyebrow {
+  margin-block: 0 0.75rem;
+  color: var(--nt-text-muted);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  overflow-wrap: anywhere;
+}
+
+// Native Details-Elemente bilden den Dateibaum ohne JavaScript ab.
+.demo-explorer {
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+
+  summary {
+    padding-block: 0.4rem;
     font-weight: 600;
+    cursor: pointer;
+  }
+
+  details details {
+    margin-inline-start: 0.75rem;
+  }
+}
+
+.demo-file-list {
+  margin: 0 0 0.5rem;
+  padding: 0;
+  list-style: none;
+
+  li {
+    padding: 0.4rem 0.5rem;
+  }
+
+  a {
+    color: var(--nt-text);
+    text-decoration: none;
+  }
+
+  li:has(> a[aria-current='page']) {
+    border-radius: 0.25rem;
+    background: var(--nt-surface-raised);
+    font-weight: 600;
+  }
+}
+
+// Das Formular bleibt normaler Default-Slot-Inhalt und kann vom Header aus zurückgesetzt werden.
+.demo-editor {
+  min-inline-size: 0;
+  padding: 1.5rem;
+}
+
+.demo-document-field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin-block-end: 1.5rem;
+  font-size: 0.8rem;
+
+  input {
+    box-sizing: border-box;
+    flex: 1 1 10rem;
+    min-inline-size: 0;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--nt-border);
+    border-radius: 0.375rem;
+    color: var(--nt-text);
+    background: var(--nt-surface);
+    font: inherit;
+  }
+}
+
+.demo-editor-label {
+  display: block;
+  margin-block-end: 0.5rem;
+  color: var(--nt-text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+// Die Höhe macht das Scrollen des mittleren Bereichs sichtbar; der Editor benötigt keine Library.
+.demo-source {
+  box-sizing: border-box;
+  display: block;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  padding: 1rem;
+  border: 1px solid var(--nt-border);
+  border-radius: 0.5rem;
+  color: var(--nt-text);
+  background: var(--nt-surface);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.8rem;
+  line-height: 1.8;
+  tab-size: 2;
+  resize: vertical;
+}
+
+// Weiterer Dokumentinhalt zeigt den frei nutzbaren Platz unter dem Editor.
+.demo-notes {
+  margin-block-start: 2rem;
+  padding-block-start: 1.5rem;
+  border-block-start: 1px solid var(--nt-border);
+  font-size: 0.85rem;
+
+  h2 {
+    font-size: 1.1rem;
+  }
+
+  p {
     overflow-wrap: anywhere;
   }
+}
 
-  // Navigation und Inspector tragen Inhalt, aber keine eigene Scrollsteuerung.
-  > [slot='sidebar-left'],
-  > [slot='sidebar-right'] {
-    font-size: 0.8rem;
-    overflow-wrap: anywhere;
+// Metadaten dürfen lange Werte umbrechen und erzeugen ihren eigenen vertikalen Scrollbereich.
+.demo-inspector {
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
 
-    h2 {
-      margin-block: 0 1rem;
-      font-size: 0.7rem;
-      color: var(--nt-text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
+  h2 {
+    margin-block: 0 1rem;
+    font-size: 0.85rem;
+  }
+}
 
-    ul {
-      padding: 0;
-      list-style: none;
-    }
+.demo-properties {
+  margin: 0;
 
-    li {
-      padding-block: 0.45rem;
-      border-block-end: 1px solid var(--nt-border);
-    }
+  div {
+    padding-block: 0.75rem;
+    border-block-end: 1px solid var(--nt-border);
   }
 
-  // Die Code-Vorschau behält lange Zeilen; der Default-Slot scrollt bei Bedarf zweiachsig.
-  .demo-editor {
-    padding: 1.5rem;
-
-    h2 {
-      margin-block-start: 0;
-      font-size: 1.15rem;
-    }
-
-    p {
-      font-size: 0.85rem;
-      color: var(--nt-text-muted);
-    }
-
-    pre {
-      margin: 1.5rem 0 0;
-      font-size: 0.8rem;
-      line-height: 1.8;
-      tab-size: 2;
-    }
+  dt {
+    color: var(--nt-text-muted);
+    font-size: 0.7rem;
   }
+
+  dd {
+    margin: 0.25rem 0 0;
+  }
+}
+
+// Die Statusleiste verteilt beide Gruppen ausschließlich innerhalb der mittleren Spalte.
+.demo-statusbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  color: var(--nt-text-muted);
+  font-size: 0.7rem;
+  overflow-wrap: anywhere;
 }

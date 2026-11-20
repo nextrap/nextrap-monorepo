@@ -1,6 +1,6 @@
 ---
 name: ntl-spa-content-usage
-description: "@nextrap/ntl-spa-content für SPA-Workspaces verwenden: Import, NtlSpaContent, Slot-Zuordnung und trunkjs/content-pane Markdown. Nicht für Theme-SCSS."
+description: "@nextrap/ntl-spa-content für SPA-Workspaces verwenden: Import, NtlSpaContent, direkte HTML-Einbindung und Slot-Zuordnung. Nicht für Theme-SCSS."
 ---
 
 # SPA Content verwenden
@@ -13,36 +13,70 @@ verwende ein Dokumentlayout. Für visuelle Anpassungen lies den
 ## Import und Einstieg
 
 ```ts
-import '@trunkjs/content-pane';
+// Der Import registriert das Custom Element; das Anwendungstheme liefert die Optik.
 import '@nextrap/ntl-spa-content';
 ```
 
-Lass folgendes Markdown innerhalb von `tj-content-pane` verarbeiten. Die
-Abschnitte werden direkte Kinder des Layouts; `section-slot` benennt deren Slot.
+Verwende `<ntl-spa-content>` direkt im HTML. Benannte Inhalte sind direkte Kinder
+mit `slot="…"`; Kinder ohne `slot` bilden den mittleren, scrollenden Inhalt.
+Ein Content-Pane-Wrapper oder Markdown ist für diese Verwendung nicht nötig.
 
-```markdown
----
-{: layout="1;ntl-spa-content"}
+```html
+<!-- Die äußere Navbar scrollt mit der Seite nach oben aus dem Viewport. -->
+<header class="demo-navbar demo-toolbar">
+  <nav class="demo-toolbar-start" aria-label="Hauptnavigation">
+    <strong>NEXTRAP</strong>
+    <a href="#workspace">Workspace</a>
+  </nav>
+  <div class="demo-actions">
+    <a class="demo-button" href="#editor-notes">Hilfe</a>
+  </div>
+</header>
 
-## Dateien
-{: section-slot="sidebar-left-header"}
+<!-- Direkte Kinder belegen die Slots; die Sidebars behalten die volle Höhe. -->
+<ntl-spa-content id="workspace">
+  <h2 slot="sidebar-left-header">Dateien</h2>
+  <nav slot="sidebar-left" aria-label="Projektdateien">
+    <a href="#editor-document" aria-current="page">README.md</a>
+  </nav>
 
-## Projekt
-{: section-slot="sidebar-left"}
+  <!-- Das Anwendungstheme richtet den Titel links und die Aktionen rechts aus. -->
+  <header slot="header" class="demo-toolbar">
+    <div class="demo-toolbar-start">
+      <div class="demo-title">
+        <strong>README.md</strong>
+        <span>Workspace / docs</span>
+      </div>
+    </div>
+    <div class="demo-actions">
+      <button type="reset" form="workspace-form">Zurücksetzen</button>
+      <a class="demo-button" href="#editor-notes">Hilfe</a>
+    </div>
+  </header>
 
-- README.md
-- src/app.ts
+  <!-- Das Formular liegt im Default-Slot; der Reset-Button bleibt im Header. -->
+  <form id="workspace-form">
+    <label for="editor-document">Dokument</label>
+    <textarea id="editor-document" name="document" rows="24"># Mein Workspace</textarea>
+  </form>
 
-## README.md
-{: section-slot="header"}
+  <!-- Die Hilfelinks führen zu den Hinweisen im selben scrollenden Inhalt. -->
+  <section id="editor-notes" aria-label="Hinweise zum Workspace">
+    <p>Die Sidebars und der Dokumentbereich scrollen unabhängig voneinander.</p>
+  </section>
+  <footer slot="footer">Markdown · UTF-8 · Lokale Vorschau</footer>
 
-## Dokument
-
-Hier steht der unabhängig scrollende Hauptinhalt.
-
-## Gespeichert
-{: section-slot="footer"}
+  <h2 slot="sidebar-right-header">Inspector</h2>
+  <section slot="sidebar-right" aria-label="Dokumenteigenschaften">
+    <p>README.md</p>
+    <p>Projekt: Mein Workspace</p>
+  </section>
+</ntl-spa-content>
 ```
+
+Die Klassen im Beispiel gehören zur Anwendung. Die vollständige Demo gestaltet
+Navbar und Header als Flex-Zeilen mit einer linken Inhaltsgruppe und einer
+rechten Aktionsgruppe. Die Komponente selbst ordnet nur ihre Slots an.
 
 ## Slots
 
@@ -69,8 +103,10 @@ eigene Initialisierung, Properties, Attribute oder Events.
 ## Navbar und Scrollen
 
 Platziere die Navbar als vorheriges Geschwister im normalen Dokumentfluss.
-Die [vollständige Demo](https://github.com/nextrap/nextrap-monorepo/blob/main/nextrap-layout/ntl-spa-content/demo/ntl-spa-content.demo.ts) zeigt die
-Markdown-Struktur mit `layout="1;nav.demo-navbar"` vor dem SPA-Layout.
+Die [vollständige HTML-Seite](https://github.com/nextrap/nextrap-monorepo/blob/main/nextrap-layout/ntl-spa-content/demo/index.html)
+enthält das Dokument mit Navbar, Workspace und allen sieben Slots. Ihr
+Module-Entry lädt die Komponente und das Demo-SCSS; die `.demo.ts` übernimmt
+denselben HTML-Inhalt in einen eigenen Viewport des Demo-Viewers.
 
 Beim äußeren Seitenscrollen verschwindet die Navbar und das Layout erreicht
 den oberen Viewport-Rand. Die Breite entspricht dem umgebenden Container;
