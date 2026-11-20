@@ -1,5 +1,7 @@
 import { defineDemo } from '@trunkjs/demo-viewer';
 
+// Registriert die dekorativen Icons der Dropdown-Auslöser und Aktionszeilen.
+import '@nextrap/nte-icon';
 import '@nextrap/style-base/default';
 import '@nextrap/style-reset';
 import '@nextrap/style-typography/default';
@@ -36,7 +38,8 @@ const demoCss = `
   align-items: flex-start;
 }
 
-.style-button-demo__flag {
+.style-button-demo__flag,
+.style-button-demo__icon {
   margin-inline-end: .5rem;
 }
 `;
@@ -153,18 +156,24 @@ export default defineDemo({
               popovertarget="actions-menu"
               aria-controls="actions-menu"
             >
-              Aktionen
+              <nte-icon class="bi bi-cloud style-button-demo__icon" aria-hidden="true"></nte-icon>Aktionen
             </button>
             <ul id="actions-menu" class="dropdown-menu" popover="auto" aria-labelledby="actions-toggle">
               <li>
-                <button type="button" popovertarget="actions-menu" popovertargetaction="hide">Duplizieren</button>
+                <button type="button" popovertarget="actions-menu" popovertargetaction="hide">
+                  <nte-icon class="bi bi-files style-button-demo__icon" aria-hidden="true"></nte-icon>Duplizieren
+                </button>
               </li>
               <li>
-                <button type="button" popovertarget="actions-menu" popovertargetaction="hide">Archivieren</button>
+                <button type="button" popovertarget="actions-menu" popovertargetaction="hide">
+                  <nte-icon class="bi bi-archive style-button-demo__icon" aria-hidden="true"></nte-icon>Archivieren
+                </button>
               </li>
               <li><hr /></li>
               <li>
-                <button type="button" popovertarget="actions-menu" popovertargetaction="hide">Löschen</button>
+                <button type="button" popovertarget="actions-menu" popovertargetaction="hide">
+                  <nte-icon class="bi bi-trash style-button-demo__icon" aria-hidden="true"></nte-icon>Löschen
+                </button>
               </li>
             </ul>
           </div>

@@ -1,4 +1,4 @@
-// Dropdown-menu mixin API — styles the current selector.
+// Native Dropdowns erhalten eine deckende Theme-Fläche und durchgehende Aktionszeilen.
 
 @mixin dropdown-menu() {
   --hover-bg: var(--nt-primary);
@@ -15,10 +15,11 @@
   min-width: 160px;
   max-block-size: min(70vh, 24rem);
   overflow-y: auto;
-  padding: 0.5rem 0;
+  padding-block: 0.5rem;
+  padding-inline: 0;
   margin: 0.25rem 0 0;
   list-style: none;
-  background-color: rgb(from var(--nt-body) r g b / 0.9);
+  background-color: var(--nt-body, #fff);
   border: var(--nt-border-width, 1px) solid rgb(from var(--nt-text) r g b / 0.15);
   border-radius: var(--nt-border-radius);
   box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
@@ -41,8 +42,11 @@
     }
   }
 
+  // Eigene Listenabstände verhindern Einzüge vor den vollflächigen Hover- und Fokusbereichen.
   > li {
+    margin: 0;
     padding: 0;
+    list-style: none;
     color: var(--nt-text);
 
     > hr {
@@ -54,6 +58,7 @@
     > :is(a, button) {
       box-sizing: border-box;
       width: 100%;
+      margin: 0;
       padding: 0.5rem 1rem;
       color: inherit;
       font: inherit;

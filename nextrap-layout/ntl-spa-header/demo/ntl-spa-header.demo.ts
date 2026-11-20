@@ -1,15 +1,16 @@
-// Registriert den Header und verwendet dieselbe HTML-Seite wie die eigenständige Demo.
+// Registriert Header und Icons und verwendet dieselbe HTML-Seite wie die eigenständige Demo.
 import { defineDemo } from '@trunkjs/demo-viewer';
+import '@nextrap/nte-icon';
 import '../index';
 import pageHtml from './index.html?raw';
 import css from './ntl-spa-header.scss?inline';
 
-// Ein eigener Viewport zeigt beide Header mit den Styles der vollständigen Seite.
+// Ein eigener Viewport zeigt alle Header-Varianten mit den Styles der vollständigen Seite.
 export default defineDemo({
-  title: 'SPA Header: Navigation und Sub-Line',
+  title: 'SPA Header: Navigation, Sub-Line und Benutzermenü',
   navPath: ['Layouts', 'SPA Header'],
   description:
-    'HTML-Header mit getrennten Slots, vertikal zentrierten Inhalten und frei gewählten Abständen.',
+    'HTML-Header mit getrennten Slots, kompakter Variante und Login-Dropdown mit Kontoaktionen.',
   iframe: true,
   css,
   html: pageHtml,

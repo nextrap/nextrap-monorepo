@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SPA Header · Nextrap</title>
-    <!-- Der Modul-Entry registriert den Header und lädt das Anwendungstheme. -->
+    <!-- Der Modul-Entry registriert Header und Icons und lädt das Anwendungstheme. -->
     <script type="module" src="./index.ts"></script>
   </head>
   <body>
@@ -17,6 +17,7 @@
         <a class="me-3 text-reset text-decoration-none" href="#ueberblick"
            aria-current="page">Übersicht</a>
         <a class="me-3 text-body-secondary text-decoration-none" href="#kompakt">Kompakt</a>
+        <a class="me-3 text-body-secondary text-decoration-none" href="#benutzermenue">Benutzermenü</a>
       </nav>
       <!-- Die Button-Links liegen direkt im Slot; der Header zentriert sie vertikal. -->
       <a slot="right-nav" class="btn btn-neutral me-2" href="#hinweise">Hilfe</a>
@@ -58,6 +59,49 @@
           </nav>
           <a slot="right-nav" class="btn btn-neutral me-2" href="#ueberblick">Zur Übersicht</a>
         </ntl-spa-header>
+      </section>
+
+      <!-- Eine zusätzliche Header-Instanz zeigt das Kontomenü am rechten Zeilenende. -->
+      <section id="benutzermenue" class="mt-5" aria-labelledby="account-title">
+        <h2 id="account-title" class="h4">Login und Benutzermenü</h2>
+        <p>
+          Rechts öffnet der Login-Button ein Kontomenü mit Settings,
+          Benutzereinstellungen und Abmelden. Die Beispielaktionen schließen
+          das Menü; sie ändern keine echte Sitzung.
+        </p>
+        <ntl-spa-header aria-label="Navigation mit Benutzermenü">
+          <a slot="brand" class="ms-4 me-4 fw-bold text-primary text-decoration-none"
+             href="#ueberblick">NEXTRAP</a>
+          <nav slot="main-nav" class="d-flex align-items-center small" aria-label="Kontonavigation">
+            <a class="me-3 text-reset text-decoration-none" href="#ueberblick">Workspace</a>
+          </nav>
+          <button slot="right-nav" id="spa-header-account-toggle"
+                  class="btn btn-neutral dropdown-toggle ms-3 me-4" type="button"
+                  popovertarget="spa-header-account-menu" aria-controls="spa-header-account-menu">
+            <nte-icon class="bi bi-person-circle me-2" aria-hidden="true"></nte-icon>Login
+          </button>
+        </ntl-spa-header>
+
+        <!-- Das Toplayer-Menü bleibt außerhalb der Header-Slots und ihrer Scrollbereiche. -->
+        <ul id="spa-header-account-menu" class="dropdown-menu" popover="auto"
+            aria-labelledby="spa-header-account-toggle">
+          <li>
+            <button type="button" popovertarget="spa-header-account-menu" popovertargetaction="hide">
+              <nte-icon class="bi bi-gear me-2" aria-hidden="true"></nte-icon>Settings
+            </button>
+          </li>
+          <li>
+            <button type="button" popovertarget="spa-header-account-menu" popovertargetaction="hide">
+              <nte-icon class="bi bi-person-gear me-2" aria-hidden="true"></nte-icon>Benutzereinstellungen
+            </button>
+          </li>
+          <li><hr></li>
+          <li>
+            <button type="button" popovertarget="spa-header-account-menu" popovertargetaction="hide">
+              <nte-icon class="bi bi-box-arrow-right me-2" aria-hidden="true"></nte-icon>Abmelden
+            </button>
+          </li>
+        </ul>
       </section>
 
       <!-- Hinweise erklären ausschließlich die tatsächlich verwendete Header-API. -->
