@@ -30,7 +30,7 @@ Ein Content-Pane-Wrapper oder Markdown ist für diese Verwendung nicht nötig.
     <a href="#workspace">Workspace</a>
   </nav>
   <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 ms-auto">
-    <a class="btn btn-neutral btn-sm small fw-semibold" href="#editor-notes">Hilfe</a>
+    <a class="btn btn-neutral fw-semibold" href="#editor-notes">Hilfe</a>
   </div>
 </header>
 
@@ -51,9 +51,9 @@ Ein Content-Pane-Wrapper oder Markdown ist für diese Verwendung nicht nötig.
       <span class="badge">Markdown</span>
     </div>
     <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 ms-auto">
-      <button class="btn btn-neutral btn-sm small fw-semibold" type="reset"
+      <button class="btn btn-neutral fw-semibold" type="reset"
               form="workspace-form">Zurücksetzen</button>
-      <a class="btn btn-primary btn-sm small fw-semibold" href="#editor-notes">Hilfe</a>
+      <a class="btn btn-primary fw-semibold" href="#editor-notes">Hilfe</a>
     </div>
   </header>
 
@@ -84,8 +84,8 @@ Das Anwendungstheme stellt Runtime-Tokens aus `@nextrap/style-base` bereit und
 materialisiert die Utilities über `style-utils()` aus `@nextrap/style-utils`.
 Die Default-Styles von `@nextrap/style-typography`, `@nextrap/style-elements` und
 `@nextrap/style-button` liefern Typografie, List Groups, Badges und Buttons.
-Neutrale Nebenaktionen verwenden `btn-neutral`; `small` und `fw-semibold`
-geben den Header-Buttons ihre kompakte, etwas kräftigere Typografie.
+Neutrale Nebenaktionen verwenden `btn-neutral`. Die Header-Buttons nutzen die
+Standardgröße; `fw-semibold` gibt ihnen ihre etwas kräftigere Beschriftung.
 
 Die Flex- und Abstands-Utilities ordnen die linke Inhaltsgruppe und die rechte
 Aktionsgruppe an. Nur `demo-toolbar-start` ergänzt in der Demo

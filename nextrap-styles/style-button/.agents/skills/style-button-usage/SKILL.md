@@ -25,14 +25,14 @@ Der Button übernimmt seine Roundness automatisch aus `--nt-border-radius`; Them
 
 ## Neutrale Aktionen
 
-Verwende `.btn.btn-neutral` für zurückhaltende UI-Aktionen; `.btn-sm` ergänzt
-bei Bedarf kompakte Abstände. Der neutrale Modifier verwendet `--nt-surface`
-als Fläche, `--nt-text` als Textfarbe und `--nt-border` als Randfarbe. Hover und
-Active wechseln dezent auf `--nt-surface-muted`.
+Verwende `.btn.btn-neutral` für zurückhaltende UI-Aktionen in Standardgröße.
+Der neutrale Modifier verwendet `--nt-surface` als Fläche, `--nt-text` als
+Textfarbe und `--nt-border` als Randfarbe. Hover und Active wechseln dezent
+auf `--nt-surface-muted`.
 
 ```html
-<!-- Eine kompakte neutrale Navigation kombiniert Basis, Farbe und Größe. -->
-<a class="btn btn-neutral btn-sm" href="/einstellungen">Einstellungen</a>
+<!-- Eine neutrale Navigation verwendet die gemeinsame Standardgröße. -->
+<a class="btn btn-neutral" href="/einstellungen">Einstellungen</a>
 ```
 
 Die `.btn`-Basis verwendet standardmäßig die Primary-Farbe, den Theme-Radius
@@ -89,7 +89,7 @@ Ein Split-Button kombiniert eine direkte Hauptaktion mit einem separaten Dropdow
 Die Größenmodifier `.btn-sm`, `.btn-lg`, `.btn-xl` und `.btn-xxl` werden immer zusätzlich zu `.btn` gesetzt. Ohne Größenmodifier gilt die Standardgröße.
 
 `.btn-sm` ändert nur das Padding, nicht die Schriftgröße. Die Fallbacks betragen
-`0.375rem` vertikal und `0.75rem` horizontal für luftigere kompakte UI-Aktionen.
+`0.25rem` vertikal und `0.5rem` horizontal für kompakte UI-Aktionen.
 Bestehende Werte für `--nt-btn-sm-padding-y` und `--nt-btn-sm-padding-x` haben
 weiterhin Vorrang.
 

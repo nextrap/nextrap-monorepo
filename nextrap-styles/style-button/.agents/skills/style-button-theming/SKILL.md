@@ -32,13 +32,41 @@ ein. Er verwendet `--nt-surface` für die Fläche, `--nt-text` für den Text und
 // Die öffentliche Sass-API stellt Basis und unabhängige Modifier bereit.
 @use '@nextrap/style-button' as button;
 
-// Kompakte UI-Aktionen kombinieren neutrale Farben mit der gemeinsamen Basis.
+// Zurückhaltende UI-Aktionen verwenden neutrale Farben in der normalen Größe.
 .workspace-action {
   @include button.btn();
   @include button.btn-neutral();
-  @include button.btn-sm();
 }
 ```
+
+## Kontrast und Zustandsfarben
+
+Filled-Varianten beziehen den Vordergrund passend zur Fläche aus
+`--nt-text-on-<family>`, `--nt-text-on-<family>-hover` beziehungsweise
+`--nt-text-on-<family>-active`. Die lokalen Tokens `--btn-txt`,
+`--btn-txt-hover` und `--btn-txt-active` bilden diese Zustände ab. Überschreibe
+Fläche und Vordergrund immer als geprüftes Paar.
+
+Outline-Hover füllt mit der Basisfarbe und nutzt deren Basisvordergrund;
+Active verwendet die Active-Fläche und ihren Vordergrund auch ohne Hover.
+`btn-neutral()` verwendet weiterhin `--nt-text`. Der Dropdown-Pfeil folgt
+über `currentColor` der tatsächlichen Textfarbe.
+
+Die Token-Engine bevorzugt bei vollständiger CSS-Unterstützung Weiß ab `4.5:1`
+nach [WCAG 2.2](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html),
+sonst Schwarz. Davor greifen die statischen Palette-/State-Fallbacks und,
+sofern unterstützt, natives
+[contrast-color()](https://www.w3.org/TR/css-color-5/#contrast-color).
+Statische Fallbacks decken beliebige Theme-Overrides nicht zuverlässig ab.
+Die Berechnung gilt für deckende sRGB-Flächen; prüfe Transparenz gegen den
+tatsächlichen Backdrop und Wide-Gamut-Farben separat. Das ersetzt keine
+allgemeine Barrierefreiheitsprüfung.
+Prüfe die normalen Brand-/Linkfarben ungefüllter Outline- und Link-Buttons
+zusätzlich gegen ihren tatsächlichen Seitenuntergrund.
+
+Die Button-Basis verwendet `transition: none`, damit Vordergrund und Fläche
+ohne graue Zwischenfarben wechseln. Füge keine pauschale Farbtransition hinzu,
+ohne die Zwischenzustände zu prüfen. Lead-/Glow-Effekte bleiben eigenständig.
 
 ## Größen
 
@@ -48,10 +76,10 @@ und schließen `btn()` nicht ein. Passe das Padding zentral über
 Größenklassen anzulegen. Die größeren Varianten verwenden außerdem
 `--nt-btn-<size>-font-size`.
 
-`btn-sm()` ändert ausschließlich das Padding mit Fallbacks von `0.375rem`
-vertikal und `0.75rem` horizontal. Das gibt kompakten UI-Aktionen mehr Platz;
-vorhandene Overrides über `--nt-btn-sm-padding-y` und `--nt-btn-sm-padding-x`
-gelten weiter. Der Modifier setzt keine eigene Schriftgröße oder Zeilenhöhe.
+`btn-sm()` ändert ausschließlich das Padding mit Fallbacks von `0.25rem`
+vertikal und `0.5rem` horizontal. Overrides über `--nt-btn-sm-padding-y` und
+`--nt-btn-sm-padding-x` haben Vorrang. Der Modifier setzt keine eigene
+Schriftgröße oder Zeilenhöhe; ohne Größenmodifier gilt die normale Größe.
 
 ## Lead und Glow
 

@@ -100,7 +100,6 @@ export default defineDemo({
         <h2>Größen</h2>
         <div class="style-button-demo__row">
           <button class="btn btn-primary btn-sm" type="button">Small</button>
-          <button class="btn btn-neutral btn-sm" type="button">Kompakte Nebenaktion</button>
           <button class="btn btn-primary" type="button">Default</button>
           <button class="btn btn-primary btn-lg" type="button">Large</button>
           <button class="btn btn-primary btn-xl" type="button">Extra Large</button>

@@ -6,7 +6,7 @@ import css from './tokens.scss?inline';
 export default defineDemo({
   title: 'Farben, Typografie und Abstände',
   group: 'style-base',
-  description: 'Runtime-Tokens für Farben, Schriftgrößen und Spacing',
+  description: 'Runtime-Tokens für Farben, Textkontrast, Schriftgrößen und Spacing',
   css,
   html: `
     <div class="token-demo">
@@ -34,6 +34,24 @@ export default defineDemo({
             <code>--nt-${color}</code>
           </div>
         `,
+          )
+          .join('')}
+      </div>
+      <!-- Zustandsmuster zeigen die zur tatsächlichen Fläche gehörende Textfarbe. -->
+      <h2>Textkontrast bei Hover und Active</h2>
+      <p>Weiß wird bevorzugt, sobald es mindestens 4,5:1 Kontrast erreicht; sonst wird Schwarz verwendet.</p>
+      <div class="token-demo__colors">
+        ${['primary', 'success', 'warning', 'danger']
+          .map((color) =>
+            ['hover', 'active']
+              .map(
+                (state) => `
+          <div style="background: var(--nt-${color}-${state}); color: var(--nt-text-on-${color}-${state})">
+            <code>--nt-${color}-${state}</code>
+          </div>
+        `,
+              )
+              .join(''),
           )
           .join('')}
       </div>

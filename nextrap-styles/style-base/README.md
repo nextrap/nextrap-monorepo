@@ -172,22 +172,60 @@ Prefer semantic spacing in application/component code. The structural progressio
 .page-section + .page-section { margin-block-start: var(--nt-spacing-section); }
 ```
 
+## Kontrastfarben
+
+Für Text auf einer Farbfamilie stehen `--nt-text-on-<family>`,
+`--nt-text-on-<family>-hover` und `--nt-text-on-<family>-active` bereit. Verwende
+jeweils den Vordergrund zur tatsächlich dargestellten Fläche und ihrem Zustand.
+Die vollständige CSS-Berechnung bevorzugt Weiß, wenn es mindestens `4.5:1`
+erreicht, andernfalls Schwarz. Grundlage ist die ungerundete relative Luminanz
+nach [WCAG 2.2](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html).
+
+Die Standard-Primary-Farbe `#0969da` erreicht mit Weiß etwa `5.19:1`. Die
+Basisflächen von Success, Tertiary, Info und Warning verwenden Schwarz, weil
+Weiß dort die Schwelle nicht erreicht.
+
+Die Engine ergänzt die Kontrastwahl abhängig von der Browser-Unterstützung:
+
+1. Statische Vordergründe zur Standardpalette und `light-dark()`-State-Fallbacks.
+2. Natives [contrast-color()](https://www.w3.org/TR/css-color-5/#contrast-color),
+   sofern unterstützt, mit seiner eigenen Schwarz-/Weißauswahl.
+3. Die Weißpräferenz über relative `color(srgb-linear ...)`-Berechnung, sofern
+   `@supports` den vollständigen benötigten Ausdruck akzeptiert.
+
+Statische Fallbacks garantieren keinen Kontrast für frei veränderte Themes.
+Die Berechnung gilt für deckende sRGB-Flächen; Transparenz benötigt den realen
+Backdrop, Wide-Gamut-Farben eine eigene Prüfung. Die Tokens sind keine
+allgemeine Barrierefreiheitsgarantie.
+
 ## Component contract
 
 Components consume global tokens through `var(--nt-*)` and must not depend on private Sass theme state or recreate global theme calculations.
 
 ```css
+/* Fläche und Text übernehmen zusammen die Tokens des jeweiligen Zustands. */
 .btn {
   --btn-bg: var(--nt-primary);
   --btn-bg-hover: var(--nt-primary-hover);
+  --btn-bg-active: var(--nt-primary-active);
   --btn-text: var(--nt-text-on-primary);
+  --btn-text-hover: var(--nt-text-on-primary-hover);
+  --btn-text-active: var(--nt-text-on-primary-active);
 
   background: var(--btn-bg);
   color: var(--btn-text);
 }
 
+/* Hover verwendet den Vordergrund der tatsächlichen Hover-Fläche. */
 .btn:hover {
   background: var(--btn-bg-hover);
+  color: var(--btn-text-hover);
+}
+
+/* Active funktioniert auch dann, wenn kein Hover-Zustand vorliegt. */
+.btn:active {
+  background: var(--btn-bg-active);
+  color: var(--btn-text-active);
 }
 ```
 

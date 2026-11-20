@@ -4,13 +4,25 @@
 // Theme authors should normally override input tokens; components should
 // consume semantic/derived tokens so themes remain runtime-overridable.
 
+@use 'sass:string';
+
+// Bevorzugt Weiß ab WCAG-AA-Kontrast 4,5:1 auf einer deckenden sRGB-Fläche.
+// Die linearen Kanäle liefern die WCAG-Luminanz; round() trifft nur die binäre
+// Entscheidung nach dem Grenzvergleich und rundet keinen Kontrastwert auf.
+@function _contrast-foreground($background) {
+  $luminance: '(0.2126 * r + 0.7152 * g + 0.0722 * b)';
+  $channel: 'clamp(0, 1 - round(up, #{$luminance} - (1.05 / 4.5 - 0.05), 1), 1)';
+
+  @return string.unquote('color(from #{$background} srgb-linear #{$channel} #{$channel} #{$channel} / 1)');
+}
+
 @mixin runtime-theme() {
   // Do not set color-scheme here. A theme can be scoped below :root and would
   // otherwise override the inherited explicit light/dark scheme. Scheme
   // selection is emitted globally by runtime-scheme-selectors().
 
   // === COLOR INPUT TOKENS ===
-  --nt-primary: #007bff; // Main brand/action color: primary buttons, selected states, key actions.
+  --nt-primary: #0969da; // Das Standardblau erlaubt weiße Beschriftung mit etwa 5,19:1 Kontrast.
   --nt-accent: #ff8400; // Complementary brand color: highlights, accents and secondary emphasis.
   --nt-neutral: #7e7e7e; // Neutral seed used to derive surfaces, text, borders and gray scale.
   --nt-secondary: #6c757d; // Secondary action/state color where primary emphasis is too strong.
@@ -174,14 +186,14 @@
   --nt-link-active: var(--nt-primary-active);
 
   // === CONTRAST TEXT ===
-  // Static fallbacks keep semantic foregrounds usable where contrast-color()
-  // is unavailable. Supporting browsers replace them from the real background.
+  // Die statischen Fallbacks passen zur Default-Palette; moderne Browser
+  // berechnen anschließend aus den tatsächlichen Theme- und Zustandsfarben.
   --nt-text-on-primary: var(--nt-white);
   --nt-text-on-secondary: var(--nt-white);
-  --nt-text-on-tertiary: var(--nt-white);
+  --nt-text-on-tertiary: var(--nt-black);
   --nt-text-on-accent: var(--nt-black);
-  --nt-text-on-success: var(--nt-white);
-  --nt-text-on-info: var(--nt-white);
+  --nt-text-on-success: var(--nt-black);
+  --nt-text-on-info: var(--nt-black);
   --nt-text-on-warning: var(--nt-black);
   --nt-text-on-danger: var(--nt-white);
   --nt-text-on-light: var(--nt-black);
@@ -189,19 +201,47 @@
   --nt-text-on-white: var(--nt-black);
   --nt-text-on-black: var(--nt-white);
 
+  // Hover und Active berücksichtigen auch die helleren Flächen im Dark-Scheme.
+  @each $color in 'primary', 'secondary', 'danger' {
+    --nt-text-on-#{$color}-hover: light-dark(var(--nt-white), var(--nt-black));
+    --nt-text-on-#{$color}-active: light-dark(var(--nt-white), var(--nt-black));
+  }
+
+  // Diese Familien benötigen Weiß erst auf der dunkleren Active-Fläche im Light-Scheme.
+  @each $color in 'tertiary', 'info', 'success' {
+    --nt-text-on-#{$color}-hover: var(--nt-black);
+    --nt-text-on-#{$color}-active: light-dark(var(--nt-white), var(--nt-black));
+  }
+
+  // Die übrigen Default-Familien behalten ihren Vordergrund in beiden Zuständen.
+  @each $color in 'accent', 'warning', 'light', 'dark', 'white', 'black' {
+    --nt-text-on-#{$color}-hover: var(--nt-text-on-#{$color});
+    --nt-text-on-#{$color}-active: var(--nt-text-on-#{$color});
+  }
+
+  // Die Liste registriert Token-Namen; Farbberechnung und Theme-Overrides bleiben CSS.
+  $contrast-colors: (
+    'primary', 'secondary', 'tertiary', 'accent', 'success', 'info',
+    'warning', 'danger', 'light', 'dark', 'white', 'black'
+  );
+
+  // Native Kontrastwahl bleibt als dynamischer Fallback ohne relative Farben verfügbar.
   @supports (color: contrast-color(red)) {
-    --nt-text-on-primary: contrast-color(var(--nt-primary));
-    --nt-text-on-secondary: contrast-color(var(--nt-secondary));
-    --nt-text-on-tertiary: contrast-color(var(--nt-tertiary));
-    --nt-text-on-accent: contrast-color(var(--nt-accent));
-    --nt-text-on-success: contrast-color(var(--nt-success));
-    --nt-text-on-info: contrast-color(var(--nt-info));
-    --nt-text-on-warning: contrast-color(var(--nt-warning));
-    --nt-text-on-danger: contrast-color(var(--nt-danger));
-    --nt-text-on-light: contrast-color(var(--nt-light));
-    --nt-text-on-dark: contrast-color(var(--nt-dark));
-    --nt-text-on-white: contrast-color(var(--nt-white));
-    --nt-text-on-black: contrast-color(var(--nt-black));
+    @each $color in $contrast-colors {
+      --nt-text-on-#{$color}: contrast-color(var(--nt-#{$color}));
+      --nt-text-on-#{$color}-hover: contrast-color(var(--nt-#{$color}-hover, var(--nt-#{$color})));
+      --nt-text-on-#{$color}-active: contrast-color(var(--nt-#{$color}-active, var(--nt-#{$color})));
+    }
+  }
+
+  // Der vollständige Ausdruck prüft relative Farben und die benötigte CSS-Mathematik.
+  // Weiß gewinnt bereits bei ausreichendem Kontrast, nicht erst beim maximalen Kontrast.
+  @supports (color: #{_contrast-foreground('red')}) {
+    @each $color in $contrast-colors {
+      --nt-text-on-#{$color}: #{_contrast-foreground('var(--nt-#{$color})')};
+      --nt-text-on-#{$color}-hover: #{_contrast-foreground('var(--nt-#{$color}-hover, var(--nt-#{$color}))')};
+      --nt-text-on-#{$color}-active: #{_contrast-foreground('var(--nt-#{$color}-active, var(--nt-#{$color}))')};
+    }
   }
 
   // === GRAY SCALE ===
