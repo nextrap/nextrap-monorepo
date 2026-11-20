@@ -4,8 +4,10 @@
 
 Dieses vollständige Beispiel zeigt eine klickbare Handbuchseite mit Unterseiten.
 Der Pfeil klappt ausschließlich den Unterbaum auf und zu. Der Link bleibt dabei
-bedienbar. Ein Knoten ohne `data.href` ist eine reine Beschriftung, etwa ein Verzeichnis;
-auch dort bedient ausschließlich der Pfeil den Unterbaum.
+bedienbar. Bei einem Knoten mit Kindern und ohne `data.href`, etwa einem
+Verzeichnis, öffnen und schließen auch Name und Icon den Unterbaum. Bei Blättern
+wählt das Label den Eintrag aus; freie Zeilen- und Zellflächen bleiben passiv.
+Eigenständige Zellaktionen wie Dropdowns behalten ihre Funktion. Die Hervorhebung umfasst trotzdem die gesamte Zeile mit ihren Zellen.
 
 ```ts
 import { NteTreeView, TreeModel } from '@nextrap/nte-treeview';
@@ -145,7 +147,9 @@ zur Registrierung und verwende dieselbe Sass-Baseline. Kein `setData` ist nötig
 
 Direkte Knoten werden automatisch in den `children`-Slot eingeordnet. Der
 Standard-Slot enthält die Beschriftung, `icon` ein optionales Symbol, `center`
-und `end` beliebige zusätzliche Inhalte. Zellaktionen sind keine Nachfahren
+und `end` beliebige zusätzliche Inhalte. Ohne eigenen `icon`-Inhalt verwenden
+Elternknoten das automatisch wechselnde Ordnersymbol der Default-Styles. Blätter
+haben keinen Pfeil-Platzhalter und ohne eigenes Icon auch keinen Symbolabstand. Zellaktionen sind keine Nachfahren
 des Links oder des Aufklappknopfs. Auch manuell hinzugefügte/entfernte Knoten
 aktualisieren den Pfeil. `expanded` lässt sich als Property oder Attribut setzen.
 
@@ -198,8 +202,9 @@ Die mittlere Zelle zeigt nun „📚“. `data.icon` wird nicht automatisch als 
 Bild-URL oder Icon-Bibliothek interpretiert. Für deklaratives Markup bleibt der
 `icon`-Slot verfügbar. Alle Angaben in `data` werden reaktiv beobachtet, auch beim
 Austauschen oder Löschen des gesamten `data`-Objekts. Ohne `data` bleibt ein Knoten
-eine Beschriftung und sein Unterbaum zunächst geschlossen; Aufklappen legt bei
-Bedarf `data` an und schreibt `data.expanded` zurück. Für JSON ausschließlich
+ein auswählbares Label und sein Unterbaum zunächst geschlossen. Name, Icon oder
+Pfeil öffnen einen unverlinkten Unterbaum; dies legt bei Bedarf `data` an und
+schreibt `data.expanded` zurück. Für JSON ausschließlich
 Strings, Zahlen, Booleans und `null` verwenden; optionale Werte dürfen fehlen.
 
 Migration gegenüber dem bisherigen PR-Entwurf:
@@ -210,3 +215,76 @@ Migration gegenüber dem bisherigen PR-Entwurf:
 | `node.target`, `node.rel`, `node.current` | `node.data?.target`, `node.data?.rel`, `node.data?.current` |
 | `node.meta.size`, `node.meta.status` | `node.data?.['size']`, `node.data?.['status']` |
 | `id`, `label`, `children` | unverändert auf Knotenebene |
+
+## 07 – Ordner- und Datei-Icons im Explorer verwenden
+
+Ergänzt das deklarative Beispiel 04. Ordner mit Kindern zeigen ohne zusätzliche
+Konfiguration ein geschlossenes oder geöffnetes Symbol aus `default-style()`.
+Ein eigenes Element im `icon`-Slot ersetzt dieses Symbol. Dateien erhalten nur
+dann ein Icon, wenn die Anwendung eines bereitstellt:
+
+```html
+<nte-treeview-item>
+  <svg slot="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+    aria-hidden="true" focusable="false">
+    <path d="M3 1.5h6l4 4v9H3z M9 1.5v4h4 M5 8h6 M5 10.5h6" />
+  </svg>
+  README.md
+  <span slot="center">Markdown</span>
+  <span slot="end">2 KB</span>
+</nte-treeview-item>
+```
+
+Das SVG und der Name bilden gemeinsam die Klickfläche. Ein Blatt ohne Icon, etwa
+`<nte-treeview-item>Methoden</nte-treeview-item>`, beginnt direkt an seinem Einzug;
+es bleibt kein Platz für einen unsichtbaren Pfeil. Die unabhängige
+[Explorer-Demo](../demo/02-file-explorer.demo.ts) zeigt offene und geschlossene
+Ordner, Dateien mit und ohne Icon sowie Typ und Größe in gemeinsamen Spalten.
+
+## 08 – Eigene Klick- und Doppelklick-Aktionen ohne Link
+
+Unabhängige Alternative zur Navigation. Die folgenden Lit-Listener hängen an
+`nte-treeview-item`; dessen Label ist ohne `href` ein nativer Button. Die
+Anwendung verwendet dieselbe Sass-Baseline wie in Beispiel 01:
+
+```ts
+import { html, render } from 'lit';
+import '@nextrap/nte-treeview';
+
+const actions = document.createElement('div');
+document.body.append(actions);
+render(html`
+  <nte-treeview aria-label="Dateiaktionen">
+    <nte-treeview-item
+      @label-click=${() => window.alert('Einfacher Klick: Notizen.md')}>
+      Notizen.md
+    </nte-treeview-item>
+    <nte-treeview-item
+      @label-click=${(event: CustomEvent<{ originalEvent: MouseEvent }>) => {
+        if (event.detail.originalEvent.detail === 0) {
+          window.alert('Tastatur: Handbuch.pdf');
+        }
+      }}
+      @label-dblclick=${() => window.alert('Doppelklick: Handbuch.pdf')}>
+      Handbuch.pdf
+    </nte-treeview-item>
+  </nte-treeview>`, actions);
+```
+
+`label-click` und `label-dblclick` liefern `{ item, originalEvent }` als `detail`
+und sind bubbling/composed/cancelable. Sie entstehen nur auf Name oder Icon,
+auch wenn derselbe Eintrag schon ausgewählt ist. `selection-change` bleibt das
+separate Ereignis für eine tatsächlich geänderte Auswahl. Bei Event-Delegation
+identifiziert `detail.item` den auslösenden Knoten.
+
+Ein Doppelklick erzeugt zuerst zwei native Klicks. Deshalb liegen die beiden
+Alerts auf getrennten Einträgen; der erste Alert würde sonst den Doppelklick
+unterbrechen. Native Button-Aktivierung per Enter/Leertaste erzeugt einen Klick
+mit `originalEvent.detail === 0` und kann dieselbe Dateiaktion auslösen.
+
+`event.preventDefault()` im `label-click`-Listener ersetzt die Standardaktion
+eines Labels, also Navigation oder Ordner-Disclosure; der Eintrag wird weiterhin
+ausgewählt. Eigenständige interaktive Slot-Inhalte und modifizierte Klicks
+behalten ihr bisheriges Verhalten. Die
+[Aktionsdemo](../demo/03-actions.demo.ts) zeigt den vollständigen Ablauf mit Icons
+und direkt sichtbaren Listenern.

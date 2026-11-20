@@ -6,14 +6,15 @@ import './main.scss';
 // Der Ablauf zeigt CMS-Seiten, Dateien, unabhängige Disclosure und ausgerichtete Zusatz-Zellen.
 export default defineDemo({
   title: 'TreeView: Seiten, Dateien und Zusatzspalten',
-  description: 'Reaktiver Baum mit Elternlinks, Dateigrößen und Status-Dropdowns',
+  description: 'Reaktiver Baum mit Ordner-Icons, Elternlinks, Dateigrößen und Status-Dropdowns',
   render(root) {
     render(
       html`<main>
         <h1>Inhalte und Dateien</h1>
         <p>
-          Der Seitenname öffnet die Seite. Ausschließlich der Pfeil klappt den Unterbaum auf. Das Dropdown ändert nur
-          den Status.
+          Verlinkte Namen öffnen ihre Seite; der Pfeil klappt unabhängig davon den Unterbaum auf. Ordner ohne Link
+          öffnen und schließen auch über ihren Namen oder ihr Icon. Freie Zeilenflächen und Größenangaben lösen
+          keine Aktion aus; das Dropdown ändert nur den Status.
         </p>
         <nte-treeview aria-label="Inhalte und Dateien"></nte-treeview>
         <p>

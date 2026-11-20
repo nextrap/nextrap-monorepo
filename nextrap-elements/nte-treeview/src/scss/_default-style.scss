@@ -6,11 +6,9 @@
   --nte-treeview-center-width: 0px;
   --nte-treeview-end-width: 0px;
 
-  // Die gemeinsame Fläche fasst die Zeilen zusammen, ohne Unterbäume abzuschneiden.
+  // Eine offene Explorer-Fläche ersetzt Tabellenrahmen, ohne Unterbäume abzuschneiden.
   &::part(list) {
     padding: var(--nt-space-1, 0.25rem);
-    border: 1px solid var(--nt-border, color-mix(in srgb, currentColor 20%, transparent));
-    border-radius: var(--nt-border-radius, 0.5rem);
     background: var(--nt-surface, Canvas);
   }
 
@@ -20,7 +18,6 @@
 
     & nte-treeview-item::part(center) {
       padding-inline: var(--nt-space-3, 0.75rem);
-      border-inline-start: 1px solid var(--nt-border, color-mix(in srgb, currentColor 20%, transparent));
     }
   }
   &:has([slot='end']) {
@@ -28,7 +25,6 @@
 
     & nte-treeview-item::part(end) {
       padding-inline: var(--nt-space-3, 0.75rem);
-      border-inline-start: 1px solid var(--nt-border, color-mix(in srgb, currentColor 20%, transparent));
     }
   }
 
@@ -46,12 +42,10 @@
     border: 1px solid transparent;
     pointer-events: none;
     border-radius: var(--nt-border-radius-sm, 0.25rem);
-    box-shadow: inset 0 -1px var(--nt-border, color-mix(in srgb, currentColor 12%, transparent));
   }
 
   // Gleiche Zellhöhen und Zentrierung erhalten eine durchgehende, auch mehrzeilige Zeile.
   & nte-treeview-item::part(toggle),
-  & nte-treeview-item::part(spacer),
   & nte-treeview-item::part(label),
   & nte-treeview-item::part(center),
   & nte-treeview-item::part(end) {
@@ -61,9 +55,8 @@
     min-block-size: 2.5rem;
   }
 
-  // Blatt und Elternknoten nutzen dieselbe Pfeilspalte und damit dieselbe Textkante.
-  & nte-treeview-item::part(toggle),
-  & nte-treeview-item::part(spacer) {
+  // Nur Elternknoten benötigen einen Pfeil; Blätter beginnen ohne leeren Platzhalter.
+  & nte-treeview-item::part(toggle) {
     grid-column: 1;
     grid-row: 1;
     display: grid;
@@ -77,17 +70,18 @@
     padding-block: var(--nt-space-1, 0.25rem);
     overflow-wrap: anywhere;
   }
-  // Beschriftungen behalten normalen Textfluss, auch mit Links oder hervorgehobenen Wörtern.
+  // Nur Name und Icon bilden die Klickfläche; die freie Namensspalte bleibt passiv.
   & nte-treeview-item::part(label) {
     display: block;
+    inline-size: fit-content;
+    max-inline-size: 100%;
     align-content: center;
-    padding-inline-end: var(--nt-space-3, 0.75rem);
   }
   // Beschriftungen ohne Link sind native Auswahlbuttons mit derselben Zeilenoptik.
   & nte-treeview-item::part(text) {
     appearance: none;
     margin: 0;
-    padding-inline-start: 0;
+    padding-inline: 0;
     border: 0;
     background: none;
     color: inherit;
@@ -95,9 +89,23 @@
     text-align: start;
     cursor: pointer;
   }
-  & nte-treeview-item > [slot='icon'] {
+  // Explizite Datei-Icons und der Ordner-Fallback liegen direkt vor dem Namen.
+  & nte-treeview-item > [slot='icon'],
+  & nte-treeview-item::part(folder-icon) {
+    display: inline-block;
+    inline-size: 1.125em;
+    block-size: 1em;
     margin-inline-end: var(--nt-space-2, 0.5rem);
-    vertical-align: middle;
+    vertical-align: -0.125em;
+  }
+
+  // Das Theme zeichnet die Standardordner; ein eigener icon-Slot ersetzt den Fallback.
+  & nte-treeview-item::part(folder-icon) {
+    background-color: currentColor;
+    mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M3%207a2%202%200%200%201%202-2h5l2%202h7a2%202%200%200%201%202%202v10H3Z%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.75%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+  }
+  & nte-treeview-item[expanded]::part(folder-icon) {
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M3%2011V7a2%202%200%200%201%202-2h5l2%202h7a2%202%200%200%201%202%202v2M3%2019l2-8h17l-3%208Z%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.75%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E");
   }
   & nte-treeview-item::part(center),
   & nte-treeview-item::part(end) {
