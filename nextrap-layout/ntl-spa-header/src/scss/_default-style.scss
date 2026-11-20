@@ -1,0 +1,14 @@
+// Das Anwendungstheme materialisiert die Optik ohne zusätzliche Innen- oder Außenabstände.
+@mixin default-style() {
+  color: var(--nt-text);
+  background: var(--nt-surface);
+  font-family: var(--nt-font-family);
+  border-block-end: 1px solid var(--nt-border);
+
+  // Die festen Scrollbereiche bleiben auch ohne fokussierbare Inhalte per Tastatur erreichbar.
+  &::part(main-line):focus-visible,
+  &::part(sub-line):focus-visible {
+    outline: 2px solid var(--nt-primary);
+    outline-offset: -2px;
+  }
+}

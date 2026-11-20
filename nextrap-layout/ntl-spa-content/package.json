@@ -21,6 +21,7 @@
         "lit": "^3.3.2"
     },
     "devDependencies": {
+        "@nextrap/ntl-spa-header": "^0.0.0",
         "@nextrap/style-base": "^2.0.0",
         "@nextrap/style-button": "^2.0.2",
         "@nextrap/style-elements": "^2.0.4",
