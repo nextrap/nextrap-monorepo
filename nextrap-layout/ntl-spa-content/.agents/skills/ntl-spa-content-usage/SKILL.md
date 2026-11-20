@@ -57,7 +57,7 @@ Hier steht der unabhängig scrollende Hauptinhalt.
 | `sidebar-right-header` | Fester Header innerhalb der rechten Sidebar. |
 
 Lass unbenutzte Slots weg. Eine Sidebar erscheint nur, wenn ihrem Inhaltsslot
-ein Element oder Text zugewiesen ist; ihr Header allein öffnet sie nicht.
+ein Element zugewiesen ist; ihr Header allein öffnet sie nicht.
 Die Nextrap-Basis ignoriert Whitespace und Kommentare. Ein zugewiesener leerer
 oder versteckter Wrapper zählt dagegen als Belegung; entferne ihn, wenn die
 Sidebar verschwinden soll. Native Slotwechsel aktualisieren die Darstellung.
@@ -69,7 +69,7 @@ eigene Initialisierung, Properties, Attribute oder Events.
 ## Navbar und Scrollen
 
 Platziere die Navbar als vorheriges Geschwister im normalen Dokumentfluss.
-Die [vollständige Demo](../../../demo/ntl-spa-content.demo.ts) zeigt die
+Die [vollständige Demo](https://github.com/nextrap/nextrap-monorepo/blob/main/nextrap-layout/ntl-spa-content/demo/ntl-spa-content.demo.ts) zeigt die
 Markdown-Struktur mit `layout="1;nav.demo-navbar"` vor dem SPA-Layout.
 
 Beim äußeren Seitenscrollen verschwindet die Navbar und das Layout erreicht

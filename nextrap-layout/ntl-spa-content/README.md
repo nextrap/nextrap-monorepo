@@ -14,7 +14,7 @@ vor dem Workspace, alle sieben Slots und unterschiedliche Sidebar-Breiten.
 
 - [Import, Slots und Markdown-Beispiel](.agents/skills/ntl-spa-content-usage/SKILL.md)
 - [Sass-Mixin, CSS-Variablen und Parts](.agents/skills/ntl-spa-content-theming/SKILL.md)
-- [Vollständige Demo](demo/ntl-spa-content.demo.ts)
+- [Vollständige Demo](https://github.com/nextrap/nextrap-monorepo/blob/main/nextrap-layout/ntl-spa-content/demo/ntl-spa-content.demo.ts)
 
 Das JavaScript registriert die Komponente und ihre funktionalen Shadow-Styles.
 Die Anwendung bindet die visuelle Baseline ausdrücklich über `default-style()`
