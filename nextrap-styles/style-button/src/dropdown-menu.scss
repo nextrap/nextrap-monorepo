@@ -12,7 +12,10 @@
   opacity: 0;
   transform: translateY(-0.25rem);
   display: none;
-  min-width: 160px;
+  // Die natürliche Menübreite darf ausweichen, bleibt aber innerhalb der Viewportbreite.
+  box-sizing: border-box;
+  min-inline-size: min(160px, calc(100vi - 1rem));
+  max-inline-size: calc(100vi - 1rem);
   max-block-size: min(70vh, 24rem);
   overflow-y: auto;
   padding-block: 0.5rem;
@@ -68,9 +71,18 @@
       border: 0;
       cursor: pointer;
       display: block;
+      // Direkte Textknoten bleiben beim Icon und erhalten bei Platzmangel eine Ellipsis.
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       transition:
         background-color 160ms ease,
         color 160ms ease;
+
+      // Inline-Icons richten sich am Text aus, statt auf dessen Baseline abzusinken.
+      > :is(nte-icon, img, svg, [aria-hidden='true']) {
+        vertical-align: middle;
+      }
     }
 
     > :is(a, button):is(:hover, :focus-visible) {

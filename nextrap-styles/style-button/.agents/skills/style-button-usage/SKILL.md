@@ -64,14 +64,28 @@ Aktionsbuttons ohne Navigation können das Popover nach ihrer Ausführung nativ 
 </ul>
 ```
 
-Ein Split-Button kombiniert eine direkte Hauptaktion mit einem separaten Dropdown-Auslöser. Beide Controls stehen in `.btn-group`; das Popover darf außerhalb der Gruppe folgen. Der Dropdown-Button benötigt einen eigenen zugänglichen Namen.
+Ein Split-Button kombiniert eine direkte Hauptaktion mit einem separaten
+`.dropdown-toggle.dropdown-toggle-split`. Beide Controls stehen in `.btn-group`
+und erhalten dieselbe Größenklasse; das Popover darf außerhalb der Gruppe
+folgen. Nur der rechte Auslöser trägt `popovertarget`. Die Hauptaktion löst
+ihre eigene Aktion aus, ohne das Menü zu öffnen. Icon-only-Controls benötigen
+jeweils einen eigenen zugänglichen Namen.
+
+Der Split-Modifier verwendet 75 % des horizontalen Paddings der jeweiligen
+Button-Größe, zentriert den Pfeil ohne zusätzlichen Textabstand und wächst in
+der Gruppe nicht mit. So bleiben auch große Split-Buttons kompakt. Für
+XXL-Icon-Aktionen das Symbol nur innerhalb der Hauptaktion vergrößern;
+den Pfeil nicht über eine gemeinsame Icon-Größe mitskalieren. Soll die
+Pfeilspalte trotz XXL-Höhe schmal bleiben, kann ihr `--nt-btn-xxl-padding-x`
+lokal den horizontalen Standardwert übernehmen; die Gruppe gleicht die
+Höhen weiterhin an.
 
 ```html
 <div class="btn-group" role="group" aria-label="Download und weitere Formate">
   <a class="btn btn-primary" href="/download">Herunterladen</a>
   <button
     id="download-toggle"
-    class="btn btn-primary dropdown-toggle"
+    class="btn btn-primary dropdown-toggle dropdown-toggle-split"
     type="button"
     popovertarget="download-menu"
     aria-controls="download-menu"
