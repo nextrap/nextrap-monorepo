@@ -1,6 +1,47 @@
+@use '@nextrap/style-base' as base;
+@use '@nextrap/style-button' as button;
 @use '../index' as treeview;
+
+// Nur diese Demo stellt ihre Theme-Tokens bereit; andere Viewer-Beispiele bleiben unabhängig.
+main:has(> nte-treeview) {
+  max-inline-size: 64rem;
+  margin-inline: auto;
+  padding-block: var(--nt-spacing-component);
+  color: var(--nt-text);
+  font-family: var(--nt-font-family);
+  line-height: var(--nt-line-height);
+
+  @include base.runtime-theme();
+
+  // Die vorhandenen Modellaktionen verwenden die gemeinsame Nextrap-Button-Baseline.
+  > p:has(button) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nt-space-2);
+  }
+  button {
+    @include button.btn();
+    @include button.btn-outline-secondary();
+    @include button.btn-sm();
+  }
+
+  // Native Statusfelder bleiben in ihrer Spalte und übernehmen die Theme-Typografie.
+  nte-treeview select {
+    box-sizing: border-box;
+    max-inline-size: 100%;
+    padding: var(--nt-space-1) var(--nt-space-2);
+    border: 1px solid var(--nt-border);
+    border-radius: var(--nt-border-radius-sm);
+    background: var(--nt-surface-raised);
+    color: var(--nt-text);
+    font: inherit;
+  }
+}
 
 // Die Demo aktiviert dieselbe öffentliche Baseline wie eine konsumierende Anwendung.
 nte-treeview.style-default {
-  @include treeview.default-style($center-width: 7rem, $end-width: 10rem);
+  @include treeview.default-style(
+    $center-width: clamp(4rem, 12vw, 7rem),
+    $end-width: clamp(9rem, 24vw, 10rem)
+  );
 }

@@ -2,36 +2,172 @@
 @mixin default-style($indent: 1.25rem, $center-width: 8rem, $end-width: 10rem) {
   color: var(--nt-text, currentColor);
   font-family: var(--nt-font-family-base, inherit);
+  line-height: var(--nt-line-height, 1.5);
   --nte-treeview-center-width: 0px;
   --nte-treeview-end-width: 0px;
+
+  // Die gemeinsame Fläche fasst die Zeilen zusammen, ohne Unterbäume abzuschneiden.
+  &::part(list) {
+    padding: var(--nt-space-1, 0.25rem);
+    border: 1px solid var(--nt-border, color-mix(in srgb, currentColor 20%, transparent));
+    border-radius: var(--nt-border-radius, 0.5rem);
+    background: var(--nt-surface, Canvas);
+  }
 
   // Sobald ein Knoten Zellen nutzt, reservieren alle Ebenen dieselben rechten Spalten.
   &:has([slot='center']) {
     --nte-treeview-center-width: #{$center-width};
+
+    & nte-treeview-item::part(center) {
+      padding-inline: var(--nt-space-3, 0.75rem);
+      border-inline-start: 1px solid var(--nt-border, color-mix(in srgb, currentColor 20%, transparent));
+    }
   }
   &:has([slot='end']) {
     --nte-treeview-end-width: #{$end-width};
+
+    & nte-treeview-item::part(end) {
+      padding-inline: var(--nt-space-3, 0.75rem);
+      border-inline-start: 1px solid var(--nt-border, color-mix(in srgb, currentColor 20%, transparent));
+    }
   }
 
-  // Nur der Unterbaum wird schmaler; auto-Breite und Start-Margin erhalten die rechte Außenkante.
-  & nte-treeview-item::part(children) {
-    margin-inline-start: $indent;
-    border-inline-start: 1px solid var(--nt-border, currentColor);
+  // Der absolute Hintergrund gehört nur zur ersten Grid-Zeile, niemals zum Unterbaum.
+  & nte-treeview-item::part(row) {
+    position: relative;
+  }
+  & nte-treeview-item::part(row)::before {
+    content: '';
+    position: absolute;
+    grid-column: 1 / -1;
+    grid-row: 1 / 2;
+    inset: 0;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+    pointer-events: none;
+    border-radius: var(--nt-border-radius-sm, 0.25rem);
+    box-shadow: inset 0 -1px var(--nt-border, color-mix(in srgb, currentColor 12%, transparent));
   }
 
-  // Blatt und Elternknoten reservieren denselben Pfeilbereich vor der Beschriftung.
+  // Gleiche Zellhöhen und Zentrierung erhalten eine durchgehende, auch mehrzeilige Zeile.
+  & nte-treeview-item::part(toggle),
+  & nte-treeview-item::part(spacer),
+  & nte-treeview-item::part(label),
+  & nte-treeview-item::part(center),
+  & nte-treeview-item::part(end) {
+    position: relative;
+    box-sizing: border-box;
+    align-self: stretch;
+    min-block-size: 2.5rem;
+  }
+
+  // Blatt und Elternknoten nutzen dieselbe Pfeilspalte und damit dieselbe Textkante.
   & nte-treeview-item::part(toggle),
   & nte-treeview-item::part(spacer) {
-    box-sizing: border-box;
+    grid-column: 1;
+    grid-row: 1;
+    display: grid;
+    place-items: center;
     inline-size: 2rem;
-    min-block-size: 2rem;
+    padding: 0;
   }
-  & nte-treeview-item::part(toggle) {
-    padding: 0.5rem;
+  & nte-treeview-item::part(label),
+  & nte-treeview-item::part(center),
+  & nte-treeview-item::part(end) {
+    padding-block: var(--nt-space-1, 0.25rem);
+    overflow-wrap: anywhere;
   }
+  // Beschriftungen behalten normalen Textfluss, auch mit Links oder hervorgehobenen Wörtern.
   & nte-treeview-item::part(label) {
-    padding-block: 0.25rem;
+    display: block;
+    align-content: center;
+    padding-inline-end: var(--nt-space-3, 0.75rem);
   }
+  // Beschriftungen ohne Link sind native Auswahlbuttons mit derselben Zeilenoptik.
+  & nte-treeview-item::part(text) {
+    appearance: none;
+    margin: 0;
+    padding-inline-start: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+  }
+  & nte-treeview-item > [slot='icon'] {
+    margin-inline-end: var(--nt-space-2, 0.5rem);
+    vertical-align: middle;
+  }
+  & nte-treeview-item::part(center),
+  & nte-treeview-item::part(end) {
+    display: flex;
+    align-items: center;
+  }
+  & nte-treeview-item::part(center) {
+    justify-content: center;
+    font-variant-numeric: tabular-nums;
+  }
+  & nte-treeview-item::part(end) {
+    justify-content: flex-end;
+  }
+
+  // Auch gerenderte Slot-Wrapper dürfen sich innerhalb ihrer festen Spalte verkleinern.
+  & nte-treeview-item > [slot='center'],
+  & nte-treeview-item > [slot='end'] {
+    min-inline-size: 0;
+    max-inline-size: 100%;
+  }
+
+  // Der Einzug beträgt exakt $indent; die Führungslinie verbraucht keine Layoutbreite.
+  & nte-treeview-item::part(children) {
+    position: relative;
+    margin-inline-start: $indent;
+    border: 0;
+  }
+  & nte-treeview-item::part(children)::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: calc(1rem - #{$indent});
+    inline-size: 1px;
+    background: var(--nt-border, color-mix(in srgb, currentColor 20%, transparent));
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  // Nur die tatsächlich bediente Zeile erhält Hover; ihre Vorfahren bleiben unverändert.
+  & nte-treeview-item:hover:not(:has(nte-treeview-item:hover))::part(row)::before {
+    background-color: var(--nt-surface-muted, color-mix(in srgb, currentColor 6%, transparent));
+  }
+
+  // Alle Zellen der aktuellen Seite bleiben gemeinsam markiert, auch ohne Mauszeiger.
+  & nte-treeview-item[current]:not([current=''])::part(row)::before {
+    background-color: var(--nt-primary-subtle, color-mix(in srgb, currentColor 12%, transparent));
+  }
+  & nte-treeview-item[current]:not([current=''])::part(label) {
+    font-weight: var(--nt-font-weight-bold, 600);
+  }
+
+  // Auswahl bleibt beim Verlassen der Zeile bestehen und umfasst auch leere Zusatz-Zellen.
+  & nte-treeview-item[selected]::part(row)::before {
+    border-color: var(--nt-primary, currentColor);
+    background-color: var(--nt-primary-subtle, color-mix(in srgb, currentColor 12%, transparent));
+  }
+
+  // Tastaturfokus fasst ebenfalls nur die eigene Zeile zusammen, einschließlich Zellaktionen.
+  & nte-treeview-item:focus-within:not(:has(nte-treeview-item:focus-within))::part(row)::before {
+    outline: 2px solid var(--nt-focus, currentColor);
+    outline-offset: -2px;
+  }
+  & nte-treeview-item::part(toggle):focus-visible,
+  & nte-treeview-item::part(label):focus-visible {
+    outline: 2px solid var(--nt-focus, currentColor);
+    outline-offset: -2px;
+    border-radius: var(--nt-border-radius-sm, 0.25rem);
+  }
+
+  // Links behalten die Zeilenfarbe; eine Unterstreichung kennzeichnet ihr eigenes Ziel.
   & nte-treeview-item::part(link) {
     color: inherit;
     text-decoration: none;
@@ -40,9 +176,39 @@
     text-decoration: underline;
   }
 
-  // Die Ausrichtung der Zellen ist von der Tiefe des Baumbereichs unabhängig.
-  & nte-treeview-item::part(center),
-  & nte-treeview-item::part(end) {
-    overflow-wrap: anywhere;
+  // Bewegungsarme Systeme behalten dieselben Zustände ohne animierte Übergänge.
+  @media (prefers-reduced-motion: no-preference) {
+    & nte-treeview-item::part(row)::before {
+      transition: background-color 120ms ease, border-color 120ms ease;
+    }
+    & nte-treeview-item::part(indicator) {
+      transition: transform 180ms ease;
+    }
+
+    // Der native Wrapper belegt die volle zweite Rasterzeile und animiert seine echte Inhaltshöhe.
+    @supports (interpolate-size: allow-keywords) and (transition-behavior: allow-discrete)
+      and selector(::part(details)::details-content) {
+      & nte-treeview-item::part(details)::details-content {
+        display: block;
+        grid-column: 1 / -1;
+        grid-row: 2 / 3;
+        min-block-size: 0;
+        block-size: 0;
+        interpolate-size: allow-keywords;
+        overflow: clip;
+        transition: block-size 180ms ease, content-visibility 180ms allow-discrete,
+          overflow 0s allow-discrete;
+      }
+      & nte-treeview-item::part(children) {
+        display: block;
+      }
+      & nte-treeview-item[expanded]::part(details)::details-content {
+        block-size: auto;
+        overflow: visible;
+        // Nach der Öffnung dürfen Zellmenüs wieder über den Unterbaum hinausragen.
+        transition: block-size 180ms ease, content-visibility 180ms allow-discrete,
+          overflow 0s 180ms allow-discrete;
+      }
+    }
   }
 }
