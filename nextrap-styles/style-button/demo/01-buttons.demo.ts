@@ -44,7 +44,7 @@ const demoCss = `
 export default defineDemo({
   title: 'Buttons',
   group: 'style-button',
-  description: 'Standard-, Text-, Link-, Outline-, Größen-, Lead-, Glow- und Gruppen-Varianten',
+  description: 'Standard-, neutrale, Text-, Link-, Outline-, Größen-, Lead-, Glow- und Gruppen-Varianten',
   css: ['default', demoCss],
   html: `
     <div class="style-button-demo">
@@ -63,6 +63,7 @@ export default defineDemo({
         <h2>Varianten</h2>
         <div class="style-button-demo__row">
           <button class="btn" type="button">Default</button>
+          <button class="btn btn-neutral" type="button">Neutral</button>
           <button class="btn btn-primary" type="button">Primary</button>
           <button class="btn btn-accent" type="button">Accent</button>
           <button class="btn btn-secondary" type="button">Secondary</button>
@@ -99,6 +100,7 @@ export default defineDemo({
         <h2>Größen</h2>
         <div class="style-button-demo__row">
           <button class="btn btn-primary btn-sm" type="button">Small</button>
+          <button class="btn btn-neutral btn-sm" type="button">Kompakte Nebenaktion</button>
           <button class="btn btn-primary" type="button">Default</button>
           <button class="btn btn-primary btn-lg" type="button">Large</button>
           <button class="btn btn-primary btn-xl" type="button">Extra Large</button>
@@ -119,6 +121,7 @@ export default defineDemo({
         <h2>Disabled</h2>
         <div class="style-button-demo__row">
           <button class="btn btn-primary" type="button" disabled>Primary</button>
+          <button class="btn btn-neutral" type="button" disabled>Neutral</button>
           <button class="btn btn-secondary" type="button" disabled>Secondary</button>
           <button class="btn btn-outline-primary" type="button" disabled>Outline</button>
         </div>

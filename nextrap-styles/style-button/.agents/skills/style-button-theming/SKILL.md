@@ -15,9 +15,43 @@ Nutze diesen Skill für Theme-SCSS und visuelle Button-Varianten. Für Markup un
 - Kombiniere vorhandene Mixins, statt Varianten wie `btn-glow-primary` oder `btn-glow-secondary` anzulegen.
 - Der Standardradius kommt aus `--nt-border-radius`, das `style-base` aus der Theme-Eingabe `--nt-radius` ableitet. Lege im Button keinen festen Theme-Radius fest.
 
+## Basis und neutrale Aktionen
+
+`btn()` verwendet die Primary-Farbe, `font-weight: 500` und den zentralen
+Theme-Radius. Die Basis normalisiert `box-sizing: border-box` und
+`display: inline-flex`; `align-items: center` und `justify-content: center`
+zentrieren ihren Inhalt. `font: inherit` übernimmt die Kontextschrift mitsamt
+Zeilenhöhe, bevor `font-weight: 500` das Control-Gewicht festlegt.
+
+`btn-neutral()` ist ein unabhängiger Farbmodifier und schließt `btn()` nicht
+ein. Er verwendet `--nt-surface` für die Fläche, `--nt-text` für den Text und
+`--nt-border` für den Rand; Hover und Active nutzen `--nt-surface-muted`.
+`style-button()` erzeugt `.btn-neutral` ausschließlich aus diesem Mixin.
+
+```scss
+// Die öffentliche Sass-API stellt Basis und unabhängige Modifier bereit.
+@use '@nextrap/style-button' as button;
+
+// Kompakte UI-Aktionen kombinieren neutrale Farben mit der gemeinsamen Basis.
+.workspace-action {
+  @include button.btn();
+  @include button.btn-neutral();
+  @include button.btn-sm();
+}
+```
+
 ## Größen
 
-`btn-sm()`, `btn-lg()`, `btn-xl()` und `btn-xxl()` sind unabhängige Modifier-Mixins und schließen `btn()` nicht ein. Passe die Größen zentral über `--nt-btn-<size>-padding-y`, `--nt-btn-<size>-padding-x` und `--nt-btn-<size>-font-size` an, statt weitere Größenklassen anzulegen.
+`btn-sm()`, `btn-lg()`, `btn-xl()` und `btn-xxl()` sind unabhängige Modifier-Mixins
+und schließen `btn()` nicht ein. Passe das Padding zentral über
+`--nt-btn-<size>-padding-y` und `--nt-btn-<size>-padding-x` an, statt weitere
+Größenklassen anzulegen. Die größeren Varianten verwenden außerdem
+`--nt-btn-<size>-font-size`.
+
+`btn-sm()` ändert ausschließlich das Padding mit Fallbacks von `0.375rem`
+vertikal und `0.75rem` horizontal. Das gibt kompakten UI-Aktionen mehr Platz;
+vorhandene Overrides über `--nt-btn-sm-padding-y` und `--nt-btn-sm-padding-x`
+gelten weiter. Der Modifier setzt keine eigene Schriftgröße oder Zeilenhöhe.
 
 ## Lead und Glow
 

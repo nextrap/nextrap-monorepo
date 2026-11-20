@@ -10,6 +10,7 @@
 
 @mixin style-button() {
   .btn { @include b.btn(); }
+  .btn-neutral { @include b.btn-neutral(); }
   .btn-link { @include b.btn-link(); }
   .btn-text { @include b.btn-text(); }
   .btn-hover { @include b.btn-hover(); }

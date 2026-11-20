@@ -33,8 +33,7 @@ ntl-spa-content.style-default {
   min-inline-size: 0;
 }
 
-// Native Controls übernehmen die Schrift und bleiben einschließlich Padding innerhalb der Breite.
-button,
+// Eingabefelder übernehmen die Schrift und bleiben einschließlich Padding innerhalb der Breite.
 input,
 textarea {
   box-sizing: border-box;

@@ -1,5 +1,5 @@
 // Button mixin API — each public mixin styles the current selector.
-// Default CSS classes are materialized by `all()`.
+// Default CSS classes are materialized by `style-button()`.
 
 @mixin btn() {
   --btn-txt: var(--nt-text-on-primary, #fff);
@@ -7,8 +7,11 @@
   --btn-bg-hover: var(--nt-primary-hover, var(--btn-bg));
   --btn-bg-active: var(--nt-primary-active, var(--btn-bg));
 
-  // Hebt Controls typografisch leicht vom normalen Fließtext ab, ohne sie semibold oder bold wirken zu lassen.
-  display: inline-block;
+  // Gleiche Geometrie und vererbte Schrift halten Links und native Controls konsistent.
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   appearance: none;
   -webkit-appearance: none;
   padding: var(--nt-btn-padding-y, 0.5rem) var(--nt-btn-padding-x, 1rem);
@@ -16,6 +19,8 @@
   color: var(--btn-txt) !important;
   border-radius: var(--nt-border-radius, var(--nt-radius, 0.375rem));
   border: var(--nt-border-width, 1px) solid var(--btn-bg);
+  font: inherit;
+  // Hebt Controls typografisch leicht vom normalen Fließtext ab, ohne sie semibold oder bold wirken zu lassen.
   font-weight: 500;
   text-decoration: none;
   text-align: center;
@@ -54,6 +59,16 @@
     cursor: not-allowed;
     pointer-events: none;
   }
+}
+
+// Neutrale Aktionen erhalten eine dezente Fläche und einen Rahmen aus dem Theme.
+@mixin btn-neutral() {
+  --btn-bg: var(--nt-surface, transparent);
+  --btn-bg-hover: var(--nt-surface-muted, var(--btn-bg));
+  --btn-bg-active: var(--nt-surface-muted, var(--btn-bg));
+  --btn-txt: var(--nt-text, currentColor);
+
+  border-color: var(--nt-border, currentColor);
 }
 
 @mixin btn-link() {
@@ -139,9 +154,9 @@
   }
 }
 
-// Reduziert beim kleinen Button nur den Innenabstand und behält die normale Textgröße.
+// Die kleine Variante reduziert nur den Innenabstand und übernimmt die Textgröße der Basis.
 @mixin btn-sm() {
-  padding: var(--nt-btn-sm-padding-y, 0.25rem) var(--nt-btn-sm-padding-x, 0.5rem);
+  padding: var(--nt-btn-sm-padding-y, 0.375rem) var(--nt-btn-sm-padding-x, 0.75rem);
 }
 
 @mixin btn-lg() {
