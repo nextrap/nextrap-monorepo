@@ -33,7 +33,7 @@ Ein Content-Pane-Wrapper oder Markdown ist für diese Verwendung nicht nötig.
   </div>
 </header>
 
-<!-- Direkte Kinder belegen die Slots; die Sidebars behalten die volle Höhe. -->
+<!-- Direkte Kinder belegen die Slots; die Sidebars füllen die sichtbare Höhe. -->
 <ntl-spa-content id="workspace">
   <h2 slot="sidebar-left-header">Dateien</h2>
   <nav slot="sidebar-left" aria-label="Projektdateien">
@@ -111,7 +111,25 @@ denselben HTML-Inhalt in einen eigenen Viewport des Demo-Viewers.
 Beim äußeren Seitenscrollen verschwindet die Navbar und das Layout erreicht
 den oberen Viewport-Rand. Die Breite entspricht dem umgebenden Container;
 verwende für volle Bildschirmbreite einen unbeschränkten Seitencontainer.
-Die Höhe beträgt `100dvh`, mit `100vh` als Fallback.
+Der Host bleibt `100dvh` hoch, mit `100vh` als Fallback. Dadurch bleibt der äußere
+Scrollweg erhalten, während die sichtbare Höhe seiner drei Spalten variiert.
+
+Die Spalten füllen zunächst nur den sichtbaren Platz unter der Navbar. Beim
+Wegscrollen der Navbar wachsen sie bis zur vollen Viewport-Höhe. Der mittlere
+Footer bleibt am unteren Viewport-Rand sichtbar; der Default-Inhalt erhält
+jeweils den verbleibenden Platz zwischen Header und Footer. Die Sidebars passen
+sich gemeinsam mit der mittleren Spalte an.
+
+Dieses Verhalten benötigt CSS-Unterstützung für `view-timeline`,
+`animation-timeline` und `animation-range`; siehe die
+[Browser-Kompatibilität von CSS-Animation-Timelines](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/animation-timeline).
+Ohne diese Unterstützung bleiben die Spalten vollständig Viewport-hoch.
+Dann liegt der Footer zunächst unterhalb des sichtbaren Bereichs und wird erst
+sichtbar, nachdem die Navbar weggescrollt ist.
+
+Prüfe die Bildschirmhöhe auf `/demo/index.html` oder in der Fullscreen-Ansicht
+des Demo-Viewers. Die eingebettete Vorschau hat einen eigenen Viewport und kann
+unter dem Viewer-Header selbst teilweise außerhalb des Browserbereichs liegen.
 
 Scrollen über einem inneren Scrollport bewegt zuerst dessen Inhalt. An dessen
 Grenzen darf das Scrollen an die Seite weitergehen; dadurch kann beim
@@ -121,8 +139,8 @@ ist nicht Teil der API.
 
 Sticky bleibt durch den umgebenden Container begrenzt. Vermeide einen
 unbeabsichtigten `overflow: auto/hidden` an Vorfahren, wenn der Dokument-Viewport
-maßgeblich sein soll. Vor dem Wegscrollen der Navbar liegt das untere Ende des
-bereits Viewport-hohen Layouts entsprechend unterhalb des sichtbaren Bereichs.
+maßgeblich sein soll. Die Höhenanpassung verändert nur die Spalten, nicht die
+äußere Größe des Hosts.
 
 ## Breiten
 

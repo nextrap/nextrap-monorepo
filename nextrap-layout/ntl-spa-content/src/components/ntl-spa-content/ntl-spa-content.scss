@@ -1,4 +1,4 @@
-// Nach dem äußeren Seitenscrollen füllt das Layout den sichtbaren Viewport.
+// Der volle Host erhält den äußeren Scrollweg, auch wenn seine Spalten zunächst kürzer sind.
 :host {
   box-sizing: border-box;
   display: flex;
@@ -17,8 +17,41 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  block-size: 100%;
   min-inline-size: 0;
   min-block-size: 0;
+}
+
+// Die Host-Timeline misst den sichtbaren Platz unter einer wegscrollenden Navbar.
+@supports (view-timeline-name: --_ntl-spa-content-viewport) and
+  (animation-timeline: --_ntl-spa-content-viewport) and
+  (animation-range: entry 0% entry 100%) {
+  :host {
+    view-timeline-name: --_ntl-spa-content-viewport;
+    view-timeline-axis: block;
+    view-timeline-inset: 0;
+  }
+
+  // Alle Spalten enden am Viewport-Rand; Content und Sidebars behalten eigene Scrollports.
+  // Die nicht-null Dauer hält die Animation auch in Firefox aktiv; der Scrollstand steuert sie.
+  #sidebar-left,
+  #main,
+  #sidebar-right {
+    animation: ntl-spa-content-visible-height 1ms linear both;
+    animation-timeline: --_ntl-spa-content-viewport;
+    animation-range: entry 0% entry 100%;
+  }
+
+  // Nur die Spalten wachsen mit dem Scrollfortschritt; die Hosthöhe bleibt unverändert.
+  @keyframes ntl-spa-content-visible-height {
+    from {
+      block-size: 0;
+    }
+
+    to {
+      block-size: 100%;
+    }
+  }
 }
 
 // Die Mitte erhält den gesamten Platz, den die vorhandenen Sidebars übriglassen.

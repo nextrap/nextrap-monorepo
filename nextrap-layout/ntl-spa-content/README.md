@@ -4,6 +4,12 @@ Viewport-hohes SPA-Layout für Navigation, Editor und Inspector. Die Sidebars
 reichen über die gesamte Höhe; Header und Footer des Hauptinhalts bleiben in
 der Mitte. Alle drei Inhaltsbereiche scrollen unabhängig.
 
+Mit CSS-View-Timelines nutzen die drei Spalten zunächst den sichtbaren Platz
+unter der Navbar. Beim Wegscrollen der Navbar wachsen sie auf die volle
+Viewport-Höhe; der Footer bleibt dabei sichtbar und der Inhalt erhält den
+verbleibenden Platz. Ohne diese Browser-Unterstützung behalten die Spalten die
+volle Höhe, sodass der Footer erst nach dem Wegscrollen der Navbar sichtbar ist.
+
 ## Demo
 
 Im Monorepo `npx nx dev ntl-spa-content` ausführen. Die vollständige HTML-Seite
@@ -16,6 +22,11 @@ Slots und unterschiedliche Sidebar-Breiten. Navbar und mittlerer Header ordnen
 Navigation beziehungsweise Dateiinformationen links und Aktionen rechts an.
 Die HTML-Datei ist die gemeinsame Quelle für die Seite und den Demo-Viewer;
 `demo/index.ts` lädt lediglich die Komponente und ihre Demo-Styles.
+
+Prüfe die Footer-Position auf der eigenständigen HTML-Seite oder in der
+Fullscreen-Ansicht des Viewers. Die eingebettete Vorschau besitzt einen eigenen
+Viewport und kann unter dem Viewer-Header selbst teilweise außerhalb des
+sichtbaren Browserbereichs liegen.
 
 ## Verwendung und Styling
 

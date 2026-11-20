@@ -39,7 +39,7 @@ Innenabstände und Fokusmarkierungen am aufrufenden Selektor. Es verwendet
 | `main` | Gesamte mittlere Spalte einschließlich Header und Footer. |
 | `header`, `footer` | Feste Leisten ausschließlich in der Mitte. |
 | `content` | Default-Slot und dessen Scrollport. |
-| `sidebar-left`, `sidebar-right` | Ganze Sidebar über die volle Layouthöhe. |
+| `sidebar-left`, `sidebar-right` | Ganze Sidebar über die verfügbare sichtbare Höhe. |
 | `sidebar-left-header`, `sidebar-right-header` | Feste Sidebar-Leisten. |
 | `sidebar-left-content`, `sidebar-right-content` | Unabhängige Sidebar-Scrollports. |
 
@@ -59,6 +59,19 @@ Erhalte die funktionalen Shadow-Regeln für Sticky, Viewport-Höhe, Flex-Verteil
 `min-inline-size: 0`, `min-block-size: 0`, Scrollports und leere Slots. Die
 Sidebars liegen außerhalb der mittleren Header-/Footer-Zeilen. Lass natives
 Scroll-Chaining zu, wenn die äußere Navbar wieder erreichbar bleiben soll.
+
+Der Host bleibt `100dvh` hoch, damit der äußere Scrollweg erhalten bleibt. Eine
+CSS-View-Timeline steuert die `block-size` der drei Spalten: zunächst den
+sichtbaren Platz unter der Navbar, nach deren Wegscrollen die volle Höhe.
+Erhalte diese funktionale Spaltenanimation und ihre Timeline, damit der Footer
+sichtbar bleibt und der Inhalt den verbleibenden Platz erhält. Überschreibe die
+Host-Höhe nicht und füge dem Host kein Padding hinzu; Abstände gehören an die
+öffentlichen Parts oder die Inhalte.
+
+Die Anpassung setzt `view-timeline`, `animation-timeline` und `animation-range`
+voraus. Ohne diese Unterstützung behalten die Spalten die volle Höhe und der
+Footer wird erst nach dem Wegscrollen der Navbar sichtbar. Die öffentlichen
+Parts und Sidebar-Breiten bleiben in beiden Fällen gleich.
 
 Gestalte Farben, Rahmen und Abstände ausschließlich über Parts und die äußere
 Sass-Schicht. Erfinde für einzelne Breiten keine neue `style-*` Variante und
