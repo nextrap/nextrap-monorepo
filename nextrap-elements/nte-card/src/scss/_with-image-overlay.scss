@@ -3,7 +3,7 @@
 // Überlagert Bild und Content als gemeinsame randlose Medienfläche mit geschütztem Text.
 @mixin with-image-overlay {
   // Der abgeleitete Zustand folgt expliziten Slots, Bildautomatik und dynamischen Änderungen.
-  &[data-card-regions~='image'] {
+  &:where([data-card-regions~='image']) {
     @include bleed.with-region-bleed(image);
     @include bleed.with-region-bleed(content);
     &::part(wrapper) {
@@ -16,6 +16,7 @@
       grid-column: 1;
       min-width: 0;
       min-height: 0;
+      margin: 0;
     }
     &::part(image) { height: auto; }
     &::part(content) {
@@ -24,14 +25,10 @@
       justify-content: end;
       padding: var(--inner-padding);
     }
-    // Die gemeinsame Medienfläche steht zuerst; Header/Footer folgen danach.
-    &::part(wrapper) { --_nte-card-first-bleed: 1; --_nte-card-last-bleed: var(--_nte-card-bleed-footer-end, 0); }
-    &[data-card-regions~='header']:not([data-card-regions~='footer'])::part(wrapper) {
-      --_nte-card-last-bleed: var(--_nte-card-bleed-header-end, 0);
-    }
-    // Nur ohne weitere Regionen reicht die gemeinsame Medienfläche auch bis unten.
-    &:not([data-card-regions~='header']):not([data-card-regions~='footer']) {
-      &::part(wrapper) { --_nte-card-last-bleed: 1; }
+    // Header/Footer folgen der Medienfläche; nur die letzte dieser Zeilen hat einen unteren Inset.
+    &::part(header), &::part(footer) { margin-block-start: 0; }
+    &:not([data-card-regions~='footer'])::part(header) {
+      margin-block-end: var(--_card-inset-block-end);
     }
     &::part(gradient) { background: var(--overlay-background); }
   }

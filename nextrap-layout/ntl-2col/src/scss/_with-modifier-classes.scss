@@ -1,3 +1,4 @@
+@use 'with-aside-bleed' as aside-bleed;
 @use 'with-reverse' as reverse;
 @use 'with-mobile-reverse' as mobile-reverse;
 @use 'with-desktop-reverse' as desktop-reverse;
@@ -13,6 +14,7 @@
 
 // Alle Helper bleiben unter dem Selektor des aufrufenden Styles.
 @mixin with-modifier-classes {
+  &.with-aside-bleed { @include aside-bleed.with-aside-bleed(); }
   &.with-reverse, &.reverse { @include reverse.with-reverse(); }
   &.with-mobile-reverse, &.reverse-mobile, &.mobile-reverse { @include mobile-reverse.with-mobile-reverse(); }
   &.with-desktop-reverse, &.reverse-desktop, &.desktop-reverse { @include desktop-reverse.with-desktop-reverse(); }
