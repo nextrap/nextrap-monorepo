@@ -1,0 +1,6 @@
+// Aktiviert alternierende Flächen in der sichtbaren Baumreihenfolge; die Baseline bleibt separat.
+@mixin with-zebra() {
+  --_nte-treeview-stripe-background: color-mix(in srgb,
+    var(--nt-surface-muted, color-mix(in srgb, currentColor 6%, transparent)) 50%,
+    var(--nt-surface, Canvas));
+}

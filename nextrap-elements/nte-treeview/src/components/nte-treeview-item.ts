@@ -15,10 +15,14 @@ export class NteTreeViewItem extends nextrap_element() {
       display: block;
       min-inline-size: 0;
     }
-    /* Alle Ebenen behalten dieselbe rechte Kante und gemeinsam vorgegebene Zellbreiten. */
+    /* Versteckte Knoten belegen weder eine Zeile noch eine Position in der Zebra-Abfolge. */
+    :host([hidden]) {
+      display: none;
+    }
+    /* Der Einzug belegt nur die erste Spalte; Zeile und Unterbaum behalten ihre volle Breite. */
     #row {
       display: grid;
-      grid-template-columns: auto minmax(0, 1fr) var(--nte-treeview-center-width, auto) var(
+      grid-template-columns: var(--_nte-treeview-indent, 0px) auto minmax(0, 1fr) var(--nte-treeview-center-width, auto) var(
           --nte-treeview-end-width,
           auto
         );
@@ -33,7 +37,7 @@ export class NteTreeViewItem extends nextrap_element() {
       display: contents;
     }
     #toggle {
-      grid-column: 1;
+      grid-column: 2;
       grid-row: 1;
       list-style: none;
       cursor: pointer;
@@ -42,7 +46,7 @@ export class NteTreeViewItem extends nextrap_element() {
       display: none;
     }
     #label {
-      grid-column: 2;
+      grid-column: 3;
       grid-row: 1;
       min-inline-size: 0;
       max-inline-size: 100%;
@@ -50,13 +54,13 @@ export class NteTreeViewItem extends nextrap_element() {
       overflow-wrap: anywhere;
     }
     #center {
-      grid-column: 3;
+      grid-column: 4;
       grid-row: 1;
       min-inline-size: 0;
       text-align: center;
     }
     #end {
-      grid-column: 4;
+      grid-column: 5;
       grid-row: 1;
       min-inline-size: 0;
       text-align: end;

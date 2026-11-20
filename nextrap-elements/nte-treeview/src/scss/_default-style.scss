@@ -5,6 +5,8 @@
   line-height: var(--nt-line-height, 1.5);
   --nte-treeview-center-width: 0px;
   --nte-treeview-end-width: 0px;
+  --_nte-treeview-next-indent: 0px;
+  --_nte-treeview-stripe-background: transparent;
 
   // Eine offene Explorer-Fläche ersetzt Tabellenrahmen, ohne Unterbäume abzuschneiden.
   &::part(list) {
@@ -28,6 +30,11 @@
     }
   }
 
+  // Nur die erste Spalte rückt Inhalte ein; Unterbäume und Zeilenflächen bleiben gleich breit.
+  & nte-treeview-item {
+    --_nte-treeview-indent: var(--_nte-treeview-next-indent);
+  }
+
   // Der absolute Hintergrund gehört nur zur ersten Grid-Zeile, niemals zum Unterbaum.
   & nte-treeview-item::part(row) {
     position: relative;
@@ -44,6 +51,11 @@
     border-radius: var(--nt-border-radius-sm, 0.25rem);
   }
 
+  // Ohne Feature-Mixin bleiben auch gerade Zeilen transparent; Zustände haben Vorrang.
+  & nte-treeview-item:where([data-treeview-stripe])::part(row)::before {
+    background-color: var(--_nte-treeview-stripe-background);
+  }
+
   // Gleiche Zellhöhen und Zentrierung erhalten eine durchgehende, auch mehrzeilige Zeile.
   & nte-treeview-item::part(toggle),
   & nte-treeview-item::part(label),
@@ -57,7 +69,7 @@
 
   // Nur Elternknoten benötigen einen Pfeil; Blätter beginnen ohne leeren Platzhalter.
   & nte-treeview-item::part(toggle) {
-    grid-column: 1;
+    grid-column: 2;
     grid-row: 1;
     display: grid;
     place-items: center;
@@ -127,17 +139,18 @@
     max-inline-size: 100%;
   }
 
-  // Der Einzug beträgt exakt $indent; die Führungslinie verbraucht keine Layoutbreite.
+  // Die Linie folgt der Elternpfeil-Achse, ohne den Unterbaum oder dessen Highlights einzurücken.
   & nte-treeview-item::part(children) {
+    --_nte-treeview-next-indent: calc(var(--_nte-treeview-indent) + #{$indent});
     position: relative;
-    margin-inline-start: $indent;
+    margin-inline-start: 0;
     border: 0;
   }
   & nte-treeview-item::part(children)::before {
     content: '';
     position: absolute;
     inset-block: 0;
-    inset-inline-start: calc(1rem - #{$indent});
+    inset-inline-start: calc(var(--_nte-treeview-indent) + 1rem);
     inline-size: 1px;
     background: var(--nt-border, color-mix(in srgb, currentColor 20%, transparent));
     opacity: 0.5;

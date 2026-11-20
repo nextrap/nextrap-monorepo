@@ -77,3 +77,22 @@ nte-treeview.style-default {
     $end-width: $end-width
   );
 }
+
+// Die zusätzliche Klasse aktiviert Zebra, ohne eine zweite style-Variante zu benötigen.
+nte-treeview.style-default.with-zebra {
+  @include treeview.with-zebra();
+}
+
+// Die Zebra-Demo braucht Platz für Dateitypen, aber nur eine schmale Größenspalte statt Status-Dropdowns.
+main.treeview-zebra-demo {
+  $type-width: 7rem;
+  $size-width: 4.5rem;
+
+  > .treeview-columns {
+    grid-template-columns: minmax(0, 1fr) $type-width $size-width;
+  }
+  > nte-treeview.style-default {
+    --nte-treeview-center-width: #{$type-width};
+    --nte-treeview-end-width: #{$size-width};
+  }
+}

@@ -34,6 +34,9 @@ export class NteTreeView extends nextrap_element() {
   private _data?: TreeModel;
   private _unsubscribe?: () => void;
 
+  // Deklarative und modellgesteuerte Bäume teilen dieselbe sichtbare Zeilenfolge.
+  private readonly _rowsObserver = new MutationObserver(() => this._updateRows());
+
   /** Übernimmt ab dem ersten Aufruf das gesamte Light DOM für die Datenansicht. */
   public setData(data: TreeModel): void {
     if (!(data instanceof TreeModel)) {
@@ -50,11 +53,19 @@ export class NteTreeView extends nextrap_element() {
   override connectedCallback(): void {
     super.connectedCallback();
     this._subscribeToData();
+    this._rowsObserver.observe(this, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['expanded', 'hidden'],
+    });
+    this._updateRows();
     if (this._data) this.requestUpdate();
   }
 
   /** Verhindert, dass ein langlebiges Modell entfernte TreeViews festhält. */
   override disconnectedCallback(): void {
+    this._rowsObserver.disconnect();
     this._unsubscribe?.();
     this._unsubscribe = undefined;
     super.disconnectedCallback();
@@ -64,6 +75,25 @@ export class NteTreeView extends nextrap_element() {
   private _subscribeToData(): void {
     this._unsubscribe?.();
     this._unsubscribe = this.isConnected ? this._data?.subscribe(() => this.requestUpdate()) : undefined;
+  }
+
+  /** Ordnet nur eigene Knoten nach sichtbarer Baumreihenfolge; geschlossene Zweige zählen nicht mit. */
+  private _updateRows(): void {
+    const visibility = new Map<NteTreeViewItem, boolean>();
+    let visibleIndex = 0;
+    for (const item of this.querySelectorAll('nte-treeview-item')) {
+      if (item.closest('nte-treeview') !== this) continue;
+
+      // Ein aus einem Unterbaum an die Wurzel verschobener Knoten nutzt wieder den Standard-Slot.
+      if (item.parentElement === this && item.slot === 'children') item.removeAttribute('slot');
+      const parent = item.parentElement?.closest('nte-treeview-item');
+      const parentVisible = parent ? visibility.get(parent) : undefined;
+      const visible = !item.hidden && (parentVisible === undefined || (parentVisible && parent?.expanded === true));
+      visibility.set(item, visible);
+
+      // Geschlossene und versteckte Zweige verschieben die Streifen der folgenden Zeilen nicht.
+      item.toggleAttribute('data-treeview-stripe', visible && ++visibleIndex % 2 === 0);
+    }
   }
 
   /** Hält eine einzelne Auswahl im eigenen Baum; Modellknoten werden über ihre Identität zugeordnet. */
