@@ -1,5 +1,7 @@
 import { defineDemo } from '@trunkjs/demo-viewer';
 
+// Registriert die dekorativen Icons der Dropdown-Auslöser und Aktionszeilen.
+import '@nextrap/nte-icon';
 import '@nextrap/style-base/default';
 import '@nextrap/style-reset';
 import '@nextrap/style-typography/default';
@@ -36,7 +38,24 @@ const demoCss = `
   align-items: flex-start;
 }
 
-.style-button-demo__flag {
+/* Eine schmale Menüfläche macht die Kürzung langer Beschriftungen sichtbar. */
+.style-button-demo__constrained-menu {
+  inline-size: 13rem;
+}
+
+/* Das große Symbol füllt die Inhaltsfläche der eigenständigen XXL-Hauptaktion. */
+.style-button-demo__icon-action {
+  --nte-icon-size: 2em;
+  padding-inline: var(--nt-btn-xxl-padding-y, 1.25rem);
+}
+
+/* Der Pfeil übernimmt die XXL-Höhe, behält horizontal aber die kompakte Standardgröße. */
+.style-button-demo__icon-split-toggle {
+  --nt-btn-xxl-padding-x: var(--nt-btn-padding-x, 1rem);
+}
+
+.style-button-demo__flag,
+.style-button-demo__icon {
   margin-inline-end: .5rem;
 }
 `;
@@ -153,18 +172,52 @@ export default defineDemo({
               popovertarget="actions-menu"
               aria-controls="actions-menu"
             >
-              Aktionen
+              <nte-icon class="bi bi-cloud style-button-demo__icon" aria-hidden="true"></nte-icon>Aktionen
             </button>
             <ul id="actions-menu" class="dropdown-menu" popover="auto" aria-labelledby="actions-toggle">
               <li>
-                <button type="button" popovertarget="actions-menu" popovertargetaction="hide">Duplizieren</button>
+                <button type="button" popovertarget="actions-menu" popovertargetaction="hide">
+                  <nte-icon class="bi bi-files style-button-demo__icon" aria-hidden="true"></nte-icon>Duplizieren
+                </button>
               </li>
               <li>
-                <button type="button" popovertarget="actions-menu" popovertargetaction="hide">Archivieren</button>
+                <button type="button" popovertarget="actions-menu" popovertargetaction="hide">
+                  <nte-icon class="bi bi-archive style-button-demo__icon" aria-hidden="true"></nte-icon>Archivieren
+                </button>
               </li>
               <li><hr /></li>
               <li>
-                <button type="button" popovertarget="actions-menu" popovertargetaction="hide">Löschen</button>
+                <button type="button" popovertarget="actions-menu" popovertargetaction="hide">
+                  <nte-icon class="bi bi-trash style-button-demo__icon" aria-hidden="true"></nte-icon>Löschen
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Lange Einträge bleiben mit und ohne Icon einzeilig; der vollständige Text bleibt erhalten. -->
+          <div class="style-button-demo__dropdown-example">
+            <button
+              id="constrained-actions-toggle"
+              class="btn btn-neutral dropdown-toggle"
+              type="button"
+              popovertarget="constrained-actions-menu"
+              aria-controls="constrained-actions-menu"
+            >
+              Lange Einträge
+            </button>
+            <ul id="constrained-actions-menu" class="dropdown-menu style-button-demo__constrained-menu"
+                popover="auto" aria-labelledby="constrained-actions-toggle">
+              <li>
+                <button type="button" popovertarget="constrained-actions-menu" popovertargetaction="hide"
+                        title="Benutzereinstellungen für diesen Workspace öffnen">
+                  <nte-icon class="bi bi-person-gear style-button-demo__icon" aria-hidden="true"></nte-icon>Benutzereinstellungen für diesen Workspace öffnen
+                </button>
+              </li>
+              <li>
+                <button type="button" popovertarget="constrained-actions-menu" popovertargetaction="hide"
+                        title="Benachrichtigungen für alle Arbeitsbereiche konfigurieren">
+                  Benachrichtigungen für alle Arbeitsbereiche konfigurieren
+                </button>
               </li>
             </ul>
           </div>
@@ -203,7 +256,7 @@ export default defineDemo({
               <a class="btn btn-secondary" href="?download=default">Herunterladen</a>
               <button
                 id="download-toggle"
-                class="btn btn-secondary dropdown-toggle"
+                class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
                 type="button"
                 popovertarget="download-menu"
                 aria-controls="download-menu"
@@ -216,6 +269,52 @@ export default defineDemo({
               <li><a href="?download=txt">Text herunterladen</a></li>
             </ul>
           </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>XXL-Split-Button ohne Beschriftung</h2>
+        <p>Die Wolke lädt eine Demo-Datei herunter. Nur der Pfeil öffnet die weiteren Aktionen.</p>
+        <div class="style-button-demo__dropdown-example">
+          <!-- Die Hauptaktion bleibt ein eigener Download-Link; ausschließlich der Pfeil steuert das Popover. -->
+          <div class="btn-group" role="group" aria-label="Cloud-Download und weitere Aktionen">
+            <a
+              class="btn btn-primary btn-xxl style-button-demo__icon-action"
+              href="data:text/plain;charset=utf-8,Nextrap%20XXL%20Split-Button%0A"
+              download="nextrap-demo.txt"
+              aria-label="Demo-Datei herunterladen"
+              title="Demo-Datei herunterladen"
+            >
+              <nte-icon class="bi bi-cloud-download" aria-hidden="true"></nte-icon>
+            </a>
+            <button
+              id="xxl-download-toggle"
+              class="btn btn-primary btn-xxl dropdown-toggle dropdown-toggle-split style-button-demo__icon-split-toggle"
+              type="button"
+              popovertarget="xxl-download-menu"
+              aria-controls="xxl-download-menu"
+              aria-label="Weitere Download-Aktionen"
+              title="Weitere Download-Aktionen"
+            ></button>
+          </div>
+          <ul id="xxl-download-menu" class="dropdown-menu" popover="auto" aria-labelledby="xxl-download-toggle">
+            <li>
+              <a href="data:text/plain;charset=utf-8,Nextrap%20XXL%20Split-Button%0A" download="nextrap-demo.txt">
+                <nte-icon class="bi bi-file-earmark-text style-button-demo__icon" aria-hidden="true"></nte-icon>Textdatei herunterladen
+              </a>
+            </li>
+            <li>
+              <a href="data:application/json,%7B%22demo%22%3A%22XXL%20Split-Button%22%7D" download="nextrap-demo.json">
+                <nte-icon class="bi bi-filetype-json style-button-demo__icon" aria-hidden="true"></nte-icon>JSON-Datei herunterladen
+              </a>
+            </li>
+            <li><hr /></li>
+            <li>
+              <button type="button" popovertarget="xxl-download-menu" popovertargetaction="hide">
+                <nte-icon class="bi bi-x-lg style-button-demo__icon" aria-hidden="true"></nte-icon>Menü schließen
+              </button>
+            </li>
+          </ul>
         </div>
       </section>
     </div>

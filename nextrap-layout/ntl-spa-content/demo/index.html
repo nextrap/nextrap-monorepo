@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SPA Content · Nextrap Workspace</title>
-    <!-- Der Modul-Entry registriert beide Komponenten und lädt das Demo-Theme. -->
+    <!-- Der Modul-Entry registriert die Komponenten und Icons und lädt das Demo-Theme. -->
     <script type="module" src="./index.ts"></script>
   </head>
   <body>
@@ -19,7 +19,11 @@
 
       <!-- Direkt eingesetzte Buttons werden vom Slot vertikal zentriert, ohne zusätzlichen Wrapper. -->
       <a slot="right-nav" class="btn btn-neutral ms-3" href="#editor-notes">Hilfe</a>
-      <a slot="right-nav" class="btn btn-primary btn-lead ms-2 me-4" href="#workspace">Zum Workspace</a>
+      <button slot="right-nav" id="spa-content-actions-toggle"
+              class="btn btn-primary dropdown-toggle ms-2 me-4" type="button"
+              popovertarget="spa-content-actions-menu" aria-controls="spa-content-actions-menu">
+        <nte-icon class="bi bi-cloud me-2" aria-hidden="true"></nte-icon>Aktionen
+      </button>
 
       <!-- Die optionale zweite Zeile hat eine eigene Höhe; auch hier kommen Seitenabstände vom Inhalt. -->
       <p slot="sub-line" class="m-0 mx-4 small text-body-secondary">
@@ -27,6 +31,26 @@
         der Workspace wächst auf die volle Bildschirmhöhe.
       </p>
     </ntl-spa-header>
+
+    <!-- Das native Popover liegt außerhalb der Header-Slots und öffnet über deren Scrollport. -->
+    <ul id="spa-content-actions-menu" class="dropdown-menu" popover="auto"
+        aria-labelledby="spa-content-actions-toggle">
+      <li>
+        <a href="#workspace">
+          <nte-icon class="bi bi-folder2-open me-2" aria-hidden="true"></nte-icon>Zum Workspace
+        </a>
+      </li>
+      <li>
+        <a href="#editor-notes">
+          <nte-icon class="bi bi-file-earmark-text me-2" aria-hidden="true"></nte-icon>Dokumentation
+        </a>
+      </li>
+      <li>
+        <button type="reset" form="workspace-form">
+          <nte-icon class="bi bi-arrow-clockwise me-2" aria-hidden="true"></nte-icon>Zurücksetzen
+        </button>
+      </li>
+    </ul>
 
     <!-- Alle benannten Slots sind direkte Kinder; die Sidebars reichen über die ganze Höhe. -->
     <ntl-spa-content id="workspace" role="main" aria-label="Workspace">

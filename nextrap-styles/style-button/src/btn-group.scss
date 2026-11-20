@@ -14,6 +14,15 @@
     border-radius: 0;
   }
 
+  // Split-Hälften bleiben in einer Zeile; nur die Hauptaktion darf freien Platz übernehmen.
+  &:has(> .dropdown-toggle-split) {
+    flex-wrap: nowrap;
+  }
+
+  .btn.dropdown-toggle-split {
+    flex: 0 0 auto;
+  }
+
   .btn:not(:last-child) {
     border-right: 0;
   }

@@ -20,6 +20,8 @@
   .btn-xxl { @include b.btn-xxl(); }
   .btn-lead { @include lead.btn-lead(); }
   .dropdown-toggle { @include b.dropdown-toggle(); }
+  // Der Split-Modifier ergänzt den normalen Auslöser um einen schmalen Pfeilbereich.
+  .dropdown-toggle-split { @include b.dropdown-toggle-split(); }
 
   .btn-primary { @include b.btn-primary(); }
   .btn-accent { @include b.btn-accent(); }

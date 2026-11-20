@@ -1,5 +1,6 @@
-// Registriert beide Komponenten, da der Viewer nur die Body-Knoten der HTML-Seite übernimmt.
+// Registriert Komponenten und Icons, da der Viewer nur die Body-Knoten der HTML-Seite übernimmt.
 import { defineDemo } from '@trunkjs/demo-viewer';
+import '@nextrap/nte-icon';
 import '@nextrap/ntl-spa-header';
 import '../index';
 import pageHtml from './index.html?raw';
@@ -10,7 +11,7 @@ export default defineDemo({
   title: 'SPA Content: HTML-Workspace mit SPA Header',
   navPath: ['Layouts', 'SPA Content'],
   description:
-    'Vollständige HTML-Seite mit SPA Header, frei gesetzten Inhaltsabständen und unabhängig scrollenden Spalten.',
+    'Vollständige HTML-Seite mit SPA Header, Cloud-Aktionsmenü und unabhängig scrollenden Spalten.',
   iframe: true,
   css,
   html: pageHtml,
@@ -18,5 +19,13 @@ export default defineDemo({
   render(root) {
     const page = new DOMParser().parseFromString(pageHtml, 'text/html');
     root.replaceChildren(...Array.from(page.body.childNodes));
+
+    // Schließt nach der Auswahl, ohne Fragmentnavigation oder den nativen Reset zu ersetzen.
+    root.querySelector<HTMLElement>('#spa-content-actions-menu')!.addEventListener('click', (event) => {
+      const target = event.target as Element;
+      if (target.closest('a, button')) {
+        (event.currentTarget as HTMLElement).hidePopover();
+      }
+    });
   },
 });

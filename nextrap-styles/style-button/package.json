@@ -13,7 +13,9 @@
         "url": "https://github.com/nextrap/nextrap-monorepo"
     },
     "dependencies": {},
-    "devDependencies": {},
+    "devDependencies": {
+        "@nextrap/nte-icon": "^0.0.1"
+    },
     "type": "module",
     "exports": {
         ".": {
