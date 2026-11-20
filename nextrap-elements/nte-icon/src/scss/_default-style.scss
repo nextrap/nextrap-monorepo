@@ -1,0 +1,9 @@
+// Das Theme bindet die visuelle Baseline bewusst an nte-icon.style-default.
+@mixin default-style() {
+  vertical-align: -.125em;
+
+  // Der Platzhalter bleibt erkennbar, ohne wie ein endgültiges Icon auszusehen.
+  &::part(placeholder) {
+    opacity: .5;
+  }
+}

@@ -1,0 +1,56 @@
+// Nur Glyph-Zuordnungen werden eingebettet; FontFace übernimmt den verzögerten Download.
+@use '../../scss/bootstrap-icons';
+
+// Die intrinsische em-Box hält das Layout auch während eines Downloads quadratisch stabil.
+:host {
+  --_nte-icon-scale: 1em;
+  display: inline-grid;
+  place-items: center;
+  inline-size: 1em;
+  block-size: 1em;
+  aspect-ratio: 1;
+  flex: none;
+  line-height: 1;
+  font-size: var(--_nte-icon-height, var(--nte-icon-size, var(--_nte-icon-scale)));
+}
+
+// Vorhandene globale Bootstrap-Regeln dürfen am Host kein zweites Glyph erzeugen.
+:host::before {
+  content: none !important;
+  display: none !important;
+}
+
+// Das native hidden-Attribut muss trotz des eigenen Host-Displays wirksam bleiben.
+:host([hidden]) { display: none !important; }
+
+// Benannte Größen skalieren relativ zum umgebenden Text; Höhe/CSS-Variable haben Vorrang.
+:host([size='xs' i]) { --_nte-icon-scale: .75em; }
+:host([size='sm' i]), :host([size='s' i]), :host([size='small' i]) { --_nte-icon-scale: .875em; }
+:host([size='lg' i]), :host([size='l' i]), :host([size='large' i]) { --_nte-icon-scale: 1.25em; }
+:host([size='xl' i]) { --_nte-icon-scale: 1.5em; }
+:host([size='xxl' i]), :host([size='2xl' i]) { --_nte-icon-scale: 2em; }
+
+// Alle Darstellungsarten nutzen dieselbe Fläche; Bildproportionen bleiben erhalten.
+.glyph, img, [part='placeholder'] {
+  grid-area: 1 / 1;
+  inline-size: 100%;
+  block-size: 100%;
+  box-sizing: border-box;
+}
+img { object-fit: contain; }
+.glyph, [part='placeholder'] { display: grid; place-items: center; }
+[part='placeholder'] { overflow: hidden; }
+[hidden] { display: none !important; }
+
+// Die Icon-Schrift benötigt feste Font-Eigenschaften, erbt aber Größe und Textfarbe.
+.glyph::before {
+  display: block;
+  font-family: 'bootstrap-icons';
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
