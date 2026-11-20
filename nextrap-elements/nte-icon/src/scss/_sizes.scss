@@ -1,0 +1,9 @@
+// Das Theme kann diese Größenklassen im Light DOM auf nte-icon materialisieren.
+@mixin sizes() {
+  &.size-xs { --nte-icon-size: .75em; }
+  &.size-sm { --nte-icon-size: .875em; }
+  &.size-md { --nte-icon-size: 1em; }
+  &.size-lg { --nte-icon-size: 1.25em; }
+  &.size-xl { --nte-icon-size: 1.5em; }
+  &.size-xxl { --nte-icon-size: 2em; }
+}

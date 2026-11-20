@@ -1,0 +1,6 @@
+// Die Demo materialisiert ausschließlich die optionalen Größenklassen im Light DOM.
+@use '../index' as icon;
+nte-icon { @include icon.sizes(); }
+
+// Die Beispiele bleiben bei verschiedenen Icon-Größen nebeneinander vergleichbar.
+.icon-demo-row { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }

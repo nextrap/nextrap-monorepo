@@ -1,0 +1,22 @@
+// Eine quadratische Inline-Box skaliert mit dem Text oder einer expliziten CSS-Größe.
+:host {
+  display: inline-block;
+  inline-size: 1em;
+  block-size: 1em;
+  aspect-ratio: 1;
+  font-size: var(--nte-icon-size, 1em);
+  line-height: 1;
+  flex: none;
+}
+
+// Eine Bildquelle ersetzt das Font-Glyph, ohne Klassen oder Styles per JavaScript auszuwerten.
+:host([src]:not([src='']))::before { display: none !important; }
+:host([hidden]) { display: none !important; }
+
+// Das Bild füllt dieselbe Fläche und behält seine eigenen Proportionen.
+img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+}

@@ -33,6 +33,7 @@
             "@nextrap/nte-dialog": ["nextrap-elements/nte-dialog/src/index.ts"],
             "@nextrap/nte-dialog-component": ["nextrap-elements/nte-dialog-component/src/index.ts"],
             "@nextrap/nte-element-highlighter": ["nextrap-elements/nte-element-highlighter/src/index.ts"],
+            "@nextrap/nte-icon": ["nextrap-elements/nte-icon/index.ts"],
             "@nextrap/nte-image": ["nextrap-elements/nte-image/src/index.ts"],
             "@nextrap/nte-infiniscroll": ["nextrap-elements/nte-infiniscroll/src/index.ts"],
             "@nextrap/nte-input": ["nextrap-elements/nte-input/src/index.ts"],
