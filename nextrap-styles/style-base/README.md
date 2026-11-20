@@ -2,7 +2,10 @@
 
 Global Nextrap design tokens implemented entirely with CSS custom properties.
 
-`style-base` is token-only: it emits no reset, native-element styling, utility classes or component styles. Include it once at document/theme level, never inside component shadow DOM.
+`style-base` erzeugt ausschließlich Tokens, keine Resets, Element-Styles oder
+Utility-Klassen. Materialisiere die Theme-Tokens einmal auf Dokument-/Theme-Ebene,
+niemals erneut im Shadow DOM einer Komponente. Der reine Sass-API-Import für die
+Kontrastfunktion erzeugt keine Tokens oder visuellen Regeln.
 
 ## The theming model
 
@@ -174,9 +177,10 @@ Prefer semantic spacing in application/component code. The structural progressio
 
 ## Kontrastfarben
 
-Für Text auf einer Farbfamilie stehen `--nt-text-on-<family>`,
-`--nt-text-on-<family>-hover` und `--nt-text-on-<family>-active` bereit. Verwende
-jeweils den Vordergrund zur tatsächlich dargestellten Fläche und ihrem Zustand.
+Für Text auf einer Farbfamilie steht `--nt-text-on-<family>` bereit. Die zwölf
+Basis-Kontrasttokens bleiben die gemeinsame Theme-API. Zustandsabhängige Flächen
+verwenden die unten beschriebene Kontrastfunktion direkt im jeweiligen Selektor;
+dafür gibt es keine zusätzlichen globalen Hover-/Active-Text-Tokens.
 Die vollständige CSS-Berechnung bevorzugt Weiß, wenn es mindestens `4.5:1`
 erreicht, andernfalls Schwarz. Grundlage ist die ungerundete relative Luminanz
 nach [WCAG 2.2](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html).
@@ -187,7 +191,7 @@ Weiß dort die Schwelle nicht erreicht.
 
 Die Engine ergänzt die Kontrastwahl abhängig von der Browser-Unterstützung:
 
-1. Statische Vordergründe zur Standardpalette und `light-dark()`-State-Fallbacks.
+1. Statische Vordergründe zur Standardpalette.
 2. Natives [contrast-color()](https://www.w3.org/TR/css-color-5/#contrast-color),
    sofern unterstützt, mit seiner eigenen Schwarz-/Weißauswahl.
 3. Die Weißpräferenz über relative `color(srgb-linear ...)`-Berechnung, sofern
@@ -200,40 +204,53 @@ allgemeine Barrierefreiheitsgarantie.
 
 ## Component contract
 
-Components consume global tokens through `var(--nt-*)` and must not depend on private Sass theme state or recreate global theme calculations.
+Komponenten konsumieren die globalen Tokens über `var(--nt-*)`. Für eine andere
+Fläche stellt die öffentliche Sass-API ab Version `2.1.0` die Funktion
+`contrast-foreground($background)` bereit. Sie erzeugt nur den CSS-Farbausdruck;
+die Berechnung bleibt im Browser. Import und Funktionsaufruf materialisieren
+weder Tokens noch visuelle Regeln und benötigen keine privaten Sass-Imports.
 
-```css
-/* Fläche und Text übernehmen zusammen die Tokens des jeweiligen Zustands. */
-.btn {
-  --btn-bg: var(--nt-primary);
-  --btn-bg-hover: var(--nt-primary-hover);
-  --btn-bg-active: var(--nt-primary-active);
-  --btn-text: var(--nt-text-on-primary);
-  --btn-text-hover: var(--nt-text-on-primary-hover);
-  --btn-text-active: var(--nt-text-on-primary-active);
+Der Aufrufer setzt einen Fallback und prüft den vollständigen Ausdruck mit
+`@supports`. Dieses Beispiel ergänzt eine Primary-Aktion um Hover-Kontrast:
 
-  background: var(--btn-bg);
-  color: var(--btn-text);
-}
+```scss
+// Die öffentliche Funktion teilt die Formel, ohne das Theme erneut auszugeben.
+@use '@nextrap/style-base' as nt;
 
-/* Hover verwendet den Vordergrund der tatsächlichen Hover-Fläche. */
-.btn:hover {
-  background: var(--btn-bg-hover);
-  color: var(--btn-text-hover);
-}
+// Der Grundzustand berücksichtigt auch explizite Theme-Overrides der Textfarbe.
+.action {
+  background: var(--nt-primary);
+  color: var(--nt-text-on-primary);
 
-/* Active funktioniert auch dann, wenn kein Hover-Zustand vorliegt. */
-.btn:active {
-  background: var(--btn-bg-active);
-  color: var(--btn-text-active);
+  // Der Fallback passt zur Default-Palette; die Berechnung folgt der Hover-Fläche.
+  &:hover {
+    background: var(--nt-primary-hover);
+    color: light-dark(white, black);
+
+    @supports (color: contrast-color(red)) {
+      color: contrast-color(var(--nt-primary-hover));
+    }
+
+    @supports (color: #{nt.contrast-foreground('red')}) {
+      color: nt.contrast-foreground('var(--nt-primary-hover)');
+    }
+  }
 }
 ```
+
+Active verwendet entsprechend seine tatsächliche Hintergrundfarbe als Eingabe.
+Die Formel gehört in diesen Selektor, damit lokale Variablen dort ausgewertet
+werden. Prüfe statische Fallbacks erneut, wenn die Palette verändert wird.
 
 ## API summary
 
 `@nextrap/style-base` exports one theming mixin:
 
 - `runtime-theme()` — emits the complete runtime token graph and automatic/manual light-dark scheme support.
+
+Zusätzlich exportiert die Sass-API ab `2.1.0`
+`contrast-foreground($background)` für die direkte Laufzeit-Kontrastberechnung
+in Komponenten. Die Funktion allein erzeugt keine CSS-Ausgabe.
 
 `@nextrap/style-base/default` remains the ready-to-use standard theme and emits `runtime-theme()` on `:root`.
 

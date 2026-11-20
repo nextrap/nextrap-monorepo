@@ -1,10 +1,59 @@
 // Button mixin API — each public mixin styles the current selector.
 // Default CSS classes are materialized by `style-button()`.
 
+@use '@nextrap/style-base' as nt;
+
+// Erhält die Kontrast-Fallbacks der Standardpalette ohne zusätzliche CSS-Tokens.
+@function _btn-state-fallback($color, $state) {
+  @if $color == 'primary' or $color == 'secondary' or $color == 'danger' {
+    @return light-dark(var(--nt-white, #fff), var(--nt-black, #000));
+  }
+
+  @if $color == 'tertiary' or $color == 'info' or $color == 'success' {
+    @if $state == 'active' {
+      @return light-dark(var(--nt-white, #fff), var(--nt-black, #000));
+    }
+
+    @return var(--nt-black, #000);
+  }
+
+  @return var(--nt-text-on-#{$color}, var(--btn-txt));
+}
+
+// Berechnet die Textfarbe direkt aus der sichtbaren Fläche; die Formel bleibt zentral.
+@mixin _btn-contrast($background, $fallback) {
+  color: $fallback !important;
+
+  @supports (color: contrast-color(red)) {
+    color: contrast-color($background) !important;
+  }
+
+  @supports (color: #{nt.contrast-foreground('red')}) {
+    color: nt.contrast-foreground($background) !important;
+  }
+}
+
+// Active folgt nach Hover; deaktivierte Controls behalten ihre eigene Textfarbe.
+@mixin _btn-interaction-contrast($color, $outline: false) {
+  $hover-fallback: _btn-state-fallback($color, 'hover');
+
+  // Outline-Hover füllt mit der Basisfarbe statt mit deren Hover-Abwandlung.
+  @if $outline {
+    $hover-fallback: var(--nt-text-on-#{$color}, var(--nt-text-on-primary, #fff));
+  }
+
+  &:hover:where(:not(.disabled):not([disabled])) {
+    @include _btn-contrast(var(--btn-bg-hover), $hover-fallback);
+  }
+
+  &:active:where(:not(.disabled):not([disabled])) {
+    @include _btn-contrast(var(--btn-bg-active), _btn-state-fallback($color, 'active'));
+  }
+}
+
+// Die Basis verwendet zentrale Primary-Tokens und berechnet Zustandskontrast lokal.
 @mixin btn() {
   --btn-txt: var(--nt-text-on-primary, #fff);
-  --btn-txt-hover: var(--nt-text-on-primary-hover, var(--btn-txt));
-  --btn-txt-active: var(--nt-text-on-primary-active, var(--btn-txt));
   --btn-bg: var(--nt-primary, #0d6efd);
   --btn-bg-hover: var(--nt-primary-hover, var(--btn-bg));
   --btn-bg-active: var(--nt-primary-active, var(--btn-bg));
@@ -44,14 +93,14 @@
 
   &:hover {
     background-color: var(--btn-bg-hover);
-    color: var(--btn-txt-hover) !important;
     text-decoration: none;
   }
 
   &:active {
     background-color: var(--btn-bg-active);
-    color: var(--btn-txt-active) !important;
   }
+
+  @include _btn-interaction-contrast('primary');
 
   &.disabled,
   &[disabled] {
@@ -68,10 +117,14 @@
   --btn-bg-hover: var(--nt-surface-muted, var(--btn-bg));
   --btn-bg-active: var(--nt-surface-muted, var(--btn-bg));
   --btn-txt: var(--nt-text, currentColor);
-  --btn-txt-hover: var(--btn-txt);
-  --btn-txt-active: var(--btn-txt);
 
   border-color: var(--nt-border, currentColor);
+
+  // Neutrale Flächen behalten die ausdrücklich gewählte normale Textfarbe.
+  &:hover:where(:not(.disabled):not([disabled])),
+  &:active:where(:not(.disabled):not([disabled])) {
+    color: var(--btn-txt) !important;
+  }
 }
 
 @mixin btn-link() {
@@ -199,28 +252,29 @@
   }
 }
 
+// Gefüllte Varianten behalten Basis-Overrides und berechnen ihre Zustandsfarben direkt.
 @mixin _btn-variant($color) {
   --btn-bg: var(--nt-#{$color}) !important;
   --btn-bg-hover: var(--nt-#{$color}-hover, var(--nt-#{$color})) !important;
   --btn-bg-active: var(--nt-#{$color}-active, var(--nt-#{$color})) !important;
   --btn-txt: var(--nt-text-on-#{$color}, var(--nt-text-on-primary, #fff)) !important;
-  --btn-txt-hover: var(--nt-text-on-#{$color}-hover, var(--btn-txt)) !important;
-  --btn-txt-active: var(--nt-text-on-#{$color}-active, var(--btn-txt)) !important;
   border-color: var(--nt-#{$color}) !important;
+
+  @include _btn-interaction-contrast($color);
 }
 
+// Outline bleibt transparent; gefüllte Hover-/Active-Flächen erhalten eigenen Kontrast.
 @mixin _btn-outline-variant($color) {
   --btn-bg: transparent;
   --btn-bg-hover: var(--nt-#{$color});
   --btn-bg-active: var(--nt-#{$color}-active, var(--nt-#{$color}));
   --btn-txt: var(--nt-#{$color});
-  // Hover füllt mit der Basisfarbe, Active mit der tatsächlichen Active-Fläche.
-  --btn-txt-hover: var(--nt-text-on-#{$color}, var(--nt-text-on-primary, #fff));
-  --btn-txt-active: var(--nt-text-on-#{$color}-active, var(--btn-txt-hover));
 
   background-color: transparent;
   color: var(--btn-txt) !important;
   border-color: var(--nt-#{$color});
+
+  @include _btn-interaction-contrast($color, $outline: true);
 }
 
 @mixin btn-primary() {

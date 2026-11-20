@@ -24,6 +24,12 @@
 
 @use './src/runtime-theme' as runtime;
 
+// Liefert den zentralen CSS-Kontrastausdruck ohne eigene Regeln oder Variablen.
+// Aufrufer prüfen die vollständige Unterstützung mit @supports vor der Verwendung.
+@function contrast-foreground($background) {
+  @return runtime.contrast-foreground($background);
+}
+
 // Emits the complete Nextrap runtime token graph into the current selector.
 // Override input CSS custom properties after this mixin to define a theme.
 @mixin runtime-theme-scoped() {

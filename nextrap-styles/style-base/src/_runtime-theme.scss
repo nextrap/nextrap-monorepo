@@ -9,7 +9,7 @@
 // Bevorzugt Weiß ab WCAG-AA-Kontrast 4,5:1 auf einer deckenden sRGB-Fläche.
 // Die linearen Kanäle liefern die WCAG-Luminanz; round() trifft nur die binäre
 // Entscheidung nach dem Grenzvergleich und rundet keinen Kontrastwert auf.
-@function _contrast-foreground($background) {
+@function contrast-foreground($background) {
   $luminance: '(0.2126 * r + 0.7152 * g + 0.0722 * b)';
   $channel: 'clamp(0, 1 - round(up, #{$luminance} - (1.05 / 4.5 - 0.05), 1), 1)';
 
@@ -187,7 +187,7 @@
 
   // === CONTRAST TEXT ===
   // Die statischen Fallbacks passen zur Default-Palette; moderne Browser
-  // berechnen anschließend aus den tatsächlichen Theme- und Zustandsfarben.
+  // berechnen anschließend aus den tatsächlichen Theme-Farben.
   --nt-text-on-primary: var(--nt-white);
   --nt-text-on-secondary: var(--nt-white);
   --nt-text-on-tertiary: var(--nt-black);
@@ -201,24 +201,6 @@
   --nt-text-on-white: var(--nt-black);
   --nt-text-on-black: var(--nt-white);
 
-  // Hover und Active berücksichtigen auch die helleren Flächen im Dark-Scheme.
-  @each $color in 'primary', 'secondary', 'danger' {
-    --nt-text-on-#{$color}-hover: light-dark(var(--nt-white), var(--nt-black));
-    --nt-text-on-#{$color}-active: light-dark(var(--nt-white), var(--nt-black));
-  }
-
-  // Diese Familien benötigen Weiß erst auf der dunkleren Active-Fläche im Light-Scheme.
-  @each $color in 'tertiary', 'info', 'success' {
-    --nt-text-on-#{$color}-hover: var(--nt-black);
-    --nt-text-on-#{$color}-active: light-dark(var(--nt-white), var(--nt-black));
-  }
-
-  // Die übrigen Default-Familien behalten ihren Vordergrund in beiden Zuständen.
-  @each $color in 'accent', 'warning', 'light', 'dark', 'white', 'black' {
-    --nt-text-on-#{$color}-hover: var(--nt-text-on-#{$color});
-    --nt-text-on-#{$color}-active: var(--nt-text-on-#{$color});
-  }
-
   // Die Liste registriert Token-Namen; Farbberechnung und Theme-Overrides bleiben CSS.
   $contrast-colors: (
     'primary', 'secondary', 'tertiary', 'accent', 'success', 'info',
@@ -229,18 +211,14 @@
   @supports (color: contrast-color(red)) {
     @each $color in $contrast-colors {
       --nt-text-on-#{$color}: contrast-color(var(--nt-#{$color}));
-      --nt-text-on-#{$color}-hover: contrast-color(var(--nt-#{$color}-hover, var(--nt-#{$color})));
-      --nt-text-on-#{$color}-active: contrast-color(var(--nt-#{$color}-active, var(--nt-#{$color})));
     }
   }
 
   // Der vollständige Ausdruck prüft relative Farben und die benötigte CSS-Mathematik.
   // Weiß gewinnt bereits bei ausreichendem Kontrast, nicht erst beim maximalen Kontrast.
-  @supports (color: #{_contrast-foreground('red')}) {
+  @supports (color: #{contrast-foreground('red')}) {
     @each $color in $contrast-colors {
-      --nt-text-on-#{$color}: #{_contrast-foreground('var(--nt-#{$color})')};
-      --nt-text-on-#{$color}-hover: #{_contrast-foreground('var(--nt-#{$color}-hover, var(--nt-#{$color}))')};
-      --nt-text-on-#{$color}-active: #{_contrast-foreground('var(--nt-#{$color}-active, var(--nt-#{$color}))')};
+      --nt-text-on-#{$color}: #{contrast-foreground('var(--nt-#{$color})')};
     }
   }
 

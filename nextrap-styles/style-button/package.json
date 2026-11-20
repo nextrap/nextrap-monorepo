@@ -13,6 +13,9 @@
         "url": "https://github.com/nextrap/nextrap-monorepo"
     },
     "dependencies": {},
+    "peerDependencies": {
+        "@nextrap/style-base": "^2.1.0"
+    },
     "devDependencies": {},
     "type": "module",
     "exports": {

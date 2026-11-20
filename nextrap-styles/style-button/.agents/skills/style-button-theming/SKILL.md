@@ -14,6 +14,8 @@ Nutze diesen Skill für Theme-SCSS und visuelle Button-Varianten. Für Markup un
 - Basis- und Modifier-Mixins bleiben unabhängig. Ein Modifier schließt die Basis nicht implizit ein.
 - Kombiniere vorhandene Mixins, statt Varianten wie `btn-glow-primary` oder `btn-glow-secondary` anzulegen.
 - Der Standardradius kommt aus `--nt-border-radius`, das `style-base` aus der Theme-Eingabe `--nt-radius` ableitet. Lege im Button keinen festen Theme-Radius fest.
+- Die Sass-API benötigt `@nextrap/style-base` in Version `^2.1.0` als Peer für
+  die gemeinsame Kontrastfunktion. Der Import materialisiert keine Theme-Tokens.
 
 ## Basis und neutrale Aktionen
 
@@ -41,20 +43,22 @@ ein. Er verwendet `--nt-surface` für die Fläche, `--nt-text` für den Text und
 
 ## Kontrast und Zustandsfarben
 
-Filled-Varianten beziehen den Vordergrund passend zur Fläche aus
-`--nt-text-on-<family>`, `--nt-text-on-<family>-hover` beziehungsweise
-`--nt-text-on-<family>-active`. Die lokalen Tokens `--btn-txt`,
-`--btn-txt-hover` und `--btn-txt-active` bilden diese Zustände ab. Überschreibe
-Fläche und Vordergrund immer als geprüftes Paar.
+Filled-Varianten beziehen ihren normalen Vordergrund über `--btn-txt` aus
+`--nt-text-on-<family>`. Explizite Overrides dieser Basisfarbe bleiben wirksam.
+Hover und Active berechnen die Textfarbe direkt aus `--btn-bg-hover`
+beziehungsweise `--btn-bg-active`. Die gemeinsame öffentliche Sass-Funktion
+`contrast-foreground()` aus `style-base` erzeugt dafür den Laufzeit-Ausdruck;
+zusätzliche globale oder lokale Textvariablen gibt es nicht.
 
-Outline-Hover füllt mit der Basisfarbe und nutzt deren Basisvordergrund;
-Active verwendet die Active-Fläche und ihren Vordergrund auch ohne Hover.
-`btn-neutral()` verwendet weiterhin `--nt-text`. Der Dropdown-Pfeil folgt
-über `currentColor` der tatsächlichen Textfarbe.
+Outline-Hover füllt mit der Basisfarbe; Active verwendet die Active-Fläche auch
+ohne Hover. Beide gefüllten Zustände berechnen deren Kontrastfarbe.
+`btn-neutral()` verwendet weiterhin `--nt-text`. Link-, Text- und ungefüllte
+Outline-Zustände behalten ihre eigenen semantischen Textfarben. Der
+Dropdown-Pfeil folgt über `currentColor` der tatsächlichen Textfarbe.
 
 Die Token-Engine bevorzugt bei vollständiger CSS-Unterstützung Weiß ab `4.5:1`
 nach [WCAG 2.2](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html),
-sonst Schwarz. Davor greifen die statischen Palette-/State-Fallbacks und,
+sonst Schwarz. Davor greifen lokale Fallbacks für die Default-Zustände und,
 sofern unterstützt, natives
 [contrast-color()](https://www.w3.org/TR/css-color-5/#contrast-color).
 Statische Fallbacks decken beliebige Theme-Overrides nicht zuverlässig ab.
@@ -63,6 +67,12 @@ tatsächlichen Backdrop und Wide-Gamut-Farben separat. Das ersetzt keine
 allgemeine Barrierefreiheitsprüfung.
 Prüfe die normalen Brand-/Linkfarben ungefüllter Outline- und Link-Buttons
 zusätzlich gegen ihren tatsächlichen Seitenuntergrund.
+
+Setze eigene Zustandsflächen über die vorhandenen Hintergrundvariablen. Ein
+Override von `--btn-txt` gilt für den Grundzustand; eine bewusst abweichende
+Zustands-Textfarbe gehört als geprüfte `color`-Regel in den jeweiligen Selektor.
+Kopiere die Kontrastformel nicht in ein Theme und importiere keine privaten
+Sass-Dateien von `style-base`.
 
 Die Button-Basis verwendet `transition: none`, damit Vordergrund und Fläche
 ohne graue Zwischenfarben wechseln. Füge keine pauschale Farbtransition hinzu,

@@ -37,24 +37,6 @@ export default defineDemo({
           )
           .join('')}
       </div>
-      <!-- Zustandsmuster zeigen die zur tatsächlichen Fläche gehörende Textfarbe. -->
-      <h2>Textkontrast bei Hover und Active</h2>
-      <p>Weiß wird bevorzugt, sobald es mindestens 4,5:1 Kontrast erreicht; sonst wird Schwarz verwendet.</p>
-      <div class="token-demo__colors">
-        ${['primary', 'success', 'warning', 'danger']
-          .map((color) =>
-            ['hover', 'active']
-              .map(
-                (state) => `
-          <div style="background: var(--nt-${color}-${state}); color: var(--nt-text-on-${color}-${state})">
-            <code>--nt-${color}-${state}</code>
-          </div>
-        `,
-              )
-              .join(''),
-          )
-          .join('')}
-      </div>
       <h2>Subtle und Emphasis</h2>
       <div class="token-demo__colors">
         ${['primary', 'accent', 'secondary', 'tertiary', 'success', 'info', 'warning', 'danger']
