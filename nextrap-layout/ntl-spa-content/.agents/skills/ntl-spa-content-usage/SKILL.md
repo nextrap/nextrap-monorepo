@@ -13,8 +13,9 @@ verwende ein Dokumentlayout. Für visuelle Anpassungen lies den
 ## Import und Einstieg
 
 ```ts
-// Der Import registriert das Custom Element; das Anwendungstheme liefert die Optik.
+// Die Imports registrieren Workspace und äußere Navbar; das Anwendungstheme liefert die Optik.
 import '@nextrap/ntl-spa-content';
+import '@nextrap/ntl-spa-header';
 ```
 
 Verwende `<ntl-spa-content>` direkt im HTML. Benannte Inhalte sind direkte Kinder
@@ -22,17 +23,21 @@ mit `slot="…"`; Kinder ohne `slot` bilden den mittleren, scrollenden Inhalt.
 Ein Content-Pane-Wrapper oder Markdown ist für diese Verwendung nicht nötig.
 
 ```html
-<!-- Die äußere Navbar scrollt mit der Seite; Utilities ordnen ihre Gruppen an. -->
-<header class="d-flex flex-wrap align-items-center gap-3">
-  <nav class="demo-toolbar-start d-flex flex-wrap align-items-center flex-fill gap-3"
+<!-- Der Header ordnet seine Slots an; nur die eingesetzten Inhalte setzen Abstände. -->
+<ntl-spa-header role="banner">
+  <a slot="brand" class="ms-4 me-3 fw-bold text-primary text-decoration-none"
+     href="#workspace">NEXTRAP</a>
+  <nav slot="main-nav" class="d-flex align-items-center gap-3"
        aria-label="Hauptnavigation">
-    <strong>NEXTRAP</strong>
     <a href="#workspace">Workspace</a>
   </nav>
-  <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 ms-auto">
-    <a class="btn btn-neutral" href="#editor-notes">Hilfe</a>
-  </div>
-</header>
+  <!-- Direkt belegte Aktionsslots benötigen keinen Flex-Wrapper zur Zentrierung. -->
+  <a slot="right-nav" class="btn btn-neutral ms-3" href="#editor-notes">Hilfe</a>
+  <a slot="right-nav" class="btn btn-primary ms-2 me-4" href="#workspace">Zum Workspace</a>
+  <p slot="sub-line" class="m-0 mx-4 small text-body-secondary">
+    Die Navbar scrollt aus dem Bild; der Workspace nutzt danach die volle Höhe.
+  </p>
+</ntl-spa-header>
 
 <!-- Direkte Kinder belegen die Slots; die Sidebars füllen die sichtbare Höhe. -->
 <ntl-spa-content id="workspace">
@@ -87,11 +92,19 @@ Die Default-Styles von `@nextrap/style-typography`, `@nextrap/style-elements` un
 Neutrale Nebenaktionen verwenden `btn-neutral`. Die Header-Buttons nutzen die
 Standardgröße und die normale Schriftstärke von `style-button`.
 
-Die Flex- und Abstands-Utilities ordnen die linke Inhaltsgruppe und die rechte
-Aktionsgruppe an. Nur `demo-toolbar-start` ergänzt in der Demo
-`min-inline-size: 0`, damit die linke Gruppe schrumpfen kann. Die Komponente
-selbst ordnet ihre Slots an; ein zusätzlicher Responsive-Wrapper ist nicht
-nötig. Die vollständige Demo zeigt die Einbindung der Styles und die kleinen
+Der äußere SPA-Header ordnet Brand, Hauptnavigation und rechte Aktionen selbst
+an und zentriert die eingesetzten Elemente vertikal. Er setzt kein Padding
+und keine Zwischenräume; Abstände gehören den Inhalten, etwa durch `ms-4`,
+`me-3`, `ms-2`, `me-4` oder `mx-4`. Seine Zeilenhöhen sind über
+`--main-line-height` und `--sub-line-height` steuerbar; die Defaults sind
+`4.5rem` und `2rem`. Das Anwendungstheme bindet auch für den Header dessen
+`default-style()` ein; siehe die
+[Header-Komponente](../../../../ntl-spa-header/README.md).
+
+Im mittleren Editor-Header ordnen weiterhin Flex- und Abstands-Utilities die
+Inhalte an. `demo-toolbar-start` ergänzt dort `min-inline-size: 0`, damit die
+linke Gruppe schrumpfen kann. Ein zusätzlicher Responsive-Wrapper ist nicht
+nötig. Die vollständige Demo zeigt die Style-Einbindung und die kleinen
 verbleibenden Formular-Korrekturen.
 
 ## Slots
@@ -120,9 +133,10 @@ eigene Initialisierung, Properties, Attribute oder Events.
 
 Platziere die Navbar als vorheriges Geschwister im normalen Dokumentfluss.
 Die [vollständige HTML-Seite](https://github.com/nextrap/nextrap-monorepo/blob/main/nextrap-layout/ntl-spa-content/demo/index.html)
-enthält das Dokument mit Navbar, Workspace und allen sieben Slots. Ihr
-Module-Entry lädt die Komponente und das Demo-SCSS; die `.demo.ts` übernimmt
-denselben HTML-Inhalt in einen eigenen Viewport des Demo-Viewers.
+enthält das Dokument mit SPA Header, Workspace und allen sieben Content-Slots.
+Beide Demo-Entrys registrieren `ntl-spa-header` und `ntl-spa-content`; das
+Demo-SCSS materialisiert beide öffentlichen Style-Mixins. Die `.demo.ts`
+übernimmt denselben HTML-Inhalt in einen eigenen Viewport des Demo-Viewers.
 
 Beim äußeren Seitenscrollen verschwindet die Navbar und das Layout erreicht
 den oberen Viewport-Rand. Die Breite entspricht dem umgebenden Container;

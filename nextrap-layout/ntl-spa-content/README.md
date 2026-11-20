@@ -17,17 +17,28 @@ ist unter `http://localhost:4000/demo/index.html` erreichbar; der Demo-Viewer
 unter `http://localhost:4000/` zeigt dasselbe Beispiel. Im zentralen Demo-Viewer
 steht es unter **Layouts → SPA Content**.
 
-Die Seite zeigt eine Navbar im Dokumentfluss vor dem Workspace, alle sieben
-Slots und unterschiedliche Sidebar-Breiten. Navbar und mittlerer Header ordnen
-Navigation beziehungsweise Dateiinformationen links und Aktionen rechts an.
-Die HTML-Datei ist die gemeinsame Quelle für die Seite und den Demo-Viewer;
-`demo/index.ts` lädt lediglich die Komponente und ihre Demo-Styles.
+Die Seite verwendet `@nextrap/ntl-spa-header` als Navbar im Dokumentfluss vor dem
+Workspace und zeigt alle sieben Content-Slots sowie unterschiedliche
+Sidebar-Breiten. Der Header ordnet Brand, Hauptnavigation und rechte Aktionen
+in einer Zeile an; der erklärende Text liegt in seiner optionalen Sub-Line.
+Direkt eingesetzte Aktionsbuttons werden ohne zusätzlichen Wrapper zentriert.
+Der mittlere Editor-Header behält Dateiinformationen links und Aktionen rechts.
+
+Die Header-Komponente setzt kein Padding und keine Abstände zwischen den
+Inhalten. `ms-4`, `me-3`, `ms-2`, `me-4` und `mx-4` im HTML bestimmen die
+gewünschten Ränder und Zwischenräume. Die Zeilenhöhen lassen sich über
+`--main-line-height` und `--sub-line-height` anpassen; die Demo nutzt die Defaults
+`4.5rem` und `2rem` der [Header-Komponente](../ntl-spa-header/README.md).
+
+Die HTML-Datei ist die gemeinsame Quelle für die Seite und den Demo-Viewer.
+Beide Demo-Entrys registrieren Header und Workspace; das Demo-SCSS bindet ihre
+öffentlichen `default-style()`-Mixins ausdrücklich ein.
 
 Das Demo-SCSS nutzt die Runtime-Tokens aus `@nextrap/style-base` und Klassen aus
 `@nextrap/style-utils`, `@nextrap/style-typography`, `@nextrap/style-elements`
 und `@nextrap/style-button`. Flex- und Abstands-Utilities, Typografie, List Groups,
 Badges und Buttons übernehmen die Darstellung. Eigene Regeln bleiben auf die
-SPA-Mixin-Einbindung, Sidebar-Breiten und kleine Layout-/Formular-Korrekturen
+SPA-Mixin-Einbindungen, Sidebar-Breiten und kleine Layout-/Formular-Korrekturen
 beschränkt. Ein zusätzlicher Responsive-Wrapper ist dafür nicht nötig.
 
 Prüfe die Footer-Position auf der eigenständigen HTML-Seite oder in der

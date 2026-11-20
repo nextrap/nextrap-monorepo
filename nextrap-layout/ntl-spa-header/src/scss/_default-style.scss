@@ -1,0 +1,17 @@
+// Die helle Header-Fläche und ihr Schatten grenzen die Navigation ohne zusätzliche Abstände ab.
+@mixin default-style() {
+  color: var(--nt-text);
+  background: var(--nt-surface-muted);
+  font-family: var(--nt-font-family);
+  border-block-end: 1px solid var(--nt-border);
+
+  // Die schmale innere Kante scrollt mit dem Header und ragt nicht über den Workspace.
+  box-shadow: inset 0 -1px 1px color-mix(in srgb, var(--nt-black) 6%, transparent);
+
+  // Die festen Scrollbereiche bleiben auch ohne fokussierbare Inhalte per Tastatur erreichbar.
+  &::part(main-line):focus-visible,
+  &::part(sub-line):focus-visible {
+    outline: 2px solid var(--nt-primary);
+    outline-offset: -2px;
+  }
+}

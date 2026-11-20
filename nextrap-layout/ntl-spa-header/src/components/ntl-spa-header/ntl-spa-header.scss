@@ -1,0 +1,56 @@
+// Der Header füllt seinen Container und bleibt im normalen Dokumentfluss.
+:host {
+  display: block;
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+// Die Navigation folgt direkt auf das Brand; nur die freie Fläche trennt die rechten Aktionen.
+#main-line {
+  display: grid;
+  grid-template-columns: max-content minmax(max-content, 1fr) max-content;
+  grid-template-rows: minmax(0, 1fr);
+  block-size: var(--main-line-height, 4.5rem);
+  overflow: auto;
+}
+
+// Die Slot-Inhalte behalten eigene Abstände; überhohe Inhalte bleiben vom Anfang aus erreichbar.
+slot[name] {
+  display: flex;
+  align-items: safe center;
+  min-inline-size: 0;
+  min-block-size: 0;
+}
+
+// Feste Spaltenzuordnung erhält die Ausrichtung auch bei ausgelassenen Slots.
+slot[name='brand'] {
+  grid-column: 1;
+}
+
+slot[name='main-nav'] {
+  grid-column: 2;
+}
+
+slot[name='right-nav'] {
+  grid-column: 3;
+  justify-content: flex-end;
+}
+
+// Der fokussierbare Zeilen-Wrapper hält Höhe und Scrollbereich vom semantischen Slot getrennt.
+#sub-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  block-size: var(--sub-line-height, 2rem);
+  overflow: auto;
+}
+
+// Leere Bereiche benötigen keinen Platz; Slotwechsel übernimmt die Nextrap-Basis.
+slot[name].slot-empty {
+  display: none !important;
+}
+
+#main-line:not(:has(> slot:not(.slot-empty))),
+#sub-line:has(> slot.slot-empty) {
+  display: none;
+}

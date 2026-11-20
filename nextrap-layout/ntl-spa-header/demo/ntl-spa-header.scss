@@ -1,0 +1,26 @@
+// Öffentliche Nextrap-Styles liefern Typografie, Buttons und Abstands-Utilities.
+@use '@nextrap/style-base' as nt;
+@use '@nextrap/style-typography/default' as typography;
+@use '@nextrap/style-button/default' as buttons;
+@use '@nextrap/style-utils' as utils;
+@use '../index' as header;
+
+// Utilities folgen den Mustern, damit ihre Klassen gezielte Anpassungen erlauben.
+@include utils.style-utils();
+
+// Die vollständige Seite und die Viewer-Vorschau verwenden dasselbe Anwendungstheme.
+:root {
+  @include nt.runtime-theme-scoped();
+  @include utils.scheme-light();
+}
+
+// Der Viewer übernimmt Body-Inhalte ohne Body-Klassen; deshalb hier die Mixins.
+body {
+  @include utils.m-0();
+  @include utils.surface-white();
+}
+
+// Die Komponente liefert keine impliziten Light-DOM-Styles beim JavaScript-Import.
+ntl-spa-header.style-default {
+  @include header.default-style();
+}

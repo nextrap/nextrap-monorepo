@@ -54,6 +54,7 @@
             "@nextrap/ntl-card-row": ["nextrap-layout/ntl-card-row/src/index.ts"],
             "@nextrap/ntl-footer": ["nextrap-layout/ntl-footer/src/index.ts"],
             "@nextrap/ntl-spa-content": ["nextrap-layout/ntl-spa-content/index.ts"],
+            "@nextrap/ntl-spa-header": ["nextrap-layout/ntl-spa-header/index.ts"],
             "@nextrap/style-base": ["nextrap-styles/style-base/index.ts"],
             "@nextrap/style-button": ["nextrap-styles/style-button/src/index.ts"],
             "@nextrap/style-switch": ["nextrap-styles/style-switch/index.ts"],

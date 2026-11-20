@@ -1,0 +1,79 @@
+<!doctype html>
+<!-- Vollständige HTML-Demo: Die Header-Inhalte bestimmen ihre Abstände selbst. -->
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SPA Header · Nextrap</title>
+    <!-- Der Modul-Entry registriert den Header und lädt das Anwendungstheme. -->
+    <script type="module" src="./index.ts"></script>
+  </head>
+  <body>
+    <!-- Die Standardhöhen gelten ohne Konfiguration; Seitenabstände stehen an den Inhalten. -->
+    <ntl-spa-header role="banner" aria-label="SPA-Navigation">
+      <a slot="brand" class="ms-4 me-4 fw-bold text-primary text-decoration-none"
+         href="#ueberblick">NEXTRAP</a>
+      <nav slot="main-nav" class="d-flex align-items-center small" aria-label="Hauptnavigation">
+        <a class="me-3 text-reset text-decoration-none" href="#ueberblick"
+           aria-current="page">Übersicht</a>
+        <a class="me-3 text-body-secondary text-decoration-none" href="#kompakt">Kompakt</a>
+      </nav>
+      <!-- Die Button-Links liegen direkt im Slot; der Header zentriert sie vertikal. -->
+      <a slot="right-nav" class="btn btn-neutral me-2" href="#hinweise">Hilfe</a>
+      <a slot="right-nav" class="btn btn-primary me-4" href="#kompakt">Beispiel</a>
+      <p slot="sub-line" class="m-0 ms-4 me-4 small text-body-secondary">
+        Projekt / Workspace · Eine optionale zweite Zeile für Kontext und Navigation.
+      </p>
+    </ntl-spa-header>
+
+    <!-- Auch die Seiteninhalte verwenden die vorhandenen Nextrap-Utilities. -->
+    <main class="p-4">
+      <section id="ueberblick" aria-labelledby="overview-title">
+        <h1 id="overview-title" class="h3">Ein Header, vier Slots</h1>
+        <p>
+          Brand und Hauptnavigation stehen links, die Aktionen rechts.
+          Alle direkten Slot-Inhalte sind vertikal zentriert; der Header setzt
+          weder Padding noch Abstände zwischen ihnen.
+        </p>
+        <p class="text-body-secondary">
+          Die HTML-Klassen <code>ms-4</code>, <code>me-4</code> und
+          <code>me-2</code> bestimmen hier die Abstände.
+          Die beiden Zeilen verwenden standardmäßig <code>4.5rem</code>
+          und <code>2rem</code> Höhe.
+        </p>
+      </section>
+
+      <!-- Ohne Sub-Line wird keine leere zweite Zeile reserviert. -->
+      <section id="kompakt" class="mt-5" aria-labelledby="compact-title">
+        <h2 id="compact-title" class="h4">Kompakt ohne Sub-Line</h2>
+        <p>
+          Diese Instanz setzt nur <code>--main-line-height: 3.5rem</code>.
+          Die geringeren Seitenabstände kommen wieder aus dem HTML-Inhalt.
+        </p>
+        <ntl-spa-header style="--main-line-height: 3.5rem;" aria-label="Kompakte Navigation">
+          <a slot="brand" class="ms-2 me-3 fw-bold text-primary text-decoration-none"
+             href="#ueberblick">NEXTRAP</a>
+          <nav slot="main-nav" class="d-flex align-items-center small" aria-label="Kompakte Hauptnavigation">
+            <a class="me-3 text-reset text-decoration-none" href="#hinweise">Hinweise</a>
+          </nav>
+          <a slot="right-nav" class="btn btn-neutral me-2" href="#ueberblick">Zur Übersicht</a>
+        </ntl-spa-header>
+      </section>
+
+      <!-- Hinweise erklären ausschließlich die tatsächlich verwendete Header-API. -->
+      <section id="hinweise" class="mt-5" aria-labelledby="notes-title">
+        <h2 id="notes-title" class="h4">Eigene Inhalte einsetzen</h2>
+        <p>
+          Direkte Kinder erhalten <code>slot="brand"</code>,
+          <code>slot="main-nav"</code>, <code>slot="right-nav"</code>
+          oder <code>slot="sub-line"</code>. Mehrere Elemente dürfen denselben Slot belegen.
+        </p>
+        <p class="mb-0 text-body-secondary">
+          Die Zeilenhöhen lassen sich mit <code>--main-line-height</code> und
+          <code>--sub-line-height</code> anpassen. Inhalte und verschachtelte
+          Navigationsgruppen verwenden weiterhin ihre eigenen Styles und Abstände.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

@@ -5,28 +5,28 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SPA Content · Nextrap Workspace</title>
-    <!-- Der Modul-Entry registriert das Element und lädt das Demo-Theme. -->
+    <!-- Der Modul-Entry registriert beide Komponenten und lädt das Demo-Theme. -->
     <script type="module" src="./index.ts"></script>
   </head>
   <body>
-    <!-- Diese Navbar bleibt im normalen Dokumentfluss und scrollt nach oben heraus. -->
-    <header class="d-flex flex-wrap align-items-center gap-3 p-4 border-bottom border-dark border-opacity-10 surface-light">
-      <div class="demo-toolbar-start d-flex flex-wrap align-items-center flex-fill gap-3">
-        <a class="fw-bold text-primary text-decoration-none" href="#workspace">NEXTRAP</a>
-        <nav class="d-flex flex-wrap gap-3 small" aria-label="Hauptnavigation">
-          <a class="text-reset text-decoration-none fw-semibold" href="#workspace-form" aria-current="page">Workspace</a>
-          <a class="text-body-secondary text-decoration-none" href="#editor-notes">Dokumentation</a>
-        </nav>
-      </div>
-      <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 ms-auto" role="group" aria-label="Seitenaktionen">
-        <a class="btn btn-neutral" href="#editor-notes">Hilfe</a>
-        <a class="btn btn-primary btn-lead" href="#workspace">Zum Workspace</a>
-      </div>
-      <p class="w-100 m-0 small text-body-secondary">
+    <!-- Die Navbar scrollt mit der Seite; ausschließlich ihre Inhalte bestimmen die Abstände. -->
+    <ntl-spa-header role="banner">
+      <a slot="brand" class="ms-4 me-3 fw-bold text-primary text-decoration-none" href="#workspace">NEXTRAP</a>
+      <nav slot="main-nav" class="d-flex align-items-center gap-3 small" aria-label="Hauptnavigation">
+        <a class="text-reset text-decoration-none fw-semibold" href="#workspace-form" aria-current="page">Workspace</a>
+        <a class="text-body-secondary text-decoration-none" href="#editor-notes">Dokumentation</a>
+      </nav>
+
+      <!-- Direkt eingesetzte Buttons werden vom Slot vertikal zentriert, ohne zusätzlichen Wrapper. -->
+      <a slot="right-nav" class="btn btn-neutral ms-3" href="#editor-notes">Hilfe</a>
+      <a slot="right-nav" class="btn btn-primary btn-lead ms-2 me-4" href="#workspace">Zum Workspace</a>
+
+      <!-- Die optionale zweite Zeile hat eine eigene Höhe; auch hier kommen Seitenabstände vom Inhalt. -->
+      <p slot="sub-line" class="m-0 mx-4 small text-body-secondary">
         Der Footer ist schon sichtbar. Hier nach unten scrollen: Die Navbar verschwindet,
         der Workspace wächst auf die volle Bildschirmhöhe.
       </p>
-    </header>
+    </ntl-spa-header>
 
     <!-- Alle benannten Slots sind direkte Kinder; die Sidebars reichen über die ganze Höhe. -->
     <ntl-spa-content id="workspace" role="main" aria-label="Workspace">

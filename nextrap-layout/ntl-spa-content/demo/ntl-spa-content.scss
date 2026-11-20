@@ -4,6 +4,7 @@
 @use '@nextrap/style-elements/default' as elements;
 @use '@nextrap/style-button/default' as buttons;
 @use '@nextrap/style-utils' as utils;
+@use '@nextrap/ntl-spa-header' as spaHeader;
 @use '../index' as spa;
 
 // Utilities kommen nach den Mustern, damit Klassen gezielt deren Darstellung anpassen.
@@ -21,14 +22,19 @@ body {
   @include utils.surface-white();
 }
 
-// Das Anwendungstheme aktiviert die Komponente und konfiguriert lediglich ihre Sidebar-Breiten.
+// Das Header-Mixin liefert die Optik; seine Inhalte setzen ihre Abstände mit Utilities.
+ntl-spa-header.style-default {
+  @include spaHeader.default-style();
+}
+
+// Das Anwendungstheme aktiviert den Workspace und konfiguriert seine Sidebar-Breiten.
 ntl-spa-content.style-default {
   @include spa.default-style();
   --sidebar-left-width: 15rem;
   --sidebar-right-width: 18rem;
 }
 
-// Für schrumpfbare Flex-Gruppen gibt es noch keine entsprechende Utility.
+// Der mittlere Editor-Header behält seine schrumpfbare Flex-Gruppe.
 .demo-toolbar-start {
   min-inline-size: 0;
 }
