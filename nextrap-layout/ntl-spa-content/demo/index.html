@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Vollständige HTML-Seite für die direkte Nutzung und den Demo-Viewer. -->
+<!-- Vollständige HTML-Seite mit Nextrap-Utilities, Elementmustern und Buttons. -->
 <html lang="de">
   <head>
     <meta charset="utf-8">
@@ -10,19 +10,19 @@
   </head>
   <body>
     <!-- Diese Navbar bleibt im normalen Dokumentfluss und scrollt nach oben heraus. -->
-    <header class="demo-navbar demo-toolbar">
-      <div class="demo-toolbar-start">
-        <a class="demo-brand" href="#workspace">NEXTRAP</a>
-        <nav class="demo-navigation" aria-label="Hauptnavigation">
-          <a href="#workspace-form" aria-current="page">Workspace</a>
-          <a href="#editor-notes">Dokumentation</a>
+    <header class="d-flex flex-wrap align-items-center gap-3 p-4 border-bottom border-dark border-opacity-10 surface-light">
+      <div class="demo-toolbar-start d-flex flex-wrap align-items-center flex-fill gap-3">
+        <a class="fw-bold text-primary text-decoration-none" href="#workspace">NEXTRAP</a>
+        <nav class="d-flex flex-wrap gap-3 small" aria-label="Hauptnavigation">
+          <a class="text-reset text-decoration-none fw-semibold" href="#workspace-form" aria-current="page">Workspace</a>
+          <a class="text-body-secondary text-decoration-none" href="#editor-notes">Dokumentation</a>
         </nav>
       </div>
-      <div class="demo-actions" role="group" aria-label="Seitenaktionen">
-        <a class="demo-button" href="#editor-notes">Hilfe</a>
-        <a class="demo-button demo-button-primary" href="#workspace">Zum Workspace</a>
+      <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 ms-auto" role="group" aria-label="Seitenaktionen">
+        <a class="btn btn-outline-secondary btn-sm small" href="#editor-notes">Hilfe</a>
+        <a class="btn btn-primary btn-sm small btn-lead" href="#workspace">Zum Workspace</a>
       </div>
-      <p class="demo-scroll-hint">
+      <p class="w-100 m-0 small text-body-secondary">
         Der Footer ist schon sichtbar. Hier nach unten scrollen: Die Navbar verschwindet,
         der Workspace wächst auf die volle Bildschirmhöhe.
       </p>
@@ -30,26 +30,26 @@
 
     <!-- Alle benannten Slots sind direkte Kinder; die Sidebars reichen über die ganze Höhe. -->
     <ntl-spa-content id="workspace" role="main" aria-label="Workspace">
-      <div slot="sidebar-left-header" class="demo-sidebar-heading">
+      <div slot="sidebar-left-header" class="d-flex flex-wrap align-items-center justify-content-between gap-2 small">
         <strong>Explorer</strong>
-        <span class="demo-badge">Projekt</span>
+        <span class="badge rounded-pill">Projekt</span>
       </div>
 
       <!-- Aufklappbare Ordner und viele Dateien machen den eigenen Sidebar-Scrollbereich sichtbar. -->
-      <nav slot="sidebar-left" class="demo-explorer" aria-label="Projektdateien">
-        <p class="demo-eyebrow">nextrap-workspace</p>
+      <nav slot="sidebar-left" class="small text-break" aria-label="Projektdateien">
+        <p class="small fw-semibold text-body-secondary mb-2">nextrap-workspace</p>
         <details open>
-          <summary>src</summary>
-          <ul class="demo-file-list">
-            <li><a href="#workspace-form" aria-current="page">workspace.ts</a></li>
+          <summary class="py-2 fw-semibold">src</summary>
+          <ul class="list-group list-group-flush m-0 mb-2">
+            <li class="surface-light fw-semibold"><a class="text-reset text-decoration-none" href="#workspace-form" aria-current="page">workspace.ts</a></li>
             <li>index.ts</li>
             <li>app.ts</li>
             <li>routes.ts</li>
             <li>settings.ts</li>
           </ul>
-          <details open>
-            <summary>components</summary>
-            <ul class="demo-file-list">
+          <details class="ms-3" open>
+            <summary class="py-2 fw-semibold">components</summary>
+            <ul class="list-group list-group-flush m-0 mb-2">
               <li>app-header.ts</li>
               <li>breadcrumb.ts</li>
               <li>command-palette.ts</li>
@@ -66,9 +66,9 @@
               <li>toolbar.ts</li>
             </ul>
           </details>
-          <details open>
-            <summary>styles</summary>
-            <ul class="demo-file-list">
+          <details class="ms-3" open>
+            <summary class="py-2 fw-semibold">styles</summary>
+            <ul class="list-group list-group-flush m-0 mb-2">
               <li>index.scss</li>
               <li>buttons.scss</li>
               <li>editor.scss</li>
@@ -81,14 +81,14 @@
           </details>
         </details>
         <details open>
-          <summary>docs</summary>
-          <ul class="demo-file-list">
-            <li><a href="#editor-notes">README.md</a></li>
+          <summary class="py-2 fw-semibold">docs</summary>
+          <ul class="list-group list-group-flush m-0 mb-2">
+            <li><a class="text-reset text-decoration-none" href="#editor-notes">README.md</a></li>
             <li>architecture.md</li>
             <li>contributing.md</li>
           </ul>
         </details>
-        <ul class="demo-file-list">
+        <ul class="list-group list-group-flush m-0 mb-2">
           <li>package.json</li>
           <li>tsconfig.json</li>
           <li>vite.config.ts</li>
@@ -96,29 +96,29 @@
       </nav>
 
       <!-- Der mittlere Header richtet Dateiinformationen links und native Aktionen rechts aus. -->
-      <header slot="header" class="demo-toolbar">
-        <div class="demo-toolbar-start">
-          <h1 class="demo-title"><span>src /</span> workspace.ts</h1>
-          <span class="demo-badge">TypeScript</span>
+      <header slot="header" class="d-flex flex-wrap align-items-center gap-3">
+        <div class="demo-toolbar-start d-flex flex-wrap align-items-center flex-fill gap-3">
+          <h1 class="h6 m-0 text-break"><span class="fw-normal text-body-secondary">src /</span> workspace.ts</h1>
+          <span class="badge rounded-pill">TypeScript</span>
         </div>
-        <div class="demo-actions" role="group" aria-label="Dokumentaktionen">
-          <button type="reset" form="workspace-form">Zurücksetzen</button>
-          <a class="demo-button demo-button-primary" href="#editor-notes">Hilfe</a>
+        <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 ms-auto" role="group" aria-label="Dokumentaktionen">
+          <button class="btn btn-outline-secondary btn-sm small" type="reset" form="workspace-form">Zurücksetzen</button>
+          <a class="btn btn-primary btn-sm small" href="#editor-notes">Hilfe</a>
         </div>
       </header>
 
       <!-- Ohne slot-Attribut liegt der Editor im standardmäßig scrollenden Mittelbereich. -->
-      <div class="demo-editor">
+      <div>
         <form id="workspace-form">
           <!-- Enter im Dokumentnamen darf die Demo nicht als Formular absenden. -->
           <button type="submit" hidden disabled></button>
-          <div class="demo-document-field">
+          <div class="d-flex flex-wrap align-items-center gap-3 mb-4 small">
             <label for="document-name">Dokumentname</label>
-            <input id="document-name" name="document-name" value="workspace.ts" autocomplete="off">
+            <input class="flex-fill px-3 py-2 border border-dark border-opacity-10 rounded" id="document-name" name="document-name" value="workspace.ts" autocomplete="off">
           </div>
-          <label class="demo-editor-label" for="document-source">Editor</label>
+          <label class="d-block small fw-semibold text-body-secondary mb-2" for="document-source">Editor</label>
           <!-- Die hohe Textarea zeigt das Scrollen des Content-Bereichs und bleibt nativ editierbar. -->
-          <textarea id="document-source" class="demo-source" name="source" rows="38" spellcheck="false" wrap="off">// Beispielinhalt für einen Workspace mit getrennten Scrollbereichen.
+          <textarea id="document-source" class="d-block w-100 p-3 border border-dark border-opacity-10 rounded font-monospace small lh-lg" name="source" rows="38" spellcheck="false" wrap="off">// Beispielinhalt für einen Workspace mit getrennten Scrollbereichen.
 export const workspace = {
   name: 'Nextrap Workspace',
   activeDocument: 'src/workspace.ts',
@@ -155,9 +155,9 @@ export default workspace;</textarea>
         </form>
 
         <!-- Ein zweiter Inhalt zeigt, dass der Default-Slot keine spezielle Editor-API voraussetzt. -->
-        <section id="editor-notes" class="demo-notes" aria-labelledby="editor-notes-title">
-          <p class="demo-eyebrow">README.md</p>
-          <h2 id="editor-notes-title">Ein Workspace, drei Scrollbereiche</h2>
+        <section id="editor-notes" class="mt-4 pt-4 border-top border-dark border-opacity-10 small" aria-labelledby="editor-notes-title">
+          <p class="small fw-semibold text-body-secondary mb-2">README.md</p>
+          <h2 class="h6" id="editor-notes-title">Ein Workspace, drei Scrollbereiche</h2>
           <p>Links stehen Projektdateien, in der Mitte das Dokument und rechts seine Eigenschaften.</p>
           <p>Die Statusleiste ist schon unter der noch sichtbaren Navbar erreichbar. Beim Wegscrollen der Navbar wachsen alle drei Spalten bis zur vollen Bildschirmhöhe.</p>
           <p>Der Header und die Statusleiste bleiben beim Scrollen des Dokuments sichtbar. Beide Sidebars füllen die verfügbare Höhe.</p>
@@ -167,41 +167,41 @@ export default workspace;</textarea>
       </div>
 
       <!-- Die Statusleiste bleibt unter dem Editor und beansprucht keine Sidebar-Fläche. -->
-      <footer slot="footer" class="demo-statusbar">
+      <footer slot="footer" class="d-flex flex-wrap justify-content-between gap-2 small text-body-secondary">
         <span>main · workspace.ts</span>
         <span>TypeScript · UTF-8 · Demo</span>
       </footer>
 
-      <div slot="sidebar-right-header" class="demo-sidebar-heading">
+      <div slot="sidebar-right-header" class="d-flex flex-wrap align-items-center justify-content-between gap-2 small">
         <strong>Inspector</strong>
-        <span class="demo-badge">Info</span>
+        <span class="badge rounded-pill">Info</span>
       </div>
 
       <!-- Längere Metadaten demonstrieren das Scrollen unter dem festen Inspector-Header. -->
-      <aside slot="sidebar-right" class="demo-inspector" aria-label="Dokumenteigenschaften">
-        <p class="demo-eyebrow">workspace.ts</p>
-        <h2>Dokumenteigenschaften</h2>
-        <dl class="demo-properties">
-          <div><dt>Dateityp</dt><dd>TypeScript</dd></div>
-          <div><dt>Verzeichnis</dt><dd>src</dd></div>
-          <div><dt>Branch</dt><dd>main</dd></div>
-          <div><dt>Projekt</dt><dd>Nextrap Workspace</dd></div>
-          <div><dt>Zeichensatz</dt><dd>UTF-8</dd></div>
-          <div><dt>Zeilenenden</dt><dd>LF</dd></div>
-          <div><dt>Einrückung</dt><dd>2 Leerzeichen</dd></div>
-          <div><dt>Modultyp</dt><dd>ES Module</dd></div>
-          <div><dt>Editor</dt><dd>Native Textarea</dd></div>
-          <div><dt>Bearbeitung</dt><dd>Lokal im Browser</dd></div>
-          <div><dt>Navigation</dt><dd>Explorer links</dd></div>
-          <div><dt>Kontext</dt><dd>Inspector rechts</dd></div>
-          <div><dt>Header</dt><dd>Dateiname und Aktionen</dd></div>
-          <div><dt>Footer</dt><dd>Statusleiste</dd></div>
-          <div><dt>Layout</dt><dd>Drei Spalten</dd></div>
-          <div><dt>Scrollbereiche</dt><dd>Unabhängig</dd></div>
-          <div><dt>Linke Breite</dt><dd>15 rem</dd></div>
-          <div><dt>Rechte Breite</dt><dd>18 rem</dd></div>
-          <div><dt>Dokumentation</dt><dd>Im Editorbereich</dd></div>
-          <div><dt>Hilfe</dt><dd>Über die Header-Buttons</dd></div>
+      <aside slot="sidebar-right" class="small text-break" aria-label="Dokumenteigenschaften">
+        <p class="small fw-semibold text-body-secondary mb-2">workspace.ts</p>
+        <h2 class="h6 mb-3">Dokumenteigenschaften</h2>
+        <dl class="list-group list-group-flush m-0">
+          <div><dt class="small text-body-secondary">Dateityp</dt><dd class="m-0">TypeScript</dd></div>
+          <div><dt class="small text-body-secondary">Verzeichnis</dt><dd class="m-0">src</dd></div>
+          <div><dt class="small text-body-secondary">Branch</dt><dd class="m-0">main</dd></div>
+          <div><dt class="small text-body-secondary">Projekt</dt><dd class="m-0">Nextrap Workspace</dd></div>
+          <div><dt class="small text-body-secondary">Zeichensatz</dt><dd class="m-0">UTF-8</dd></div>
+          <div><dt class="small text-body-secondary">Zeilenenden</dt><dd class="m-0">LF</dd></div>
+          <div><dt class="small text-body-secondary">Einrückung</dt><dd class="m-0">2 Leerzeichen</dd></div>
+          <div><dt class="small text-body-secondary">Modultyp</dt><dd class="m-0">ES Module</dd></div>
+          <div><dt class="small text-body-secondary">Editor</dt><dd class="m-0">Native Textarea</dd></div>
+          <div><dt class="small text-body-secondary">Bearbeitung</dt><dd class="m-0">Lokal im Browser</dd></div>
+          <div><dt class="small text-body-secondary">Navigation</dt><dd class="m-0">Explorer links</dd></div>
+          <div><dt class="small text-body-secondary">Kontext</dt><dd class="m-0">Inspector rechts</dd></div>
+          <div><dt class="small text-body-secondary">Header</dt><dd class="m-0">Dateiname und Aktionen</dd></div>
+          <div><dt class="small text-body-secondary">Footer</dt><dd class="m-0">Statusleiste</dd></div>
+          <div><dt class="small text-body-secondary">Layout</dt><dd class="m-0">Drei Spalten</dd></div>
+          <div><dt class="small text-body-secondary">Scrollbereiche</dt><dd class="m-0">Unabhängig</dd></div>
+          <div><dt class="small text-body-secondary">Linke Breite</dt><dd class="m-0">15 rem</dd></div>
+          <div><dt class="small text-body-secondary">Rechte Breite</dt><dd class="m-0">18 rem</dd></div>
+          <div><dt class="small text-body-secondary">Dokumentation</dt><dd class="m-0">Im Editorbereich</dd></div>
+          <div><dt class="small text-body-secondary">Hilfe</dt><dd class="m-0">Über die Header-Buttons</dd></div>
         </dl>
       </aside>
     </ntl-spa-content>

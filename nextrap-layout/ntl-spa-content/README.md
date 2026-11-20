@@ -23,6 +23,13 @@ Navigation beziehungsweise Dateiinformationen links und Aktionen rechts an.
 Die HTML-Datei ist die gemeinsame Quelle für die Seite und den Demo-Viewer;
 `demo/index.ts` lädt lediglich die Komponente und ihre Demo-Styles.
 
+Das Demo-SCSS nutzt die Runtime-Tokens aus `@nextrap/style-base` und Klassen aus
+`@nextrap/style-utils`, `@nextrap/style-typography`, `@nextrap/style-elements`
+und `@nextrap/style-button`. Flex- und Abstands-Utilities, Typografie, List Groups,
+Badges und Buttons übernehmen die Darstellung. Eigene Regeln bleiben auf die
+SPA-Mixin-Einbindung, Sidebar-Breiten und kleine Layout-/Formular-Korrekturen
+beschränkt. Ein zusätzlicher Responsive-Wrapper ist dafür nicht nötig.
+
 Prüfe die Footer-Position auf der eigenständigen HTML-Seite oder in der
 Fullscreen-Ansicht des Viewers. Die eingebettete Vorschau besitzt einen eigenen
 Viewport und kann unter dem Viewer-Header selbst teilweise außerhalb des

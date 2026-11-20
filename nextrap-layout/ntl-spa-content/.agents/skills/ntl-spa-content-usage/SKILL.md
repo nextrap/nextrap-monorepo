@@ -22,35 +22,38 @@ mit `slot="…"`; Kinder ohne `slot` bilden den mittleren, scrollenden Inhalt.
 Ein Content-Pane-Wrapper oder Markdown ist für diese Verwendung nicht nötig.
 
 ```html
-<!-- Die äußere Navbar scrollt mit der Seite nach oben aus dem Viewport. -->
-<header class="demo-navbar demo-toolbar">
-  <nav class="demo-toolbar-start" aria-label="Hauptnavigation">
+<!-- Die äußere Navbar scrollt mit der Seite; Utilities ordnen ihre Gruppen an. -->
+<header class="d-flex flex-wrap align-items-center gap-3">
+  <nav class="demo-toolbar-start d-flex flex-wrap align-items-center flex-fill gap-3"
+       aria-label="Hauptnavigation">
     <strong>NEXTRAP</strong>
     <a href="#workspace">Workspace</a>
   </nav>
-  <div class="demo-actions">
-    <a class="demo-button" href="#editor-notes">Hilfe</a>
+  <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 ms-auto">
+    <a class="btn btn-sm btn-outline-secondary" href="#editor-notes">Hilfe</a>
   </div>
 </header>
 
 <!-- Direkte Kinder belegen die Slots; die Sidebars füllen die sichtbare Höhe. -->
 <ntl-spa-content id="workspace">
-  <h2 slot="sidebar-left-header">Dateien</h2>
+  <h2 slot="sidebar-left-header" class="h6 m-0">Dateien</h2>
   <nav slot="sidebar-left" aria-label="Projektdateien">
-    <a href="#editor-document" aria-current="page">README.md</a>
+    <ul class="list-group list-group-flush">
+      <li><a href="#editor-document" aria-current="page">README.md</a></li>
+    </ul>
   </nav>
 
-  <!-- Das Anwendungstheme richtet den Titel links und die Aktionen rechts aus. -->
-  <header slot="header" class="demo-toolbar">
-    <div class="demo-toolbar-start">
-      <div class="demo-title">
-        <strong>README.md</strong>
-        <span>Workspace / docs</span>
-      </div>
+  <!-- Nextrap-Utilities richten den Titel links und die Button-Gruppe rechts aus. -->
+  <header slot="header" class="d-flex flex-wrap align-items-center gap-3">
+    <div class="demo-toolbar-start d-flex flex-wrap align-items-center flex-fill gap-3">
+      <h1 class="h6 m-0">README.md</h1>
+      <span class="small text-body-secondary">Workspace / docs</span>
+      <span class="badge">Markdown</span>
     </div>
-    <div class="demo-actions">
-      <button type="reset" form="workspace-form">Zurücksetzen</button>
-      <a class="demo-button" href="#editor-notes">Hilfe</a>
+    <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 ms-auto">
+      <button class="btn btn-sm btn-outline-secondary" type="reset"
+              form="workspace-form">Zurücksetzen</button>
+      <a class="btn btn-sm btn-primary" href="#editor-notes">Hilfe</a>
     </div>
   </header>
 
@@ -64,9 +67,12 @@ Ein Content-Pane-Wrapper oder Markdown ist für diese Verwendung nicht nötig.
   <section id="editor-notes" aria-label="Hinweise zum Workspace">
     <p>Die Sidebars und der Dokumentbereich scrollen unabhängig voneinander.</p>
   </section>
-  <footer slot="footer">Markdown · UTF-8 · Lokale Vorschau</footer>
+  <footer slot="footer" class="d-flex flex-wrap justify-content-between gap-2 m-0 small">
+    <span>Markdown · UTF-8</span>
+    <span class="text-body-secondary">Lokale Vorschau</span>
+  </footer>
 
-  <h2 slot="sidebar-right-header">Inspector</h2>
+  <h2 slot="sidebar-right-header" class="h6 m-0">Inspector</h2>
   <section slot="sidebar-right" aria-label="Dokumenteigenschaften">
     <p>README.md</p>
     <p>Projekt: Mein Workspace</p>
@@ -74,9 +80,17 @@ Ein Content-Pane-Wrapper oder Markdown ist für diese Verwendung nicht nötig.
 </ntl-spa-content>
 ```
 
-Die Klassen im Beispiel gehören zur Anwendung. Die vollständige Demo gestaltet
-Navbar und Header als Flex-Zeilen mit einer linken Inhaltsgruppe und einer
-rechten Aktionsgruppe. Die Komponente selbst ordnet nur ihre Slots an.
+Das Anwendungstheme stellt Runtime-Tokens aus `@nextrap/style-base` bereit und
+materialisiert die Utilities über `style-utils()` aus `@nextrap/style-utils`.
+Die Default-Styles von `@nextrap/style-typography`, `@nextrap/style-elements` und
+`@nextrap/style-button` liefern Typografie, List Groups, Badges und Buttons.
+
+Die Flex- und Abstands-Utilities ordnen die linke Inhaltsgruppe und die rechte
+Aktionsgruppe an. Nur `demo-toolbar-start` ergänzt in der Demo
+`min-inline-size: 0`, damit die linke Gruppe schrumpfen kann. Die Komponente
+selbst ordnet ihre Slots an; ein zusätzlicher Responsive-Wrapper ist nicht
+nötig. Die vollständige Demo zeigt die Einbindung der Styles und die kleinen
+verbleibenden Formular-Korrekturen.
 
 ## Slots
 

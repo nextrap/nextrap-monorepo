@@ -1,0 +1,14 @@
+// Kennzeichnet kurze Zusatzinformationen als neutrales Label mit zentralen Theme-Tokens.
+// Farben und Rundung können durch die vorhandenen Style-Utilities angepasst werden.
+@mixin badge() {
+  display: inline-block;
+  padding: var(--nt-space-1, 0.25rem) var(--nt-space-2, 0.5rem);
+  border: var(--nt-border-width, 1px) solid var(--nt-border, currentColor);
+  border-radius: var(--nt-border-radius, 0.375rem);
+  color: var(--nt-text, currentColor);
+  background-color: var(--nt-surface-muted, transparent);
+  font-size: 0.75em;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
