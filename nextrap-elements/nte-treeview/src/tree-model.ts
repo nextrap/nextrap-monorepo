@@ -16,8 +16,8 @@ export interface TreeNodeData {
 
 /** Trennt die allgemeine Baumstruktur von den anwendungsspezifischen Daten. */
 export interface TreeNode {
-  /** Stabiler Geschwisterschlüssel; für ID-Zugriff und Formularwerte im gesamten Baum eindeutig. */
-  readonly id: string;
+  /** Optionaler stabiler Geschwisterschlüssel; für ID-Zugriffe im gesamten Baum eindeutig. */
+  readonly id?: string;
   label: string;
   /** Optionales Linkziel; hat Vorrang vor dem weiterhin unterstützten data.href. */
   src?: string;

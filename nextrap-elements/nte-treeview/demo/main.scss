@@ -49,7 +49,7 @@ main:has(> nte-treeview) {
     }
   }
 
-  // Die Aktionsdemo zeigt übernehmbare Listener neben den ausführbaren Einträgen.
+  // Die Aktionsdemo zeigt das ausgewählte Modellobjekt und den abgefragten Zustand.
   > pre {
     overflow: auto;
     padding: var(--nt-space-3);

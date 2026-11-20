@@ -1,0 +1,5 @@
+/* Der Baum bleibt auch ohne Theme im normalen Dokumentfluss. */
+:host {
+  display: block;
+  min-inline-size: 0;
+}

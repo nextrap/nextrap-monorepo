@@ -1,0 +1,24 @@
+<main>
+  <h1>Auswahl und Zustand auslesen</h1>
+  <p>
+    Klicke auf einen Eintrag: <code>selection-change</code> liefert in <code>event.detail</code> das ausgewählte
+    Modellobjekt. Derselbe Event-Listener reagiert auf die Auswahl-Buttons; beim Löschen erhält er <code>null</code>.
+  </p>
+  <nte-treeview aria-label="Dokumente mit programmatischer Auswahl"></nte-treeview>
+  <p>
+    <button data-action="select-object">Notizen.md per Objekt auswählen</button>
+    <button data-action="select-id">Handbuch.pdf per ID auswählen</button>
+    <button data-action="clear">Auswahl löschen</button>
+    <button data-action="toggle">Archiv auf/zu</button>
+    <button data-action="state">Zustand lesen</button>
+  </p>
+  <p>
+    <code>view.value</code> liest das ausgewählte Objekt und akzeptiert beim Setzen ein Modellobjekt,
+    eine ID oder <code>null</code>. „Notizen.md“ hat bewusst keine ID. Die Objektreferenz stammt aus
+    <code>tree.children</code>; <code>getNodeById(id)</code> findet alternativ einen Knoten über seine eindeutige ID.
+  </p>
+  <h2>Ausgewähltes Objekt</h2>
+  <pre data-result="selected" aria-live="polite">Keine Auswahl</pre>
+  <h2>Letzte Zustandsabfrage</h2>
+  <pre data-result="state" aria-live="polite">„Zustand lesen“ zeigt value und den Zustand beider Ordner.</pre>
+</main>

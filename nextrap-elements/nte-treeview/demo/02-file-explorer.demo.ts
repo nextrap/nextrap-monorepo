@@ -1,86 +1,16 @@
 import { defineDemo } from '@trunkjs/demo-viewer';
 import { html, render } from 'lit';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 import '../index';
-import './main.scss';
+import markup from './02-file-explorer.demo.html?raw';
+import styles from './main.scss?inline';
 
 // Der Dateibaum zeigt automatische Ordnersymbole und optionale Dateisymbole im vorhandenen Icon-Slot.
 export default defineDemo({
   title: 'TreeView: Datei-Explorer direkt in HTML',
   description: 'Ordner öffnen, Dateien auswählen und Details über alle Ebenen ausrichten',
   render(root) {
-    render(
-      html`<main class="treeview-explorer-demo">
-        <h1>Datei-Explorer direkt in HTML</h1>
-        <p>
-          Diese zusätzliche Variante baut die Einträge von Hand in HTML auf. Für dynamische Anwendungen zeigen
-          die Modell- und Aktionsdemo den üblichen Weg über <code>TreeModel</code>.
-        </p>
-        <p>
-          Ordner öffnen und schließen über ihren Namen, ihr Symbol oder den Pfeil. Dateinamen und ihre Symbole
-          wählen den Eintrag aus. Unterstrichene Dateinamen wie README.md öffnen zusätzlich ihren Link;
-          Typ, Größe und freie Zeilenflächen lösen keine Aktion aus.
-        </p>
-        <!-- Die Spaltenüberschriften gehören zur Demo; die Baumkomponente liefert die ausgerichteten Zellen. -->
-        <div class="treeview-columns" aria-hidden="true">
-          <span>Name</span><span>Typ</span><span>Größe</span>
-        </div>
-        <nte-treeview aria-label="Projektdateien">
-          <nte-treeview-item expanded>
-            Projekt
-            <span slot="center">Ordner</span>
-            <span slot="end">—</span>
-            <nte-treeview-item selected href="#readme">
-              <svg slot="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"
-                aria-hidden="true" focusable="false">
-                <path d="M3 1.5h6l4 4v9H3z M9 1.5v4h4 M5 8h6 M5 10.5h6" />
-              </svg>
-              README.md
-              <span slot="center">Markdown</span>
-              <span slot="end">2 KB</span>
-            </nte-treeview-item>
-            <nte-treeview-item expanded>
-              src
-              <span slot="center">Ordner</span>
-              <span slot="end">—</span>
-              <nte-treeview-item>
-                <svg slot="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"
-                  aria-hidden="true" focusable="false">
-                  <path d="M3 1.5h6l4 4v9H3z M9 1.5v4h4 M6.5 8 5 9.5 6.5 11 M9.5 8 11 9.5 9.5 11" />
-                </svg>
-                index.ts
-                <span slot="center">TypeScript</span>
-                <span slot="end">4 KB</span>
-              </nte-treeview-item>
-              <!-- Die Pfeilspalte bleibt reserviert; ein Blatt ohne Icon braucht kein zusätzliches Symbol. -->
-              <nte-treeview-item>
-                Methoden
-                <span slot="center">Referenz</span>
-                <span slot="end">8 KB</span>
-              </nte-treeview-item>
-            </nte-treeview-item>
-            <nte-treeview-item>
-              Archiv
-              <span slot="center">Ordner</span>
-              <span slot="end">—</span>
-              <nte-treeview-item>
-                <svg slot="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"
-                  aria-hidden="true" focusable="false">
-                  <path d="M3 1.5h6l4 4v9H3z M9 1.5v4h4 M5 8h6 M5 10.5h4" />
-                </svg>
-                Entwurf.txt
-                <span slot="center">Textdatei</span>
-                <span slot="end">1 KB</span>
-              </nte-treeview-item>
-            </nte-treeview-item>
-          </nte-treeview-item>
-        </nte-treeview>
-        <p>
-          Die Ordnersymbole wechseln automatisch mit dem Aufklappzustand. Dateisymbole werden über
-          <code>slot="icon"</code> ergänzt; „Methoden“ zeigt bewusst einen Eintrag ohne Symbol.
-        </p>
-      </main>`,
-      root,
-    );
+    render(html`<style>${styles}</style>${unsafeHTML(markup)}`, root);
   },
 });

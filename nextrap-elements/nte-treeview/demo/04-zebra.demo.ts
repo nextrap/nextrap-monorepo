@@ -1,43 +1,17 @@
 import { defineDemo } from '@trunkjs/demo-viewer';
 import { html, render } from 'lit';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 import { TreeModel } from '../index';
-import './main.scss';
+import markup from './04-zebra.demo.html?raw';
+import styles from './main.scss?inline';
 
 // Derselbe Baum zeigt die rahmenlose Baseline und die optionale Zebra-Klasse im direkten Wechsel.
 export default defineDemo({
   title: 'TreeView: optionale Zebra-Streifen',
   description: 'Volle Zeilenbreite, verschachtelte Ordner und Zebra über die Klasse with-zebra',
   render(root) {
-    render(
-      html`<main class="treeview-zebra-demo">
-        <h1>Optionale Zebra-Streifen</h1>
-        <p>
-          Öffne und schließe Ordner über ihren Namen oder den Pfeil. Die Streifen wechseln über alle sichtbaren
-          Ebenen hinweg; Hover und Auswahl reichen immer über die gesamte Breite.
-        </p>
-        <p>
-          <label>
-            <input type="checkbox" checked @change=${(event: Event) => {
-              root.querySelector('nte-treeview')!.classList.toggle(
-                'with-zebra', (event.target as HTMLInputElement).checked,
-              );
-            }}>
-            Zebra-Streifen anzeigen
-          </label>
-        </p>
-        <!-- Die Zusatzspalten bleiben ausgerichtet, ohne Trenner zwischen den Einträgen. -->
-        <div class="treeview-columns" aria-hidden="true">
-          <span>Name</span><span>Typ</span><span>Größe</span>
-        </div>
-        <nte-treeview class="with-zebra" aria-label="Projektdateien mit optionalen Zebra-Streifen"></nte-treeview>
-        <p>
-          <code>class="with-zebra"</code> aktiviert die Streifen. Ohne diese Klasse bleibt die Fläche einfarbig;
-          Auswahl und Hover funktionieren in beiden Varianten. Größen und freie Zeilenflächen lösen keine Aktion aus.
-        </p>
-      </main>`,
-      root,
-    );
+    render(html`<style>${styles}</style>${unsafeHTML(markup)}`, root);
 
     // Mehrere geöffnete Ebenen und ein geschlossener Zweig machen die sichtbare Reihenfolge nachvollziehbar.
     const tree = new TreeModel([
@@ -69,10 +43,17 @@ export default defineDemo({
       { id: 'package', label: 'package.json', data: { type: 'JSON', size: '2 KB' } },
     ]);
 
-    // Die öffentlichen Renderer ergänzen ausschließlich Zellinhalte; Zebra benötigt keine Datenfelder.
+    // Zebra wird über die Klasse gesteuert und braucht keine zusätzlichen Modellfelder.
     const view = root.querySelector('nte-treeview')!;
-    view.renderCenter = (node) => node.children?.length ? 'Ordner' : node.data?.['type'] ?? '';
-    view.renderEnd = (node) => node.data?.['size'] ?? '—';
+    view.renderer = (node) => html`
+      ${node.label}
+      <span slot="center">${node.children?.length ? 'Ordner' : node.data?.['type'] ?? ''}</span>
+      <span slot="end">${node.data?.['size'] ?? '—'}</span>
+    `;
     view.setData(tree);
+    const checkbox = root.querySelector<HTMLInputElement>('[data-action="zebra"]')!;
+    checkbox.addEventListener('change', () => {
+      view.classList.toggle('with-zebra', checkbox.checked);
+    });
   },
 });

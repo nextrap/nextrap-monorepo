@@ -1,10 +1,10 @@
 import { nextrap_element } from '@nextrap/nt-core';
-import { css, html } from 'lit';
+import { html, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import type { TreeNode } from '../tree-model';
-import type { TreeViewActionDetail } from './nte-treeview';
+import styles from './nte-treeview-item.scss?inline';
 
 /** Entspricht den nativen aria-current-Werten für verlinkte Knoten. */
 export type TreeItemCurrent = 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | '';
@@ -13,82 +13,7 @@ export type TreeItemCurrent = 'page' | 'step' | 'location' | 'date' | 'time' | '
 @customElement('nte-treeview-item')
 export class NteTreeViewItem extends nextrap_element() {
   // Nur funktionales Layout; alle visuellen Defaults kommen aus dem öffentlichen Sass-Mixin.
-  static override styles = css`
-    :host {
-      display: block;
-      min-inline-size: 0;
-    }
-    /* Versteckte Knoten belegen weder eine Zeile noch eine Position in der Zebra-Abfolge. */
-    :host([hidden]) {
-      display: none;
-    }
-    /* Der Einzug belegt nur die erste Spalte; Zeile und Unterbaum behalten ihre volle Breite. */
-    #row {
-      display: grid;
-      grid-template-columns:
-        var(--_nte-treeview-indent, 0px)
-        var(--_nte-treeview-toggle-width, auto)
-        minmax(0, 1fr)
-        var(--nte-treeview-center-width, auto)
-        var(--nte-treeview-end-width, auto);
-      align-items: center;
-      min-inline-size: 0;
-    }
-    #details {
-      display: contents;
-    }
-    /* Der native Inhalts-Wrapper gibt den geöffneten Unterbaum an das Zeilenraster weiter. */
-    #details[open]::details-content {
-      display: contents;
-    }
-    #toggle {
-      grid-column: 2;
-      grid-row: 1;
-      list-style: none;
-      cursor: pointer;
-    }
-    #toggle::-webkit-details-marker {
-      display: none;
-    }
-    #label {
-      grid-column: 3;
-      grid-row: 1;
-      min-inline-size: 0;
-      max-inline-size: 100%;
-      justify-self: start;
-      overflow-wrap: anywhere;
-    }
-    #center {
-      grid-column: 4;
-      grid-row: 1;
-      min-inline-size: 0;
-      text-align: center;
-    }
-    #end {
-      grid-column: 5;
-      grid-row: 1;
-      min-inline-size: 0;
-      text-align: end;
-    }
-    #children {
-      grid-column: 1 / -1;
-      grid-row: 2;
-      min-inline-size: 0;
-    }
-    /* Explizites Ausblenden erhält native Disclosure auch bei display: contents am details. */
-    #details:not([open]) > #children {
-      display: none;
-    }
-    #indicator {
-      display: block;
-      inline-size: 1em;
-      block-size: 1em;
-      transform: rotate(-90deg);
-    }
-    #details[open] #indicator {
-      transform: none;
-    }
-  `;
+  static override styles = unsafeCSS(styles);
 
   // Link und Unterbaum sind voneinander unabhängig konfigurierbar.
   @property({ reflect: true }) public accessor href = '';
@@ -101,7 +26,7 @@ export class NteTreeViewItem extends nextrap_element() {
   @state() private accessor _hasChildren = false;
   @state() private accessor _labelText = '';
 
-  /** @internal Der Renderer bindet den beobachtbaren Knoten für typisierte Label-Aktionen. */
+  /** @internal Der Renderer bindet den beobachtbaren Knoten für die Auswahl im TreeView. */
   public _modelNode: TreeNode | null = null;
 
   // Erkennt den Wechsel zwischen Blatt und Elternknoten auch bei dynamischem Light DOM.
@@ -163,7 +88,7 @@ export class NteTreeViewItem extends nextrap_element() {
 
   /** Öffentliche Label-Events schließen Icon und Tastatur ein, ohne leere Zellen zu aktivieren. */
   private _dispatchLabelEvent(type: 'label-click' | 'label-dblclick', originalEvent: MouseEvent): boolean {
-    return this.dispatchEvent(new CustomEvent<Omit<TreeViewActionDetail, 'node'>>(type, {
+    return this.dispatchEvent(new CustomEvent<{ item: NteTreeViewItem; originalEvent: MouseEvent }>(type, {
       detail: { item: this, originalEvent },
       bubbles: true,
       composed: true,

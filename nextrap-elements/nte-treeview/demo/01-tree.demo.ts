@@ -1,32 +1,16 @@
 import { defineDemo } from '@trunkjs/demo-viewer';
 import { html, nothing, render } from 'lit';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { TreeModel } from '../index';
-import './main.scss';
+import markup from './01-tree.demo.html?raw';
+import styles from './main.scss?inline';
 
 // Der Ablauf zeigt CMS-Seiten, Dateien, unabhängige Disclosure und ausgerichtete Zusatz-Zellen.
 export default defineDemo({
   title: 'TreeView: Seiten, Dateien und Zusatzspalten',
   description: 'Reaktiver Baum mit Ordner-Icons, Elternlinks, Dateigrößen und Status-Dropdowns',
   render(root) {
-    render(
-      html`<main>
-        <h1>Inhalte und Dateien</h1>
-        <p>
-          Bei verlinkten Ordnern wählt der erste Klick nur den Eintrag aus; ein weiterer Klick öffnet die Seite.
-          Dateilinks öffnen ihr Ziel direkt. Der Pfeil klappt unabhängig davon den Unterbaum auf. Ordner ohne Link
-          öffnen und schließen über ihren Namen oder ihr Icon. Freie Zeilenflächen und Größenangaben lösen keine
-          Aktion aus; das Dropdown ändert nur den Status.
-        </p>
-        <nte-treeview aria-label="Inhalte und Dateien"></nte-treeview>
-        <p>
-          <button data-action="rename">Handbuch umbenennen</button>
-          <button data-action="add">Datei hinzufügen</button>
-          <button data-action="remove">Letzte Datei entfernen</button>
-          <button data-action="toggle">Unterbaum umschalten</button>
-        </p>
-      </main>`,
-      root,
-    );
+    render(html`<style>${styles}</style>${unsafeHTML(markup)}`, root);
 
     // Ein CMS-Elternknoten ist selbst navigierbar; ein Verzeichnis braucht keinen Link.
     const tree = new TreeModel([
@@ -56,20 +40,23 @@ export default defineDemo({
       },
     ]);
     const view = root.querySelector('nte-treeview')!;
-    view.renderCenter = (node) => node.data?.['size'] ?? '';
-    view.renderEnd = (node) =>
-      node.data?.['status'] == null
+    // Ein Renderer liefert das Label und bei Bedarf Inhalte für die vorhandenen Slots.
+    view.renderer = (node) => html`
+      ${node.label}
+      <span slot="center">${node.data?.['size'] ?? ''}</span>
+      ${node.data?.['status'] == null
         ? nothing
-        : html` <select
+        : html`<select slot="end"
             aria-label=${`Status für ${node.label}`}
             .value=${String(node.data['status'])}
             @change=${(event: Event) => {
-          node.data!['status'] = (event.target as HTMLSelectElement).value;
-        }}
+              node.data!['status'] = (event.target as HTMLSelectElement).value;
+            }}
           >
             <option>Entwurf</option>
             <option>Veröffentlicht</option>
-          </select>`;
+          </select>`}
+    `;
     view.setData(tree);
 
     // Alle Aktionen ändern ausschließlich das Modell, einschließlich des Aufklappzustands.
