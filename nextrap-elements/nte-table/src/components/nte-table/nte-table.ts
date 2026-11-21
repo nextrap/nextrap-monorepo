@@ -9,6 +9,7 @@ import {
   type NteTablePluginContext,
 } from '../../plugins/plugin-registry';
 import style from './nte-table.scss?inline';
+import { resolveColumnWidths } from './column-widths';
 
 const DEFAULT_HEIGHT = '24rem';
 const MIN_COLUMN_WIDTH = 48;
@@ -372,20 +373,28 @@ export class NteTableElement extends nextrap_element({
       headerCells.forEach((headerCell, columnIndex) => {
         const hidden = headerCell.hidden || this._isDataHidden(headerCell);
         if (!hidden) visibleColumns.push(columnIndex);
-        if (this._columnWidths[columnIndex] !== undefined) return;
-        const configuredWidth = this._readColumnWidth(headerCell);
-        if (!configuredWidth) return;
-        this._setManagedStyle(headerCell, 'inline-size', configuredWidth);
-        this._setManagedStyle(headerCell, 'min-inline-size', configuredWidth);
-        this._setManagedStyle(headerCell, 'max-inline-size', configuredWidth);
+
       });
 
-      headerCells.forEach((headerCell, columnIndex) => {
-        this._columnWidths[columnIndex] ??= Math.max(
-          MIN_COLUMN_WIDTH,
-          Math.ceil(headerCell.getBoundingClientRect().width),
-        );
-      });
+      // Nur sichtbare Spalten verbrauchen Platz; jeder Layoutlauf berücksichtigt den aktuellen Viewport.
+      const resolved = resolveColumnWidths(visibleColumns.map(index => {
+        const header = headerCells[index];
+        let width: string | number | undefined = this._readColumnWidth(header) ?? undefined;
+        // Bestehende CSS-Längen wie rem bleiben als gemessene Pixelbreiten kompatibel.
+        if (width && !/^\d+(?:\.\d+)?(px|%|fr)?$/.test(String(width)) && width !== 'auto') {
+          this._setManagedStyle(header, 'inline-size', String(width));
+          this._setManagedStyle(header, 'min-inline-size', String(width));
+          this._setManagedStyle(header, 'max-inline-size', String(width));
+          width = header.getBoundingClientRect().width;
+        }
+        return {
+          width,
+          minWidth: header.dataset['minWidth'] === undefined ? undefined : Number(header.dataset['minWidth']),
+          maxWidth: header.dataset['maxWidth'] === undefined ? undefined : Number(header.dataset['maxWidth']),
+        };
+      }), body.clientWidth);
+      this._columnWidths = headerCells.map(() => 0);
+      visibleColumns.forEach((index, position) => { this._columnWidths[index] = resolved[position]; });
       const widths = this._columnWidths;
 
       rows.forEach((row) => {
@@ -507,7 +516,12 @@ export class NteTableElement extends nextrap_element({
     const index = this._resolveColumn(target);
     const header = index === null ? null : this._sourceTable?.tHead?.rows[0]?.cells[index];
     if (index === null || !header || !Number.isFinite(width)) return false;
-    const normalized = Math.max(MIN_COLUMN_WIDTH, Math.round(width));
+    // Manuelle Pixelwerte unterliegen denselben Grenzen wie die automatische Verteilung.
+    const normalized = resolveColumnWidths([{
+      width: Math.round(width),
+      minWidth: header.dataset['minWidth'] === undefined ? MIN_COLUMN_WIDTH : Number(header.dataset['minWidth']),
+      maxWidth: header.dataset['maxWidth'] === undefined ? undefined : Number(header.dataset['maxWidth']),
+    }], 0)[0];
     this._columnWidths[index] = normalized;
     header.dataset['width'] = `${normalized}px`;
     this._scheduleLayout();
@@ -602,6 +616,7 @@ export class NteTableElement extends nextrap_element({
     let value =
       headerCell.dataset['width']?.trim() || headerCell.style.width.trim() || headerCell.getAttribute('width')?.trim();
     if (!value) return null;
+    if (/^\d+(?:\.\d+)?fr$/.test(value)) return value;
     if (/^\d+(?:\.\d+)?$/.test(value)) value = `${value}px`;
     const css = this.ownerDocument.defaultView?.CSS;
     if (!css || css.supports('width', value)) return value;

@@ -15,6 +15,7 @@ This is the binding internal contract for `@nextrap/nte-data-table`. Changes req
 - `data` is a caller-owned readonly array. Rendering never mutates row objects.
 - `TableDefinition` is developer-controlled and defines stable unique column IDs, accessors, renderers, presets and capabilities.
 - Row and column identity must be stable across refreshes.
+- `width` accepts pixels, percentages of the post-pixel remainder and fractional (`fr`) shares; omitted widths default to `1fr`. `minWidth`/`maxWidth` constrain layout and resizing. User view-state widths override definition widths. All geometry is delegated to `nte-table`.
 - Renderer strings are text, not HTML. A renderer may deliberately return a Node.
 
 ## View state

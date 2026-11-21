@@ -9,6 +9,7 @@ description: "Use NteDataTableElement, TableDefinition, TableColumnDefinition, T
 - `NteDataTableElement.definition`: developer schema with stable row/column IDs.
 - `NteDataTableElement.viewState`, `getViewState()`, `setViewState()`: serializable user layout.
 - Set `TableColumnDefinition.pinned` for leading default pins. When `viewState.pinnedColumns` is present—even as `[]`—its stable IDs override those defaults. Only a contiguous run of leading visible columns can be pinned by the composed `nte-table`.
+- `TableColumnDefinition.width`: Pixel als Zahl oder `'120px'`, Prozent vom Rest nach Pixelspalten (`'20%'`) oder gewichteter Restanteil (`'2fr'`). Ohne Angabe gilt `'1fr'`. `minWidth`/`maxWidth` begrenzen Verteilung und Resizing; Viewport-Änderungen berechnen neu. Persistierte `viewState.columnWidths` haben als Pixelwerte Vorrang.
 - Set `TableColumnDefinition.footer` to text, a Node, or a callback receiving the rendered rows. If any column has footer content, the component renders one fixed native `tfoot` row.
 - `NteDataTableCellRendererRegistry.register|get|has|unregister`: shared cell presets.
 - `nte-data-table-view-state-change`: persist its `detail.state` in the application.

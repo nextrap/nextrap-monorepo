@@ -1,6 +1,7 @@
 import '@nextrap/style-base/default';
 import '@nextrap/style-typography/default';
 import { defineDemo } from '@trunkjs/demo-viewer';
+import { dom } from '@trunkjs/browser-utils';
 
 import '../index';
 import type { NteDataTableElement, TableDefinition, TableViewStateChangeDetail } from '../index';
@@ -26,26 +27,23 @@ const data: Service[] = Array.from({ length: 24 }, (_, index) => ({
   region: ['eu-central', 'eu-west', 'us-east'][index % 3],
 }));
 
-const statusRenderer = (value: unknown): Node => {
+// Erzeugt pro Zelle frische DOM-Nodes mit sicher interpoliertem Statustext.
+const statusRenderer = (value: unknown): DocumentFragment => {
   const status = String(value);
-  const element = document.createElement('span');
-  element.className = 'status';
-  element.dataset['active'] = String(status === 'Aktiv');
-  element.textContent = status;
-  return element;
+  return dom`<span class="status" data-active=${String(status === 'Aktiv')}>${status}</span>`;
 };
 
 const definition: TableDefinition<Service> = {
   id: 'services',
   rowId: 'id',
   columns: [
-    { id: 'id', header: 'ID', field: 'id', defaultWidth: 110, pinned: true },
-    { id: 'service', header: 'Service', field: 'service', defaultWidth: 190 },
-    { id: 'team', header: 'Team', field: 'team', defaultWidth: 140 },
-    { id: 'status', header: 'Status', field: 'status', defaultWidth: 130, render: statusRenderer },
-    { id: 'requests', header: 'Requests', field: 'requests', defaultWidth: 140, preset: 'number' },
-    { id: 'latency', header: 'Latenz (ms)', field: 'latency', defaultWidth: 130, preset: 'number' },
-    { id: 'region', header: 'Region', field: 'region', defaultWidth: 150 },
+    { id: 'id', header: 'ID', field: 'id', width: '110px', pinned: true },
+    { id: 'service', header: 'Service', field: 'service', width: '2fr', minWidth: 150 },
+    { id: 'team', header: 'Team', field: 'team', width: 140 },
+    { id: 'status', header: 'Status', field: 'status', width: 130, render: statusRenderer },
+    { id: 'requests', header: 'Requests', field: 'requests', width: 140, preset: 'number' },
+    { id: 'latency', header: 'Latenz (ms)', field: 'latency', width: 130, preset: 'number' },
+    { id: 'region', header: 'Region', field: 'region', width: '15%', minWidth: 100 },
   ],
 };
 

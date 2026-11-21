@@ -25,7 +25,7 @@ export default defineDemo({
         <nte-table height="18rem" pinned-columns="1" scroll-label="Live-Aufträge">
           <table>
             <caption>Live aktualisierte Aufträge</caption>
-            <thead><tr><th data-width="128">Auftrag</th><th data-width="224" data-customer-header>Kunde</th><th data-width="160">Status</th><th data-width="144" data-priority-header>Priorität</th><th data-width="208">Kontakt</th><th data-width="320">Notiz</th></tr></thead>
+            <thead><tr><th data-width="128">Auftrag</th><th data-width="224" data-customer-header>Kunde</th><th data-width="20%" data-min-width="100">Status</th><th data-width="144" data-priority-header>Priorität</th><th data-width="1fr" data-min-width="120">Kontakt</th><th data-width="2fr" data-min-width="160" data-max-width="480">Notiz</th></tr></thead>
             <tbody data-live-body>
               <tr><th>AU-101</th><td>Aperture Labs</td><td>Neu</td><td>Hoch</td><td>Ada</td><td>Native Inhalte bleiben direkt bedienbar.</td></tr>
               <tr><th>AU-102</th><td>Black Mesa</td><td>In Arbeit</td><td>Mittel</td><td>Grace</td><td>Die Tabelle wird weder beobachtet noch geklont.</td></tr>

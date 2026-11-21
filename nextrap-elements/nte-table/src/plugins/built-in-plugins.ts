@@ -442,6 +442,7 @@ export class NteTableColumnReorderPlugin extends PointerReorderPlugin {
 export class NteTableRowReorderPlugin extends PointerReorderPlugin {
   private _sourceRow: HTMLTableRowElement | null = null;
   private _originalRows: HTMLTableRowElement[] = [];
+  private _originalNodes: ChildNode[] = [];
 
   protected onConnect(): void {
     this.context?.table.tBodies[0]?.addEventListener('pointerdown', this._handlePointerDown);
@@ -478,6 +479,8 @@ export class NteTableRowReorderPlugin extends PointerReorderPlugin {
     this.pointerId = event.pointerId;
     this._sourceRow = row;
     this._originalRows = Array.from(context.table.tBodies[0].rows);
+    // Lit verwaltet auch Marker zwischen Zeilen; deren Position muss erhalten bleiben.
+    this._originalNodes = Array.from(context.table.tBodies[0].childNodes);
     this.preview = ghost.element;
     this.grabOffsetX = event.clientX - ghost.rect.left;
     this.grabOffsetY = event.clientY - ghost.rect.top;
@@ -510,11 +513,15 @@ export class NteTableRowReorderPlugin extends PointerReorderPlugin {
     const source = this._sourceRow;
     const from = source ? this._originalRows.indexOf(source) : -1;
     const to = source ? Array.from(context?.table.tBodies[0]?.rows ?? []).indexOf(source) : -1;
+    const originalNodes = this._originalNodes;
+    const body = context?.table.tBodies[0];
     this._finishDrag();
     if (!context || from < 0 || to < 0 || from === to) return;
-    context.host.dispatchEvent(new CustomEvent('nte-table-row-reorder', {
-      bubbles: true, composed: true, detail: { from, to },
+    const keepDomOrder = context.host.dispatchEvent(new CustomEvent('nte-table-row-reorder', {
+      bubbles: true, composed: true, cancelable: true, detail: { from, to },
     }));
+    // Datengetriebene Verbraucher rendern selbst; vorher exakt den Lit-DOM restaurieren.
+    if (!keepDomOrder && body) body.append(...originalNodes);
     context.refresh();
   };
 
@@ -526,11 +533,12 @@ export class NteTableRowReorderPlugin extends PointerReorderPlugin {
     this.clearDragState();
     this._sourceRow = null;
     this._originalRows = [];
+    this._originalNodes = [];
   }
 
   private _cancelDrag(): void {
     const body = this.context?.table.tBodies[0];
-    if (body && this._originalRows.length) animateMove(Array.from(body.rows), () => body.append(...this._originalRows), 'y');
+    if (body && this._originalNodes.length) animateMove(Array.from(body.rows), () => body.append(...this._originalNodes), 'y');
     this._finishDrag();
   }
 }

@@ -62,6 +62,7 @@ export class NteDataTableElement<T extends object = Record<string, unknown>> ext
         .scrollLabel=${this.scrollLabel || definition.id}
         @nte-table-column-resize=${this._handleResize}
         @nte-table-column-reorder=${this._handleReorder}
+        @nte-table-row-reorder=${this._handleRowReorder}
         @nte-table-sort=${this._handleSort}
       >
         <table>
@@ -73,9 +74,11 @@ export class NteDataTableElement<T extends object = Record<string, unknown>> ext
                     scope="col"
                     data-column-id=${column.id}
                     data-width=${this._width(column) ?? nothing}
+                    data-min-width=${column.minWidth ?? nothing}
+                    data-max-width=${column.maxWidth ?? nothing}
                     data-resizable=${column.resizable === false ? 'false' : nothing}
                     data-reorderable=${column.reorderable === false ? 'false' : nothing}
-                    data-sortable=${column.sortable === false ? 'false' : nothing}
+                    data-sortable=${this._sortable(column) ? nothing : 'false'}
                     ?hidden=${this._hidden(column)}
                   >
                     ${column.header}
@@ -103,6 +106,26 @@ export class NteDataTableElement<T extends object = Record<string, unknown>> ext
         </table>
       </nte-table>
     `;
+  }
+
+  // Übernimmt die sichtbare Reihenfolge unveränderlich; Lit bleibt Eigentümer des Zeilen-DOM.
+  private _handleRowReorder(event: CustomEvent<{ from: number; to: number }>): void {
+    event.preventDefault();
+    event.stopPropagation();
+    const definition = this.definition;
+    if (!definition) return;
+    const { from, to } = event.detail;
+    const rows = this._rows(definition, this._columns(definition));
+    if (!Number.isInteger(from) || !Number.isInteger(to) || from < 0 || to < 0
+        || from >= rows.length || to >= rows.length || from === to) return;
+    const [row] = rows.splice(from, 1);
+    rows.splice(to, 0, row);
+    // Manuelle Reihenfolge ersetzt eine eventuell aktive Sortierung.
+    if (this.viewState.sort?.length) this._setViewState({ ...this.viewState, sort: [] }, 'programmatic');
+    this.data = rows;
+    this.dispatchEvent(new CustomEvent('nte-data-table-row-reorder', {
+      bubbles: true, composed: true, detail: { from, to, data: rows },
+    }));
   }
 
   private _validateDefinition(): void {
@@ -149,9 +172,15 @@ export class NteDataTableElement<T extends object = Record<string, unknown>> ext
   private _footerCell(column: TableColumnDefinition<T>, rows: readonly T[]) {
     return typeof column.footer === 'function' ? column.footer(rows) : (column.footer ?? '');
   }
-  private _width(column: TableColumnDefinition<T>): number | undefined {
-    return this.viewState.columnWidths?.[column.id] ?? column.defaultWidth;
+  // Persistierte Benutzerbreiten bleiben Pixelwerte und überschreiben die flexible Definition.
+  private _width(column: TableColumnDefinition<T>): number | string | undefined {
+    return this.viewState.columnWidths?.[column.id] ?? column.width;
   }
+  // Spalten-Overrides haben Vorrang; ohne Tabellenstandard bleibt Sortieren aktiviert.
+  private _sortable(column: TableColumnDefinition<T>): boolean {
+    return column.sortable ?? this.definition?.defaultSortable ?? true;
+  }
+
   private _hidden(column: TableColumnDefinition<T>): boolean {
     return column.hidden === true || (this.viewState.hiddenColumns ?? []).includes(column.id);
   }
@@ -194,7 +223,8 @@ export class NteDataTableElement<T extends object = Record<string, unknown>> ext
     event.stopPropagation();
     if (!this.definition) return;
     const column = this._columns(this.definition)[event.detail.columnIndex];
-    if (column)
+    // Auch eingehende Sortierereignisse müssen die aufgelöste Freigabe beachten.
+    if (column && this._sortable(column))
       this._setViewState(
         { ...this.viewState, sort: [{ columnId: column.id, direction: event.detail.direction }] },
         'sort',

@@ -28,8 +28,9 @@ Every row must contain the same number of cells and `colspan`/`rowspan` must rem
 
 - `height` configures the `tbody` scroll viewport; `pinned-columns`, `scroll-label` and host `aria-label` configure its behavior and accessible name.
 - `features` activates registered plugins by whitespace- or comma-separated name.
-- Header `data-width`, inline `width`, or the native `width` attribute is resolved once and then fixed in pixels across all sections. Drag the header's inline-end edge to resize only that column.
-- Real columns keep their configured widths. A presentation-only `tr::after` filler cell absorbs any unused body width and is not part of the table API or accessibility tree.
+- Breiten stehen in `data-width`, Inline-`width` oder dem nativen `width`-Attribut. Pixel werden zuerst reserviert, Prozent beziehen sich auf den danach verbleibenden Platz und `fr` verteilt den Rest gewichtet. Ohne Angabe gilt `1fr`; beispielsweise erhält `2fr` doppelt so viel wie `1fr`.
+- `data-min-width` und `data-max-width` begrenzen Layout und Resizing in Pixeln (Standardminimum: 48). Begrenzte fr-Spalten geben überschüssigen Platz an andere fr-Spalten ab. Viewport-Änderungen berechnen die Verteilung neu. Manuelles Resizing setzt eine feste Pixelbreite.
+- Mindestbreiten und Prozentanteile über 100% können horizontalen Overflow erzeugen. Sind keine fr-Spalten vorhanden oder alle Maxima erreicht, nimmt die nicht-semantische `tr::after`-Füllzelle den Rest auf. Alle Tabellenabschnitte erhalten identische berechnete Pixelbreiten.
 - Header `hidden` or `data-hidden` hides the complete column.
 - `sourceTable` returns the active native table. `refresh()` removes component-owned layout values, measures the current table again, and fixes every visible column in pixels.
 - `remote` controls selection without observing selection classes.

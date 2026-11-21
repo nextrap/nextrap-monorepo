@@ -21,9 +21,9 @@ const definition: TableDefinition<Customer> = {
   id: 'customers',
   rowId: 'id',
   columns: [
-    { id: 'name', header: 'Name', field: 'name', defaultWidth: 220 },
-    { id: 'amount', header: 'Umsatz', field: 'amount', preset: 'number', defaultWidth: 140 },
-    { id: 'active', header: 'Aktiv', field: 'active', preset: 'boolean', defaultWidth: 100 },
+    { id: 'name', header: 'Name', field: 'name', width: '2fr', minWidth: 160 },
+    { id: 'amount', header: 'Umsatz', field: 'amount', preset: 'number', width: '30%', minWidth: 100, maxWidth: 240 },
+    { id: 'active', header: 'Aktiv', field: 'active', preset: 'boolean', width: '100px' },
   ],
 };
 
@@ -35,7 +35,7 @@ export default defineDemo({
     root.innerHTML = `
       <main class="nte-data-table-demo">
         <h1>Data Table</h1>
-        <p>Definition und Daten werden als Properties gesetzt.</p>
+        <p>100px werden zuerst reserviert, Umsatz erhält 30% vom Rest und Name den übrigen Platz (2fr).</p>
         <nte-data-table height="14rem"></nte-data-table>
       </main>
     `;

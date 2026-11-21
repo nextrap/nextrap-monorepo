@@ -15,7 +15,8 @@ export interface TableColumnDefinition<T extends object> {
   render?: (value: unknown, row: T) => TableCellContent;
   footer?: TableFooterContent<T>;
   preset?: string;
-  defaultWidth?: number;
+  /** Pixel, Prozent nach Abzug fester Spalten oder fr-Restanteile; Standard: 1fr. */
+  width?: number | `${number}px` | `${number}%` | `${number}fr`;
   minWidth?: number;
   maxWidth?: number;
   hidden?: boolean;
@@ -28,6 +29,8 @@ export interface TableColumnDefinition<T extends object> {
 export interface TableDefinition<T extends object> {
   id: string;
   columns: TableColumnDefinition<T>[];
+  /** Standard für die interaktive Sortierung; einzelne Spalten überschreiben ihn. Ohne Angabe gilt true. */
+  defaultSortable?: boolean;
   rowId: keyof T | ((row: T) => string);
   preset?: string;
 }

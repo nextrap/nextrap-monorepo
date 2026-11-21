@@ -39,13 +39,13 @@ Read it before changing the component's DOM, scrolling, column sizing, pinning, 
 ## Column layout contract
 
 - JavaScript resolves every visible column to one concrete pixel width and applies that width to the corresponding header, body, and footer cells.
-- Real column widths remain independent from viewport fill. Resizing or reordering one column must never implicitly change the width of whichever real column happens to be last.
-- Each rendered row uses a non-semantic `::after` table-cell as a visual filler. The row width is at least the usable `tbody` viewport width, so the filler alone absorbs any remainder after the real fixed-width cells.
+- Width inputs resolve in order: bounded pixel widths, percentages of the remaining viewport after pixel allocation, then weighted `fr` shares of the remainder. Missing widths default to `1fr`. Min/max constraints apply to all stages and resizing; constrained fractional shares redistribute remaining space. Layout recalculates against the usable body viewport on every size change. Manual resizing persists a pixel input; flexible columns may consequently change.
+- Each rendered row uses a non-semantic `::after` table-cell as a visual filler. It absorbs remainder only when there are no eligible flexible columns or all maxima are reached. Minimum widths and percentage totals over 100% may cause horizontal overflow.
 - The filler must remain a CSS pseudo-element: it must not appear in `row.cells`, accessibility semantics, selection, sorting, pinning, resizing, or column-reorder logic. When real columns exceed the viewport, it collapses and native horizontal scrolling takes over.
 - Header `data-width`, inline `width`, and the native `width` attribute are accepted as width inputs.
 - The core exposes column measurement and width application through `NteTableRemote`; this geometry remains part of the table layout contract.
 - Pointer resizing is implemented only by the built-in `resize-columns` plugin. It applies widths through the Remote and emits one `nte-table-column-resize` event after a successful gesture.
-- The minimum column width is 48 pixels. Width persistence belongs to higher-level components and uses stable column IDs.
+- The default minimum column width is 48 pixels; header `data-min-width` and `data-max-width` override layout and resize limits. Width persistence belongs to higher-level components and uses stable column IDs.
 - Header and footer cells remain single-line so indicators and controls cannot change section height or break cross-section alignment.
 - Hidden columns are derived from the corresponding header cell and hidden consistently in every section.
 - Rows must remain rectangular; `colspan` and `rowspan` are outside the enhanced layout contract.
@@ -80,7 +80,7 @@ Read it before changing the component's DOM, scrolling, column sizing, pinning, 
 
 1. Restore only styles/attributes previously owned by the component.
 2. Validate the single table, single header row, single body, optional single footer row, and rectangular rows.
-3. Read configured widths and measure unresolved header widths.
+3. Read configured pixel, percentage and fractional widths with min/max constraints; unresolved widths mean `1fr`.
 4. Configure `tbody` with the requested height as the only scroll container and read its usable viewport width.
 5. Apply identical real pixel widths across all table sections and size each row to at least the body viewport so its CSS filler receives the remainder.
 6. Keep caption/header/footer in normal flow and apply cumulative pinned-column offsets.

@@ -9,7 +9,7 @@ Use this skill for markup and component API. For theme SCSS, use `nte-table-them
 
 - Provide exactly one direct rectangular `<table>`; avoid `colspan`/`rowspan`.
 - Set widths, visibility and stable identifiers on header cells with `data-width`, `hidden`/`data-hidden`, and `data-column-id`. Width inputs are resolved and fixed in pixels.
-- Real columns keep their resolved widths; a non-semantic CSS filler after every row absorbs unused body width without participating in column APIs.
+- `data-width` akzeptiert Pixel, Prozent vom Platz nach festen Pixelspalten und gewichtete `fr`-Anteile; ohne Angabe gilt `1fr`. `data-min-width`/`data-max-width` begrenzen Layout und Resizing. Viewport-Änderungen verteilen neu. Manuelle Breiten werden Pixelwerte. Nur nicht verteilbarer Rest geht an die nicht-semantische CSS-Füllzelle.
 - Use `selected`, `highlight`, semantic `highlight-*`, or `border-free` on a header cell to propagate that state to its column. Use the same highlight/selected classes directly on body rows for row styling.
 - Put sort/status content in a child with class `indicator`.
 - Use `height` for the `tbody` scroll viewport and `pinned-columns` for leading columns; header/footer remain in normal flow outside the body scrollbars.
