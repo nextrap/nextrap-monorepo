@@ -34,12 +34,12 @@
   animation: mini-loader-finish 160ms ease-out 180ms forwards;
 }
 
-// Der rote Balken läuft zehn Sekunden und bleibt anschließend kurz vor dem Ende stehen.
+// Der Ladebalken läuft zehn Sekunden und bleibt anschließend kurz vor dem Ende stehen.
 #mini-loader-value {
   display: block;
   width: 100%;
   height: 100%;
-  background: #f00;
+  background: var(--nt-primary);
   transform: scaleX(0);
   transform-origin: left center;
   animation: mini-loader-progress 10s linear forwards;
