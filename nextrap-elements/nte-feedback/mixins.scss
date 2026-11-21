@@ -1,7 +1,4 @@
 @mixin feedback-default {
-  // Der Mini-Loader bleibt über seinen öffentlichen Part farblich anpassbar.
-  &::part(mini-loader-value) { background: #f00; }
-
   &::part(dialog) {
     background: var(--nt-surface-raised);
     color: var(--nt-text);

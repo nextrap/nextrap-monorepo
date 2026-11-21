@@ -21,7 +21,6 @@
   pointer-events: none;
   z-index: 2147483647;
   opacity: 1;
-  transition: opacity 160ms ease-out;
 }
 
 // Auch der Popover-Backdrop darf die Anwendung weder verdecken noch blockieren.
@@ -30,18 +29,35 @@
   pointer-events: none;
 }
 
-// Erst nach dem vollständigen Durchlaufen blendet der Balken aus.
-#mini-loader.fading {
-  opacity: 0;
+// Nach der Abschluss-Transition blendet CSS den Balken aus und meldet animationend.
+#mini-loader.ready {
+  animation: mini-loader-finish 160ms ease-out 180ms forwards;
 }
 
-// ScaleX vermeidet Layoutänderungen; die Farbe liefert das öffentliche Theme-Mixin.
+// Der rote Balken läuft zehn Sekunden und bleibt anschließend kurz vor dem Ende stehen.
 #mini-loader-value {
   display: block;
   width: 100%;
   height: 100%;
+  background: #f00;
+  transform: scaleX(0);
   transform-origin: left center;
-  will-change: transform;
+  animation: mini-loader-progress 10s linear forwards;
+  transition: transform 180ms ease-out;
+}
+
+// 50 % nach 200 ms; die folgenden Abschnitte werden deutlich langsamer.
+@keyframes mini-loader-progress {
+  0% { transform: scaleX(0); }
+  2% { transform: scaleX(0.5); }
+  10% { transform: scaleX(0.75); }
+  50% { transform: scaleX(0.9); }
+  100% { transform: scaleX(0.95); }
+}
+
+// Dieses Animation-Ende schließt den Loader und löst sein Promise auf.
+@keyframes mini-loader-finish {
+  to { opacity: 0; }
 }
 
 #dialog {
@@ -150,6 +166,18 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  // Ohne Bewegungsanimation bleibt nur ein kurzer Fade für den gemeinsamen Abschluss.
+  #mini-loader-value {
+    animation: none;
+    transform: scaleX(0.5);
+    transition: none;
+  }
+
+  #mini-loader.ready {
+    animation-duration: 1ms;
+    animation-delay: 0s;
+  }
+
   #dialog.shake {
     animation: none;
   }

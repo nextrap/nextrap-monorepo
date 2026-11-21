@@ -5,6 +5,7 @@ import { Listen } from '@trunkjs/browser-utils';
 import type { PropertyValues } from 'lit';
 import { html, nothing, unsafeCSS } from 'lit';
 import { customElement, query, state } from 'lit/decorators.js';
+import { keyed } from 'lit/directives/keyed.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import {
   NTE_FEEDBACK_DEFAULT_AUTO_CLOSE_MS,
@@ -40,11 +41,8 @@ export class NteFeedback extends nextrap_element(features) {
 
   // Der Mini-Loader teilt den Feedback-Lifecycle, aber weder Dialog noch Fokus.
   @state() private accessor _loadingVariant: NonNullable<NextrapLoadingDetail['variant']> = 'dialog';
-  @state() private accessor _miniProgress = 0;
-  @state() private accessor _miniFading = false;
-  private _miniAnimationFrame: number | null = null;
-  private _miniReady = false;
-  private _miniReducedMotion = false;
+  @state() private accessor _miniReady = false;
+  private _miniLoadId = 0;
 
   private _abortCallback?: () => void;
   private _infoConfirmCallback?: () => void;
@@ -56,7 +54,6 @@ export class NteFeedback extends nextrap_element(features) {
   // Entfernen beendet einen Mini-Loader samt Promise; ein Reconnect startet ihn nicht neu.
   override disconnectedCallback() {
     if (this._isMiniLoader()) this.close();
-    this._clearMiniLoader();
     this._clearAutoCloseTimer();
     this._clearMockProgress();
     this._clearShakeTimer();
@@ -70,21 +67,21 @@ export class NteFeedback extends nextrap_element(features) {
     if (!this.isConnected) return;
     this._syncDialogState(this._open && !this._isMiniLoader());
     this._syncMiniLoaderState(this._isMiniLoader());
+    if (this._miniReady) this._finishMiniLoader();
   }
 
   // Beide Darstellungen nutzen denselben Zustand; Mini öffnet keinen modalen Dialog.
   protected override render() {
     return html`
       ${super.render()}
-      ${this._isMiniLoader() ? html`
+      ${this._isMiniLoader() ? keyed(this._miniLoadId, html`
         <div id="mini-loader" part="mini-loader" popover="manual"
-          class=${this._miniFading ? 'fading' : ''}
           role="progressbar" aria-label=${this._title} aria-valuetext=${this._message}
-          aria-busy=${this._miniFading ? 'false' : 'true'}
-          aria-valuenow=${this._miniFading ? '100' : nothing}>
-          <span id="mini-loader-value" part="mini-loader-value"
-            style=${`transform: scaleX(${this._miniProgress / 100});`}></span>
-        </div>` : nothing}
+          aria-busy=${this._miniReady ? 'false' : 'true'}
+          aria-valuenow=${this._miniReady ? '100' : nothing}
+          @animationend=${this._onMiniAnimationEnd}>
+          <span id="mini-loader-value" part="mini-loader-value"></span>
+        </div>`) : nothing}
       <dialog id="dialog" part="dialog" aria-labelledby="headline" aria-describedby="assistive-context message"
         aria-modal="true" aria-busy=${this._isBusy() ? 'true' : 'false'} role=${this._getRole()}
         @cancel=${this._onDialogCancel} @click=${this._onDialogClick}>
@@ -140,14 +137,19 @@ export class NteFeedback extends nextrap_element(features) {
     this._openState('loading', detail.title, detail.message, detail.reference, detail.cancelable ?? !!detail.onAbort);
     this._abortCallback = detail.onAbort;
     this._progress = 0;
-    if (detail.variant === 'mini') this._startMiniLoader();
+    this._loadingVariant = detail.variant ?? 'dialog';
+    if (this._isMiniLoader()) {
+      this._clearMockProgress();
+      // Ein frisches Element startet die CSS-Animation auch bei erneutem Loading.
+      this._miniLoadId++;
+    }
   }
 
   // Ready beendet ausschließlich Loading; wiederholte Events starten den Abschluss nicht neu.
   @Listen('nextrap:ready', { target: 'window' })
   private _handleReady() {
     if (!this._open || this._status !== 'loading') return;
-    if (!this._isMiniLoader() || this._miniReducedMotion) {
+    if (!this._isMiniLoader()) {
       this.close();
       return;
     }
@@ -312,66 +314,29 @@ export class NteFeedback extends nextrap_element(features) {
     return this._open && this._status === 'loading' && this._loadingVariant === 'mini';
   }
 
-  // Die Kurve erreicht nach 250 ms 50 % und nähert sich immer langsamer 95 %.
-  // Erst Ready erlaubt 100 %; dessen Zeitmessung beginnt nach einem gerenderten Startframe.
-  private _startMiniLoader() {
-    this._clearMockProgress();
-    this._loadingVariant = 'mini';
-    this._miniReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
-    if (this._miniReducedMotion) {
-      this._miniProgress = 50;
-      return;
-    }
-
-    let startedAt: number | undefined;
-    let readyAt: number | undefined;
-    let fadeStartedAt: number | undefined;
-    let readyProgress = 0;
-
-    // Ein einziger Frame-Loop hält Fortschritt und Abschluss auch bei schnellen Event-Wechseln zusammen.
-    const animate = (now: number) => {
-      this._miniAnimationFrame = null;
-      if (!this.isConnected || !this._isMiniLoader()) return;
-      startedAt ??= now;
-
-      if (this._miniReady) {
-        if (readyAt === undefined) {
-          readyAt = now;
-          readyProgress = this._miniProgress;
-        }
-        const ratio = Math.min(1, (now - readyAt) / 180);
-        this._miniProgress = readyProgress + (100 - readyProgress) * (1 - Math.pow(1 - ratio, 3));
-        if (ratio === 1) {
-          fadeStartedAt ??= now;
-          this._miniFading = true;
-          // Entspricht der Opacity-Transition; erst danach endet das Loading-Promise.
-          if (now - fadeStartedAt >= 160) {
-            this.close();
-            return;
-          }
-        }
-      } else {
-        const elapsed = now - startedAt;
-        this._miniProgress = 95 * elapsed / (elapsed + 225);
-      }
-
-      this._miniAnimationFrame = window.requestAnimationFrame(animate);
-    };
-    this._miniAnimationFrame = window.requestAnimationFrame(animate);
+  // Ready übernimmt einmalig die sichtbare CSS-Position; Transition und Fade laufen in CSS.
+  private _finishMiniLoader() {
+    const loader = this._miniLoaderElement;
+    const value = loader?.firstElementChild as HTMLElement | null;
+    if (!loader || !value || loader.classList.contains('ready')) return;
+    value.style.transform = getComputedStyle(value).transform;
+    value.style.animation = 'none';
+    // Der Style-Flush hält den aktuellen Stand als Startwert der Abschluss-Transition fest.
+    void value.offsetWidth;
+    value.style.transform = 'scaleX(1)';
+    loader.classList.add('ready');
   }
 
-  // Abbruch, Zustandswechsel und Disconnect dürfen keine späteren Close-Callbacks hinterlassen.
+  // Nur das Ausblenden des aktuellen Balkens beendet Loading, nicht dessen Ladeanimation.
+  private _onMiniAnimationEnd(event: AnimationEvent) {
+    if (event.target === this._miniLoaderElement && event.animationName === 'mini-loader-finish' && this._miniReady) this.close();
+  }
+
+  // Schließen oder Ersetzen entfernt die CSS-Animation zusammen mit ihrem Element.
   private _clearMiniLoader() {
-    if (this._miniAnimationFrame !== null) {
-      window.cancelAnimationFrame(this._miniAnimationFrame);
-      this._miniAnimationFrame = null;
-    }
     this._syncMiniLoaderState(false);
     this._loadingVariant = 'dialog';
-    this._miniProgress = 0;
-    this._miniFading = false;
     this._miniReady = false;
-    this._miniReducedMotion = false;
   }
 
   // Ein manuelles Popover liegt ohne Fokus- oder Klicksperre über normalem Seiteninhalt.

@@ -40,14 +40,14 @@ Low-level `nextrap:*` window events remain available for integrations, but appli
 ## Mini-Loader per Trigger steuern
 
 `variant: 'mini'` zeigt einen 2 px hohen roten Balken am oberen Viewport-Rand,
-ohne die Oberfläche oder den Fokus zu blockieren. Er erreicht schnell ungefähr
-50 % und nähert sich anschließend immer langsamer 95 %. Erst `Feedback.ready()`
-animiert ihn bis 100 % und blendet ihn danach aus. Ohne `variant` beziehungsweise
-mit `variant: 'dialog'` bleibt der bisherige Loading-Dialog erhalten.
+ohne die Oberfläche oder den Fokus zu blockieren. Eine CSS-Animation erreicht
+nach 200 ms bereits 50 % und läuft danach langsamer bis 95 %. Nach 10 Sekunden
+bleibt der Balken dort stehen. `Feedback.ready()` lässt ihn von seiner aktuellen
+Position bis 100 % laufen und anschließend ausblenden. Ohne `variant` oder mit
+`variant: 'dialog'` bleibt der bisherige Loading-Dialog erhalten.
 
 Bei aktivierter Bewegungsreduktion bleibt der Balken statisch bei 50 % und
-verschwindet bei Ready sofort. Über `::part(mini-loader)` lässt sich seine Höhe
-anpassen, über `::part(mini-loader-value)` seine Farbe.
+verschwindet bei Ready ohne Bewegungsanimation.
 
 Dieser Ausschnitt ersetzt den Loading-Teil oben und verwendet dasselbe `save()`:
 
