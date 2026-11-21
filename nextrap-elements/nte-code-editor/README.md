@@ -33,7 +33,7 @@ form.reset(); // Stellt editor.defaultValue wieder her.
 ```
 
 `value` ist sofort lesbar, auch vor dem ersten Rendern und ohne DOM-Verbindung.
-Eine Zuweisung erzeugt keine `input`-/`change`-Events. Benutzereingaben erzeugen
+Eine Zuweisung erzeugt keine `input`-/`change`-Events. Texteingaben erzeugen
 ein `input` am Host; `change` folgt beim Verlassen eines geänderten Editors.
 `value`-Attribut und `defaultValue` bestimmen den Reset-Wert. Nach einer
 Wertzuweisung oder Benutzereingabe verändern neue Defaults den laufenden Wert
@@ -111,12 +111,14 @@ editor.unfoldAll();
 editor.folding = false; // Entfernt auch vorhandene Faltungen und ihre Keybindings.
 ```
 
-Sprach- und Optionswechsel erhalten die View, den Dokumenttext, die Auswahl
-und die Undo-History. `foldAll()` und `unfoldAll()` liefern `false`, wenn Folding
-deaktiviert ist oder noch keine View existiert. Ohne `indentWithTab` bleibt
-Tab für den regulären Fokuswechsel verfügbar.
+Sprachwechsel und Folding-Konfiguration erhalten die View, den Dokumenttext,
+die Auswahl und die Undo-History. Im zweispaltigen Vergleich gilt `folding`
+für beide Seiten; `foldAll()` und `unfoldAll()` steuern die Arbeitsfassung.
+Beide Methoden liefern `false`, wenn Folding deaktiviert ist oder noch keine
+View existiert. Ohne `indentWithTab` bleibt Tab für den regulären Fokuswechsel
+verfügbar.
 
-## 5. Diffs anzeigen
+## 5. Unified-Diff anzeigen
 
 ```ts
 editor.language = 'html';
@@ -132,7 +134,70 @@ Vergleichsbasis dar. Nur der aktuelle Code gehört zu `value` und `FormData`.
 Ein leerer Originalstring aktiviert ebenfalls den Vergleich. Accept-/Reject-
 Buttons sind für diese reine Vergleichsansicht ausgeschaltet.
 
-## 6. CodeMirror gezielt erweitern
+## 6. Versionen nebeneinander vergleichen und übernehmen
+
+Dieses eigenständige Beispiel öffnet das Original links und die Arbeitsfassung
+rechts. Binde für die Darstellung das Sass-Mixin wie in Abschnitt 1 ein.
+Die Buttons zwischen den Seiten setzen den jeweiligen geänderten Block in
+der Arbeitsfassung auf seinen Originalzustand zurück.
+
+```ts
+import '@nextrap/nte-code-editor';
+
+const editor = document.createElement('nte-code-editor');
+editor.label = 'HTML-Versionen vergleichen';
+editor.diffMode = 'side-by-side';
+editor.originalValue = '<article>\n  <h1>Willkommen</h1>\n</article>';
+editor.value = '<article>\n  <h1>Willkommen bei Nextrap</h1>\n</article>';
+editor.addEventListener('input', () => console.log(editor.value));
+document.body.append(editor);
+```
+
+`originalValue` ist stets das Original (CodeMirror-Seite A), `value` stets die
+Arbeitsfassung (Seite B). Nur `value` wird als Formularwert übertragen. Das
+Original bleibt für direkte Texteingaben schreibgeschützt. Die gemeinsame
+vertikale Scrollfläche hält zusammengehörige Zeilen beider Dokumente auf
+gleicher Höhe; zusätzliche oder entfernte Zeilen werden entsprechend
+ausgeglichen. Eine Höhenbegrenzung am öffentlichen Part `editor` begrenzt den
+gesamten Vergleich, nicht jede Seite einzeln.
+
+| API | Verhalten |
+|---|---|
+| `originalValue: string \| undefined` | Vergleichsbasis; `undefined` beendet jeden Diff, `''` ist ein gültiges leeres Original |
+| `diffMode` / `diff-mode` | `unified` (Default) oder `side-by-side`; ohne `originalValue` bleibt ein einzelner Editor |
+| `diffOrientation` / `diff-orientation` | `original-first` (Default): Original links; `modified-first`: Arbeitsfassung links |
+| `revertControls` / `revert-controls` | Nur Split: `original-to-modified` (Default), `modified-to-original` oder `none` |
+| `editorView` | Immer die View der Arbeitsfassung, unabhängig von der Seitenanordnung |
+| `mergeView` | Nur im aktiven Split: `a` ist das Original, `b` die Arbeitsfassung |
+| `input` / `change` | Eine Chunk-Kopie vom Original in `value` erzeugt `input` und unmittelbar danach `change` |
+| `original-change` | Eine Chunk-Kopie in das Original erzeugt `CustomEvent<{ value: string }>` mit dem neuen Original in `detail.value` |
+
+Die folgenden Einstellungen verändern den gerade erzeugten Vergleich. Die
+Seitenanordnung bestimmt ausschließlich die Darstellung; die Kopierrichtung
+bezieht sich weiterhin auf Original und Arbeitsfassung:
+
+```ts
+editor.diffOrientation = 'modified-first'; // Arbeitsfassung links, Original rechts.
+editor.revertControls = 'modified-to-original'; // Buttons übernehmen neue Blöcke ins Original.
+
+editor.addEventListener('original-change', (event) => {
+  const { value } = (event as CustomEvent<{ value: string }>).detail;
+  console.log(value); // Neue Vergleichsbasis; editor.value bleibt unverändert.
+});
+```
+
+`revertControls = 'none'` blendet die Buttons aus. `disabled`, ein deaktiviertes
+Fieldset und `readOnly` verhindern ebenfalls Chunk-Kopien in beide Richtungen.
+Zuweisungen an `value` oder `originalValue` bleiben ereignislos. Eine Kopie
+nach `originalValue` verändert weder `value` noch den Formularwert; verwende
+dafür das eigene Ereignis `original-change`.
+
+Seitenanordnung und Übernahme-Controls werden ohne neue Editor-Views
+umgeschaltet. Ein Wechsel zwischen Einzel- und Split-Ansicht erhält Dokument,
+Auswahl und Undo-Verlauf. Zusätzliche StateFields eigener Extensions werden
+bei diesem Wechsel neu initialisiert.
+
+## 7. CodeMirror gezielt erweitern
 
 ```ts
 import { EditorView } from '@codemirror/view';
@@ -142,17 +207,29 @@ await editor.updateComplete;
 editor.editorView?.focus();
 ```
 
-`extensions` ist der öffentliche CodeMirror-Erweiterungspunkt. `editorView`
-liefert nach `updateComplete` die aktive View und nach dem Entfernen des
-Elements `undefined`. Beim erneuten Einhängen werden Text und EditorState
-wiederhergestellt. Zusätzliche Extensions sollen die vom Wrapper verwalteten
-Sprach-, Folding-, Diff- und Formularzustände nicht nochmals konfigurieren.
+`extensions` ist der öffentliche CodeMirror-Erweiterungspunkt für die
+Arbeitsfassung; im Split wird diese Konfiguration ausschließlich auf Seite B
+angewendet. Sprache, HTML-Completion-Vorgaben und Folding konfiguriert der
+Wrapper für beide Seiten.
+
+`editorView` liefert nach `updateComplete` immer die View der Arbeitsfassung.
+`mergeView` liefert nur bei aktivem Split den Vergleich mit `a` (Original) und
+`b` (Arbeitsfassung). Nach dem Entfernen des Elements sind beide Getter
+`undefined`. Im Einzelmodus wird beim erneuten Einhängen der gespeicherte
+EditorState wiederverwendet. Bei einer Split-Ansicht werden Dokument, Auswahl
+und Undo-Verlauf beider Seiten übernommen; zusätzliche StateFields eigener
+Extensions werden neu initialisiert. Zusätzliche Extensions sollen die vom
+Wrapper verwalteten Sprach-, Folding-, Diff- und Formularzustände nicht
+nochmals konfigurieren.
 
 ## Demos und Entwicklung
 
-Die fünf `.demo.ts`-Dateien unter `demo/` zeigen diese Abläufe mit sichtbaren
+Die sechs `.demo.ts`-Dateien unter `demo/` zeigen diese Abläufe mit sichtbaren
 Controls. Der Einstieg verwendet Markdown/Kramdown und `tj-content-pane`;
 Quelltext gelangt über `value` in den Editor, nicht über einen Slot.
+`05-diff.demo.ts` zeigt den Unified-Diff. `06-side-by-side.demo.ts` zeigt den
+zweispaltigen Vergleich mit Seitenwechsel, beiden Kopierrichtungen,
+ausblendbaren Buttons, Reset und Live-Ausgaben beider Dokumente.
 
 ```sh
 npx nx dev nte-code-editor
