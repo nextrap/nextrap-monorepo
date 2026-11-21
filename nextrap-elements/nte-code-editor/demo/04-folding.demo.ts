@@ -2,7 +2,7 @@
 import '@trunkjs/content-pane';
 import { defineDemo } from '@trunkjs/demo-viewer';
 import '../index';
-import type { NtlCodeEditor } from '../index';
+import type { NteCodeEditor } from '../index';
 import css from './demo.scss?inline';
 
 // Mehrzeilige Blöcke machen die Fold-Marker und das Wiederherstellen direkt erkennbar.
@@ -20,7 +20,7 @@ kann die Funktion während der Bearbeitung ein- und ausgeschaltet werden.
 Beim Abschalten wird zuvor eingeklappter Code wieder vollständig sichtbar.
 
 ---
-{: layout="ntl-code-editor#folding-editor[language=typescript]" section-aria-label="TypeScript mit Code Folding"}
+{: layout="nte-code-editor#folding-editor[language=typescript]" section-aria-label="TypeScript mit Code Folding"}
 
 ---
 {: layout="/;"}
@@ -28,7 +28,7 @@ Beim Abschalten wird zuvor eingeklappter Code wieder vollständig sichtbar.
   wrapper_html: '<tj-content-pane>{{content}}</tj-content-pane>',
   // folding ist standardmäßig aktiv; hier bleibt die Initialisierung beim Dokument.
   afterRender({ query }) {
-    const editor = query<NtlCodeEditor>('#folding-editor');
+    const editor = query<NteCodeEditor>('#folding-editor');
     editor.label = 'TypeScript mit Code Folding';
     editor.value = `interface Page {
   id: number;
@@ -57,7 +57,7 @@ function getTitle(id: number): string {
         value: true,
         // false entfernt sowohl Fold-Marker als auch den Folding-Zustand.
         onChange({ value }, { query, controls }) {
-          const editor = query<NtlCodeEditor>('#folding-editor');
+          const editor = query<NteCodeEditor>('#folding-editor');
           editor.folding = Boolean(value);
           controls.setValue(
             'folding-status',
@@ -72,7 +72,7 @@ function getTitle(id: number): string {
         label: 'Alle Blöcke einklappen',
         // Die Anwendung darf das optionale Feature auch programmatisch steuern.
         async onClick(_event, { query, controls }) {
-          const editor = query<NtlCodeEditor>('#folding-editor');
+          const editor = query<NteCodeEditor>('#folding-editor');
           await editor.updateComplete;
           if (editor.folding) {
             editor.foldAll();
@@ -93,7 +93,7 @@ function getTitle(id: number): string {
         label: 'Alle Blöcke ausklappen',
         // Ausklappen verändert den Dokumenttext nicht.
         onClick(_event, { query, controls }) {
-          const editor = query<NtlCodeEditor>('#folding-editor');
+          const editor = query<NteCodeEditor>('#folding-editor');
           editor.unfoldAll();
           controls.setValue('folding-status', 'Der gesamte Code ist sichtbar.');
         },

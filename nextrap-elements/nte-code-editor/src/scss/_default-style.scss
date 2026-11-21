@@ -1,11 +1,11 @@
 // Das Theme materialisiert die gesamte visuelle Baseline am gewählten Host-Selektor.
 @mixin default-style() {
-  --ntl-code-editor-keyword: #8250df;
-  --ntl-code-editor-string: #0a6b30;
-  --ntl-code-editor-number: #0550ae;
-  --ntl-code-editor-comment: #6e7781;
-  --ntl-code-editor-tag: #116329;
-  --ntl-code-editor-attribute: #953800;
+  --nte-code-editor-keyword: #8250df;
+  --nte-code-editor-string: #0a6b30;
+  --nte-code-editor-number: #0550ae;
+  --nte-code-editor-comment: #6e7781;
+  --nte-code-editor-tag: #116329;
+  --nte-code-editor-attribute: #953800;
 
   // Die Editoren passen ohne Layout-JavaScript in schmale Container.
   &::part(editor) {
@@ -40,6 +40,21 @@
     color: var(--nt-text-muted, #57606a);
     background: var(--nt-bg-secondary, #f6f8fa);
     border-right: 1px solid var(--nt-border-color, #d0d7de);
+  }
+
+  // Übernahme-Buttons gehören zur öffentlichen Theme-Oberfläche des Split-Diffs.
+  &::part(revert-control) {
+    color: var(--nt-primary, #0969da);
+    border-radius: var(--nt-border-radius, 0.375rem);
+  }
+
+  &::part(revert-control):hover {
+    background: var(--nt-bg-secondary, #f6f8fa);
+  }
+
+  &::part(revert-control):focus-visible {
+    outline: 2px solid var(--nt-primary, #0969da);
+    outline-offset: -2px;
   }
 
   &:disabled::part(editor) {

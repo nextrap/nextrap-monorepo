@@ -1,0 +1,87 @@
+---
+name: nte-code-editor-theming
+description: Verwende diesen Skill ausschließlich beim Erstellen oder Ändern eines Themes für nte-code-editor. Er beschreibt Sass-Mixins, öffentliche Parts, Syntaxfarben und den gemeinsamen Scrollbereich der Split-Ansicht; verwende für Markup und API den nte-code-editor-usage Skill.
+---
+
+# NTE Code Editor gestalten
+
+Materialisiere `default-style()` unter genau einer `style-*`-Klasse. Der
+Sass-Entrypoint erzeugt beim Import keine CSS-Ausgabe; der Runtime-Entrypoint
+importiert keine Light-DOM-Styles.
+
+```scss
+@use '@nextrap/nte-code-editor' as editor;
+
+nte-code-editor.style-default {
+  @include editor.default-style();
+}
+
+/* Eine konkrete Instanz darf ihren Scrollport über den öffentlichen Part anpassen. */
+nte-code-editor.large-source::part(editor) {
+  max-height: 40rem;
+}
+```
+
+## Öffentliche Oberfläche
+
+| Part | Verantwortung |
+|---|---|
+| `container` | Mount-Punkt der Einzel- oder Merge-View |
+| `editor` | Rahmen, Fläche, Fokusdarstellung und Höhenbegrenzung des gesamten Editors |
+| `merge-view` | Zusätzlich zu `editor` am gemeinsamen Container der Split-Ansicht |
+| `original-editor`, `modified-editor` | Die beiden inneren Editor-Views im Split; ohne den Part `editor` |
+| `scroller` | Text-Scrollcontainer und Monospace-Typografie; im Split an beiden Seiten |
+| `original-scroller`, `modified-scroller` | Seitenspezifische Parts der inneren Scrollcontainer |
+| `content` | Texteingabebereich und vertikale Textabstände; im Split an beiden Seiten |
+| `original-content`, `modified-content` | Seitenspezifische Parts der Texteingabebereiche |
+| `gutters` | Zeilennummern und Folding-Bereich; im Split an beiden Seiten |
+| `original-gutters`, `modified-gutters` | Seitenspezifische Parts der Gutter |
+| `revert-control` | Button zum Kopieren eines geänderten Blocks zwischen den Seiten |
+
+Begrenze die Höhe immer am Part `editor`; das Default-Mixin setzt dort
+`min-height: 10rem` und `max-height: 28rem`. Im Einzelmodus trägt die
+CodeMirror-View diesen Part. Im Split trägt ausschließlich der gemeinsame
+Merge-Container `part="editor merge-view"`; er besitzt den vertikalen
+Scrollbereich für beide Dokumente. Bestehende Höhenanpassungen wie im Beispiel
+wirken dadurch für beide Darstellungen.
+
+Setze im Split keine eigene Höhenbegrenzung auf `original-editor`,
+`modified-editor` oder deren `scroller`-Parts: Zwei getrennte vertikale
+Scrollbereiche würden die gemeinsame Ausrichtung aufheben. Die inneren
+Scrollcontainer bleiben für Textdarstellung und horizontales Scrollen
+zuständig; eine gekoppelte horizontale Scrollposition ist kein zugesicherter
+Vertrag. Die Part-Namen beziehen sich auf Dokumentrollen und bleiben beim
+Tauschen der Seitenanordnung gleich.
+
+Vermeide eine kleinere maximale Höhe nur am Host; dadurch könnte die View den
+reservierten Layoutbereich überschreiten. Schmale Container werden durch
+`min-width: 0` und internes Scrollen unterstützt; die Komponente besitzt keine
+eigenen Breakpoints oder Media Queries.
+
+Das äußere Mixin definiert folgende Syntaxfarben; überschreibe sie bei Bedarf
+am Host derselben Style-Klasse:
+
+- `--nte-code-editor-keyword`
+- `--nte-code-editor-string`
+- `--nte-code-editor-number`
+- `--nte-code-editor-comment`
+- `--nte-code-editor-tag`
+- `--nte-code-editor-attribute`
+
+Das Mixin konsumiert `--nt-text`, `--nt-bg`, `--nt-border-color`,
+`--nt-border-radius`, `--nt-primary`, `--nt-text-muted` und `--nt-bg-secondary`
+mit seinen dokumentierten Default-Werten. Syntaxfarben werden im Shadow Root
+nur gelesen, nicht erneut definiert.
+
+CodeMirror verwaltet die funktionalen internen Styles sowie Completion- und
+Diff-Dekorationen. Eine zusätzliche CodeMirror-Theme-Extension über
+`extensions` gilt ausschließlich für die Arbeitsfassung. Gestalte beide
+Seiten über die gemeinsamen Parts oder verwende die `original-*`- und
+`modified-*`-Parts für gezielte Unterschiede. Überschreibe nicht per
+DOM-Manipulation die Editorstruktur, Selection-Layer oder
+Contenteditable-Verwaltung.
+
+Es gibt keine visuellen Modifier und keine Inhalte für den Default-Slot.
+Für Markup, Formulare und Optionen lies
+[nte-code-editor-usage](../nte-code-editor-usage/SKILL.md).
+

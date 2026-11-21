@@ -6,8 +6,8 @@ import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
 // Library und Demo teilen den Package-Pfad; Laufzeit-Peers bleiben extern.
-const projectName = 'ntl-code-editor';
-const packagePath = 'nextrap-layout/ntl-code-editor';
+const projectName = 'nte-code-editor';
+const packagePath = 'nextrap-elements/nte-code-editor';
 
 // Der Viewer wird nur beim Entwickeln aktiviert; der Build erzeugt die Library.
 export default defineConfig({

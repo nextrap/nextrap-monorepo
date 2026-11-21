@@ -5,7 +5,12 @@ import {
   closeBracketsKeymap,
   completionKeymap,
 } from '@codemirror/autocomplete';
-import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
+import {
+  defaultKeymap,
+  history,
+  historyField,
+  historyKeymap,
+} from '@codemirror/commands';
 import {
   bracketMatching,
   codeFolding,
@@ -19,10 +24,12 @@ import {
 } from '@codemirror/language';
 import {
   getOriginalDoc,
+  MergeView,
   originalDocChangeEffect,
   unifiedMergeView,
 } from '@codemirror/merge';
-import type { Extension, StateEffect } from '@codemirror/state';
+import type { MergeConfig } from '@codemirror/merge';
+import type { EditorStateConfig, Extension, StateEffect } from '@codemirror/state';
 import {
   Annotation,
   ChangeSet,
@@ -47,30 +54,33 @@ import type { PropertyValues } from 'lit';
 import { html, unsafeCSS } from 'lit';
 import { createLanguageSupport } from '../../lib/languages';
 import type {
+  CodeEditorDiffMode,
+  CodeEditorDiffOrientation,
   CodeEditorHtmlElement,
   CodeEditorLanguage,
+  CodeEditorRevertControls,
 } from '../../lib/types';
-import style from './ntl-code-editor.scss?inline';
+import style from './nte-code-editor.scss?inline';
 
 // Programmatische Wertzuweisungen bleiben wie bei einem nativen Textfeld ereignislos.
 const assignedValue = Annotation.define<boolean>();
 
 // Syntaxfarben werden vom äußeren Sass-Mixin geliefert und bleiben im Theme anpassbar.
 const tokenHighlighting = HighlightStyle.define([
-  { tag: tags.keyword, color: 'var(--ntl-code-editor-keyword)' },
+  { tag: tags.keyword, color: 'var(--nte-code-editor-keyword)' },
   {
     tag: [tags.string, tags.attributeValue],
-    color: 'var(--ntl-code-editor-string)',
+    color: 'var(--nte-code-editor-string)',
   },
   {
     tag: [tags.number, tags.bool, tags.null],
-    color: 'var(--ntl-code-editor-number)',
+    color: 'var(--nte-code-editor-number)',
   },
-  { tag: [tags.comment, tags.meta], color: 'var(--ntl-code-editor-comment)' },
-  { tag: [tags.tagName, tags.typeName], color: 'var(--ntl-code-editor-tag)' },
+  { tag: [tags.comment, tags.meta], color: 'var(--nte-code-editor-comment)' },
+  { tag: [tags.tagName, tags.typeName], color: 'var(--nte-code-editor-tag)' },
   {
     tag: [tags.attributeName, tags.propertyName],
-    color: 'var(--ntl-code-editor-attribute)',
+    color: 'var(--nte-code-editor-attribute)',
   },
   { tag: tags.heading, fontWeight: 'bold' },
   { tag: tags.strong, fontWeight: 'bold' },
@@ -78,8 +88,8 @@ const tokenHighlighting = HighlightStyle.define([
   { tag: tags.link, textDecoration: 'underline' },
 ]);
 
-// Ein einzelner Editor behält seinen Zustand auch beim Umschalten der Optionen.
-export class NtlCodeEditor extends nextrap_element({ logging: false }) {
+// value bleibt die Arbeitsfassung, auch wenn der Vergleich zwei Editoren anzeigt.
+export class NteCodeEditor extends nextrap_element({ logging: false }) {
   static formAssociated = true;
   static override styles = unsafeCSS(style);
   static override properties = {
@@ -98,6 +108,17 @@ export class NtlCodeEditor extends nextrap_element({ logging: false }) {
     htmlElements: { attribute: false },
     classNames: { attribute: false },
     originalValue: { attribute: false },
+    diffMode: { type: String, attribute: 'diff-mode', reflect: true },
+    diffOrientation: {
+      type: String,
+      attribute: 'diff-orientation',
+      reflect: true,
+    },
+    revertControls: {
+      type: String,
+      attribute: 'revert-controls',
+      reflect: true,
+    },
     extensions: { attribute: false },
   };
 
@@ -114,6 +135,9 @@ export class NtlCodeEditor extends nextrap_element({ logging: false }) {
   htmlElements: readonly CodeEditorHtmlElement[] = [];
   classNames: readonly string[] = [];
   originalValue: string | undefined;
+  diffMode: CodeEditorDiffMode = 'unified';
+  diffOrientation: CodeEditorDiffOrientation = 'original-first';
+  revertControls: CodeEditorRevertControls = 'original-to-modified';
   extensions: Extension = [];
 
   // Compartments erlauben Konfigurationswechsel ohne Verlust von Cursor und Undo-History.
@@ -124,7 +148,11 @@ export class NtlCodeEditor extends nextrap_element({ logging: false }) {
   readonly #diff = new Compartment();
   readonly #internals = this.attachInternals();
   #view?: EditorView;
+  #merge?: MergeView;
   #savedState?: EditorState;
+  #savedOriginalState?: EditorState;
+  #savedSplit = false;
+  #savedScroll = { top: 0, left: 0, originalLeft: 0 };
   #value = '';
   #dirtyValue = false;
   #committedValue = '';
@@ -166,9 +194,14 @@ export class NtlCodeEditor extends nextrap_element({ logging: false }) {
     this.setAttribute('value', value);
   }
 
-  // Für CodeMirror-Erweiterungen steht die aktive View nach updateComplete bereit.
+  // Die aktive View gehört auch im Split-Modus immer zur bearbeitbaren Arbeitsfassung.
   get editorView(): EditorView | undefined {
     return this.#view;
+  }
+
+  // Im Split-Modus sind beide CodeMirror-Views für gezielte Erweiterungen erreichbar.
+  get mergeView(): MergeView | undefined {
+    return this.#merge;
   }
 
   // Der Parent verarbeitet seine reaktiven Attribute; value behält native Reset-Semantik.
@@ -192,11 +225,7 @@ export class NtlCodeEditor extends nextrap_element({ logging: false }) {
 
   // DOM-Listener und Observer der View werden entfernt; Dokument und History bleiben erhalten.
   override disconnectedCallback(): void {
-    if (this.#view) {
-      this.#savedState = this.#view.state;
-      this.#view.destroy();
-      this.#view = undefined;
-    }
+    this.#destroyEditor();
     super.disconnectedCallback();
   }
 
@@ -216,8 +245,11 @@ export class NtlCodeEditor extends nextrap_element({ logging: false }) {
   protected override updated(changed: PropertyValues): void {
     super.updated(changed);
     if (!this.isConnected) return;
+    const split =
+      this.diffMode === 'side-by-side' && this.originalValue !== undefined;
+    if (this.#view && Boolean(this.#merge) !== split) this.#destroyEditor();
     const created = !this.#view;
-    if (created) this.#createEditor();
+    if (created) this.#createEditor(split);
     this.#configure(changed, created);
   }
 
@@ -281,35 +313,100 @@ export class NtlCodeEditor extends nextrap_element({ logging: false }) {
     this.requestUpdate('value', previous);
   }
 
-  // Ein Initialwert wird vor dem Anlegen der View in den State übernommen.
-  #createEditor(): void {
-    const parent = this.renderRoot.querySelector<HTMLElement>('#editor')!;
-    let state = this.#savedState;
-    if (state && state.doc.toString() !== this.#value) {
-      state = state.update({
-        changes: { from: 0, to: state.doc.length, insert: this.#value },
-        annotations: Transaction.addToHistory.of(false),
-      }).state;
+  // MergeView verwaltet und entfernt beide Views gemeinsam.
+  #destroyEditor(): void {
+    if (!this.#view) return;
+    this.#savedState = this.#view.state;
+    this.#savedSplit = Boolean(this.#merge);
+    this.#savedScroll = {
+      top: (this.#merge?.dom ?? this.#view.scrollDOM).scrollTop,
+      left: this.#view.scrollDOM.scrollLeft,
+      originalLeft: this.#merge?.a.scrollDOM.scrollLeft ?? 0,
+    };
+    if (this.#merge) {
+      this.#savedOriginalState = this.#merge.a.state;
+      this.#merge.destroy();
+      this.#merge = undefined;
+    } else {
+      this.#view.destroy();
     }
-    if (!state) {
+    this.#view = undefined;
+  }
+
+  // Zwischen Disconnect und Reconnect gesetzte Werte mappen auch Auswahl und History.
+  #restoreState(
+    state: EditorState | undefined,
+    doc: string,
+  ): EditorState | undefined {
+    if (!state || state.doc.toString() === doc) return state;
+    return state.update({
+      changes: { from: 0, to: state.doc.length, insert: doc },
+      annotations: [assignedValue.of(true), Transaction.addToHistory.of(false)],
+    }).state;
+  }
+
+  // Nur öffentliche Zustände übernehmen: MergeView benötigt eigene Diff-Felder und Dispatches.
+  #stateConfig(original: boolean, saved?: EditorState): EditorStateConfig {
+    const doc = original
+      ? (this.originalValue ?? '').replace(/\r\n?/g, '\n')
+      : this.#value;
+    const state = this.#restoreState(saved, doc);
+    const savedHistory = state?.field(historyField, false);
+    return {
+      doc,
+      selection: state?.selection,
+      extensions: [
+        this.#baseExtensions(original),
+        savedHistory === undefined ? [] : historyField.init(() => savedHistory),
+      ],
+    };
+  }
+
+  // A bleibt das Original, B die Arbeitsfassung; die visuelle Reihenfolge ist davon unabhängig.
+  #createEditor(split: boolean): void {
+    const parent = this.renderRoot.querySelector<HTMLElement>('#editor')!;
+    const root = this.renderRoot as ShadowRoot;
+    if (split) {
       this.#diffOriginal = undefined;
-      state = EditorState.create({
-        doc: this.#value,
-        extensions: this.#baseExtensions(),
+      this.#merge = new MergeView({
+        a: this.#stateConfig(true, this.#savedOriginalState),
+        b: this.#stateConfig(false, this.#savedState),
+        ...this.#mergeOptions(),
+        parent,
+        root,
       });
+      this.#view = this.#merge.b;
+      this.#merge.dom.setAttribute('part', 'editor merge-view');
+      this.#merge.a.dom.setAttribute('part', 'original-editor');
+      this.#view.dom.setAttribute('part', 'modified-editor');
+      this.#savedOriginalState = undefined;
+    } else {
+      let state = this.#savedSplit
+        ? undefined
+        : this.#restoreState(this.#savedState, this.#value);
+      if (!state) {
+        this.#diffOriginal = undefined;
+        state = EditorState.create(this.#stateConfig(false, this.#savedState));
+      }
+      this.#view = new EditorView({ state, parent, root });
+      this.#view.dom.setAttribute('part', 'editor');
     }
     this.#savedState = undefined;
-    this.#view = new EditorView({
-      state,
-      parent,
-      root: this.renderRoot as ShadowRoot,
+    const view = this.#view;
+    const scroll = this.#savedScroll;
+    view.requestMeasure({
+      read: () => null,
+      write: () => {
+        if (this.#view !== view) return;
+        (this.#merge?.dom ?? view.scrollDOM).scrollTop = scroll.top;
+        view.scrollDOM.scrollLeft = scroll.left;
+        if (this.#merge) this.#merge.a.scrollDOM.scrollLeft = scroll.originalLeft;
+      },
     });
-    this.#view.dom.setAttribute('part', 'editor');
-    this.#view.scrollDOM.setAttribute('part', 'scroller');
   }
 
   // Die Standardfunktionen werden einzeln eingebunden, damit Folding vollständig abschaltbar ist.
-  #baseExtensions(): Extension {
+  #baseExtensions(original: boolean): Extension {
     return [
       lineNumbers(),
       highlightActiveLineGutter(),
@@ -334,19 +431,54 @@ export class NtlCodeEditor extends nextrap_element({ logging: false }) {
       this.#editing.of([]),
       this.#extensions.of([]),
       this.#diff.of([]),
-      EditorView.updateListener.of((update) => this.#onEditorUpdate(update)),
-      EditorView.domEventObservers({
-        focus: () => {
-          this.#committedValue = this.#value;
-        },
-        blur: () => this.#commitChange(),
-      }),
+      EditorView.updateListener.of((update) =>
+        original ? this.#onOriginalUpdate(update) : this.#onEditorUpdate(update),
+      ),
+      original
+        ? []
+        : EditorView.domEventObservers({
+            focus: () => {
+              this.#committedValue = this.#value;
+            },
+            blur: () => this.#commitChange(),
+          }),
     ];
   }
 
   // Compartments erhalten die View; insbesondere verändert ein Sprachwechsel nicht den Text.
   #configure(changed: PropertyValues, all: boolean): void {
-    const view = this.#view!;
+    this.#configureView(this.#view!, false, changed, all);
+    if (!this.#merge) return;
+    this.#configureView(this.#merge.a, true, changed, all);
+    if (all || changed.has('originalValue')) {
+      const original = (this.originalValue ?? '').replace(/\r\n?/g, '\n');
+      const view = this.#merge.a;
+      if (view.state.doc.toString() !== original) {
+        view.dispatch({
+          changes: { from: 0, to: view.state.doc.length, insert: original },
+          annotations: [assignedValue.of(true), Transaction.addToHistory.of(false)],
+        });
+      }
+    }
+    if (
+      all ||
+      changed.has('diffOrientation') ||
+      changed.has('revertControls') ||
+      changed.has('disabled') ||
+      changed.has('readOnly') ||
+      changed.has('formDisabled')
+    ) {
+      this.#merge.reconfigure(this.#mergeOptions());
+    }
+  }
+
+  // Sprache und Folding gelten für beide Seiten; Extensions und Formular-Events für die Arbeitsfassung.
+  #configureView(
+    view: EditorView,
+    original: boolean,
+    changed: PropertyValues,
+    all: boolean,
+  ): void {
     const effects: StateEffect<unknown>[] = [];
     if (
       all ||
@@ -381,26 +513,91 @@ export class NtlCodeEditor extends nextrap_element({ logging: false }) {
       changed.has('label')
     ) {
       const disabled = this.disabled || this.#formDisabled;
+      const readOnly = original || disabled || this.readOnly;
+      const role = original ? 'original' : 'modified';
       effects.push(
         this.#editing.reconfigure([
-          EditorState.readOnly.of(disabled || this.readOnly),
-          EditorView.editable.of(!disabled),
+          EditorState.readOnly.of(readOnly),
+          EditorView.editable.of(!disabled && !original),
           EditorView.contentAttributes.of({
-            part: 'content',
-            'aria-label': this.label,
+            part: this.#merge ? `content ${role}-content` : 'content',
+            'aria-label': this.#merge
+              ? `${this.label} – ${original ? 'Original' : 'Arbeitsfassung'}`
+              : this.label,
             'aria-multiline': 'true',
             'aria-disabled': String(disabled),
-            'aria-readonly': String(disabled || this.readOnly),
+            'aria-readonly': String(readOnly),
             tabindex: disabled ? '-1' : '0',
           }),
         ]),
       );
     }
-    if (all || changed.has('extensions'))
+    if (!original && (all || changed.has('extensions')))
       effects.push(this.#extensions.reconfigure(this.extensions));
-    if (all || changed.has('originalValue')) this.#configureDiff(effects);
+    if (!this.#merge && (all || changed.has('originalValue')))
+      this.#configureDiff(effects);
     if (effects.length) view.dispatch({ effects });
-    view.dom.querySelector('.cm-gutters')?.setAttribute('part', 'gutters');
+    const role = original ? 'original' : 'modified';
+    view.scrollDOM.setAttribute(
+      'part',
+      this.#merge ? `scroller ${role}-scroller` : 'scroller',
+    );
+    view.dom.querySelector('.cm-gutters')?.setAttribute(
+      'part',
+      this.#merge ? `gutters ${role}-gutters` : 'gutters',
+    );
+  }
+
+  // Read-only sperrt auch explizite Übernahmen, unabhängig von deren Richtung.
+  #mergeOptions(): MergeConfig {
+    const locked = this.disabled || this.#formDisabled || this.readOnly;
+    return {
+      orientation: this.diffOrientation === 'modified-first' ? 'b-a' : 'a-b',
+      revertControls:
+        locked || this.revertControls === 'none'
+          ? undefined
+          : this.revertControls === 'modified-to-original'
+            ? 'b-to-a'
+            : 'a-to-b',
+      renderRevertControl: () => this.#renderRevertControl(),
+    };
+  }
+
+  // Die Pfeile folgen dem Ziel; CodeMirror übernimmt den zugehörigen Diff-Block.
+  #renderRevertControl(): HTMLElement {
+    const button = document.createElement('button');
+    const toOriginal = this.revertControls === 'modified-to-original';
+    const toLeft = toOriginal === (this.diffOrientation !== 'modified-first');
+    const label = toOriginal
+      ? 'Änderung in das Original übernehmen'
+      : 'Änderung durch das Original ersetzen';
+    button.type = 'button';
+    button.setAttribute('part', 'revert-control');
+    button.setAttribute('aria-label', label);
+    button.title = label;
+    button.textContent = toLeft ? '←' : '→';
+    // Sperrt auch den kurzen Zeitraum vor dem nächsten reaktiven Update.
+    const guard = (event: Event) => {
+      if (
+        this.disabled || this.#formDisabled || this.readOnly ||
+        this.revertControls === 'none'
+      ) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }
+    };
+    button.addEventListener('mousedown', guard, { capture: true });
+    button.addEventListener('click', guard, { capture: true });
+    // CodeMirror hört auf mousedown; Tastatur und Assistenztechnik lösen dagegen click aus.
+    button.addEventListener('click', (event) => {
+      if (event.detail !== 0) return;
+      event.preventDefault();
+      button.dispatchEvent(new MouseEvent('mousedown', {
+        bubbles: true,
+        cancelable: true,
+      }));
+    });
+    return button;
   }
 
   // Bei einer neuen Baseline muss auch das bestehende Original-Document-Feld aktualisiert werden.
@@ -443,10 +640,29 @@ export class NtlCodeEditor extends nextrap_element({ logging: false }) {
       this.dispatchEvent(
         new InputEvent('input', { bubbles: true, composed: true }),
       );
+      if (update.transactions.some((transaction) => transaction.isUserEvent('revert')))
+        this.#commitChange();
     }
   }
 
-  // change bezeichnet wie bei textarea den Abschluss einer geänderten Eingabe beim Blur.
+  // Eine bewusste Übernahme ins Original verändert niemals den Formularwert.
+  #onOriginalUpdate(update: ViewUpdate): void {
+    if (
+      !update.docChanged ||
+      !update.transactions.some(
+        (transaction) =>
+          transaction.docChanged && !transaction.annotation(assignedValue),
+      )
+    ) return;
+    this.originalValue = update.state.doc.toString();
+    this.dispatchEvent(new CustomEvent<{ value: string }>('original-change', {
+      detail: { value: this.originalValue },
+      bubbles: true,
+      composed: true,
+    }));
+  }
+
+  // change schließt eine Bearbeitung beim Blur oder eine blockweise Übernahme ab.
   #commitChange(): void {
     if (this.#committedValue === this.#value) return;
     this.#committedValue = this.#value;
@@ -455,12 +671,12 @@ export class NtlCodeEditor extends nextrap_element({ logging: false }) {
 }
 
 // Der öffentliche Import registriert genau dieses Custom Element.
-if (!customElements.get('ntl-code-editor'))
-  customElements.define('ntl-code-editor', NtlCodeEditor);
+if (!customElements.get('nte-code-editor'))
+  customElements.define('nte-code-editor', NteCodeEditor);
 
 // DOM-Abfragen und createElement erhalten den konkreten Property-Vertrag.
 declare global {
   interface HTMLElementTagNameMap {
-    'ntl-code-editor': NtlCodeEditor;
+    'nte-code-editor': NteCodeEditor;
   }
 }

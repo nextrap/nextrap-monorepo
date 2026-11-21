@@ -1,5 +1,5 @@
 {
-    "name": "@nextrap/ntl-code-editor",
+    "name": "@nextrap/nte-code-editor",
     "version": "0.0.0",
     "type": "module",
     "main": "./index.js",
@@ -20,7 +20,7 @@
         "README.md"
     ],
     "repository": {
-        "directory": "nextrap-layout/ntl-code-editor",
+        "directory": "nextrap-elements/nte-code-editor",
         "type": "git",
         "url": "https://github.com/nextrap/nextrap-monorepo"
     },

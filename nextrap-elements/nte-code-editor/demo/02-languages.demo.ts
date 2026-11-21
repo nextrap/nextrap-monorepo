@@ -2,7 +2,7 @@
 import '@trunkjs/content-pane';
 import { defineDemo } from '@trunkjs/demo-viewer';
 import '../index';
-import type { NtlCodeEditor } from '../index';
+import type { NteCodeEditor } from '../index';
 import css from './demo.scss?inline';
 
 // Die Markdown-Abschnitte erzeugen jeweils einen leeren Editor mit eigener Sprache.
@@ -21,7 +21,7 @@ Style- und Script-Blöcke; Markdown erkennt HTML sowie die gezeigten Code-Fences
 ## HTML
 
 ---
-{: layout="ntl-code-editor#html-editor[language=html]" section-aria-label="HTML-Beispiel"}
+{: layout="nte-code-editor#html-editor[language=html]" section-aria-label="HTML-Beispiel"}
 
 ---
 {: layout="/;"}
@@ -29,7 +29,7 @@ Style- und Script-Blöcke; Markdown erkennt HTML sowie die gezeigten Code-Fences
 ## Markdown mit HTML und Code-Fences
 
 ---
-{: layout="ntl-code-editor#markdown-editor[language=markdown]" section-aria-label="Markdown-Beispiel"}
+{: layout="nte-code-editor#markdown-editor[language=markdown]" section-aria-label="Markdown-Beispiel"}
 
 ---
 {: layout="/;"}
@@ -37,7 +37,7 @@ Style- und Script-Blöcke; Markdown erkennt HTML sowie die gezeigten Code-Fences
 ## CSS
 
 ---
-{: layout="ntl-code-editor#css-editor[language=css]" section-aria-label="CSS-Beispiel"}
+{: layout="nte-code-editor#css-editor[language=css]" section-aria-label="CSS-Beispiel"}
 
 ---
 {: layout="/;"}
@@ -45,7 +45,7 @@ Style- und Script-Blöcke; Markdown erkennt HTML sowie die gezeigten Code-Fences
 ## JavaScript
 
 ---
-{: layout="ntl-code-editor#javascript-editor[language=javascript]" section-aria-label="JavaScript-Beispiel"}
+{: layout="nte-code-editor#javascript-editor[language=javascript]" section-aria-label="JavaScript-Beispiel"}
 
 ---
 {: layout="/;"}
@@ -53,7 +53,7 @@ Style- und Script-Blöcke; Markdown erkennt HTML sowie die gezeigten Code-Fences
 ## TypeScript
 
 ---
-{: layout="ntl-code-editor#typescript-editor[language=typescript]" section-aria-label="TypeScript-Beispiel"}
+{: layout="nte-code-editor#typescript-editor[language=typescript]" section-aria-label="TypeScript-Beispiel"}
 
 ---
 {: layout="/;"}
@@ -61,7 +61,7 @@ Style- und Script-Blöcke; Markdown erkennt HTML sowie die gezeigten Code-Fences
 ## SCSS
 
 ---
-{: layout="ntl-code-editor#scss-editor[language=scss]" section-aria-label="SCSS-Beispiel"}
+{: layout="nte-code-editor#scss-editor[language=scss]" section-aria-label="SCSS-Beispiel"}
 
 ---
 {: layout="/;"}
@@ -69,8 +69,8 @@ Style- und Script-Blöcke; Markdown erkennt HTML sowie die gezeigten Code-Fences
   wrapper_html: '<tj-content-pane>{{content}}</tj-content-pane>',
   // value bleibt in jedem Sprachmodus ein String; die Inhalte werden nicht ausgeführt.
   afterRender({ query }) {
-    query<NtlCodeEditor>('#html-editor').label = 'HTML-Beispiel';
-    query<NtlCodeEditor>('#html-editor').value = `<div class="card">
+    query<NteCodeEditor>('#html-editor').label = 'HTML-Beispiel';
+    query<NteCodeEditor>('#html-editor').value = `<div class="card">
   <h2>Eine Karte</h2>
   <style>
     .card { color: rebeccapurple; }
@@ -81,8 +81,8 @@ Style- und Script-Blöcke; Markdown erkennt HTML sowie die gezeigten Code-Fences
   </script>
 </div>`;
 
-    query<NtlCodeEditor>('#markdown-editor').label = 'Markdown-Beispiel';
-    query<NtlCodeEditor>('#markdown-editor').value = `# Markdown und HTML
+    query<NteCodeEditor>('#markdown-editor').label = 'Markdown-Beispiel';
+    query<NteCodeEditor>('#markdown-editor').value = `# Markdown und HTML
 
 **Formatierter Text** und ein [Link](https://example.org).
 
@@ -101,8 +101,8 @@ $accent: rebeccapurple;
 .card { &:hover { color: $accent; } }
 \`\`\``;
 
-    query<NtlCodeEditor>('#css-editor').label = 'CSS-Beispiel';
-    query<NtlCodeEditor>('#css-editor').value = `.card {
+    query<NteCodeEditor>('#css-editor').label = 'CSS-Beispiel';
+    query<NteCodeEditor>('#css-editor').value = `.card {
   display: grid;
   gap: 1rem;
   color: rebeccapurple;
@@ -112,8 +112,8 @@ $accent: rebeccapurple;
   color: darkviolet;
 }`;
 
-    query<NtlCodeEditor>('#javascript-editor').label = 'JavaScript-Beispiel';
-    query<NtlCodeEditor>('#javascript-editor').value =
+    query<NteCodeEditor>('#javascript-editor').label = 'JavaScript-Beispiel';
+    query<NteCodeEditor>('#javascript-editor').value =
       `const pages = ['Start', 'Kontakt'];
 
 function renderTitles(items) {
@@ -122,8 +122,8 @@ function renderTitles(items) {
 
 console.log(renderTitles(pages));`;
 
-    query<NtlCodeEditor>('#typescript-editor').label = 'TypeScript-Beispiel';
-    query<NtlCodeEditor>('#typescript-editor').value = `interface Page {
+    query<NteCodeEditor>('#typescript-editor').label = 'TypeScript-Beispiel';
+    query<NteCodeEditor>('#typescript-editor').value = `interface Page {
   id: number;
   title: string;
 }
@@ -134,8 +134,8 @@ function findPage(pages: Page[], id: number): Page | undefined {
 
 const selected = findPage([{ id: 1, title: 'Start' }], 1);`;
 
-    query<NtlCodeEditor>('#scss-editor').label = 'SCSS-Beispiel';
-    query<NtlCodeEditor>('#scss-editor').value = `$accent: rebeccapurple;
+    query<NteCodeEditor>('#scss-editor').label = 'SCSS-Beispiel';
+    query<NteCodeEditor>('#scss-editor').value = `$accent: rebeccapurple;
 
 @mixin card-border($color) {
   border: 1px solid $color;

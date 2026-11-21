@@ -9,3 +9,9 @@
 .cm-scroller {
   overflow: auto;
 }
+
+// Beide Diff-Seiten teilen einen vertikalen Scrollport; CodeMirror richtet die Zeilen aus.
+.cm-mergeView {
+  min-width: 0;
+  overflow: auto;
+}
