@@ -1,0 +1,11 @@
+// Der Host und sein Mount-Punkt dürfen in flexiblen Layouts schmaler als der Code werden.
+:host,
+#editor {
+  display: block;
+  min-width: 0;
+}
+
+// Horizontales und vertikales Scrollen bleiben innerhalb der CodeMirror-View.
+.cm-scroller {
+  overflow: auto;
+}

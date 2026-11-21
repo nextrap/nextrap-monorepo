@@ -1,0 +1,43 @@
+{
+    "name": "@nextrap/ntl-code-editor",
+    "version": "0.0.0",
+    "type": "module",
+    "main": "./index.js",
+    "types": "./index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./index.d.ts",
+            "sass": "./index.scss",
+            "import": "./index.js"
+        },
+        "./index.scss": "./index.scss"
+    },
+    "files": [
+        "index.*",
+        "src",
+        ".agents",
+        ".ai-usage-info.md",
+        "README.md"
+    ],
+    "repository": {
+        "directory": "nextrap-layout/ntl-code-editor",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
+    "peerDependencies": {
+        "@codemirror/autocomplete": "^6.20.4",
+        "@codemirror/commands": "^6.11.1",
+        "@codemirror/lang-css": "^6.3.1",
+        "@codemirror/lang-html": "^6.4.12",
+        "@codemirror/lang-javascript": "^6.2.5",
+        "@codemirror/lang-markdown": "^6.5.2",
+        "@codemirror/lang-sass": "^6.0.2",
+        "@codemirror/language": "^6.13.1",
+        "@codemirror/merge": "^6.12.3",
+        "@codemirror/state": "^6.7.6",
+        "@codemirror/view": "^6.43.15",
+        "@lezer/highlight": "^1.2.5",
+        "@nextrap/nt-core": "^2.0.2",
+        "lit": "^3.3.2"
+    }
+}
