@@ -1,14 +1,13 @@
 # @nextrap/ntl-spa-content
 
-Viewport-hohes SPA-Layout für Navigation, Editor und Inspector. Die Sidebars
-reichen über die gesamte Höhe; Header und Footer des Hauptinhalts bleiben in
-der Mitte. Alle drei Inhaltsbereiche scrollen unabhängig.
+SPA-Layout für Navigation, Editor und Inspector mit einem gemeinsamen
+Dokument-Scrollweg. Die globale Navbar scrollt aus dem Bild; der Content-Header
+und beide Sidebars bleiben am oberen Viewport-Rand sticky.
 
-Mit CSS-View-Timelines nutzen die drei Spalten zunächst den sichtbaren Platz
-unter der Navbar. Beim Wegscrollen der Navbar wachsen sie auf die volle
-Viewport-Höhe; der Footer bleibt dabei sichtbar und der Inhalt erhält den
-verbleibenden Platz. Ohne diese Browser-Unterstützung behalten die Spalten die
-volle Höhe, sodass der Footer erst nach dem Wegscrollen der Navbar sichtbar ist.
+Der Hauptinhalt bestimmt die Dokumenthöhe und besitzt keinen zusätzlichen
+Scrollport. Sein Footer folgt im Dokumentfluss. Die Sidebars füllen die gesamte
+Fensterhöhe (`100dvh`, Fallback `100vh`) und scrollen nur bei überlangem Inhalt
+intern. View-Timelines und Scroll-Listener sind nicht erforderlich.
 
 ## Demo
 

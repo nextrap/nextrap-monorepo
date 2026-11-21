@@ -1,76 +1,50 @@
-// Der volle Host erhält den äußeren Scrollweg, auch wenn seine Spalten zunächst kürzer sind.
+// Der Hauptinhalt bestimmt die Dokumenthöhe; eine vorherige Navbar scrollt normal aus dem Bild.
 :host {
   box-sizing: border-box;
   display: flex;
-  position: sticky;
-  inset-block-start: 0;
+  position: static;
   inline-size: 100%;
-  block-size: 100vh;
-  block-size: 100dvh;
   min-inline-size: 0;
+  min-block-size: 0;
 }
 
-// Jede Spalte verteilt die verfügbare Höhe zwischen festen und scrollenden Slots.
+// Die Spalten verteilen Header, Inhalt und Footer ohne zusätzlichen mittleren Scrollport.
 #sidebar-left,
 #main,
 #sidebar-right {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  block-size: 100%;
   min-inline-size: 0;
   min-block-size: 0;
 }
 
-// Die Host-Timeline misst den sichtbaren Platz unter einer wegscrollenden Navbar.
-@supports (view-timeline-name: --_ntl-spa-content-viewport) and
-  (animation-timeline: --_ntl-spa-content-viewport) and
-  (animation-range: entry 0% entry 100%) {
-  :host {
-    view-timeline-name: --_ntl-spa-content-viewport;
-    view-timeline-axis: block;
-    view-timeline-inset: 0;
-  }
-
-  // Alle Spalten enden am Viewport-Rand; Content und Sidebars behalten eigene Scrollports.
-  // Die nicht-null Dauer hält die Animation auch in Firefox aktiv; der Scrollstand steuert sie.
-  #sidebar-left,
-  #main,
-  #sidebar-right {
-    animation: ntl-spa-content-visible-height 1ms linear both;
-    animation-timeline: --_ntl-spa-content-viewport;
-    animation-range: entry 0% entry 100%;
-  }
-
-  // Nur die Spalten wachsen mit dem Scrollfortschritt; die Hosthöhe bleibt unverändert.
-  @keyframes ntl-spa-content-visible-height {
-    from {
-      block-size: 0;
-    }
-
-    to {
-      block-size: 100%;
-    }
-  }
-}
-
-// Die Mitte erhält den gesamten Platz, den die vorhandenen Sidebars übriglassen.
+// Die Mitte wächst mit ihrem Inhalt und lässt Platz für die optionalen Sidebars.
 #main {
   flex: 1 1 0;
 }
 
-// Die Breiten sind konfigurierbar; beide Sidebars lassen der Mitte mindestens 30%.
+// Sidebars bleiben fensterhoch am oberen Rand; überlanger Inhalt scrollt innerhalb der Spalte.
+#sidebar-left,
+#sidebar-right {
+  position: sticky;
+  inset-block-start: 0;
+  align-self: flex-start;
+  block-size: 100vh;
+  block-size: 100dvh;
+  max-inline-size: 35%;
+  overflow: auto;
+}
+
+// Beide Sidebars lassen zusammen mindestens 30 Prozent der Breite für den Hauptinhalt frei.
 #sidebar-left {
   flex: 0 1 var(--sidebar-left-width, 16rem);
-  max-inline-size: 35%;
 }
-
 #sidebar-right {
   flex: 0 1 var(--sidebar-right-width, 18rem);
-  max-inline-size: 35%;
 }
 
-// Slots bilden selbst die Boxen; zusätzliche Header- und Scroll-Wrapper entfallen.
+// Slots bilden die Boxen im normalen Fluss; nur ganze Sidebars besitzen eigene Scrollports.
 slot {
   box-sizing: border-box;
   display: block;
@@ -78,13 +52,11 @@ slot {
   min-inline-size: 0;
 }
 
-// Native Scrollports lassen an ihren Grenzen das Scrollen der äußeren Seite zu.
-slot[name='sidebar-left'],
-slot:not([name]),
-slot[name='sidebar-right'] {
-  flex: 1 1 0;
-  min-block-size: 0;
-  overflow: auto;
+// Ausschließlich der Content-Header bleibt über dem vorbeiscrollenden Hauptinhalt stehen.
+slot[name='header'] {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 1;
 }
 
 // Ein Header allein öffnet keine Sidebar; unbesetzte feste Slots belegen keinen Platz.

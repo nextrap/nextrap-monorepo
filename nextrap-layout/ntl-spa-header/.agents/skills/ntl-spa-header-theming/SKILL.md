@@ -20,6 +20,11 @@ ntl-spa-header.style-default {
 }
 ```
 
+Für die unveränderte Baseline genügt der explizite Sass-Import
+`@use '@nextrap/ntl-spa-header/default';`. `default.scss` materialisiert das
+bestehende Mixin unter `ntl-spa-header.style-default` und wird auch beim
+Library-Build und im veröffentlichten Package mitgeliefert.
+
 `index.scss` exportiert nur `default-style()` und gibt beim Import kein CSS aus.
 Das Mixin gestaltet Text, hellgraue Fläche im hellen Theme, Schrift und untere
 Trennlinie mit `--nt-text`, `--nt-surface-muted`, `--nt-font-family` und

@@ -25,6 +25,7 @@ export default defineConfig({
       'README.md',
       '.ai-usage-info.md',
       'index.scss',
+      'default.scss',
       'src/**/*.scss',
       '.agents/**/*',
     ]),

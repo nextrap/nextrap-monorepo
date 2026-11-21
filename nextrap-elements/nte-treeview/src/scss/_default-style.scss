@@ -83,12 +83,15 @@
     padding-block: var(--nt-space-1, 0.25rem);
     overflow-wrap: anywhere;
   }
-  // Nur Name und Icon bilden die Klickfläche; die freie Namensspalte bleibt passiv.
+  // Icon und Name bleiben auch bei blockförmigem Slot-Inhalt in einer gemeinsamen Klickzeile.
   & nte-treeview-item::part(label) {
-    display: block;
-    inline-size: fit-content;
-    max-inline-size: 100%;
-    align-content: center;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    inline-size: max-content;
+    max-inline-size: none;
+    white-space: nowrap;
+    overflow-wrap: normal;
   }
   // Beschriftungen ohne Link sind native Auswahlbuttons mit derselben Zeilenoptik.
   & nte-treeview-item::part(text) {
@@ -102,13 +105,14 @@
     text-align: start;
     cursor: pointer;
   }
-  // Explizite Datei-Icons und der Ordner-Fallback liegen direkt vor dem Namen.
+  // Datei-Icons und Ordner-Fallback behalten ihre Breite direkt vor dem einzeiligen Namen.
   & nte-treeview-item > [slot='icon'],
   & nte-treeview-item::part(folder-icon) {
     display: inline-block;
+    flex-shrink: 0;
     inline-size: 1.125em;
     block-size: 1em;
-    margin-inline-end: var(--nt-space-3, 0.75rem);
+    margin-inline-end: var(--nt-space-1, 0.25rem);
     vertical-align: -0.125em;
   }
 

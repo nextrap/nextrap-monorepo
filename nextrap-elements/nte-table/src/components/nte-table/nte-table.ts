@@ -376,7 +376,7 @@ export class NteTableElement extends nextrap_element({
       this._setManagedStyle(body, 'inline-size', '100%');
       this._setManagedStyle(body, 'overflow-x', 'auto');
       this._setManagedStyle(body, 'overflow-y', 'auto');
-      this._setManagedStyle(body, 'overscroll-behavior', 'contain');
+      this._setManagedStyle(body, 'overscroll-behavior', 'auto');
       this._setManagedStyle(body, 'touch-action', 'pan-x pan-y');
       this._setManagedStyle(body, '-webkit-overflow-scrolling', 'touch');
 

@@ -18,7 +18,12 @@
     border-inline-start: 1px solid var(--nt-border);
   }
 
-  // Feste Leisten werden ausschließlich in ihrer jeweiligen Spalte gestaltet.
+  // Die deckende Fläche verhindert durchscheinenden Hauptinhalt unter dem sticky Header.
+  &::part(header) {
+    background: var(--nt-surface);
+  }
+
+  // Leisten werden ausschließlich in ihrer jeweiligen Spalte gestaltet.
   &::part(header),
   &::part(sidebar-left-header),
   &::part(sidebar-right-header) {

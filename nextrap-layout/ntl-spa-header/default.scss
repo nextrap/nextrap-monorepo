@@ -1,0 +1,6 @@
+@use './index' as header;
+
+// Der explizite Style-Import materialisiert die Baseline, unabhängig vom Runtime-Import.
+ntl-spa-header.style-default {
+  @include header.default-style();
+}

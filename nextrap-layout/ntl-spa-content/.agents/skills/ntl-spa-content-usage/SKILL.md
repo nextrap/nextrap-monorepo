@@ -5,9 +5,8 @@ description: "@nextrap/ntl-spa-content für SPA-Workspaces verwenden: Import, Nt
 
 # SPA Content verwenden
 
-Nutze dieses Layout für einen Viewport-hohen Arbeitsbereich mit Navigation,
-Editorinhalt und optionalem Inspector. Für normale fließende Seiteninhalte
-verwende ein Dokumentlayout. Für visuelle Anpassungen lies den
+Nutze dieses Layout für einen dokument-scrollenden Arbeitsbereich mit sticky
+Content-Header und optionalen fensterhohen sticky Sidebars. Für visuelle Anpassungen lies den
 [Theming-Skill](../ntl-spa-content-theming/SKILL.md).
 
 ## Import und Einstieg
@@ -19,7 +18,7 @@ import '@nextrap/ntl-spa-header';
 ```
 
 Verwende `<ntl-spa-content>` direkt im HTML. Benannte Inhalte sind direkte Kinder
-mit `slot="…"`; Kinder ohne `slot` bilden den mittleren, scrollenden Inhalt.
+mit `slot="…"`; Kinder ohne `slot` bilden den mittleren Inhalt im Dokumentfluss.
 Ein Content-Pane-Wrapper oder Markdown ist für diese Verwendung nicht nötig.
 
 ```html
@@ -70,7 +69,7 @@ Ein Content-Pane-Wrapper oder Markdown ist für diese Verwendung nicht nötig.
 
   <!-- Die Hilfelinks führen zu den Hinweisen im selben scrollenden Inhalt. -->
   <section id="editor-notes" aria-label="Hinweise zum Workspace">
-    <p>Die Sidebars und der Dokumentbereich scrollen unabhängig voneinander.</p>
+    <p>Der Dokumentbereich scrollt mit der Seite; überlange Sidebars scrollen intern.</p>
   </section>
   <footer slot="footer" class="d-flex flex-wrap justify-content-between gap-2 m-0 small">
     <span>Markdown · UTF-8</span>
@@ -111,13 +110,13 @@ verbleibenden Formular-Korrekturen.
 
 | Slot | Verhalten |
 |---|---|
-| Default | Füllt die verbleibende Mitte und scrollt standardmäßig zweiachsig. |
-| `header` | Fester Bereich über dem Default-Inhalt, nur in der Mitte. |
-| `footer` | Fester Bereich unter dem Default-Inhalt, nur in der Mitte. |
-| `sidebar-left` | Linke Sidebar mit eigenem Scrollport über die verbleibende Spaltenhöhe. |
-| `sidebar-left-header` | Fester Header innerhalb der linken Sidebar. |
+| Default | Hauptinhalt bestimmt die Dokumenthöhe, ohne eigenen Scrollport. |
+| `header` | Sticky am oberen Viewport-Rand, ausschließlich in der Mitte. |
+| `footer` | Folgt dem Hauptinhalt im Dokumentfluss. |
+| `sidebar-left` | Inhalt der fensterhohen sticky linken Sidebar. |
+| `sidebar-left-header` | Header innerhalb der gemeinsam scrollenden linken Sidebar. |
 | `sidebar-right` | Rechte Sidebar, spiegelbildlich zur linken. |
-| `sidebar-right-header` | Fester Header innerhalb der rechten Sidebar. |
+| `sidebar-right-header` | Header innerhalb der gemeinsam scrollenden rechten Sidebar. |
 
 Lass unbenutzte Slots weg. Eine Sidebar erscheint nur, wenn ihrem Inhaltsslot
 ein Element zugewiesen ist; ihr Header allein öffnet sie nicht.
@@ -138,39 +137,28 @@ Beide Demo-Entrys registrieren `ntl-spa-header` und `ntl-spa-content`; das
 Demo-SCSS materialisiert beide öffentlichen Style-Mixins. Die `.demo.ts`
 übernimmt denselben HTML-Inhalt in einen eigenen Viewport des Demo-Viewers.
 
-Beim äußeren Seitenscrollen verschwindet die Navbar und das Layout erreicht
-den oberen Viewport-Rand. Die Breite entspricht dem umgebenden Container;
-verwende für volle Bildschirmbreite einen unbeschränkten Seitencontainer.
-Der Host bleibt `100dvh` hoch, mit `100vh` als Fallback. Dadurch bleibt der äußere
-Scrollweg erhalten, während die sichtbare Höhe seiner drei Spalten variiert.
+Beim Seitenscrollen verschwindet die Navbar. Der Hauptinhalt bestimmt die
+Dokumenthöhe; sein Header bleibt ab dem oberen Viewport-Rand sticky. Der Footer
+folgt dem Inhalt und ist nicht am Fensterrand fixiert. Die Breite entspricht dem
+umgebenden Container.
 
-Die Spalten füllen zunächst nur den sichtbaren Platz unter der Navbar. Beim
-Wegscrollen der Navbar wachsen sie bis zur vollen Viewport-Höhe. Der mittlere
-Footer bleibt am unteren Viewport-Rand sichtbar; der Default-Inhalt erhält
-jeweils den verbleibenden Platz zwischen Header und Footer. Die Sidebars passen
-sich gemeinsam mit der mittleren Spalte an.
-
-Dieses Verhalten benötigt CSS-Unterstützung für `view-timeline`,
-`animation-timeline` und `animation-range`; siehe die
-[Browser-Kompatibilität von CSS-Animation-Timelines](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/animation-timeline).
-Ohne diese Unterstützung bleiben die Spalten vollständig Viewport-hoch.
-Dann liegt der Footer zunächst unterhalb des sichtbaren Bereichs und wird erst
-sichtbar, nachdem die Navbar weggescrollt ist.
+Beide Sidebars bleiben ebenfalls am oberen Viewport-Rand sticky und sind
+`100dvh` hoch (`100vh` als Fallback). Überlanger Sidebar-Inhalt scrollt innerhalb
+der gesamten Spalte einschließlich ihres Headers. View-Timelines oder
+Scroll-Listener sind nicht erforderlich.
 
 Prüfe die Bildschirmhöhe auf `/demo/index.html` oder in der Fullscreen-Ansicht
 des Demo-Viewers. Die eingebettete Vorschau hat einen eigenen Viewport und kann
 unter dem Viewer-Header selbst teilweise außerhalb des Browserbereichs liegen.
 
-Scrollen über einem inneren Scrollport bewegt zuerst dessen Inhalt. An dessen
-Grenzen darf das Scrollen an die Seite weitergehen; dadurch kann beim
-Hochscrollen auch die Navbar zurückkehren. Über den festen Leisten lässt sich
-direkt die äußere Seite scrollen. Eine erzwungene Reihenfolge der Scrollports
-ist nicht Teil der API.
+Nur überlange Sidebars und eingesetzte Komponenten wie Tabellen besitzen eigene
+Scrollports. An deren Grenzen darf das Scrollen an das Dokument weitergehen.
+Der mittlere Content-Slot öffnet keinen weiteren Scrollbereich.
 
 Sticky bleibt durch den umgebenden Container begrenzt. Vermeide einen
 unbeabsichtigten `overflow: auto/hidden` an Vorfahren, wenn der Dokument-Viewport
-maßgeblich sein soll. Die Höhenanpassung verändert nur die Spalten, nicht die
-äußere Größe des Hosts.
+maßgeblich sein soll. Der Host wächst mit seinem Inhalt und begrenzt den
+Sticky-Bereich seiner Spalten.
 
 ## Breiten
 

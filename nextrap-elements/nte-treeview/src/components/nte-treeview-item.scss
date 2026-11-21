@@ -6,13 +6,13 @@
 :host([hidden]) {
   display: none;
 }
-/* Der Einzug belegt nur die erste Spalte; Zeile und Unterbaum behalten ihre volle Breite. */
+/* Die Namensspalte behält ihre Inhaltsbreite und schiebt Zusatzspalten bei Platzmangel nach rechts. */
 #row {
   display: grid;
   grid-template-columns:
     var(--_nte-treeview-indent, 0px)
     var(--_nte-treeview-toggle-width, auto)
-    minmax(0, 1fr)
+    minmax(max-content, 1fr)
     var(--nte-treeview-center-width, auto)
     var(--nte-treeview-end-width, auto);
   align-items: center;
@@ -34,13 +34,15 @@
 #toggle::-webkit-details-marker {
   display: none;
 }
+/* Icon und Titel bleiben einzeilig; lange Namen werden weder getrennt noch abgeschnitten. */
 #label {
   grid-column: 3;
   grid-row: 1;
   min-inline-size: 0;
   max-inline-size: 100%;
   justify-self: start;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+  overflow-wrap: normal;
 }
 #center {
   grid-column: 4;

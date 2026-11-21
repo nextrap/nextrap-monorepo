@@ -6,6 +6,7 @@
     "types": "./index.d.ts",
     "files": [
         "index.*",
+        "default.scss",
         "src",
         ".agents",
         ".ai-usage-info.md",
