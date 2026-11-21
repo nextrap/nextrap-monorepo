@@ -54,10 +54,23 @@
   }
 
   & > table .nte-table-drag-handle {
-    float: inline-start;
-    margin-inline-end: var(--nt-space-1, 0.25rem);
     cursor: grab;
     touch-action: none;
+  }
+
+  // Reserviert den Handle-Bereich unabhängig von der Höhe des eigentlichen Zellinhalts.
+  & > table tbody :is(th, td):has(> [data-nte-table-row-handle]) {
+    position: relative;
+    padding-inline-start: 1.75rem;
+  }
+
+  // Zentriert Zeilen-Handles auch neben hohen Controls, ohne den Zellinhalt zu verschieben.
+  & > table tbody [data-nte-table-row-handle] {
+    position: absolute;
+    inset-inline-start: 0.125rem;
+    inset-block-start: 50%;
+    transform: translateY(-50%);
+    margin: 0;
   }
 
   & > table .nte-table-drag-handle:active {
