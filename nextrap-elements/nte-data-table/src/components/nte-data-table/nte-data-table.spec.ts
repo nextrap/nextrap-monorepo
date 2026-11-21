@@ -23,6 +23,31 @@ const definition: TableDefinition<Row> = {
 afterEach(() => document.body.replaceChildren());
 
 describe('NteDataTableElement', () => {
+  // Der öffentliche Leerzustand wird ohne eigene Datenzeile zur Basistabelle weitergereicht.
+  it('forwards empty-body and toggles the overlay when data changes', async () => {
+    const element = new NteDataTableElement<Row>();
+    element.definition = definition;
+    element.innerHTML = '<div slot="empty-body">Keine Einträge<button>Hinzufügen</button></div>';
+    document.body.append(element);
+    const settle = async () => {
+      await element.updateComplete;
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    };
+    await settle();
+    const forwarding = element.renderRoot.querySelector<HTMLSlotElement>('slot[name="empty-body"]')!;
+    expect(forwarding.slot).toBe('empty-body');
+    expect(forwarding.assignedElements()[0].textContent).toContain('Keine Einträge');
+    const table = element.renderRoot.querySelector('nte-table')!;
+    const empty = table.shadowRoot!.querySelector<HTMLElement>('#empty-body')!;
+    expect(empty.hidden).toBe(false);
+    element.data = [{ id: 1, name: 'Ada', region: 'EU' }];
+    await settle();
+    expect(empty.hidden).toBe(true);
+    element.data = [];
+    await settle();
+    expect(empty.hidden).toBe(false);
+  });
+
   // Die Basistabelle stellt bei preventDefault den DOM vor dem nächsten Lit-Render wieder her.
   it('reorders data without mutating the input and preserves cell values after rendering', async () => {
     const element = new NteDataTableElement<Row>();

@@ -65,6 +65,7 @@ export class NteDataTableElement<T extends object = Record<string, unknown>> ext
         @nte-table-row-reorder=${this._handleRowReorder}
         @nte-table-sort=${this._handleSort}
       >
+        <slot name="empty-body" slot="empty-body"></slot>
         <table>
           <thead>
             <tr>

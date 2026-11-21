@@ -7,7 +7,8 @@ import { NTE_INPUT_CONTROL_ID, NTE_INPUT_VALIDATION_ID, type NteInputRenderConte
 import style from './default-text.scss?inline';
 
 export class DefaultTextPlugin extends AbstractNteInputPlugin {
-  static readonly types = ['text', 'email', 'password'];
+  // Datumsfelder verwenden denselben nativen Control- und Value-Vertrag wie Textfelder.
+  static readonly types = ['text', 'email', 'password', 'date'];
 
   override getStyleSheet() {
     return style;
@@ -38,6 +39,8 @@ export class DefaultTextPlugin extends AbstractNteInputPlugin {
         .value=${this.normalizeStringValue(this.host.value)}
         placeholder=${element.getAttribute('placeholder') ?? ''}
         aria-describedby=${NTE_INPUT_VALIDATION_ID}
+        min=${ifDefined(element.getAttribute('min') ?? undefined)}
+        max=${ifDefined(element.getAttribute('max') ?? undefined)}
         pattern=${ifDefined(element.getAttribute('pattern') ?? undefined)}
         minlength=${ifDefined(element.getAttribute('minlength') ?? undefined)}
         maxlength=${ifDefined(element.getAttribute('maxlength') ?? undefined)}

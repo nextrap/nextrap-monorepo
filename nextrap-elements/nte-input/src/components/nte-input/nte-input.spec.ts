@@ -7,6 +7,39 @@ import { NTE_INPUT_CONTROL_ID, NTE_INPUT_VALIDATION_ID, type NteInputValue } fro
 import { NteInput } from './nte-input';
 
 describe('NteInput', () => {
+  // Datumsfelder behalten ISO-Werte bei und delegieren Bereichsgrenzen an das native Input.
+  it('renders date controls with min/max and synchronizes edited dates', async () => {
+    const element = document.createElement('nte-input') as NteInput;
+    element.type = 'date';
+    element.value = '2026-06-15';
+    element.setAttribute('min', '2026-06-01');
+    element.setAttribute('max', '2026-06-30');
+    document.body.append(element);
+    try {
+      await element.updateComplete;
+      await element.updateComplete;
+      const input = element.shadowRoot!.querySelector('input')!;
+      expect(input.type).toBe('date');
+      expect(input.value).toBe('2026-06-15');
+      expect(input.min).toBe('2026-06-01');
+      expect(input.max).toBe('2026-06-30');
+      input.value = '2026-05-31';
+      expect(input.validity.rangeUnderflow).toBe(true);
+      input.value = '2026-07-01';
+      expect(input.validity.rangeOverflow).toBe(true);
+      input.value = '2026-06-20';
+      input.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
+      expect(element.value).toBe('2026-06-20');
+      element.setAttribute('min', '2026-06-21');
+      element.requestUpdate();
+      await element.updateComplete;
+      expect(input.min).toBe('2026-06-21');
+      expect(input.validity.rangeUnderflow).toBe(true);
+    } finally {
+      element.remove();
+    }
+  });
+
   it('should create an element', () => {
     const element = new NteInput();
 

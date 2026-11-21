@@ -13,6 +13,24 @@ Mit `definition.defaultSortable: false` wird die interaktive Sortierung standard
 
 Spaltenbreiten: `width` akzeptiert Zahlen (Pixel), `'120px'`, `'20%'` und `'2fr'`. Zuerst werden Pixel reserviert; Prozent beziehen sich auf den danach verbleibenden Platz. `fr` verteilt den übrigen Platz gewichtet; ohne Breite gilt `'1fr'`. `minWidth`/`maxWidth` begrenzen Verteilung und Resizing. Überschüsse begrenzter fr-Spalten werden weiterverteilt, zu große Mindestbreiten erzeugen horizontalen Overflow. Ohne freie fr-Spalten bleibt Restfläche leer. Manuelle `viewState.columnWidths` überschreiben die Definition als Pixelwerte. Größenänderungen berechnen das Layout automatisch neu. Die Demos zeigen feste, prozentuale und flexible Spalten.
 
+## Leerer Tabellenbody
+
+`nte-data-table` reicht den benannten Slot `empty-body` an `nte-table` weiter.
+Bei leerem Datenarray füllt er den Bodybereich aus und zentriert den Inhalt horizontal
+und vertikal. Header und Footer bleiben erhalten. Mit Daten wird der Slot ausgeblendet.
+
+```html
+<nte-data-table>
+  <div slot="empty-body">
+    <p>Keine Einträge</p>
+    <button type="button">Meldung hinzufügen</button>
+  </div>
+</nte-data-table>
+```
+
+Definition, Daten und Button-Aktion werden wie gewohnt von der Anwendung gesetzt.
+Ein ausführbares Beispiel mit Hinzufügen und Entfernen zeigt `demo/04-empty-body.demo.ts`.
+
 ## Zeilen verschieben
 
 Mit `features="reorder-rows"` lassen sich Zeilen über Drag-Handles verschieben.

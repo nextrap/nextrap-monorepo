@@ -99,6 +99,7 @@ export class NteTableElement extends nextrap_element({
   @property({ type: String, reflect: true, attribute: 'aria-label' }) public override accessor ariaLabel = '';
 
   private _body: HTMLTableSectionElement | null = null;
+  private _rowObserver: MutationObserver | null = null;
   private _columnWidths: number[] = [];
   private _layoutFrame: number | null = null;
   private _managed = new Map<HTMLElement, ManagedState>();
@@ -172,6 +173,9 @@ export class NteTableElement extends nextrap_element({
         aria-label="${this._viewportLabel()}"
       >
         <slot @slotchange=${this._handleSlotChange}></slot>
+        <div id="empty-body" part="empty-body" hidden>
+          <slot name="empty-body"></slot>
+        </div>
       </div>
     `;
   }
@@ -200,6 +204,9 @@ export class NteTableElement extends nextrap_element({
       return;
     }
 
+    // Native Tabellen melden hinzugefügte/entfernte Zeilen nicht per slotchange.
+    this._rowObserver = new MutationObserver(() => this._scheduleLayout());
+    this._rowObserver.observe(sourceTable, { childList: true, subtree: true });
     const view = this.ownerDocument.defaultView;
     if (view?.ResizeObserver) {
       this._resizeObserver = new view.ResizeObserver(() => this._scheduleLayout());
@@ -209,6 +216,10 @@ export class NteTableElement extends nextrap_element({
   }
 
   private _unbindSourceTable(): void {
+    this._rowObserver?.disconnect();
+    this._rowObserver = null;
+    const empty = this.renderRoot.querySelector<HTMLElement>('#empty-body');
+    if (empty) empty.hidden = true;
     this._setBody(null);
     this._resizeObserver?.disconnect();
     this._resizeObserver = null;
@@ -438,6 +449,14 @@ export class NteTableElement extends nextrap_element({
 
       this._applyPinnedColumns(rows, headerCells, visibleColumns, widths);
       this._setBody(body);
+      // Der Leerzustand überlagert ausschließlich den Body, niemals Header oder Footer.
+      const empty = this.renderRoot.querySelector<HTMLElement>('#empty-body');
+      const viewport = this.renderRoot.querySelector<HTMLElement>('#viewport');
+      if (empty && viewport) {
+        empty.hidden = body.rows.length > 0;
+        empty.style.insetBlockStart = `${body.getBoundingClientRect().top - viewport.getBoundingClientRect().top}px`;
+        empty.style.blockSize = this._safeHeight();
+      }
       this._syncHorizontalScroll();
       this._refreshWidths = false;
     } finally {

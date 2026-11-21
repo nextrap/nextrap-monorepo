@@ -2,6 +2,24 @@
 
 Display-only table viewport with a fixed header/footer, fixed column widths, hidden columns, pinned leading columns and programmatic selection. The native Light DOM table remains the only table.
 
+## Leerer Tabellenbody
+
+Der benannte Slot `empty-body` füllt bei leerem `tbody` dessen gesamte Fläche aus.
+Der Inhalt wird standardmäßig horizontal und vertikal zentriert; Header und Footer
+bleiben sichtbar und bedienbar. Schon eine Body-Zeile blendet den Slot aus.
+Änderungen an nativen Zeilen werden beobachtet. Es gibt keinen eingebauten Hinweistext.
+Über `::part(empty-body)` kann das Layout angepasst werden.
+
+```html
+<nte-table height="16rem">
+  <table>
+    <thead><tr><th>Meldung</th></tr></thead>
+    <tbody></tbody>
+  </table>
+  <div slot="empty-body">Keine Einträge</div>
+</nte-table>
+```
+
 ## Import and basic usage
 
 ```ts
