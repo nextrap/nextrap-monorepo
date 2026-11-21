@@ -20,6 +20,19 @@ export default defineDemo({
         },
       },
       {
+        // Der Loader bleibt bis Ready aktiv; die übrigen Controls bleiben bedienbar.
+        id: 'mini-loading', type: 'button', label: 'Mini-Loader',
+        onClick: async (_, env) => {
+          await Feedback.loading({ variant: 'mini', message: 'Die Daten werden vorbereitet …' });
+          env.toast.log('Mini-Loader geschlossen');
+        },
+      },
+      {
+        // Ready beendet den aktiven Loader einschließlich seiner Abschlussanimation.
+        id: 'ready', type: 'button', label: 'Ready',
+        onClick: () => Feedback.ready(),
+      },
+      {
         id: 'progress', type: 'button', label: 'Progress 45 %',
         onClick: (_, env) => {
           void Feedback.progress({ progress: 45, message: 'Dateien werden verarbeitet …', reference: env.query<HTMLElement>('[data-reference]') }).then(() => env.toast.log('progress closed'));
@@ -49,6 +62,7 @@ export default defineDemo({
       <main class="nte-feedback-demo">
         <h1>NTE Feedback</h1>
         <p>Die Controls rufen ausschließlich die öffentliche <code>Feedback</code>-API auf.</p>
+        <p>Mini-Loader starten, mit Ready abschließen oder mit Schließen sofort beenden.</p>
         <button type="button" class="btn btn-outline-primary" data-reference>Import #2026-08</button>
         <nte-feedback class="style-default"></nte-feedback>
       </main>`;

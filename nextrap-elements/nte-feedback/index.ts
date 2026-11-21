@@ -17,6 +17,7 @@ import type {
 declare global {
   interface WindowEventMap {
     'nextrap:loading': CustomEvent<NextrapLoadingDetail>;
+    'nextrap:ready': CustomEvent<void>;
     'nextrap:progress': CustomEvent<NextrapProgressDetail>;
     'nextrap:success': CustomEvent<NextrapSuccessDetail>;
     'nextrap:fail': CustomEvent<NextrapFailDetail>;

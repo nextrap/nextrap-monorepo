@@ -6,6 +6,60 @@
   z-index: 9999;
 }
 
+// Der nichtmodale Top-Layer-Balken bleibt oben fixiert und lässt alle Klicks durch.
+#mini-loader {
+  position: fixed;
+  inset: 0 0 auto;
+  width: 100%;
+  max-width: none;
+  height: 2px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  background: transparent;
+  pointer-events: none;
+  z-index: 2147483647;
+  opacity: 1;
+}
+
+// Auch der Popover-Backdrop darf die Anwendung weder verdecken noch blockieren.
+#mini-loader::backdrop {
+  background: transparent;
+  pointer-events: none;
+}
+
+// Nach der Abschluss-Transition blendet CSS den Balken aus und meldet animationend.
+#mini-loader.ready {
+  animation: mini-loader-finish 160ms ease-out 180ms forwards;
+}
+
+// Der Ladebalken läuft zehn Sekunden und bleibt anschließend kurz vor dem Ende stehen.
+#mini-loader-value {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--nt-primary);
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: mini-loader-progress 10s linear forwards;
+  transition: transform 180ms ease-out;
+}
+
+// 50 % nach 200 ms; die folgenden Abschnitte werden deutlich langsamer.
+@keyframes mini-loader-progress {
+  0% { transform: scaleX(0); }
+  2% { transform: scaleX(0.5); }
+  10% { transform: scaleX(0.75); }
+  50% { transform: scaleX(0.9); }
+  100% { transform: scaleX(0.95); }
+}
+
+// Dieses Animation-Ende schließt den Loader und löst sein Promise auf.
+@keyframes mini-loader-finish {
+  to { opacity: 0; }
+}
+
 #dialog {
   width: var(--nte-feedback-dialog-width, min(calc(100vw - 2rem), 42rem));
   max-height: var(--nte-feedback-dialog-max-height, calc(100vh - 2rem));
@@ -112,6 +166,18 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  // Ohne Bewegungsanimation bleibt nur ein kurzer Fade für den gemeinsamen Abschluss.
+  #mini-loader-value {
+    animation: none;
+    transform: scaleX(0.5);
+    transition: none;
+  }
+
+  #mini-loader.ready {
+    animation-duration: 1ms;
+    animation-delay: 0s;
+  }
+
   #dialog.shake {
     animation: none;
   }
