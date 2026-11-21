@@ -6,6 +6,44 @@
   z-index: 9999;
 }
 
+// Der nichtmodale Top-Layer-Balken bleibt oben fixiert und lässt alle Klicks durch.
+#mini-loader {
+  position: fixed;
+  inset: 0 0 auto;
+  width: 100%;
+  max-width: none;
+  height: 2px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  background: transparent;
+  pointer-events: none;
+  z-index: 2147483647;
+  opacity: 1;
+  transition: opacity 160ms ease-out;
+}
+
+// Auch der Popover-Backdrop darf die Anwendung weder verdecken noch blockieren.
+#mini-loader::backdrop {
+  background: transparent;
+  pointer-events: none;
+}
+
+// Erst nach dem vollständigen Durchlaufen blendet der Balken aus.
+#mini-loader.fading {
+  opacity: 0;
+}
+
+// ScaleX vermeidet Layoutänderungen; die Farbe liefert das öffentliche Theme-Mixin.
+#mini-loader-value {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: left center;
+  will-change: transform;
+}
+
 #dialog {
   width: var(--nte-feedback-dialog-width, min(calc(100vw - 2rem), 42rem));
   max-height: var(--nte-feedback-dialog-max-height, calc(100vh - 2rem));

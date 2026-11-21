@@ -10,6 +10,8 @@ interface NextrapFeedbackDetail {
 }
 
 export interface NextrapLoadingDetail extends NextrapFeedbackDetail {
+  /** Wählt den blockierenden Dialog oder den schmalen Ladebalken am oberen Rand. */
+  variant?: 'dialog' | 'mini';
   reference?: string | HTMLElement;
   onAbort?: () => void;
 }

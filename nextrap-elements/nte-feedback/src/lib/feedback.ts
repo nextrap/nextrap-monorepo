@@ -29,6 +29,11 @@ export class Feedback {
     window.dispatchEvent(new CustomEvent(CLOSE_EVENT));
   }
 
+  /** Schließt Loading ab; der Mini-Loader läuft vor dem Ausblenden bis zum Ende. */
+  static ready(): void {
+    window.dispatchEvent(new CustomEvent('nextrap:ready'));
+  }
+
   static loading(input: string | NextrapLoadingDetail = {}): Promise<void> {
     return Feedback.open('loading', withMessage(input));
   }
