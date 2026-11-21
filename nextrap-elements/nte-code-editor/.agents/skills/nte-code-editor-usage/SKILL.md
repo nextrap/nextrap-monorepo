@@ -1,12 +1,12 @@
 ---
-name: ntl-code-editor-usage
-description: Verwende diesen Skill für Markup, Auswahl und API-Integration von ntl-code-editor, insbesondere value, Formulare, Sprachen, HTML-Completion, Folding und Diffs. Verwende für Theme-Änderungen den separaten ntl-code-editor-theming Skill.
+name: nte-code-editor-usage
+description: Verwende diesen Skill für Markup, Auswahl und API-Integration von nte-code-editor, insbesondere value, Formulare, Sprachen, HTML-Completion, Folding und Diffs. Verwende für Theme-Änderungen den separaten nte-code-editor-theming Skill.
 ---
 
-# NTL Code Editor verwenden
+# NTE Code Editor verwenden
 
-Importiere `@nextrap/ntl-code-editor`. Das Package registriert `ntl-code-editor`
-und exportiert `NtlCodeEditor`, `CodeEditorLanguage` und `CodeEditorHtmlElement`.
+Importiere `@nextrap/nte-code-editor`. Das Package registriert `nte-code-editor`
+und exportiert `NteCodeEditor`, `CodeEditorLanguage` und `CodeEditorHtmlElement`.
 Verwende es für bearbeitbaren Quelltext und Unified-Diffs. HTML im Editor ist
 Quelltext und wird nicht als Vorschau ausgeführt.
 
@@ -17,7 +17,7 @@ Editor in ein Layout einsetzt. Verwende einen leeren Layout-Container:
 
 ```markdown
 ---
-{: layout="ntl-code-editor#source[language=html][name=source]"}
+{: layout="nte-code-editor#source[language=html][name=source]"}
 
 ---
 {: layout="/;"}
@@ -26,7 +26,7 @@ Editor in ein Layout einsetzt. Verwende einen leeren Layout-Container:
 Setze den Code anschließend über die Property der erzeugten Instanz:
 
 ```ts
-const editor = document.querySelector('ntl-code-editor')!;
+const editor = document.querySelector('nte-code-editor')!;
 editor.label = 'HTML-Quelltext';
 editor.defaultValue = '<div>Ausgangswert</div>';
 editor.value = '<div>Aktueller Code</div>';
@@ -72,4 +72,4 @@ Disconnect ist `editorView` nicht verfügbar; der EditorState wird beim
 Reconnect wiederverwendet.
 
 Nutze die nummerierten Demos für komplette, ausführbare Beispiele. Für Styles
-lies [ntl-code-editor-theming](../ntl-code-editor-theming/SKILL.md).
+lies [nte-code-editor-theming](../nte-code-editor-theming/SKILL.md).

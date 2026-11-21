@@ -1,23 +1,23 @@
 ---
-name: ntl-code-editor-theming
-description: Verwende diesen Skill ausschließlich beim Erstellen oder Ändern eines Themes für ntl-code-editor. Er beschreibt Sass-Mixins, öffentliche Parts und Syntaxfarben; verwende für Markup und API den ntl-code-editor-usage Skill.
+name: nte-code-editor-theming
+description: Verwende diesen Skill ausschließlich beim Erstellen oder Ändern eines Themes für nte-code-editor. Er beschreibt Sass-Mixins, öffentliche Parts und Syntaxfarben; verwende für Markup und API den nte-code-editor-usage Skill.
 ---
 
-# NTL Code Editor gestalten
+# NTE Code Editor gestalten
 
 Materialisiere `default-style()` unter genau einer `style-*`-Klasse. Der
 Sass-Entrypoint erzeugt beim Import keine CSS-Ausgabe; der Runtime-Entrypoint
 importiert keine Light-DOM-Styles.
 
 ```scss
-@use '@nextrap/ntl-code-editor' as editor;
+@use '@nextrap/nte-code-editor' as editor;
 
-ntl-code-editor.style-default {
+nte-code-editor.style-default {
   @include editor.default-style();
 }
 
 /* Eine konkrete Instanz darf ihren Scrollport über den öffentlichen Part anpassen. */
-ntl-code-editor.large-source::part(editor) {
+nte-code-editor.large-source::part(editor) {
   max-height: 40rem;
 }
 ```
@@ -41,12 +41,12 @@ eigenen Breakpoints oder Media Queries.
 Das äußere Mixin definiert folgende Syntaxfarben; überschreibe sie bei Bedarf
 am Host derselben Style-Klasse:
 
-- `--ntl-code-editor-keyword`
-- `--ntl-code-editor-string`
-- `--ntl-code-editor-number`
-- `--ntl-code-editor-comment`
-- `--ntl-code-editor-tag`
-- `--ntl-code-editor-attribute`
+- `--nte-code-editor-keyword`
+- `--nte-code-editor-string`
+- `--nte-code-editor-number`
+- `--nte-code-editor-comment`
+- `--nte-code-editor-tag`
+- `--nte-code-editor-attribute`
 
 Das Mixin konsumiert `--nt-text`, `--nt-bg`, `--nt-border-color`,
 `--nt-border-radius`, `--nt-primary`, `--nt-text-muted` und `--nt-bg-secondary`
@@ -60,4 +60,4 @@ die Editorstruktur, Selection-Layer oder Contenteditable-Verwaltung.
 
 Es gibt keine visuellen Modifier und keine Inhalte für den Default-Slot.
 Für Markup, Formulare und Optionen lies
-[ntl-code-editor-usage](../ntl-code-editor-usage/SKILL.md).
+[nte-code-editor-usage](../nte-code-editor-usage/SKILL.md).

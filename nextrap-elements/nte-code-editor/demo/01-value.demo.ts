@@ -2,7 +2,7 @@
 import '@trunkjs/content-pane';
 import { defineDemo } from '@trunkjs/demo-viewer';
 import '../index';
-import type { NtlCodeEditor } from '../index';
+import type { NteCodeEditor } from '../index';
 import css from './demo.scss?inline';
 
 // Der leere HR-Container übergibt keinen Inhalt an den Diagnose-Slot des Editors.
@@ -20,7 +20,7 @@ Bearbeite das HTML direkt im Editor. **input** meldet die Bearbeitung sofort,
 keines dieser beiden Benutzerereignisse aus.
 
 ---
-{: layout="ntl-code-editor#value-editor[name=source]" section-aria-label="HTML-Quelltext"}
+{: layout="nte-code-editor#value-editor[name=source]" section-aria-label="HTML-Quelltext"}
 
 ---
 {: layout="/;"}
@@ -28,8 +28,8 @@ keines dieser beiden Benutzerereignisse aus.
   wrapper_html: '<tj-content-pane>{{content}}</tj-content-pane>',
   // Das echte Formular nutzt denselben Editor über seine explizite Form-Zuordnung.
   async afterRender({ root, query, controls }) {
-    await customElements.whenDefined('ntl-code-editor');
-    const editor = query<NtlCodeEditor>('#value-editor');
+    await customElements.whenDefined('nte-code-editor');
+    const editor = query<NteCodeEditor>('#value-editor');
     editor.label = 'HTML-Quelltext';
     const form = document.createElement('form');
     form.id = 'code-editor-value-form';
@@ -68,7 +68,7 @@ keines dieser beiden Benutzerereignisse aus.
         info: '„Anwenden“ schreibt den Text über die value-Property in den Editor.',
         // Programmatisches Setzen ist absichtlich von Benutzereingaben getrennt.
         onApply({ value }, { query }) {
-          query<NtlCodeEditor>('#value-editor').value = String(value);
+          query<NteCodeEditor>('#value-editor').value = String(value);
         },
       },
       {
@@ -78,7 +78,7 @@ keines dieser beiden Benutzerereignisse aus.
         onClick(_event, { query, controls }) {
           controls.setValue(
             'source-value',
-            query<NtlCodeEditor>('#value-editor').value,
+            query<NteCodeEditor>('#value-editor').value,
           );
         },
       },
@@ -103,7 +103,7 @@ keines dieser beiden Benutzerereignisse aus.
           query<HTMLFormElement>('#code-editor-value-form').reset();
           controls.setValue(
             'source-value',
-            query<NtlCodeEditor>('#value-editor').value,
+            query<NteCodeEditor>('#value-editor').value,
           );
         },
       },

@@ -1,6 +1,6 @@
-# NTL Code Editor
+# NTE Code Editor
 
-`@nextrap/ntl-code-editor` stellt CodeMirror 6 als formularfähige Web Component
+`@nextrap/nte-code-editor` stellt CodeMirror 6 als formularfähige Web Component
 bereit. Code wird über `value` gesetzt und gelesen. HTML, Markdown, CSS,
 JavaScript, TypeScript und SCSS stehen ohne weitere Sprachkonfiguration bereit.
 
@@ -10,10 +10,10 @@ Dieses eigenständige Beispiel verwendet die HTML-Standardkonfiguration. Die
 Anwendung importiert das Package und bindet den visuellen Default separat ein.
 
 ```ts
-import '@nextrap/ntl-code-editor';
+import '@nextrap/nte-code-editor';
 
 const form = document.createElement('form');
-const editor = document.createElement('ntl-code-editor');
+const editor = document.createElement('nte-code-editor');
 editor.name = 'source';
 editor.label = 'HTML-Quelltext';
 editor.defaultValue = '<div class="container">Hallo Nextrap</div>';
@@ -47,9 +47,9 @@ form-associated Custom Elements benötigt.
 Für die Darstellung bindet die Anwendung das öffentliche Sass-Mixin ein:
 
 ```scss
-@use '@nextrap/ntl-code-editor' as editor;
+@use '@nextrap/nte-code-editor' as editor;
 
-ntl-code-editor.style-default {
+nte-code-editor.style-default {
   @include editor.default-style();
 }
 ```
@@ -155,8 +155,8 @@ Controls. Der Einstieg verwendet Markdown/Kramdown und `tj-content-pane`;
 Quelltext gelangt über `value` in den Editor, nicht über einen Slot.
 
 ```sh
-npx nx dev ntl-code-editor
-npx nx build ntl-code-editor
+npx nx dev nte-code-editor
+npx nx build nte-code-editor
 ```
 
 Alle direkt verwendeten Libraries sind Peers; die lokale Installation liegt
@@ -164,5 +164,5 @@ im Root-`package.json`. Das neue Package wird zunächst als npm-Workspace
 verwendet. Versionierung und Veröffentlichung erfolgen durch den Maintainer.
 
 Die package-spezifischen Verträge stehen in
-[Usage](.agents/skills/ntl-code-editor-usage/SKILL.md) und
-[Theming](.agents/skills/ntl-code-editor-theming/SKILL.md).
+[Usage](.agents/skills/nte-code-editor-usage/SKILL.md) und
+[Theming](.agents/skills/nte-code-editor-theming/SKILL.md).

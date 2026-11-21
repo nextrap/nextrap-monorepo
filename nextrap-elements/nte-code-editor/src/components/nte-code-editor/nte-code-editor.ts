@@ -50,27 +50,27 @@ import type {
   CodeEditorHtmlElement,
   CodeEditorLanguage,
 } from '../../lib/types';
-import style from './ntl-code-editor.scss?inline';
+import style from './nte-code-editor.scss?inline';
 
 // Programmatische Wertzuweisungen bleiben wie bei einem nativen Textfeld ereignislos.
 const assignedValue = Annotation.define<boolean>();
 
 // Syntaxfarben werden vom äußeren Sass-Mixin geliefert und bleiben im Theme anpassbar.
 const tokenHighlighting = HighlightStyle.define([
-  { tag: tags.keyword, color: 'var(--ntl-code-editor-keyword)' },
+  { tag: tags.keyword, color: 'var(--nte-code-editor-keyword)' },
   {
     tag: [tags.string, tags.attributeValue],
-    color: 'var(--ntl-code-editor-string)',
+    color: 'var(--nte-code-editor-string)',
   },
   {
     tag: [tags.number, tags.bool, tags.null],
-    color: 'var(--ntl-code-editor-number)',
+    color: 'var(--nte-code-editor-number)',
   },
-  { tag: [tags.comment, tags.meta], color: 'var(--ntl-code-editor-comment)' },
-  { tag: [tags.tagName, tags.typeName], color: 'var(--ntl-code-editor-tag)' },
+  { tag: [tags.comment, tags.meta], color: 'var(--nte-code-editor-comment)' },
+  { tag: [tags.tagName, tags.typeName], color: 'var(--nte-code-editor-tag)' },
   {
     tag: [tags.attributeName, tags.propertyName],
-    color: 'var(--ntl-code-editor-attribute)',
+    color: 'var(--nte-code-editor-attribute)',
   },
   { tag: tags.heading, fontWeight: 'bold' },
   { tag: tags.strong, fontWeight: 'bold' },
@@ -79,7 +79,7 @@ const tokenHighlighting = HighlightStyle.define([
 ]);
 
 // Ein einzelner Editor behält seinen Zustand auch beim Umschalten der Optionen.
-export class NtlCodeEditor extends nextrap_element({ logging: false }) {
+export class NteCodeEditor extends nextrap_element({ logging: false }) {
   static formAssociated = true;
   static override styles = unsafeCSS(style);
   static override properties = {
@@ -455,12 +455,12 @@ export class NtlCodeEditor extends nextrap_element({ logging: false }) {
 }
 
 // Der öffentliche Import registriert genau dieses Custom Element.
-if (!customElements.get('ntl-code-editor'))
-  customElements.define('ntl-code-editor', NtlCodeEditor);
+if (!customElements.get('nte-code-editor'))
+  customElements.define('nte-code-editor', NteCodeEditor);
 
 // DOM-Abfragen und createElement erhalten den konkreten Property-Vertrag.
 declare global {
   interface HTMLElementTagNameMap {
-    'ntl-code-editor': NtlCodeEditor;
+    'nte-code-editor': NteCodeEditor;
   }
 }

@@ -3,7 +3,7 @@ import { startCompletion } from '@codemirror/autocomplete';
 import '@trunkjs/content-pane';
 import { defineDemo } from '@trunkjs/demo-viewer';
 import '../index';
-import type { CodeEditorHtmlElement, NtlCodeEditor } from '../index';
+import type { CodeEditorHtmlElement, NteCodeEditor } from '../index';
 import css from './demo.scss?inline';
 
 // Beide Eingabefelder zeigen dieselben Vorgaben in unterschiedlichen Sprachkontexten.
@@ -23,7 +23,7 @@ Klassen bleiben beim Vervollständigen des nächsten Klassennamens erhalten.
 ## HTML
 
 ---
-{: layout="ntl-code-editor#completion-html[language=html]" section-aria-label="HTML mit eigenen Vorschlägen"}
+{: layout="nte-code-editor#completion-html[language=html]" section-aria-label="HTML mit eigenen Vorschlägen"}
 
 ---
 {: layout="/;"}
@@ -31,7 +31,7 @@ Klassen bleiben beim Vervollständigen des nächsten Klassennamens erhalten.
 ## HTML innerhalb von Markdown
 
 ---
-{: layout="ntl-code-editor#completion-markdown[language=markdown]" section-aria-label="Markdown mit eigenen Vorschlägen"}
+{: layout="nte-code-editor#completion-markdown[language=markdown]" section-aria-label="Markdown mit eigenen Vorschlägen"}
 
 ---
 {: layout="/;"}
@@ -39,8 +39,8 @@ Klassen bleiben beim Vervollständigen des nächsten Klassennamens erhalten.
   wrapper_html: '<tj-content-pane>{{content}}</tj-content-pane>',
   // Tags können nur Namen oder zusätzlich ihre erlaubten Attributwerte enthalten.
   afterRender({ query, controls }) {
-    const htmlEditor = query<NtlCodeEditor>('#completion-html');
-    const markdownEditor = query<NtlCodeEditor>('#completion-markdown');
+    const htmlEditor = query<NteCodeEditor>('#completion-html');
+    const markdownEditor = query<NteCodeEditor>('#completion-markdown');
     htmlEditor.label = 'HTML mit eigenen Vorschlägen';
     markdownEditor.label = 'Markdown mit eigenen Vorschlägen';
     const htmlElements: CodeEditorHtmlElement[] = [
@@ -97,8 +97,8 @@ Der Fließtext bleibt **Markdown**.
             .split('\n')
             .map((name) => name.trim())
             .filter(Boolean);
-          query<NtlCodeEditor>('#completion-html').classNames = classNames;
-          query<NtlCodeEditor>('#completion-markdown').classNames = classNames;
+          query<NteCodeEditor>('#completion-html').classNames = classNames;
+          query<NteCodeEditor>('#completion-markdown').classNames = classNames;
         },
       },
       {
@@ -113,8 +113,8 @@ Der Fließtext bleibt **Markdown**.
             .split('\n')
             .map((name) => name.trim())
             .filter(Boolean);
-          query<NtlCodeEditor>('#completion-html').htmlElements = htmlElements;
-          query<NtlCodeEditor>('#completion-markdown').htmlElements =
+          query<NteCodeEditor>('#completion-html').htmlElements = htmlElements;
+          query<NteCodeEditor>('#completion-markdown').htmlElements =
             htmlElements;
         },
       },
@@ -123,7 +123,7 @@ Der Fließtext bleibt **Markdown**.
         label: 'Klassen-Completion im HTML zeigen',
         // Die öffentliche EditorView ermöglicht bei Bedarf direkte CodeMirror-Kommandos.
         async onClick(_event, { query }) {
-          const editor = query<NtlCodeEditor>('#completion-html');
+          const editor = query<NteCodeEditor>('#completion-html');
           editor.value = '<div class="container ca"></div>';
           await editor.updateComplete;
           const view = editor.editorView;
@@ -141,7 +141,7 @@ Der Fließtext bleibt **Markdown**.
         label: 'Tag-Completion in Markdown zeigen',
         // Ein noch unvollständiger Tag muss bereits vor einem fertigen HTML-Block ergänzbar sein.
         async onClick(_event, { query }) {
-          const editor = query<NtlCodeEditor>('#completion-markdown');
+          const editor = query<NteCodeEditor>('#completion-markdown');
           editor.value = '# Markdown\n\n<app-';
           await editor.updateComplete;
           const view = editor.editorView;
