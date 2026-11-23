@@ -772,7 +772,7 @@ describe('NteInput', () => {
     expect(element.value).toBe(true);
     expect(element.selectedOptions.map((option) => option.value)).toEqual(['yes']);
     expect(checkboxText?.textContent?.trim()).toBe('AGB akzeptieren');
-    expect(topLabel?.hasAttribute('hidden')).toBe(true);
+    expect(topLabel).toBeNull();
 
     element.value = false;
     await element.updateComplete;
