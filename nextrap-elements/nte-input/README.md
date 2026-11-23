@@ -123,10 +123,21 @@ NteInput.registerPlugin(TextPlugin);
 <nte-input label="Schlagworte" type="token-input" value='["news"]' data-options='[{"value":"news","label":"News"},{"value":"events","label":"Events"}]'></nte-input>
 <nte-input label="AGB akzeptieren" type="checkbox" checked></nte-input>
 <nte-input label="Benachrichtigungen" type="switch" checked></nte-input>
+<nte-input
+  type="switch"
+  label="Veröffentlichung"
+  off-text="Nicht veröffentlicht"
+  on-text="Veröffentlicht"
+></nte-input>
 <nte-input label="Benutzername" type="text">
   <span slot="input-aid">Nur Kleinbuchstaben, Zahlen, Punkt und Bindestrich verwenden.</span>
 </nte-input>
 ```
+
+The optional `off-text` and `on-text` attributes display a changing status
+label immediately to the right of the switch. The outer `label` stays fixed
+in the left form column. If only one state text is supplied, the status
+text is omitted for the other state.
 
 ## Label layout and description
 
