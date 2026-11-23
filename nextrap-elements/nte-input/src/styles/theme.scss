@@ -100,6 +100,7 @@ $themeCarbon: map.merge(
 // Überträgt die gewählte Theme-Map auf die öffentlichen Parts und exportiert Geometrie-Tokens für kombinierbare Modifier.
 @mixin theme($theme: $themeBootstrap) {
   $spacing-scale: var(--nte-input-scale-spacing, 1);
+  $padding-scale: var(--nte-input-scale-padding, var(--nte-input-scale-spacing, 1));
   $label-scale: var(--nte-input-scale-label, 1);
   $input-scale: var(--nte-input-scale-input, 1);
 
@@ -173,8 +174,8 @@ $themeCarbon: map.merge(
 
   &:not([type='checkbox']):not([type='switch'])::part(control-inner) {
     align-items: center;
-    padding: calc(#{map.get($theme, control-padding-y)} * #{$spacing-scale})
-      calc(#{map.get($theme, control-padding-x)} * #{$spacing-scale});
+    padding: calc(#{map.get($theme, control-padding-y)} * #{$padding-scale})
+      calc(#{map.get($theme, control-padding-x)} * #{$padding-scale});
   }
 
   &[type='select-radio']::part(control-inner),
