@@ -133,8 +133,7 @@ $themeCarbon: map.merge(
   }
 
   // Unterdrückt nur die unbenutzte Label-Area; Field und Control behalten ihr Theme-Padding.
-  &:not([label])::part(label-area),
-  &[label='']::part(label-area) {
+  &:not([label])::part(label-area) {
     display: none;
   }
 
