@@ -105,6 +105,39 @@ describe('NteInput', () => {
     }
   });
 
+  it('hides only the label area for select without a label and preserves the control', async () => {
+    const element = document.createElement('nte-input') as NteInput;
+    element.type = 'select';
+    element.options = [{ value: 'active', label: 'Aktiv' }];
+    document.body.appendChild(element);
+
+    try {
+      await element.updateComplete;
+      await element.updateComplete;
+
+      const field = element.shadowRoot!.querySelector<HTMLElement>('[part="field"]');
+      const labelArea = element.shadowRoot!.querySelector<HTMLElement>('[part="label-area"]');
+      const control = element.shadowRoot!.querySelector<HTMLElement>('[part="control"]');
+      const select = element.shadowRoot!.querySelector('select');
+
+      expect(field).not.toBeNull();
+      expect(labelArea?.hidden).toBe(true);
+      expect(control).not.toBeNull();
+      expect(select).toBeInstanceOf(HTMLSelectElement);
+
+      element.label = 'Status';
+      await element.updateComplete;
+      expect(element.shadowRoot!.querySelector<HTMLElement>('[part="label-area"]')?.hidden).toBe(false);
+
+      element.label = '';
+      await element.updateComplete;
+      expect(element.shadowRoot!.querySelector<HTMLElement>('[part="label-area"]')?.hidden).toBe(true);
+      expect(element.shadowRoot!.querySelector('select')).toBeInstanceOf(HTMLSelectElement);
+    } finally {
+      element.remove();
+    }
+  });
+
   it('renders label and validation message box', async () => {
     const element = document.createElement('nte-input') as NteInput;
     element.label = 'E-Mail';
