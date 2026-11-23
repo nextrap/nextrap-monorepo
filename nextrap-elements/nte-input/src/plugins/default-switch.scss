@@ -12,3 +12,8 @@
 .switch-control {
   @include switch.switch-control();
 }
+
+// Der Status-Text nutzt die bestehende Switch-Typografie rechts vom Schalter.
+.switch-label {
+  @include switch.switch-label();
+}
