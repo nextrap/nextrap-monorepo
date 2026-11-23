@@ -17,6 +17,7 @@ Built-in plugins currently cover:
 - select
 - select-radio
 - checkbox
+- switch (base style from `@nextrap/style-switch`)
 - token-input
 
 ## Installation
@@ -75,7 +76,7 @@ Built-in value behavior:
 
 - text / email / password / textarea → `string`
 - select → `string`
-- checkbox → `boolean`
+- checkbox / switch → `boolean`
 - select-radio → `string[]`
 - token-input → `string[]`
 
@@ -121,6 +122,7 @@ NteInput.registerPlugin(TextPlugin);
 <nte-input label="Tags" type="select-radio" multiple value='["news"]' data-options='[{"value":"news","label":"News"},{"value":"events","label":"Events"}]'></nte-input>
 <nte-input label="Schlagworte" type="token-input" value='["news"]' data-options='[{"value":"news","label":"News"},{"value":"events","label":"Events"}]'></nte-input>
 <nte-input label="AGB akzeptieren" type="checkbox" checked></nte-input>
+<nte-input label="Benachrichtigungen" type="switch" checked></nte-input>
 <nte-input label="Benutzername" type="text">
   <span slot="input-aid">Nur Kleinbuchstaben, Zahlen, Punkt und Bindestrich verwenden.</span>
 </nte-input>
@@ -128,7 +130,7 @@ NteInput.registerPlugin(TextPlugin);
 
 ## Label layout and description
 
-By default the label is placed on the left. Set `--nte-input-label-columns`
+By default the label is placed on the left. Without a label the control takes the full row. A whitespace-only label intentionally reserves the left column (use `aria-label` for accessibility). Textareas, select-radio groups and token inputs align labels at the top. Set `--nte-input-label-columns`
 (default: `4`) on a theme, container or input to choose its width in a
 12-column grid. The `compact` class stacks the label above the control;
 both layouts can be used with the existing size classes `sm`, `md`, `lg`,
