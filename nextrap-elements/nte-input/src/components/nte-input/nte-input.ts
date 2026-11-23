@@ -157,7 +157,7 @@ export class NteInput extends nextrap_element({
 
     const pluginHtml = plugin?.render(this.renderContext);
     const labelTemplate = html`
-      <label id="label" part="label" for=${this._labelFor} ?hidden=${!this.hasAttribute('label') || Boolean(plugin?.isLabelHidden())}>
+      <label id="label" part="label" for=${this._labelFor} ?hidden=${(!this.label && !this.hasAttribute('label')) || Boolean(plugin?.isLabelHidden())}>
         ${this.label}
       </label>
     `;
@@ -168,7 +168,7 @@ export class NteInput extends nextrap_element({
           ${isHoverLabel || Boolean(plugin?.isLabelHidden())
             ? nothing
             : html`
-                <div id="label-area" part="label-area" ?hidden=${!this.hasAttribute("label")}>
+                <div id="label-area" part="label-area" ?hidden=${!this.label && !this.hasAttribute("label")}>
                   ${labelTemplate}
                   <button
                     id="description-trigger"
