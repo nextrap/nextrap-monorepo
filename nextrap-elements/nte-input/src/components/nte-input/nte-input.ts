@@ -157,7 +157,7 @@ export class NteInput extends nextrap_element({
 
     const pluginHtml = plugin?.render(this.renderContext);
     const labelTemplate = html`
-      <label id="label" part="label" for=${this._labelFor} ?hidden=${!this.label || Boolean(plugin?.isLabelHidden())}>
+      <label id="label" part="label" for=${this._labelFor} ?hidden=${!this.hasAttribute('label') || Boolean(plugin?.isLabelHidden())}>
         ${this.label}
       </label>
     `;
