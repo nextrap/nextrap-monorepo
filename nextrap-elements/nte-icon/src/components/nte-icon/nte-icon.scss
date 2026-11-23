@@ -1,10 +1,10 @@
-// Eine quadratische Inline-Box skaliert mit dem Text oder einer expliziten CSS-Größe.
+// Die quadratische Inline-Box ist standardmäßig eine Stufe größer als der Text; explizite Größen haben Vorrang.
 :host {
   display: inline-block;
   inline-size: 1em;
   block-size: 1em;
   aspect-ratio: 1;
-  font-size: var(--nte-icon-size, 1em);
+  font-size: var(--nte-icon-size, 1.25em);
   line-height: 1;
   flex: none;
 }

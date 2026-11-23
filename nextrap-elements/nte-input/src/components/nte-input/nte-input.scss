@@ -198,11 +198,15 @@
   display: none;
 }
 
+// Inhalt bestimmt die Breite; Bildschirmhälfte und 400 px begrenzen das Info-Popover.
 :where(#description-popover) {
   position-anchor: --nte-input-description-anchor;
   position-area: bottom center;
   margin: 0.5rem 0 0;
-  max-width: min(24rem, 90vw);
+  box-sizing: border-box;
+  inline-size: max-content;
+  max-inline-size: min(400px, 50vw);
+  overflow-wrap: anywhere;
   padding: 0.75rem 1rem;
   border: 1px solid var(--nt-border-color, #ced4da);
   border-radius: var(--nt-border-radius, 0.375rem);

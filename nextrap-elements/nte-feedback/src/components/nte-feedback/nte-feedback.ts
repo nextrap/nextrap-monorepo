@@ -201,6 +201,9 @@ export class NteFeedback extends nextrap_element(features) {
   private _openState(status: Exclude<NteFeedbackStatus, 'idle'>, title?: string, message?: string, reference?: string | HTMLElement, cancelable = false) {
     this._clearMiniLoader();
     this._clearAutoCloseTimer();
+    // Neu einreihen statt einen offenen Dialog hinter später geöffneten Modals zu behalten.
+    // Internes Schließen beendet weder den Feedback-Zustand noch dessen Promise.
+    this._syncDialogState(false);
     this._open = true;
     this._status = status;
     this._title = title?.trim() || this._getDefaultTitle(status);
@@ -214,6 +217,7 @@ export class NteFeedback extends nextrap_element(features) {
     this._infoConfirmCallback = undefined;
   }
 
+  // Statusdialoge bieten nur dann eine Schließen-Aktion an, wenn sie abbrechbar sind.
   private _renderActions() {
     switch (this._status) {
       case 'loading':
@@ -221,7 +225,7 @@ export class NteFeedback extends nextrap_element(features) {
         return this._abortCallback ? html`<button class="btn" part=${this._getButtonPart('secondary')} @click=${this._onAbortClick}>Abort</button>` : nothing;
       case 'success':
       case 'fail':
-        return html`<button class="btn" part=${this._getButtonPart('primary')} @click=${() => this.close()}>Close</button>`;
+        return this._cancelable ? html`<button class="btn" part=${this._getButtonPart('primary')} @click=${() => this.close()}>Close</button>` : nothing;
       case 'info':
         return html`<button class="btn" part=${this._getButtonPart('primary')} @click=${this._onInfoConfirm}>OK</button>`;
       case 'confirm':
@@ -231,9 +235,11 @@ export class NteFeedback extends nextrap_element(features) {
     }
   }
 
+  // Ohne erlaubte Aktion bleibt auch der zugehörige Aktionsbereich ausgeblendet.
   private _hasActions() {
     if (this._status === 'loading' || this._status === 'progress') return !!this._abortCallback;
-    if (this._status === 'success' || this._status === 'fail' || this._status === 'info') return true;
+    if (this._status === 'success' || this._status === 'fail') return this._cancelable;
+    if (this._status === 'info') return true;
     return this._status === 'confirm' && this._actions.length > 0;
   }
 
@@ -397,10 +403,11 @@ export class NteFeedback extends nextrap_element(features) {
     this._shakeTimer = null;
   }
 
+  // Nicht abbrechbare Dialoge dürfen auch durch Hintergrundklicks nicht verschwinden.
   private _requiresExplicitInteraction() {
+    if (!this._cancelable) return true;
     if (this._status === 'confirm') return true;
-    if (this._status === 'info' && this._infoConfirmCallback) return true;
-    return (this._status === 'loading' || this._status === 'progress') && !this._cancelable;
+    return this._status === 'info' && !!this._infoConfirmCallback;
   }
 
   private _shake() {

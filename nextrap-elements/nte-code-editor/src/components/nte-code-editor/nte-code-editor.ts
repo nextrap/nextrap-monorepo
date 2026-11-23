@@ -10,6 +10,7 @@ import {
   history,
   historyField,
   historyKeymap,
+  indentWithTab,
 } from '@codemirror/commands';
 import {
   bracketMatching,
@@ -425,6 +426,8 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
         ...defaultKeymap,
         ...historyKeymap,
         ...completionKeymap,
+        // Tab und Shift+Tab bearbeiten die Einrückung, statt den Editor zu verlassen.
+        indentWithTab,
       ]),
       this.#language.of([]),
       this.#folding.of([]),

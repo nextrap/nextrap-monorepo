@@ -1,6 +1,6 @@
 @use 'sass:map';
 
-// Definiert die semantische Bootstrap-Basis und hält alle Farben an die globalen Nextrap-Theme-Tokens gebunden.
+// Definiert die Bootstrap-Basis mit bewusst weißen Eingabeflächen; übrige Farben folgen den Nextrap-Theme-Tokens.
 $themeDefaults: (
   gap: 0.5rem,
   control-gap: 0.5rem,
@@ -12,7 +12,8 @@ $themeDefaults: (
   label-font-weight: 600,
   label-letter-spacing: normal,
   control-color: var(--nt-text, #212529),
-  control-background: var(--nt-body, #fff),
+  // Eingabeflächen bleiben unabhängig vom aktiven Farbschema weiß.
+  control-background: #fff,
   border-color: var(--nt-border-color, #ced4da),
   border-color-focus: var(--nt-primary, #0d6efd),
   border-color-invalid: var(--nt-danger, #dc3545),
@@ -50,13 +51,14 @@ $themeDefaults: (
   token-border: 0,
   token-radius: 999px,
   token-input-min-width: 8rem,
-  hoverlabel-background: var(--nt-body, #fff),
+  // Schwebende Labels decken die weiße Eingabefläche im selben Farbton ab.
+  hoverlabel-background: #fff,
 );
 
 // Stellt die normale Theme-Variante unverändert aus der semantischen Basis bereit.
 $themeBootstrap: map.merge($themeDefaults, ());
 
-// Definiert die Carbon-Geometrie, verwendet für Farben aber ausschließlich dark-mode-fähige Nextrap-Tokens und Mischungen.
+// Definiert die Carbon-Geometrie mit ebenfalls weißen Eingabeflächen und ansonsten Theme-basierten Farben.
 $themeCarbon: map.merge(
   $themeDefaults,
   (
@@ -68,7 +70,8 @@ $themeCarbon: map.merge(
     label-font-weight: 400,
     label-letter-spacing: 0.01em,
     control-color: var(--nt-text, #161616),
-    control-background: color-mix(in srgb, var(--nt-text, #161616) 6%, var(--nt-body, #fff)),
+    // Auch Carbon-Eingabeflächen bleiben unabhängig vom Farbschema weiß.
+    control-background: #fff,
     border-color: color-mix(in srgb, var(--nt-text, #161616) 45%, transparent),
     border-color-focus: var(--nt-primary, #0f62fe),
     border-color-invalid: var(--nt-danger, #da1e28),
@@ -93,7 +96,8 @@ $themeCarbon: map.merge(
     token-background: color-mix(in srgb, var(--nt-text, #161616) 12%, var(--nt-body, #fff)),
     token-border: 1px solid color-mix(in srgb, var(--nt-text, #161616) 22%, transparent),
     token-radius: 0,
-    hoverlabel-background: color-mix(in srgb, var(--nt-text, #161616) 6%, var(--nt-body, #fff)),
+    // Schwebende Labels erhalten denselben unveränderlich weißen Hintergrund.
+    hoverlabel-background: #fff,
   )
 );
 

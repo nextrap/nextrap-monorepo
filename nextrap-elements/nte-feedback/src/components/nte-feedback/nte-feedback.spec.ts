@@ -38,6 +38,34 @@ describe('nte-feedback', () => {
     expect(el.shadowRoot?.querySelector('#assistive-context')?.textContent).toContain('Wartedialog');
   });
 
+  // Ein Statuswechsel muss Feedback erneut vor zwischenzeitlich geöffneten Dialogen platzieren.
+  it('reopens an existing feedback dialog when loading changes to an error', async () => {
+    const el = new NteFeedback();
+    document.body.appendChild(el);
+    await el.updateComplete;
+    const dialog = el.shadowRoot!.querySelector('#dialog') as HTMLDialogElement;
+    const order: string[] = [];
+    const showModal = vi.fn(() => { order.push('show'); dialog.setAttribute('open', ''); });
+    const close = vi.fn(() => { order.push('close'); dialog.removeAttribute('open'); });
+    dialog.showModal = showModal;
+    dialog.close = close;
+    const feedbackClosed = vi.fn();
+    window.addEventListener('nextrap:feedback-closed', feedbackClosed);
+    try {
+      window.dispatchEvent(new CustomEvent('nextrap:loading'));
+      await el.updateComplete;
+      order.push('application-dialog');
+      window.dispatchEvent(new CustomEvent('nextrap:fail', { detail: { message: 'Fehler', autoClose: false } }));
+      await el.updateComplete;
+      expect(order).toEqual(['show', 'application-dialog', 'close', 'show']);
+      expect(dialog.open).toBe(true);
+      expect(dialog.textContent).toContain('Fehler');
+      expect(feedbackClosed).not.toHaveBeenCalled();
+    } finally {
+      window.removeEventListener('nextrap:feedback-closed', feedbackClosed);
+    }
+  });
+
   it('falls back to the default title when no title is provided', async () => {
     const el = new NteFeedback();
     document.body.appendChild(el);
@@ -93,6 +121,60 @@ describe('nte-feedback', () => {
     );
     await el.updateComplete;
     expect(el.shadowRoot?.querySelector('#close')).toBeTruthy();
+  });
+
+  // Finale Fehler bleiben ohne Schließen-Button, bei Escape und bei Hintergrundklicks offen.
+  it('keeps non-cancelable errors open until explicitly closed by the application', async () => {
+    vi.useFakeTimers();
+    const el = new NteFeedback();
+    document.body.appendChild(el);
+    await el.updateComplete;
+
+    window.dispatchEvent(new CustomEvent('nextrap:fail', {
+      detail: { message: 'Start fehlgeschlagen', cancelable: false, autoClose: false },
+    }));
+    await el.updateComplete;
+
+    const dialog = el.shadowRoot?.querySelector('#dialog') as HTMLDialogElement;
+    expect(el.shadowRoot?.querySelector('#close')).toBeFalsy();
+    expect(el.shadowRoot?.querySelector('#actions')).toBeFalsy();
+    expect(el.shadowRoot?.querySelector('button')).toBeFalsy();
+    const cancel = new Event('cancel', { cancelable: true });
+    dialog.dispatchEvent(cancel);
+    expect(cancel.defaultPrevented).toBe(true);
+    await el.updateComplete;
+    expect(dialog.open).toBe(true);
+
+    dialog.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: 10, clientY: 10 }));
+    await el.updateComplete;
+    expect(dialog.open).toBe(true);
+    expect(dialog.classList.contains('shake')).toBe(true);
+
+    vi.advanceTimersByTime(NTE_FEEDBACK_DEFAULT_AUTO_CLOSE_MS * 2);
+    window.dispatchEvent(new CustomEvent('nextrap:ready'));
+    await el.updateComplete;
+    expect(dialog.open).toBe(true);
+
+    el.close();
+    await el.updateComplete;
+    expect(dialog.open).toBe(false);
+  });
+
+  // Normale Fehler bleiben weiterhin vom Benutzer schließbar.
+  it('closes cancelable errors on backdrop clicks', async () => {
+    const el = new NteFeedback();
+    document.body.appendChild(el);
+    await el.updateComplete;
+    window.dispatchEvent(new CustomEvent('nextrap:fail', {
+      detail: { message: 'Fehler', autoClose: false },
+    }));
+    await el.updateComplete;
+    expect(el.shadowRoot?.querySelector('#close')).toBeTruthy();
+    expect(el.shadowRoot?.querySelector('#actions button')?.textContent).toBe('Close');
+    const dialog = el.shadowRoot?.querySelector('#dialog') as HTMLDialogElement;
+    dialog.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: 10, clientY: 10 }));
+    await el.updateComplete;
+    expect(dialog.open).toBe(false);
   });
 
   it('auto closes success dialogs by default', async () => {

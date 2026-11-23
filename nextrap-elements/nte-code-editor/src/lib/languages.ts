@@ -20,6 +20,7 @@ import {
 } from '@codemirror/language';
 import { EditorState, type Extension } from '@codemirror/state';
 import type { CodeEditorHtmlElement, CodeEditorLanguage } from './types';
+import { kramdown } from './kramdown';
 
 // Die HTML-Quelle arbeitet synchron, auch wenn Markdown sie auf ein Fragment anwendet.
 type SynchronousCompletion = (
@@ -242,6 +243,7 @@ export function createLanguageSupport(
     }),
   ];
   const baseMarkdown = markdown({
+    extensions: [kramdown],
     htmlTagLanguage: htmlSupport,
     codeLanguages,
     completeHTMLTags: false,
