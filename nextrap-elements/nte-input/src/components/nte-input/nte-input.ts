@@ -168,7 +168,7 @@ export class NteInput extends nextrap_element({
           ${isHoverLabel || Boolean(plugin?.isLabelHidden())
             ? nothing
             : html`
-                <div id="label-area" part="label-area" ?hidden=${!this.label}>
+                <div id="label-area" part="label-area" ?hidden=${!this.hasAttribute("label")}>
                   ${labelTemplate}
                   <button
                     id="description-trigger"
