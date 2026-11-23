@@ -1,6 +1,7 @@
 select {
   width: 100%;
-  min-width: 0;
+  // Die längste Option bestimmt die intrinsische Breite, auch in einem Inline-Host.
+  min-width: max-content;
   color: inherit;
   font: inherit;
   background: transparent;

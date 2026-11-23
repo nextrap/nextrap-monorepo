@@ -110,7 +110,7 @@ $themeCarbon: map.merge(
   --nte-input-hoverlabel-background: #{map.get($theme, hoverlabel-background)};
 
   // Die normale Feldanordnung verwendet ein konfigurierbares Zwölfer-Raster ohne eigene Breakpoints.
-  &[label]:not([label='']):not(.compact):not(.hoverlabel):not([type='checkbox']):not([type='switch'])::part(field) {
+  &[label]:not([label='']):not(.compact):not(.hoverlabel):not([type='checkbox'])::part(field) {
     grid-template-columns:
       minmax(0, calc((100% - #{map.get($theme, gap)}) * var(--nte-input-label-columns, 4) / 12))
       minmax(0, 1fr);
@@ -130,6 +130,12 @@ $themeCarbon: map.merge(
     align-items: center;
     gap: 0.375rem;
     min-width: 0;
+  }
+
+  // Unterdrückt nur die unbenutzte Label-Area; Field und Control behalten ihr Theme-Padding.
+  &:not([label])::part(label-area),
+  &[label='']::part(label-area) {
+    display: none;
   }
 
   &::part(wrapper),

@@ -165,10 +165,10 @@ export class NteInput extends nextrap_element({
     return html`
       <div id="wrapper" part="wrapper">
         <div id="field" part="field">
-          ${isHoverLabel || !this.label || Boolean(plugin?.isLabelHidden())
+          ${isHoverLabel || Boolean(plugin?.isLabelHidden())
             ? nothing
             : html`
-                <div id="label-area" part="label-area">
+                <div id="label-area" part="label-area" ?hidden=${!this.label}>
                   ${labelTemplate}
                   <button
                     id="description-trigger"

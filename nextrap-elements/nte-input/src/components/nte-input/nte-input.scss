@@ -2,6 +2,11 @@
   display: block;
 }
 
+// Optionaler Inline-Modus: Host-Breite folgt dem intrinsischen Control-Inhalt.
+:host(.inline) {
+  display: inline-block;
+}
+
 :where(#wrapper),
 :where(#field) {
   display: grid;
@@ -11,6 +16,11 @@
 :where(#label) {
   margin: 0;
   font-weight: 600;
+}
+
+// Versteckt ausschließlich die Label-Area, nie das Field mit seinem Control.
+:where(#label-area[hidden]) {
+  display: none;
 }
 
 :where(#label[hidden]) {
