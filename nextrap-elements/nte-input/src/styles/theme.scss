@@ -110,7 +110,7 @@ $themeCarbon: map.merge(
   --nte-input-hoverlabel-background: #{map.get($theme, hoverlabel-background)};
 
   // Die normale Feldanordnung verwendet ein konfigurierbares Zwölfer-Raster ohne eigene Breakpoints.
-  &[label]:not([label='']):not(.compact):not(.hoverlabel):not([type='checkbox'])::part(field) {
+  &[label]:not([label='']):not(.compact):not(.hoverlabel):not([type='checkbox']):not([type='switch'])::part(field) {
     grid-template-columns:
       minmax(0, calc((100% - #{map.get($theme, gap)}) * var(--nte-input-label-columns, 4) / 12))
       minmax(0, 1fr);
@@ -146,7 +146,7 @@ $themeCarbon: map.merge(
     letter-spacing: map.get($theme, label-letter-spacing);
   }
 
-  &:not([type='checkbox'])::part(control) {
+  &:not([type='checkbox']):not([type='switch'])::part(control) {
     align-items: stretch;
     gap: calc(#{map.get($theme, control-gap)} * #{$spacing-scale});
     min-height: calc(#{map.get($theme, control-min-height)} * #{$spacing-scale});
@@ -165,7 +165,7 @@ $themeCarbon: map.merge(
       border-width 0.2s ease;
   }
 
-  &:not([type='checkbox'])::part(control-inner) {
+  &:not([type='checkbox']):not([type='switch'])::part(control-inner) {
     align-items: center;
     padding: calc(#{map.get($theme, control-padding-y)} * #{$spacing-scale})
       calc(#{map.get($theme, control-padding-x)} * #{$spacing-scale});
@@ -176,7 +176,7 @@ $themeCarbon: map.merge(
     align-items: flex-start;
   }
 
-  &[type='checkbox']::part(control) {
+  &:is([type='checkbox'], [type='switch'])::part(control) {
     min-height: auto;
     padding: 0;
     background: transparent;
@@ -185,28 +185,28 @@ $themeCarbon: map.merge(
     box-shadow: none;
   }
 
-  &[type='checkbox']::part(control-inner) {
+  &:is([type='checkbox'], [type='switch'])::part(control-inner) {
     padding: 0;
   }
 
-  &:not([type='checkbox']):focus-within::part(control) {
+  &:not([type='checkbox']):not([type='switch']):focus-within::part(control) {
     border-color: map.get($theme, border-color-focus);
     border-bottom-width: map.get($theme, control-focus-border-bottom-width);
     box-shadow: map.get($theme, control-focus-shadow);
   }
 
   // Stellt einen sichtbaren Tastaturfokus um die komplette Checkbox-Control sicher.
-  &[type='checkbox']:focus-within::part(control) {
+  &:is([type='checkbox'], [type='switch']):focus-within::part(control) {
     border-color: map.get($theme, border-color-focus);
     box-shadow: map.get($theme, control-focus-shadow);
   }
 
-  &[invalid]:not([type='checkbox'])::part(control) {
+  &[invalid]:not([type='checkbox']):not([type='switch'])::part(control) {
     border-color: map.get($theme, border-color-invalid);
     box-shadow: map.get($theme, control-invalid-shadow);
   }
 
-  &[valid]:not([type='checkbox'])::part(control) {
+  &[valid]:not([type='checkbox']):not([type='switch'])::part(control) {
     border-color: map.get($theme, border-color-valid);
     box-shadow: map.get($theme, control-valid-shadow);
   }
