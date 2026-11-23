@@ -48,6 +48,21 @@
       </section>
 
       <section>
+        <h3>Label-Layout</h3>
+        <p>Standardmäßig steht das Label links. Die Klasse compact schiebt es über das Eingabefeld.</p>
+        <nte-input label="Benutzername (Standard)" type="text" placeholder="max.mustermann">
+          <span slot="description">Der Benutzername ist öffentlich sichtbar.</span>
+        </nte-input>
+        <nte-input class="compact" label="Benutzername (Compact)" type="text" placeholder="max.mustermann">
+          <span slot="description">Die Beschreibung erscheint am Info-Button neben dem Label.</span>
+        </nte-input>
+        <p>tj-responsive kann compact bei kleinen Breiten automatisch einschalten:</p>
+        <tj-responsive>
+          <nte-input class="-xl:compact" label="Responsives Label" type="text" placeholder="max.mustermann"></nte-input>
+        </tj-responsive>
+      </section>
+
+      <section>
         <h3>Größen</h3>
         <p>This is the way the elements look with no styling applied</p>
         <nte-input class="default sm" label="default sm" type="text" placeholder="Max Mustermann"></nte-input>
