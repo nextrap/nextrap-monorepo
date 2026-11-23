@@ -792,7 +792,7 @@ describe('NteInput disabled and readonly', () => {
       expect(control.disabled).toBe(!nativeReadonly);
       if (nativeReadonly) expect(control.readOnly).toBe(true);
       if (type === 'token-input') {
-        expect(element.shadowRoot!.querySelector<HTMLButtonElement>('button')!.disabled).toBe(true);
+        expect(element.shadowRoot!.querySelector<HTMLButtonElement>('button[part="token-remove"]')!.disabled).toBe(true);
       }
 
       element.removeAttribute('readonly');
