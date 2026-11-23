@@ -121,7 +121,9 @@ describe('NteInput', () => {
       const select = element.shadowRoot!.querySelector('select');
 
       expect(field).not.toBeNull();
+      expect(element.hasAttribute('label')).toBe(false);
       expect(labelArea?.hidden).toBe(true);
+      expect(element.shadowRoot!.querySelector<HTMLElement>('[part="label"]')?.hidden).toBe(true);
       expect(control).not.toBeNull();
       expect(select).toBeInstanceOf(HTMLSelectElement);
 
@@ -131,7 +133,22 @@ describe('NteInput', () => {
 
       element.label = '';
       await element.updateComplete;
+      expect(element.hasAttribute('label')).toBe(true);
+      expect(element.shadowRoot!.querySelector<HTMLElement>('[part="label-area"]')?.hidden).toBe(false);
+      const emptyLabel = element.shadowRoot!.querySelector<HTMLElement>('[part="label"]');
+      expect(emptyLabel?.hidden).toBe(false);
+      expect(emptyLabel?.textContent?.trim()).toBe('');
+
+      // Ein leeres Label reserviert im Standardlayout die erste Spalte;
+      // mit compact wird der leere Bereich per Theme-CSS platzsparend ausgeblendet.
+      element.classList.add('compact');
+      expect(element.shadowRoot!.querySelector<HTMLElement>('[part="label"]')).toBe(emptyLabel);
+
+      element.removeAttribute('label');
+      await element.updateComplete;
+      expect(element.hasAttribute('label')).toBe(false);
       expect(element.shadowRoot!.querySelector<HTMLElement>('[part="label-area"]')?.hidden).toBe(true);
+      expect(element.shadowRoot!.querySelector<HTMLElement>('[part="label"]')?.hidden).toBe(true);
       expect(element.shadowRoot!.querySelector('select')).toBeInstanceOf(HTMLSelectElement);
     } finally {
       element.remove();

@@ -1,10 +1,16 @@
 select {
   width: 100%;
-  // Die längste Option bestimmt die intrinsische Breite, auch in einem Inline-Host.
-  min-width: max-content;
+  // Block-Felder bleiben im Control und lassen dem nativen Chevron seinen Platz.
+  min-width: 0;
   color: inherit;
   font: inherit;
   background: transparent;
   border: 0;
   outline: 0;
+}
+
+// Nur Inline-Selects bestimmen die Host-Breite aus ihrer nativen Options-Breite.
+:host(.inline) select {
+  width: max-content;
+  min-width: max-content;
 }

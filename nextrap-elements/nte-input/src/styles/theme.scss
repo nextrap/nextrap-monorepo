@@ -100,6 +100,7 @@ $themeCarbon: map.merge(
 // Überträgt die gewählte Theme-Map auf die öffentlichen Parts und exportiert Geometrie-Tokens für kombinierbare Modifier.
 @mixin theme($theme: $themeBootstrap) {
   $spacing-scale: var(--nte-input-scale-spacing, 1);
+  $padding-scale: var(--nte-input-scale-padding, var(--nte-input-scale-spacing, 1));
   $label-scale: var(--nte-input-scale-label, 1);
   $input-scale: var(--nte-input-scale-input, 1);
 
@@ -110,7 +111,7 @@ $themeCarbon: map.merge(
   --nte-input-hoverlabel-background: #{map.get($theme, hoverlabel-background)};
 
   // Die normale Feldanordnung verwendet ein konfigurierbares Zwölfer-Raster ohne eigene Breakpoints.
-  &[label]:not([label='']):not(.compact):not(.hoverlabel):not([type='checkbox'])::part(field) {
+  &[label]:not(.compact):not(.hoverlabel):not([type='checkbox'])::part(field) {
     grid-template-columns:
       minmax(0, calc((100% - #{map.get($theme, gap)}) * var(--nte-input-label-columns, 4) / 12))
       minmax(0, 1fr);
@@ -134,7 +135,7 @@ $themeCarbon: map.merge(
 
   // Unterdrückt nur die unbenutzte Label-Area; Field und Control behalten ihr Theme-Padding.
   &:not([label])::part(label-area),
-  &[label='']::part(label-area) {
+  &.compact[label='']::part(label-area) {
     display: none;
   }
 
@@ -173,8 +174,8 @@ $themeCarbon: map.merge(
 
   &:not([type='checkbox']):not([type='switch'])::part(control-inner) {
     align-items: center;
-    padding: calc(#{map.get($theme, control-padding-y)} * #{$spacing-scale})
-      calc(#{map.get($theme, control-padding-x)} * #{$spacing-scale});
+    padding: calc(#{map.get($theme, control-padding-y)} * #{$padding-scale})
+      calc(#{map.get($theme, control-padding-x)} * #{$padding-scale});
   }
 
   &[type='select-radio']::part(control-inner),

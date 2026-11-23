@@ -28,6 +28,8 @@ nte-input[type='select-radio'].vertical {
 // Kleine Eingaben reduzieren Innenabstand und Gaps stärker als die Schriftgröße.
 nte-input.sm {
   @include nte-input.size(0.75, 0.875, 0.875);
+  // Innenabstand separat noch kompakter; Gap und Typografie bleiben unverändert.
+  --nte-input-scale-padding: 0.6;
 }
 
 nte-input.md {

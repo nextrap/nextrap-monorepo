@@ -24,8 +24,8 @@ export class NteInput extends nextrap_element({
   private static readonly plugins = new Map<string, NteInputPluginClass>();
 
   @property({ type: String, reflect: true }) accessor type = 'text';
-  // Spiegelt Labels zur CSS-gesteuerten Reservierung der linken Rasterspalte.
-  @property({ type: String, reflect: true }) accessor label = '';
+  // Reflektiert explizite Labels, erzeugt aber beim Initialisieren kein fehlendes label-Attribut.
+  @property({ type: String, reflect: true, useDefault: true }) accessor label = '';
   // Status-Texte des Switches bleiben unabhängig vom festen Formular-Label reaktiv.
   @property({ type: String, attribute: 'on-text' }) accessor onText = '';
   @property({ type: String, attribute: 'off-text' }) accessor offText = '';
@@ -157,7 +157,7 @@ export class NteInput extends nextrap_element({
 
     const pluginHtml = plugin?.render(this.renderContext);
     const labelTemplate = html`
-      <label id="label" part="label" for=${this._labelFor} ?hidden=${!this.label || Boolean(plugin?.isLabelHidden())}>
+      <label id="label" part="label" for=${this._labelFor} ?hidden=${(!this.label && !this.hasAttribute('label')) || Boolean(plugin?.isLabelHidden())}>
         ${this.label}
       </label>
     `;
@@ -168,7 +168,7 @@ export class NteInput extends nextrap_element({
           ${isHoverLabel || Boolean(plugin?.isLabelHidden())
             ? nothing
             : html`
-                <div id="label-area" part="label-area" ?hidden=${!this.label}>
+                <div id="label-area" part="label-area" ?hidden=${!this.label && !this.hasAttribute("label")}>
                   ${labelTemplate}
                   <button
                     id="description-trigger"
