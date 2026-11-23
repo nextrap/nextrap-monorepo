@@ -4,7 +4,7 @@ Minimal input wrapper for Nextrap.
 
 `nte-input` itself only renders the frame around a control:
 
-- a label above the control
+- a label beside the control by default (above it with `compact`)
 - a bordered control box
 - a validation area below the control
 - an optional input aid area below the control
@@ -125,6 +125,38 @@ NteInput.registerPlugin(TextPlugin);
   <span slot="input-aid">Nur Kleinbuchstaben, Zahlen, Punkt und Bindestrich verwenden.</span>
 </nte-input>
 ```
+
+## Label layout and description
+
+By default the label is placed on the left. Set `--nte-input-label-columns`
+(default: `4`) on a theme, container or input to choose its width in a
+12-column grid. The `compact` class stacks the label above the control;
+both layouts can be used with the existing size classes `sm`, `md`, `lg`,
+`xl` and `xxl`.
+
+```html
+<nte-input label="Benutzername" type="text"></nte-input>
+<nte-input class="compact sm" label="Benutzername" type="text"></nte-input>
+<nte-input label="Benutzername" type="text">
+  <span slot="description">Dieser Name wird öffentlich angezeigt.</span>
+</nte-input>
+```
+
+The description slot appears in a native popover next to the label, opened
+by the information button on hover or click. It is independent of the
+existing `input-aid` slot underneath the field.
+
+The public `with-compact()` Sass mixin implements the compact layout.
+`tj-responsive` can toggle the compact class externally, without
+breakpoint logic inside `nte-input`:
+
+```html
+<tj-responsive>
+  <nte-input class="-xl:compact" label="Benutzername" type="text"></nte-input>
+</tj-responsive>
+```
+
+The website/theme provides `tj-responsive`; the input does not register it.
 
 ## Textarea auto grow
 
