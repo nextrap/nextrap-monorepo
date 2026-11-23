@@ -118,6 +118,11 @@ $themeCarbon: map.merge(
     align-items: center;
   }
 
+  // Ohne label-Attribut gibt es nur eine Control-Spalte; keine 1fr-Label-Aufteilung.
+  &:not([label])::part(field) {
+    grid-template-columns: auto;
+  }
+
   // Inline-Selects dürfen ihre Breite aus dem nativen Select statt aus einer
   // 1fr-Spalte ohne intrinsische Mindestgröße ableiten.
   &.inline[type='select']::part(field) {
