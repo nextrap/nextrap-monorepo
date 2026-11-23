@@ -1,0 +1,14 @@
+@use '@nextrap/style-switch' as switch;
+
+// Verwendet ausschließlich die drei Basismixins, ohne Material-, Icon- oder Outline-Variante.
+.switch {
+  @include switch.switch();
+}
+
+.switch-input {
+  @include switch.switch-input();
+}
+
+.switch-control {
+  @include switch.switch-control();
+}
