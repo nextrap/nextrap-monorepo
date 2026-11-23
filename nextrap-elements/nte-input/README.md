@@ -150,10 +150,13 @@ both layouts can be used with the existing size classes `sm`, `md`, `lg`,
 ```html
 <nte-input label="Benutzername" type="text"></nte-input>
 <nte-input class="compact sm" label="Benutzername" type="text"></nte-input>
+<nte-input class="inline" type="select" data-options='[{"value":"draft","label":"Entwurf"},{"value":"published","label":"Veröffentlicht"}]'></nte-input>
 <nte-input label="Benutzername" type="text">
   <span slot="description">Dieser Name wird öffentlich angezeigt.</span>
 </nte-input>
 ```
+
+The optional `inline` class makes the host `inline-block` so it takes its content width instead of the full line. Native `select` controls contribute the width required by their options, including in inline layouts, without setting an explicit width. Standard block layouts and `.compact` remain unchanged.
 
 The description slot appears in a native popover next to the label, opened
 by the information button on hover or click. It is independent of the
