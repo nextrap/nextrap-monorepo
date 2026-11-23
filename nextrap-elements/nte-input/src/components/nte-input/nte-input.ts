@@ -26,6 +26,9 @@ export class NteInput extends nextrap_element({
   @property({ type: String, reflect: true }) accessor type = 'text';
   // Spiegelt Labels zur CSS-gesteuerten Reservierung der linken Rasterspalte.
   @property({ type: String, reflect: true }) accessor label = '';
+  // Status-Texte des Switches bleiben unabhängig vom festen Formular-Label reaktiv.
+  @property({ type: String, attribute: 'on-text' }) accessor onText = '';
+  @property({ type: String, attribute: 'off-text' }) accessor offText = '';
   @property({ type: String }) accessor placeholder = '';
   @property({
     attribute: 'data-options',
