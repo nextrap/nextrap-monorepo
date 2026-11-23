@@ -10,7 +10,8 @@ select {
 }
 
 // Nur Inline-Selects bestimmen die Host-Breite aus ihrer nativen Options-Breite.
+// Das Select füllt den vom Inline-Grid intrinsisch ermittelten Platz aus.
 :host(.inline) select {
-  width: max-content;
+  width: auto;
   min-width: max-content;
 }
