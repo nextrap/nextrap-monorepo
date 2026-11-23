@@ -38,6 +38,14 @@ export class DefaultSwitchPlugin extends DefaultCheckboxPlugin {
           ?required=${element.hasAttribute('required')}
         />
         <span class="switch-control" part="switch-control" aria-hidden="true"></span>
+        <!-- Der optionale Status-Text wechselt mit dem Boolean-Wert, ohne das Formular-Label zu verändern. -->
+        ${element.value === true
+          ? element.onText
+            ? html`<span class="switch-label" part="switch-label">${element.onText}</span>`
+            : null
+          : element.offText
+            ? html`<span class="switch-label" part="switch-label">${element.offText}</span>`
+            : null}
       </label>
     `;
   }
