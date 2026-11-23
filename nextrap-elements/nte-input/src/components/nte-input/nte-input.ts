@@ -161,7 +161,33 @@ export class NteInput extends nextrap_element({
     return html`
       <div id="wrapper" part="wrapper">
         <div id="field" part="field">
-          ${isHoverLabel ? nothing : labelTemplate}
+          ${isHoverLabel
+            ? nothing
+            : html`
+                <div id="label-area" part="label-area">
+                  ${labelTemplate}
+                  <button
+                    id="description-trigger"
+                    part="description-trigger"
+                    type="button"
+                    aria-label="Beschreibung zu ${this.label}"
+                    aria-haspopup="true"
+                    aria-controls="description-popover"
+                    popovertarget="description-popover"
+                    @click=${(event: Event) => event.stopPropagation()}
+                    @pointerenter=${this.onDescriptionEnter}
+                    @pointerleave=${this.onDescriptionLeave}
+                  >ⓘ</button>
+                  <div
+                    id="description-popover"
+                    part="description-popover"
+                    popover="auto"
+                    role="note"
+                    @pointerenter=${this.onDescriptionEnter}
+                    @pointerleave=${this.onDescriptionLeave}
+                  ><slot id="description-slot" name="description"></slot></div>
+                </div>
+              `}
 
           <div id="control-shell" part="control">
             <slot id="start" name="start" part="start"></slot>
@@ -290,6 +316,23 @@ export class NteInput extends nextrap_element({
       this.setAttribute('invalid', '');
       this.removeAttribute('valid');
     }
+  }
+
+  // Hover öffnet dieselbe native Popover-Fläche wie ein Klick auf den Info-Button.
+  onDescriptionEnter() {
+    const popover = this.renderRoot.querySelector<HTMLElement>('#description-popover');
+    if (popover && !popover.matches(':popover-open') && popover.querySelector('slot')?.assignedNodes().length) {
+      popover.showPopover();
+    }
+  }
+
+  // Beim Verlassen des Info-Bereichs wird die Hover-Hilfe geschlossen.
+  onDescriptionLeave(event: PointerEvent) {
+    const trigger = this.renderRoot.querySelector<HTMLElement>('#description-trigger');
+    const popover = this.renderRoot.querySelector<HTMLElement>('#description-popover');
+    const next = event.relatedTarget;
+    if (next instanceof Node && (trigger?.contains(next) || popover?.contains(next))) return;
+    if (popover?.matches(':popover-open')) popover.hidePopover();
   }
 
   @Listen('click')

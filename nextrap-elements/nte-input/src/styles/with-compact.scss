@@ -1,0 +1,7 @@
+// Schaltet das Label-Layout ohne Breakpoint-Auswertung auf eine vertikale Anordnung um.
+@mixin with-compact() {
+  &::part(field) {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+  }
+}

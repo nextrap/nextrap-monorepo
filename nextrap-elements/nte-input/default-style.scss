@@ -12,6 +12,11 @@ nte-input.carbon {
   @include nte-input.default-style(nte-input.$themeCarbon);
 }
 
+// Aktiviert das vertikale Label-Layout unabhängig vom Theme über den Compact-Modifier.
+nte-input.compact {
+  @include nte-input.with-compact();
+}
+
 nte-input.hoverlabel {
   @include nte-input.floating-labels();
 }

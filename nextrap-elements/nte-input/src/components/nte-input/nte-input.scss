@@ -168,3 +168,35 @@
   opacity: 1;
   transform: translateY(0);
 }
+
+
+// Die Info-Hilfe erscheint nur bei belegtem Description-Slot; Positionierung erfolgt nativ im Top Layer.
+:where(#label-area) {
+  min-width: 0;
+}
+
+:where(#description-trigger) {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: help;
+  anchor-name: --nte-input-description-anchor;
+}
+
+:where(#label-area:has(#description-slot.slot-empty) #description-trigger) {
+  display: none;
+}
+
+:where(#description-popover) {
+  position-anchor: --nte-input-description-anchor;
+  position-area: bottom center;
+  margin: 0.5rem 0 0;
+  max-width: min(24rem, 90vw);
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--nt-border-color, #ced4da);
+  border-radius: var(--nt-border-radius, 0.375rem);
+  color: var(--nt-text, #212529);
+  background: var(--nt-body, #fff);
+  box-shadow: 0 0.5rem 1rem color-mix(in srgb, var(--nt-text, #212529) 15%, transparent);
+}

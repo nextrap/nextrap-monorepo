@@ -1,5 +1,6 @@
 import { FormDataAccessor } from '@trunkjs/browser-utils';
 import '@nextrap/style-base';
+import '@trunkjs/responsive';
 import '@nextrap/style-typography';
 import '@nextrap/style-utils';
 import '../index.ts';
