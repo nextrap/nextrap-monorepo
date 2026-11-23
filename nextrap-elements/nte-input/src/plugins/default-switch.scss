@@ -1,0 +1,19 @@
+@use '@nextrap/style-switch' as switch;
+
+// Verwendet ausschließlich die drei Basismixins, ohne Material-, Icon- oder Outline-Variante.
+.switch {
+  @include switch.switch();
+}
+
+.switch-input {
+  @include switch.switch-input();
+}
+
+.switch-control {
+  @include switch.switch-control();
+}
+
+// Der Status-Text nutzt die bestehende Switch-Typografie rechts vom Schalter.
+.switch-label {
+  @include switch.switch-label();
+}

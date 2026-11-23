@@ -53,6 +53,7 @@
         <nte-input label="Benutzername (Standard)" type="text" placeholder="max.mustermann">
           <span slot="description">Der Benutzername ist öffentlich sichtbar.</span>
         </nte-input>
+        <nte-input type="text" placeholder="Feld ohne Label: volle Breite"></nte-input>
         <nte-input class="compact" label="Benutzername (Compact)" type="text" placeholder="max.mustermann">
           <span slot="description">Die Beschreibung erscheint am Info-Button neben dem Label.</span>
         </nte-input>
@@ -125,6 +126,7 @@
 
       <section>
         <h2>Textarea</h2>
+        <nte-input label="Kommentar (Label obenbündig)" type="textarea" value="Erster Text"></nte-input>
         <nte-input class="hoverlabel" label="Kommentar" type="textarea" value="Erster Text"></nte-input>
       </section>
 
@@ -208,6 +210,20 @@
       <section>
         <h2>Checkbox</h2>
         <nte-input label="AGB akzeptieren" type="checkbox" checked></nte-input>
+      </section>
+
+      <section>
+        <h2>Switch</h2>
+        <p>Der Basis-Switch verwendet den Checkbox-Zustand. Ein Leerzeichen als Label reserviert die linke Spalte.</p>
+        <nte-input
+          type="switch"
+          label="Veröffentlichung"
+          off-text="Nicht veröffentlicht"
+          on-text="Veröffentlicht"
+        ></nte-input>
+        <nte-input type="switch" label="Benachrichtigungen" checked></nte-input>
+        <nte-input type="switch" label=" " aria-label="Zusatzfunktion aktivieren"></nte-input>
+        <nte-input type="switch" aria-label="Unbeschrifteten Switch aktivieren"></nte-input>
       </section>
 
       <section>
