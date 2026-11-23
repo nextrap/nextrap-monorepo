@@ -141,7 +141,7 @@ text is omitted for the other state.
 
 ## Label layout and description
 
-By default the label is placed on the left. Without a `label` attribute the label area disappears and the control takes the full row. Explicit `label="\"` or whitespace-only labels retain the empty label element and reserve the left column; in `.compact` an empty string reserves no vertical space. Use `aria-label` when the visible label is empty. Textareas, select-radio groups and token inputs align labels at the top. Set `--nte-input-label-columns`
+By default the label is placed on the left. Without a `label` attribute the label area disappears and the control takes the full row. Explicit `label=""` or whitespace-only labels retain the empty label element and reserve the left column; in `.compact` an empty string reserves no vertical space. Use `aria-label` when the visible label is empty. Textareas, select-radio groups and token inputs align labels at the top. Set `--nte-input-label-columns`
 (default: `4`) on a theme, container or input to choose its width in a
 12-column grid. The `compact` class stacks the label above the control;
 both layouts can be used with the existing size classes `sm`, `md`, `lg`,
