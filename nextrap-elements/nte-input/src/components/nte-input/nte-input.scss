@@ -2,6 +2,11 @@
   display: block;
 }
 
+// Optionaler Inline-Modus: Host-Breite folgt dem intrinsischen Control-Inhalt.
+:host(.inline) {
+  display: inline-block;
+}
+
 :where(#wrapper),
 :where(#field) {
   display: grid;
