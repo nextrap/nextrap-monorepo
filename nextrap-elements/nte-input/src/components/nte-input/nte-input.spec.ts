@@ -715,6 +715,44 @@ describe('NteInput', () => {
     element.remove();
   });
 
+  // Status-Texte stehen rechts am Switch; das feste Feld-Label und die Checkbox-Semantik bleiben erhalten.
+  it('switch displays off-text and on-text beside the control when toggled', async () => {
+    const element = document.createElement('nte-input') as NteInput;
+    element.type = 'switch';
+    element.label = 'Veröffentlichung';
+    element.offText = 'Nicht veröffentlicht';
+    element.onText = 'Veröffentlicht';
+    document.body.appendChild(element);
+
+    try {
+      await element.updateComplete;
+      await element.updateComplete;
+      const input = element.shadowRoot!.querySelector<HTMLInputElement>('input[role="switch"]');
+      expect(input).toBeInstanceOf(HTMLInputElement);
+      expect(input?.checked).toBe(false);
+      expect(element.shadowRoot?.querySelector('[part="label"]')?.textContent?.trim()).toBe('Veröffentlichung');
+      expect(element.shadowRoot?.querySelector('[part="switch-label"]')?.textContent?.trim()).toBe('Nicht veröffentlicht');
+
+      input!.checked = true;
+      input!.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
+      await element.updateComplete;
+
+      expect(element.value).toBe(true);
+      expect(element.shadowRoot?.querySelector('[part="switch-label"]')?.textContent?.trim()).toBe('Veröffentlicht');
+      expect(element.shadowRoot?.querySelector('[part="label"]')?.textContent?.trim()).toBe('Veröffentlichung');
+
+      element.setAttribute('on-text', 'Online');
+      await element.updateComplete;
+      expect(element.shadowRoot?.querySelector('[part="switch-label"]')?.textContent?.trim()).toBe('Online');
+
+      element.value = false;
+      await element.updateComplete;
+      expect(element.shadowRoot?.querySelector('[part="switch-label"]')?.textContent?.trim()).toBe('Nicht veröffentlicht');
+    } finally {
+      element.remove();
+    }
+  });
+
   it('default checkbox plugin uses boolean values via the host value accessor', async () => {
     const element = document.createElement('nte-input') as NteInput;
     element.type = 'checkbox';
