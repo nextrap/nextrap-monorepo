@@ -24,7 +24,8 @@ export class NteInput extends nextrap_element({
   private static readonly plugins = new Map<string, NteInputPluginClass>();
 
   @property({ type: String, reflect: true }) accessor type = 'text';
-  @property({ type: String }) accessor label = '';
+  // Spiegelt Labels zur CSS-gesteuerten Reservierung der linken Rasterspalte.
+  @property({ type: String, reflect: true }) accessor label = '';
   @property({ type: String }) accessor placeholder = '';
   @property({
     attribute: 'data-options',
@@ -161,7 +162,7 @@ export class NteInput extends nextrap_element({
     return html`
       <div id="wrapper" part="wrapper">
         <div id="field" part="field">
-          ${isHoverLabel
+          ${isHoverLabel || !this.label || Boolean(plugin?.isLabelHidden())
             ? nothing
             : html`
                 <div id="label-area" part="label-area">
