@@ -2,12 +2,23 @@
 import { history, undo } from '@codemirror/commands';
 import { Compartment, EditorState } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { CodeEditorInlineEditCallback, CodeEditorInlineEditRequest, CodeEditorInlineEditResponse } from '../types';
 import { inlineEditExtension, isInlineEditActive, openInlineEdit } from './index';
 
 const views: EditorView[] = [];
 const hosts: HTMLElement[] = [];
+const originalExecCommand = Object.getOwnPropertyDescriptor(document, 'execCommand');
+
+// jsdom meldet sich als WebKit, implementiert aber CodeMirrors Safari-Selection-Fallback nicht.
+beforeEach(() => {
+  if (typeof document.execCommand !== 'function') {
+    Object.defineProperty(document, 'execCommand', {
+      configurable: true,
+      value: () => false,
+    });
+  }
+});
 
 // Jede View wird unabhängig erstellt, auch in einem Shadow Root wie im NTE-Editor.
 function setup(
@@ -42,6 +53,11 @@ function setup(
 afterEach(() => {
   for (const view of views.splice(0)) view.destroy();
   for (const host of hosts.splice(0)) host.remove();
+  if (originalExecCommand) {
+    Object.defineProperty(document, 'execCommand', originalExecCommand);
+  } else {
+    Reflect.deleteProperty(document, 'execCommand');
+  }
 });
 
 // Ein echtes Eingabefeld und die Buttons werden über die sichtbare Oberfläche bedient.
