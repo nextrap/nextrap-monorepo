@@ -119,7 +119,6 @@ function createPrompt(view: EditorView, config: InlineEditOptions, from: number,
       previewHost.setAttribute('part', 'ai-edit-preview');
       dom.replaceChildren(previewHost, button('Accept', () => close(response.text)), button('Reject', () => close()));
       preview = new EditorView({
-        root: view.root,
         parent: previewHost,
         state: EditorState.create({
           doc: response.text,
