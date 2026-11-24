@@ -47,7 +47,7 @@ export type CodeEditorInlineCompletionCallback = (
   request: CodeEditorInlineCompletionRequest,
 ) => Promise<CodeEditorInlineCompletionResponse | null>;
 
-/** Vom Plugin auf vollständige Zeilen erweiterte Auswahl mit Freitextanweisung. */
+/** Zeilenauswahl oder leere Selection am Cursor mit Freitextanweisung. */
 export interface CodeEditorInlineEditRequest {
   language: CodeEditorLanguage;
   codeBefore: string;
@@ -59,12 +59,12 @@ export interface CodeEditorInlineEditRequest {
   signal?: AbortSignal;
 }
 
-/** Nichtleerer Ersatz der ausgewählten Zeilen. */
+/** Nichtleerer Ersatz der Auswahl oder einzufügender Text. */
 export interface CodeEditorInlineEditResponse {
   text: string;
 }
 
-/** Null oder leerer Ersatz lässt die ursprünglichen Zeilen unverändert. */
+/** Null oder leerer Ersatz lässt das Dokument unverändert. */
 export type CodeEditorInlineEditCallback = (
   request: CodeEditorInlineEditRequest,
 ) => Promise<CodeEditorInlineEditResponse | null>;

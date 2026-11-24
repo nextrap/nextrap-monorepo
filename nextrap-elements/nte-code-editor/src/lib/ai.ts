@@ -1,8 +1,6 @@
-// Marimo stellt Darstellung, Request-Lifecycle und Tastaturbefehle bereit.
-import {
-  aiExtension, inlineCompletion, inlineCompletionKeymap, showAiEditInput,
-  inputState, completionState,
-} from '@marimo-team/codemirror-ai';
+// Marimo übernimmt nur die automatische Vervollständigung.
+import { inlineCompletion, inlineCompletionKeymap } from '@marimo-team/codemirror-ai';
+import { inlineEditExtension, isInlineEditActive, openInlineEdit } from './inline-edit';
 import { Prec } from '@codemirror/state';
 import type { Extension } from '@codemirror/state';
 import type { EditorView } from '@codemirror/view';
@@ -30,9 +28,8 @@ export function aiExtensions(config: AiOptions): Extension {
         delay: config.delay,
         includeKeymap: false,
         events: {
-          beforeSuggestionFetch: view => config.canEdit() &&
-            !view.state.field(inputState, false)?.show &&
-            !view.state.field(completionState, false),
+          beforeSuggestionFetch: view => config.canEdit() && !isInlineEditActive(view),
+          shouldShowSuggestion: view => config.canEdit() && !isInlineEditActive(view),
         },
         fetchFn: async (state, signal) => {
           const cursor = state.selection.main.head;
@@ -49,22 +46,13 @@ export function aiExtensions(config: AiOptions): Extension {
       // Tab übernimmt Ghost-Text vor der bestehenden Einrückungsbelegung.
       Prec.highest(inlineCompletionKeymap),
     ] : [],
-    edit ? aiExtension({
-      keymaps: { showInput: config.editKey },
-      prompt: async ({ prompt, selection, codeBefore, codeAfter, signal }) => {
-        const from = codeBefore.length;
-        const result = await edit({
-          language: config.language(), prompt, selection, codeBefore, codeAfter,
-          from, to: from + selection.length, signal,
-        });
-        return result?.text || selection;
-      },
+    edit ? inlineEditExtension({
+      edit, key: config.editKey, language: config.language, canEdit: config.canEdit,
     }) : [],
   ];
 }
 
 // Der öffentliche Edit-Trigger delegiert an den vorhandenen Plugin-Befehl.
 export function triggerEdit(view: EditorView): boolean {
-  return !view.state.readOnly && view.state.field(inputState, false) !== undefined
-    && showAiEditInput(view);
+  return openInlineEdit(view);
 }

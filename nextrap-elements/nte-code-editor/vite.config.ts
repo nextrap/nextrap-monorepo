@@ -2,7 +2,7 @@ import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import { tjDemoViewerPlugin } from '@trunkjs/vite-demo-viewer';
 import * as path from 'node:path';
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import dts from 'vite-plugin-dts';
 
 // Library und Demo teilen den Package-Pfad; Laufzeit-Peers bleiben extern.
@@ -39,6 +39,16 @@ export default defineConfig({
       tsconfigPath: path.join(__dirname, 'tsconfig.lib.json'),
     }),
   ],
+  // Nx erkennt das Testtarget; DOM-Tests verwenden die vorhandene jsdom-Umgebung.
+  test: {
+    watch: false,
+    environment: 'jsdom',
+    include: ['src/**/*.{test,spec}.ts'],
+    coverage: {
+      reportsDirectory: `../../coverage/${packagePath}`,
+      provider: 'v8',
+    },
+  },
   build: {
     outDir: `../../dist/${packagePath}`,
     emptyOutDir: true,

@@ -18,7 +18,7 @@ export default defineDemo({
     <p>Die Demo simuliert einen KI-Dienst lokal. Beide Callbacks können durch eigene API-Aufrufe ersetzt werden.</p>
     <ol>
       <li><strong>Inline Completion:</strong> Ergänze in der ersten Zeile <code>Hell</code> zu <code>Hello</code>. Nach dem Debounce erscheint <code> world!</code> als Ghost-Text. Tab übernimmt, Escape verwirft.</li>
-      <li><strong>Inline Edit:</strong> Markiere Text in der zweiten Zeile. Öffne mit Strg+K (macOS: Cmd+K) oder dem Demo-Button das Anweisungsfeld, gib <code>uppercase</code> ein und bestätige mit Enter. Accept behält den Vorschlag, Reject stellt den vorherigen Text wieder her.</li>
+      <li><strong>Inline Edit:</strong> Markiere Text in der zweiten Zeile. Öffne mit Strg+K (macOS: Cmd+K) oder dem Demo-Button das Anweisungsfeld, gib <code>uppercase</code> ein und bestätige mit Enter. Accept übernimmt den Vorschlag, Reject verwirft ihn. Ohne Markierung öffnet derselbe Shortcut das Eingabefeld am Cursor; <code>uppercase</code> fügt dann <code>NEW TEXT</code> ein.</li>
     </ol>
     <section aria-label="KI-Editor">
       <nte-code-editor id="ai-editor" language="text" label="KI-Editor"></nte-code-editor>
@@ -36,7 +36,7 @@ export default defineDemo({
     </ul>
     <p><code>CodeEditorInlineCompletionResponse</code>: <code>{ text: ' world!' }</code> ergänzt nur den fehlenden Text; <code>null</code> erzeugt keinen Vorschlag.</p>
     <h3>CodeEditorInlineEditRequest</h3>
-    <p>Beispiel: Nach Übernahme der Completion wird die zweite Zeile bearbeitet. Das Plugin erweitert die Auswahl auf vollständige Zeilen.</p>
+    <p>Beispiel: Nach Übernahme der Completion wird die zweite Zeile bearbeitet. Das Plugin erweitert Markierungen auf vollständige Zeilen; ohne Markierung gilt <code>selection: ''</code> und <code>from === to</code>.</p>
     <ul>
       <li><code>language: CodeEditorLanguage</code> – z. B. <code>'text'</code>.</li>
       <li><code>codeBefore: string</code> – Text vor dem Edit-Bereich, z. B. <code>'Hello world!\\n'</code>.</li>
@@ -47,7 +47,7 @@ export default defineDemo({
       <li><code>prompt: string</code> – Anweisung, z. B. <code>'uppercase'</code>.</li>
       <li><code>signal?: AbortSignal</code> – optionales Abbruchsignal; kann auch <code>undefined</code> sein.</li>
     </ul>
-    <p><code>CodeEditorInlineEditResponse</code>: <code>{ text: 'MARK THIS TEXT TO EDIT.' }</code> ersetzt nur die betroffenen Zeilen. <code>null</code> oder leerer Ersatz lässt den Originaltext unverändert. Während der Vorschau enthält <code>editor.value</code> bereits den Ersatz.</p>
+    <p><code>CodeEditorInlineEditResponse</code>: <code>{ text: 'MARK THIS TEXT TO EDIT.' }</code> ersetzt nur die betroffenen Zeilen. <code>null</code> oder leerer Ersatz lässt den Originaltext unverändert. Erst Accept ändert <code>editor.value</code>.</p>
     <h3>Editor und CodeMirror</h3>
     <p><code>editor</code> ist die Nextrap-Web-Component; <code>editor.value</code> enthält den gesamten Text. <code>editor.editorView</code> ist die zugrunde liegende CodeMirror-View der Arbeitsfassung. Ihr <code>state</code> enthält Dokument und Auswahl. <code>dispatch()</code> wendet eine Transaktion an, etwa um den Cursor zu setzen. Für normales Lesen und Schreiben genügt <code>value</code>.</p>
   `,
@@ -72,7 +72,7 @@ export default defineDemo({
       const { signal, ...data } = request;
       controls.setValue('request', JSON.stringify({ ...data, signal: signal ? { aborted: signal.aborted } : null }, null, 2));
       const result = !signal?.aborted && request.prompt.toLowerCase() === 'uppercase'
-        ? { text: request.selection.toUpperCase() }
+        ? { text: request.selection ? request.selection.toUpperCase() : 'NEW TEXT' }
         : null;
       controls.setValue('response', JSON.stringify(result, null, 2));
       return result;
@@ -84,7 +84,7 @@ export default defineDemo({
     // verfügbar. dispatch setzt die Auswahl per Transaktion auf Offset 4 (nach Hell).
     await editor.updateComplete;
     editor.editorView?.dispatch({ selection: { anchor: 4 } });
-    // input meldet Dokumentänderungen, auch Übernahme und Reject eines Vorschlags.
+    // input meldet die tatsächliche Übernahme eines Vorschlags.
     controls.setValue('value', editor.value);
     const onInput = () => controls.setValue('value', editor.value);
     editor.addEventListener('input', onInput);
@@ -102,7 +102,7 @@ export default defineDemo({
         },
       },
       {
-        type: 'button', label: 'Auswahl bearbeiten',
+        type: 'button', label: 'Bearbeiten / Einfügen',
         onClick(_event, { query }) {
           query<NteCodeEditor>('#ai-editor').triggerInlineEdit();
         },
