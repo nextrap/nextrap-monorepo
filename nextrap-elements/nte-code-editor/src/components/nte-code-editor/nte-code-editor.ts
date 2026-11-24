@@ -75,6 +75,9 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
     htmlElements: { attribute: false },
     classNames: { attribute: false },
     originalValue: { attribute: false },
+    oldValue: { attribute: false, noAccessor: true },
+    header: { type: Boolean, reflect: true },
+    singleVersion: { state: true },
     diffMode: { type: String, attribute: 'diff-mode', reflect: true },
     diffOrientation: {
       type: String,
@@ -107,6 +110,8 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
   htmlElements: readonly CodeEditorHtmlElement[] = [];
   classNames: readonly string[] = [];
   originalValue: string | undefined;
+  header = false;
+  private singleVersion: 'original' | 'current' | undefined;
   diffMode: CodeEditorDiffMode = 'unified';
   diffOrientation: CodeEditorDiffOrientation = 'original-first';
   revertControls: CodeEditorRevertControls = 'original-to-modified';
@@ -130,6 +135,7 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
   readonly #internals = this.attachInternals();
   #view?: EditorView;
   #merge?: MergeView;
+  #preview?: EditorView;
   #savedState?: EditorState;
   #savedOriginalState?: EditorState;
   #savedSplit = false;
@@ -148,6 +154,16 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
   // Wie bei textarea erzeugt eine Zuweisung weder input noch change.
   set value(value: string) {
     this.#setValue(String(value ?? ''), true);
+  }
+
+  // oldValue ist ein Alias für die bestehende Vergleichsbasis; null deaktiviert den Vergleich.
+  get oldValue(): string | null {
+    return this.originalValue ?? null;
+  }
+
+  set oldValue(value: string | null | undefined) {
+    this.originalValue = value ?? undefined;
+    if (value == null) this.singleVersion = undefined;
   }
 
   // name und form werden direkt durch ElementInternals mit dem Formular verbunden.
@@ -212,14 +228,70 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
 
   // Lit besitzt nur den Mount-Punkt; CodeMirror verwaltet dessen interne DOM-Knoten.
   protected override render() {
+    const hasOriginal = this.oldValue !== null;
+    const showOriginal = hasOriginal && this.singleVersion === 'original';
     return html`${super.render()}
-      <div
-        id="editor"
-        part="container"
-        @input=${this.#stopInnerEvent}
-        @change=${this.#stopInnerEvent}
-      ></div>
+      ${this.header || hasOriginal ? this.#renderHeader(hasOriginal) : ''}
+      <div ?hidden=${showOriginal}>
+        <div
+          id="editor"
+          part="container"
+          @input=${this.#stopInnerEvent}
+          @change=${this.#stopInnerEvent}
+        ></div>
+      </div>
+      <div id="original-preview" ?hidden=${!showOriginal}></div>
       <slot NO-DEFAULT-SLOT></slot>`;
+  }
+
+  // Der kompakte Header zeigt die drei Ansichten nur bei vorhandener Vergleichsbasis.
+  #renderHeader(hasOriginal: boolean) {
+    const split = this.singleVersion === undefined && this.diffMode === 'side-by-side';
+    const unified = this.singleVersion === undefined && this.diffMode !== 'side-by-side';
+    const single = this.singleVersion !== undefined;
+    const toggleLabel = this.singleVersion === 'original'
+      ? 'Aktuelle Version anzeigen'
+      : 'Original anzeigen';
+    return html`
+      <div part="header">
+        <span part="header-content"><slot name="header"></slot></span>
+        ${hasOriginal ? html`
+          <button type="button" part=${split ? 'header-button active-header-button' : 'header-button'}
+            aria-label="Split View" title="Split View" aria-pressed=${split}
+            @click=${() => this.#selectDiff('side-by-side')}>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+              stroke-width="1.4" aria-hidden="true">
+              <rect x="1.5" y="2" width="13" height="12" rx="1"/><path d="M8 2v12M3.5 5h2.5M10 5h2.5M3.5 8h2.5M10 8h2.5"/>
+            </svg>
+          </button>
+          <button type="button" part=${unified ? 'header-button active-header-button' : 'header-button'}
+            aria-label="Änderungen untereinander" title="Änderungen untereinander" aria-pressed=${unified}
+            @click=${() => this.#selectDiff('unified')}>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+              stroke-width="1.4" aria-hidden="true">
+              <path d="M2 4h4M4 2v4M8 4h6M2 11h4M8 11h6"/>
+            </svg>
+          </button>
+          <button type="button" part=${single ? 'header-button active-header-button' : 'header-button'}
+            aria-label=${toggleLabel} title=${toggleLabel} aria-pressed=${single}
+            @click=${this.#toggleVersion}>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+              stroke-width="1.4" aria-hidden="true">
+              <path d="M3 2h7l3 3v9H3zM10 2v3h3M5 8h6M5 11h6"/>
+            </svg>
+          </button>
+        ` : ''}
+      </div>`;
+  }
+
+  // Die Ansichtswechsel verändern weder das Original noch den aktuellen Formularwert.
+  #selectDiff(mode: CodeEditorDiffMode): void {
+    this.singleVersion = undefined;
+    this.diffMode = mode;
+  }
+
+  #toggleVersion(): void {
+    this.singleVersion = this.singleVersion === 'original' ? 'current' : 'original';
   }
 
   // Wertänderungen lassen die Konfiguration unangetastet; nur geänderte Optionen werden ersetzt.
@@ -230,12 +302,16 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
       void this.#initialize();
       return;
     }
-    const split =
+    if (this.originalValue === undefined && this.singleVersion !== undefined)
+      this.singleVersion = undefined;
+    const split = this.singleVersion === undefined &&
       this.diffMode === 'side-by-side' && this.originalValue !== undefined;
     if (this.#view && Boolean(this.#merge) !== split) this.#destroyEditor();
     const created = !this.#view;
     if (created) this.#createEditor(split);
     this.#configure(changed, created);
+    this.#configurePreview(changed);
+    if (changed.has('singleVersion')) this.#view?.requestMeasure();
   }
 
   // Während des Imports gelten die aktuellen Properties; entfernte Instanzen erzeugen keine View.
@@ -260,7 +336,8 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
   // Fokus wird in das eigentliche Textfeld delegiert, nicht auf den äußeren Host.
   override focus(options?: FocusOptions): void {
     if (this.disabled || this.#formDisabled) return;
-    if (this.#view) this.#view.contentDOM.focus(options);
+    if (this.#preview) this.#preview.contentDOM.focus(options);
+    else if (this.#view) this.#view.contentDOM.focus(options);
     else super.focus(options);
   }
 
@@ -276,7 +353,7 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
 
   // Öffnet die Anweisung für die aktuelle Auswahl in der Arbeitsfassung.
   triggerInlineEdit(): boolean {
-    return Boolean(this.#view && this.inlineEdit && !this.disabled && !this.#formDisabled &&
+    return Boolean(this.singleVersion !== 'original' && this.#view && this.inlineEdit && !this.disabled && !this.#formDisabled &&
       !this.readOnly && triggerEdit(this.#view));
   }
 
@@ -325,6 +402,8 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
 
   // MergeView verwaltet und entfernt beide Views gemeinsam.
   #destroyEditor(): void {
+    this.#preview?.destroy();
+    this.#preview = undefined;
     if (!this.#view) return;
     // KI-Vorschau und laufende Requests gehören nicht zum gespeicherten EditorState.
     this.#view.dispatch({ effects: this.#ai.reconfigure([]) });
@@ -487,6 +566,33 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
     }
   }
 
+  // Die Original-Einzelansicht ist eine separate schreibgeschützte View; die Arbeitsfassung bleibt erhalten.
+  #configurePreview(changed: PropertyValues): void {
+    if (this.singleVersion !== 'original' || this.originalValue === undefined) {
+      this.#preview?.destroy();
+      this.#preview = undefined;
+      return;
+    }
+    const created = !this.#preview;
+    if (!this.#preview) {
+      this.#preview = new EditorView({
+        state: EditorState.create(this.#stateConfig(true)),
+        parent: this.renderRoot.querySelector<HTMLElement>('#original-preview')!,
+        root: this.renderRoot as ShadowRoot,
+      });
+      this.#preview.dom.setAttribute('part', 'editor original-preview');
+    }
+    const view = this.#preview;
+    this.#configureView(view, true, changed, created);
+    const original = this.originalValue.replace(/\r\n?/g, '\n');
+    if (view.state.doc.toString() !== original) {
+      view.dispatch({
+        changes: { from: 0, to: view.state.doc.length, insert: original },
+        annotations: [assignedValue.of(true), Transaction.addToHistory.of(false)],
+      });
+    }
+  }
+
   // Sprache und Folding gelten für beide Seiten; Extensions und Formular-Events für die Arbeitsfassung.
   #configureView(
     view: EditorView,
@@ -536,7 +642,7 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
           EditorView.editable.of(!disabled && !original),
           EditorView.contentAttributes.of({
             part: this.#merge ? `content ${role}-content` : 'content',
-            'aria-label': this.#merge
+            'aria-label': this.#merge || original
               ? `${this.label} – ${original ? 'Original' : 'Arbeitsfassung'}`
               : this.label,
             'aria-multiline': 'true',
@@ -566,7 +672,7 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
         canEdit: () => canEdit() && completion === this.inlineCompletion && edit === this.inlineEdit,
       }) : []));
     }
-    if (!this.#merge && (all || changed.has('originalValue')))
+    if (!original && !this.#merge && (all || changed.has('originalValue') || changed.has('singleVersion')))
       this.#configureDiff(effects);
     if (effects.length) view.dispatch({ effects });
     const role = original ? 'original' : 'modified';
@@ -634,7 +740,9 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
 
   // Bei einer neuen Baseline muss auch das bestehende Original-Document-Feld aktualisiert werden.
   #configureDiff(effects: StateEffect<unknown>[]): void {
-    const next = this.originalValue?.replace(/\r\n?/g, '\n');
+    const next = this.singleVersion === undefined
+      ? this.originalValue?.replace(/\r\n?/g, '\n')
+      : undefined;
     if (next === this.#diffOriginal) return;
     if (next !== undefined && this.#diffOriginal !== undefined) {
       const original = getOriginalDoc(this.#view!.state);
@@ -648,7 +756,11 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
         this.#diff.reconfigure(
           next === undefined
             ? []
-            : unifiedMergeView({ original: next, mergeControls: false }),
+            : unifiedMergeView({
+                original: next,
+                mergeControls: false,
+                collapseUnchanged: { margin: 0, minSize: 1 },
+              }),
         ),
       );
     }
