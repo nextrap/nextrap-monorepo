@@ -212,6 +212,22 @@ Arbeitsfassung; im Split wird diese Konfiguration ausschließlich auf Seite B
 angewendet. Sprache, HTML-Completion-Vorgaben und Folding konfiguriert der
 Wrapper für beide Seiten.
 
+Die Variable `editor` bezeichnet die Nextrap-Web-Component. Verwende deren
+`value`-Property, um den gesamten Text zu lesen oder zu ersetzen. Für
+CodeMirror-spezifische Operationen ist `editorView` zuständig. Ihr
+`state` ist ein unveränderlicher Snapshot von Dokument, Auswahl und
+Extensions. `dispatch()` übergibt eine Transaktion an die View und
+aktualisiert damit den State und die Darstellung:
+
+```ts
+await editor.updateComplete;
+const view = editor.editorView;
+if (view) {
+  console.log(view.state.doc.toString()); // Gesamter Dokumenttext.
+  view.dispatch({ selection: { anchor: 0 } }); // Cursor an den Anfang.
+}
+```
+
 `editorView` liefert nach `updateComplete` immer die View der Arbeitsfassung.
 `mergeView` liefert nur bei aktivem Split den Vergleich mit `a` (Original) und
 `b` (Arbeitsfassung). Nach dem Entfernen des Elements sind beide Getter
@@ -222,14 +238,118 @@ Extensions werden neu initialisiert. Zusätzliche Extensions sollen die vom
 Wrapper verwalteten Sprach-, Folding-, Diff- und Formularzustände nicht
 nochmals konfigurieren.
 
+## 8. KI-Vervollständigung und markierten Text bearbeiten
+
+Die beiden Funktionen verwenden `@marimo-team/codemirror-ai` (0.3.10),
+sind unabhängig und ohne Callback inaktiv.
+Die Anwendung stellt den asynchronen KI-Dienst selbst bereit; der Editor enthält
+keine API-Keys und sendet keine Requests an einen fest eingebauten Dienst.
+
+```ts
+import type {
+  CodeEditorInlineCompletionCallback, CodeEditorInlineEditCallback,
+} from '@nextrap/nte-code-editor';
+
+// editor ist die Instanz aus Abschnitt 1. Dieses Beispiel arbeitet ohne Netzwerk.
+const completion: CodeEditorInlineCompletionCallback = async request => {
+  const { codeBefore, signal } = request;
+  if (signal.aborted || !codeBefore.endsWith('Hello')) return null;
+  return { text: ' world!' };
+};
+const edit: CodeEditorInlineEditCallback = async request => {
+  const { selection, prompt, signal } = request;
+  if (signal?.aborted || prompt !== 'uppercase') return null;
+  return { text: selection.toUpperCase() };
+};
+editor.inlineCompletion = completion;
+editor.inlineEdit = edit;
+editor.inlineCompletionAutomatic = true;
+editor.inlineCompletionDelay = 400;
+await editor.updateComplete;
+```
+
+Tippe `Hello`: Der Vorschlag ` world!` erscheint nach dem Debounce als Ghost-Text.
+Tab fügt ihn ein, Escape verwirft ihn. Das Plugin bietet keinen öffentlichen
+manuellen Completion-Trigger. Strg+Leertaste bleibt für die vorhandene
+CodeMirror-Autocompletion reserviert.
+
+Markiere `Hello`, drücke Strg+K (`Mod-k`) oder rufe `editor.triggerInlineEdit()`
+auf. Gib `uppercase` ein und bestätige mit Enter. Das Plugin erweitert die
+Auswahl auf vollständige Zeilen. Der Vorschlag wird direkt in das Dokument
+und damit in `value` übernommen und als Diff angezeigt. Accept behält ihn,
+Reject stellt den ursprünglichen Text wieder her. Der Formularwert enthält
+während der Vorschau bereits den vorgeschlagenen Text.
+
+| API | Verhalten |
+|---|---|
+| `inlineCompletion` | Async-Callback oder `undefined` |
+| `inlineEdit` | Async-Callback oder `undefined` |
+| `inlineCompletionAutomatic` | Default `true`; `false` deaktiviert die Completion |
+| `inlineCompletionDelay` | Debounce in Millisekunden, Default `400` |
+| `inlineEditKey` | CodeMirror-Keyname; Default `Mod-k` |
+| `triggerInlineEdit()` | `true` wenn geöffnet, sonst `false` |
+
+Die exportierten Request-/Response-Typen ermöglichen eine typisierte Anbindung:
+
+### `CodeEditorInlineCompletionRequest`
+
+Beispiel: Das Dokument ist `Hello\nMark this text to edit.`, der Cursor steht
+nach `Hello`.
+
+| Property / Typ | Bedeutung | Beispielwert |
+|---|---|---|
+| `language: CodeEditorLanguage` | Aktive Sprache; mögliche Werte siehe Abschnitt 2 | `'text'`, `'html'`, `'typescript'` |
+| `codeBefore: string` | Gesamter Dokumenttext vor dem Cursor | `'Hello'` |
+| `codeAfter: string` | Gesamter Dokumenttext nach dem Cursor | `'\nMark this text to edit.'` |
+| `cursor: number` | Nullbasierter Cursor-Offset | `5` |
+| `signal: AbortSignal` | Abbruchsignal für den laufenden Request | `signal.aborted === false` |
+
+`CodeEditorInlineCompletionResponse`: `{ text: ' world!' }` ist ausschließlich
+die einzufügende Ergänzung. `null` zeigt keinen Vorschlag an.
+
+### `CodeEditorInlineEditRequest`
+
+Beispiel: Nach Übernahme der Completion enthält das Dokument
+`Hello world!\nMark this text to edit.`. Bearbeitet wird die zweite Zeile.
+
+| Property / Typ | Bedeutung | Beispielwert |
+|---|---|---|
+| `language: CodeEditorLanguage` | Aktive Sprache wie bei Completion | `'text'` |
+| `codeBefore: string` | Dokumenttext vor dem Edit-Bereich | `'Hello world!\n'` |
+| `selection: string` | Vollständiger zu ersetzender Zeilenbereich | `'Mark this text to edit.'` |
+| `codeAfter: string` | Dokumenttext nach dem Edit-Bereich | `''` |
+| `from: number` | Inklusiver Startoffset | `13` |
+| `to: number` | Exklusiver Endoffset | `36` |
+| `prompt: string` | Freitextanweisung des Benutzers | `'uppercase'` |
+| `signal?: AbortSignal` | Optionales Abbruchsignal | `undefined` oder `signal.aborted === false` |
+
+`CodeEditorInlineEditResponse`: `{ text: 'MARK THIS TEXT TO EDIT.' }`
+ersetzt den Bereich `[from, to)`, nicht den gesamten Dokumenttext.
+
+
+`cursor`, `from` und `to` sind nullbasierte UTF-16-Offsets im aktuellen
+Dokument (keine Zeilennummern). Beide
+Responses enthalten ausschließlich `{ text: string }` oder der Callback
+liefert `null` für keinen Vorschlag. Beim Edit wird bei `null` oder `text: ''`
+der ursprüngliche Text zurückgegeben, da das Plugin keinen leeren Ersatz
+unterstützt. Das `AbortSignal` (beim Edit optional) kann direkt an `fetch`
+übergeben werden. Request-Abbruch und Vorschau verwaltet das Plugin.
+Bei `disabled`, `readOnly` oder deaktiviertem Fieldset sind beide Funktionen
+gesperrt; im Split gelten sie ausschließlich für die Arbeitsfassung.
+Dokumentänderungen durch das Plugin nehmen wie gewöhnliche Eingaben an Undo
+und den bestehenden `input`-/`change`-Events teil.
+
 ## Demos und Entwicklung
 
-Die sechs `.demo.ts`-Dateien unter `demo/` zeigen diese Abläufe mit sichtbaren
-Controls. Der Einstieg verwendet Markdown/Kramdown und `tj-content-pane`;
-Quelltext gelangt über `value` in den Editor, nicht über einen Slot.
+Die sieben `.demo.ts`-Dateien unter `demo/` zeigen diese Abläufe mit sichtbaren
+Controls. Alle Demos verwenden direktes HTML-Markup ohne Content Pane oder
+Layout-Notation. Quelltext gelangt über `value` in den Editor, nicht über einen
+Slot.
 `05-diff.demo.ts` zeigt den Unified-Diff. `06-side-by-side.demo.ts` zeigt den
 zweispaltigen Vergleich mit Seitenwechsel, beiden Kopierrichtungen,
 ausblendbaren Buttons, Reset und Live-Ausgaben beider Dokumente.
+`07-ai.demo.ts` zeigt die beiden KI-Callbacks mit simulierten Antworten,
+Request-/Response-Ausgaben und dem aktuellen Formularwert.
 
 ```sh
 npx nx dev nte-code-editor

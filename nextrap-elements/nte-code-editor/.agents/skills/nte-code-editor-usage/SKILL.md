@@ -12,17 +12,14 @@ Verwende es für bearbeitbaren Quelltext, Unified-Diffs und zweispaltige
 Vergleiche mit Chunk-Übernahme. HTML im Editor ist Quelltext und wird nicht
 als Vorschau ausgeführt.
 
-## Einstieg über Content Pane
+## Einstieg über HTML
 
-Importiere zusätzlich `@trunkjs/content-pane`, wenn Markdown/Kramdown den
-Editor in ein Layout einsetzt. Verwende einen leeren Layout-Container:
+Der Code-Editor ist ein App-Control, kein Website-Layout. Verwende direktes
+HTML-Markup ohne `tj-content-pane` oder Kramdown-Layout-Notation. Auch alle
+Demos und Usage-Beispiele verwenden diese Form der Einbindung.
 
-```markdown
----
-{: layout="nte-code-editor#source[language=html][name=source]"}
-
----
-{: layout="/;"}
+```html
+<nte-code-editor id="source" language="html" name="source"></nte-code-editor>
 ```
 
 Setze den Code anschließend über die Property der erzeugten Instanz:
@@ -103,8 +100,9 @@ Sprache, Completion-Vorgaben und `folding` gelten im Split für beide Seiten.
 Rufe `foldAll()`/`unfoldAll()` nach `updateComplete` auf; diese Methoden steuern
 die Arbeitsfassung und respektieren `folding = false`.
 CodeMirror-Standardfunktionen liefern Undo/Redo, Bracket Matching und
-Completion; eine Language-Server-Anbindung ist nicht enthalten. Tab bleibt
-ein Fokuswechsel.
+Completion; eine Language-Server-Anbindung ist nicht enthalten. Ein sichtbarer
+KI-Vorschlag kann mit Tab angenommen werden; ohne Vorschlag bleibt die bisherige
+Tab-Belegung erhalten.
 
 Erwarte form-associated Custom Elements mit `ElementInternals`. Die Komponente
 berücksichtigt deaktivierte Fieldsets und Browser-Wiederherstellung. Nach
@@ -114,7 +112,25 @@ Split-Reconnect werden Dokument, Auswahl und Undo-Verlauf beider Seiten
 übernommen; zusätzliche StateFields eigener Extensions werden neu
 initialisiert.
 
-Nutze die sechs nummerierten Demos für komplette, ausführbare Beispiele:
+## Optionale KI-Callbacks
+
+Setze `inlineCompletion` und/oder `inlineEdit` auf einen asynchronen Callback.
+Beide erhalten `language`, `codeBefore`, `codeAfter` und `signal` (beim Edit
+optional); Completion zusätzlich `cursor`, Edit zusätzlich `selection`,
+`from`, `to` und `prompt`. Der Callback liefert `{ text: string }` oder
+`null`. Die Completion liefert nur die Ergänzung, Edit den nichtleeren
+Ersatz der vom Marimo-Plugin ausgewählten vollständigen Zeilen.
+
+`inlineCompletionAutomatic = false` deaktiviert die Vervollständigung.
+`inlineCompletionDelay` beträgt standardmäßig 400 ms. Tab übernimmt den
+Ghost-Text, Escape verwirft ihn. Ein manueller Completion-Trigger steht
+im Plugin nicht zur Verfügung. Edit über `Mod-k`/`triggerInlineEdit()`;
+`inlineEditKey` ist konfigurierbar. Das Plugin schreibt den Vorschlag
+direkt in `value`; Accept behält ihn, Reject stellt den Ausgangstext wieder
+her. Die Originalseite und schreibgeschützte Editoren sind ausgeschlossen.
+Siehe README Abschnitt 8 und `07-ai.demo.ts` für typisierte Beispiele.
+
+Nutze die sieben nummerierten Demos für komplette, ausführbare Beispiele:
 Demo 05 zeigt den Unified-Diff, Demo 06 die Split-Ansicht mit Seitenwechsel,
 Kopierrichtungen, gemeinsamem Scrollen und Live-Ausgaben. Für Styles lies
 [nte-code-editor-theming](../nte-code-editor-theming/SKILL.md).

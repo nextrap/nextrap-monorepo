@@ -1,11 +1,10 @@
 // Alle sechs Sprachmodi werden über dieselbe öffentliche Editor-API verwendet.
-import '@trunkjs/content-pane';
 import { defineDemo } from '@trunkjs/demo-viewer';
 import '../index';
 import type { NteCodeEditor } from '../index';
 import css from './demo.scss?inline';
 
-// Die Markdown-Abschnitte erzeugen jeweils einen leeren Editor mit eigener Sprache.
+// Die HTML-Abschnitte enthalten jeweils einen leeren Editor mit eigener Sprache.
 export default defineDemo({
   title: '02 · HTML, Markdown, CSS, JavaScript, TypeScript und SCSS',
   navPath: ['Elemente', 'Code Editor'],
@@ -13,60 +12,34 @@ export default defineDemo({
   description:
     'Mitgelieferte Sprachen einschließlich HTML und Code-Fences innerhalb von Markdown.',
   css,
-  markdown: `# Mitgelieferte Sprachen
-
-Die Sprache wird über **language** gesetzt. HTML verarbeitet auch enthaltene
-Style- und Script-Blöcke; Markdown erkennt HTML sowie die gezeigten Code-Fences.
-
-## HTML
-
----
-{: layout="nte-code-editor#html-editor[language=html]" section-aria-label="HTML-Beispiel"}
-
----
-{: layout="/;"}
-
-## Markdown mit HTML und Code-Fences
-
----
-{: layout="nte-code-editor#markdown-editor[language=markdown]" section-aria-label="Markdown-Beispiel"}
-
----
-{: layout="/;"}
-
-## CSS
-
----
-{: layout="nte-code-editor#css-editor[language=css]" section-aria-label="CSS-Beispiel"}
-
----
-{: layout="/;"}
-
-## JavaScript
-
----
-{: layout="nte-code-editor#javascript-editor[language=javascript]" section-aria-label="JavaScript-Beispiel"}
-
----
-{: layout="/;"}
-
-## TypeScript
-
----
-{: layout="nte-code-editor#typescript-editor[language=typescript]" section-aria-label="TypeScript-Beispiel"}
-
----
-{: layout="/;"}
-
-## SCSS
-
----
-{: layout="nte-code-editor#scss-editor[language=scss]" section-aria-label="SCSS-Beispiel"}
-
----
-{: layout="/;"}
-`,
-  wrapper_html: '<tj-content-pane>{{content}}</tj-content-pane>',
+  html: `
+    <h1>Mitgelieferte Sprachen</h1>
+    <p>Die Sprache wird über <strong>language</strong> gesetzt. HTML verarbeitet auch enthaltene Style- und Script-Blöcke; Markdown erkennt HTML sowie die gezeigten Code-Fences.</p>
+    <h2>HTML</h2>
+    <section aria-label="HTML-Beispiel">
+      <nte-code-editor id="html-editor" language="html" label="HTML-Beispiel"></nte-code-editor>
+    </section>
+    <h2>Markdown mit HTML und Code-Fences</h2>
+    <section aria-label="Markdown-Beispiel">
+      <nte-code-editor id="markdown-editor" language="markdown" label="Markdown-Beispiel"></nte-code-editor>
+    </section>
+    <h2>CSS</h2>
+    <section aria-label="CSS-Beispiel">
+      <nte-code-editor id="css-editor" language="css" label="CSS-Beispiel"></nte-code-editor>
+    </section>
+    <h2>JavaScript</h2>
+    <section aria-label="JavaScript-Beispiel">
+      <nte-code-editor id="javascript-editor" language="javascript" label="JavaScript-Beispiel"></nte-code-editor>
+    </section>
+    <h2>TypeScript</h2>
+    <section aria-label="TypeScript-Beispiel">
+      <nte-code-editor id="typescript-editor" language="typescript" label="TypeScript-Beispiel"></nte-code-editor>
+    </section>
+    <h2>SCSS</h2>
+    <section aria-label="SCSS-Beispiel">
+      <nte-code-editor id="scss-editor" language="scss" label="SCSS-Beispiel"></nte-code-editor>
+    </section>
+  `,
   // value bleibt in jedem Sprachmodus ein String; die Inhalte werden nicht ausgeführt.
   afterRender({ query }) {
     query<NteCodeEditor>('#html-editor').label = 'HTML-Beispiel';

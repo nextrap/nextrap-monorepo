@@ -1,5 +1,4 @@
 // Die Demo steuert Folding vollständig über die öffentliche Wrapper-API.
-import '@trunkjs/content-pane';
 import { defineDemo } from '@trunkjs/demo-viewer';
 import '../index';
 import type { NteCodeEditor } from '../index';
@@ -13,19 +12,13 @@ export default defineDemo({
   description:
     'Folding während der Bearbeitung umschalten, ohne den Editor oder seinen Text neu anzulegen.',
   css,
-  markdown: `# Code Folding
-
-Die Marker am linken Rand falten einzelne Blöcke. Mit **Folding aktiviert**
-kann die Funktion während der Bearbeitung ein- und ausgeschaltet werden.
-Beim Abschalten wird zuvor eingeklappter Code wieder vollständig sichtbar.
-
----
-{: layout="nte-code-editor#folding-editor[language=typescript]" section-aria-label="TypeScript mit Code Folding"}
-
----
-{: layout="/;"}
-`,
-  wrapper_html: '<tj-content-pane>{{content}}</tj-content-pane>',
+  html: `
+    <h1>Code Folding</h1>
+    <p>Die Marker am linken Rand falten einzelne Blöcke. Mit <strong>Folding aktiviert</strong> kann die Funktion während der Bearbeitung ein- und ausgeschaltet werden. Beim Abschalten wird zuvor eingeklappter Code wieder vollständig sichtbar.</p>
+    <section aria-label="TypeScript mit Code Folding">
+      <nte-code-editor id="folding-editor" language="typescript" label="TypeScript mit Code Folding"></nte-code-editor>
+    </section>
+  `,
   // folding ist standardmäßig aktiv; hier bleibt die Initialisierung beim Dokument.
   afterRender({ query }) {
     const editor = query<NteCodeEditor>('#folding-editor');

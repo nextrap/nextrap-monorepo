@@ -1,6 +1,5 @@
 // HTML und eingebettetes HTML teilen die konfigurierbare Completion des Wrappers.
 import { startCompletion } from '@codemirror/autocomplete';
-import '@trunkjs/content-pane';
 import { defineDemo } from '@trunkjs/demo-viewer';
 import '../index';
 import type { CodeEditorHtmlElement, NteCodeEditor } from '../index';
@@ -14,29 +13,18 @@ export default defineDemo({
   description:
     'Standard-HTML-Completion um eigene Tags, Attribute und verfügbare Klassen ergänzen – auch in Markdown.',
   css,
-  markdown: `# Eigene Completion-Vorgaben
-
-Tippe **<app-** oder ergänze einen Klassennamen innerhalb von **class**.
-**Strg + Leertaste** öffnet die Vorschläge auch ausdrücklich. Bereits gesetzte
-Klassen bleiben beim Vervollständigen des nächsten Klassennamens erhalten.
-
-## HTML
-
----
-{: layout="nte-code-editor#completion-html[language=html]" section-aria-label="HTML mit eigenen Vorschlägen"}
-
----
-{: layout="/;"}
-
-## HTML innerhalb von Markdown
-
----
-{: layout="nte-code-editor#completion-markdown[language=markdown]" section-aria-label="Markdown mit eigenen Vorschlägen"}
-
----
-{: layout="/;"}
-`,
-  wrapper_html: '<tj-content-pane>{{content}}</tj-content-pane>',
+  html: `
+    <h1>Eigene Completion-Vorgaben</h1>
+    <p>Tippe <strong>&lt;app-</strong> oder ergänze einen Klassennamen innerhalb von <strong>class</strong>. <strong>Strg + Leertaste</strong> öffnet die Vorschläge auch ausdrücklich. Bereits gesetzte Klassen bleiben beim Vervollständigen des nächsten Klassennamens erhalten.</p>
+    <h2>HTML</h2>
+    <section aria-label="HTML mit eigenen Vorschlägen">
+      <nte-code-editor id="completion-html" language="html" label="HTML mit eigenen Vorschlägen"></nte-code-editor>
+    </section>
+    <h2>HTML innerhalb von Markdown</h2>
+    <section aria-label="Markdown mit eigenen Vorschlägen">
+      <nte-code-editor id="completion-markdown" language="markdown" label="Markdown mit eigenen Vorschlägen"></nte-code-editor>
+    </section>
+  `,
   // Tags können nur Namen oder zusätzlich ihre erlaubten Attributwerte enthalten.
   afterRender({ query, controls }) {
     const htmlEditor = query<NteCodeEditor>('#completion-html');

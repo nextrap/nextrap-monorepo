@@ -5,5 +5,11 @@ export type {
   CodeEditorDiffOrientation,
   CodeEditorHtmlElement,
   CodeEditorLanguage,
+  CodeEditorInlineCompletionCallback,
+  CodeEditorInlineCompletionRequest,
+  CodeEditorInlineCompletionResponse,
+  CodeEditorInlineEditCallback,
+  CodeEditorInlineEditRequest,
+  CodeEditorInlineEditResponse,
   CodeEditorRevertControls,
 } from './src/lib/types';
