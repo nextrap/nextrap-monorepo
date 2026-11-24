@@ -212,6 +212,22 @@ Arbeitsfassung; im Split wird diese Konfiguration ausschließlich auf Seite B
 angewendet. Sprache, HTML-Completion-Vorgaben und Folding konfiguriert der
 Wrapper für beide Seiten.
 
+Die Variable `editor` bezeichnet die Nextrap-Web-Component. Verwende deren
+`value`-Property, um den gesamten Text zu lesen oder zu ersetzen. Für
+CodeMirror-spezifische Operationen ist `editorView` zuständig. Ihr
+`state` ist ein unveränderlicher Snapshot von Dokument, Auswahl und
+Extensions. `dispatch()` übergibt eine Transaktion an die View und
+aktualisiert damit den State und die Darstellung:
+
+```ts
+await editor.updateComplete;
+const view = editor.editorView;
+if (view) {
+  console.log(view.state.doc.toString()); // Gesamter Dokumenttext.
+  view.dispatch({ selection: { anchor: 0 } }); // Cursor an den Anfang.
+}
+```
+
 `editorView` liefert nach `updateComplete` immer die View der Arbeitsfassung.
 `mergeView` liefert nur bei aktivem Split den Vergleich mit `a` (Original) und
 `b` (Arbeitsfassung). Nach dem Entfernen des Elements sind beide Getter
@@ -275,12 +291,44 @@ während der Vorschau bereits den vorgeschlagenen Text.
 
 Die exportierten Request-/Response-Typen ermöglichen eine typisierte Anbindung:
 
-| Request | Felder |
-|---|---|
-| `CodeEditorInlineCompletionRequest` | `language`, `codeBefore`, `codeAfter`, `cursor`, `signal` |
-| `CodeEditorInlineEditRequest` | `language`, `codeBefore`, `selection`, `codeAfter`, `from`, `to`, `prompt`, `signal` |
+### `CodeEditorInlineCompletionRequest`
 
-`cursor`, `from` und `to` sind UTF-16-Offsets im aktuellen Dokument. Beide
+Beispiel: Das Dokument ist `Hello\nMark this text to edit.`, der Cursor steht
+nach `Hello`.
+
+| Property / Typ | Bedeutung | Beispielwert |
+|---|---|---|
+| `language: CodeEditorLanguage` | Aktive Sprache; mögliche Werte siehe Abschnitt 2 | `'text'`, `'html'`, `'typescript'` |
+| `codeBefore: string` | Gesamter Dokumenttext vor dem Cursor | `'Hello'` |
+| `codeAfter: string` | Gesamter Dokumenttext nach dem Cursor | `'\nMark this text to edit.'` |
+| `cursor: number` | Nullbasierter Cursor-Offset | `5` |
+| `signal: AbortSignal` | Abbruchsignal für den laufenden Request | `signal.aborted === false` |
+
+`CodeEditorInlineCompletionResponse`: `{ text: ' world!' }` ist ausschließlich
+die einzufügende Ergänzung. `null` zeigt keinen Vorschlag an.
+
+### `CodeEditorInlineEditRequest`
+
+Beispiel: Nach Übernahme der Completion enthält das Dokument
+`Hello world!\nMark this text to edit.`. Bearbeitet wird die zweite Zeile.
+
+| Property / Typ | Bedeutung | Beispielwert |
+|---|---|---|
+| `language: CodeEditorLanguage` | Aktive Sprache wie bei Completion | `'text'` |
+| `codeBefore: string` | Dokumenttext vor dem Edit-Bereich | `'Hello world!\n'` |
+| `selection: string` | Vollständiger zu ersetzender Zeilenbereich | `'Mark this text to edit.'` |
+| `codeAfter: string` | Dokumenttext nach dem Edit-Bereich | `''` |
+| `from: number` | Inklusiver Startoffset | `13` |
+| `to: number` | Exklusiver Endoffset | `36` |
+| `prompt: string` | Freitextanweisung des Benutzers | `'uppercase'` |
+| `signal?: AbortSignal` | Optionales Abbruchsignal | `undefined` oder `signal.aborted === false` |
+
+`CodeEditorInlineEditResponse`: `{ text: 'MARK THIS TEXT TO EDIT.' }`
+ersetzt den Bereich `[from, to)`, nicht den gesamten Dokumenttext.
+
+
+`cursor`, `from` und `to` sind nullbasierte UTF-16-Offsets im aktuellen
+Dokument (keine Zeilennummern). Beide
 Responses enthalten ausschließlich `{ text: string }` oder der Callback
 liefert `null` für keinen Vorschlag. Beim Edit wird bei `null` oder `text: ''`
 der ursprüngliche Text zurückgegeben, da das Plugin keinen leeren Ersatz
