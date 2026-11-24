@@ -115,18 +115,19 @@ initialisiert.
 ## Optionale KI-Callbacks
 
 Setze `inlineCompletion` und/oder `inlineEdit` auf einen asynchronen Callback.
-Beide erhalten `language`, `codeBefore`, `codeAfter` und `signal`; Completion
-zusätzlich `cursor`, Edit zusätzlich `selection`, `from`, `to` und `prompt`.
-Der Callback liefert `{ text: string }` oder `null`. Der Text ist nur die
-Ergänzung bzw. der vollständige Ersatz der Auswahl; `''` löscht beim Edit.
+Beide erhalten `language`, `codeBefore`, `codeAfter` und `signal` (beim Edit
+optional); Completion zusätzlich `cursor`, Edit zusätzlich `selection`,
+`from`, `to` und `prompt`. Der Callback liefert `{ text: string }` oder
+`null`. Die Completion liefert nur die Ergänzung, Edit den nichtleeren
+Ersatz der vom Marimo-Plugin ausgewählten vollständigen Zeilen.
 
-Mit `inlineCompletionAutomatic = false` bleiben manuelle Anfragen möglich.
-`inlineCompletionDelay` beträgt standardmäßig 400 ms. Manuelle Auslösung über
-`Mod-Shift-Space`/`triggerInlineCompletion()`, Edit über
-`Mod-k`/`triggerInlineEdit()`; die beiden Key-Properties sind konfigurierbar.
-Tab übernimmt den Ghost-Text, Escape verwirft ihn. Edit zeigt einen Diff vor
-Accept/Reject und verändert `value` erst bei Accept. Die Originalseite und
-schreibgeschützte Editoren führen keine KI-Aktionen aus.
+`inlineCompletionAutomatic = false` deaktiviert die Vervollständigung.
+`inlineCompletionDelay` beträgt standardmäßig 400 ms. Tab übernimmt den
+Ghost-Text, Escape verwirft ihn. Ein manueller Completion-Trigger steht
+im Plugin nicht zur Verfügung. Edit über `Mod-k`/`triggerInlineEdit()`;
+`inlineEditKey` ist konfigurierbar. Das Plugin schreibt den Vorschlag
+direkt in `value`; Accept behält ihn, Reject stellt den Ausgangstext wieder
+her. Die Originalseite und schreibgeschützte Editoren sind ausgeschlossen.
 Siehe README Abschnitt 8 und `07-ai.demo.ts` für typisierte Beispiele.
 
 Nutze die sieben nummerierten Demos für komplette, ausführbare Beispiele:

@@ -6,7 +6,7 @@ import type {
 } from '../index';
 import css from './demo.scss?inline';
 
-// Die beiden getrennten Callbacks zeigen Request, Response und bestätigten Formularwert.
+// Die beiden getrennten Callbacks zeigen Request, Response und aktuellen Formularwert.
 export default defineDemo({
   title: '07 · KI-Vervollständigung und Textbearbeitung',
   navPath: ['Elemente', 'Code Editor'],
@@ -15,7 +15,7 @@ export default defineDemo({
   css,
   html: `
     <h1>KI-Unterstützung ohne externen Dienst</h1>
-    <p>Tippe beispielsweise am Zeilenende <strong>Hello</strong> und warte kurz. Strg+Umschalt+Leertaste fragt sofort an, Tab übernimmt und Escape verwirft. Markiere einen Text und öffne mit Strg+K das Anweisungsfeld. Der Demo-Callback versteht <strong>uppercase</strong> und <strong>delete</strong>. Erst Accept ändert den Wert.</p>
+    <p>Tippe beispielsweise am Zeilenende <strong>Hello</strong> und warte kurz. Tab übernimmt, Escape verwirft den Ghost-Text. Markiere einen Text und öffne mit Strg+K das Anweisungsfeld. Der Demo-Callback versteht <strong>uppercase</strong>. Das Plugin bearbeitet ganze Zeilen und zeigt den Vorschlag direkt im Dokument; Reject stellt den vorherigen Text wieder her.</p>
     <section aria-label="KI-Editor">
       <nte-code-editor id="ai-editor" language="text" label="KI-Editor"></nte-code-editor>
     </section>
@@ -37,9 +37,9 @@ export default defineDemo({
       controls.setValue('request', JSON.stringify(data, null, 2));
       const result = request.prompt.toLowerCase() === 'uppercase'
         ? { text: request.selection.toUpperCase() }
-        : request.prompt.toLowerCase() === 'delete' ? { text: '' } : null;
+        : null;
       controls.setValue('response', JSON.stringify(result, null, 2));
-      return signal.aborted ? null : result;
+      return signal?.aborted ? null : result;
     };
     editor.inlineCompletion = completion;
     editor.inlineEdit = edit;
@@ -61,12 +61,6 @@ export default defineDemo({
         },
       },
       {
-        type: 'button', label: 'Vervollständigung anfordern',
-        onClick(_event, { query }) {
-          query<NteCodeEditor>('#ai-editor').triggerInlineCompletion();
-        },
-      },
-      {
         type: 'button', label: 'Auswahl bearbeiten',
         onClick(_event, { query }) {
           query<NteCodeEditor>('#ai-editor').triggerInlineEdit();
@@ -74,7 +68,7 @@ export default defineDemo({
       },
       { id: 'request', type: 'output', label: 'Request (ohne AbortSignal)' },
       { id: 'response', type: 'output', label: 'Response' },
-      { id: 'value', type: 'output', label: 'Bestätigter editor.value' },
+      { id: 'value', type: 'output', label: 'Aktueller editor.value' },
     ],
   },
 });

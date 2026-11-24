@@ -224,7 +224,8 @@ nochmals konfigurieren.
 
 ## 8. KI-Vervollständigung und markierten Text bearbeiten
 
-Die beiden Funktionen sind unabhängig und standardmäßig ohne Callback inaktiv.
+Die beiden Funktionen verwenden `@marimo-team/codemirror-ai` (0.3.10),
+sind unabhängig und ohne Callback inaktiv.
 Die Anwendung stellt den asynchronen KI-Dienst selbst bereit; der Editor enthält
 keine API-Keys und sendet keine Requests an einen fest eingebauten Dienst.
 
@@ -241,7 +242,7 @@ const completion: CodeEditorInlineCompletionCallback = async request => {
 };
 const edit: CodeEditorInlineEditCallback = async request => {
   const { selection, prompt, signal } = request;
-  if (signal.aborted || prompt !== 'uppercase') return null;
+  if (signal?.aborted || prompt !== 'uppercase') return null;
   return { text: selection.toUpperCase() };
 };
 editor.inlineCompletion = completion;
@@ -251,25 +252,26 @@ editor.inlineCompletionDelay = 400;
 await editor.updateComplete;
 ```
 
-Setze den Cursor nach `Hello`: Der Vorschlag ` world!` erscheint als Ghost-Text.
-Mit Tab wird er eingefügt, mit Escape verworfen. Strg+Umschalt+Leertaste
-(`Mod-Shift-Space`) oder `editor.triggerInlineCompletion()` starten sofort
-eine Anfrage, auch bei `inlineCompletionAutomatic = false`. Strg+Leertaste
-bleibt für die vorhandene CodeMirror-Autocompletion reserviert.
+Tippe `Hello`: Der Vorschlag ` world!` erscheint nach dem Debounce als Ghost-Text.
+Tab fügt ihn ein, Escape verwirft ihn. Das Plugin bietet keinen öffentlichen
+manuellen Completion-Trigger. Strg+Leertaste bleibt für die vorhandene
+CodeMirror-Autocompletion reserviert.
 
 Markiere `Hello`, drücke Strg+K (`Mod-k`) oder rufe `editor.triggerInlineEdit()`
-auf. Gib `uppercase` ein und bestätige mit Enter. Das Panel zeigt einen Diff
-von `Hello` zu `HELLO`; erst Accept verändert `value`. Reject oder Escape
-verwerfen den Vorschlag. Die umliegenden Zeichen bleiben unverändert.
+auf. Gib `uppercase` ein und bestätige mit Enter. Das Plugin erweitert die
+Auswahl auf vollständige Zeilen. Der Vorschlag wird direkt in das Dokument
+und damit in `value` übernommen und als Diff angezeigt. Accept behält ihn,
+Reject stellt den ursprünglichen Text wieder her. Der Formularwert enthält
+während der Vorschau bereits den vorgeschlagenen Text.
 
 | API | Verhalten |
 |---|---|
 | `inlineCompletion` | Async-Callback oder `undefined` |
 | `inlineEdit` | Async-Callback oder `undefined` |
-| `inlineCompletionAutomatic` | Default `true`; `false` erlaubt nur manuelle Anfragen |
+| `inlineCompletionAutomatic` | Default `true`; `false` deaktiviert die Completion |
 | `inlineCompletionDelay` | Debounce in Millisekunden, Default `400` |
-| `inlineCompletionKey` / `inlineEditKey` | CodeMirror-Keynamen; Default `Mod-Shift-Space` / `Mod-k` |
-| `triggerInlineCompletion()` / `triggerInlineEdit()` | `true` wenn gestartet, sonst `false` |
+| `inlineEditKey` | CodeMirror-Keyname; Default `Mod-k` |
+| `triggerInlineEdit()` | `true` wenn geöffnet, sonst `false` |
 
 Die exportierten Request-/Response-Typen ermöglichen eine typisierte Anbindung:
 
@@ -280,13 +282,14 @@ Die exportierten Request-/Response-Typen ermöglichen eine typisierte Anbindung:
 
 `cursor`, `from` und `to` sind UTF-16-Offsets im aktuellen Dokument. Beide
 Responses enthalten ausschließlich `{ text: string }` oder der Callback
-liefert `null` für keinen Vorschlag. Beim Edit ist `text: ''` eine Löschung.
-Das `AbortSignal` kann direkt an `fetch` übergeben werden. Geänderte Auswahl,
-Dokument, Konfiguration oder Disconnect verwerfen laufende Anfragen.
+liefert `null` für keinen Vorschlag. Beim Edit wird bei `null` oder `text: ''`
+der ursprüngliche Text zurückgegeben, da das Plugin keinen leeren Ersatz
+unterstützt. Das `AbortSignal` (beim Edit optional) kann direkt an `fetch`
+übergeben werden. Request-Abbruch und Vorschau verwaltet das Plugin.
 Bei `disabled`, `readOnly` oder deaktiviertem Fieldset sind beide Funktionen
 gesperrt; im Split gelten sie ausschließlich für die Arbeitsfassung.
-Die bestätigte Änderung nimmt wie eine gewöhnliche Eingabe an Undo und den
-bestehenden `input`-/`change`-Events teil.
+Dokumentänderungen durch das Plugin nehmen wie gewöhnliche Eingaben an Undo
+und den bestehenden `input`-/`change`-Events teil.
 
 ## Demos und Entwicklung
 
@@ -298,7 +301,7 @@ Slot.
 zweispaltigen Vergleich mit Seitenwechsel, beiden Kopierrichtungen,
 ausblendbaren Buttons, Reset und Live-Ausgaben beider Dokumente.
 `07-ai.demo.ts` zeigt die beiden KI-Callbacks mit simulierten Antworten,
-Request-/Response-Ausgaben und dem bestätigten Formularwert.
+Request-/Response-Ausgaben und dem aktuellen Formularwert.
 
 ```sh
 npx nx dev nte-code-editor
