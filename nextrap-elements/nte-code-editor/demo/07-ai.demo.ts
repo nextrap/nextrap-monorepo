@@ -1,5 +1,4 @@
 // Ausführbare KI-Demo ohne Netzwerk, Zugangsdaten oder fest vorgegebenen Anbieter.
-import '@trunkjs/content-pane';
 import { defineDemo } from '@trunkjs/demo-viewer';
 import '../index';
 import type {
@@ -14,21 +13,13 @@ export default defineDemo({
   order: 7,
   description: 'Ghost-Text und gezielte Änderungen mit eigenen asynchronen Callbacks.',
   css,
-  markdown: [
-    '# KI-Unterstützung ohne externen Dienst',
-    '',
-    'Tippe beispielsweise am Zeilenende **Hello** und warte kurz.',
-    'Strg+Umschalt+Leertaste fragt sofort an, Tab übernimmt und Escape verwirft.',
-    'Markiere einen Text und öffne mit Strg+K das Anweisungsfeld.',
-    'Der Demo-Callback versteht **uppercase** und **delete**. Erst Accept ändert den Wert.',
-    '',
-    '---',
-    '{: layout="nte-code-editor#ai-editor[language=text]" section-aria-label="KI-Editor"}',
-    '',
-    '---',
-    '{: layout="/;"}',
-  ].join('\n'),
-  wrapper_html: '<tj-content-pane>{{content}}</tj-content-pane>',
+  html: `
+    <h1>KI-Unterstützung ohne externen Dienst</h1>
+    <p>Tippe beispielsweise am Zeilenende <strong>Hello</strong> und warte kurz. Strg+Umschalt+Leertaste fragt sofort an, Tab übernimmt und Escape verwirft. Markiere einen Text und öffne mit Strg+K das Anweisungsfeld. Der Demo-Callback versteht <strong>uppercase</strong> und <strong>delete</strong>. Erst Accept ändert den Wert.</p>
+    <section aria-label="KI-Editor">
+      <nte-code-editor id="ai-editor" language="text" label="KI-Editor"></nte-code-editor>
+    </section>
+  `,
 
   // Die Antwort enthält ausschließlich den einzufügenden bzw. zu ersetzenden Text.
   async afterRender({ query, controls }) {

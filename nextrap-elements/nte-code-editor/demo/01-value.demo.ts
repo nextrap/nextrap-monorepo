@@ -1,11 +1,10 @@
-// Registriert die Markdown-Pipeline und den Editor für die ausführbare Demo.
-import '@trunkjs/content-pane';
+// Registriert den Editor für die ausführbare Demo.
 import { defineDemo } from '@trunkjs/demo-viewer';
 import '../index';
 import type { NteCodeEditor } from '../index';
 import css from './demo.scss?inline';
 
-// Der leere HR-Container übergibt keinen Inhalt an den Diagnose-Slot des Editors.
+// Das direkte HTML-Markup übergibt keinen Inhalt an den Diagnose-Slot des Editors.
 export default defineDemo({
   title: '01 · Value und Formulare',
   navPath: ['Elemente', 'Code Editor'],
@@ -13,19 +12,13 @@ export default defineDemo({
   description:
     'Code über value setzen und lesen, Benutzereingaben verfolgen und den Wert mit FormData übernehmen.',
   css,
-  markdown: `# Code wie einen Formularwert bearbeiten
-
-Bearbeite das HTML direkt im Editor. **input** meldet die Bearbeitung sofort,
-**change** nach dem Verlassen des Editors. Eine Zuweisung an **value** löst
-keines dieser beiden Benutzerereignisse aus.
-
----
-{: layout="nte-code-editor#value-editor[name=source]" section-aria-label="HTML-Quelltext"}
-
----
-{: layout="/;"}
-`,
-  wrapper_html: '<tj-content-pane>{{content}}</tj-content-pane>',
+  html: `
+    <h1>Code wie einen Formularwert bearbeiten</h1>
+    <p>Bearbeite das HTML direkt im Editor. <strong>input</strong> meldet die Bearbeitung sofort, <strong>change</strong> nach dem Verlassen des Editors. Eine Zuweisung an <strong>value</strong> löst keines dieser beiden Benutzerereignisse aus.</p>
+    <section aria-label="HTML-Quelltext">
+      <nte-code-editor id="value-editor" name="source" label="HTML-Quelltext"></nte-code-editor>
+    </section>
+  `,
   // Das echte Formular nutzt denselben Editor über seine explizite Form-Zuordnung.
   async afterRender({ root, query, controls }) {
     await customElements.whenDefined('nte-code-editor');

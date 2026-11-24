@@ -291,8 +291,9 @@ bestehenden `input`-/`change`-Events teil.
 ## Demos und Entwicklung
 
 Die sieben `.demo.ts`-Dateien unter `demo/` zeigen diese Abläufe mit sichtbaren
-Controls. Der Einstieg verwendet Markdown/Kramdown und `tj-content-pane`;
-Quelltext gelangt über `value` in den Editor, nicht über einen Slot.
+Controls. Alle Demos verwenden direktes HTML-Markup ohne Content Pane oder
+Layout-Notation. Quelltext gelangt über `value` in den Editor, nicht über einen
+Slot.
 `05-diff.demo.ts` zeigt den Unified-Diff. `06-side-by-side.demo.ts` zeigt den
 zweispaltigen Vergleich mit Seitenwechsel, beiden Kopierrichtungen,
 ausblendbaren Buttons, Reset und Live-Ausgaben beider Dokumente.

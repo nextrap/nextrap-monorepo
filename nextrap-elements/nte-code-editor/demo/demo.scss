@@ -14,9 +14,3 @@ nte-code-editor {
     max-height: 26rem;
   }
 }
-
-// Der Markdown-Rahmen hält auf schmalen Viewports auch lange Quelltextzeilen im Layout.
-tj-content-pane {
-  display: block;
-  min-width: 0;
-}

@@ -1,5 +1,4 @@
 // Der Unified Diff vergleicht originalValue mit dem weiterhin editierbaren value.
-import '@trunkjs/content-pane';
 import { defineDemo } from '@trunkjs/demo-viewer';
 import '../index';
 import type { NteCodeEditor } from '../index';
@@ -13,20 +12,13 @@ export default defineDemo({
   description:
     'Eine unveränderliche Vergleichsversion und den aktuellen value als bearbeitbaren Unified Diff anzeigen.',
   css,
-  markdown: `# Original und Bearbeitungsstand vergleichen
-
-**originalValue** enthält die Vergleichsversion, **value** den aktuellen Text.
-Der Diff markiert hinzugefügte und entfernte Zeilen, während du weiterarbeitest.
-**undefined** beendet den Vergleich; ein leerer String vergleicht dagegen mit
-einem leeren Dokument.
-
----
-{: layout="nte-code-editor#diff-editor[language=html]" section-aria-label="HTML-Vergleich"}
-
----
-{: layout="/;"}
-`,
-  wrapper_html: '<tj-content-pane>{{content}}</tj-content-pane>',
+  html: `
+    <h1>Original und Bearbeitungsstand vergleichen</h1>
+    <p><strong>originalValue</strong> enthält die Vergleichsversion, <strong>value</strong> den aktuellen Text. Der Diff markiert hinzugefügte und entfernte Zeilen, während du weiterarbeitest. <strong>undefined</strong> beendet den Vergleich; ein leerer String vergleicht dagegen mit einem leeren Dokument.</p>
+    <section aria-label="HTML-Vergleich">
+      <nte-code-editor id="diff-editor" language="html" label="HTML-Vergleich"></nte-code-editor>
+    </section>
+  `,
   // Original und Arbeitsfassung werden explizit über die beiden Properties gesetzt.
   afterRender({ query, controls, state }) {
     const editor = query<NteCodeEditor>('#diff-editor');

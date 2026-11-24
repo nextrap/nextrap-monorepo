@@ -12,17 +12,14 @@ Verwende es für bearbeitbaren Quelltext, Unified-Diffs und zweispaltige
 Vergleiche mit Chunk-Übernahme. HTML im Editor ist Quelltext und wird nicht
 als Vorschau ausgeführt.
 
-## Einstieg über Content Pane
+## Einstieg über HTML
 
-Importiere zusätzlich `@trunkjs/content-pane`, wenn Markdown/Kramdown den
-Editor in ein Layout einsetzt. Verwende einen leeren Layout-Container:
+Der Code-Editor ist ein App-Control, kein Website-Layout. Verwende direktes
+HTML-Markup ohne `tj-content-pane` oder Kramdown-Layout-Notation. Auch alle
+Demos und Usage-Beispiele verwenden diese Form der Einbindung.
 
-```markdown
----
-{: layout="nte-code-editor#source[language=html][name=source]"}
-
----
-{: layout="/;"}
+```html
+<nte-code-editor id="source" language="html" name="source"></nte-code-editor>
 ```
 
 Setze den Code anschließend über die Property der erzeugten Instanz:

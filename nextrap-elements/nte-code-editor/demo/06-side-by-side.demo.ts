@@ -1,5 +1,4 @@
 // Die Split-Ansicht verwendet dieselben Formularwerte wie der einzelne Editor.
-import '@trunkjs/content-pane';
 import { defineDemo } from '@trunkjs/demo-viewer';
 import '../index';
 import type { NteCodeEditor } from '../index';
@@ -13,27 +12,15 @@ export default defineDemo({
   description:
     'Seiten tauschen, einzelne Änderungsblöcke in beide Richtungen übernehmen und beide Versionen gemeinsam scrollen.',
   css,
-  markdown: `# Zwei Versionen gemeinsam bearbeiten
-
-**originalValue** ist das Original, **value** die bearbeitbare Arbeitsfassung.
-Scrolle innerhalb des Vergleichs: Zusammengehörige Abschnitte bleiben auf
-gleicher Höhe, auch wenn eine Version zusätzliche Zeilen enthält.
-
-Die Buttons zwischen den Seiten holen zunächst den jeweiligen Originalblock
-in die Arbeitsfassung zurück. **Neue Blöcke ins Original übernehmen** kehrt
-die Kopierrichtung um und verändert damit gezielt die Vergleichsbasis.
-Das Original bleibt für direkte Texteingaben schreibgeschützt.
-
-**Neue Version links** vertauscht nur die Darstellung. Die Bedeutung von
-**value**, **originalValue** und der gewählten Kopierrichtung bleibt erhalten.
-
----
-{: layout="nte-code-editor#split-editor[language=html][diff-mode=side-by-side]" section-aria-label="Original und Arbeitsfassung vergleichen"}
-
----
-{: layout="/;"}
-`,
-  wrapper_html: '<tj-content-pane>{{content}}</tj-content-pane>',
+  html: `
+    <h1>Zwei Versionen gemeinsam bearbeiten</h1>
+    <p><strong>originalValue</strong> ist das Original, <strong>value</strong> die bearbeitbare Arbeitsfassung. Scrolle innerhalb des Vergleichs: Zusammengehörige Abschnitte bleiben auf gleicher Höhe, auch wenn eine Version zusätzliche Zeilen enthält.</p>
+    <p>Die Buttons zwischen den Seiten holen zunächst den jeweiligen Originalblock in die Arbeitsfassung zurück. <strong>Neue Blöcke ins Original übernehmen</strong> kehrt die Kopierrichtung um und verändert damit gezielt die Vergleichsbasis. Das Original bleibt für direkte Texteingaben schreibgeschützt.</p>
+    <p><strong>Neue Version links</strong> vertauscht nur die Darstellung. Die Bedeutung von <strong>value</strong>, <strong>originalValue</strong> und der gewählten Kopierrichtung bleibt erhalten.</p>
+    <section aria-label="Original und Arbeitsfassung vergleichen">
+      <nte-code-editor id="split-editor" language="html" diff-mode="side-by-side" label="Original und Arbeitsfassung vergleichen"></nte-code-editor>
+    </section>
+  `,
   // Konkrete Dokumente enthalten getrennte Ersetzungen, Ergänzungen und Löschungen.
   afterRender({ query, controls, state }) {
     const editor = query<NteCodeEditor>('#split-editor');
