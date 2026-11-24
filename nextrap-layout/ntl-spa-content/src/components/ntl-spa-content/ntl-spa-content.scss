@@ -52,10 +52,21 @@ slot {
   min-inline-size: 0;
 }
 
-// Ausschließlich der Content-Header bleibt über dem vorbeiscrollenden Hauptinhalt stehen.
+// Der Content-Header bleibt am oberen Rand über dem vorbeiscrollenden Hauptinhalt stehen.
 slot[name='header'] {
   position: sticky;
   inset-block-start: 0;
+  z-index: 1;
+}
+
+// Freier Platz bleibt oberhalb des sticky Footers; dieser bleibt am Spaltenende auf Inhaltshöhe.
+slot[name='footer'] {
+  position: sticky;
+  inset-block-end: 0;
+  flex: 0 0 auto;
+  margin-block-start: auto;
+  height: auto;
+  min-height: 48px;
   z-index: 1;
 }
 

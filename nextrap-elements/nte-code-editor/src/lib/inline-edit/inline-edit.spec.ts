@@ -70,7 +70,7 @@ function enterPrompt(view: EditorView, prompt: string): void {
 
 function clickButton(view: EditorView, label: string): void {
   const button = Array.from(view.dom.querySelectorAll<HTMLButtonElement>('.cm-ai-edit-prompt button'))
-    .find(element => element.textContent === label);
+    .find(element => (element.getAttribute('aria-label') ?? element.textContent?.replace(/^[✓×] /, '')) === label);
   expect(button).toBeDefined();
   button!.click();
 }
@@ -121,7 +121,51 @@ describe('Inline Edit und Insert', () => {
     expect(view.state.doc.toString()).toBe(
       action === 'Accept' ? 'before\nREPLACEMENT\nafter' : 'before\nselected\nafter',
     );
+    expect(isInlineEditActive(view)).toBe(action === 'Reject');
+  });
+
+  // Reject erhält Eingabe und Cursor-Kontext, damit ein korrigierter Auftrag erneut generiert werden kann.
+  it('restores the original insert prompt after Reject and accepts a revised suggestion', async () => {
+    const edit = vi.fn<CodeEditorInlineEditCallback>()
+      .mockResolvedValueOnce({ text: 'FIRST' })
+      .mockResolvedValueOnce({ text: 'SECOND' });
+    const { view } = setup('abc', { anchor: 1 }, edit);
+    openInlineEdit(view);
+    enterPrompt(view, '  original instruction  ');
+    await Promise.resolve();
+    clickButton(view, 'Reject');
+    const input = view.dom.querySelector<HTMLInputElement>('.cm-ai-edit-prompt input');
+    expect(input?.value).toBe('  original instruction  ');
+    expect(view.root.activeElement).toBe(input);
+    expect(preview(view)).toBeNull();
+    expect(view.state.doc.toString()).toBe('abc');
+    expect(isInlineEditActive(view)).toBe(true);
+    enterPrompt(view, 'revised instruction');
+    await Promise.resolve();
+    expect(edit).toHaveBeenCalledTimes(2);
+    expect(edit.mock.calls[1][0]).toMatchObject({
+      prompt: 'revised instruction', selection: '', from: 1, to: 1,
+      codeBefore: 'a', codeAfter: 'bc',
+    });
+    clickButton(view, 'Accept');
+    expect(view.state.doc.toString()).toBe('aSECONDbc');
     expect(isInlineEditActive(view)).toBe(false);
+  });
+
+  // Symbolbuttons behalten verständliche Namen und die gewünschte Reihenfolge.
+  it('places the close symbol next to Generate and decorates preview actions', async () => {
+    const { view } = setup('abc', { anchor: 1 }, async () => ({ text: 'NEW' }));
+    openInlineEdit(view);
+    const buttons = () => Array.from(view.dom.querySelectorAll<HTMLButtonElement>('.cm-ai-edit-prompt button'));
+    expect(buttons().map(button => button.textContent)).toEqual(['Generate', '×']);
+    expect(buttons()[1].getAttribute('aria-label')).toBe('Schließen');
+    enterPrompt(view, 'insert');
+    await Promise.resolve();
+    expect(buttons().map(button => button.textContent)).toEqual(['✓ Accept', '× Reject']);
+    clickButton(view, 'Reject');
+    clickButton(view, 'Schließen');
+    expect(isInlineEditActive(view)).toBe(false);
+    expect(view.state.doc.toString()).toBe('abc');
   });
 
   // Null und leere Antworten verändern nichts; der Prompt bleibt wiederholbar.
@@ -134,7 +178,7 @@ describe('Inline Edit und Insert', () => {
     expect(preview(view)).toBeNull();
     expect(view.state.doc.toString()).toBe('abc');
     expect(view.dom.querySelector<HTMLInputElement>('.cm-ai-edit-prompt input')?.value).toBe('insert');
-    clickButton(view, 'Cancel');
+    clickButton(view, 'Schließen');
     expect(isInlineEditActive(view)).toBe(false);
   });
 

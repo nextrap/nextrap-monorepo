@@ -10,6 +10,27 @@
   overflow: auto;
 }
 
+// Eingabe und Aktionen bleiben zusammen; bei Platzmangel schrumpft nur das Eingabefeld.
+.cm-ai-edit-prompt .cm-ai-edit-input-row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 4px;
+  width: 32rem;
+  max-width: 100%;
+  min-width: 0;
+
+  input {
+    flex: 1 1 12rem;
+    min-width: 0;
+  }
+
+  button {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+}
+
 // Beide Diff-Seiten teilen einen vertikalen Scrollport; CodeMirror richtet die Zeilen aus.
 .cm-mergeView {
   min-width: 0;

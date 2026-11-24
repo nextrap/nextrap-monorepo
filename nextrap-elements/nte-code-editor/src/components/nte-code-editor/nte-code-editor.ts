@@ -78,6 +78,7 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
     oldValue: { attribute: false, noAccessor: true },
     header: { type: Boolean, reflect: true },
     singleVersion: { state: true },
+    viewMode: { type: String, attribute: 'view-mode' },
     diffMode: { type: String, attribute: 'diff-mode', reflect: true },
     diffOrientation: {
       type: String,
@@ -111,7 +112,8 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
   classNames: readonly string[] = [];
   originalValue: string | undefined;
   header = false;
-  private singleVersion: 'original' | 'current' | undefined;
+  // Neue Instanzen starten mit der vollständigen aktuellen Seite; Diffs werden manuell gewählt.
+  private singleVersion: 'original' | 'current' | undefined = 'current';
   diffMode: CodeEditorDiffMode = 'unified';
   diffOrientation: CodeEditorDiffOrientation = 'original-first';
   revertControls: CodeEditorRevertControls = 'original-to-modified';
@@ -163,7 +165,7 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
 
   set oldValue(value: string | null | undefined) {
     this.originalValue = value ?? undefined;
-    if (value == null) this.singleVersion = undefined;
+
   }
 
   // name und form werden direkt durch ElementInternals mit dem Formular verbunden.
@@ -231,7 +233,6 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
     const hasOriginal = this.oldValue !== null;
     const showOriginal = hasOriginal && this.singleVersion === 'original';
     return html`${super.render()}
-      ${this.header || hasOriginal ? this.#renderHeader(hasOriginal) : ''}
       <div ?hidden=${showOriginal}>
         <div
           id="editor"
@@ -244,44 +245,14 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
       <slot NO-DEFAULT-SLOT></slot>`;
   }
 
-  // Der kompakte Header zeigt die drei Ansichten nur bei vorhandener Vergleichsbasis.
-  #renderHeader(hasOriginal: boolean) {
-    const split = this.singleVersion === undefined && this.diffMode === 'side-by-side';
-    const unified = this.singleVersion === undefined && this.diffMode !== 'side-by-side';
-    const single = this.singleVersion !== undefined;
-    const toggleLabel = this.singleVersion === 'original'
-      ? 'Aktuelle Version anzeigen'
-      : 'Original anzeigen';
-    return html`
-      <div part="header">
-        <span part="header-content"><slot name="header"></slot></span>
-        ${hasOriginal ? html`
-          <button type="button" part=${split ? 'header-button active-header-button' : 'header-button'}
-            aria-label="Split View" title="Split View" aria-pressed=${split}
-            @click=${() => this.#selectDiff('side-by-side')}>
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor"
-              stroke-width="1.4" aria-hidden="true">
-              <rect x="1.5" y="2" width="13" height="12" rx="1"/><path d="M8 2v12M3.5 5h2.5M10 5h2.5M3.5 8h2.5M10 8h2.5"/>
-            </svg>
-          </button>
-          <button type="button" part=${unified ? 'header-button active-header-button' : 'header-button'}
-            aria-label="Änderungen untereinander" title="Änderungen untereinander" aria-pressed=${unified}
-            @click=${() => this.#selectDiff('unified')}>
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor"
-              stroke-width="1.4" aria-hidden="true">
-              <path d="M2 4h4M4 2v4M8 4h6M2 11h4M8 11h6"/>
-            </svg>
-          </button>
-          <button type="button" part=${single ? 'header-button active-header-button' : 'header-button'}
-            aria-label=${toggleLabel} title=${toggleLabel} aria-pressed=${single}
-            @click=${this.#toggleVersion}>
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor"
-              stroke-width="1.4" aria-hidden="true">
-              <path d="M3 2h7l3 3v9H3zM10 2v3h3M5 8h6M5 11h6"/>
-            </svg>
-          </button>
-        ` : ''}
-      </div>`;
+  // Externe Steuerelemente wählen die Ansicht, ohne den Inhalt zu ersetzen.
+  get viewMode(): 'page' | CodeEditorDiffMode {
+    return this.singleVersion !== undefined ? 'page' : this.diffMode;
+  }
+
+  set viewMode(mode: 'page' | CodeEditorDiffMode) {
+    if (mode === 'page') this.#toggleVersion();
+    else if (mode === 'unified' || mode === 'side-by-side') this.#selectDiff(mode);
   }
 
   // Die Ansichtswechsel verändern weder das Original noch den aktuellen Formularwert.
@@ -290,8 +261,9 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
     this.diffMode = mode;
   }
 
+  // Der Seitenmodus zeigt die bearbeitbare aktuelle Fassung ohne Vergleich.
   #toggleVersion(): void {
-    this.singleVersion = this.singleVersion === 'original' ? 'current' : 'original';
+    this.singleVersion = 'current';
   }
 
   // Wertänderungen lassen die Konfiguration unangetastet; nur geänderte Optionen werden ersetzt.
@@ -302,8 +274,6 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
       void this.#initialize();
       return;
     }
-    if (this.originalValue === undefined && this.singleVersion !== undefined)
-      this.singleVersion = undefined;
     const split = this.singleVersion === undefined &&
       this.diffMode === 'side-by-side' && this.originalValue !== undefined;
     if (this.#view && Boolean(this.#merge) !== split) this.#destroyEditor();

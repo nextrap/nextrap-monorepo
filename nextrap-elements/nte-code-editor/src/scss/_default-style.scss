@@ -7,54 +7,9 @@
   --nte-code-editor-tag: #116329;
   --nte-code-editor-attribute: #953800;
 
-  // Der optionale Header bleibt kompakt; Farben folgen der bestehenden Theme-Oberfläche.
-  &::part(header) {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    box-sizing: border-box;
-    height: 24px;
-    max-height: 24px;
-    overflow: hidden;
-    background: var(--nt-bg-secondary, #f6f8fa);
-    color: var(--nt-text-muted, #57606a);
-  }
-
-  &::part(header-content) {
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-  }
-
-  // Die drei Icon-Buttons nutzen dieselbe Höhe und markieren die aktive Ansicht.
-  &::part(header-button) {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 24px;
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    border: 0;
-    color: inherit;
-    background: transparent;
-    cursor: pointer;
-  }
-
-  &::part(active-header-button),
-  &::part(header-button):hover {
-    color: var(--nt-text, #24292f);
-    background: var(--nt-border-color, #d0d7de);
-  }
-
-  &::part(header-button):focus-visible {
-    outline: 2px solid var(--nt-primary, #0969da);
-    outline-offset: -2px;
-  }
-
-  // Die Editoren passen ohne Layout-JavaScript in schmale Container.
+  // 20 Zeilen mit 0.875rem Schrift und Zeilenhöhe 1.6, zuzüglich Innenabstand und Rahmen.
   &::part(editor) {
-    min-height: 10rem;
+    min-height: calc(20 * 0.875rem * 1.6 + 1rem + 2px);
     max-height: none;
     color: var(--nt-text, #24292f);
     background: var(--nt-bg, #fff);
@@ -68,8 +23,9 @@
     outline-offset: 1px;
   }
 
-  // Monospace und Padding gehören zur äußeren Darstellung des Textfeldes.
+  // Der Scrollbereich füllt auch bei kurzem Inhalt die Mindesthöhe von 20 Textzeilen.
   &::part(scroller) {
+    min-height: calc(20 * 0.875rem * 1.6 + 1rem);
     font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
     font-size: 0.875rem;
     line-height: 1.6;
@@ -80,8 +36,9 @@
     caret-color: currentColor;
   }
 
-  // Zeilennummern und Folding-Gutter teilen dieselbe Theme-Fläche.
+  // Fläche und Trennlinie reichen bis unten, ohne zusätzliche nummerierte Zeilen anzulegen.
   &::part(gutters) {
+    min-height: calc(20 * 0.875rem * 1.6 + 1rem);
     color: var(--nt-text-muted, #57606a);
     background: var(--nt-bg-secondary, #f6f8fa);
     border-right: 1px solid var(--nt-border-color, #d0d7de);

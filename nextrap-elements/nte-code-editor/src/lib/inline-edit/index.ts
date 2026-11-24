@@ -117,7 +117,14 @@ function createPrompt(view: EditorView, config: InlineEditOptions, from: number,
       const previewHost = view.dom.ownerDocument.createElement('div');
       previewHost.className = 'cm-ai-edit-preview';
       previewHost.setAttribute('part', 'ai-edit-preview');
-      dom.replaceChildren(previewHost, button('Accept', () => close(response.text)), button('Reject', () => close()));
+      dom.replaceChildren(previewHost, button('✓ Accept', () => close(response.text)), button('× Reject', () => {
+        // Reject verwirft nur die Vorschau; derselbe Prompt bleibt zur Überarbeitung erhalten.
+        preview?.destroy();
+        preview = undefined;
+        showPrompt();
+        input.focus();
+        repositionTooltips(view);
+      }));
       preview = new EditorView({
         parent: previewHost,
         state: EditorState.create({
@@ -139,8 +146,20 @@ function createPrompt(view: EditorView, config: InlineEditOptions, from: number,
     }
   };
 
+  // Dasselbe Eingabefeld bewahrt den ursprünglichen Auftrag auch nach Reject.
+  const showPrompt = (): void => {
+    // Das Symbol schließt den Dialog; der zugängliche Name erklärt die Aktion.
+    const dismiss = button('×', () => close());
+    dismiss.setAttribute('aria-label', 'Schließen');
+    dismiss.title = 'Schließen';
+    const row = view.dom.ownerDocument.createElement('div');
+    row.className = 'cm-ai-edit-input-row';
+    row.append(input, button('Generate', () => { void submit(); }), dismiss);
+    dom.replaceChildren(row);
+  };
+  showPrompt();
+
   // Enter sendet, Escape verwirft; die Eingabe bleibt bei einer leeren Antwort erhalten.
-  dom.append(button('Generate', () => { void submit(); }), button('Cancel', () => close()));
   dom.addEventListener('keydown', event => {
     if (event.key === 'Escape') {
       event.preventDefault();

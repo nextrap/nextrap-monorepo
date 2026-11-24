@@ -31,8 +31,10 @@
     border-block-end: 1px solid var(--nt-border);
   }
 
+  // Der sticky Footer verdeckt den scrollenden Inhalt und bleibt durch wenig Innenabstand kompakt.
   &::part(footer) {
-    padding: var(--nt-space-2) var(--nt-space-4);
+    background: var(--nt-surface);
+    padding: var(--nt-space-1) var(--nt-space-4);
     border-block-start: 1px solid var(--nt-border);
   }
 
