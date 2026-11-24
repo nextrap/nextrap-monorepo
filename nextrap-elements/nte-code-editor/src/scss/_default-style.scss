@@ -7,6 +7,51 @@
   --nte-code-editor-tag: #116329;
   --nte-code-editor-attribute: #953800;
 
+  // Der optionale Header bleibt kompakt; Farben folgen der bestehenden Theme-Oberfläche.
+  &::part(header) {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    box-sizing: border-box;
+    height: 24px;
+    max-height: 24px;
+    overflow: hidden;
+    background: var(--nt-bg-secondary, #f6f8fa);
+    color: var(--nt-text-muted, #57606a);
+  }
+
+  &::part(header-content) {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  // Die drei Icon-Buttons nutzen dieselbe Höhe und markieren die aktive Ansicht.
+  &::part(header-button) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    color: inherit;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  &::part(active-header-button),
+  &::part(header-button):hover {
+    color: var(--nt-text, #24292f);
+    background: var(--nt-border-color, #d0d7de);
+  }
+
+  &::part(header-button):focus-visible {
+    outline: 2px solid var(--nt-primary, #0969da);
+    outline-offset: -2px;
+  }
+
   // Die Editoren passen ohne Layout-JavaScript in schmale Container.
   &::part(editor) {
     min-height: 10rem;
