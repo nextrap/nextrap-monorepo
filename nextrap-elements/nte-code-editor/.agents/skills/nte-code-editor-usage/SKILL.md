@@ -119,15 +119,15 @@ Beide erhalten `language`, `codeBefore`, `codeAfter` und `signal` (beim Edit
 optional); Completion zusätzlich `cursor`, Edit zusätzlich `selection`,
 `from`, `to` und `prompt`. Der Callback liefert `{ text: string }` oder
 `null`. Die Completion liefert nur die Ergänzung, Edit den nichtleeren
-Ersatz der vom Marimo-Plugin ausgewählten vollständigen Zeilen.
+Ersatz der ausgewählten vollständigen Zeilen. Ohne Markierung liefert Edit
+nur den einzufügenden Text (`selection: ''`, `from === to`).
 
 `inlineCompletionAutomatic = false` deaktiviert die Vervollständigung.
 `inlineCompletionDelay` beträgt standardmäßig 400 ms. Tab übernimmt den
 Ghost-Text, Escape verwirft ihn. Ein manueller Completion-Trigger steht
 im Plugin nicht zur Verfügung. Edit über `Mod-k`/`triggerInlineEdit()`;
-`inlineEditKey` ist konfigurierbar. Das Plugin schreibt den Vorschlag
-direkt in `value`; Accept behält ihn, Reject stellt den Ausgangstext wieder
-her. Die Originalseite und schreibgeschützte Editoren sind ausgeschlossen.
+`inlineEditKey` ist konfigurierbar. Die separate Merge-Vorschau verändert
+`value` erst bei Accept. Reject oder Escape verwirft den Vorschlag. Die Originalseite und schreibgeschützte Editoren sind ausgeschlossen.
 Siehe README Abschnitt 8 und `07-ai.demo.ts` für typisierte Beispiele.
 
 Nutze die sieben nummerierten Demos für komplette, ausführbare Beispiele:

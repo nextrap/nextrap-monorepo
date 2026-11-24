@@ -238,10 +238,11 @@ Extensions werden neu initialisiert. Zusätzliche Extensions sollen die vom
 Wrapper verwalteten Sprach-, Folding-, Diff- und Formularzustände nicht
 nochmals konfigurieren.
 
-## 8. KI-Vervollständigung und markierten Text bearbeiten
+## 8. KI-Vervollständigung, Bearbeiten und Einfügen
 
-Die beiden Funktionen verwenden `@marimo-team/codemirror-ai` (0.3.10),
-sind unabhängig und ohne Callback inaktiv.
+Die automatische Vervollständigung verwendet `@marimo-team/codemirror-ai`.
+Inline Edit und Insert nutzen eine separate Extension mit `@codemirror/merge`.
+Beide Funktionen sind unabhängig und ohne Callback inaktiv.
 Die Anwendung stellt den asynchronen KI-Dienst selbst bereit; der Editor enthält
 keine API-Keys und sendet keine Requests an einen fest eingebauten Dienst.
 
@@ -259,7 +260,7 @@ const completion: CodeEditorInlineCompletionCallback = async request => {
 const edit: CodeEditorInlineEditCallback = async request => {
   const { selection, prompt, signal } = request;
   if (signal?.aborted || prompt !== 'uppercase') return null;
-  return { text: selection.toUpperCase() };
+  return { text: selection ? selection.toUpperCase() : 'NEW TEXT' };
 };
 editor.inlineCompletion = completion;
 editor.inlineEdit = edit;
@@ -275,10 +276,9 @@ CodeMirror-Autocompletion reserviert.
 
 Markiere `Hello`, drücke Strg+K (`Mod-k`) oder rufe `editor.triggerInlineEdit()`
 auf. Gib `uppercase` ein und bestätige mit Enter. Das Plugin erweitert die
-Auswahl auf vollständige Zeilen. Der Vorschlag wird direkt in das Dokument
-und damit in `value` übernommen und als Diff angezeigt. Accept behält ihn,
-Reject stellt den ursprünglichen Text wieder her. Der Formularwert enthält
-während der Vorschau bereits den vorgeschlagenen Text.
+Auswahl auf vollständige Zeilen. Ohne Markierung öffnet sich dasselbe Feld
+am Cursor; `selection` ist leer und `from === to`. Die separate Diff-Vorschau
+ändert `value` erst bei Accept. Reject oder Escape verwirft den Vorschlag.
 
 | API | Verhalten |
 |---|---|
@@ -316,7 +316,7 @@ Beispiel: Nach Übernahme der Completion enthält das Dokument
 |---|---|---|
 | `language: CodeEditorLanguage` | Aktive Sprache wie bei Completion | `'text'` |
 | `codeBefore: string` | Dokumenttext vor dem Edit-Bereich | `'Hello world!\n'` |
-| `selection: string` | Vollständiger zu ersetzender Zeilenbereich | `'Mark this text to edit.'` |
+| `selection: string` | Zeilenbereich oder `''` bei Einfügung | `'Mark this text to edit.'` |
 | `codeAfter: string` | Dokumenttext nach dem Edit-Bereich | `''` |
 | `from: number` | Inklusiver Startoffset | `13` |
 | `to: number` | Exklusiver Endoffset | `36` |
@@ -331,8 +331,7 @@ ersetzt den Bereich `[from, to)`, nicht den gesamten Dokumenttext.
 Dokument (keine Zeilennummern). Beide
 Responses enthalten ausschließlich `{ text: string }` oder der Callback
 liefert `null` für keinen Vorschlag. Beim Edit wird bei `null` oder `text: ''`
-der ursprüngliche Text zurückgegeben, da das Plugin keinen leeren Ersatz
-unterstützt. Das `AbortSignal` (beim Edit optional) kann direkt an `fetch`
+das Dokument nicht geändert. Das `AbortSignal` (beim Edit optional) kann direkt an `fetch`
 übergeben werden. Request-Abbruch und Vorschau verwaltet das Plugin.
 Bei `disabled`, `readOnly` oder deaktiviertem Fieldset sind beide Funktionen
 gesperrt; im Split gelten sie ausschließlich für die Arbeitsfassung.
