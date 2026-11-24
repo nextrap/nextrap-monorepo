@@ -1,60 +1,14 @@
 // CodeMirror stellt den Editor; Nextrap ergänzt Lifecycle, Formularwert und Theme-API.
-import {
-  autocompletion,
-  closeBrackets,
-  closeBracketsKeymap,
-  completionKeymap,
-} from '@codemirror/autocomplete';
-import {
-  defaultKeymap,
-  history,
-  historyField,
-  historyKeymap,
-  indentWithTab,
-} from '@codemirror/commands';
-import {
-  bracketMatching,
-  codeFolding,
-  foldAll as foldAllCode,
-  foldGutter,
-  foldKeymap,
-  HighlightStyle,
-  indentOnInput,
-  syntaxHighlighting,
-  unfoldAll as unfoldAllCode,
-} from '@codemirror/language';
-import {
-  getOriginalDoc,
-  MergeView,
-  originalDocChangeEffect,
-  unifiedMergeView,
-} from '@codemirror/merge';
+type MergeView = import('@codemirror/merge').MergeView;
 import type { MergeConfig } from '@codemirror/merge';
 import type { EditorStateConfig, Extension, StateEffect } from '@codemirror/state';
-import {
-  Annotation,
-  ChangeSet,
-  Compartment,
-  EditorState,
-  Transaction,
-} from '@codemirror/state';
+type Compartment = import('@codemirror/state').Compartment;
+type EditorState = import('@codemirror/state').EditorState;
 import type { ViewUpdate } from '@codemirror/view';
-import {
-  drawSelection,
-  dropCursor,
-  EditorView,
-  highlightActiveLine,
-  highlightActiveLineGutter,
-  highlightSpecialChars,
-  keymap,
-  lineNumbers,
-} from '@codemirror/view';
-import { tags } from '@lezer/highlight';
+type EditorView = import('@codemirror/view').EditorView;
 import { nextrap_element } from '@nextrap/nt-core';
 import type { PropertyValues } from 'lit';
 import { html, unsafeCSS } from 'lit';
-import { createLanguageSupport } from '../../lib/languages';
-import { aiExtensions, triggerEdit } from '../../lib/ai';
 import type {
   CodeEditorDiffMode,
   CodeEditorDiffOrientation,
@@ -66,31 +20,40 @@ import type {
 } from '../../lib/types';
 import style from './nte-code-editor.scss?inline';
 
-// Programmatische Wertzuweisungen bleiben wie bei einem nativen Textfeld ereignislos.
-const assignedValue = Annotation.define<boolean>();
+// Geteilte Bindungen werden erst nach dem dynamischen Import verwendet.
+let { autocompletion, closeBrackets, closeBracketsKeymap, completionKeymap,
+  defaultKeymap, history, historyField, historyKeymap, indentWithTab,
+  bracketMatching, codeFolding, foldAllCode, foldGutter, foldKeymap,
+  indentOnInput, syntaxHighlighting, unfoldAllCode, getOriginalDoc,
+  MergeView, originalDocChangeEffect, unifiedMergeView, ChangeSet,
+  Compartment, EditorState, Transaction, drawSelection, dropCursor,
+  EditorView, highlightActiveLine, highlightActiveLineGutter,
+  highlightSpecialChars, keymap, lineNumbers, createLanguageSupport,
+  assignedValue, tokenHighlighting, aiExtensions, triggerEdit,
+} = {} as typeof import('../../lib/codemirror-runtime');
+let runtimeRequest: Promise<void> | undefined;
 
-// Syntaxfarben werden vom äußeren Sass-Mixin geliefert und bleiben im Theme anpassbar.
-const tokenHighlighting = HighlightStyle.define([
-  { tag: tags.keyword, color: 'var(--nte-code-editor-keyword)' },
-  {
-    tag: [tags.string, tags.attributeValue],
-    color: 'var(--nte-code-editor-string)',
-  },
-  {
-    tag: [tags.number, tags.bool, tags.null],
-    color: 'var(--nte-code-editor-number)',
-  },
-  { tag: [tags.comment, tags.meta], color: 'var(--nte-code-editor-comment)' },
-  { tag: [tags.tagName, tags.typeName], color: 'var(--nte-code-editor-tag)' },
-  {
-    tag: [tags.attributeName, tags.propertyName],
-    color: 'var(--nte-code-editor-attribute)',
-  },
-  { tag: tags.heading, fontWeight: 'bold' },
-  { tag: tags.strong, fontWeight: 'bold' },
-  { tag: tags.emphasis, fontStyle: 'italic' },
-  { tag: tags.link, textDecoration: 'underline' },
-]);
+// Gleichzeitige Instanzen teilen den Import; fehlgeschlagene Imports bleiben wiederholbar.
+async function loadRuntime(): Promise<void> {
+  runtimeRequest ??= (async () => {
+    try {
+      const runtime = await import('../../lib/codemirror-runtime');
+    ({ autocompletion, closeBrackets, closeBracketsKeymap, completionKeymap,
+      defaultKeymap, history, historyField, historyKeymap, indentWithTab,
+      bracketMatching, codeFolding, foldAllCode, foldGutter, foldKeymap,
+      indentOnInput, syntaxHighlighting, unfoldAllCode, getOriginalDoc,
+      MergeView, originalDocChangeEffect, unifiedMergeView, ChangeSet,
+      Compartment, EditorState, Transaction, drawSelection, dropCursor,
+      EditorView, highlightActiveLine, highlightActiveLineGutter,
+      highlightSpecialChars, keymap, lineNumbers, createLanguageSupport,
+      assignedValue, tokenHighlighting, aiExtensions, triggerEdit } = runtime);
+    } catch (error) {
+      runtimeRequest = undefined;
+      throw error;
+    }
+  })();
+  await runtimeRequest;
+}
 
 // value bleibt die Arbeitsfassung, auch wenn der Vergleich zwei Editoren anzeigt.
 export class NteCodeEditor extends nextrap_element({ logging: false }) {
@@ -157,12 +120,13 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
   inlineEditKey = 'Mod-k';
 
   // Compartments erlauben Konfigurationswechsel ohne Verlust von Cursor und Undo-History.
-  readonly #language = new Compartment();
-  readonly #folding = new Compartment();
-  readonly #editing = new Compartment();
-  readonly #extensions = new Compartment();
-  readonly #diff = new Compartment();
-  readonly #ai = new Compartment();
+  #language!: Compartment;
+  #folding!: Compartment;
+  #editing!: Compartment;
+  #extensions!: Compartment;
+  #diff!: Compartment;
+  #ai!: Compartment;
+  #initializing = false;
   readonly #internals = this.attachInternals();
   #view?: EditorView;
   #merge?: MergeView;
@@ -262,12 +226,35 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
   protected override updated(changed: PropertyValues): void {
     super.updated(changed);
     if (!this.isConnected) return;
+    if (!this.#language) {
+      void this.#initialize();
+      return;
+    }
     const split =
       this.diffMode === 'side-by-side' && this.originalValue !== undefined;
     if (this.#view && Boolean(this.#merge) !== split) this.#destroyEditor();
     const created = !this.#view;
     if (created) this.#createEditor(split);
     this.#configure(changed, created);
+  }
+
+  // Während des Imports gelten die aktuellen Properties; entfernte Instanzen erzeugen keine View.
+  async #initialize(): Promise<void> {
+    if (this.#initializing) return;
+    this.#initializing = true;
+    try {
+      await loadRuntime();
+      if (!this.isConnected) return;
+      this.#language = new Compartment();
+      this.#folding = new Compartment();
+      this.#editing = new Compartment();
+      this.#extensions = new Compartment();
+      this.#diff = new Compartment();
+      this.#ai = new Compartment();
+      this.requestUpdate();
+    } finally {
+      this.#initializing = false;
+    }
   }
 
   // Fokus wird in das eigentliche Textfeld delegiert, nicht auf den äußeren Host.

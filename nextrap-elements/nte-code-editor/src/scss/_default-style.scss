@@ -10,7 +10,7 @@
   // Die Editoren passen ohne Layout-JavaScript in schmale Container.
   &::part(editor) {
     min-height: 10rem;
-    max-height: 28rem;
+    max-height: none;
     color: var(--nt-text, #24292f);
     background: var(--nt-bg, #fff);
     border: 1px solid var(--nt-border-color, #d0d7de);
