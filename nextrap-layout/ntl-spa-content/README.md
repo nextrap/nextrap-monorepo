@@ -9,6 +9,16 @@ Scrollport. Sein Footer folgt im Dokumentfluss. Die Sidebars füllen die gesamte
 Fensterhöhe (`100dvh`, Fallback `100vh`) und scrollen nur bei überlangem Inhalt
 intern. View-Timelines und Scroll-Listener sind nicht erforderlich.
 
+## Container-Vertrag
+
+Header, Hauptinhalt (Default-Slot) und Footer haben kein horizontales Padding.
+Verwende für diese drei Bereiche immer `container` oder `container-fluid` an
+den eingesetzten Elementen beziehungsweise ihren Inhaltswrappern. Diese Klassen
+übernehmen Breitenbegrenzung und horizontale Abstände: `container` begrenzt die
+Breite, `container-fluid` nutzt die gesamte verfügbare Breite. Kein zusätzliches
+X-Padding auf den zugehörigen Layout-Parts setzen. Vertikale Abstände und das
+Padding der Sidebars bleiben Aufgabe des Layouts.
+
 ## Demo
 
 Im Monorepo `npx nx dev ntl-spa-content` ausführen. Die vollständige HTML-Seite

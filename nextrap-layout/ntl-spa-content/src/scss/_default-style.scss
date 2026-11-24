@@ -23,8 +23,13 @@
     background: var(--nt-surface);
   }
 
-  // Leisten werden ausschließlich in ihrer jeweiligen Spalte gestaltet.
-  &::part(header),
+  // Der mittlere Header überlässt horizontale Abstände dem eingesetzten Container.
+  &::part(header) {
+    padding: var(--nt-space-3) 0;
+    border-block-end: 1px solid var(--nt-border);
+  }
+
+  // Sidebar-Leisten behalten ihre eigenen horizontalen Innenabstände.
   &::part(sidebar-left-header),
   &::part(sidebar-right-header) {
     padding: var(--nt-space-3) var(--nt-space-4);
@@ -34,13 +39,21 @@
   // Der sticky Footer verdeckt den scrollenden Inhalt und bleibt durch wenig Innenabstand kompakt.
   &::part(footer) {
     background: var(--nt-surface);
-    padding: var(--nt-space-1) var(--nt-space-4);
+    padding: var(--nt-space-1) 0;
     border-block-start: 1px solid var(--nt-border);
   }
 
-  // Der Inhaltsabstand ist Theme-Verantwortung und kann über Parts ersetzt werden.
-  &::part(content),
-  &::part(sidebar-left-content),
+  // Der Hauptinhalt nutzt container oder container-fluid für Breite und horizontale Abstände.
+  &::part(content) {
+    padding: var(--nt-space-4) 0;
+  }
+
+  // Der linke Sidebar-Inhalt nutzt die volle Breite und behält nur vertikale Innenabstände.
+  &::part(sidebar-left-content) {
+    padding: var(--nt-space-4) 0;
+  }
+
+  // Der rechte Sidebar-Inhalt behält seine bisherigen Innenabstände.
   &::part(sidebar-right-content) {
     padding: var(--nt-space-4);
   }

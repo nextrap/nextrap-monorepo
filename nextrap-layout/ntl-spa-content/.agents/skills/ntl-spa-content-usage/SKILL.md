@@ -21,6 +21,13 @@ Verwende `<ntl-spa-content>` direkt im HTML. Benannte Inhalte sind direkte Kinde
 mit `slot="…"`; Kinder ohne `slot` bilden den mittleren Inhalt im Dokumentfluss.
 Ein Content-Pane-Wrapper oder Markdown ist für diese Verwendung nicht nötig.
 
+Header, Hauptinhalt und Footer immer mit `container` oder `container-fluid`
+einbinden: direkt am eingesetzten Element oder an einem Inhaltswrapper. Die
+Layout-Parts `header`, `content` und `footer` setzen kein horizontales Padding.
+`container` begrenzt die Breite, `container-fluid` nutzt die volle verfügbare
+Breite; beide liefern die horizontalen Abstände. Nicht zusätzlich X-Padding
+auf diese Parts setzen. Sidebar-Padding und vertikale Abstände bleiben erhalten.
+
 ```html
 <!-- Der Header ordnet seine Slots an; nur die eingesetzten Inhalte setzen Abstände. -->
 <ntl-spa-header role="banner">
@@ -48,7 +55,7 @@ Ein Content-Pane-Wrapper oder Markdown ist für diese Verwendung nicht nötig.
   </nav>
 
   <!-- Nextrap-Utilities richten den Titel links und die Button-Gruppe rechts aus. -->
-  <header slot="header" class="d-flex flex-wrap align-items-center gap-3">
+  <header slot="header" class="container-fluid d-flex flex-wrap align-items-center gap-3">
     <div class="demo-toolbar-start d-flex flex-wrap align-items-center flex-fill gap-3">
       <h1 class="h6 m-0">README.md</h1>
       <span class="small text-body-secondary">Workspace / docs</span>
@@ -62,16 +69,16 @@ Ein Content-Pane-Wrapper oder Markdown ist für diese Verwendung nicht nötig.
   </header>
 
   <!-- Das Formular liegt im Default-Slot; der Reset-Button bleibt im Header. -->
-  <form id="workspace-form">
+  <form id="workspace-form" class="container-fluid">
     <label for="editor-document">Dokument</label>
     <textarea id="editor-document" name="document" rows="24"># Mein Workspace</textarea>
   </form>
 
   <!-- Die Hilfelinks führen zu den Hinweisen im selben scrollenden Inhalt. -->
-  <section id="editor-notes" aria-label="Hinweise zum Workspace">
+  <section id="editor-notes" class="container-fluid" aria-label="Hinweise zum Workspace">
     <p>Der Dokumentbereich scrollt mit der Seite; überlange Sidebars scrollen intern.</p>
   </section>
-  <footer slot="footer" class="d-flex flex-wrap justify-content-between gap-2 m-0 small">
+  <footer slot="footer" class="container-fluid d-flex flex-wrap justify-content-between gap-2 m-0 small">
     <span>Markdown · UTF-8</span>
     <span class="text-body-secondary">Lokale Vorschau</span>
   </footer>

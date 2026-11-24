@@ -19,9 +19,9 @@ ntl-spa-content.style-default {
   --sidebar-left-width: 15rem;
   --sidebar-right-width: 18rem;
 
-  // Ein Editor kann seinen eigenen Innenabstand übernehmen.
+  // Optional entfällt der vertikale Inhaltsabstand; X-Abstände liefert ausschließlich der Container.
   &::part(content) {
-    padding: 0;
+    padding-block: 0;
   }
 }
 ```
@@ -33,6 +33,14 @@ Innenabstände und Fokusmarkierungen am aufrufenden Selektor. Es verwendet
 `--nt-font-family` sowie `--nt-space-2/3/4` aus dem Anwendungstheme. Beide Sidebars
 nutzen `--nt-surface-raised`: im hellen Theme weiß, einschließlich ihrer festen
 Header. Die Fläche passt sich weiterhin dem gewählten Farbschema an.
+
+## Horizontale Abstände
+
+Die Parts `header`, `content` und `footer` haben ausdrücklich kein X-Padding.
+Ihre eingesetzten Elemente oder Inhaltswrapper müssen immer `container` oder
+`container-fluid` verwenden. Diese Klassen steuern Breite und horizontale
+Abstände; Themes dürfen dort kein zusätzliches horizontales Padding setzen.
+Vertikale Layoutabstände und das vorhandene Sidebar-Padding bleiben erhalten.
 
 ## Öffentliche Oberfläche
 
@@ -67,7 +75,8 @@ Erhalte die Flex-Verteilung, Mindestgrößen, Sticky-Zuordnung und Behandlung le
 Slots. Vermeide Overflow an Vorfahren, der den Dokument-Viewport als Sticky-Bezug
 ersetzt. Lass natives Scroll-Chaining in den Sidebars zu. Die Header-Fläche des
 Default-Mixins muss deckend bleiben, damit vorbeiscrollender Inhalt nicht
-hindurchscheint. Abstände gehören an die Parts oder deren Inhalte.
+hindurchscheint. Vertikale Abstände gehören an die Parts; horizontale Abstände
+von Header, Hauptinhalt und Footer ausschließlich an deren Container.
 
 Gestalte Farben, Rahmen und Abstände ausschließlich über Parts und die äußere
 Sass-Schicht. Erfinde für einzelne Breiten keine neue `style-*` Variante und
