@@ -54,11 +54,14 @@ import { nextrap_element } from '@nextrap/nt-core';
 import type { PropertyValues } from 'lit';
 import { html, unsafeCSS } from 'lit';
 import { createLanguageSupport } from '../../lib/languages';
+import { aiExtensions, triggerCompletion, triggerEdit } from '../../lib/ai';
 import type {
   CodeEditorDiffMode,
   CodeEditorDiffOrientation,
   CodeEditorHtmlElement,
   CodeEditorLanguage,
+  CodeEditorInlineCompletionCallback,
+  CodeEditorInlineEditCallback,
   CodeEditorRevertControls,
 } from '../../lib/types';
 import style from './nte-code-editor.scss?inline';
@@ -121,6 +124,12 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
       reflect: true,
     },
     extensions: { attribute: false },
+    inlineCompletion: { attribute: false },
+    inlineEdit: { attribute: false },
+    inlineCompletionAutomatic: { type: Boolean, attribute: false },
+    inlineCompletionDelay: { type: Number, attribute: false },
+    inlineCompletionKey: { attribute: false },
+    inlineEditKey: { attribute: false },
   };
 
   // Das value-Attribut ist der Reset-Wert; die Property ist der aktuelle Formularwert.
@@ -141,12 +150,21 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
   revertControls: CodeEditorRevertControls = 'original-to-modified';
   extensions: Extension = [];
 
+  // Ohne Callback bleibt die jeweilige KI-Funktion vollständig deaktiviert.
+  inlineCompletion?: CodeEditorInlineCompletionCallback;
+  inlineEdit?: CodeEditorInlineEditCallback;
+  inlineCompletionAutomatic = true;
+  inlineCompletionDelay = 400;
+  inlineCompletionKey = 'Mod-Shift-Space';
+  inlineEditKey = 'Mod-k';
+
   // Compartments erlauben Konfigurationswechsel ohne Verlust von Cursor und Undo-History.
   readonly #language = new Compartment();
   readonly #folding = new Compartment();
   readonly #editing = new Compartment();
   readonly #extensions = new Compartment();
   readonly #diff = new Compartment();
+  readonly #ai = new Compartment();
   readonly #internals = this.attachInternals();
   #view?: EditorView;
   #merge?: MergeView;
@@ -271,6 +289,16 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
     return Boolean(this.folding && this.#view && unfoldAllCode(this.#view));
   }
 
+  // Externe Buttons können auch bei ausgeschalteter Automatik einen Vorschlag anfordern.
+  triggerInlineCompletion(): boolean {
+    return Boolean(this.#view && triggerCompletion(this.#view));
+  }
+
+  // Öffnet die Anweisung für die aktuelle Auswahl in der Arbeitsfassung.
+  triggerInlineEdit(): boolean {
+    return Boolean(this.#view && triggerEdit(this.#view));
+  }
+
   // Ein nativer form.reset() stellt den Default ohne synthetische Nutzereingabe wieder her.
   formResetCallback(): void {
     this.#dirtyValue = false;
@@ -317,6 +345,8 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
   // MergeView verwaltet und entfernt beide Views gemeinsam.
   #destroyEditor(): void {
     if (!this.#view) return;
+    // KI-Vorschau und laufende Requests gehören nicht zum gespeicherten EditorState.
+    this.#view.dispatch({ effects: this.#ai.reconfigure([]) });
     this.#savedState = this.#view.state;
     this.#savedSplit = Boolean(this.#merge);
     this.#savedScroll = {
@@ -434,6 +464,7 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
       this.#editing.of([]),
       this.#extensions.of([]),
       this.#diff.of([]),
+      this.#ai.of([]),
       EditorView.updateListener.of((update) =>
         original ? this.#onOriginalUpdate(update) : this.#onEditorUpdate(update),
       ),
@@ -537,6 +568,24 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
     }
     if (!original && (all || changed.has('extensions')))
       effects.push(this.#extensions.reconfigure(this.extensions));
+    // KI-Extensions laufen nur auf der editierbaren Arbeitsfassung.
+    if (!original && (all || changed.has('inlineCompletion') || changed.has('inlineEdit') ||
+        changed.has('inlineCompletionAutomatic') || changed.has('inlineCompletionDelay') ||
+        changed.has('inlineCompletionKey') || changed.has('inlineEditKey') || changed.has('language') ||
+        changed.has('disabled') || changed.has('readOnly') || changed.has('formDisabled'))) {
+      const canEdit = () => this.isConnected && !this.disabled && !this.#formDisabled && !this.readOnly;
+      const completion = this.inlineCompletion;
+      const edit = this.inlineEdit;
+      effects.push(this.#ai.reconfigure(canEdit() && (completion || edit) ? aiExtensions({
+        completion, edit,
+        automatic: this.inlineCompletionAutomatic,
+        delay: this.inlineCompletionDelay,
+        completionKey: this.inlineCompletionKey,
+        editKey: this.inlineEditKey,
+        language: () => this.language,
+        canEdit: () => canEdit() && completion === this.inlineCompletion && edit === this.inlineEdit,
+      }) : []));
+    }
     if (!this.#merge && (all || changed.has('originalValue')))
       this.#configureDiff(effects);
     if (effects.length) view.dispatch({ effects });

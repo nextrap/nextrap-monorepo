@@ -27,3 +27,44 @@ export type CodeEditorHtmlElement =
       name: string;
       attributes?: Record<string, readonly string[] | null>;
     };
+
+/** Kontext einer Vervollständigung; Positionen sind UTF-16-Offsets wie in CodeMirror. */
+export interface CodeEditorInlineCompletionRequest {
+  language: CodeEditorLanguage;
+  codeBefore: string;
+  codeAfter: string;
+  cursor: number;
+  signal: AbortSignal;
+}
+
+/** Nur einzufügender Text, nicht das gesamte Dokument. */
+export interface CodeEditorInlineCompletionResponse {
+  text: string;
+}
+
+/** Null bedeutet, dass kein Vorschlag angezeigt werden soll. */
+export type CodeEditorInlineCompletionCallback = (
+  request: CodeEditorInlineCompletionRequest,
+) => Promise<CodeEditorInlineCompletionResponse | null>;
+
+/** Exakt markierter Bereich mit Freitextanweisung und umgebendem Dokument. */
+export interface CodeEditorInlineEditRequest {
+  language: CodeEditorLanguage;
+  codeBefore: string;
+  selection: string;
+  codeAfter: string;
+  from: number;
+  to: number;
+  prompt: string;
+  signal: AbortSignal;
+}
+
+/** Vollständiger Ersatz der Auswahl; ein leerer String löscht die Auswahl. */
+export interface CodeEditorInlineEditResponse {
+  text: string;
+}
+
+/** Null bedeutet, dass keine Änderung vorgeschlagen wird. */
+export type CodeEditorInlineEditCallback = (
+  request: CodeEditorInlineEditRequest,
+) => Promise<CodeEditorInlineEditResponse | null>;

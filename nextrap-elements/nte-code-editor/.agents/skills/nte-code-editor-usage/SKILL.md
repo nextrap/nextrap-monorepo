@@ -103,8 +103,9 @@ Sprache, Completion-Vorgaben und `folding` gelten im Split für beide Seiten.
 Rufe `foldAll()`/`unfoldAll()` nach `updateComplete` auf; diese Methoden steuern
 die Arbeitsfassung und respektieren `folding = false`.
 CodeMirror-Standardfunktionen liefern Undo/Redo, Bracket Matching und
-Completion; eine Language-Server-Anbindung ist nicht enthalten. Tab bleibt
-ein Fokuswechsel.
+Completion; eine Language-Server-Anbindung ist nicht enthalten. Ein sichtbarer
+KI-Vorschlag kann mit Tab angenommen werden; ohne Vorschlag bleibt die bisherige
+Tab-Belegung erhalten.
 
 Erwarte form-associated Custom Elements mit `ElementInternals`. Die Komponente
 berücksichtigt deaktivierte Fieldsets und Browser-Wiederherstellung. Nach
@@ -114,7 +115,24 @@ Split-Reconnect werden Dokument, Auswahl und Undo-Verlauf beider Seiten
 übernommen; zusätzliche StateFields eigener Extensions werden neu
 initialisiert.
 
-Nutze die sechs nummerierten Demos für komplette, ausführbare Beispiele:
+## Optionale KI-Callbacks
+
+Setze `inlineCompletion` und/oder `inlineEdit` auf einen asynchronen Callback.
+Beide erhalten `language`, `codeBefore`, `codeAfter` und `signal`; Completion
+zusätzlich `cursor`, Edit zusätzlich `selection`, `from`, `to` und `prompt`.
+Der Callback liefert `{ text: string }` oder `null`. Der Text ist nur die
+Ergänzung bzw. der vollständige Ersatz der Auswahl; `''` löscht beim Edit.
+
+Mit `inlineCompletionAutomatic = false` bleiben manuelle Anfragen möglich.
+`inlineCompletionDelay` beträgt standardmäßig 400 ms. Manuelle Auslösung über
+`Mod-Shift-Space`/`triggerInlineCompletion()`, Edit über
+`Mod-k`/`triggerInlineEdit()`; die beiden Key-Properties sind konfigurierbar.
+Tab übernimmt den Ghost-Text, Escape verwirft ihn. Edit zeigt einen Diff vor
+Accept/Reject und verändert `value` erst bei Accept. Die Originalseite und
+schreibgeschützte Editoren führen keine KI-Aktionen aus.
+Siehe README Abschnitt 8 und `07-ai.demo.ts` für typisierte Beispiele.
+
+Nutze die sieben nummerierten Demos für komplette, ausführbare Beispiele:
 Demo 05 zeigt den Unified-Diff, Demo 06 die Split-Ansicht mit Seitenwechsel,
 Kopierrichtungen, gemeinsamem Scrollen und Live-Ausgaben. Für Styles lies
 [nte-code-editor-theming](../nte-code-editor-theming/SKILL.md).
