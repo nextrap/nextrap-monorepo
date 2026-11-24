@@ -111,6 +111,7 @@ class AiRequests {
       void this.requestCompletion(config.completion!);
     };
     if (manual) {
+      this.view.focus();
       this.view.dispatch({ effects: show.of(null) });
       run();
     } else {
