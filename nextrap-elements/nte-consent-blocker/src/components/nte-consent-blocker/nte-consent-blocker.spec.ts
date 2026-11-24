@@ -1,9 +1,19 @@
-import { afterEach, expect } from 'vitest';
+import { afterEach, beforeEach, expect, vi } from 'vitest';
 import { NteConsentBlockerElement } from './nte-consent-blocker';
 
-// Räumt den gemeinsamen Dokumentzustand auf, damit Template-Selektoren keine Folgetests beeinflussen.
-afterEach(() => {
-  document.body.replaceChildren();
+// Kontrolliert die verzögerten Breakpoint-Updates der verbundenen Elemente.
+beforeEach(() => {
+  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+});
+
+// Führt ausstehende Updates aus, solange das jsdom-Dokument noch verfügbar ist.
+afterEach(async () => {
+  try {
+    await vi.runAllTimersAsync();
+  } finally {
+    document.body.replaceChildren();
+    vi.useRealTimers();
+  }
 });
 
 describe('nte-consent-blocker', () => {
