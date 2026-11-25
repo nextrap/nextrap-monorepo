@@ -86,6 +86,11 @@ nte-treeview.style-website {
   @include treeview.website-style();
 }
 
+// Die kompakte Variante nutzt dieselbe Explorer-Optik bei geringerer Zeilenhöhe.
+nte-treeview.style-sm {
+  @include treeview.small-style();
+}
+
 // Die zusätzliche Klasse aktiviert Zebra, ohne eine zweite style-Variante zu benötigen.
 nte-treeview.style-default.with-zebra {
   @include treeview.with-zebra();
