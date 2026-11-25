@@ -12,6 +12,7 @@ on:
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
+  actions: read
   pages: write
   id-token: write
 
@@ -49,6 +50,29 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: './docs'
+      - name: Wait for Pages artifact metadata
+        # The upload can finish before the artifact becomes visible in the Actions API.
+        timeout-minutes: 2
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          sleep 10
+          for attempt in {1..20}; do
+            if count=$(gh api --method GET "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts" -f name=github-pages --jq '[.artifacts[] | select(.name == "github-pages" and .expired == false)] | length'); then
+              if [[ "$count" == 1 ]]; then
+                echo "Pages artifact is available."
+                exit 0
+              elif [[ "$count" != 0 ]]; then
+                echo "::error::Expected one Pages artifact, found $count."
+                exit 1
+              fi
+            fi
+            echo "Pages artifact not available (attempt $attempt/20)."
+            if (( attempt < 20 )); then sleep 3; fi
+          done
+          echo "::error::Pages artifact did not become available."
+          exit 1
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
