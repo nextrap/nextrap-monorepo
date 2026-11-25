@@ -71,7 +71,7 @@ export class NteTreeViewItem extends nextrap_element() {
     this.dispatchEvent(new CustomEvent<boolean>('expanded-change', { detail: open }));
   }
 
-  /** Native Pfeilaktionen verwenden denselben Zustandswechsel wie ein unverlinkter Ordnername. */
+  /** Nur native Pfeilaktionen ändern den Öffnungszustand des Unterbaums. */
   private _onToggle(event: Event): void {
     this._setExpanded((event.currentTarget as HTMLDetailsElement).open);
   }
@@ -96,14 +96,11 @@ export class NteTreeViewItem extends nextrap_element() {
     }));
   }
 
-  /** Verlinkte Ordner werden im Baum zuerst ausgewählt; eigene Aktionen dürfen die Navigation ersetzen. */
+  /** Icon und Name aktivieren sofort; nur der separate Chevron klappt Unterbäume auf oder zu. */
   private _onLabelClick(event: MouseEvent): void {
     if (!this._isLabelAction(event)) return;
-    const selectOnly = this._hasChildren && Boolean(this.href) && !this.selected
-      && this.closest('nte-treeview') !== null;
     const activate = this._dispatchLabelEvent('label-click', event);
-    if (!activate || event.defaultPrevented || selectOnly) event.preventDefault();
-    else if (this._hasChildren && !this.href) this._setExpanded(!this.expanded);
+    if (!activate || event.defaultPrevented) event.preventDefault();
 
     this.dispatchEvent(new CustomEvent<NteTreeViewItem>('selection-request', {
       detail: this,
@@ -163,8 +160,6 @@ export class NteTreeViewItem extends nextrap_element() {
               part="label text"
               type="button"
               aria-pressed=${this.selected}
-              aria-expanded=${ifDefined(this._hasChildren ? String(this.expanded) : undefined)}
-              aria-controls=${ifDefined(this._hasChildren ? 'children' : undefined)}
               @click=${this._onLabelClick}
               @dblclick=${this._onLabelDoubleClick}
               >${label}</button

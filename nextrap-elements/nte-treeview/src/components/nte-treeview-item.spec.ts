@@ -121,8 +121,8 @@ describe('NteTreeViewItem explorer interactions', () => {
     expect(control(leaf, '#label').hasAttribute('aria-expanded')).toBe(false);
   });
 
-  // Expansion muss vor der Auswahl im Modell stehen und darf durch spätere Renderzyklen nicht verloren gehen.
-  it('writes folder expansion synchronously before selection and emits it only once', async () => {
+  // Icon und Label wählen Ordner aus, ohne ihren Öffnungszustand oder das Modell-Disclosure zu ändern.
+  it('activates folder labels and icons without changing expansion', async () => {
     const model = new TreeModel([{ id: 'folder', label: 'Ordner', children: [{ id: 'file', label: 'Datei' }] }]);
     const view = new NteTreeView();
     view.setData(model);
@@ -134,30 +134,31 @@ describe('NteTreeViewItem explorer interactions', () => {
     folder.addEventListener('expanded-change', expanded);
     view.addEventListener('selection-change', () => expansionAtSelection.push(model.children[0].data?.expanded));
 
+    const action = vi.fn();
+    view.addEventListener('label-click', action);
     pointerClick(control(folder, '#label'));
-    expect(model.children[0].data?.expanded).toBe(true);
     expect(model.children[0].data?.selected).toBe(true);
-    expect(expansionAtSelection).toEqual([true]);
+    expect(expansionAtSelection).toEqual([undefined]);
     await settleDisclosure(view);
-    expect(control(folder, '#label').getAttribute('aria-expanded')).toBe('true');
-    expect(expanded).toHaveBeenCalledTimes(1);
+    expect(control(folder, '#label').hasAttribute('aria-expanded')).toBe(false);
+    expect(control<HTMLDetailsElement>(folder, '#details').open).toBe(false);
 
-    // Der nachfolgende native Toggle bestätigt nur den bereits übernommenen Zustand.
-    control<HTMLDetailsElement>(folder, '#details').dispatchEvent(new Event('toggle'));
-    expect(expanded).toHaveBeenCalledTimes(1);
-    model.children[0].label = 'Umbenannter Ordner';
-    await settle(view);
-    expect(control<HTMLDetailsElement>(folder, '#details').open).toBe(true);
+    pointerClick(control(folder, '[part~="folder-icon"]'));
+    expect(action).toHaveBeenCalledTimes(2);
+    expect(expanded).not.toHaveBeenCalled();
 
+    model.children[0].data!.expanded = true;
+    await settleDisclosure(view);
     pointerClick(control(folder, '#label'));
-    expect(model.children[0].data?.expanded).toBe(false);
+    pointerClick(control(folder, '[part~="folder-icon"]'));
     await settleDisclosure(view);
-    expect(control(folder, '#label').getAttribute('aria-expanded')).toBe('false');
-    expect(expanded).toHaveBeenCalledTimes(2);
+    expect(model.children[0].data?.expanded).toBe(true);
+    expect(control<HTMLDetailsElement>(folder, '#details').open).toBe(true);
+    expect(action).toHaveBeenCalledTimes(4);
   });
 
-  // Verlinkte Ordner werden zuerst ausgewählt; Datei-Links bleiben sofort navigierbar.
-  it('selects linked folders before navigating while leaf links stay immediate', async () => {
+  // Ordner- und Datei-Links navigieren bereits beim ersten Klick auf Name oder Icon.
+  it('activates linked folders and leaves immediately', async () => {
     const view = await mount(`
       <nte-treeview-item id="page" href="#handbuch">
         Handbuch
@@ -181,7 +182,7 @@ describe('NteTreeViewItem explorer interactions', () => {
     expect(page.selected).toBe(false);
 
     const first = pointerClick(label);
-    expect(first.defaultPrevented).toBe(true);
+    expect(first.defaultPrevented).toBe(false);
     expect(page.selected).toBe(true);
     expect(pointerClick(label).defaultPrevented).toBe(false);
 
@@ -190,8 +191,11 @@ describe('NteTreeViewItem explorer interactions', () => {
     expect(file.selected).toBe(true);
     expect(page.selected).toBe(false);
 
-    // Tastaturaktivierung startet nach dem Auswahlwechsel ebenfalls wieder bei der reinen Auswahl.
-    for (const prevented of [true, false]) {
+    // Auch das Ordner-Icon navigiert nach einem Auswahlwechsel ohne vorgeschalteten Auswahlklick.
+    expect(pointerClick(control(page, '[part~="folder-icon"]')).defaultPrevented).toBe(false);
+
+    // Tastaturaktivierung folgt denselben direkten Linkregeln.
+    for (const prevented of [false, false]) {
       const keyboard = new MouseEvent('click', { bubbles: true, composed: true, cancelable: true, detail: 0 });
       label.dispatchEvent(keyboard);
       expect(keyboard.defaultPrevented).toBe(prevented);

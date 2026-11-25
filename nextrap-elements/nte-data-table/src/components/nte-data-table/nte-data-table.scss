@@ -1,7 +1,9 @@
 @use '@nextrap/nte-table' as table;
 
+// Im Grid/Flex-Layout darf der Host unter die Inhaltsbreite schrumpfen, damit Zellen Ellipsis anwenden können.
 :host {
   display: block;
+  min-inline-size: 0;
 }
 
 // The composed nte-table lives inside this component's shadow root, so the
