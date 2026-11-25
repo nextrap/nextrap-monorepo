@@ -1,12 +1,13 @@
-// Die App aktiviert die visuelle Baum-Baseline explizit an ihrer style-default-Klasse.
-@mixin default-style($indent: 1.25rem, $center-width: 8rem, $end-width: 10rem) {
+// Die Anwendung bindet den Datei-Explorer an style-filesystem ein.
+@mixin filesystem-style($indent: 0.625rem, $center-width: 8rem, $end-width: 10rem) {
   color: var(--nt-text, currentColor);
   font-family: var(--nt-font-family-base, inherit);
+  font-size: var(--nte-treeview-font-size, 1.125rem);
   line-height: var(--nt-line-height, 1.5);
   --nte-treeview-center-width: 0px;
   --nte-treeview-end-width: 0px;
   --_nte-treeview-next-indent: 0px;
-  --_nte-treeview-toggle-width: 2rem;
+  --_nte-treeview-toggle-width: 1.75rem;
   --_nte-treeview-stripe-background: transparent;
 
   // Eine offene Explorer-Fläche ersetzt Tabellenrahmen, ohne Unterbäume abzuschneiden.
@@ -39,6 +40,12 @@
   // Der absolute Hintergrund gehört nur zur ersten Grid-Zeile, niemals zum Unterbaum.
   & nte-treeview-item::part(row) {
     position: relative;
+    grid-template-columns:
+      var(--_nte-treeview-indent)
+      var(--_nte-treeview-toggle-width)
+      minmax(0, 1fr)
+      var(--nte-treeview-center-width)
+      var(--nte-treeview-end-width);
   }
   & nte-treeview-item::part(row)::before {
     content: '';
@@ -47,9 +54,8 @@
     grid-row: 1 / 2;
     inset: 0;
     box-sizing: border-box;
-    border: 1px solid transparent;
     pointer-events: none;
-    border-radius: var(--nt-border-radius-sm, 0.25rem);
+    border-radius: var(--nt-border-radius, 0.5rem);
   }
 
   // Ohne Feature-Mixin bleiben auch gerade Zeilen transparent; Zustände haben Vorrang.
@@ -76,6 +82,11 @@
     place-items: center;
     inline-size: var(--_nte-treeview-toggle-width);
     padding: 0;
+    color: var(--nt-text-muted, #52606d);
+  }
+  & nte-treeview-item::part(indicator) {
+    inline-size: 0.875rem;
+    block-size: 0.875rem;
   }
   & nte-treeview-item::part(label),
   & nte-treeview-item::part(center),
@@ -83,13 +94,14 @@
     padding-block: var(--nt-space-1, 0.25rem);
     overflow-wrap: anywhere;
   }
-  // Icon und Name bleiben auch bei blockförmigem Slot-Inhalt in einer gemeinsamen Klickzeile.
+  // Die Name-Spalte darf schrumpfen, während lange Dateinamen einzeilig bleiben.
   & nte-treeview-item::part(label) {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    inline-size: max-content;
-    max-inline-size: none;
+    display: block;
+    align-content: center;
+    inline-size: fit-content;
+    max-inline-size: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
     overflow-wrap: normal;
   }
@@ -105,24 +117,31 @@
     text-align: start;
     cursor: pointer;
   }
-  // Datei-Icons und Ordner-Fallback behalten ihre Breite direkt vor dem einzeiligen Namen.
+  // Eigene Slot-Icons behalten Vorrang vor den Standard-Datei- und Ordnersymbolen.
   & nte-treeview-item > [slot='icon'],
-  & nte-treeview-item::part(folder-icon) {
+  & nte-treeview-item::part(folder-icon),
+  & nte-treeview-item:not(:has(> [slot='icon'], > nte-treeview-item))::part(label)::before {
     display: inline-block;
-    flex-shrink: 0;
     inline-size: 1.125em;
-    block-size: 1em;
-    margin-inline-end: var(--nt-space-1, 0.25rem);
-    vertical-align: -0.125em;
+    block-size: 1.125em;
+    margin-inline-end: var(--nt-space-2, 0.5rem);
+    vertical-align: -0.22em;
   }
 
-  // Das Theme zeichnet die Standardordner; ein eigener icon-Slot ersetzt den Fallback.
+  // Dateisymbole erscheinen nur an Blättern ohne übergebenes Icon.
+  & nte-treeview-item:not(:has(> [slot='icon'], > nte-treeview-item))::part(label)::before {
+    content: '';
+    background-color: var(--nt-text-muted, #52606d);
+    mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M5%203h9l5%205v13H5z%20M14%203v6h5%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+  }
+
+  // Die gefüllte Silhouette unterscheidet geschlossene und geöffnete Ordner.
   & nte-treeview-item::part(folder-icon) {
-    background-color: currentColor;
-    mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M3%207a2%202%200%200%201%202-2h5l2%202h7a2%202%200%200%201%202%202v10H3Z%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.75%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+    background-color: var(--nt-primary, currentColor);
+    mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M2%206a2%202%200%200%201%202-2h5l3%203h8a2%202%200%200%201%202%202v10a2%202%200%200%201-2%202H4a2%202%200%200%201-2-2z%22%20fill%3D%22black%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
   }
   & nte-treeview-item[expanded]::part(folder-icon) {
-    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M3%2011V7a2%202%200%200%201%202-2h5l2%202h7a2%202%200%200%201%202%202v2M3%2019l2-8h17l-3%208Z%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.75%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M2%2017V5a2%202%200%200%201%202-2h5l3%203h7a2%202%200%200%201%202%202H6l-2%203v7zm2%202%203-9h14a1%201%200%200%201%201%201.3l-2.5%208A2%202%200%200%201%2017.6%2021H5a1.5%201.5%200%200%201-1-2z%22%20fill%3D%22black%22%2F%3E%3C%2Fsvg%3E");
   }
   & nte-treeview-item::part(center),
   & nte-treeview-item::part(end) {
@@ -144,22 +163,9 @@
     max-inline-size: 100%;
   }
 
-  // Die Linie folgt der Elternpfeil-Achse, ohne den Unterbaum oder dessen Highlights einzurücken.
+  // Die Einrückung folgt der Tiefe und lässt die Zeilenflächen über die volle Breite laufen.
   & nte-treeview-item::part(children) {
     --_nte-treeview-next-indent: calc(var(--_nte-treeview-indent) + #{$indent});
-    position: relative;
-    margin-inline-start: 0;
-    border: 0;
-  }
-  // Die nachgelagerte Linie bleibt über Hover- und Auswahlflächen sichtbar, ohne Klicks abzufangen.
-  & nte-treeview-item::part(children)::after {
-    content: '';
-    position: absolute;
-    inset-block: 0;
-    inset-inline-start: calc(var(--_nte-treeview-indent) + var(--_nte-treeview-toggle-width) / 2);
-    inline-size: 1px;
-    background: color-mix(in srgb, var(--nt-text-muted, currentColor) 70%, transparent);
-    pointer-events: none;
   }
 
   // Nur die tatsächlich bediente Zeile erhält Hover; ihre Vorfahren bleiben unverändert.
@@ -177,8 +183,19 @@
 
   // Auswahl bleibt beim Verlassen der Zeile bestehen und umfasst auch leere Zusatz-Zellen.
   & nte-treeview-item[selected]::part(row)::before {
-    border-color: var(--nt-primary, currentColor);
-    background-color: var(--nt-primary-subtle, color-mix(in srgb, currentColor 12%, transparent));
+    background-color: var(--nt-surface-muted, #ebedef);
+  }
+  & nte-treeview-item[selected]::part(row)::after {
+    content: '';
+    position: absolute;
+    grid-column: 1 / -1;
+    grid-row: 1 / 2;
+    inset-block: 0.3125rem;
+    inset-inline-start: calc(-1 * var(--nt-space-1, 0.25rem));
+    inline-size: 2px;
+    border-radius: 2px;
+    background-color: var(--nt-primary, #006bdf);
+    pointer-events: none;
   }
 
   // Tastaturfokus fasst ebenfalls nur die eigene Zeile zusammen, einschließlich Zellaktionen.
@@ -193,17 +210,22 @@
     border-radius: var(--nt-border-radius-sm, 0.25rem);
   }
 
-  // Links bleiben auch ohne Hover als navigierbare Ziele erkennbar.
+  // Links übernehmen die Explorer-Optik und zeigen ihre Unterstreichung bei Interaktion.
   & nte-treeview-item::part(link) {
     color: inherit;
-    text-decoration: underline;
+    text-decoration: none;
     text-underline-offset: 0.15em;
+  }
+
+  & nte-treeview-item::part(link):hover,
+  & nte-treeview-item::part(link):focus-visible {
+    text-decoration: underline;
   }
 
   // Bewegungsarme Systeme behalten dieselben Zustände ohne animierte Übergänge.
   @media (prefers-reduced-motion: no-preference) {
     & nte-treeview-item::part(row)::before {
-      transition: background-color 120ms ease, border-color 120ms ease;
+      transition: background-color 120ms ease;
     }
     & nte-treeview-item::part(indicator) {
       transition: transform 180ms ease;
@@ -235,4 +257,9 @@
       }
     }
   }
+}
+
+// Erhält bestehende Einbindungen des bisherigen Standardstils.
+@mixin default-style($indent: 0.625rem, $center-width: 8rem, $end-width: 10rem) {
+  @include filesystem-style($indent, $center-width, $end-width);
 }

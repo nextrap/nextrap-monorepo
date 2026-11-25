@@ -78,6 +78,14 @@ nte-treeview.style-default {
   );
 }
 
+// Dateisystem und Website verwenden die jeweils vollständige Variante.
+nte-treeview.style-filesystem {
+  @include treeview.filesystem-style($center-width: $center-width, $end-width: $end-width);
+}
+nte-treeview.style-website {
+  @include treeview.website-style();
+}
+
 // Die zusätzliche Klasse aktiviert Zebra, ohne eine zweite style-Variante zu benötigen.
 nte-treeview.style-default.with-zebra {
   @include treeview.with-zebra();
@@ -92,7 +100,7 @@ main.treeview-explorer-demo {
   > .treeview-columns {
     grid-template-columns: minmax(0, 1fr) $type-width $size-width;
   }
-  > nte-treeview.style-default {
+  > nte-treeview:is(.style-default, .style-filesystem) {
     --nte-treeview-center-width: #{$type-width};
     --nte-treeview-end-width: #{$size-width};
   }
