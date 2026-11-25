@@ -18,75 +18,23 @@ Einmal in der App-Shell einbinden:
 
 ## API-Stub: zentrale SPA-Konfiguration
 
-Die App benötigt eine Version von `@trunkjs/api-stub` mit
-`onFeedbackStart`, `onFeedbackEnd` und `onError`
-([TrunkJS PR #49](https://github.com/trunkjs/trunkjs-monorepo/pull/49)).
-Der Adapter besitzt keine feste Abhängigkeit zu dieser Library.
+Die App konfiguriert `onFeedbackStart`, `onFeedbackEnd` und `onError`
+des API-Stubs einmal zentral und verwendet darin die vorhandenen
+`Feedback.*`-Funktionen. NTE Feedback benötigt keinen zusätzlichen Adapter.
 
-```ts
-import { Feedback } from '@nextrap/nte-feedback';
-import { API as generatedAPI } from './generated-api';
+**[Beispiel: API-Stub mit Feedback-Presets konfigurieren](https://github.com/nextrap/nextrap-monorepo/blob/main/nextrap-elements/nte-feedback/docs/api-stub-feedback.md)**
+zeigt die vollständige Konfiguration in der Anwendung und die zugehörigen
+Request-Aufrufe. Die dort definierten Presets sind Anwendungsbeispiele,
+keine eingebauten NTE-Feedback-Presets.
 
-export const API = generatedAPI.with(Feedback.createRequestHandler());
-```
-
-```ts
-// Standard: nur der Mini-Ladebalken am oberen Rand.
-const file = await API.File.Get.request({ params: { id: 'index.md' } });
-
-// Expliziter Dialog mit automatisch erzeugter Erfolgsmeldung.
-await API.File.Save.request({
-  params: { id: 'index.md' },
-  body: { content: '# Startseite' },
-  feedback: { key: 'dialog', name: 'Datei speichern' },
-});
-
-// Individuelle Meldungen und optionale Zusatzinformationen.
-await API.File.Save.request({
-  params: { id: 'index.md' },
-  body: { content: '# Startseite' },
-  feedback: {
-    key: 'dialog',
-    name: 'Datei speichern',
-    loadingMessage: 'Die Startseite wird gespeichert …',
-    successMessage: 'Die Startseite wurde gespeichert.',
-    errorMessage: 'Die Startseite konnte nicht gespeichert werden.',
-    data: { details: 'index.md' },
-  },
-});
-```
-
-| Feedback | Während des Requests | Bei Erfolg | Bei Fehler |
+| Beispiel-Preset | Während des Requests | Bei Erfolg | Bei Fehler |
 | --- | --- | --- | --- |
-| Standard / `'mini'` | Mini-Balken | Keine Meldung | Fehlerdialog |
-| `{ key: 'dialog', name: 'Datei speichern' }` | Ladefenster | Erfolgreich: Datei speichern | Fehler: Datei speichern |
-| `successMessage` / `errorMessage` | Wie gewählt | Individueller Text | Individueller Text und Fehlerdetails |
-| `false` | Keine Anzeige | Keine Anzeige | Fehlerdialog |
- 
-Ohne explizite Meldung werden Name und tatsächliche Fehlermeldung verwendet.
-Fehlt der Name, dient der API-Routenname als Fallback. Bei einem HTTP-Fehler
-wird nach Möglichkeit die JSON-Fehlermeldung des Backends gelesen; HTTP-Status
-und zusätzliche Textdetails stehen im Fehlerdialog. `successMessage: false`
-und `errorMessage: false` unterdrücken die jeweilige Anzeige; `reportError: false`
-deaktiviert den Error-Callback im Stub. Fehler bleiben Promise-Rejections.
-Abbrüche erzeugen keine Fehlermeldung. Der Adapter verwaltet die Request-IDs,
-damit ein beendeter Request den Loader eines anderen nicht schließt. Dialoge
-haben Vorrang vor Mini-Feedback; Abschlussmeldungen werden nach den laufenden
-sichtbaren Requests nacheinander angezeigt.
+| `mini` (Standard) | Mini-Balken | Keine Meldung | Fehlerdialog |
+| `dialog` | Ladefenster | Erfolg mit Aktionsname | Fehler mit Aktionsname |
+| `ai` | Ladefenster mit eigenem Text | Erfolg | Fehlerdialog |
 
-Eigene Presets werden einmal zentral definiert, z. B.:
-
-```ts
-export const API = generatedAPI.with(Feedback.createRequestHandler({
-  ai: { variant: 'dialog', loadingMessage: 'AI arbeitet …' },
-}));
-
-await API.File.Save.request({
-  params: { id: 'index.md' },
-  body: { content: '# Startseite' },
-  feedback: { key: 'ai', name: 'Datei speichern' },
-});
-```
+Für individuelle Meldungen übergibt die Anwendung dem Stub z. B.
+`feedback: { key: 'dialog', name: 'Datei speichern', successMessage: 'Gespeichert.' }`.
 
 ## Manuelle Feedback-Funktionen
 

@@ -1,34 +1,18 @@
 # SPA: API-Feedback zentral konfigurieren
 
-Das Feedback wird einmal in der App-Shell eingebunden:
-
 ```html
 <nte-feedback></nte-feedback>
 ```
 
-Dieses Beispiel zeigt die echte API-Stub-Konfiguration mit zwei
-typisierten Beispielrouten. Voraussetzung ist eine Version von
-`@trunkjs/api-stub` mit den Feedback-Callbacks aus
-[PR #49](https://github.com/trunkjs/trunkjs-monorepo/pull/49).
-Die Beispielrouten erwarten ein entsprechendes Backend; es ist eine
-Konfigurationsdemo, kein gestarteter Demo-Server.
+Für API-Requests einer SPA die globalen Callbacks des TrunkJS API-Stubs
+mit den vorhandenen `Feedback.*`-Funktionen verbinden. Die vollständige
+Konfiguration mit frei definierbaren Presets steht im
+[API-Stub-Konfigurationsbeispiel](https://github.com/nextrap/nextrap-monorepo/blob/main/nextrap-elements/nte-feedback/docs/api-stub-feedback.md).
+
+Nach dieser einmaligen Konfiguration genügt in der Page:
 
 ```ts
-import { createApi, type ApiRoute } from '@trunkjs/api-stub';
-import { Feedback } from '@nextrap/nte-feedback';
-
-type FileData = { content: string };
-type Routes = {
-  File: {
-    Get: ApiRoute<{ id: string }, {}, never, FileData>;
-    Save: ApiRoute<{ id: string }, {}, FileData, FileData>;
-  };
-};
-
-const API = createApi<Routes>({
-  'File.Get': ['GET', '/api/files/{id}'],
-  'File.Save': ['PUT', '/api/files/{id}'],
-}, Feedback.createRequestHandler());
+import { API } from './api';
 
 const file = await API.File.Get.request({ params: { id: 'index.md' } });
 
@@ -40,35 +24,13 @@ await API.File.Save.request({
 ```
 
 Der GET zeigt nur den Mini-Ladebalken. Der Save öffnet ein Ladefenster
-mit dem Namen und meldet bei Erfolg **Erfolgreich: Datei speichern**.
-Bei einem Fehler erscheint **Fehler: Datei speichern** mit der
-Fehlermeldung des Backends bzw. der Exception.
-
-## Individuelle Texte
-
-Die folgende Variante ersetzt den Save-Aufruf oben:
-
-```ts
-await API.File.Save.request({
-  params: { id: 'index.md' },
-  body: { content: '# Startseite' },
-  feedback: {
-    key: 'dialog',
-    name: 'Startseite speichern',
-    successMessage: 'Die Startseite wurde gespeichert.',
-    errorMessage: 'Die Startseite konnte nicht gespeichert werden.',
-    data: { details: 'index.md' },
-  },
-});
-```
-
-Die API liefert weiterhin die typisierte Response oder verwirft das
-Promise mit dem ursprünglichen Fehler. Kein zusätzlicher Feedback-Wrapper
-in der Page oder UI-Komponente ist notwendig.
+und zeigt Erfolg oder Fehler mit dem Aktionsnamen. Die Presets gehören
+zur App-Konfiguration, nicht zum NTE-Feedback-Paket. Die Beispielrouten
+erwarten ein entsprechendes Backend.
 
 ## Manuelle Aktionen
 
 Die interaktive Demo zeigt die weiterhin verfügbaren manuellen Shortcuts
 für lokale Aktionen, z. B. `Feedback.confirm()`, `Feedback.error()` und
 `Feedback.progress()`. Für normale API-Aufrufe ist die zentrale
-Konfiguration oben zu bevorzugen.
+Konfiguration zu bevorzugen.

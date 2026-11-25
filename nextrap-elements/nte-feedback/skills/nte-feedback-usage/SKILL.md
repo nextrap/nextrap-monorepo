@@ -10,20 +10,13 @@ Für Single Page Applications die zentralen Feedback-Callbacks von
 einbinden. Keine individuellen Request-Wrapper, Loading-Flags oder
 Catch-Blöcke nur für die API-Fehleranzeige in Komponenten.
 
-```ts
-import { Feedback } from '@nextrap/nte-feedback';
-import { API as generatedAPI } from './generated-api';
-
-export const API = generatedAPI.with(Feedback.createRequestHandler());
-```
-
-Standardmäßig Mini-Ladebalken, bei `feedback: { key: 'dialog', name: 'Datei speichern' }`
-Ladefenster und Erfolgsmeldung. Individuelle `successMessage`, `errorMessage`
-und `loadingMessage` sowie `data: { details: 'index.md' }` sind optional.
-Die globale Fehleranzeige enthält den Namen und die Backend-Fehlermeldung.
-Die Stub-Callbacks werden mit TrunkJS PR #49 eingeführt.
-Details und Beispielrouten: [README](../../README.md) und
-[SPA-Demo](../../demo/01-usage.md).
+Die App konfiguriert `onFeedbackStart`, `onFeedbackEnd` und `onError`
+des API-Stubs einmal zentral mit den vorhandenen `Feedback.*`-Methoden.
+Das [Konfigurationsbeispiel mit Presets](https://github.com/nextrap/nextrap-monorepo/blob/main/nextrap-elements/nte-feedback/docs/api-stub-feedback.md)
+zeigt Mini-Ladebalken als Standard, Ladefenster mit Aktionsnamen sowie
+individuelle Meldungen. Die Presets werden in der App definiert; NTE Feedback
+stellt dafür keinen zusätzlichen Adapter bereit. Bei parallelen Requests
+koordiniert die App die Feedback-Anzeige anhand der Request-IDs.
 
 ## Manuelle API für Nicht-API-Aktionen
 
