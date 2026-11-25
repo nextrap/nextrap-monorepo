@@ -1,5 +1,5 @@
-// Die App aktiviert die visuelle Baum-Baseline explizit an ihrer style-default-Klasse.
-@mixin default-style($indent: 0.625rem, $center-width: 8rem, $end-width: 10rem) {
+// Die Anwendung bindet den Datei-Explorer an style-filesystem ein.
+@mixin filesystem-style($indent: 0.625rem, $center-width: 8rem, $end-width: 10rem) {
   color: var(--nt-text, currentColor);
   font-family: var(--nt-font-family-base, inherit);
   font-size: var(--nte-treeview-font-size, 1.125rem);
@@ -257,4 +257,9 @@
       }
     }
   }
+}
+
+// Erhält bestehende Einbindungen des bisherigen Standardstils.
+@mixin default-style($indent: 0.625rem, $center-width: 8rem, $end-width: 10rem) {
+  @include filesystem-style($indent, $center-width, $end-width);
 }

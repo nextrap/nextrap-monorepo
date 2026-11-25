@@ -4,6 +4,8 @@ export {
   type TreeNodeRenderer,
   type TreeViewElement,
   type TreeViewState,
+  type TreeViewExpandedState,
+  type TreeViewFilter,
   type TreeViewEventMap,
 } from './src/components/nte-treeview';
 export { NteTreeViewItem, type TreeItemCurrent } from './src/components/nte-treeview-item';

@@ -29,14 +29,19 @@ console.log(view.value);       // Der ausgewählte Knoten, nicht nur seine ID.
 console.log(view.getState(tree.children[0])); // { selected: false, expanded: true }
 ```
 
-Die Anwendung bindet die visuelle Baseline ausdrücklich ein. Das Element setzt
-`style-default` automatisch; `index.scss` selbst erzeugt kein CSS.
+Die Anwendung bindet die gewählte Variante als Sass-Mixin ein. Setze dafür
+`style-filesystem` für Dateien und Ordner oder `style-website` für Seiten und
+Unterseiten. Ohne eigene Style-Klasse setzt das Element `style-default`.
+Das bisherige `default-style()`-Mixin entspricht `filesystem-style()`.
 
 ```scss
 @use '@nextrap/nte-treeview' as treeview;
 
-nte-treeview.style-default {
-  @include treeview.default-style();
+nte-treeview.style-filesystem {
+  @include treeview.filesystem-style();
+}
+nte-treeview.style-website {
+  @include treeview.website-style();
 }
 nte-treeview.style-default.with-zebra {
   @include treeview.with-zebra();
@@ -70,6 +75,25 @@ verlinkten Ordner wählt ihn aus, der nächste folgt dem Link. Dateilinks navigi
 direkt. Auswahl, Hover und Fokus reichen über die gesamte Zeile einschließlich
 Einzug und Zusatzspalten. Die Baseline hat keine Zelltrenner; `with-zebra`
 aktiviert optionale Streifen.
+
+## Öffnungszustand und Filter
+
+`view.expandedState` liefert eine serialisierbare Momentaufnahme wie
+`{ handbuch: true, archiv: false }`. Sie enthält Zweige mit eindeutiger ID.
+Beim Austausch des Modells über `setData()` übernimmt dieselbe TreeView den
+bisherigen Öffnungszustand für wiederkehrende IDs. Neue IDs verwenden den
+Öffnungszustand aus dem übergebenen Modell.
+
+Die optionale Property `view.filter` prüft Modellknoten. Pfade zu Treffern
+bleiben vorübergehend geöffnet. Ein Rücksetzen des Filters stellt die
+gespeicherten Öffnungszustände wieder dar.
+
+```ts
+const query = 'einstieg';
+view.filter = (node) => node.label.toLowerCase().includes(query);
+console.log(JSON.stringify(view.expandedState));
+view.filter = undefined;
+```
 
 ## Beispiele
 

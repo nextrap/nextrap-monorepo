@@ -6,14 +6,14 @@
   </p>
   <p>
     Ordner öffnen und schließen über ihren Namen, ihr Symbol oder den Pfeil. Dateinamen und ihre Symbole
-    wählen den Eintrag aus. Unterstrichene Dateinamen wie README.md öffnen zusätzlich ihren Link;
+    wählen den Eintrag aus. Verlinkte Dateinamen wie README.md öffnen zusätzlich ihr Ziel;
     Typ, Größe und freie Zeilenflächen lösen keine Aktion aus.
   </p>
   <!-- Die Spaltenüberschriften gehören zur Demo; die Baumkomponente liefert die ausgerichteten Zellen. -->
   <div class="treeview-columns" aria-hidden="true">
     <span>Name</span><span>Typ</span><span>Größe</span>
   </div>
-  <nte-treeview aria-label="Projektdateien">
+  <nte-treeview class="style-filesystem" aria-label="Projektdateien">
     <nte-treeview-item expanded>
       Projekt
       <span slot="center">Ordner</span>
@@ -40,7 +40,7 @@
           <span slot="center">TypeScript</span>
           <span slot="end">4 KB</span>
         </nte-treeview-item>
-        <!-- Die Pfeilspalte bleibt reserviert; ein Blatt ohne Icon braucht kein zusätzliches Symbol. -->
+        <!-- Ohne eigenen Icon-Slot verwendet das Blatt das Standardsymbol. -->
         <nte-treeview-item>
           Methoden
           <span slot="center">Referenz</span>
@@ -64,7 +64,16 @@
     </nte-treeview-item>
   </nte-treeview>
   <p>
-    Die Ordnersymbole wechseln automatisch mit dem Aufklappzustand. Dateisymbole werden über
-    <code>slot="icon"</code> ergänzt; „Methoden“ zeigt bewusst einen Eintrag ohne Symbol.
+    Die Ordnersymbole wechseln automatisch mit dem Aufklappzustand.
+    <code>slot="icon"</code> ersetzt das Standard-Dateisymbol.
   </p>
+  <h2>Website mit Unterseiten</h2>
+  <nte-treeview class="style-website" aria-label="Website-Seiten">
+    <nte-treeview-item id="home" href="#home">Startseite</nte-treeview-item>
+    <nte-treeview-item id="services" expanded>Leistungen
+      <nte-treeview-item id="consulting" href="#consulting">Beratung</nte-treeview-item>
+      <nte-treeview-item id="support" href="#support">Support</nte-treeview-item>
+    </nte-treeview-item>
+    <nte-treeview-item id="contact" href="#contact">Kontakt</nte-treeview-item>
+  </nte-treeview>
 </main>

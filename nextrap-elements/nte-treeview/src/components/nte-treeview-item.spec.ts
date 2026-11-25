@@ -335,3 +335,62 @@ describe('NteTreeViewItem explorer interactions', () => {
     expect(double.defaultPrevented).toBe(true);
   });
 });
+
+// Prüft den Öffnungszustand beim Austausch des Modells und die temporäre Trefferansicht.
+describe('NteTreeView expansion and filtering', () => {
+  // Explizit geschlossene Zweige behalten ihren Zustand auch über ein leeres Modell hinweg.
+  it('restores open and closed branches by ID across model replacements', async () => {
+    const view = await mount('');
+    const branch = (id: string, expanded: boolean) => ({
+      id, label: id, data: { expanded }, children: [{ label: 'Unterseite' }],
+    });
+    const initial = new TreeModel([branch('open', false), branch('closed', true)]);
+    view.setData(initial);
+    await settle(view);
+    pointerClick(control(view.querySelector<NteTreeViewItem>('nte-treeview-item[data-tree-id="open"]')!, '#label'));
+    pointerClick(control(view.querySelector<NteTreeViewItem>('nte-treeview-item[data-tree-id="closed"]')!, '#label'));
+    const snapshot = view.expandedState;
+    expect(snapshot).toEqual({ open: true, closed: false });
+
+    view.setData(new TreeModel());
+    const replacement = new TreeModel([branch('closed', true), branch('new', true), branch('open', false)]);
+    view.setData(replacement);
+
+    expect(view.expandedState).toEqual({ closed: false, new: true, open: true });
+    expect(snapshot).toEqual({ open: true, closed: false });
+    expect(replacement.children.map((node) => node.data?.expanded)).toEqual([false, true, true]);
+  });
+
+  // Treffer unter geschlossenen Zweigen werden sichtbar, ohne gespeicherte Werte zu ändern.
+  it('opens matching paths temporarily while hiding unrelated descendants', async () => {
+    const view = await mount('');
+    const tree = new TreeModel([
+      { id: 'docs', label: 'Dokumentation', children: [
+        { id: 'guide', label: 'Anleitung', children: [
+          { id: 'match', label: 'Treffer' },
+          { id: 'other', label: 'Sonstiges' },
+        ] },
+      ] },
+      { id: 'contact', label: 'Kontakt' },
+    ]);
+    view.setData(tree);
+    await settle(view);
+    const item = (id: string) => view.querySelector<NteTreeViewItem>(`[data-tree-id="${id}"]`)!;
+    view.filter = (node) => node.label === 'Treffer';
+    await settleDisclosure(view);
+
+    expect(item('docs').expanded).toBe(true);
+    expect(item('guide').expanded).toBe(true);
+    expect(item('match').hidden).toBe(false);
+    expect(item('other').hidden).toBe(true);
+    expect(item('contact').hidden).toBe(true);
+    expect(view.expandedState).toEqual({ docs: false, guide: false });
+
+    view.filter = undefined;
+    await settleDisclosure(view);
+    expect(item('docs').expanded).toBe(false);
+    expect(item('guide').expanded).toBe(false);
+    expect(item('other').hidden).toBe(false);
+    expect(item('contact').hidden).toBe(false);
+  });
+});

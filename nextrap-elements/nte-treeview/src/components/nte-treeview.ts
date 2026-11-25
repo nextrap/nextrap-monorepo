@@ -2,6 +2,7 @@ import { nextrap_element } from '@nextrap/nt-core';
 import { html, render, unsafeCSS, type PropertyValues, type TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { live } from 'lit/directives/live.js';
 import { repeat } from 'lit/directives/repeat.js';
 
 import { TreeModel, type TreeNode } from '../tree-model';
@@ -20,6 +21,12 @@ export interface TreeViewState {
   expanded: boolean;
 }
 
+/** Serialisierbarer Öffnungszustand der aktiven Ordner oder Unterseiten mit eindeutiger ID. */
+export type TreeViewExpandedState = Record<string, boolean>;
+
+/** Prüft Modellknoten unabhängig von ihrer momentanen Sichtbarkeit. */
+export type TreeViewFilter = (node: TreeNode) => boolean;
+
 /** Das Ereignis enthält unmittelbar die gewählte Referenz; null steht für eine gelöschte Auswahl. */
 export interface TreeViewEventMap {
   'selection-change': CustomEvent<TreeViewElement | null>;
@@ -36,6 +43,12 @@ export class NteTreeView extends nextrap_element() {
 
   /** Ohne Renderer wird im Datenbetrieb node.label angezeigt. */
   @property({ attribute: false }) public accessor renderer: TreeNodeRenderer | undefined;
+
+  /** Blendet Modellknoten ohne Treffer aus und lässt Pfade zu Treffern sichtbar. */
+  @property({ attribute: false }) public accessor filter: TreeViewFilter | undefined;
+
+  // Öffnungszustände bleiben auch erhalten, wenn eine ID vorübergehend im Modell fehlt.
+  private readonly _rememberedExpansion = new Map<string, boolean>();
 
   // Ohne setData bleibt das vom Aufrufer geschriebene Light DOM vollständig erhalten.
   private _data?: TreeModel;
@@ -76,14 +89,56 @@ export class NteTreeView extends nextrap_element() {
       : { selected: item!.selected, expanded: item!.expanded };
   }
 
+  /** Gibt eine unabhängige Momentaufnahme einschließlich geschlossener Zweige zurück. */
+  public get expandedState(): TreeViewExpandedState {
+    const entries: [string, boolean][] = [];
+    for (const [id, element] of this._uniqueElementsById()) {
+      if (element instanceof NteTreeViewItem) {
+        if (Array.from(element.children).some((child) => child instanceof NteTreeViewItem)) {
+          entries.push([id, element.expanded]);
+        }
+      } else if (element.children?.length) {
+        entries.push([id, Boolean(element.data?.expanded)]);
+      }
+    }
+    return Object.fromEntries(entries);
+  }
+
+  /** Behält nur baumweit eindeutige IDs bei, damit gleichnamige Zweige keine Zustände teilen. */
+  private _uniqueElementsById(): Map<string, TreeViewElement> {
+    const unique = new Map<string, TreeViewElement>();
+    const ambiguous = new Set<string>();
+    for (const element of this._data ? this._modelNodes() : this._ownItems()) {
+      const id = element.id;
+      if (!id || ambiguous.has(id)) continue;
+      if (unique.has(id)) {
+        unique.delete(id);
+        ambiguous.add(id);
+      } else {
+        unique.set(id, element);
+      }
+    }
+    return unique;
+  }
+
   /** Übernimmt ab dem ersten Aufruf das gesamte Light DOM für die Datenansicht. */
   public setData(data: TreeModel): void {
     if (!(data instanceof TreeModel)) {
       throw new TypeError('setData erwartet ein TreeModel.');
     }
+    for (const [id, expanded] of Object.entries(this.expandedState)) {
+      this._rememberedExpansion.set(id, expanded);
+    }
     this._unsubscribe?.();
     if (!this._data) this.replaceChildren();
     this._data = data;
+    for (const [id, element] of this._uniqueElementsById()) {
+      const node = element as TreeNode;
+      const expanded = this._rememberedExpansion.get(id);
+      if (node.children?.length && expanded !== undefined && Boolean(node.data?.expanded) !== expanded) {
+        (node.data ??= {}).expanded = expanded;
+      }
+    }
     this._subscribeToData();
     this.requestUpdate();
   }
@@ -212,11 +267,31 @@ export class NteTreeView extends nextrap_element() {
   /** Rendert zusätzlich zum Shadow DOM nur im ausdrücklich aktivierten Datenbetrieb. */
   protected override updated(changed: PropertyValues): void {
     super.updated(changed);
-    if (this._data) render(this._renderItems(this._data.children), this);
+    if (!this._data) return;
+    const visible = this.filter ? this._filteredNodes(this._data.children, this.filter) : undefined;
+    render(this._renderItems(this._data.children, visible), this);
+  }
+
+  /** Erfasst Treffer von unten nach oben; der Wert markiert Pfade, die geöffnet werden müssen. */
+  private _filteredNodes(items: TreeNode[], filter: TreeViewFilter): Map<TreeNode, boolean> {
+    const visible = new Map<TreeNode, boolean>();
+    const visit = (item: TreeNode): boolean => {
+      let hasVisibleChild = false;
+      for (const child of item.children ?? []) {
+        if (child && visit(child)) hasVisibleChild = true;
+      }
+      const matches = filter(item) || hasVisibleChild;
+      if (matches) visible.set(item, hasVisibleChild);
+      return matches;
+    };
+    for (const item of items) {
+      if (item) visit(item);
+    }
+    return visible;
   }
 
   /** Behält vorhandene Geschwister anhand ihrer IDs oder ihrer Objektidentität. */
-  private _renderItems(items: TreeNode[], nested = false): TemplateResult {
+  private _renderItems(items: TreeNode[], visible?: Map<TreeNode, boolean>, nested = false): TemplateResult {
     return html`${repeat(
       items,
       (item) => item.id ?? item,
@@ -229,13 +304,19 @@ export class NteTreeView extends nextrap_element() {
           .target=${item.data?.target ?? ''}
           .rel=${item.data?.rel ?? ''}
           .current=${item.data?.current ?? ''}
-          .expanded=${item.data?.expanded ?? false}
+          ?hidden=${visible !== undefined && !visible.has(item)}
+          .expanded=${live(visible?.get(item) || Boolean(item.data?.expanded))}
           .selected=${item.data?.selected ?? false}
           @expanded-change=${(event: CustomEvent<boolean>) => {
+            // Erzwingt offene Trefferpfade nur für die Ansicht, ohne den Modellzustand zu ändern.
+            if (visible?.get(item)) {
+              this.requestUpdate();
+              return;
+            }
             (item.data ??= {}).expanded = event.detail;
           }}
           >${this.renderer ? this.renderer(item) : item.label}
-          ${this._renderItems(item.children ?? [], true)}</nte-treeview-item
+          ${this._renderItems(item.children ?? [], visible, true)}</nte-treeview-item
         >
       `,
     )}`;
