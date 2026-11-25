@@ -351,8 +351,10 @@ describe('NteTreeView expansion and filtering', () => {
     const initial = new TreeModel([branch('open', false), branch('closed', true)]);
     view.setData(initial);
     await settle(view);
-    pointerClick(control(view.querySelector<NteTreeViewItem>('nte-treeview-item[data-tree-id="open"]')!, '#label'));
-    pointerClick(control(view.querySelector<NteTreeViewItem>('nte-treeview-item[data-tree-id="closed"]')!, '#label'));
+    await settleDisclosure(view);
+    control(view.querySelector<NteTreeViewItem>('nte-treeview-item[data-tree-id="open"]')!, '#toggle').click();
+    control(view.querySelector<NteTreeViewItem>('nte-treeview-item[data-tree-id="closed"]')!, '#toggle').click();
+    await settleDisclosure(view);
     const snapshot = view.expandedState;
     expect(snapshot).toEqual({ open: true, closed: false });
 
