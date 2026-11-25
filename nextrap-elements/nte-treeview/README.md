@@ -83,6 +83,9 @@ aktiviert optionale Streifen.
 Beim Austausch des Modells über `setData()` übernimmt dieselbe TreeView den
 bisherigen Öffnungszustand für wiederkehrende IDs. Neue IDs verwenden den
 Öffnungszustand aus dem übergebenen Modell.
+Eine Zuweisung wie `view.expandedState = { handbuch: true, archiv: false }`
+ändert die angegebenen Zweige. Die Zuweisung kann vor `setData()` erfolgen.
+Ausgelassene IDs behalten ihren Zustand.
 
 Die optionale Property `view.filter` prüft Modellknoten. Pfade zu Treffern
 bleiben vorübergehend geöffnet. Ein Rücksetzen des Filters stellt die

@@ -93,15 +93,40 @@ export class NteTreeView extends nextrap_element() {
   public get expandedState(): TreeViewExpandedState {
     const entries: [string, boolean][] = [];
     for (const [id, element] of this._uniqueElementsById()) {
-      if (element instanceof NteTreeViewItem) {
-        if (Array.from(element.children).some((child) => child instanceof NteTreeViewItem)) {
-          entries.push([id, element.expanded]);
-        }
-      } else if (element.children?.length) {
-        entries.push([id, Boolean(element.data?.expanded)]);
-      }
+      if (!this._isBranch(element)) continue;
+      entries.push([id, element instanceof NteTreeViewItem ? element.expanded : Boolean(element.data?.expanded)]);
     }
     return Object.fromEntries(entries);
+  }
+
+  /** Übernimmt angegebene IDs sofort und merkt unbekannte IDs für den nächsten Modellwechsel. */
+  public set expandedState(state: TreeViewExpandedState) {
+    const expansion = new Map(Object.entries(state));
+    for (const [id, expanded] of expansion) {
+      this._rememberedExpansion.set(id, expanded);
+    }
+    this._applyExpansion(expansion);
+    this.requestUpdate();
+  }
+
+  /** Blätter besitzen keinen Öffnungszustand, unabhängig davon, wie sie erzeugt wurden. */
+  private _isBranch(element: TreeViewElement): boolean {
+    return element instanceof NteTreeViewItem
+      ? Array.from(element.children).some((child) => child instanceof NteTreeViewItem)
+      : Boolean(element.children?.length);
+  }
+
+  /** Wendet nur übergebene Werte an, ohne die Zustände anderer Zweige zurückzusetzen. */
+  private _applyExpansion(expansion: ReadonlyMap<string, boolean>): void {
+    for (const [id, element] of this._uniqueElementsById()) {
+      const expanded = expansion.get(id);
+      if (expanded === undefined || !this._isBranch(element)) continue;
+      if (element instanceof NteTreeViewItem) {
+        element.expanded = expanded;
+      } else if (Boolean(element.data?.expanded) !== expanded) {
+        (element.data ??= {}).expanded = expanded;
+      }
+    }
   }
 
   /** Behält nur baumweit eindeutige IDs bei, damit gleichnamige Zweige keine Zustände teilen. */
@@ -132,13 +157,7 @@ export class NteTreeView extends nextrap_element() {
     this._unsubscribe?.();
     if (!this._data) this.replaceChildren();
     this._data = data;
-    for (const [id, element] of this._uniqueElementsById()) {
-      const node = element as TreeNode;
-      const expanded = this._rememberedExpansion.get(id);
-      if (node.children?.length && expanded !== undefined && Boolean(node.data?.expanded) !== expanded) {
-        (node.data ??= {}).expanded = expanded;
-      }
-    }
+    this._applyExpansion(this._rememberedExpansion);
     this._subscribeToData();
     this.requestUpdate();
   }

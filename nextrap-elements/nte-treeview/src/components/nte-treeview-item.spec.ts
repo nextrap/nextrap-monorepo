@@ -361,6 +361,41 @@ describe('NteTreeView expansion and filtering', () => {
     expect(replacement.children.map((node) => node.data?.expanded)).toEqual([false, true, true]);
   });
 
+  // Gespeicherte Werte lassen sich vor der Modellbindung und als Teilzustand anwenden.
+  it('sets expansion before loading a model and patches the active branches', async () => {
+    const view = await mount('');
+    const branch = (id: string, expanded: boolean) => ({
+      id, label: id, data: { expanded }, children: [{ label: 'Unterseite' }],
+    });
+    const saved = { docs: true, archive: false };
+    view.expandedState = saved;
+    saved.docs = false;
+
+    view.setData(new TreeModel([branch('docs', false), branch('archive', true), branch('extra', true)]));
+    expect(view.expandedState).toEqual({ docs: true, archive: false, extra: true });
+
+    view.expandedState = { docs: false, future: true };
+    expect(view.expandedState).toEqual({ docs: false, archive: false, extra: true });
+    await settle(view);
+    expect(view.querySelector<NteTreeViewItem>('[data-tree-id="docs"]')?.expanded).toBe(false);
+
+    view.setData(new TreeModel([branch('future', false), branch('docs', true)]));
+    expect(view.expandedState).toEqual({ future: true, docs: false });
+  });
+
+  // Auch deklarative Zweige können über denselben Snapshot geöffnet werden.
+  it('sets expansion for existing HTML items by ID', async () => {
+    const view = await mount(`
+      <nte-treeview-item id="docs">Dokumentation
+        <nte-treeview-item>Anleitung</nte-treeview-item>
+      </nte-treeview-item>
+    `);
+    view.expandedState = { docs: true };
+    await settle(view);
+    expect(view.expandedState).toEqual({ docs: true });
+    expect(view.querySelector<NteTreeViewItem>('#docs')?.expanded).toBe(true);
+  });
+
   // Treffer unter geschlossenen Zweigen werden sichtbar, ohne gespeicherte Werte zu ändern.
   it('opens matching paths temporarily while hiding unrelated descendants', async () => {
     const view = await mount('');
