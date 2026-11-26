@@ -19,6 +19,7 @@ import {
   type Language,
 } from '@codemirror/language';
 import { EditorState, type Extension } from '@codemirror/state';
+import { color } from '@uiw/codemirror-extensions-color';
 import type { CodeEditorHtmlElement, CodeEditorLanguage } from './types';
 import { kramdown } from './kramdown';
 
@@ -177,18 +178,20 @@ export function createLanguageSupport(
   language: CodeEditorLanguage,
   htmlElements: readonly CodeEditorHtmlElement[],
   classNames: readonly string[],
+  colorPicker = false,
 ): Extension {
   switch (language) {
     case 'text':
       return [];
     case 'css':
-      return cssSupport;
+      // Der Picker bleibt auf bearbeitbare Stylesheet-Ansichten begrenzt.
+      return colorPicker ? [cssSupport, color] : cssSupport;
     case 'javascript':
       return javascriptSupport;
     case 'typescript':
       return typescriptSupport;
     case 'scss':
-      return scssSupport;
+      return colorPicker ? [scssSupport, color] : scssSupport;
   }
 
   // Tags erweitern die eingebauten HTML-Vorschläge; Klassen erhalten eine eigene Token-Quelle.

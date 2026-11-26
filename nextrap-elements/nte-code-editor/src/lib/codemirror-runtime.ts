@@ -4,7 +4,7 @@ export { defaultKeymap, history, historyField, historyKeymap, indentWithTab } fr
 export { bracketMatching, codeFolding, foldAll as foldAllCode, foldGutter, foldKeymap, indentOnInput, syntaxHighlighting, unfoldAll as unfoldAllCode } from '@codemirror/language';
 export { getOriginalDoc, MergeView, originalDocChangeEffect, unifiedMergeView } from '@codemirror/merge';
 export { ChangeSet, Compartment, EditorState, Transaction } from '@codemirror/state';
-export { drawSelection, dropCursor, EditorView, highlightActiveLine, highlightActiveLineGutter, highlightSpecialChars, keymap, lineNumbers } from '@codemirror/view';
+export { drawSelection, dropCursor, EditorView, highlightActiveLine, highlightActiveLineGutter, highlightSpecialChars, keymap, lineNumbers, rectangularSelection } from '@codemirror/view';
 export { createLanguageSupport } from './languages';
 export { aiExtensions, triggerEdit } from './ai';
 import { Annotation } from '@codemirror/state';
