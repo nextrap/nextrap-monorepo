@@ -1,0 +1,35 @@
+// Visuelle Baseline; Breitenmessung und Panel-Sichtbarkeit bleiben funktional getrennt.
+@mixin default-style($padding: var(--nt-space-2) var(--nt-space-3), $font-size: inherit) {
+  &::part(bar) { border-block-end: 1px solid var(--nt-border); }
+  &::part(tab), &::part(dropdown) {
+    font: inherit;
+    font-size: $font-size;
+    color: var(--nt-text);
+    background: transparent;
+    border: 0;
+    padding: $padding;
+  }
+  &::part(tab) {
+    border-block-end: 2px solid transparent;
+    gap: var(--nt-space-2);
+    cursor: pointer;
+  }
+  &::part(active-tab) {
+    color: var(--nt-primary);
+    border-block-end-color: var(--nt-primary);
+  }
+  &::part(tab):hover:not(:disabled) { background: var(--nt-surface-muted); }
+  &::part(tab):disabled { opacity: 0.5; cursor: default; }
+  &::part(tab):focus-visible {
+    outline: 2px solid var(--nt-primary);
+    outline-offset: -2px;
+  }
+  &::part(count) {
+    padding-inline: var(--nt-space-1);
+    border-radius: var(--nt-border-radius-sm);
+    background: var(--nt-surface-muted);
+    color: var(--nt-text);
+    font-variant-numeric: tabular-nums;
+  }
+  &::part(dropdown) { cursor: pointer; }
+}
