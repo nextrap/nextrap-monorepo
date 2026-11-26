@@ -81,6 +81,18 @@ Markdown-Fences erkennen `html`, `css`, `javascript`/`js`, `typescript`/`ts`,
 `scss` und `markdown`/`md`. TypeScript-Completion umfasst die CodeMirror-
 Sprachunterstützung; eine TypeScript-Language-Server-Anbindung ist nicht enthalten.
 
+In bearbeitbaren CSS- und SCSS-Ansichten erscheinen bei erkannten konkreten
+Farbwerten kleine Farbquadrate. Ein Klick öffnet den nativen Color Picker;
+die Auswahl ändert den Quelltext und nimmt an Undo/Redo teil. Der Picker
+ist in schreibgeschützten oder deaktivierten Ansichten sowie auf der
+Originalseite eines Vergleichs ausgeschaltet. SCSS-Variablen werden nicht
+aufgelöst. Die erkannten Farbformate bestimmt die UIW-Extension.
+
+In allen Sprachmodi ist eine rechteckige Spaltenauswahl möglich: Ziehe mit
+gehaltener mittlerer Maustaste oder mit Alt + linker Maustaste über mehrere
+Zeilen. Jede Zeile erhält eine eigene Auswahl beziehungsweise einen Cursor;
+anschließende Texteingaben bearbeiten alle ausgewählten Bereiche gleichzeitig.
+
 ## 3. Eigene HTML-Elemente und Klassen anbieten
 
 Die Konfiguration ergänzt Standard-HTML. Neue Arrays setzen aktualisierte

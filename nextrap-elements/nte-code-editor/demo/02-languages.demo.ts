@@ -24,6 +24,7 @@ export default defineDemo({
       <nte-code-editor id="markdown-editor" language="markdown" label="Markdown-Beispiel"></nte-code-editor>
     </section>
     <h2>CSS</h2>
+    <p>Klicke auf ein Farbquadrat, um die Farbe zu bearbeiten. Ziehe mit gedrückter mittlerer Maustaste oder Alt + linker Maustaste über mehrere Zeilen, um eine Spalte auszuwählen.</p>
     <section aria-label="CSS-Beispiel">
       <nte-code-editor id="css-editor" language="css" label="CSS-Beispiel"></nte-code-editor>
     </section>
@@ -36,6 +37,7 @@ export default defineDemo({
       <nte-code-editor id="typescript-editor" language="typescript" label="TypeScript-Beispiel"></nte-code-editor>
     </section>
     <h2>SCSS</h2>
+    <p>Auch konkrete SCSS-Farbwerte lassen sich über den Picker bearbeiten; Variablenreferenzen bleiben unverändert.</p>
     <section aria-label="SCSS-Beispiel">
       <nte-code-editor id="scss-editor" language="scss" label="SCSS-Beispiel"></nte-code-editor>
     </section>
@@ -78,7 +80,9 @@ $accent: rebeccapurple;
     query<NteCodeEditor>('#css-editor').value = `.card {
   display: grid;
   gap: 1rem;
-  color: rebeccapurple;
+  color: #3498db;
+  background: rgb(240, 244, 248);
+  border-color: hsl(210, 50%, 40%);
 }
 
 .card:hover {
@@ -108,7 +112,7 @@ function findPage(pages: Page[], id: number): Page | undefined {
 const selected = findPage([{ id: 1, title: 'Start' }], 1);`;
 
     query<NteCodeEditor>('#scss-editor').label = 'SCSS-Beispiel';
-    query<NteCodeEditor>('#scss-editor').value = `$accent: rebeccapurple;
+    query<NteCodeEditor>('#scss-editor').value = `$accent: #663399;
 
 @mixin card-border($color) {
   border: 1px solid $color;
@@ -121,7 +125,7 @@ const selected = findPage([{ id: 1, title: 'Start' }], 1);`;
     color: $accent;
   }
 
-  .title { font-weight: 600; }
+  .title { color: #3498db; font-weight: 600; }
 }`;
   },
 });

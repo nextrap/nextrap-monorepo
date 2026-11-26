@@ -37,6 +37,7 @@
         "@trunkjs/markdown-loader": "^1.0.0",
         "@trunkjs/vite-demo-viewer": "^1.0.0",
         "@types/node": "25.9.5",
+        "@uiw/codemirror-extensions-color": "^4.25.12",
         "@vitest/browser": "3.2.7",
         "@vitest/coverage-v8": "3.2.7",
         "@vitest/ui": "3.2.7",

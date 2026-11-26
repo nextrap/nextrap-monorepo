@@ -39,6 +39,7 @@
         "@lezer/highlight": "^1.2.5",
         "@marimo-team/codemirror-ai": "0.3.10",
         "@nextrap/nt-core": "^2.0.2",
+        "@uiw/codemirror-extensions-color": "^4.25.12",
         "lit": "^3.3.2"
     }
 }

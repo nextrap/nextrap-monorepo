@@ -28,7 +28,7 @@ let { autocompletion, closeBrackets, closeBracketsKeymap, completionKeymap,
   MergeView, originalDocChangeEffect, unifiedMergeView, ChangeSet,
   Compartment, EditorState, Transaction, drawSelection, dropCursor,
   EditorView, highlightActiveLine, highlightActiveLineGutter,
-  highlightSpecialChars, keymap, lineNumbers, createLanguageSupport,
+  highlightSpecialChars, keymap, lineNumbers, rectangularSelection, createLanguageSupport,
   assignedValue, tokenHighlighting, aiExtensions, triggerEdit,
 } = {} as typeof import('../../lib/codemirror-runtime');
 let runtimeRequest: Promise<void> | undefined;
@@ -45,7 +45,7 @@ async function loadRuntime(): Promise<void> {
       MergeView, originalDocChangeEffect, unifiedMergeView, ChangeSet,
       Compartment, EditorState, Transaction, drawSelection, dropCursor,
       EditorView, highlightActiveLine, highlightActiveLineGutter,
-      highlightSpecialChars, keymap, lineNumbers, createLanguageSupport,
+      highlightSpecialChars, keymap, lineNumbers, rectangularSelection, createLanguageSupport,
       assignedValue, tokenHighlighting, aiExtensions, triggerEdit } = runtime);
     } catch (error) {
       runtimeRequest = undefined;
@@ -474,6 +474,11 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
       highlightSpecialChars(),
       history(),
       drawSelection(),
+      // Rechteckige Markierungen erzeugen eine Auswahl pro Zeile.
+      EditorState.allowMultipleSelections.of(true),
+      rectangularSelection({
+        eventFilter: (event) => event.button === 1 || (event.button === 0 && event.altKey),
+      }),
       dropCursor(),
       indentOnInput(),
       bracketMatching(),
@@ -563,7 +568,7 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
     }
   }
 
-  // Sprache und Folding gelten für beide Seiten; Extensions und Formular-Events für die Arbeitsfassung.
+  // Sprache und Folding gelten für beide Seiten; Color Picker nur für die editierbare Arbeitsfassung.
   #configureView(
     view: EditorView,
     original: boolean,
@@ -575,7 +580,10 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
       all ||
       changed.has('language') ||
       changed.has('htmlElements') ||
-      changed.has('classNames')
+      changed.has('classNames') ||
+      changed.has('disabled') ||
+      changed.has('readOnly') ||
+      changed.has('formDisabled')
     ) {
       effects.push(
         this.#language.reconfigure(
@@ -583,6 +591,7 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
             this.language,
             this.htmlElements,
             this.classNames,
+            !original && !this.disabled && !this.#formDisabled && !this.readOnly,
           ),
         ),
       );
