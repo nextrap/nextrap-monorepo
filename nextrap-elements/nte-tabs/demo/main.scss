@@ -1,0 +1,21 @@
+@use '../index' as tabs;
+
+// Die Demo nutzt dieselbe öffentliche Sass-API wie die Anwendung.
+nte-tabs.style-default { @include tabs.default-style(); }
+nte-tabs.style-sm { @include tabs.small-style(); }
+
+// Der Container lässt sich unabhängig von der Fensterbreite verändern.
+.tabs-demo-resizable {
+  box-sizing: border-box;
+  resize: horizontal;
+  overflow: auto;
+  inline-size: 36rem;
+  max-inline-size: 100%;
+  min-inline-size: min(10rem, 100%);
+  border: 1px solid var(--nt-border);
+  padding: var(--nt-space-2);
+}
+.tabs-demo-narrow { inline-size: 12rem; max-inline-size: 100%; }
+
+// Das Panel-Layout demonstriert eine lokale Layout-Klasse ohne Runtime-Styles.
+.tabs-demo-panel { display: grid; gap: var(--nt-space-2); }

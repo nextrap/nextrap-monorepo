@@ -1,0 +1,6 @@
+// Funktionaler Panel-Host; alle visuellen Styles bleiben im Theme.
+:host {
+  display: block;
+  min-inline-size: 0;
+  min-block-size: 0;
+}

@@ -1,0 +1,37 @@
+<h2>Automatische Sidebar</h2>
+
+<p>Ziehe den unteren rechten Rand der Sidebar schmaler oder breiter.
+Wechsle den Tab und prüfe, dass die Eingabe erhalten bleibt.</p>
+
+<div class="tabs-demo-resizable">
+  <nte-tabs value="files" aria-label="File Explorer">
+    <nte-tab name="files" label="All Files">
+      <p>index.md, docs/kontakt.md</p>
+      <input aria-label="Dateisuche" placeholder="Eingabe bleibt erhalten">
+    </nte-tab>
+    <nte-tab id="demo-changes" name="changes" label="Change List" count="3">
+      <p>Geänderte Dateien</p>
+    </nte-tab>
+    <span slot="tab-changes"><span aria-hidden="true">✎</span> Change List</span>
+    <nte-tab name="history" label="History">Historie</nte-tab>
+    <nte-tab name="disabled" label="Disabled" disabled>Nicht auswählbar</nte-tab>
+  </nte-tabs>
+</div>
+
+<h2>Kompakter Style mit festem Dropdown</h2>
+
+<nte-tabs class="style-sm" overflow="dropdown" value="changes">
+  <nte-tab name="files">Dateien</nte-tab>
+  <nte-tab name="changes" label="Change List" count="0">Keine Änderungen</nte-tab>
+  <strong slot="tab-changes">✓ Änderungen</strong>
+</nte-tabs>
+
+<h2>Horizontal scrollbare Alternative</h2>
+
+<div class="tabs-demo-narrow">
+  <nte-tabs overflow="scroll">
+    <nte-tab name="files" label="All Files">Dateien</nte-tab>
+    <nte-tab name="changes" label="Change List" count="12">Änderungen</nte-tab>
+    <nte-tab name="history" label="History">Historie</nte-tab>
+  </nte-tabs>
+</div>

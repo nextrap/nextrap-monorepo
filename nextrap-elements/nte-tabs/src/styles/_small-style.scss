@@ -1,0 +1,6 @@
+@use './default-style' as base;
+
+// Eine vollständige kompakte Baseline unabhängig vom Overflow-Modus.
+@mixin small-style() {
+  @include base.default-style(var(--nt-space-1) var(--nt-space-2), 0.875em);
+}

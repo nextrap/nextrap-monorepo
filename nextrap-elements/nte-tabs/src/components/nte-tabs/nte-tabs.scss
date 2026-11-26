@@ -1,0 +1,66 @@
+// Die Host-Geometrie erlaubt auch schmale Flex- und Grid-Sidebars.
+:host {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  min-block-size: 0;
+}
+
+// Der Viewport beschränkt die Anzeige, nicht die intrinsische Messfläche.
+#bar {
+  display: flex;
+  flex: none;
+  min-inline-size: 0;
+}
+#viewport {
+  flex: 1 1 0;
+  min-inline-size: 0;
+  overflow: hidden;
+}
+#bar.scroll #viewport { overflow-x: auto; }
+#strip {
+  display: flex;
+  inline-size: max-content;
+  max-inline-size: none;
+}
+#strip > button {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+// Im Kompaktmodus bleibt der aktive echte Slot vorne; alle anderen sind nur unsichtbar.
+#bar.compact #strip > button[aria-selected='true'] { order: -1; }
+#bar.compact #strip > button[aria-selected='false'] {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+// Ein natives Select liegt über dem sichtbaren Pfeil und nutzt das Browser-Menü.
+#dropdown {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  min-inline-size: 2em;
+}
+#picker {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+#dropdown:focus-within { outline: auto; }
+
+// Panel-DOM, Eingaben und Scroll-Container bleiben auch beim Tabwechsel erhalten.
+.panel {
+  flex: 1 1 auto;
+  min-block-size: 0;
+  min-inline-size: 0;
+  overflow: auto;
+}
+.panel[hidden] { display: none !important; }
+::slotted(nte-tab) { display: block; }
