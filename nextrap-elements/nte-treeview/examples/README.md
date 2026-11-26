@@ -240,6 +240,72 @@ nicht mit. Hover und Auswahl haben Vorrang. Die
 Event-Listener um. Links bleiben unterstrichen, Führungslinien bleiben über
 den Zeilenflächen sichtbar und die Animationen berücksichtigen reduzierte Bewegung.
 
+## 08 – Dateibaum aus einer Dateiliste erzeugen
+
+Unabhängige Alternative zu Beispiel 01. Ein Backend kann direkt eine Liste
+relativer Dateipfade liefern; der Baum wird im Modell erzeugt.
+
+```ts
+const paths = ['index.md', 'de/leistungen.md', 'en/services.md', '_sass/main.scss'];
+const files = TreeModel.fromFileList(paths);
+view.setData(files);
+
+view.addEventListener('selection-change', ({ detail }) => {
+  console.log(detail?.id); // z. B. de/leistungen.md
+});
+view.value = 'de/leistungen.md';
+```
+
+Der Ordner `de` besitzt die ID `de/`, seine Datei die ID
+`de/leistungen.md`. `data.path` enthält den Pfad ohne abschließenden Slash,
+`data.kind` unterscheidet Datei und Verzeichnis. Doppelte Einträge teilen
+denselben Knoten; leere Pfadsegmente und Datei-/Ordnerkonflikte werden
+abgelehnt. Ordner sind anfangs geschlossen. Alternativ ersetzt
+`const files = view.setFileList(paths)` die beiden Bindungsaufrufe.
+Die View liefert das gebundene Modell zurück.
+
+## 09 – Dateitypen oder freie Suchbegriffe filtern
+
+Ergänzt Beispiel 08. Eine Zuweisung ersetzt immer den bisherigen Filter.
+
+```ts
+view.filter = '*.md';                       // Dateinamen, alle Ebenen
+view.filter = 'de/**';                       // Pfade unter de
+view.filter = ['**/*.md', '**/*.scss'];      // Markdown ODER Styles
+view.filter = (node) => node.data?.['kind'] === 'file'
+  && node.label.toLowerCase().includes('leistung');
+view.filter = undefined;                     // Alle Dateien wieder sichtbar
+```
+
+Die dritte Variante zeigt die Markdown-Dateien und `_sass/main.scss` samt
+Vorfahren. Die Callback-Variante zeigt nur `de/leistungen.md` samt `de`.
+Die Wildcard-Syntax und leere Filter sind im [README](../README.md#öffnungszustand-und-filter)
+beschrieben. Trefferpfade öffnen sich nur vorübergehend; Auswahl und
+ursprüngliche Öffnungszustände bleiben erhalten.
+
+## 10 – Dateisystem und Website in normaler oder kompakter Größe
+
+Die Anwendung bindet je Variante ein vollständiges Mixin ein. Es ist immer
+genau eine Style-Klasse aktiv.
+
+```scss
+@use '@nextrap/nte-treeview' as treeview;
+
+nte-treeview.style-filesystem { @include treeview.filesystem-style(); }
+nte-treeview.style-website { @include treeview.website-style(); }
+nte-treeview.style-sm { @include treeview.small-style(); }
+nte-treeview.style-website-sm { @include treeview.website-small-style(); }
+```
+
+```ts
+view.className = 'style-website-sm';
+```
+
+Die kompakte Website-Variante zeigt Dokument- statt Ordnersymbole für Zweige,
+mit den Abmessungen der kompakten Dateisystemvariante. Beim Stylewechsel
+bleibt das Modell unverändert. Die [interaktive Demo](../demo/05-file-list.demo.ts)
+zeigt alle vier Varianten sowie beide Filterarten.
+
 ## Vorhandene Label-Ereignisse
 
 Für Anwendungen, die eine Navigation oder eine Aktion am Label übernehmen,

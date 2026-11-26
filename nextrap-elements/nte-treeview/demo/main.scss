@@ -90,6 +90,9 @@ nte-treeview.style-website {
 nte-treeview.style-sm {
   @include treeview.small-style();
 }
+nte-treeview.style-website-sm {
+  @include treeview.website-small-style();
+}
 
 // Die zusätzliche Klasse aktiviert Zebra, ohne eine zweite style-Variante zu benötigen.
 nte-treeview.style-default.with-zebra {

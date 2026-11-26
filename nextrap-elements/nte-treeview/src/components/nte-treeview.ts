@@ -6,6 +6,7 @@ import { live } from 'lit/directives/live.js';
 import { repeat } from 'lit/directives/repeat.js';
 
 import { TreeModel, type TreeNode } from '../tree-model';
+import { compileGlobFilter } from '../tree-filter';
 import { NteTreeViewItem } from './nte-treeview-item';
 import styles from './nte-treeview.scss?inline';
 
@@ -24,8 +25,8 @@ export interface TreeViewState {
 /** Serialisierbarer Öffnungszustand der aktiven Ordner oder Unterseiten mit eindeutiger ID. */
 export type TreeViewExpandedState = Record<string, boolean>;
 
-/** Prüft Modellknoten unabhängig von ihrer momentanen Sichtbarkeit. */
-export type TreeViewFilter = (node: TreeNode) => boolean;
+/** Filtert Modellknoten per Callback, Wildcard oder ODER-Liste von Wildcards. */
+export type TreeViewFilter = string | readonly string[] | ((node: TreeNode) => boolean);
 
 /** Das Ereignis enthält unmittelbar die gewählte Referenz; null steht für eine gelöschte Auswahl. */
 export interface TreeViewEventMap {
@@ -162,6 +163,13 @@ export class NteTreeView extends nextrap_element() {
     this.requestUpdate();
   }
 
+  /** Bindet Dateipfade wie ['index.md', 'docs/start.md'] und liefert das neue Modell. */
+  public setFileList(files: readonly string[]): TreeModel {
+    const tree = TreeModel.fromFileList(files);
+    this.setData(tree);
+    return tree;
+  }
+
   /** Holt nach einem erneuten Einhängen auch zwischenzeitliche Datenänderungen nach. */
   override connectedCallback(): void {
     super.connectedCallback();
@@ -287,24 +295,33 @@ export class NteTreeView extends nextrap_element() {
   protected override updated(changed: PropertyValues): void {
     super.updated(changed);
     if (!this._data) return;
-    const visible = this.filter ? this._filteredNodes(this._data.children, this.filter) : undefined;
+    const filter = typeof this.filter === 'function'
+      ? this.filter
+      : compileGlobFilter(typeof this.filter === 'string' ? [this.filter] : this.filter ?? []);
+    const visible = filter ? this._filteredNodes(this._data.children, filter) : undefined;
     render(this._renderItems(this._data.children, visible), this);
   }
 
   /** Erfasst Treffer von unten nach oben; der Wert markiert Pfade, die geöffnet werden müssen. */
-  private _filteredNodes(items: TreeNode[], filter: TreeViewFilter): Map<TreeNode, boolean> {
+  private _filteredNodes(
+    items: TreeNode[],
+    filter: (node: TreeNode, path: string) => boolean,
+  ): Map<TreeNode, boolean> {
     const visible = new Map<TreeNode, boolean>();
-    const visit = (item: TreeNode): boolean => {
+    const visit = (item: TreeNode, parentPath: string): boolean => {
+      // Explizite Dateipfade haben Vorrang; generische Bäume nutzen ihre Label-Hierarchie.
+      const ownPath = item.data?.['path'];
+      const path = typeof ownPath === 'string' ? ownPath : [parentPath, item.label].filter(Boolean).join('/');
       let hasVisibleChild = false;
       for (const child of item.children ?? []) {
-        if (child && visit(child)) hasVisibleChild = true;
+        if (child && visit(child, path)) hasVisibleChild = true;
       }
-      const matches = filter(item) || hasVisibleChild;
+      const matches = filter(item, path) || hasVisibleChild;
       if (matches) visible.set(item, hasVisibleChild);
       return matches;
     };
     for (const item of items) {
-      if (item) visit(item);
+      if (item) visit(item, '');
     }
     return visible;
   }

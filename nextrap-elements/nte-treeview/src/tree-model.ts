@@ -37,6 +37,50 @@ export class TreeModel {
     this.children = this._observe(this._copyNodes(children));
   }
 
+  /**
+   * Baut aus relativen, slash-getrennten Dateipfaden einen beobachtbaren Baum.
+   * Beispiel: TreeModel.fromFileList(['index.md', 'docs/start.md']).
+   * Dateien erhalten den vollständigen Pfad als ID, Ordner zusätzlich '/'.
+   */
+  public static fromFileList(files: readonly string[]): TreeModel {
+    const roots: TreeNode[] = [];
+    const nodes = new Map<string, TreeNode>();
+
+    // Der Pfadindex vereinigt gemeinsame Verzeichnisse und erkennt Typkonflikte.
+    for (const file of files) {
+      const parts = file.split('/');
+      if (parts.some((part) => !part || part === '.' || part === '..') || file.includes('\\')) {
+        throw new TypeError(`Ungültiger relativer Dateipfad: "${file}"`);
+      }
+      let children = roots;
+      let path = '';
+      for (let i = 0; i < parts.length; i++) {
+        const label = parts[i];
+        path = path ? `${path}/${label}` : label;
+        const directory = i < parts.length - 1;
+        const kind = directory ? 'directory' : 'file';
+        let node = nodes.get(path);
+
+        // Doppelte Dateien sind identisch; eine Datei darf aber kein Ordner sein.
+        if (node && node.data?.['kind'] !== kind) {
+          throw new TypeError(`Datei-/Ordnerkonflikt im Pfad: "${path}"`);
+        }
+        if (!node) {
+          node = {
+            id: directory ? `${path}/` : path,
+            label,
+            data: { kind, path },
+            ...(directory ? { children: [] } : {}),
+          };
+          nodes.set(path, node);
+          children.push(node);
+        }
+        if (directory) children = node.children!;
+      }
+    }
+    return new TreeModel(roots);
+  }
+
   /** Meldet Änderungen synchron; Lit fasst daraus resultierende Renderzyklen zusammen. */
   public subscribe(listener: () => void): () => void {
     this._listeners.add(listener);
