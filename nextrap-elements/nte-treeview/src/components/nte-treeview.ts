@@ -51,6 +51,9 @@ export class NteTreeView extends nextrap_element() {
   // Öffnungszustände bleiben auch erhalten, wenn eine ID vorübergehend im Modell fehlt.
   private readonly _rememberedExpansion = new Map<string, boolean>();
 
+  // Manuelle Zustände übersteuern automatisch geöffnete Trefferpfade nur im aktuellen Filter.
+  private readonly _filterExpansion = new Map<TreeNode, boolean>();
+
   // Ohne setData bleibt das vom Aufrufer geschriebene Light DOM vollständig erhalten.
   private _data?: TreeModel;
   private _unsubscribe?: () => void;
@@ -158,6 +161,7 @@ export class NteTreeView extends nextrap_element() {
     this._unsubscribe?.();
     if (!this._data) this.replaceChildren();
     this._data = data;
+    this._filterExpansion.clear();
     this._applyExpansion(this._rememberedExpansion);
     this._subscribeToData();
     this.requestUpdate();
@@ -294,6 +298,7 @@ export class NteTreeView extends nextrap_element() {
   /** Rendert zusätzlich zum Shadow DOM nur im ausdrücklich aktivierten Datenbetrieb. */
   protected override updated(changed: PropertyValues): void {
     super.updated(changed);
+    if (changed.has('filter')) this._filterExpansion.clear();
     if (!this._data) return;
     const filter = typeof this.filter === 'function'
       ? this.filter
@@ -341,11 +346,14 @@ export class NteTreeView extends nextrap_element() {
           .rel=${item.data?.rel ?? ''}
           .current=${item.data?.current ?? ''}
           ?hidden=${visible !== undefined && !visible.has(item)}
-          .expanded=${live(visible?.get(item) || Boolean(item.data?.expanded))}
+          .expanded=${live(visible?.get(item)
+            ? this._filterExpansion.get(item) ?? true
+            : Boolean(item.data?.expanded))}
           .selected=${item.data?.selected ?? false}
           @expanded-change=${(event: CustomEvent<boolean>) => {
-            // Erzwingt offene Trefferpfade nur für die Ansicht, ohne den Modellzustand zu ändern.
+            // Manuelle Änderungen an Trefferpfaden bleiben bis zum Filterwechsel rein visuell.
             if (visible?.get(item)) {
+              this._filterExpansion.set(item, event.detail);
               this.requestUpdate();
               return;
             }

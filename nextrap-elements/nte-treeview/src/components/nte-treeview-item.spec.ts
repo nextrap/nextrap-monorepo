@@ -402,6 +402,40 @@ describe('NteTreeView expansion and filtering', () => {
     expect(view.querySelector<NteTreeViewItem>('#docs')?.expanded).toBe(true);
   });
 
+  // Manuelles Schließen hat während desselben Filters Vorrang vor automatisch geöffneten Pfaden.
+  it('keeps matching folders manually closed until the filter changes', async () => {
+    const view = await mount('');
+    view.setData(TreeModel.fromFileList(['docs/guide/start.md', 'docs/guide/other.md']));
+    view.filter = 'docs/**/*.md';
+    await settleDisclosure(view);
+    const folder = view.querySelector<NteTreeViewItem>('[data-tree-id="docs/guide/"]')!;
+    expect(folder.expanded).toBe(true);
+
+    const details = folder.shadowRoot!.querySelector('details')!;
+    details.open = false;
+    details.dispatchEvent(new Event('toggle'));
+    await settleDisclosure(view);
+    view.requestUpdate();
+    await settleDisclosure(view);
+    expect(folder.expanded).toBe(false);
+    expect(view.expandedState['docs/guide/']).toBe(false);
+
+    details.open = true;
+    details.dispatchEvent(new Event('toggle'));
+    await settleDisclosure(view);
+    expect(folder.expanded).toBe(true);
+    details.open = false;
+    details.dispatchEvent(new Event('toggle'));
+    await settleDisclosure(view);
+
+    view.filter = '**/start.md';
+    await settleDisclosure(view);
+    expect(folder.expanded).toBe(true);
+    view.filter = undefined;
+    await settleDisclosure(view);
+    expect(folder.expanded).toBe(false);
+  });
+
   // Treffer unter geschlossenen Zweigen werden sichtbar, ohne gespeicherte Werte zu ändern.
   it('opens matching paths temporarily while hiding unrelated descendants', async () => {
     const view = await mount('');

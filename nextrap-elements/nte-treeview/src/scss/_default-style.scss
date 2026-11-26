@@ -268,12 +268,12 @@
 @mixin small-style($indent: 0.375rem, $center-width: 5rem, $end-width: 6rem) {
   @include filesystem-style($indent, $center-width, $end-width);
 
-  font-size: 10px;
+  font-size: 13px;
   --_nte-treeview-toggle-width: 1rem;
   --_nte-treeview-padding: 2px;
-  --_nte-treeview-cell-padding: 4px;
+  --_nte-treeview-cell-padding: 3px;
   --_nte-treeview-row-height: 20px;
-  --_nte-treeview-indicator-size: 10px;
-  --_nte-treeview-icon-gap: 4px;
+  --_nte-treeview-indicator-size: 13px;
+  --_nte-treeview-icon-gap: 3px;
   --_nte-treeview-selection-inset: 3px;
 }
