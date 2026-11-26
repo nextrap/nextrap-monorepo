@@ -106,6 +106,17 @@ direkt. Auswahl, Hover und Fokus reichen über die gesamte Zeile einschließlich
 Einzug und Zusatzspalten. Die Baseline hat keine Zelltrenner; `with-zebra`
 aktiviert optionale Streifen.
 
+```ts
+view.itemClass = node => node.data?.['change'] ? `vcs-${node.data['change']}` : '';
+```
+
+Der optionale Callback `itemClass(node)` setzt CSS-Klassen auf das jeweilige
+`nte-treeview-item` im Modellbetrieb. Mehrere Klassen können durch Leerzeichen
+getrennt werden. Leerer Rückgabewert oder `undefined` entfernt die zuvor vom
+Callback gesetzten Klassen. Die Anwendung stylt beispielsweise
+`nte-treeview-item.vcs-changed::part(label)`. Im HTML-Betrieb können Klassen
+wie bisher direkt gesetzt werden.
+
 ## Öffnungszustand und Filter
 
 `view.expandedState` liefert eine serialisierbare Momentaufnahme wie

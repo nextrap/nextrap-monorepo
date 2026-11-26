@@ -1,6 +1,7 @@
 import { nextrap_element } from '@nextrap/nt-core';
 import { html, render, unsafeCSS, type PropertyValues, type TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { live } from 'lit/directives/live.js';
 import { repeat } from 'lit/directives/repeat.js';
@@ -44,6 +45,9 @@ export class NteTreeView extends nextrap_element() {
 
   /** Ohne Renderer wird im Datenbetrieb node.label angezeigt. */
   @property({ attribute: false }) public accessor renderer: TreeNodeRenderer | undefined;
+
+  /** Liefert optionale CSS-Klassen pro Modellknoten; der Aufrufer verantwortet das Styling. */
+  @property({ attribute: false }) public accessor itemClass: ((node: TreeNode) => string | undefined | null) | undefined;
 
   /** Blendet Modellknoten ohne Treffer aus und lässt Pfade zu Treffern sichtbar. */
   @property({ attribute: false }) public accessor filter: TreeViewFilter | undefined;
@@ -338,6 +342,7 @@ export class NteTreeView extends nextrap_element() {
       (item) => item.id ?? item,
       (item) => html`
         <nte-treeview-item
+          class=${classMap(Object.fromEntries((this.itemClass?.(item) ?? '').split(/\s+/).filter(Boolean).map(name => [name, true])))}
           data-tree-id=${ifDefined(item.id)}
           ._modelNode=${item}
           slot=${ifDefined(nested ? 'children' : undefined)}
