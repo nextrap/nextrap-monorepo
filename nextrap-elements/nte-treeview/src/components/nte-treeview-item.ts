@@ -71,7 +71,7 @@ export class NteTreeViewItem extends nextrap_element() {
     this.dispatchEvent(new CustomEvent<boolean>('expanded-change', { detail: open }));
   }
 
-  /** Nur native Pfeilaktionen ändern den Öffnungszustand des Unterbaums. */
+  /** Synchronisiert native Pfeilaktionen mit dem gemeinsamen Öffnungszustand. */
   private _onToggle(event: Event): void {
     this._setExpanded((event.currentTarget as HTMLDetailsElement).open);
   }
@@ -96,7 +96,7 @@ export class NteTreeViewItem extends nextrap_element() {
     }));
   }
 
-  /** Icon und Name aktivieren sofort; nur der separate Chevron klappt Unterbäume auf oder zu. */
+  /** Icon und Name aktivieren sofort; Einfachklick verändert den Unterbaum nicht. */
   private _onLabelClick(event: MouseEvent): void {
     if (!this._isLabelAction(event)) return;
     const activate = this._dispatchLabelEvent('label-click', event);
@@ -109,10 +109,14 @@ export class NteTreeViewItem extends nextrap_element() {
     }));
   }
 
-  /** Doppelklick bleibt ein natives Ereignis nach zwei Klicks; die Komponente verzögert nichts. */
+  /** Doppelklick schaltet Unterbäume um, sofern die Anwendung die Standardaktion nicht abbricht. */
   private _onLabelDoubleClick(event: MouseEvent): void {
     if (!this._isLabelAction(event)) return;
-    if (!this._dispatchLabelEvent('label-dblclick', event)) event.preventDefault();
+    if (!this._dispatchLabelEvent('label-dblclick', event) || event.defaultPrevented) {
+      event.preventDefault();
+      return;
+    }
+    if (this._hasChildren) this._setExpanded(!this.expanded);
   }
 
   /** Link, Pfeil und Zellen sind Geschwister: Ein Dropdown-Klick kann den Unterbaum nicht umschalten. */

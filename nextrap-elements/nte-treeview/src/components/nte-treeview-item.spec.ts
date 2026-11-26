@@ -282,6 +282,31 @@ describe('NteTreeViewItem explorer interactions', () => {
   });
 
   // Aktionen wiederholen sich unabhängig von der Auswahl; Doppelklick bleibt ein separates natives Ereignis.
+  // Doppelklick öffnet und schließt Ordner, während Anwendungen die Aktion abbrechen können.
+  it('toggles folders on double-click and respects cancellation', async () => {
+    const view = await mount('');
+    const model = TreeModel.fromFileList(['docs/start.md']);
+    view.setData(model);
+    await settleDisclosure(view);
+    const folder = view.querySelector<NteTreeViewItem>('[data-tree-id="docs/"]')!;
+    const doubleClick = () => control(folder, '#label').dispatchEvent(new MouseEvent('dblclick', {
+      bubbles: true, composed: true, cancelable: true, detail: 2,
+    }));
+    doubleClick();
+    await settleDisclosure(view);
+    expect(folder.expanded).toBe(true);
+    expect(model.children[0].data?.expanded).toBe(true);
+    doubleClick();
+    await settleDisclosure(view);
+    expect(folder.expanded).toBe(false);
+    expect(model.children[0].data?.expanded).toBe(false);
+
+    view.addEventListener('label-dblclick', event => event.preventDefault(), { once: true });
+    expect(doubleClick()).toBe(false);
+    await settleDisclosure(view);
+    expect(folder.expanded).toBe(false);
+  });
+
   it('emits actions for repeated clicks, native double-clicks and keyboard-style activation', async () => {
     const view = await mount('<nte-treeview-item id="file">Datei</nte-treeview-item>');
     const file = view.querySelector<NteTreeViewItem>('#file')!;
