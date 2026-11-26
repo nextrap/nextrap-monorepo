@@ -468,7 +468,43 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
 
   // Die Standardfunktionen werden einzeln eingebunden, damit Folding vollständig abschaltbar ist.
   #baseExtensions(original: boolean): Extension {
+    // Die Linux-Primärauswahl darf eine Mitteltasten-Markiergeste nicht überschreiben.
+    // Der Zustand gehört zur einzelnen View und endet mit der nächsten Eingabegeste.
+    let middleStart: { x: number; y: number } | null = null;
+    let middleDragged = false;
+    const trackMiddleDrag = (event: MouseEvent): void => {
+      if (middleStart && (Math.abs(event.clientX - middleStart.x) > 4
+        || Math.abs(event.clientY - middleStart.y) > 4)) middleDragged = true;
+    };
+    const suppressMiddlePaste = (event: Event): boolean => {
+      if (!middleDragged) return false;
+      event.preventDefault();
+      return true;
+    };
     return [
+      EditorView.domEventObservers({
+        mousedown: (event) => {
+          middleStart = event.button === 1 ? { x: event.clientX, y: event.clientY } : null;
+          middleDragged = false;
+        },
+        mousemove: (event) => {
+          if (event.buttons & 4) trackMiddleDrag(event);
+        },
+        mouseup: (event) => {
+          if (event.button === 1) trackMiddleDrag(event);
+        },
+        keydown: () => { middleStart = null; middleDragged = false; },
+        blur: () => { middleStart = null; middleDragged = false; },
+      }),
+      EditorView.domEventHandlers({
+        auxclick: (event) => {
+          if (event.button !== 1) return false;
+          trackMiddleDrag(event);
+          return suppressMiddlePaste(event);
+        },
+        paste: (event) => suppressMiddlePaste(event),
+        beforeinput: (event) => event.inputType === 'insertFromPaste' && suppressMiddlePaste(event),
+      }),
       lineNumbers(),
       highlightActiveLineGutter(),
       highlightSpecialChars(),
