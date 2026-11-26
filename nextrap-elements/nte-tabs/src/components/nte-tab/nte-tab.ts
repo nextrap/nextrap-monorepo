@@ -1,8 +1,13 @@
+import { nextrap_element } from '@nextrap/nt-core';
+import { html, unsafeCSS } from 'lit';
+import styles from './nte-tab.scss?inline';
 import { customElement } from 'lit/decorators.js';
 
 /** Panel-Metadaten werden als Attribute gespeichert und vom Eltern-Element beobachtet. */
 @customElement('nte-tab')
-export class NteTab extends HTMLElement {
+export class NteTab extends nextrap_element({ subLayoutApply: true, setDefaultStyle: false }) {
+  static override styles = unsafeCSS(styles);
+
   /** Eindeutiger Name innerhalb der Tab-Leiste. */
   get name(): string { return this.getAttribute('name') ?? ''; }
   set name(value: string) { this.setAttribute('name', value); }
@@ -26,6 +31,12 @@ export class NteTab extends HTMLElement {
   /** Deaktivierte Panels können nicht ausgewählt werden. */
   get disabled(): boolean { return this.hasAttribute('disabled'); }
   set disabled(value: boolean) { this.toggleAttribute('disabled', value); }
+
+  /** Default- und Content-Slot erhalten auch verschachtelte Layouts im Light DOM. */
+  protected override render() {
+    super.render();
+    return html`<div part="content"><slot name="content"></slot><slot></slot></div>`;
+  }
 }
 
 declare global {

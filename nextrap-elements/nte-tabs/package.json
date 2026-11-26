@@ -18,10 +18,8 @@
         "./package.json": "./package.json"
     },
     "files": [
-        "index.*",
-        "src",
-        "README.md",
-        ".ai-usage-info.md"
+        "*.*",
+        "src"
     ],
     "repository": {
         "directory": "nextrap-elements/nte-tabs",

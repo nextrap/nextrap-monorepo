@@ -21,9 +21,12 @@ export default defineConfig(() => ({
   css: {
     devSourcemap: true,
   },
+  esbuild: {
+    sourcemap: true,
+  },
   plugins: [
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['README.md', '.ai-usage-info.md', 'package.json', 'index.scss', 'src/**/*.scss']),
+    nxCopyAssetsPlugin(['README.md', '.ai-usage-info.md', 'package.json', '*.scss', 'src/**/*.scss']),
     {
       name: 'watch-md-reload',
       handleHotUpdate({ file, server }) {

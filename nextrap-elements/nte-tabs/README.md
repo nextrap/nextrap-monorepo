@@ -84,7 +84,33 @@ tabs.addEventListener('change', event => {
 `count = null` entfernt den Counter; `count = 0` zeigt Null.
 Programmatische Auswahl löst kein `change` aus.
 
-## 4. Overflow-Verhalten
+## 4. Layout und Slots
+
+`nte-tab` ist eine Nextrap-Komponente mit eigenem Shadow DOM.
+Der Default-Slot sowie der optionale `content`-Slot nehmen Panel-Inhalte
+auf. Verschachtelte `layout`-Attribute werden über Content Pane aufgelöst.
+Der individuelle Header bleibt ein Slot am übergeordneten `nte-tabs`.
+
+In Content-Pane-Markdown können die Tabs als Layout angegeben werden:
+
+```markdown
+## Datei-Explorer
+
+---
+{: layout="nte-tabs[value='files']"}
+
+### Dateien
+{: layout="nte-tab[name='files']"}
+
+Alle Dateien.
+
+### Änderungen
+{: layout="nte-tab[name='changes']"}
+
+Geänderte Dateien.
+```
+
+## 5. Overflow-Verhalten
 
 | Wert | Darstellung |
 |---|---|
@@ -97,7 +123,7 @@ Breite der vollständigen Leiste. Sie bleibt auch im Dropdown-Modus
 messbar. Geänderte Labels, Counter, Header und Containerbreiten können
 den Modus ohne feste Breakpoints ändern. Es wird kein Panel entfernt.
 
-## 5. Öffentliche API
+## 6. Öffentliche API
 
 | Element | Attribut/Property | Verhalten |
 |---|---|---|
@@ -109,6 +135,7 @@ den Modus ohne feste Breakpoints ändern. Es wird kein Panel entfernt.
 | `nte-tab` | `label` | Beschriftung; Standard: Name |
 | `nte-tab` | `count` | Optionaler nichtnegativer Integer |
 | `nte-tab` | `disabled` | Deaktiviert den Tab |
+| `nte-tab` | Default-Slot, `content` (Slot) | Panel-Inhalte, auch verschachtelte Layouts |
 
 `NteTabs`, `NteTab` und `TabsOverflow` werden exportiert. Das Event
 `change` enthält den neuen Namen als `detail`, bubbelt und ist composed.
@@ -121,16 +148,17 @@ Pfeiltasten, Home und End navigieren die Tab-Leiste. Das Dropdown nutzt
 die native Select-Bedienung. Formulare und verschachtelte Komponenten
 bleiben beim Umschalten erhalten.
 
-## 6. Theming
+## 7. Theming
 
 Parts: `bar`, `tablist`, `tab`, `active-tab`, `label`, `count`,
-`dropdown`, `panel`. Die Mixins nutzen geerbte `--nt-*`-Tokens.
+`dropdown`, `panel`. Das Panel-Element `nte-tab` bietet zusätzlich den Part `content`.
+Die Mixins nutzen geerbte `--nt-*`-Tokens.
 Die intrinsische Breite der Leiste, die Slot-Zuordnung und das Ausblenden
 inaktiver Panels sind funktional und dürfen nicht überschrieben werden.
 Der Runtime-Import erzeugt keine Light-DOM-Styles.
 
 ## Demo
 
-`demo/01-tabs.demo.ts` zeigt eine in der Breite veränderbare Sidebar,
-individuelle Header, dynamische Counter, erhaltene Formulareingaben
-und die Alternativen `dropdown` und `scroll` im Nextrap Demo Viewer.
+Die Demo enthält eine Content-Pane-Markdown-Variante, eine interaktive
+HTML-Variante mit Overflow und eine TypeScript-Variante mit Layout,
+programmatischer Auswahl und Counter.

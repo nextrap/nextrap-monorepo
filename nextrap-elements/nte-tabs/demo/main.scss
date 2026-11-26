@@ -16,3 +16,6 @@ nte-tabs.style-sm { @include tabs.small-style(); }
   padding: var(--nt-space-2);
 }
 .tabs-demo-narrow { inline-size: 12rem; max-inline-size: 100%; }
+
+// Das Panel-Layout demonstriert eine lokale Layout-Klasse ohne Runtime-Styles.
+.tabs-demo-panel { display: grid; gap: var(--nt-space-2); }

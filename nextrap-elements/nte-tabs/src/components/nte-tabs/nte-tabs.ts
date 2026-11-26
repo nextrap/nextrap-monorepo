@@ -2,7 +2,7 @@ import { nextrap_element } from '@nextrap/nt-core';
 import { html, unsafeCSS, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
-import { NteTab } from './nte-tab';
+import { NteTab } from '../nte-tab/nte-tab';
 import styles from './nte-tabs.scss?inline';
 
 /** Bestimmt die Präsentation bei Platzmangel. */
@@ -10,7 +10,7 @@ export type TabsOverflow = 'auto' | 'dropdown' | 'scroll';
 
 /** Tabs mit dauerhaft eingebundenen Panels und intrinsischer Overflow-Messung. */
 @customElement('nte-tabs')
-export class NteTabs extends nextrap_element() {
+export class NteTabs extends nextrap_element({ subLayoutApply: true }) {
   static override styles = unsafeCSS(styles);
 
   /** Aktiver Name; nur Benutzerwechsel lösen change aus. */
