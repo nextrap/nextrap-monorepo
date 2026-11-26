@@ -36,9 +36,10 @@
     caret-color: currentColor;
   }
 
-  // Fläche und Trennlinie reichen bis unten, ohne zusätzliche nummerierte Zeilen anzulegen.
+  // Bei kurzem Inhalt füllt der Balken den Scrollbereich; CodeMirrors dynamische Mindesthöhe bleibt erhalten.
   &::part(gutters) {
-    min-height: calc(20 * 0.875rem * 1.6 + 1rem);
+    height: auto;
+    align-self: stretch;
     color: var(--nt-text-muted, #57606a);
     background: var(--nt-bg-secondary, #f6f8fa);
     border-right: 1px solid var(--nt-border-color, #d0d7de);
