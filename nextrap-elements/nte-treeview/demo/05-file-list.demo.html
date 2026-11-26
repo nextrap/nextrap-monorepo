@@ -1,0 +1,27 @@
+<!-- Ein und derselbe Baum bleibt bei Stil- und Filterwechseln erhalten. -->
+<main>
+  <h1>Dateiliste, Filter und Styles</h1>
+  <p>Die Dateipfade werden automatisch zu Ordnern und Dateien zusammengefügt.</p>
+  <p>
+    <label>Darstellung
+      <select data-style>
+        <option value="style-filesystem">Dateisystem</option>
+        <option value="style-sm">Dateisystem klein</option>
+        <option value="style-website">Website</option>
+        <option value="style-website-sm">Website klein</option>
+      </select>
+    </label>
+    <label>Filter
+      <select data-filter-mode>
+        <option value="glob">Wildcard (kommagetrennt)</option>
+        <option value="callback">Callback (Dateiname enthält Text)</option>
+      </select>
+    </label>
+    <label>Suchmuster
+      <input data-filter type="search" placeholder="**/*.md, **/*.scss">
+    </label>
+    <button data-clear type="button">Filter leeren</button>
+  </p>
+  <nte-treeview class="style-filesystem" aria-label="Repository-Dateien"></nte-treeview>
+  <p>Auswahl: <output data-selection>–</output></p>
+</main>

@@ -3,8 +3,17 @@
 // Hauptseiten und Unterseiten teilen ein Seitensymbol; der Pfeil zeigt die Hierarchie.
 @mixin website-style($indent: 1rem, $center-width: 8rem, $end-width: 10rem) {
   @include treeview.filesystem-style($indent, $center-width, $end-width);
+  @include _page-icons();
+}
 
-  // Seiten mit Unterseiten ersetzen das Ordnersymbol durch dieselbe Dokumentform wie Blätter.
+// Kompakte Seitennavigation behält die Dokument-Icons bei geringerer Zeilenhöhe.
+@mixin website-small-style($indent: 0.375rem, $center-width: 5rem, $end-width: 6rem) {
+  @include treeview.small-style($indent, $center-width, $end-width);
+  @include _page-icons();
+}
+
+// Seiten mit Unterseiten ersetzen das Ordnersymbol durch dieselbe Dokumentform wie Blätter.
+@mixin _page-icons() {
   & nte-treeview-item::part(folder-icon),
   & nte-treeview-item[expanded]::part(folder-icon) {
     background-color: var(--nt-primary, currentColor);
