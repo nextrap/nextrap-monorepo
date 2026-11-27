@@ -1,0 +1,46 @@
+// Mobile ist der Ausgangszustand; die Website schaltet Desktop per Klasse.
+:host {
+  display: block;
+}
+
+#wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.column {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+// Ausgeblendeter Inhalt bleibt auch in erhaltenen Regionen unsichtbar.
+::slotted(.d-none) {
+  display: none !important;
+}
+
+// Ohne Preserve-Modifier beanspruchen leere Regionen keinen Platz.
+:host(:not(.preserve-empty)) .column:has(> slot:is(.slot-empty, [data-no-visible-content])) {
+  display: none !important;
+}
+
+// Desktop verteilt den verfügbaren Platz proportional auf sichtbare Regionen.
+:host(.desktop) #wrapper {
+  flex-direction: row;
+}
+
+:host(.desktop) .column {
+  flex: var(--grid-cols, var(--_ntl-columns-weight, 4)) 1 0px;
+}
+
+:host(.desktop) #center {
+  flex-grow: var(--grid-cols, var(--_ntl-columns-weight, 6));
+}
+
+// Reverse verändert beide Achsen ohne Änderung der Slot-Zuordnung.
+:host(.reverse) #wrapper {
+  flex-direction: column-reverse;
+}
+
+:host(.desktop.reverse) #wrapper {
+  flex-direction: row-reverse;
+}
