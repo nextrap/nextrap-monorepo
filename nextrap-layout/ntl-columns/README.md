@@ -14,10 +14,9 @@ Klassen `@trunkjs/responsive` und einen umgebenden `tj-responsive` bereit.
 
 ```markdown
 # Seitenlayout
-{: layout="ntl-columns" section-class="lg:desktop xxl:preserve-empty"}
+{: layout="ntl-columns" section-class="lg:desktop xxl:preserve-empty" section-style="--center-cols: 6;"}
 
 ## Hauptinhalt
-{: section-style="--grid-cols: 6"}
 
 Der normale Seiteninhalt.
 
@@ -28,14 +27,15 @@ Zusätzliche Informationen.
 ```
 
 - Default-Slot: Center; `section-slot="start"` und `section-slot="end"`
-  weisen Bereiche explizit zu. Direkte Kinder mit `.aside` ohne expliziten
-  Slot landen automatisch in End.
+  weisen Bereiche explizit zu. Wenn End anfangs unbelegt ist, werden direkte
+  Kinder mit `.aside` per `data-query` automatisch End zugewiesen.
 - `desktop`: nebeneinander, sonst Start, Center, End untereinander.
 - `reverse`: kehrt die sichtbare Reihenfolge auf beiden Achsen um.
 - `preserve-empty`: behält auch leere Regionen bei.
-- `d-none` auf einem zugewiesenen Kind zählt nicht als sichtbarer Inhalt.
-- `--grid-cols` auf einem Kind setzt das Gewicht seiner Region; der erste
-  sichtbare Inhalt mit positivem numerischem Wert gewinnt. Defaults 4:6:4.
+- Eine Region mit ausschließlich `d-none`-Elementen wird ausgeblendet,
+  sofern kein `preserve-empty` gesetzt ist. Verwende elementbasierte Inhalte.
+- `--start-cols`, `--center-cols` und `--end-cols` am Layout setzen die
+  Spaltengewichte (Defaults 4:6:4). `--grid-cols` am Part überschreibt sie.
 
 ## Breiten und leere Regionen
 
@@ -47,16 +47,19 @@ proportional. Mit nur Center erhält dieser 100 %.
 Ein leerer Start-Slot wird mit `lg:desktop xxl:preserve-empty` erst ab XXL
 als Platzhalter beibehalten.
 
-`d-none` gilt für direkt zugewiesene Kinder; andere Klassen wie `hidden`
-sind kein Signal zum Entfernen der Region. Dynamische Änderungen an Slots,
-Klassen und Inline-Styles werden berücksichtigt. `preserve-empty` erhält
-die Region, macht aber `d-none` nicht sichtbar. Reverse ändert die
-visuelle, nicht die DOM- oder Tab-Reihenfolge.
+`d-none` gilt für direkt zugewiesene Elemente; andere Klassen wie `hidden`
+sind kein Signal zum Entfernen der Region. CSS reagiert auf Klassenänderungen,
+SlotVisibility auf Slotwechsel. Bei gemischtem rohem Text und ausgeblendeten
+Elementen im Default-Slot kann CSS den Text nicht als eigenes Kind prüfen;
+verwende deshalb HTML-Elemente beziehungsweise Content-Pane-Abschnitte.
+`preserve-empty` erhält die Region, macht aber `d-none` nicht sichtbar.
+Reverse ändert die visuelle, nicht die DOM- oder Tab-Reihenfolge.
 
 ## Theming
 
 Parts: `wrapper`, `start`, `center`, `end`. Das Theme kann `--grid-cols`
-direkt am jeweiligen Part setzen. Die funktionale Anordnung benötigt
+direkt am jeweiligen Part setzen. Werte auf slotted Kindern können nicht
+an den umgebenden Part vererbt werden. Die funktionale Anordnung benötigt
 kein Theme; das optionale Sass-Mixin stellt den Abstand ein.
 
 ```scss

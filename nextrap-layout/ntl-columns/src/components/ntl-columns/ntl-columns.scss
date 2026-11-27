@@ -18,22 +18,35 @@
   display: none !important;
 }
 
-// Ohne Preserve-Modifier beanspruchen leere Regionen keinen Platz.
-:host(:not(.preserve-empty)) .column:has(> slot:is(.slot-empty, [data-no-visible-content])) {
+// SlotVisibilityMixin markiert unbelegte Slots mit .slot-empty.
+:host(:not(.preserve-empty)) .column:has(> slot.slot-empty) {
+  display: none !important;
+}
+
+// Direkte Slot-Kinder lassen sich ohne eigene Listener auf .d-none prüfen.
+// Eine belegte Spalte verschwindet nur, wenn alle ihre Elemente d-none tragen.
+:host(:not(.preserve-empty):has(> [slot='start'].d-none):not(:has(> [slot='start']:not(.d-none)))) #start,
+:host(:not(.preserve-empty):has(> [slot='end'].d-none):not(:has(> [slot='end']:not(.d-none)))) #end,
+:host(:not(.preserve-empty):has(> :is(:not([slot]), [slot='']).d-none):not(:has(> :is(:not([slot]), [slot='']):not(.d-none)))) #center {
   display: none !important;
 }
 
 // Desktop verteilt den verfügbaren Platz proportional auf sichtbare Regionen.
+// Der Host liefert die Gewichte; Themes können sie am jeweiligen Part überschreiben.
 :host(.desktop) #wrapper {
   flex-direction: row;
 }
 
-:host(.desktop) .column {
-  flex: var(--grid-cols, var(--_ntl-columns-weight, 4)) 1 0px;
+:host(.desktop) #start {
+  flex: var(--grid-cols, var(--start-cols, 4)) 1 0px;
 }
 
 :host(.desktop) #center {
-  flex-grow: var(--grid-cols, var(--_ntl-columns-weight, 6));
+  flex: var(--grid-cols, var(--center-cols, 6)) 1 0px;
+}
+
+:host(.desktop) #end {
+  flex: var(--grid-cols, var(--end-cols, 4)) 1 0px;
 }
 
 // Reverse verändert beide Achsen ohne Änderung der Slot-Zuordnung.

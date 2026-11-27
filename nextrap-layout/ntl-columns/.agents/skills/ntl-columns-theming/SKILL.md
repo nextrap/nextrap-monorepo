@@ -24,6 +24,7 @@ ntl-columns.style-default {
 ```
 
 Die Gewichte 4:6:4 werden proportional verteilt. `--grid-cols` am Part
-überschreibt das Gewicht des Kindes. Desktop, Reverse und Preserve Empty
+überschreibt `--start-cols`, `--center-cols` bzw. `--end-cols` am Host.
+Desktop, Reverse und Preserve Empty
 werden über Klassen gesteuert. Überschreibe nicht die funktionale
 Flex-Richtung oder das Ausblenden leerer Regionen.

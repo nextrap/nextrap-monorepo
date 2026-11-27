@@ -50,20 +50,19 @@ im Verhältnis 6:4. Ab XXL bleibt Start zusätzlich als leerer Platzhalter.
 Diese Hinweisbox bleibt auf allen Breakpoints sichtbar.
 
 ## 4. Responsive Sichtbarkeit und eigene Gewichte
-{: layout="ntl-columns" section-class="lg:desktop"}
+{: layout="ntl-columns" section-class="lg:desktop" section-style="--start-cols: 2; --center-cols: 8; --end-cols: 2;"}
 
 ### Center
-{: section-style="--grid-cols: 8"}
 
 Der Center erhält Gewicht 8.
 
 ### Start
-{: section-slot="start" section-class="xl:d-none" section-style="--grid-cols: 2"}
+{: section-slot="start" section-class="xl:d-none"}
 
 Dieser Inhalt verschwindet ab XL; seine Spalte beansprucht keinen Platz mehr.
 
 ### End
-{: section-slot="end" section-style="--grid-cols: 2"}
+{: section-slot="end"}
 
 Der End-Slot erhält Gewicht 2. Ab XL wird seine Breite gemeinsam mit
 Center neu verteilt.
