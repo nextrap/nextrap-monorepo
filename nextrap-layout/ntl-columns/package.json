@@ -1,0 +1,25 @@
+{
+    "name": "@nextrap/ntl-columns",
+    "version": "1.0.0",
+    "files": [
+        "*.*",
+        ".agents",
+        "src"
+    ],
+    "main": "./index.js",
+    "repository": {
+        "directory": "nextrap-layout/ntl-columns",
+        "type": "git",
+        "url": "https://github.com/nextrap/nextrap-monorepo"
+    },
+    "peerDependencies": {
+        "@nextrap/nt-core": "^2.0.0",
+        "@nextrap/style-reset": "^2.0.2",
+        "lit": "^3.3.2"
+    },
+    "devDependencies": {
+        "@trunkjs/responsive": "^1.0.11"
+    },
+    "type": "module",
+    "types": "./index.d.ts"
+}

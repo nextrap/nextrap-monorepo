@@ -1,0 +1,22 @@
+@use '../index' as columns;
+
+// Die Flächen machen die Reihenfolge und erhaltene Leerbereiche sichtbar.
+ntl-columns.style-default {
+  @include columns.default-style(1rem);
+
+  &::part(wrapper) {
+    margin-block-end: 1rem;
+  }
+
+  &::part(start),
+  &::part(center),
+  &::part(end) {
+    border: 1px dashed currentColor;
+    padding: 0.75rem;
+    min-height: 3rem;
+  }
+
+  &::part(center) {
+    border-style: solid;
+  }
+}

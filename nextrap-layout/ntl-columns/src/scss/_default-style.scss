@@ -1,0 +1,6 @@
+// Der Theme-Caller bestimmt den Abstand zwischen sichtbaren Regionen.
+@mixin default-style($gap: var(--nt-spacing-layout, 1rem)) {
+  &::part(wrapper) {
+    gap: $gap;
+  }
+}

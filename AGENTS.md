@@ -18,6 +18,53 @@ Diese Datei bleibt absichtlich kurz. Detaillierter Repository-Kontext steht in `
 - Abhängigkeiten zwischen veröffentlichten `@nextrap/*`-Packages ausschließlich als `peerDependencies` deklarieren; keine internen Laufzeitabhängigkeiten in `dependencies`. Reine Demo-/Test-Abhängigkeiten bleiben `devDependencies`. Details und Generator-Vorgaben: Nextrap-Skill, Abschnitt „Libraries, interne Packages und Test-Abhängigkeiten“.
 - Externe npm-Abhängigkeiten nur im Root-`package.json` pflegen.
 
+## Grundlage für deklarative Layout-Komponenten
+
+- `ntl-*`-Layouts bestehen nach Möglichkeit ausschließlich aus einem
+  deklarativen HTML-/Lit-Template mit nativen Slots und Shadow-DOM-SCSS.
+  Nutze HTML- und CSS-Funktionen sowie vorhandene TrunkJS-Mixins, bevor
+  eigene TypeScript-Logik eingeführt wird. Layout-Grundfunktionen dürfen
+  nicht durch eigene `addEventListener`-, `slotchange`-, MutationObserver-,
+  Lifecycle- oder DOM-Umsortierungslogik nachgebaut werden.
+- Aktiviere in `nextrap_element({ subLayoutApply: true, slotVisibility: true, breakpoints: true })`
+  grundsätzlich diese Layout-Features. `SubLayoutApplyMixin` aus
+  `@trunkjs/content-pane` wertet beim ersten Update `data-query` an Slots
+  aus, weist passende Kinder automatisch zu und verarbeitet untergeordnete
+  Layouts rekursiv. Explizite Slot-Zuweisungen bleiben erhalten; ein bereits
+  belegter benannter Slot wird bei der automatischen Zuordnung übersprungen.
+  Beispiel: `<slot name="end" data-query=":scope > .aside"></slot>`.
+  Nutze bei Bedarf die vorhandene `data-set-attribute-*`-Syntax, statt
+  Attribute per eigenem Code zu setzen.
+- `SlotVisibilityMixin` aus `@trunkjs/browser-utils` setzt und entfernt
+  `.slot-empty` am Slot automatisch bei Lit-Updates und Slotwechseln.
+  Leerraum und Kommentare gelten nicht als Inhalt; vorhandener Fallback-
+  Inhalt zählt. Blende unbelegte Regionen deklarativ per CSS aus, z. B.
+  `.column:has(> slot.slot-empty)`. CSS-Zustände wie `.d-none` werden
+  separat per CSS ausgewertet; der Mixin erkennt keine CSS-Sichtbarkeit.
+- Responsives Verhalten wird grundsätzlich über `@trunkjs/responsive`
+  gesteuert. Verwende Klassen wie `lg:desktop`, `xl:reverse` und
+  responsive Styles wie `style-xl`; reagiere in der Komponente nur auf
+  die wirksamen Klassen und Styles. Jede responsive Demo muss
+  `@trunkjs/responsive` importieren und den Demo-Inhalt in
+  `<tj-responsive>` einbetten, auch bei Content-Pane-Markdown-Demos.
+  Keine eigene Breakpoint-Auswertung, Media Queries oder Resize-Listener
+  für diese Grundfunktionen. Für `ntl-*` bleibt der vorhandene
+  `BreakPointMixin` über `breakpoints: true` grundsätzlich aktiv. Er liest
+  `--breakpoint` und reflektiert den Zustand als `mode="mobile"`,
+  `mode="tablet"` oder `mode="desktop"`. Ein Wert wie `lg` schaltet zwischen
+  Mobile und Desktop; zwei Werte wie `md, xl` ergänzen den Tablet-Modus.
+  Definiere einen sinnvollen Default, den Themes global über Layout-Selektoren
+  oder Instanzen individuell überschreiben können. Ohne explizite Vorgabe
+  gilt der automatisch ermittelte Modus. Explizite responsive Klassen wie
+  `mobile` oder `desktop` können bei dafür vorgesehenen Layouts den Modus
+  im CSS übersteuern, ohne das `mode`-Attribut zu manipulieren.
+  `eventBinding` bleibt ohne konkreten Bedarf deaktiviert.
+
+Quellreferenzen: [SubLayoutApplyMixin](https://github.com/trunkjs/trunkjs-monorepo/blob/main/packages/content-pane/src/mixins/SubLayoutApplyMixin.ts),
+[SlotVisibilityMixin](https://github.com/trunkjs/trunkjs-monorepo/blob/main/packages/browser-utils/src/mixins/SlotVisibilityMixin.ts),
+[BreakPointMixin](https://github.com/trunkjs/trunkjs-monorepo/blob/main/packages/browser-utils/src/mixins/BreakPointMixin.ts)
+und [TrunkJS Responsive](https://github.com/trunkjs/trunkjs-monorepo/tree/main/packages/responsive).
+
 ## Verbindlicher Nextrap-Skill
 
 Für alle Arbeiten in diesem Repository ist der interne Nextrap-Skill verbindlich zu beachten:
