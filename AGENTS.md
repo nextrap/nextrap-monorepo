@@ -26,8 +26,8 @@ Diese Datei bleibt absichtlich kurz. Detaillierter Repository-Kontext steht in `
   eigene TypeScript-Logik eingeführt wird. Layout-Grundfunktionen dürfen
   nicht durch eigene `addEventListener`-, `slotchange`-, MutationObserver-,
   Lifecycle- oder DOM-Umsortierungslogik nachgebaut werden.
-- Aktiviere in `nextrap_element({ subLayoutApply: true, slotVisibility: true })`
-  grundsätzlich beide Layout-Features. `SubLayoutApplyMixin` aus
+- Aktiviere in `nextrap_element({ subLayoutApply: true, slotVisibility: true, breakpoints: true })`
+  grundsätzlich diese Layout-Features. `SubLayoutApplyMixin` aus
   `@trunkjs/content-pane` wertet beim ersten Update `data-query` an Slots
   aus, weist passende Kinder automatisch zu und verarbeitet untergeordnete
   Layouts rekursiv. Explizite Slot-Zuweisungen bleiben erhalten; ein bereits
@@ -48,12 +48,21 @@ Diese Datei bleibt absichtlich kurz. Detaillierter Repository-Kontext steht in `
   `@trunkjs/responsive` importieren und den Demo-Inhalt in
   `<tj-responsive>` einbetten, auch bei Content-Pane-Markdown-Demos.
   Keine eigene Breakpoint-Auswertung, Media Queries oder Resize-Listener
-  für diese Grundfunktionen. `breakpoints` und `eventBinding` bleiben
-  deaktiviert, sofern kein konkretes Feature sie erfordert; bestehende
-  Layouts mit dem dokumentierten BreakPointMixin-Vertrag bleiben unberührt.
+  für diese Grundfunktionen. Für `ntl-*` bleibt der vorhandene
+  `BreakPointMixin` über `breakpoints: true` grundsätzlich aktiv. Er liest
+  `--breakpoint` und reflektiert den Zustand als `mode="mobile"`,
+  `mode="tablet"` oder `mode="desktop"`. Ein Wert wie `lg` schaltet zwischen
+  Mobile und Desktop; zwei Werte wie `md, xl` ergänzen den Tablet-Modus.
+  Definiere einen sinnvollen Default, den Themes global über Layout-Selektoren
+  oder Instanzen individuell überschreiben können. Ohne explizite Vorgabe
+  gilt der automatisch ermittelte Modus. Explizite responsive Klassen wie
+  `mobile` oder `desktop` können bei dafür vorgesehenen Layouts den Modus
+  im CSS übersteuern, ohne das `mode`-Attribut zu manipulieren.
+  `eventBinding` bleibt ohne konkreten Bedarf deaktiviert.
 
 Quellreferenzen: [SubLayoutApplyMixin](https://github.com/trunkjs/trunkjs-monorepo/blob/main/packages/content-pane/src/mixins/SubLayoutApplyMixin.ts),
-[SlotVisibilityMixin](https://github.com/trunkjs/trunkjs-monorepo/blob/main/packages/browser-utils/src/mixins/SlotVisibilityMixin.ts)
+[SlotVisibilityMixin](https://github.com/trunkjs/trunkjs-monorepo/blob/main/packages/browser-utils/src/mixins/SlotVisibilityMixin.ts),
+[BreakPointMixin](https://github.com/trunkjs/trunkjs-monorepo/blob/main/packages/browser-utils/src/mixins/BreakPointMixin.ts)
 und [TrunkJS Responsive](https://github.com/trunkjs/trunkjs-monorepo/tree/main/packages/responsive).
 
 ## Verbindlicher Nextrap-Skill

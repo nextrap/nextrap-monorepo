@@ -28,7 +28,11 @@ Zusätzliche Informationen.
 - Default-Slot: Center; `section-slot="start"` und `section-slot="end"`
   weisen Bereiche explizit zu. Wenn End anfangs unbelegt ist, werden direkte
   Kinder mit `.aside` per `data-query` automatisch End zugewiesen.
-- `desktop`: nebeneinander, sonst Start, Center, End untereinander.
+- Ohne explizite Klasse schaltet `--breakpoint` (Default `lg`) automatisch
+  zwischen gestapeltem Mobile- und horizontalem Desktop-Layout um.
+  Zwei Werte wie `md, xl` ergeben zusätzlich `mode="tablet"` (gestapelt).
+- `desktop` erzwingt horizontale Spalten, `mobile` erzwingt gestapelte
+  Spalten; `mobile` hat Vorrang, falls beide Klassen gesetzt sind.
 - `reverse`: kehrt die sichtbare Reihenfolge auf beiden Achsen um.
 - `preserve-empty`: behält auch leere Regionen bei.
 - Eine Region mit ausschließlich `d-none`-Elementen wird ausgeblendet,

@@ -3,11 +3,12 @@
 Verändere die Viewport-Breite, um die Varianten zu prüfen.
 
 ## 1. Drei Spalten
-{: layout="ntl-columns" section-class="lg:desktop"}
+{: layout="ntl-columns"}
 
 ### Hauptinhalt
 
-Ohne Slot bleibt dieser Inhalt im Center (Gewicht 6).
+Ohne Slot bleibt dieser Inhalt im Center (Gewicht 6). Das Layout schaltet
+standardmäßig ab LG automatisch auf Desktop um.
 
 ### Start
 {: section-slot="start"}
@@ -20,11 +21,12 @@ Dieser Inhalt steht mobil vor Center (Gewicht 4).
 Die Klasse aside weist den Inhalt automatisch End zu (Gewicht 4).
 
 ## 2. Reverse
-{: layout="ntl-columns" section-class="lg:desktop xl:reverse"}
+{: layout="ntl-columns" section-class="xl:reverse" section-style="--breakpoint: md, xl;"}
 
 ### Center
 
-Ab XL tauschen Start und End ihre Position.
+Unter MD gilt Mobile, ab MD Tablet (weiterhin gestapelt), ab XL Desktop.
+Ab XL tauschen Start und End zusätzlich ihre Position.
 
 ### Start
 {: section-slot="start"}
@@ -37,11 +39,12 @@ Normalerweise links oder oben.
 Normalerweise rechts oder unten.
 
 ## 3. Leere Start-Spalte erst ab XXL beibehalten
-{: layout="ntl-columns" section-class="lg:desktop xxl:preserve-empty"}
+{: layout="ntl-columns" section-class="lg:desktop xxl:preserve-empty" section-style="--breakpoint: xxl;"}
 
 ### Center
 
-Mobil steht Center über End. Ab LG teilen sich Center und End die Breite
+Mobil steht Center über End. Die Klasse `lg:desktop` überschreibt den
+auf XXL gesetzten automatischen Breakpoint. Ab LG teilen sich die Regionen die Breite
 im Verhältnis 6:4. Ab XXL bleibt Start zusätzlich als leerer Platzhalter.
 
 ### End

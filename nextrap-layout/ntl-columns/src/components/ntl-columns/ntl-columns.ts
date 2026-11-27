@@ -9,7 +9,7 @@ import style from './ntl-columns.scss?inline';
 export class NtlColumns extends nextrap_element({
   subLayoutApply: true,
   slotVisibility: true,
-  breakpoints: false,
+  breakpoints: true,
   eventBinding: false,
 }) {
   static override styles = [unsafeCSS(resetStyle), unsafeCSS(style)];

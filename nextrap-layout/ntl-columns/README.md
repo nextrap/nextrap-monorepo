@@ -1,7 +1,7 @@
 # ntl-columns
 
 Responsives Layout mit Start-, Center- und End-Spalte für Content Pane.
-Ohne Desktop-Klasse stehen die Inhalte untereinander.
+Ohne explizite Modus-Klasse schaltet das Layout automatisch ab `lg` um.
 
 ## Verwendung
 
@@ -29,7 +29,11 @@ Zusätzliche Informationen.
 - Default-Slot: Center; `section-slot="start"` und `section-slot="end"`
   weisen Bereiche explizit zu. Wenn End anfangs unbelegt ist, werden direkte
   Kinder mit `.aside` per `data-query` automatisch End zugewiesen.
-- `desktop`: nebeneinander, sonst Start, Center, End untereinander.
+- Ohne explizite Klasse schaltet `--breakpoint` (Default `lg`) automatisch
+  zwischen gestapeltem Mobile- und horizontalem Desktop-Layout um.
+  Zwei Werte wie `md, xl` ergeben zusätzlich `mode="tablet"` (gestapelt).
+- `desktop` erzwingt horizontale Spalten, `mobile` erzwingt gestapelte
+  Spalten; `mobile` hat Vorrang, falls beide Klassen gesetzt sind.
 - `reverse`: kehrt die sichtbare Reihenfolge auf beiden Achsen um.
 - `preserve-empty`: behält auch leere Regionen bei.
 - Eine Region mit ausschließlich `d-none`-Elementen wird ausgeblendet,
@@ -61,6 +65,9 @@ Parts: `wrapper`, `start`, `center`, `end`. Das Theme kann `--grid-cols`
 direkt am jeweiligen Part setzen. Werte auf slotted Kindern können nicht
 an den umgebenden Part vererbt werden. Die funktionale Anordnung benötigt
 kein Theme; das optionale Sass-Mixin stellt den Abstand ein.
+Das Theme kann `--breakpoint` global über einen Layout-Selektor oder direkt
+an einer Instanz setzen. Der BreakPointMixin liest den wirksamen Wert bei
+Initialisierung und Resize.
 
 ```scss
 @use '@nextrap/ntl-columns' as columns;

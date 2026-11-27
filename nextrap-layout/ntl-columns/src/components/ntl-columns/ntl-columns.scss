@@ -1,5 +1,6 @@
-// Mobile ist der Ausgangszustand; die Website schaltet Desktop per Klasse.
+// Bis zum ermittelten Breakpoint bleibt das Layout gestapelt.
 :host {
+  --breakpoint: lg;
   display: block;
 }
 
@@ -33,19 +34,19 @@
 
 // Desktop verteilt den verfügbaren Platz proportional auf sichtbare Regionen.
 // Der Host liefert die Gewichte; Themes können sie am jeweiligen Part überschreiben.
-:host(.desktop) #wrapper {
+:host(:not(.mobile):is(.desktop, [mode='desktop'])) #wrapper {
   flex-direction: row;
 }
 
-:host(.desktop) #start {
+:host(:not(.mobile):is(.desktop, [mode='desktop'])) #start {
   flex: var(--grid-cols, var(--start-cols, 4)) 1 0px;
 }
 
-:host(.desktop) #center {
+:host(:not(.mobile):is(.desktop, [mode='desktop'])) #center {
   flex: var(--grid-cols, var(--center-cols, 6)) 1 0px;
 }
 
-:host(.desktop) #end {
+:host(:not(.mobile):is(.desktop, [mode='desktop'])) #end {
   flex: var(--grid-cols, var(--end-cols, 4)) 1 0px;
 }
 
@@ -54,6 +55,6 @@
   flex-direction: column-reverse;
 }
 
-:host(.desktop.reverse) #wrapper {
+:host(.reverse:not(.mobile):is(.desktop, [mode='desktop'])) #wrapper {
   flex-direction: row-reverse;
 }

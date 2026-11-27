@@ -25,6 +25,8 @@ ntl-columns.style-default {
 
 Die Gewichte 4:6:4 werden proportional verteilt. `--grid-cols` am Part
 überschreibt `--start-cols`, `--center-cols` bzw. `--end-cols` am Host.
-Desktop, Reverse und Preserve Empty
-werden über Klassen gesteuert. Überschreibe nicht die funktionale
+Der automatische Modus folgt `--breakpoint` (Default `lg`, optional zwei
+Werte wie `md, xl`). Mobile und Tablet sind gestapelt. `mobile` und
+`desktop` überschreiben die automatische Darstellung; Reverse und Preserve
+Empty werden ebenfalls über Klassen gesteuert. Überschreibe nicht die funktionale
 Flex-Richtung oder das Ausblenden leerer Regionen.
