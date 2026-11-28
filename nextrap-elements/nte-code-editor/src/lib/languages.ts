@@ -12,6 +12,9 @@ import {
 import { javascript } from '@codemirror/lang-javascript';
 import { markdown } from '@codemirror/lang-markdown';
 import { sass } from '@codemirror/lang-sass';
+import { yaml, yamlFrontmatter } from '@codemirror/lang-yaml';
+import { liquid } from '@codemirror/lang-liquid';
+import { php } from '@codemirror/lang-php';
 import {
   LanguageDescription,
   LanguageSupport,
@@ -183,6 +186,10 @@ export function createLanguageSupport(
   switch (language) {
     case 'text':
       return [];
+    case 'yaml':
+      return yaml();
+    case 'php':
+      return php();
     case 'css':
       // Der Picker bleibt auf bearbeitbare Stylesheet-Ansichten begrenzt.
       return colorPicker ? [cssSupport, color] : cssSupport;
@@ -209,6 +216,10 @@ export function createLanguageSupport(
     baseHtml.language.data.of({ autocomplete: classCompletion }),
   ]);
   if (language === 'html') return htmlSupport;
+  // Jekyll kombiniert YAML-Metadaten mit Liquid-Tags und eingebettetem HTML.
+  if (language === 'jekyll' || language === 'liquid') {
+    return yamlFrontmatter({ content: liquid({ base: htmlSupport }) });
+  }
 
   // Dieselben Sprachinstanzen werden in Fences benutzt, damit auch deren Completion verfügbar ist.
   let markdownSupport: LanguageSupport;
@@ -266,5 +277,5 @@ export function createLanguageSupport(
       ),
     }),
   ]);
-  return markdownSupport;
+  return yamlFrontmatter({ content: markdownSupport });
 }

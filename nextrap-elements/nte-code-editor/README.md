@@ -4,6 +4,17 @@
 bereit. Code wird über `value` gesetzt und gelesen. HTML, Markdown, CSS,
 JavaScript, TypeScript und SCSS stehen ohne weitere Sprachkonfiguration bereit.
 
+## Fehleransicht
+
+`errorMessage` (`error-message`) aktiviert bei nichtleerem Text eine horizontal
+und vertikal zentrierte Fehleransicht anstelle der CodeMirror-Ansicht.
+`errorDescription` (`error-description`) ergänzt die Beschreibung.
+Die Parts `error`, `error-message` und `error-description` erlauben das Styling;
+der Fehlercontainer trägt zusätzlich `editor` für die bestehende Höhensteuerung.
+Code und Undo-Verlauf bleiben erhalten. Jede Zuweisung von `value` löscht beide
+Fehlertexte, auch bei identischem oder leerem Inhalt. Alternativ beendet
+`errorMessage = ''` die Fehleransicht ohne Inhaltsänderung.
+
 ## 1. Code setzen, bearbeiten und als Formularwert lesen
 
 Dieses eigenständige Beispiel verwendet die HTML-Standardkonfiguration. Die

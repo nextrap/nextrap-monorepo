@@ -2,6 +2,10 @@
 export type CodeEditorLanguage =
   | 'html'
   | 'markdown'
+  | 'yaml'
+  | 'jekyll'
+  | 'liquid'
+  | 'php'
   | 'css'
   | 'javascript'
   | 'typescript'

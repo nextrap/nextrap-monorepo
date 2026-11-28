@@ -57,6 +57,10 @@ async function loadRuntime(): Promise<void> {
 
 // value bleibt die Arbeitsfassung, auch wenn der Vergleich zwei Editoren anzeigt.
 export class NteCodeEditor extends nextrap_element({ logging: false }) {
+  // Eine Fehlermeldung ersetzt nur die Ansicht; Code und Undo-State bleiben erhalten.
+  errorMessage = '';
+  errorDescription = '';
+
   static formAssociated = true;
   static override styles = unsafeCSS(style);
   static override properties = {
@@ -72,6 +76,8 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
     disabled: { type: Boolean, reflect: true },
     readOnly: { type: Boolean, attribute: 'readonly', reflect: true },
     label: { type: String },
+    errorMessage: { type: String, attribute: 'error-message' },
+    errorDescription: { type: String, attribute: 'error-description' },
     htmlElements: { attribute: false },
     classNames: { attribute: false },
     originalValue: { attribute: false },
@@ -233,7 +239,11 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
     const hasOriginal = this.oldValue !== null;
     const showOriginal = hasOriginal && this.singleVersion === 'original';
     return html`${super.render()}
-      <div ?hidden=${showOriginal}>
+      ${this.errorMessage ? html`<div id="error" part="editor error" role="status">
+        <div><strong part="error-message">${this.errorMessage}</strong>
+          <div part="error-description">${this.errorDescription}</div></div>
+      </div>` : null}
+      <div ?hidden=${showOriginal || !!this.errorMessage}>
         <div
           id="editor"
           part="container"
@@ -241,7 +251,7 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
           @change=${this.#stopInnerEvent}
         ></div>
       </div>
-      <div id="original-preview" ?hidden=${!showOriginal}></div>
+      <div id="original-preview" ?hidden=${!showOriginal || !!this.errorMessage}></div>
       <slot NO-DEFAULT-SLOT></slot>`;
   }
 
@@ -350,8 +360,11 @@ export class NteCodeEditor extends nextrap_element({ logging: false }) {
     event.stopPropagation();
   }
 
-  // CodeMirror und textarea verwenden normalisierte Zeilenumbrüche im Formularwert.
+  // Neuer Inhalt beendet die Fehleransicht, auch bei identischem oder leerem Wert.
+  // CodeMirror und Formularwert verwenden normalisierte Zeilenumbrüche.
   #setValue(value: string, dirty: boolean): void {
+    this.errorMessage = '';
+    this.errorDescription = '';
     const next = value.replace(/\r\n?/g, '\n');
     const previous = this.#value;
     this.#dirtyValue = dirty || this.#dirtyValue;

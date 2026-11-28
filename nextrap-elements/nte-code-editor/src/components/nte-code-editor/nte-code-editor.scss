@@ -5,6 +5,15 @@
   min-width: 0;
 }
 
+// Die Fehleransicht belegt den Editorbereich und zentriert beide Textzeilen.
+#error {
+  display: grid;
+  place-items: center;
+  text-align: center;
+  height: 100%;
+  min-height: 10rem;
+}
+
 // Horizontales und vertikales Scrollen bleiben innerhalb der CodeMirror-View.
 .cm-scroller {
   overflow: auto;
